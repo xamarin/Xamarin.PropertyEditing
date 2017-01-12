@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows">
+
+	<Style TargetType="local:StringEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:StringEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition SharedSizeGroup="Label" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+
+						<Label Target="{Binding ElementName=TextBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
+						<TextBox Name="TextBox" Grid.Column="1" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:PropertyEditorPanel">
+		<Setter Property="Grid.IsSharedSizeScope" Value="True" />
+	</Style>
+</ResourceDictionary>

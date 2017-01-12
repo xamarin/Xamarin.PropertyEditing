@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
-	public class ObjectViewModel
+	internal class ObjectViewModel
 		: PropertiesViewModel
 	{
 		private object value;
@@ -14,7 +11,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public ObjectViewModel (IEditorProvider provider)
 			: base (provider)
 		{
-
 		}
 
 		public object Value
@@ -23,7 +19,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			set
 			{
 				this.value = value;
-				RaisePropertyChanged ();
+				OnPropertyChanged ();
 				OnPropertiesChanged ();
 			}
 		}

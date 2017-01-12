@@ -106,7 +106,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
-			// properties will suppor multi-selection of designer items by self-handling having multiple
+			// properties will support multi-selection of designer items by self-handling having multiple
 			// property editors.
 		}
 	}

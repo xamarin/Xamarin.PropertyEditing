@@ -7,9 +7,7 @@ namespace Xamarin.PropertyEditing
 	public class EditorPropertyChangedEventArgs
 		: EventArgs
 	{
-		/// <remarks>
-		/// A <c>null</c> <paramref name="property"/> is meant as a full refresh, like empty property names for INPC
-		/// </remarks>
+		/// <param name="property">The property that was updated, or <c>null</c> if a full refresh is required.</param>
 		public EditorPropertyChangedEventArgs (IPropertyInfo property)
 		{
 			Property = property;

@@ -93,5 +93,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Xamarin.PropertyEditing.Windows\Xamarin.PropertyEditing.Windows.csproj">
+      <Project>{60af04be-1b6b-411b-bcba-c95eafbd7ac0}</Project>
+      <Name>Xamarin.PropertyEditing.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">
+      <Project>{a0b6fe73-d046-4e1c-ba9d-f20683889c5a}</Project>
+      <Name>Xamarin.PropertyEditing</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
