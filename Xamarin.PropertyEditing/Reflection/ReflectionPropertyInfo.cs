@@ -6,7 +6,7 @@ using System.Reflection;
 namespace Xamarin.PropertyEditing.Reflection
 {
 	public class ReflectionPropertyInfo
-		: IPropertyInfo
+		: IPropertyInfo, IEquatable<ReflectionPropertyInfo>
 	{
 		public ReflectionPropertyInfo (PropertyInfo propertyInfo)
 		{
@@ -38,6 +38,43 @@ namespace Xamarin.PropertyEditing.Reflection
 		public T GetValue<T> (object target)
 		{
 			return (T)this.propertyInfo.GetValue (target);
+		}
+
+		public bool Equals (ReflectionPropertyInfo other)
+		{
+			if (ReferenceEquals (null, other))
+				return false;
+			if (ReferenceEquals (this, other))
+				return true;
+
+			return this.propertyInfo.Equals (other.propertyInfo);
+		}
+
+		public override bool Equals (object obj)
+		{
+			if (ReferenceEquals (null, obj))
+				return false;
+			if (ReferenceEquals (this, obj))
+				return true;
+			if (obj.GetType () != this.GetType ())
+				return false;
+
+			return Equals ((ReflectionPropertyInfo)obj);
+		}
+
+		public override int GetHashCode ()
+		{
+			return this.propertyInfo.GetHashCode ();
+		}
+
+		public static bool operator == (ReflectionPropertyInfo left, ReflectionPropertyInfo right)
+		{
+			return Equals (left, right);
+		}
+
+		public static bool operator != (ReflectionPropertyInfo left, ReflectionPropertyInfo right)
+		{
+			return !Equals (left, right);
 		}
 
 		private readonly Lazy<string> category;
