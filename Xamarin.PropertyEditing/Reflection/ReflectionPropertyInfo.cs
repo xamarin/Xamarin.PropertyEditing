@@ -32,12 +32,25 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public void SetValue<T> (object target, T value)
 		{
-			this.propertyInfo.SetValue (target, value);
+			object realValue = value;
+			if (realValue != null && !this.propertyInfo.PropertyType.IsInstanceOfType (value)) {
+				realValue = Convert.ChangeType (value, this.propertyInfo.PropertyType);
+			}
+
+			this.propertyInfo.SetValue (target, realValue);
 		}
 
 		public T GetValue<T> (object target)
 		{
-			return (T)this.propertyInfo.GetValue (target);
+			object value = this.propertyInfo.GetValue (target);
+			if (value != null && !(value is T)) {
+				if (typeof(T) == typeof(string))
+					value = value.ToString ();
+				else
+					value = Convert.ChangeType (value, typeof(T));
+			}
+
+			return (T)value;
 		}
 
 		public bool Equals (ReflectionPropertyInfo other)

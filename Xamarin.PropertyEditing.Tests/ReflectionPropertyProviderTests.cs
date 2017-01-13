@@ -25,6 +25,66 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (property.Type, Is.EqualTo (typeof (string)));
 		}
 
+		[Test]
+		public async Task SetValue ()
+		{
+			var obj = new TestClass ();
+
+			var provider = new ReflectionEditorProvider ();
+			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
+
+			const string value = "value";
+
+			await editor.SetValueAsync (editor.Properties.Single (), new ValueInfo<string> {
+				Value = value
+			});
+
+			Assert.That (obj.Property, Is.EqualTo (value));
+		}
+
+		[Test]
+		public async Task GetValue ()
+		{
+			const string value = "value";
+			var obj = new TestClass { Property = value };
+
+			var provider = new ReflectionEditorProvider ();
+			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
+
+			var info = await editor.GetValueAsync<string> (editor.Properties.Single ());
+			Assert.That (info.Value, Is.EqualTo (value));
+		}
+
+		[Test]
+		public async Task SetValueConvert ()
+		{
+			var obj = new TestClass ();
+
+			var provider = new ReflectionEditorProvider ();
+			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
+
+			const string value = "1";
+
+			await editor.SetValueAsync (editor.Properties.Single (), new ValueInfo<int> {
+				Value = 1
+			});
+
+			Assert.That (obj.Property, Is.EqualTo (value));
+		}
+
+		[Test]
+		public async Task GetValueConvert ()
+		{
+			const string value = "1";
+			var obj = new TestClass { Property = value };
+
+			var provider = new ReflectionEditorProvider ();
+			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
+
+			var info = await editor.GetValueAsync<int> (editor.Properties.Single ());
+			Assert.That (info.Value, Is.EqualTo (1));
+		}
+
 		private class TestClass
 		{
 			public string Property
