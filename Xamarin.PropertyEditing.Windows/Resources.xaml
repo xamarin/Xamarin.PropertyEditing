@@ -24,11 +24,13 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyEditorPanel">
-					<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}">
-						<ItemsControl.ItemTemplateSelector>
-							<local:EditorPropertySelector />
-						</ItemsControl.ItemTemplateSelector>
-					</ItemsControl>
+					<ScrollViewer>
+						<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}">
+							<ItemsControl.ItemTemplateSelector>
+								<local:EditorPropertySelector />
+							</ItemsControl.ItemTemplateSelector>
+						</ItemsControl>
+					</ScrollViewer>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
