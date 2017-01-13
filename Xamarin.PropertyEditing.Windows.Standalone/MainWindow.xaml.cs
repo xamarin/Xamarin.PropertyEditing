@@ -16,8 +16,10 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 
 		private void Button_Click (object sender, RoutedEventArgs e)
 		{
-			this.panel.SelectedItems.Clear();
-			this.panel.SelectedItems.Add (sender);
+			if (this.panel.SelectedItems.Contains (sender))
+				this.panel.SelectedItems.Remove (sender);
+			else
+				this.panel.SelectedItems.Add (sender);
 		}
 	}
 }
