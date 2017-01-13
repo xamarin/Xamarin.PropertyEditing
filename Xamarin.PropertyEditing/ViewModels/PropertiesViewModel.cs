@@ -34,8 +34,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return;
 			}
 
-			var newSet = new HashSet<IPropertyInfo> (this.properties.Select (vm => vm.Property));
-			for (int i = 0; i < editors.Count; i++) {
+			var newSet = new HashSet<IPropertyInfo> (editors[0].Properties);
+			for (int i = 1; i < editors.Count; i++) {
 				newSet.IntersectWith (editors[i].Properties);
 			}
 
@@ -60,6 +60,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private PropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
+			// TODO
 			return new StringPropertyViewModel (property, editors);
 		}
 	}

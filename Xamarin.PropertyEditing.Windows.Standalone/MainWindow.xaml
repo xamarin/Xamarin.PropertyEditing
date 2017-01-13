@@ -18,9 +18,9 @@
 			<RowDefinition />
 		</Grid.RowDefinitions>
 
-		<Button Grid.Row="0" Grid.Column="0">Select me</Button>
-		<Button Grid.Row="1" Grid.Column="0">Select me 2</Button>
+		<Button Grid.Row="0" Grid.Column="0" Click="Button_Click">Select me</Button>
+		<Button Grid.Row="1" Grid.Column="0" Click="Button_Click">Select me 2</Button>
 
-		<xamarinprops:PropertyEditorPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" />
+		<xamarinprops:PropertyEditorPanel Name="panel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" />
 	</Grid>
 </Window>

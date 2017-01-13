@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -21,6 +22,7 @@ namespace Xamarin.PropertyEditing.Windows
 						this.templates[type] = template = new DataTemplate (type) {
 							VisualTree = new FrameworkElementFactory (controlType)
 						};
+						template.VisualTree.SetBinding (PropertyEditorControl.LabelProperty, new Binding ("Property.Name") { Mode = BindingMode.OneTime });
 					}
 				}
 

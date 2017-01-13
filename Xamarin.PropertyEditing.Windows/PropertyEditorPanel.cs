@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Xamarin.PropertyEditing.ViewModels;
@@ -13,11 +16,14 @@ namespace Xamarin.PropertyEditing.Windows
 		public PropertyEditorPanel ()
 		{
 			DefaultStyleKey = typeof(PropertyEditorPanel);
-			SelectedItems = new ObservableCollection<object> ();
+
+			var selectedItems = new ObservableCollection<object> ();
+			selectedItems.CollectionChanged += OnSelectedItemsChanged;
+			SelectedItems = selectedItems;
 		}
 
 		public static readonly DependencyProperty EditorProviderProperty = DependencyProperty.Register (
-			"EditorProvider", typeof(IEditorProvider), typeof(PropertyEditorPanel), new PropertyMetadata (default(IEditorProvider)));
+			"EditorProvider", typeof(IEditorProvider), typeof(PropertyEditorPanel), new PropertyMetadata (default(IEditorProvider), (o, args) => ((PropertyEditorPanel)o).OnEditorProviderChanged()));
 
 		public IEditorProvider EditorProvider
 		{
@@ -41,14 +47,28 @@ namespace Xamarin.PropertyEditing.Windows
 			base.OnApplyTemplate ();
 
 			this.items = (ItemsControl)GetTemplateChild ("propertyItems");
-			this.items.DataContext = new PanelViewModel (EditorProvider);
+			this.items.DataContext = this.vm = new PanelViewModel (EditorProvider);
 		}
 
+		private PanelViewModel vm;
 		private ItemsControl items;
 
-		private void OnEditorChanged ()
+		private void OnSelectedItemsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
-			
+			if (this.vm == null)
+				return;
+
+			// TODO properly
+			this.vm.SelectedObjects.Clear();
+			this.vm.SelectedObjects.AddRange (SelectedItems.Cast<object>());
+		}
+
+		private void OnEditorProviderChanged ()
+		{
+			if (this.items == null)
+				return;
+
+			this.items.DataContext = this.vm = (EditorProvider != null) ? new PanelViewModel (EditorProvider) : null;
 		}
 	}
 }

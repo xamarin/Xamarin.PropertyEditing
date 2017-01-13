@@ -23,8 +23,8 @@
 		<Setter Property="Grid.IsSharedSizeScope" Value="True" />
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate>
-					<ItemsControl Name="propertyItems">
+				<ControlTemplate TargetType="local:PropertyEditorPanel">
+					<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}">
 						<ItemsControl.ItemTemplateSelector>
 							<local:EditorPropertySelector />
 						</ItemsControl.ItemTemplateSelector>
