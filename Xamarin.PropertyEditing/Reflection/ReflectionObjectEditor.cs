@@ -38,6 +38,7 @@ namespace Xamarin.PropertyEditing.Reflection
 				throw new ArgumentException();
 
 			info.SetValue (this.target, value.Value);
+			OnPropertyChanged (info);
 		}
 
 		public Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null)
@@ -59,5 +60,10 @@ namespace Xamarin.PropertyEditing.Reflection
 		private readonly List<ReflectionPropertyInfo> properties = new List<ReflectionPropertyInfo> ();
 
 		private static readonly IObjectEditor[] EmptyDirectChildren = new IObjectEditor[0];
+
+		protected virtual void OnPropertyChanged (IPropertyInfo property)
+		{
+			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
+		}
 	}
 }

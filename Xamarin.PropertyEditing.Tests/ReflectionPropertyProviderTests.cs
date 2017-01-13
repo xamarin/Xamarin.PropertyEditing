@@ -85,6 +85,30 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (info.Value, Is.EqualTo (1));
 		}
 
+		[Test]
+		public async Task PropertyChanged ()
+		{
+			var obj = new TestClass ();
+
+			var provider = new ReflectionEditorProvider ();
+			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
+
+			const string value = "value";
+			var property = editor.Properties.Single ();
+
+			bool changed = false;
+			editor.PropertyChanged += (sender, args) => {
+				if (Equals (args.Property, property))
+					changed = true;
+			};
+
+			await editor.SetValueAsync (property, new ValueInfo<string> {
+				Value = value
+			});
+
+			Assert.That (changed, Is.True, "PropertyChanged was not raised for the given property");
+		}
+
 		private class TestClass
 		{
 			public string Property
