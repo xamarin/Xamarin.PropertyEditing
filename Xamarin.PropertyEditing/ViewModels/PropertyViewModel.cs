@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal abstract class PropertyViewModel<TValue>
 		: PropertyViewModel
 	{
-		private TValue value;
-
 		protected PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (property, editors)
 		{
@@ -20,9 +20,63 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return this.value; }
 			set
 			{
-				this.value = value;
-				OnPropertyChanged ();
+				if (!SetCurrentValue (value))
+					return;
+
+				SetValue (new ValueInfo<TValue> {
+					Source = ValueSource.Local,
+					Value = value
+				});
 			}
+		}
+
+		protected override async void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			base.OnEditorsChanged (sender, e);
+
+			// TODO hook and listen for changes
+
+			var values = new HashSet<Task<ValueInfo<TValue>>> (Editors.Select (ed => ed.GetValueAsync<TValue> (Property, Variation)));
+			ValueInfo<TValue> currentValue = null;
+
+			bool disagree = false;
+
+			while (values.Count > 0) {
+				Task<ValueInfo<TValue>> task = await Task.WhenAny (values);
+				values.Remove (task);
+
+				if (currentValue == null)
+					currentValue = task.Result;
+				else if (currentValue.Source != task.Result.Source || !Equals (currentValue.Value, task.Result.Value)) {
+					// Even if the value is the same, they are not equal if the source is not the same because
+					// it means the value is set differently at the source.
+					disagree = true;
+					currentValue = null;
+					break;
+				}
+			}
+
+			MultipleValues = disagree;
+
+			// The public setter for Value is a local set for binding
+			SetCurrentValue ((currentValue != null) ? currentValue.Value : default(TValue));
+		}
+
+		private TValue value;
+
+		private bool SetCurrentValue (TValue newValue)
+		{
+			if (Equals (this.value, newValue))
+				return false;
+
+			this.value = newValue;
+			OnPropertyChanged ();
+			return true;
+		}
+
+		private async void SetValue (ValueInfo<TValue> newValue)
+		{
+			await Task.WhenAll (Editors.Select (e => e.SetValueAsync (Property, newValue)));
 		}
 	}
 
@@ -39,9 +93,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			Property = property;
 
 			var observableEditors = new ObservableCollection<IObjectEditor>();
+			Editors = observableEditors;
 			observableEditors.CollectionChanged += OnEditorsChanged;
 			observableEditors.AddRange (editors); // Purposefully after the event hookup
-			Editors = observableEditors;
 		}
 
 		public IPropertyInfo Property
@@ -71,7 +125,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public bool MultipleValues
 		{
 			get { return this.multipleValues; }
-			private set
+			protected set
 			{
 				if (this.multipleValues == value)
 					return;
@@ -104,7 +158,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private bool multipleValues;
 		private PropertyVariation variation;
 
-		private void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
+		protected virtual void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
 			// properties will support multi-selection of designer items by self-handling having multiple
 			// property editors.

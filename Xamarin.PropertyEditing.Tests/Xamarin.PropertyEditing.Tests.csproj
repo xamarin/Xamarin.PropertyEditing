@@ -70,7 +70,9 @@
   <ItemGroup>
     <Compile Include="PanelViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyViewModelTests.cs" />
     <Compile Include="ReflectionPropertyProviderTests.cs" />
+    <Compile Include="StringViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
