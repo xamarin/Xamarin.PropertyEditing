@@ -1,5 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows">
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib">
 
 	<Style TargetType="local:StringEditorControl">
 		<Setter Property="Template">
@@ -12,7 +14,7 @@
 						</Grid.ColumnDefinitions>
 
 						<Label Target="{Binding ElementName=TextBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
-						<TextBox Name="TextBox" Grid.Column="1" Text="{Binding Value,UpdateSourceTrigger=PropertyChanged}" />
+						<TextBox Name="TextBox" Grid.Column="1" Text="{Binding Value}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -24,13 +26,53 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyEditorPanel">
-					<ScrollViewer>
-						<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}">
-							<ItemsControl.ItemTemplateSelector>
-								<local:EditorPropertySelector />
-							</ItemsControl.ItemTemplateSelector>
-						</ItemsControl>
-					</ScrollViewer>
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+
+						<TextBox Name="search" Grid.Row="0" />
+
+						<StackPanel Grid.Row="1" Orientation="Horizontal">
+							<StackPanel.Resources>
+								<ObjectDataProvider x:Key="arrangeModes" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+									<ObjectDataProvider.MethodParameters>
+										<x:Type TypeName="local:PropertyArrangeMode" />
+									</ObjectDataProvider.MethodParameters>
+								</ObjectDataProvider>
+							</StackPanel.Resources>
+							<!-- TODO localize !-->
+							<Label Target="{Binding ElementName=arrangeBy,Mode=OneTime}">Arrange by:</Label>
+							<ComboBox Name="arrangeBy" SelectedItem="{Binding ArrangeMode,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ItemsSource="{Binding Source={StaticResource arrangeModes}}" />
+						</StackPanel>
+						
+						<ScrollViewer Grid.Row="2">
+							<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}">
+								<ItemsControl.ItemTemplateSelector>
+									<local:EditorPropertySelector />
+								</ItemsControl.ItemTemplateSelector>
+								<ItemsControl.GroupStyle>
+									<GroupStyle>
+										<GroupStyle.ContainerStyle>
+											<Style TargetType="GroupItem">
+												<Setter Property="Template">
+													<Setter.Value>
+														<ControlTemplate TargetType="GroupItem">
+															<Expander Header="{Binding Name}">
+																<ItemsPresenter />
+															</Expander>
+														</ControlTemplate>
+													</Setter.Value>
+												</Setter>
+											</Style>
+										</GroupStyle.ContainerStyle>
+									</GroupStyle>
+								</ItemsControl.GroupStyle>
+							</ItemsControl>
+						</ScrollViewer>
+					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

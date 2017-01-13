@@ -2,13 +2,22 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
 {
+	public enum PropertyArrangeMode
+	{
+		Name = 0,
+		Category = 1,
+		ValueSource = 2
+	}
+
 	[TemplatePart (Name = "propertyItems", Type = typeof(ItemsControl))]
 	public class PropertyEditorPanel
 		: Control
@@ -42,16 +51,49 @@ namespace Xamarin.PropertyEditing.Windows
 			private set { SetValue (SelectedItemsPropertyKey, value); }
 		}
 
+		public static readonly DependencyProperty ArrangeModeProperty = DependencyProperty.Register (
+			"ArrangeMode", typeof(PropertyArrangeMode), typeof(PropertyEditorPanel), new PropertyMetadata (PropertyArrangeMode.Name, (o, args) => ((PropertyEditorPanel)o).OnGroupModeChanged ()));
+
+		public PropertyArrangeMode ArrangeMode
+		{
+			get { return (PropertyArrangeMode) GetValue (ArrangeModeProperty); }
+			set { SetValue (ArrangeModeProperty, value); }
+		}
+
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
 
 			this.items = (ItemsControl)GetTemplateChild ("propertyItems");
 			this.items.DataContext = this.vm = new PanelViewModel (EditorProvider);
+			Dispatcher.InvokeAsync (OnGroupModeChanged); // trigger after binding finishes
 		}
 
 		private PanelViewModel vm;
 		private ItemsControl items;
+
+		private void OnGroupModeChanged ()
+		{
+			if (this.items?.ItemsSource == null)
+				return;
+
+			PropertyArrangeMode mode = ArrangeMode;
+
+			ICollectionView view = CollectionViewSource.GetDefaultView (this.items.ItemsSource);
+
+			view.GroupDescriptions.Clear ();
+			view.SortDescriptions.Clear ();
+
+			switch (mode) {
+				case PropertyArrangeMode.Name:
+					view.SortDescriptions.Add (new SortDescription ("Name", ListSortDirection.Ascending));
+					break;
+				case PropertyArrangeMode.Category:
+					view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
+					view.SortDescriptions.Add (new SortDescription ("Name", ListSortDirection.Ascending));
+					break;
+			}
+		}
 
 		private void OnSelectedItemsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
