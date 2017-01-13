@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Reflection
 	{
 		public Task<IObjectEditor> GetObjectEditorAsync (object item)
 		{
-			throw new NotImplementedException ();
+			return Task.FromResult<IObjectEditor> (new ReflectionObjectEditor (item));
 		}
 	}
 }

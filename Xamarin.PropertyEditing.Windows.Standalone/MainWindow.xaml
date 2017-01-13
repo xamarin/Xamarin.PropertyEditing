@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows.Standalone"
         xmlns:xamarinprops="clr-namespace:Xamarin.PropertyEditing.Windows;assembly=Xamarin.PropertyEditing.Windows"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Property editor" Height="600" Width="525">
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />

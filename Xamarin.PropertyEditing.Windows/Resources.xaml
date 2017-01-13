@@ -21,5 +21,16 @@
 
 	<Style TargetType="local:PropertyEditorPanel">
 		<Setter Property="Grid.IsSharedSizeScope" Value="True" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<ItemsControl Name="propertyItems">
+						<ItemsControl.ItemTemplateSelector>
+							<local:EditorPropertySelector />
+						</ItemsControl.ItemTemplateSelector>
+					</ItemsControl>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 </ResourceDictionary>

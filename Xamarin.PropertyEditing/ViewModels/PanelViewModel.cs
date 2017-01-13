@@ -24,14 +24,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		protected override Task<IReadOnlyList<IObjectEditor>> GetEditorsAsync ()
+		protected override async Task<IReadOnlyList<IObjectEditor>> GetEditorsAsync ()
 		{
-			throw new NotImplementedException();
+			int i = 0;
+			Task<IObjectEditor>[] editorTasks = new Task<IObjectEditor>[SelectedObjects.Count];
+			foreach (object item in SelectedObjects) {
+				editorTasks[i++] = EditorProvider.GetObjectEditorAsync (item);
+			}
+
+			return await Task.WhenAll (editorTasks).ConfigureAwait (false);
 		}
 
 		private async void OnSelectedObjectsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
-
+			// this needs to be more connected with the object changes to allow for better reuse
+			OnPropertiesChanged ();
 		}
 	}
 }

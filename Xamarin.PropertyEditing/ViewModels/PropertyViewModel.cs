@@ -10,8 +10,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	{
 		private TValue value;
 
-		protected PropertyViewModel (IPropertyInfo property, IObjectEditor editor)
-			: base (property, editor)
+		protected PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (property, editors)
 		{
 		}
 
@@ -29,19 +29,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal abstract class PropertyViewModel
 		: ViewModelBase
 	{
-		public PropertyViewModel (IPropertyInfo property, IObjectEditor editor)
+		protected PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
 			if (property == null)
 				throw new ArgumentNullException (nameof (property));
-			if (editor == null)
-				throw new ArgumentNullException (nameof (editor));
+			if (editors == null)
+				throw new ArgumentNullException (nameof (editors));
 
 			Property = property;
 
-			var editors = new ObservableCollection<IObjectEditor> ();
-			editors.CollectionChanged += OnEditorsChanged;
-			editors.Add (editor);
-			Editors = editors;
+			var observableEditors = new ObservableCollection<IObjectEditor>();
+			observableEditors.CollectionChanged += OnEditorsChanged;
+			observableEditors.AddRange (editors); // Purposefully after the event hookup
+			Editors = observableEditors;
 		}
 
 		public IPropertyInfo Property
@@ -89,8 +89,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			private set
 			{
 				this.valueModel = value;
-				OnPropertyChanged();
-				OnPropertyChanged(nameof (CanDelve));
+				OnPropertyChanged ();
+				OnPropertyChanged (nameof (CanDelve));
 			}
 		}
 

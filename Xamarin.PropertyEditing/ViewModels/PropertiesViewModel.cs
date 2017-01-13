@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
@@ -27,9 +28,39 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected async void OnPropertiesChanged ()
 		{
+			IReadOnlyList<IObjectEditor> editors = await GetEditorsAsync ();
+			if (editors.Count == 0) {
+				this.properties.Clear();
+				return;
+			}
 
+			var newSet = new HashSet<IPropertyInfo> (this.properties.Select (vm => vm.Property));
+			for (int i = 0; i < editors.Count; i++) {
+				newSet.IntersectWith (editors[i].Properties);
+			}
+
+			foreach (PropertyViewModel vm in this.properties.ToArray()) {
+				if (!newSet.Remove (vm.Property)) {
+					this.properties.Remove (vm);
+					continue;
+				}
+
+				foreach (IObjectEditor editor in editors) {
+					if (!vm.Editors.Contains (editor))
+						vm.Editors.Add (editor);
+				}
+			}
+
+			foreach (IPropertyInfo property in newSet) {
+				this.properties.Add (GetViewModel (property, editors));
+			}
 		}
 
-		private readonly ObservableCollection<PropertyViewModel> properties;
+		private readonly ObservableCollection<PropertyViewModel> properties = new ObservableCollection<PropertyViewModel> ();
+
+		private PropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		{
+			return new StringPropertyViewModel (property, editors);
+		}
 	}
 }

@@ -52,13 +52,16 @@
     <Compile Include="PropertyVariation.cs" />
     <Compile Include="Reflection\ReflectionEditorProvider.cs" />
     <Compile Include="Reflection\ReflectionObjectEditor.cs" />
+    <Compile Include="Reflection\ReflectionPropertyInfo.cs" />
     <Compile Include="ValueInfo.cs" />
     <Compile Include="ValueSource.cs" />
+    <Compile Include="ViewModels\Extensions.cs" />
     <Compile Include="ViewModels\ObjectViewModel.cs" />
     <Compile Include="ViewModels\PanelViewModel.cs" />
     <Compile Include="ViewModels\PropertiesViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
+    <Compile Include="ViewModels\StringPropertyViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup />
