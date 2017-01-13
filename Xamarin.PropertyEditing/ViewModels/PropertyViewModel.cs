@@ -33,9 +33,27 @@ namespace Xamarin.PropertyEditing.ViewModels
 		protected override async void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
 			base.OnEditorsChanged (sender, e);
+			
+			// TODO: This, but not in a crap way
 
-			// TODO hook and listen for changes
+			foreach (IObjectEditor editor in this.subscribedEditors)
+				editor.PropertyChanged -= OnEditorPropertyChanged;
 
+			this.subscribedEditors.Clear();
+
+			foreach (IObjectEditor editor in Editors) {
+				this.subscribedEditors.Add (editor);
+				editor.PropertyChanged += OnEditorPropertyChanged;
+			}
+
+			await UpdateCurrentValueAsync ();
+		}
+
+		private readonly List<IObjectEditor> subscribedEditors = new List<IObjectEditor> ();
+		private TValue value;
+
+		private async Task UpdateCurrentValueAsync ()
+		{
 			var values = new HashSet<Task<ValueInfo<TValue>>> (Editors.Select (ed => ed.GetValueAsync<TValue> (Property, Variation)));
 			ValueInfo<TValue> currentValue = null;
 
@@ -59,10 +77,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 			MultipleValues = disagree;
 
 			// The public setter for Value is a local set for binding
-			SetCurrentValue ((currentValue != null) ? currentValue.Value : default(TValue));
+			SetCurrentValue ((currentValue != null) ? currentValue.Value : default (TValue));
 		}
 
-		private TValue value;
+		private async void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
+		{
+			if (e.Property != null && !Equals (e.Property, Property))
+				return;
+
+			// TODO: Smarter querying, can query the single editor and check against MultipleValues
+			await UpdateCurrentValueAsync ();
+		}
 
 		private bool SetCurrentValue (TValue newValue)
 		{
@@ -76,6 +101,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private async void SetValue (ValueInfo<TValue> newValue)
 		{
+			// TODO cancellation
 			await Task.WhenAll (Editors.Select (e => e.SetValueAsync (Property, newValue)));
 		}
 	}
