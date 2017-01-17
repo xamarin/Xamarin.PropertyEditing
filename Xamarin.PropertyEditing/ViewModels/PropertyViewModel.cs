@@ -1,19 +1,25 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class PropertyViewModel<TValue>
-		: PropertyViewModel
+		: PropertyViewModel, INotifyDataErrorInfo
 	{
 		public PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (property, editors)
 		{
 		}
+
+		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+		public bool HasErrors => this.error != null;
 
 		public TValue Value
 		{
@@ -28,6 +34,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 					Value = value
 				});
 			}
+		}
+
+		public IEnumerable GetErrors (string propertyName)
+		{
+			return (this.error != null) ? new[] { this.error } : Enumerable.Empty<string> ();
 		}
 
 		protected override async void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
@@ -49,6 +60,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 			await UpdateCurrentValueAsync ();
 		}
 
+		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
+		protected void SetError (string newError)
+		{
+			this.error = newError;
+			OnErrorsChanged (new DataErrorsChangedEventArgs (nameof (Property)));
+		}
+
+		private string error;
 		private readonly List<IObjectEditor> subscribedEditors = new List<IObjectEditor> ();
 		private TValue value;
 
@@ -101,8 +120,25 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private async void SetValue (ValueInfo<TValue> newValue)
 		{
+			SetError (null);
+
 			// TODO cancellation
-			await Task.WhenAll (Editors.Select (e => e.SetValueAsync (Property, newValue)));
+			try {
+				await Task.WhenAll (Editors.Select (e => e.SetValueAsync (Property, newValue)));
+			} catch (Exception ex) {
+				AggregateException aggregate = ex as AggregateException;
+				if (aggregate != null) {
+					aggregate = aggregate.Flatten ();
+					ex = aggregate.InnerExceptions[0];
+				}
+
+				SetError (ex.ToString());
+			}
+		}
+
+		private void OnErrorsChanged (DataErrorsChangedEventArgs e)
+		{
+			ErrorsChanged?.Invoke (this, e);
 		}
 	}
 
