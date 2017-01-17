@@ -81,17 +81,19 @@ namespace Xamarin.PropertyEditing.Windows
 
 			ICollectionView view = CollectionViewSource.GetDefaultView (this.items.ItemsSource);
 
-			view.GroupDescriptions.Clear ();
-			view.SortDescriptions.Clear ();
+			using (view.DeferRefresh ()) {
+				view.GroupDescriptions.Clear ();
+				view.SortDescriptions.Clear ();
 
-			switch (mode) {
-				case PropertyArrangeMode.Name:
-					view.SortDescriptions.Add (new SortDescription ("Property.Name", ListSortDirection.Ascending));
-					break;
-				case PropertyArrangeMode.Category:
-					view.GroupDescriptions.Add (new PropertyGroupDescription ("Property.Category"));
-					view.SortDescriptions.Add (new SortDescription ("Property.Name", ListSortDirection.Ascending));
-					break;
+				switch (mode) {
+					case PropertyArrangeMode.Name:
+						view.SortDescriptions.Add (new SortDescription ("Property.Name", ListSortDirection.Ascending));
+						break;
+					case PropertyArrangeMode.Category:
+						view.GroupDescriptions.Add (new PropertyGroupDescription ("Property.Category", new CategoryGroupConverter ()));
+						view.SortDescriptions.Add (new SortDescription ("Property.Name", ListSortDirection.Ascending));
+						break;
+				}
 			}
 		}
 
