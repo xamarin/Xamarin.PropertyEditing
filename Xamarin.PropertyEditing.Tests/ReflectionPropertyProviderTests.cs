@@ -151,6 +151,91 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (obj.Property.Property, Is.EqualTo (value));
 		}
 
+		[Test]
+		public async Task TypeConverterToPropertyAttribute ()
+		{
+			const string value = "value";
+			var obj = new ConversionClass2 {
+				Property = new TestClass2 {
+					Property = value
+				}
+			};
+
+			var provider = new ReflectionEditorProvider ();
+			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (1));
+
+			ValueInfo<string> info = await editor.GetValueAsync<string> (editor.Properties.Single ());
+			Assert.That (info.Value, Is.EqualTo (value));
+			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
+		}
+
+		[Test]
+		public async Task TypeConvertFromPropertyAttribute ()
+		{
+			const string value = "value";
+			var obj = new ConversionClass2 ();
+
+			var provider = new ReflectionEditorProvider ();
+			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (1));
+
+			await editor.SetValueAsync (editor.Properties.Single (), new ValueInfo<string> {
+				Value = value,
+				Source = ValueSource.Local
+			});
+
+			Assert.That (obj.Property, Is.Not.Null);
+			Assert.That (obj.Property.Property, Is.EqualTo (value));
+		}
+
+		private class Converter2
+			: TypeConverter
+		{
+			public override bool CanConvertFrom (ITypeDescriptorContext context, Type sourceType)
+			{
+				return (sourceType == typeof (string));
+			}
+
+			public override bool CanConvertTo (ITypeDescriptorContext context, Type destinationType)
+			{
+				return (destinationType == typeof (string));
+			}
+
+			public override object ConvertTo (ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+			{
+				if (destinationType != typeof (string))
+					throw new ArgumentException ();
+
+				return (value as TestClass2)?.Property;
+			}
+
+			public override object ConvertFrom (ITypeDescriptorContext context, CultureInfo culture, object value)
+			{
+				return new TestClass2 { Property = value as string };
+			}
+		}
+
+		private class ConversionClass2
+		{
+			[TypeConverter (typeof (Converter2))]
+			public TestClass2 Property
+			{
+				get;
+				set;
+			}
+		}
+
+		
+		private class TestClass2
+		{
+			public string Property
+			{
+				get;
+				set;
+			}
+		}
+
 		private class Converter
 			: TypeConverter
 		{
@@ -180,7 +265,6 @@ namespace Xamarin.PropertyEditing.Tests
 
 		private class ConversionClass
 		{
-			[TypeConverter (typeof(Converter))]
 			public TestClass Property
 			{
 				get;
@@ -188,6 +272,7 @@ namespace Xamarin.PropertyEditing.Tests
 			}
 		}
 
+		[TypeConverter (typeof (Converter))]
 		private class TestClass
 		{
 			public string Property

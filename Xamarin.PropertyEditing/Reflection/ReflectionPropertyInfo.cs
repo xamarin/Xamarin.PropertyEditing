@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 
 namespace Xamarin.PropertyEditing.Reflection
@@ -17,16 +18,19 @@ namespace Xamarin.PropertyEditing.Reflection
 				return categoryAttribute?.Category;
 			});
 
-			this.typeConverter = new Lazy<TypeConverter> (() => {
-				TypeConverterAttribute attribute = this.propertyInfo.GetCustomAttribute<TypeConverterAttribute> ();
-				if (attribute == null)
-					return null;
+			this.typeConverter = new Lazy<List<TypeConverter>> (() => {
+				List<TypeConverter> converters = new List<TypeConverter> ();
 
-				Type type = System.Type.GetType (attribute.ConverterTypeName);
-				if (type == null)
-					return null;
+				var attributes = this.propertyInfo.GetCustomAttributes<TypeConverterAttribute> ().Concat (this.propertyInfo.PropertyType.GetCustomAttributes<TypeConverterAttribute> ());
+				foreach (TypeConverterAttribute attribute in attributes) {
+					Type type = System.Type.GetType (attribute.ConverterTypeName);
+					if (type == null)
+						continue;
 
-				return (TypeConverter) Activator.CreateInstance (type);
+					converters.Add ((TypeConverter)Activator.CreateInstance (type));
+				}
+
+				return converters;
 			});
 		}
 
@@ -45,8 +49,9 @@ namespace Xamarin.PropertyEditing.Reflection
 		public void SetValue<T> (object target, T value)
 		{
 			object realValue = value;
-			if (this.typeConverter.Value != null && this.typeConverter.Value.CanConvertFrom (typeof(T))) {
-				realValue = this.typeConverter.Value.ConvertFrom (value);
+			object converted;
+			if (TryConvertFromValue (value, out converted)) {
+				realValue = converted;
 			} else if (realValue != null && !this.propertyInfo.PropertyType.IsInstanceOfType (value)) {
 				realValue = Convert.ChangeType (value, this.propertyInfo.PropertyType);
 			}
@@ -57,8 +62,9 @@ namespace Xamarin.PropertyEditing.Reflection
 		public T GetValue<T> (object target)
 		{
 			object value = this.propertyInfo.GetValue (target);
-			if (this.typeConverter.Value != null && this.typeConverter.Value.CanConvertTo (typeof(T))) {
-				value = this.typeConverter.Value.ConvertTo (value, typeof(T));
+			T converted;
+			if (TryConvertToValue (value, out converted)) {
+				value = converted;
 			} else if (value != null && !(value is T)) {
 				if (typeof(T) == typeof(string))
 					value = value.ToString ();
@@ -106,12 +112,43 @@ namespace Xamarin.PropertyEditing.Reflection
 			return !Equals (left, right);
 		}
 
-		private readonly Lazy<TypeConverter> typeConverter;
+		private readonly Lazy<List<TypeConverter>> typeConverter;
 		private readonly Lazy<string> category;
 
 		private readonly PropertyInfo propertyInfo;
 
 		private static readonly IAvailabilityConstraint[] EmptyConstraints = new IAvailabilityConstraint[0];
 		private static readonly PropertyVariation[] EmtpyVariations = new PropertyVariation[0];
+
+		private bool TryConvertToValue<T> (object value, out T converted)
+		{
+			converted = default(T);
+			List<TypeConverter> converters = this.typeConverter.Value;
+
+			for (int i = 0; i < converters.Count; i++) {
+				TypeConverter c = converters[i];
+				if (c.CanConvertTo (typeof(T))) {
+					converted = (T) c.ConvertTo (value, typeof(T));
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		private bool TryConvertFromValue<T> (T value, out object converted)
+		{
+			converted = null;
+			List<TypeConverter> converters = this.typeConverter.Value;
+			for (int i = 0; i < converters.Count; i++) {
+				TypeConverter c = converters[i];
+				if (c.CanConvertFrom (typeof(T))) {
+					converted = c.ConvertFrom (value);
+					return true;
+				}
+			}
+
+			return false;
+		}
 	}
 }
