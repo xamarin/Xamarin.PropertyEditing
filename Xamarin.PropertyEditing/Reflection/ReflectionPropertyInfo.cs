@@ -40,6 +40,8 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public string Category => this.category.Value;
 
+		public bool CanWrite => this.propertyInfo.CanWrite;
+
 		public ValueSources ValueSources => ValueSources.Local;
 
 		public IReadOnlyList<PropertyVariation> Variations => EmtpyVariations;
