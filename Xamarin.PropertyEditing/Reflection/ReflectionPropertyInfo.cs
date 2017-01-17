@@ -16,6 +16,18 @@ namespace Xamarin.PropertyEditing.Reflection
 				CategoryAttribute categoryAttribute = this.propertyInfo.GetCustomAttribute<CategoryAttribute> ();
 				return categoryAttribute?.Category;
 			});
+
+			this.typeConverter = new Lazy<TypeConverter> (() => {
+				TypeConverterAttribute attribute = this.propertyInfo.GetCustomAttribute<TypeConverterAttribute> ();
+				if (attribute == null)
+					return null;
+
+				Type type = System.Type.GetType (attribute.ConverterTypeName);
+				if (type == null)
+					return null;
+
+				return (TypeConverter) Activator.CreateInstance (type);
+			});
 		}
 
 		public string Name => this.propertyInfo.Name;
@@ -33,7 +45,9 @@ namespace Xamarin.PropertyEditing.Reflection
 		public void SetValue<T> (object target, T value)
 		{
 			object realValue = value;
-			if (realValue != null && !this.propertyInfo.PropertyType.IsInstanceOfType (value)) {
+			if (this.typeConverter.Value != null && this.typeConverter.Value.CanConvertFrom (typeof(T))) {
+				realValue = this.typeConverter.Value.ConvertFrom (value);
+			} else if (realValue != null && !this.propertyInfo.PropertyType.IsInstanceOfType (value)) {
 				realValue = Convert.ChangeType (value, this.propertyInfo.PropertyType);
 			}
 
@@ -43,7 +57,9 @@ namespace Xamarin.PropertyEditing.Reflection
 		public T GetValue<T> (object target)
 		{
 			object value = this.propertyInfo.GetValue (target);
-			if (value != null && !(value is T)) {
+			if (this.typeConverter.Value != null && this.typeConverter.Value.CanConvertTo (typeof(T))) {
+				value = this.typeConverter.Value.ConvertTo (value, typeof(T));
+			} else if (value != null && !(value is T)) {
 				if (typeof(T) == typeof(string))
 					value = value.ToString ();
 				else
@@ -90,6 +106,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			return !Equals (left, right);
 		}
 
+		private readonly Lazy<TypeConverter> typeConverter;
 		private readonly Lazy<string> category;
 
 		private readonly PropertyInfo propertyInfo;
