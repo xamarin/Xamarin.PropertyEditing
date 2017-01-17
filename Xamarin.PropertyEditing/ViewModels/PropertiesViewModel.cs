@@ -60,8 +60,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private PropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			// TODO
+			Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel> vmFactory;
+			if (ViewModelMap.TryGetValue (property.Type, out vmFactory))
+				return vmFactory (property, editors);
+			
 			return new StringPropertyViewModel (property, editors);
 		}
+
+		private static readonly Dictionary<Type,Func<IPropertyInfo,IEnumerable<IObjectEditor>,PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
+			{ typeof(string), (p,e) => new StringPropertyViewModel (p, e) },
+			{ typeof(bool), (p,e) => new PropertyViewModel<bool> (p, e) }
+		};
 	}
 }

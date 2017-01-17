@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
-	internal abstract class PropertyViewModel<TValue>
+	internal class PropertyViewModel<TValue>
 		: PropertyViewModel
 	{
-		protected PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		public PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (property, editors)
 		{
 		}
