@@ -124,10 +124,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			observableEditors.AddRange (editors); // Purposefully after the event hookup
 		}
 
-		/// <remarks>Exists primarily to support PropertyGroupDescription</remarks>
-		public string Category => Property.Category;
-		public string Name => Property.Name;
-
 		public IPropertyInfo Property
 		{
 			get;

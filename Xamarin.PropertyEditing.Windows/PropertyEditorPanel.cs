@@ -86,11 +86,11 @@ namespace Xamarin.PropertyEditing.Windows
 
 			switch (mode) {
 				case PropertyArrangeMode.Name:
-					view.SortDescriptions.Add (new SortDescription ("Name", ListSortDirection.Ascending));
+					view.SortDescriptions.Add (new SortDescription ("Property.Name", ListSortDirection.Ascending));
 					break;
 				case PropertyArrangeMode.Category:
-					view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
-					view.SortDescriptions.Add (new SortDescription ("Name", ListSortDirection.Ascending));
+					view.GroupDescriptions.Add (new PropertyGroupDescription ("Property.Category"));
+					view.SortDescriptions.Add (new SortDescription ("Property.Name", ListSortDirection.Ascending));
 					break;
 			}
 		}
