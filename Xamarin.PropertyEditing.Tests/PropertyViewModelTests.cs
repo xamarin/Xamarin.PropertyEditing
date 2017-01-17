@@ -116,6 +116,7 @@ namespace Xamarin.PropertyEditing.Tests
 		public async Task UnsubscribedValueChanged ()
 		{
 			TValue testValue = GetRandomTestValue ();
+			Assume.That (testValue, Is.Not.EqualTo (default(TValue)));
 
 			var obj = new TestClass ();
 			Assume.That (obj.Property, Is.EqualTo (default (TValue)));
