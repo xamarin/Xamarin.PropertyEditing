@@ -90,7 +90,8 @@ namespace Xamarin.PropertyEditing.Windows
 						view.SortDescriptions.Add (new SortDescription ("Property.Name", ListSortDirection.Ascending));
 						break;
 					case PropertyArrangeMode.Category:
-						view.GroupDescriptions.Add (new PropertyGroupDescription ("Property.Category", new CategoryGroupConverter ()));
+						view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
+						view.SortDescriptions.Add (new SortDescription ("Category", ListSortDirection.Ascending));
 						view.SortDescriptions.Add (new SortDescription ("Property.Name", ListSortDirection.Ascending));
 						break;
 				}

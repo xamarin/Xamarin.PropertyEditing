@@ -124,6 +124,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			observableEditors.AddRange (editors); // Purposefully after the event hookup
 		}
 
+		/// <remarks>Exists primarily to support PropertyGroupDescription</remarks>
+		public string Category => (!String.IsNullOrWhiteSpace(Property.Category)) ? Property.Category : "Miscellaneous"; // TODO: Localize;
+
 		public IPropertyInfo Property
 		{
 			get;
