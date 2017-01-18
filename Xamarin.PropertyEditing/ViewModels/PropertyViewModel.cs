@@ -41,7 +41,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return (this.error != null) ? new[] { this.error } : Enumerable.Empty<string> ();
 		}
 
-		protected override async void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
+		protected override void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
 			base.OnEditorsChanged (sender, e);
 			
@@ -54,10 +54,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			foreach (IObjectEditor editor in Editors) {
 				this.subscribedEditors.Add (editor);
+				OnEditorPropertyChanged (editor, new EditorPropertyChangedEventArgs (null));
 				editor.PropertyChanged += OnEditorPropertyChanged;
 			}
 
-			await UpdateCurrentValueAsync ();
+			UpdateCurrentValue();
 		}
 
 		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
@@ -67,24 +68,28 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnErrorsChanged (new DataErrorsChangedEventArgs (nameof (Property)));
 		}
 
+		protected virtual void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
+		{
+			if (e.Property != null && !Equals (e.Property, Property))
+				return;
+
+			// TODO: Smarter querying, can query the single editor and check against MultipleValues
+			UpdateCurrentValue ();
+		}
+
 		private string error;
 		private readonly List<IObjectEditor> subscribedEditors = new List<IObjectEditor> ();
 		private TValue value;
 
-		private async Task UpdateCurrentValueAsync ()
+		private void UpdateCurrentValue ()
 		{
-			var values = new HashSet<Task<ValueInfo<TValue>>> (Editors.Select (ed => ed.GetValueAsync<TValue> (Property, Variation)));
 			ValueInfo<TValue> currentValue = null;
 
 			bool disagree = false;
-
-			while (values.Count > 0) {
-				Task<ValueInfo<TValue>> task = await Task.WhenAny (values);
-				values.Remove (task);
-
+			foreach (ValueInfo<TValue> valueInfo in Editors.Select (ed => ed.GetValue<TValue> (Property, Variation))) {
 				if (currentValue == null)
-					currentValue = task.Result;
-				else if (currentValue.Source != task.Result.Source || !Equals (currentValue.Value, task.Result.Value)) {
+					currentValue = valueInfo;
+				else if (currentValue.Source != valueInfo.Source || !Equals (currentValue.Value, valueInfo.Value)) {
 					// Even if the value is the same, they are not equal if the source is not the same because
 					// it means the value is set differently at the source.
 					disagree = true;
@@ -99,15 +104,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			SetCurrentValue ((currentValue != null) ? currentValue.Value : default (TValue));
 		}
 
-		private async void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
-		{
-			if (e.Property != null && !Equals (e.Property, Property))
-				return;
-
-			// TODO: Smarter querying, can query the single editor and check against MultipleValues
-			await UpdateCurrentValueAsync ();
-		}
-
 		private bool SetCurrentValue (TValue newValue)
 		{
 			if (Equals (this.value, newValue))
@@ -118,13 +114,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return true;
 		}
 
-		private async void SetValue (ValueInfo<TValue> newValue)
+		private void SetValue (ValueInfo<TValue> newValue)
 		{
 			SetError (null);
 
-			// TODO cancellation
 			try {
-				await Task.WhenAll (Editors.Select (e => e.SetValueAsync (Property, newValue)));
+				foreach (IObjectEditor editor in Editors)
+					editor.SetValue (Property, newValue);
 			} catch (Exception ex) {
 				AggregateException aggregate = ex as AggregateException;
 				if (aggregate != null) {

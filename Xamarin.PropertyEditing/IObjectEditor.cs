@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing
 
 		event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
 
-		Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null);
-		Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null);
+		void SetValue<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null);
+		ValueInfo<T> GetValue<T> (IPropertyInfo property, PropertyVariation variation = null);
 	}
 }

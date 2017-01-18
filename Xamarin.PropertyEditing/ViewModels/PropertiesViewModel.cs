@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			EditorProvider = provider;
 		}
 
+		/// <remarks>Consumers should check for <see cref="INotifyCollectionChanged"/> and hook appropriately.</remarks>
 		public IReadOnlyList<PropertyViewModel> Properties => this.properties;
 
 		protected IEditorProvider EditorProvider

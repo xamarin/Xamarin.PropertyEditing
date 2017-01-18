@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -83,8 +82,8 @@ namespace Xamarin.PropertyEditing.Tests
 			var property = mockEditor.Object.Properties.First ();
 			var vm = GetViewModel (property, new[] { mockEditor.Object });
 
-			mockEditor.Setup (e => e.GetValueAsync<TValue> (property, null))
-				.Returns ((IPropertyInfo p, PropertyVariation v) => Task.FromResult (new ValueInfo<TValue> { Value = testValue }));
+			mockEditor.Setup (e => e.GetValue<TValue> (property, null))
+				.Returns ((IPropertyInfo p, PropertyVariation v) => new ValueInfo<TValue> { Value = testValue });
 
 			mockEditor.Raise (e => e.PropertyChanged += null, new EditorPropertyChangedEventArgs (property));
 
@@ -103,8 +102,8 @@ namespace Xamarin.PropertyEditing.Tests
 			var property = mockEditor.Object.Properties.First ();
 			var vm = GetViewModel (property, new[] { mockEditor.Object });
 
-			mockEditor.Setup (e => e.GetValueAsync<TValue> (property, null))
-				.Returns ((IPropertyInfo p, PropertyVariation v) => Task.FromResult (new ValueInfo<TValue> { Value = testValue }));
+			mockEditor.Setup (e => e.GetValue<TValue> (property, null))
+				.Returns ((IPropertyInfo p, PropertyVariation v) => new ValueInfo<TValue> { Value = testValue });
 
 			mockEditor.Raise (e => e.PropertyChanged += null, new EditorPropertyChangedEventArgs (null));
 
@@ -126,7 +125,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var editor = vm.Editors.Single ();
 			Assume.That (vm.Editors.Remove (editor), Is.True);
-			await editor.SetValueAsync (vm.Property, new ValueInfo<TValue> { Source = ValueSource.Local, Value = testValue });
+			editor.SetValue (vm.Property, new ValueInfo<TValue> { Source = ValueSource.Local, Value = testValue });
 
 			Assert.That (vm.Value, Is.Not.EqualTo (testValue));
 		}

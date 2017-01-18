@@ -37,7 +37,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			const string value = "value";
 
-			await editor.SetValueAsync (editor.Properties.Single (), new ValueInfo<string> {
+			editor.SetValue (editor.Properties.Single (), new ValueInfo<string> {
 				Value = value
 			});
 
@@ -53,7 +53,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var provider = new ReflectionEditorProvider ();
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 
-			var info = await editor.GetValueAsync<string> (editor.Properties.Single ());
+			var info = editor.GetValue<string> (editor.Properties.Single ());
 			Assert.That (info.Value, Is.EqualTo (value));
 			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
 		}
@@ -68,7 +68,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			const string value = "1";
 
-			await editor.SetValueAsync (editor.Properties.Single (), new ValueInfo<int> {
+			editor.SetValue (editor.Properties.Single (), new ValueInfo<int> {
 				Value = 1
 			});
 
@@ -84,7 +84,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var provider = new ReflectionEditorProvider ();
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 
-			var info = await editor.GetValueAsync<int> (editor.Properties.Single ());
+			var info = editor.GetValue<int> (editor.Properties.Single ());
 			Assert.That (info.Value, Is.EqualTo (1));
 			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
 		}
@@ -106,7 +106,7 @@ namespace Xamarin.PropertyEditing.Tests
 					changed = true;
 			};
 
-			await editor.SetValueAsync (property, new ValueInfo<string> {
+			editor.SetValue (property, new ValueInfo<string> {
 				Value = value
 			});
 
@@ -127,7 +127,7 @@ namespace Xamarin.PropertyEditing.Tests
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (1));
 
-			ValueInfo<string> info = await editor.GetValueAsync<string> (editor.Properties.Single ());
+			ValueInfo<string> info = editor.GetValue<string> (editor.Properties.Single ());
 			Assert.That (info.Value, Is.EqualTo (value));
 			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
 		}
@@ -142,7 +142,7 @@ namespace Xamarin.PropertyEditing.Tests
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (1));
 
-			await editor.SetValueAsync (editor.Properties.Single (), new ValueInfo<string> {
+			editor.SetValue (editor.Properties.Single (), new ValueInfo<string> {
 				Value = value,
 				Source = ValueSource.Local
 			});
@@ -165,7 +165,7 @@ namespace Xamarin.PropertyEditing.Tests
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (1));
 
-			ValueInfo<string> info = await editor.GetValueAsync<string> (editor.Properties.Single ());
+			ValueInfo<string> info = editor.GetValue<string> (editor.Properties.Single ());
 			Assert.That (info.Value, Is.EqualTo (value));
 			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
 		}
@@ -180,7 +180,7 @@ namespace Xamarin.PropertyEditing.Tests
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (1));
 
-			await editor.SetValueAsync (editor.Properties.Single (), new ValueInfo<string> {
+			editor.SetValue (editor.Properties.Single (), new ValueInfo<string> {
 				Value = value,
 				Source = ValueSource.Local
 			});
