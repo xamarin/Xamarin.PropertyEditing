@@ -134,6 +134,8 @@ namespace Xamarin.PropertyEditing.Tests
 
 		protected abstract PropertyViewModel<TValue> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors);
 
+		protected Random Random => this.rand;
+
 		private readonly Random rand = new Random (42);
 
 		private async Task<Mock<IObjectEditor>> CreateMockEditor (object obj)

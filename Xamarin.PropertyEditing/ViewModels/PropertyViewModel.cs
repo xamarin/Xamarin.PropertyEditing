@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -26,6 +25,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return this.value; }
 			set
 			{
+				value = ValidateValue (value);
+
 				if (!SetCurrentValue (value))
 					return;
 
@@ -75,6 +76,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			// TODO: Smarter querying, can query the single editor and check against MultipleValues
 			UpdateCurrentValue ();
+		}
+
+		protected virtual TValue ValidateValue (TValue validationValue)
+		{
+			return validationValue;
 		}
 
 		private string error;

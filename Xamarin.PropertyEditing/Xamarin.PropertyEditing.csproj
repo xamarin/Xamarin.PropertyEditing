@@ -55,7 +55,9 @@
     <Compile Include="Reflection\ReflectionPropertyInfo.cs" />
     <Compile Include="ValueInfo.cs" />
     <Compile Include="ValueSource.cs" />
+    <Compile Include="ViewModels\ConstrainedPropertyViewModel.cs" />
     <Compile Include="ViewModels\Extensions.cs" />
+    <Compile Include="ViewModels\NumericPropertyViewModel.cs" />
     <Compile Include="ViewModels\ObjectViewModel.cs" />
     <Compile Include="ViewModels\PanelViewModel.cs" />
     <Compile Include="ViewModels\PropertiesViewModel.cs" />
