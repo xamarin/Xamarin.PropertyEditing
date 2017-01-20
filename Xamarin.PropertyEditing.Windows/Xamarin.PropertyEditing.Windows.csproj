@@ -50,6 +50,9 @@
     </Compile>
     <Compile Include="BoolEditorControl.cs" />
     <Compile Include="EditorPropertySelector.cs" />
+    <Compile Include="NumericEditorControl.cs" />
+    <Compile Include="NumericTemplateSelector.cs" />
+    <Compile Include="NumericUpDownControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyEditorControl.cs" />
     <Compile Include="PropertyEditorPanel.cs" />

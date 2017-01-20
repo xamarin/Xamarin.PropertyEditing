@@ -1,8 +1,62 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows"
-                    xmlns:System="clr-namespace:System;assembly=mscorlib">
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+                    xmlns:vm="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing">
 
+	<local:NumericTemplateSelector x:Key="NumericTemplateSelector">
+		<local:NumericTemplateSelector.FloatingTemplate>
+			<DataTemplate DataType="vm:FloatingPropertyViewModel">
+				<local:DoubleUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+			</DataTemplate>
+		</local:NumericTemplateSelector.FloatingTemplate>
+		<local:NumericTemplateSelector.IntegerTemplate>
+			<DataTemplate DataType="vm:IntegerPropertyViewModel">
+				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+			</DataTemplate>
+		</local:NumericTemplateSelector.IntegerTemplate>
+	</local:NumericTemplateSelector>
+
+	<Style TargetType="local:NumericEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:NumericEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition SharedSizeGroup="Label" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+
+						<Label Grid.Column="0" Content="{TemplateBinding Label}" />
+						<ContentPresenter Grid.Column="1" Content="{Binding}" ContentTemplateSelector="{StaticResource NumericTemplateSelector}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:DoubleUpDownControl">
+		<Setter Property="Template">
+			<Setter.Value>
+                <ControlTemplate TargetType="local:DoubleUpDownControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+						
+						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" Grid.Column="0" />
+						
+						<StackPanel Grid.Column="1">
+                            <Button Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
+                            <Button Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
+						</StackPanel>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
 	<Style TargetType="local:StringEditorControl">
 		<Setter Property="Template">
 			<Setter.Value>
