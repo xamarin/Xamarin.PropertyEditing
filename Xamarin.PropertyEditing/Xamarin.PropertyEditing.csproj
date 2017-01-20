@@ -56,6 +56,7 @@
     <Compile Include="ValueInfo.cs" />
     <Compile Include="ValueSource.cs" />
     <Compile Include="ViewModels\ConstrainedPropertyViewModel.cs" />
+    <Compile Include="ViewModels\EnumPropertyViewModel.cs" />
     <Compile Include="ViewModels\Extensions.cs" />
     <Compile Include="ViewModels\NumericPropertyViewModel.cs" />
     <Compile Include="ViewModels\ObjectViewModel.cs" />

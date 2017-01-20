@@ -4,6 +4,24 @@
                     xmlns:System="clr-namespace:System;assembly=mscorlib"
                     xmlns:vm="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing">
 
+	<Style TargetType="{x:Type local:EnumEditorControl}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:EnumEditorControl}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition SharedSizeGroup="Label" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+
+						<Label Grid.Column="0" Content="{TemplateBinding Label}" Target="{Binding ElementName=ComboBox, Mode=OneTime}" />
+						<ComboBox x:Name="ComboBox" Grid.Column="1" ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding ValueName}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<local:NumericTemplateSelector x:Key="NumericTemplateSelector">
 		<local:NumericTemplateSelector.FloatingTemplate>
 			<DataTemplate DataType="vm:FloatingPropertyViewModel">
@@ -38,7 +56,7 @@
 	<Style TargetType="local:DoubleUpDownControl">
 		<Setter Property="Template">
 			<Setter.Value>
-                <ControlTemplate TargetType="local:DoubleUpDownControl">
+				<ControlTemplate TargetType="{x:Type local:DoubleUpDownControl}">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*" />
@@ -48,8 +66,8 @@
 						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" Grid.Column="0" />
 						
 						<StackPanel Grid.Column="1">
-                            <Button Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
-                            <Button Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
+							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
+							<Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
 						</StackPanel>
 					</Grid>
 				</ControlTemplate>

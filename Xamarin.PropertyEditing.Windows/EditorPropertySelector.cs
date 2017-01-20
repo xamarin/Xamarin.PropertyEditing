@@ -18,7 +18,15 @@ namespace Xamarin.PropertyEditing.Windows
 				DataTemplate template = null;
 				if (!this.templates.TryGetValue (type, out template)) {
 					Type controlType;
-					if (TypeMap.TryGetValue (type, out controlType)) {
+					if (!TypeMap.TryGetValue (type, out controlType)) {
+						if (type.IsGenericType) {
+							Type genericType = type.GetGenericTypeDefinition ();
+							if (genericType == typeof(EnumPropertyViewModel<>))
+								controlType = typeof(EnumEditorControl);
+						}
+					}
+
+					if (controlType != null) {
 						this.templates[type] = template = new DataTemplate (type) {
 							VisualTree = new FrameworkElementFactory (controlType)
 						};

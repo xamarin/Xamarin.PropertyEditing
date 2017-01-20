@@ -130,6 +130,16 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.Value, Is.Not.EqualTo (testValue));
 		}
 
+		protected TValue GetNonDefaultRandomTestValue ()
+		{
+			TValue value = default (TValue);
+			while (Equals (value, default (TValue))) {
+				value = GetRandomTestValue (Random);
+			}
+
+			return value;
+		}
+
 		protected abstract TValue GetRandomTestValue (Random rand);
 
 		protected abstract PropertyViewModel<TValue> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors);

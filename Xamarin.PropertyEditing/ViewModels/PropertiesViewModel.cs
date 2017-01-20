@@ -62,6 +62,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private PropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
+			if (property.Type.IsEnum) {
+				Type type = typeof(EnumPropertyViewModel<>).MakeGenericType (property.Type);
+				return (PropertyViewModel) Activator.CreateInstance (type, property, editors);
+			}
+
 			Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel> vmFactory;
 			if (ViewModelMap.TryGetValue (property.Type, out vmFactory))
 				return vmFactory (property, editors);
