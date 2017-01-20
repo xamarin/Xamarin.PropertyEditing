@@ -109,6 +109,43 @@ namespace Xamarin.PropertyEditing.Tests
 	        Assert.That (vm.MaximumValue, Is.EqualTo (max));
 	    }
 
+		[Test]
+		public void UnconstrainedMaxMinAtTypeMaxMin ()
+		{
+			T max = MaxMin.Item1;
+			T min = MaxMin.Item2;
+
+			var mockValueProperty = new Mock<IPropertyInfo> ();
+			var mockEditor = new Mock<IObjectEditor> ();
+
+			var vm = GetViewModel (mockValueProperty.Object, mockEditor.Object);
+			Assert.That (vm.IsConstrained, Is.False, "Reporting constrained with no constraint implementations");
+			Assert.That (vm.MaximumValue, Is.EqualTo (max));
+			Assert.That (vm.MinimumValue, Is.EqualTo (min));
+		}
+
+		[Test]
+		public void UnconstrainedMaxMinAtTypeMaxMinAfterChange ()
+		{
+			T max = MaxMin.Item1;
+			T min = MaxMin.Item2;
+
+			var mockValueProperty = new Mock<IPropertyInfo> ();
+			var mockEditor = new Mock<IObjectEditor> ();
+
+			var vm = GetViewModel (mockValueProperty.Object, mockEditor.Object);
+			Assume.That (vm.IsConstrained, Is.False, "Reporting constrained with no constraint implementations");
+			Assume.That (vm.MaximumValue, Is.EqualTo (max));
+			Assume.That (vm.MinimumValue, Is.EqualTo (min));
+
+			mockEditor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (null));
+			Assert.That (vm.MaximumValue, Is.EqualTo (max));
+			Assert.That (vm.MinimumValue, Is.EqualTo (min));
+		}
+
+
+		protected abstract Tuple<T,T> MaxMin { get; }
+
 		protected abstract T GetConstrainedRandomValue (Random rand, out T max, out T min);
 
 		protected abstract T GetConstrainedRandomValueAboveBounds (Random rand, out T max, out T min);

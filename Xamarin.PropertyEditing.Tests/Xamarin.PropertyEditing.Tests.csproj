@@ -70,7 +70,8 @@
   <ItemGroup>
     <Compile Include="BoolViewModelTests.cs" />
     <Compile Include="ConstrainedPropertyViewModelTests.cs" />
-    <Compile Include="NumericPropertyViewModelTests.cs" />
+    <Compile Include="FloatingPropertyViewModelTests.cs" />
+    <Compile Include="IntegerPropertyViewModelTests.cs" />
     <Compile Include="PanelViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyViewModelTests.cs" />

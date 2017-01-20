@@ -1,21 +1,49 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
-	internal class NumericPropertyViewModel
-		: ConstrainedPropertyViewModel<int>
+	internal class IntegerPropertyViewModel
+		: ConstrainedPropertyViewModel<long>
 	{
-		public NumericPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		public IntegerPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (property, editors)
 		{
+			if (!IsConstrained) {
+				MinimumValue = Int64.MinValue;
+				MaximumValue = Int64.MaxValue;
+			}
 		}
 
-		protected override int IncrementValue (int value)
+		protected override long IncrementValue (long value)
 		{
 			return value + 1;
 		}
 
-		protected override int DecrementValue (int value)
+		protected override long DecrementValue (long value)
+		{
+			return value - 1;
+		}
+	}
+
+	internal class FloatingPropertyViewModel
+		: ConstrainedPropertyViewModel<double>
+	{
+		public FloatingPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (property, editors)
+		{
+			if (!IsConstrained) {
+				MaximumValue = Double.MaxValue;
+				MinimumValue = Double.MinValue;
+			}
+		}
+
+		protected override double IncrementValue (double value)
+		{
+			return value + 1;
+		}
+
+		protected override double DecrementValue (double value)
 		{
 			return value - 1;
 		}

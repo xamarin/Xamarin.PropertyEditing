@@ -83,6 +83,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return validationValue;
 		}
 
+		protected virtual void OnValueChanged ()
+		{
+		}
+
 		private string error;
 		private readonly List<IObjectEditor> subscribedEditors = new List<IObjectEditor> ();
 		private TValue value;
@@ -116,6 +120,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return false;
 
 			this.value = newValue;
+			OnValueChanged ();
 			OnPropertyChanged ();
 			return true;
 		}

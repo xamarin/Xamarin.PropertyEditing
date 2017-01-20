@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public T MaximumValue
 		{
 			get { return this.maximumValue; }
-			private set
+			protected set
 			{
 				if (Equals (this.maximumValue, value))
 					return;
@@ -52,7 +52,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public T MinimumValue
 		{
 			get { return this.minimumValue; }
-			private set
+			protected set
 			{
 				if (Equals (this.minimumValue, value))
 					return;
@@ -80,35 +80,54 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return validationValue;
 		}
 
+		protected override void OnValueChanged ()
+		{
+			base.OnValueChanged ();
+
+			if (this.lowerValue != null) {
+				this.lowerValue.ChangeCanExecute ();
+				this.raiseValue.ChangeCanExecute ();
+			}
+		}
+
 		protected abstract T IncrementValue (T value);
 		protected abstract T DecrementValue (T value);
 
 		protected override void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
 		{
-		    UpdateMaxMin ();
-		    base.OnEditorPropertyChanged (sender, e);
+			if (this.selfConstraint != null) {
+				if (e.Property == null || e.Property.Equals (this.clampProperties.MaximumProperty) || e.Property.Equals (this.clampProperties.MinimumProperty))
+					UpdateMaxMin ();
+			}
+
+			base.OnEditorPropertyChanged (sender, e);
 		}
 
 	    private void UpdateMaxMin ()
 	    {
-	        bool isDefault = true;
-	        T max = default(T), min = default(T);
-	        if (this.selfConstraint != null) {
-	            isDefault = false;
-	            max = this.selfConstraint.MaxValue;
-	            min = this.selfConstraint.MinValue;
-	        }
+			bool isDefault = true;
+			T max = default(T), min = default(T);
+			if (this.selfConstraint != null) {
+				isDefault = false;
+				max = this.selfConstraint.MaxValue;
+				min = this.selfConstraint.MinValue;
+			}
 
-	        if (this.clampProperties != null && Editors.Count > 0) {
-	            if (this.clampProperties.MaximumProperty != null) {
-	                T highest = Editors.Select (ed => ed.GetValue<T> (this.clampProperties.MaximumProperty)).Min (v => v.Value);
-	                max = (isDefault) ? highest : Min (max, highest);
-	            }
+			if (this.clampProperties != null && Editors.Count > 0) {
+		        bool doMax = this.clampProperties.MaximumProperty != null;
+		        bool doMin = this.clampProperties.MinimumProperty != null;
 
-	            if (this.clampProperties.MinimumProperty != null) {
-	                T lowest = Editors.Select (ed => ed.GetValue<T> (this.clampProperties.MinimumProperty)).Max (v => v.Value);
-	                min = (isDefault) ? lowest : Max (min, lowest);
-	            }
+		        foreach (IObjectEditor editor in Editors) {
+			        if (doMax) {
+				        ValueInfo<T> maxinfo = editor.GetValue<T> (this.clampProperties.MaximumProperty);
+				        max = (isDefault) ? maxinfo.Value : Min (max, maxinfo.Value);
+			        }
+
+			        if (doMin) {
+				        ValueInfo<T> mininfo = editor.GetValue<T> (this.clampProperties.MinimumProperty);
+				        min = (isDefault) ? mininfo.Value : Max (min, mininfo.Value);
+			        }
+		        }
 	        }
 
 	        MaximumValue = max;
@@ -121,20 +140,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private T maximumValue;
 		private T minimumValue;
 
-	    private T Max (T left, T right)
-	    {
-	        if (left == null)
-	            return right;
+		private T Max (T left, T right)
+		{
+			if (left == null)
+				return right;
 
-	        return (left.CompareTo (right) < 0) ? right : left;
-	    }
+			return (left.CompareTo (right) < 0) ? right : left;
+		}
 
-	    private T Min (T left, T right)
-	    {
-            if (left == null)
-                return right;
+		private T Min (T left, T right)
+		{
+			if (left == null)
+				return right;
 
-            return (left.CompareTo (right) < 0) ? left : right;
-        }
+			return (left.CompareTo (right) < 0) ? left : right;
+		}
 	}
 }
