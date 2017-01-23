@@ -28,7 +28,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.MinimumValue, Is.EqualTo (min));
 
 			vm.Value = value;
-			Assume.That (vm.Value, Is.EqualTo (vm.Value));
+			Assume.That (vm.Value, Is.EqualTo (value));
 
 			Assume.That (vm.RaiseValue, Is.Not.Null);
 			Assert.That (vm.RaiseValue.CanExecute (null), Is.True, "RaiseValue can not execute");
