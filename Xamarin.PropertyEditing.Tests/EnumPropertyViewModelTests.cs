@@ -63,7 +63,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new MockObjectEditor (mockProperty.Object);
 			editor.SetValue (mockProperty.Object, new ValueInfo<T> { Source = ValueSource.Local, Value = value });
 
-			var vm = new EnumPropertyViewModel<T> (mockProperty.Object, new[] { new MockObjectEditor() });
+			var vm = new EnumPropertyViewModel<T> (mockProperty.Object, new[] { editor });
 			Assume.That (vm.Value, Is.EqualTo (value));
 			Assume.That (vm.ValueName, Is.EqualTo (value.ToString ()));
 

@@ -115,7 +115,7 @@ namespace Xamarin.PropertyEditing.Tests
 		[Description ("Once an editor is removed we should not listen for its property changes")]
 		public async Task UnsubscribedValueChanged ()
 		{
-			TValue testValue = GetRandomTestValue ();
+			TValue testValue = GetNonDefaultRandomTestValue ();
 			Assume.That (testValue, Is.Not.EqualTo (default(TValue)));
 
 			var obj = new TestClass ();
