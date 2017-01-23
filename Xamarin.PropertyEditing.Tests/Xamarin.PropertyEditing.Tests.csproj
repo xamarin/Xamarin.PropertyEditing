@@ -79,6 +79,7 @@
     <Compile Include="PropertyViewModelTests.cs" />
     <Compile Include="ReflectionPropertyProviderTests.cs" />
     <Compile Include="StringViewModelTests.cs" />
+    <Compile Include="ValueInfoTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
