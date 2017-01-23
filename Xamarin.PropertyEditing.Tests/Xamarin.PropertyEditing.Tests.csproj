@@ -73,6 +73,7 @@
     <Compile Include="EnumPropertyViewModelTests.cs" />
     <Compile Include="FloatingPropertyViewModelTests.cs" />
     <Compile Include="IntegerPropertyViewModelTests.cs" />
+    <Compile Include="MockObjectEditor.cs" />
     <Compile Include="PanelViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyViewModelTests.cs" />

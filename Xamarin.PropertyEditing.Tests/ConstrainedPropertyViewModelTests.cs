@@ -23,7 +23,7 @@ namespace Xamarin.PropertyEditing.Tests
 			constrainedMock.SetupGet (pi => pi.MaxValue).Returns (max);
 			constrainedMock.SetupGet (pi => pi.MinValue).Returns (min);
 
-			var vm = GetViewModel (mockProperty.Object, new Mock<IObjectEditor> ().Object);
+			var vm = GetViewModel (mockProperty.Object, new MockObjectEditor (mockProperty.Object));
 			Assert.That (vm.MaximumValue, Is.EqualTo (max));
 			Assert.That (vm.MinimumValue, Is.EqualTo (min));
 
@@ -49,7 +49,7 @@ namespace Xamarin.PropertyEditing.Tests
 			constrainedMock.SetupGet (pi => pi.MaxValue).Returns (max);
 			constrainedMock.SetupGet (pi => pi.MinValue).Returns (min);
 
-			var vm = GetViewModel (mockProperty.Object, new Mock<IObjectEditor> ().Object);
+			var vm = GetViewModel (mockProperty.Object, new MockObjectEditor (mockProperty.Object));
 
 			vm.Value = value;
 			Assert.That (vm.Value, Is.EqualTo (min));
@@ -73,7 +73,7 @@ namespace Xamarin.PropertyEditing.Tests
 			constrainedMock.SetupGet (pi => pi.MaxValue).Returns (max);
 			constrainedMock.SetupGet (pi => pi.MinValue).Returns (min);
 
-			var vm = GetViewModel (mockProperty.Object, new Mock<IObjectEditor> ().Object);
+			var vm = GetViewModel (mockProperty.Object, new MockObjectEditor (mockProperty.Object));
 
 			vm.Value = value;
 			Assert.That (vm.Value, Is.EqualTo (max));

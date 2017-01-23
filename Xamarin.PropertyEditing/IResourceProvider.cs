@@ -23,10 +23,9 @@ namespace Xamarin.PropertyEditing
 	public interface IResourceProvider
 	{
 		/// <summary>
-		/// Gets the 
+		/// Gets the resources available to the given <paramref name="property"/>.
 		/// </summary>
-		/// <param name="property"></param>
-		/// <returns></returns>
+		/// <exception cref="ArgumentNullException"><paramref name="property"/> is <c>null</c>.</exception>
 		Task<IReadOnlyList<Resource>> GetResourcesAsync (IPropertyInfo property);
 	}
 }

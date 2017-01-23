@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing
 {
@@ -13,6 +12,9 @@ namespace Xamarin.PropertyEditing
 			Property = property;
 		}
 
+		/// <summary>
+		/// Gets the property that was changed, or <c>null</c> for a full refresh.
+		/// </summary>
 		public IPropertyInfo Property
 		{
 			get;
@@ -27,6 +29,9 @@ namespace Xamarin.PropertyEditing
 		/// </remarks>
 		IReadOnlyCollection<IPropertyInfo> Properties { get; }
 
+		/// <summary>
+		/// Gets the parent object editor for the object this editor represents or <c>null</c> if none.
+		/// </summary>
 		IObjectEditor Parent { get; }
 
 		/// <remarks>
@@ -36,9 +41,14 @@ namespace Xamarin.PropertyEditing
 		/// </remarks>
 		IReadOnlyList<IObjectEditor> DirectChildren { get; }
 
+		/// <summary>
+		/// Raised when a property's value changes. <see cref="EditorPropertyChangedEventArgs.Property"/> can be <c>null</c> for a full refresh.
+		/// </summary>
 		event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
 
 		void SetValue<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null);
+
+		/// <exception cref="ArgumentNullException"><paramref name="property"/> is <c>null</c>.</exception>
 		ValueInfo<T> GetValue<T> (IPropertyInfo property, PropertyVariation variation = null);
 	}
 }
