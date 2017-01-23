@@ -19,6 +19,12 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
 
+		public Func<IPropertyInfo, object, object> ValueEvaluator
+		{
+			get;
+			set;
+		}
+
 		public IReadOnlyCollection<IPropertyInfo> Properties
 		{
 			get;
@@ -47,7 +53,12 @@ namespace Xamarin.PropertyEditing.Tests
 			if (variation != null)
 				throw new NotSupportedException(); // TODO
 
+			if (value.Source != ValueSource.Local && ValueEvaluator != null) {
+				value.Value = (T)ValueEvaluator (property, value.ValueDescriptor);
+			}
+
 			this.values[property] = value;
+			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
 		}
 
 		public ValueInfo<T> GetValue<T> (IPropertyInfo property, PropertyVariation variation = null)

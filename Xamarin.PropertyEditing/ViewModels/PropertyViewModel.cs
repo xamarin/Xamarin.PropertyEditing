@@ -5,6 +5,9 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -14,27 +17,47 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (property, editors)
 		{
+			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 		}
 
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
 		public bool HasErrors => this.error != null;
 
+		public ValueSource ValueSource => this.value.Source;
+
 		public TValue Value
 		{
-			get { return this.value; }
+			get { return (this.value != null) ? this.value.Value : default(TValue); }
 			set
 			{
 				value = ValidateValue (value);
-
-				if (!SetCurrentValue (value))
-					return;
-
 				SetValue (new ValueInfo<TValue> {
 					Source = ValueSource.Local,
 					Value = value
 				});
 			}
+		}
+
+		public IReadOnlyList<Resource> Resources => this.resources;
+
+		public IResourceProvider ResourceProvider
+		{
+			get { return this.resourceProvider; }
+			set
+			{
+				if (this.resourceProvider == value)
+					return;
+
+				this.resourceProvider = value;
+				OnPropertyChanged ();
+				UpdateResources ();
+			}
+		}
+
+		public ICommand SetValueResourceCommand
+		{
+			get;
 		}
 
 		public IEnumerable GetErrors (string propertyName)
@@ -89,7 +112,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private string error;
 		private readonly List<IObjectEditor> subscribedEditors = new List<IObjectEditor> ();
-		private TValue value;
+		private readonly ObservableCollection<Resource> resources = new ObservableCollection<Resource> ();
+		private ValueInfo<TValue> value;
+		private IResourceProvider resourceProvider;
+		private CancellationTokenSource cancelTokenSource;
+		private Task updateResourcesTask;
 
 		private void UpdateCurrentValue ()
 		{
@@ -111,12 +138,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			MultipleValues = disagree;
 
 			// The public setter for Value is a local set for binding
-			SetCurrentValue ((currentValue != null) ? currentValue.Value : default (TValue));
+			SetCurrentValue ((currentValue != null) ? currentValue : null);
 		}
 
-		private bool SetCurrentValue (TValue newValue)
+		private bool SetCurrentValue (ValueInfo<TValue> newValue)
 		{
-			if (Equals (this.value, newValue))
+			if (this.value == newValue)
 				return false;
 
 			this.value = newValue;
@@ -141,6 +168,63 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				SetError (ex.ToString());
 			}
+
+			UpdateCurrentValue();
+		}
+
+		private bool CanSetValueToResource (Resource resource)
+		{
+			if (resource == null || !Property.CanWrite)
+				return false;
+
+			// We're just going to block wait on this. There shouldn't be a scenario in which it would deadlock
+			// and we simply can't work async into the ICommand system. Looks bad, but practically shouldn't be an issue.
+			// Famous last words.
+			this.updateResourcesTask?.Wait ();
+			return this.resources.Contains (resource);
+		}
+
+		private void OnSetValueToResource (Resource resource)
+		{
+			if (resource == null)
+				throw new ArgumentNullException (nameof (resource));
+			
+			SetValue (new ValueInfo<TValue> {
+				Source = ValueSource.Resource,
+				ValueDescriptor = resource
+			});
+		}
+
+		private void UpdateResources ()
+		{
+			var source = new CancellationTokenSource ();
+			var cancelSource = Interlocked.Exchange (ref this.cancelTokenSource, source);
+			cancelSource?.Cancel ();
+
+			this.updateResourcesTask = UpdateResourcesAsync (source.Token);
+		}
+
+		private async Task UpdateResourcesAsync (CancellationToken cancelToken)
+		{
+			this.resources.Clear();
+
+			var provider = this.resourceProvider;
+			if (provider != null) {
+				if (cancelToken.IsCancellationRequested)
+					return;
+
+				try {
+					IReadOnlyList<Resource> gottenResources = await provider.GetResourcesAsync (Property, cancelToken);
+					if (cancelToken.IsCancellationRequested)
+						return;
+
+					this.resources.AddRange (gottenResources);
+				} catch (OperationCanceledException) {
+					return;
+				}
+			}
+
+			((RelayCommand<Resource>)SetValueResourceCommand).ChangeCanExecute ();
 		}
 
 		private void OnErrorsChanged (DataErrorsChangedEventArgs e)

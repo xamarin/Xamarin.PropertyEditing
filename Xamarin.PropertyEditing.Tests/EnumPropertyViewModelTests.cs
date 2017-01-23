@@ -56,14 +56,14 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			var mockProperty = new Mock<IPropertyInfo> ();
 			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (T));
-			var mockEditor = new Mock<IObjectEditor> ();
 
 			T value = GetNonDefaultRandomTestValue ();
 			Assume.That (value, Is.Not.EqualTo (default (T)));
 
-			mockEditor.Setup (oe => oe.GetValue<T> (mockProperty.Object, null)).Returns (new ValueInfo<T> { Source = ValueSource.Local, Value = value });
+			var editor = new MockObjectEditor (mockProperty.Object);
+			editor.SetValue (mockProperty.Object, new ValueInfo<T> { Source = ValueSource.Local, Value = value });
 
-			var vm = new EnumPropertyViewModel<T> (mockProperty.Object, new[] { mockEditor.Object });
+			var vm = new EnumPropertyViewModel<T> (mockProperty.Object, new[] { new MockObjectEditor() });
 			Assume.That (vm.Value, Is.EqualTo (value));
 			Assume.That (vm.ValueName, Is.EqualTo (value.ToString ()));
 

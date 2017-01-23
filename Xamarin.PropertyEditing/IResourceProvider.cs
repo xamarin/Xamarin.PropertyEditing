@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing
@@ -26,6 +27,6 @@ namespace Xamarin.PropertyEditing
 		/// Gets the resources available to the given <paramref name="property"/>.
 		/// </summary>
 		/// <exception cref="ArgumentNullException"><paramref name="property"/> is <c>null</c>.</exception>
-		Task<IReadOnlyList<Resource>> GetResourcesAsync (IPropertyInfo property);
+		Task<IReadOnlyList<Resource>> GetResourcesAsync (IPropertyInfo property, CancellationToken cancelToken);
 	}
 }

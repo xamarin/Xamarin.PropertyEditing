@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -128,6 +129,151 @@ namespace Xamarin.PropertyEditing.Tests
 			editor.SetValue (vm.Property, new ValueInfo<TValue> { Source = ValueSource.Local, Value = testValue });
 
 			Assert.That (vm.Value, Is.Not.EqualTo (testValue));
+		}
+
+		[Test]
+		public void CantSetResourceBeforeProvider ()
+		{
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (TValue));
+
+			var resource = new Resource ("name");
+			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
+			Assume.That (vm.ResourceProvider, Is.Null);
+			Assert.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False);
+		}
+
+		[Test]
+		public void CantSetValueToUnknownResource ()
+		{
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (TValue));
+
+			var resource = new Resource ("name");
+
+			var resourcesMock = new Mock<IResourceProvider> ();
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+
+			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
+			vm.ResourceProvider = resourcesMock.Object;
+			Assume.That (vm.SetValueResourceCommand, Is.Not.Null);
+
+			Assert.That (vm.SetValueResourceCommand.CanExecute (new Resource ("unknown")), Is.False, "Could set value to resource unknown");
+		}
+
+		[Test]
+		public void CanSetValueToResource ()
+		{
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof(TValue));
+
+			var resource = new Resource ("name");
+
+			var resourcesMock = new Mock<IResourceProvider> ();
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+
+			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
+			vm.ResourceProvider = resourcesMock.Object;
+			Assume.That (vm.SetValueResourceCommand, Is.Not.Null);
+
+			Assert.That (vm.SetValueResourceCommand.CanExecute (resource), Is.True, "Could not set value to resource");
+		}
+
+		[Test]
+		public void CantSetReadonlyPropertyToResource ()
+		{
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.CanWrite).Returns (false);
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (TValue));
+
+			var resource = new Resource ("name");
+
+			var resourcesMock = new Mock<IResourceProvider> ();
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+
+			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
+			vm.ResourceProvider = resourcesMock.Object;
+			Assume.That (vm.SetValueResourceCommand, Is.Not.Null);
+
+			Assert.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False, "Could set value to readonly resource");
+		}
+
+		[Test]
+		public void SetValueToResource ()
+		{
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.CanWrite).Returns (false);
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (TValue));
+
+			var resource = new Resource ("name");
+			var value = GetNonDefaultRandomTestValue ();
+
+			var resourcesMock = new Mock<IResourceProvider> ();
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			editor.ValueEvaluator = (info, o) => {
+				if (o == resource)
+					return value;
+
+				return default(TValue);
+			};
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			vm.ResourceProvider = resourcesMock.Object;
+			Assume.That (vm.Value, Is.EqualTo (default(TValue)));
+
+			vm.SetValueResourceCommand.Execute (resource);
+			Assert.That (vm.Value, Is.EqualTo (value));
+		}
+
+		[Test]
+		public void ResourcesListed ()
+		{
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (TValue));
+
+			var resource = new Resource ("name");
+
+			var resourcesMock = new Mock<IResourceProvider> ();
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+
+			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
+			Assume.That (vm.ResourceProvider, Is.Null);
+			Assume.That (vm.Resources, Is.Empty);
+			vm.ResourceProvider = resourcesMock.Object;
+
+			Assert.That (vm.Resources, Has.Member (resource));
+		}
+
+		[Test]
+		public void GetValueAlreadySetToResource ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (TValue));
+
+			var resource = new Resource ("name");
+
+			var resourcesMock = new Mock<IResourceProvider> ();
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			editor.SetValue (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Resource,
+				ValueDescriptor = resource,
+				Value = value
+			});
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			vm.ResourceProvider = resourcesMock.Object;
+
+			Assert.That (vm.Value, Is.EqualTo (value));
+			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Resource));
 		}
 
 		protected TValue GetNonDefaultRandomTestValue ()
