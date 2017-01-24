@@ -8,8 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Xamarin.PropertyEditing.Mac.Standalone</RootNamespace>
     <AssemblyName>Xamarin.PropertyEditing.Mac.Standalone</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -45,7 +44,7 @@
     <IncludeMonoRuntime>true</IncludeMonoRuntime>
     <UseSGen>true</UseSGen>
     <UseRefCounting>true</UseRefCounting>
-    <LinkMode>SdkOnly</LinkMode>
+    <LinkMode>None</LinkMode>
     <HttpClientHandler></HttpClientHandler>
     <XamMacArch></XamMacArch>
   </PropertyGroup>
@@ -85,6 +84,16 @@
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Xamarin.PropertyEditing.Mac\Xamarin.PropertyEditing.Mac.csproj">
+      <Project>{E8F4F0EB-C2B1-4116-8459-E076E0E0E485}</Project>
+      <Name>Xamarin.PropertyEditing.Mac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">
+      <Project>{A0B6FE73-D046-4E1C-BA9D-F20683889C5A}</Project>
+      <Name>Xamarin.PropertyEditing</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

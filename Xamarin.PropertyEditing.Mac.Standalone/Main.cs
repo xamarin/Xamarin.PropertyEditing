@@ -6,6 +6,7 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 	{
 		static void Main (string [] args)
 		{
+			var foo = typeof (PropertyEditorPanel);
 			NSApplication.Init ();
 			NSApplication.Main (args);
 		}

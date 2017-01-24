@@ -3,13 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FC9C355E-85F5-4D7B-BBBD-912543C257FF}</ProjectGuid>
+    <ProjectGuid>{E8F4F0EB-C2B1-4116-8459-E076E0E0E485}</ProjectGuid>
     <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>Xamarin.PropertyEditing.Mac</RootNamespace>
     <AssemblyName>Xamarin.PropertyEditing.Mac</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -52,6 +51,24 @@
   <ItemGroup>
     <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyEditorPanel.cs" />
+    <Compile Include="PropertyEditorPanel.designer.cs">
+      <DependentUpon>PropertyEditorPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\StringEditorControl.cs" />
+    <Compile Include="Controls\PropertyEditorControl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="PropertyEditorPanel.xib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">
+      <Project>{A0B6FE73-D046-4E1C-BA9D-F20683889C5A}</Project>
+      <Name>Xamarin.PropertyEditing</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>
