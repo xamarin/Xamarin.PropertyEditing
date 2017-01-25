@@ -88,6 +88,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
 		protected void SetError (string newError)
 		{
+			if (this.error == newError)
+				return;
+
 			this.error = newError;
 			OnErrorsChanged (new DataErrorsChangedEventArgs (nameof (Property)));
 		}
