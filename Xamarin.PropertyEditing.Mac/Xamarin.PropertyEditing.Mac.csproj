@@ -57,6 +57,8 @@
     </Compile>
     <Compile Include="Controls\StringEditorControl.cs" />
     <Compile Include="Controls\PropertyEditorControl.cs" />
+    <Compile Include="PropertyTableDelegate.cs" />
+    <Compile Include="PropertyTableDataSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="PropertyEditorPanel.xib" />
