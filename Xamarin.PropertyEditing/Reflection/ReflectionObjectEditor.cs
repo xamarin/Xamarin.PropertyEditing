@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Xamarin.PropertyEditing.Reflection
@@ -15,6 +16,11 @@ namespace Xamarin.PropertyEditing.Reflection
 			this.target = target;
 
 			foreach (PropertyInfo property in target.GetType ().GetProperties ()) {
+				DebuggerBrowsableAttribute browsable = property.GetCustomAttribute<DebuggerBrowsableAttribute> ();
+				if (browsable != null && browsable.State == DebuggerBrowsableState.Never) {
+					continue;
+				}
+
 				this.properties.Add (new ReflectionPropertyInfo (property));
 			}
 		}
