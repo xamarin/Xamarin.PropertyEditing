@@ -84,7 +84,7 @@ namespace Xamarin.PropertyEditing.Windows
 			DependencyPropertyDescriptor.FromProperty (ItemsControl.ItemsSourceProperty, typeof (ItemsControl))
 				.AddValueChanged (this.items, OnItemsSourceChanged);
 
-			this.items.DataContext = this.vm = new PanelViewModel (EditorProvider);
+			OnEditorProviderChanged();
 		}
 
 		private PanelViewModel vm;
