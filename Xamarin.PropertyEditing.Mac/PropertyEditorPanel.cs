@@ -63,7 +63,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			// create a table view and a scroll view
 			NSScrollView tableContainer = new NSScrollView (Frame) {
-				BackgroundColor = NSColor.Red,
 				AutoresizingMask = NSViewResizingMask.WidthSizable|NSViewResizingMask.HeightSizable
 			};
 			propertyTable = new NSTableView () {
@@ -121,6 +120,9 @@ namespace Xamarin.PropertyEditing.Mac
 			switch (tableColumn.Title) {
 			case "Properties":
 				//view.StringValue = DataSource.Properties [(int)row].Name;
+				if (view is StringEditorControl) {
+					((StringEditorControl)view).StringEditor.StringValue = property.Property.Name;
+				}
 				break;
 			case "Editors":
 				//view.StringValue = DataSource.Properties [(int)row].PropertyValue;

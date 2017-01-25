@@ -8,9 +8,12 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public StringEditorControl ()
 		{
-			NSTextField stringEditor = new NSTextField (new CGRect (0,0,100,20));
-			stringEditor.BackgroundColor = NSColor.Clear;
-			AddSubview (stringEditor);
+			StringEditor = new NSTextField (new CGRect (0, 0, 150, 20));
+			StringEditor.BackgroundColor = NSColor.Clear;
+			StringEditor.StringValue = "";
+			AddSubview (StringEditor);
 		}
+
+		public NSTextField StringEditor { get; set; }
 	}
 }
