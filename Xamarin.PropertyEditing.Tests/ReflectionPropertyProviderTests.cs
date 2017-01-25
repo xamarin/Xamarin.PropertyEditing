@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -187,6 +188,40 @@ namespace Xamarin.PropertyEditing.Tests
 
 			Assert.That (obj.Property, Is.Not.Null);
 			Assert.That (obj.Property.Property, Is.EqualTo (value));
+		}
+
+		/// <remarks>
+		/// Mac objects can sometimes define properties on types (say, like NSView) that aren't accessible on
+		/// some implementations. Normally you'd ask it if it can respond to the selector, but in generic code
+		/// your only recourse is to look for the DebuggerBrowsableAttribute.
+		/// </remarks>
+		[Test]
+		[NUnit.Framework.Description ("Properties marked DebuggerBrowsable (Never) should not be included in the list of properties.")]
+		public async Task DontSetupPropertiesMarkedUnbrowsable ()
+		{
+			var unbrowsable = new Unbrowsable();
+
+			var provider = new ReflectionEditorProvider();
+			IObjectEditor editor = await provider.GetObjectEditorAsync (unbrowsable);
+
+			Assert.That (editor.Properties.Count, Is.EqualTo (1), "Wrong number of properties");
+			Assert.That (editor.Properties.Single ().Name, Is.EqualTo (nameof (Unbrowsable.VisibleProperty)));
+		}
+
+		private class Unbrowsable
+		{
+			public string VisibleProperty
+			{
+				get;
+				set;
+			}
+
+			[DebuggerBrowsable (DebuggerBrowsableState.Never)]
+			public string InvisibleProperty
+			{
+				get;
+				set;
+			}
 		}
 
 		private class Converter2
