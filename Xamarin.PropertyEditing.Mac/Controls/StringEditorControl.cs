@@ -1,12 +1,13 @@
 ﻿using System;
 using AppKit;
 using CoreGraphics;
+using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class StringEditorControl : PropertyEditorControl
+	internal class StringEditorControl : PropertyEditorControl
 	{
-		public StringEditorControl ()
+		internal StringEditorControl ()
 		{
 			StringEditor = new NSTextField (new CGRect (0, 0, 150, 20));
 			StringEditor.BackgroundColor = NSColor.Clear;
@@ -14,6 +15,22 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (StringEditor);
 		}
 
-		public NSTextField StringEditor { get; set; }
+		internal NSTextField StringEditor { get; set; }
+		StringPropertyViewModel viewModel;
+
+		internal StringPropertyViewModel ViewModel {
+			get { return viewModel; }
+			set {
+				viewModel = value;
+				if (ViewModel.Value == null)
+					ViewModel.Value = string.Empty;
+				StringEditor.StringValue = ViewModel.Value;
+				value.PropertyChanged += (sender, e) => {
+					if (e.PropertyName == nameof (StringPropertyViewModel.Value)) {
+						StringEditor.StringValue = ViewModel.Value;
+					}
+				};
+			}
+		}
 	}
 }
