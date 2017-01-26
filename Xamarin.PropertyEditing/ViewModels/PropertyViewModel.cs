@@ -68,21 +68,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 		protected override void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
 			base.OnEditorsChanged (sender, e);
-			
-			// TODO: This, but not in a crap way
 
-			foreach (IObjectEditor editor in this.subscribedEditors)
-				editor.PropertyChanged -= OnEditorPropertyChanged;
-
-			this.subscribedEditors.Clear();
-
-			foreach (IObjectEditor editor in Editors) {
-				this.subscribedEditors.Add (editor);
-				OnEditorPropertyChanged (editor, new EditorPropertyChangedEventArgs (null));
-				editor.PropertyChanged += OnEditorPropertyChanged;
+			switch (e.Action) {
+				case NotifyCollectionChangedAction.Add:
+					AddEditors (e.NewItems);
+					break;
+				case NotifyCollectionChangedAction.Remove:
+					RemoveEditors (e.OldItems);
+					break;
+				case NotifyCollectionChangedAction.Reset:
+					RemoveEditors (this.subscribedEditors);
+					AddEditors ((IList)Editors);
+					break;
 			}
 
-			UpdateCurrentValue();
+			UpdateCurrentValue ();
 		}
 
 		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
@@ -120,6 +120,24 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private IResourceProvider resourceProvider;
 		private CancellationTokenSource cancelTokenSource;
 		private Task updateResourcesTask;
+
+		private void AddEditors (IList editors)
+		{
+			for (int i = 0; i < editors.Count; i++) {
+				IObjectEditor editor = (IObjectEditor)editors[i];
+				editor.PropertyChanged += OnEditorPropertyChanged;
+				this.subscribedEditors.Add (editor);
+			}
+		}
+
+		private void RemoveEditors (IList editors)
+		{
+			for (int i = 0; i < editors.Count; i++) {
+				IObjectEditor editor = (IObjectEditor)editors[i];
+				editor.PropertyChanged -= OnEditorPropertyChanged;
+				this.subscribedEditors.Remove (editor);
+			}
+		}
 
 		private void UpdateCurrentValue ()
 		{

@@ -143,9 +143,24 @@ namespace Xamarin.PropertyEditing.Windows
 			if (this.vm == null)
 				return;
 
-			// TODO properly
-			this.vm.SelectedObjects.Clear();
-			this.vm.SelectedObjects.AddRange (SelectedItems.Cast<object>());
+			switch (e.Action) {
+				case NotifyCollectionChangedAction.Add:
+					for (int i = 0; i < e.NewItems.Count; i++)
+						this.vm.SelectedObjects.Add (e.NewItems[i]);
+					break;
+
+				case NotifyCollectionChangedAction.Remove:
+					for (int i = 0; i < e.OldItems.Count; i++)
+						this.vm.SelectedObjects.Remove (e.OldItems[i]);
+					break;
+
+				case NotifyCollectionChangedAction.Replace: // TODO properly
+				case NotifyCollectionChangedAction.Move:
+				case NotifyCollectionChangedAction.Reset:
+					this.vm.SelectedObjects.Clear();
+					this.vm.SelectedObjects.AddRange (SelectedItems);
+					break;
+			}
 		}
 
 		private void OnEditorProviderChanged ()
