@@ -157,6 +157,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void SetValue (ValueInfo<TValue> newValue)
 		{
+			if (this.value == newValue)
+				return;
+
 			SetError (null);
 
 			try {

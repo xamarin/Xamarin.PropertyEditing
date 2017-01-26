@@ -276,6 +276,57 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Resource));
 		}
 
+		[Test]
+		[Description ("For performance reasons, we should never raise a value change when it hasn't changed")]
+		public void ValueNotChangedForSameValue ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof(TValue));
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			editor.SetValue (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Local,
+				Value = value
+			});
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			Assume.That (vm.Value, Is.EqualTo (value));
+
+			bool changed = false;
+			vm.PropertyChanged += (sender, args) => {
+				changed = true;
+			};
+
+			vm.Value = value;
+
+			Assert.That (changed, Is.False, "PropertyChanged raised when value set to same value");
+		}
+
+		[Test]
+		[Description ("For performance reasons, we should never invoke the editor for a value change when it hasn't changed")]
+		public void SetValueNotCalledOnEditorForSameValue ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (TValue));
+
+			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.Setup (oe => oe.GetValue<TValue> (mockProperty.Object, null)).Returns (new ValueInfo<TValue> {
+				Value = value,
+				Source = ValueSource.Local
+			});
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editorMock.Object });
+			Assume.That (vm.Value, Is.EqualTo (value));
+
+			vm.Value = value;
+
+			editorMock.Verify (oe => oe.SetValue (mockProperty.Object, It.IsAny<ValueInfo<TValue>> (), null), Times.Never);
+		}
+
 		protected TValue GetNonDefaultRandomTestValue ()
 		{
 			TValue value = default (TValue);
