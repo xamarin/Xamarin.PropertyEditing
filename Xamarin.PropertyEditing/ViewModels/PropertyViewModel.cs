@@ -151,7 +151,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			this.value = newValue;
 			OnValueChanged ();
-			OnPropertyChanged ();
+			OnPropertyChanged (nameof (Value));
 			return true;
 		}
 

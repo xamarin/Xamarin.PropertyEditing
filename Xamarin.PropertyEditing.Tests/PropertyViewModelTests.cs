@@ -72,7 +72,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public async Task ValueChanged ()
+		public async Task EditorValueChanged ()
 		{
 			TValue testValue = GetRandomTestValue ();
 
@@ -92,7 +92,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public async Task AllValuesChanged ()
+		public async Task AllEditorValuesChanged ()
 		{
 			TValue testValue = GetRandomTestValue ();
 
@@ -131,6 +131,36 @@ namespace Xamarin.PropertyEditing.Tests
 
 			Assert.That (vm.Value, Is.EqualTo (default(TValue)));
 			Assert.That (vm.MultipleValues, Is.True);
+		}
+
+		[Test]
+		public async void ValueChangedWhenValuesDisagree ()
+		{
+			TValue value = GetNonDefaultRandomTestValue ();
+			TValue otherValue = GetRandomTestValue ();
+			while (Equals (otherValue, value))
+				otherValue = GetRandomTestValue ();
+
+			var obj1 = new TestClass { Property = value };
+			var obj2 = new TestClass { Property = otherValue };
+
+			var vm = await GetBasicTestModelAsync (obj1);
+			Assume.That (vm.Value, Is.EqualTo (value));
+
+			var provider = new ReflectionEditorProvider ();
+			var editor = await provider.GetObjectEditorAsync (obj2).ConfigureAwait (false);
+
+			bool changed = false;
+			vm.PropertyChanged += (sender, args) => {
+				if (args.PropertyName == nameof (PropertyViewModel<TValue>.Value))
+					changed = true;
+			};
+
+			vm.Editors.Add (editor);
+
+			Assume.That (vm.Value, Is.EqualTo (default (TValue)));
+			Assume.That (vm.MultipleValues, Is.True);
+			Assert.That (changed, Is.True, "PropertyChanged was not raised for Value when values began to disagree");
 		}
 
 		[Test]
@@ -324,6 +354,28 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.Value = value;
 
 			Assert.That (changed, Is.False, "PropertyChanged raised when value set to same value");
+		}
+
+		[Test]
+		public void ValueChanged ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (TValue));
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			Assume.That (vm.Value, Is.Not.EqualTo (value));
+
+			bool changed = false;
+			vm.PropertyChanged += (sender, args) => {
+				changed = true;
+			};
+
+			vm.Value = value;
+
+			Assert.That (changed, Is.True, "PropertyChanged was not raised when value changed for Value");
 		}
 
 		[Test]
