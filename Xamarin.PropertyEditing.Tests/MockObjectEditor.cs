@@ -17,6 +17,12 @@ namespace Xamarin.PropertyEditing.Tests
 			Properties = properties.ToArray ();
 		}
 
+		public object Target
+		{
+			get;
+			set;
+		}
+
 		public event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
 
 		public Func<IPropertyInfo, object, object> ValueEvaluator

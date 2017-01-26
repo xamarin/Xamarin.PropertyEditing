@@ -27,6 +27,8 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
 
+		public object Target => this.target;
+
 		public IReadOnlyCollection<IPropertyInfo> Properties => this.properties;
 
 		public IObjectEditor Parent => null;

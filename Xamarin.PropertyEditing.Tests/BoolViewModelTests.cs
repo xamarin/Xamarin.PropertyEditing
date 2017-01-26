@@ -9,7 +9,7 @@ namespace Xamarin.PropertyEditing.Tests
 	{
 		protected override bool GetRandomTestValue (Random rand)
 		{
-			return true; // Because we often need to look for change notices, we can't use the default value of the type
+			return (rand.Next (0, 2) == 1);
 		}
 
 		protected override PropertyViewModel<bool> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)

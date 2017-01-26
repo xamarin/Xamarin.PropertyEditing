@@ -110,5 +110,50 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.Properties.Count, Is.EqualTo (1));
 			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (sharedPropertyMock.Object));
 		}
+
+		[Test]
+		[Description ("Adding or removing editors shouldn't remake other editors or duplicate")]
+		public void EditorsShouldBeConsistent ()
+		{
+			var provider = new ReflectionEditorProvider();
+
+			var obj1 = new TestClass();
+			var obj2 = new TestClass();
+
+			var vm = new PanelViewModel (provider);
+			vm.SelectedObjects.Add (obj1);
+
+			var property = vm.Properties[0];
+			Assume.That (property.Editors.Count, Is.EqualTo (1));
+
+			var editor = property.Editors.Single();
+
+			vm.SelectedObjects.Add (obj2);
+
+			Assume.That (property, Is.SameAs (vm.Properties[0]));
+			Assert.That (property.Editors, Contains.Item (editor));
+			Assert.That (property.Editors.Count, Is.EqualTo (2));
+		}
+
+		[Test]
+		public void EditorRemovedWithSelectedObject ()
+		{
+			var provider = new ReflectionEditorProvider ();
+
+			var obj1 = new TestClass ();
+			var obj2 = new TestClass ();
+
+			var vm = new PanelViewModel (provider);
+			vm.SelectedObjects.Add (obj1);
+			vm.SelectedObjects.Add (obj2);
+
+			var property = vm.Properties[0];
+			var editor = property.Editors.Single (oe => oe.Target == obj1);
+			Assume.That (property.Editors.Count, Is.EqualTo (2));
+			Assume.That (vm.SelectedObjects.Remove (obj2));
+			Assume.That (property, Is.SameAs (vm.Properties[0]));
+			Assert.That (property.Editors, Contains.Item (editor));
+			Assert.That (property.Editors.Count, Is.EqualTo (1));
+		}
 	}
 }

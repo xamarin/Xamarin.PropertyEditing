@@ -112,6 +112,28 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public async Task MultipleValuesDontMatch ()
+		{
+			TValue value = GetNonDefaultRandomTestValue ();
+			TValue otherValue = GetRandomTestValue ();
+			while (Equals (otherValue, value))
+				otherValue = GetRandomTestValue ();
+
+			var obj1 = new TestClass { Property = value };
+			var obj2 = new TestClass { Property = otherValue };
+
+			var vm = await GetBasicTestModelAsync (obj1);
+			Assume.That (vm.Value, Is.EqualTo (value));
+
+			var provider = new ReflectionEditorProvider ();
+			var editor = await provider.GetObjectEditorAsync (obj2).ConfigureAwait (false);
+			vm.Editors.Add (editor);
+
+			Assert.That (vm.Value, Is.EqualTo (default(TValue)));
+			Assert.That (vm.MultipleValues, Is.True);
+		}
+
+		[Test]
 		[Description ("Once an editor is removed we should not listen for its property changes")]
 		public async Task UnsubscribedValueChanged ()
 		{

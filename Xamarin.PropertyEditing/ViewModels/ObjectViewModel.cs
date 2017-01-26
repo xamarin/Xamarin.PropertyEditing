@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Xamarin.PropertyEditing.ViewModels
+﻿namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class ObjectViewModel
 		: PropertiesViewModel
@@ -18,16 +15,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return this.value; }
 			set
 			{
+				if (Equals (this.value, value))
+					return;
+
 				this.value = value;
 				OnPropertyChanged ();
-				OnPropertiesChanged ();
-			}
-		}
 
-		protected override async Task<IReadOnlyList<IObjectEditor>> GetEditorsAsync ()
-		{
-			IObjectEditor editor = await EditorProvider.GetObjectEditorAsync (Value);
-			return new[] { editor };
+				SelectedObjects.Clear ();
+				SelectedObjects.Add (value);
+			}
 		}
 	}
 }

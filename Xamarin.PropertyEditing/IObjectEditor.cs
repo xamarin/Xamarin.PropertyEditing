@@ -23,6 +23,11 @@ namespace Xamarin.PropertyEditing
 
 	public interface IObjectEditor
 	{
+		/// <summary>
+		/// Gets the target object being edited.
+		/// </summary>
+		object Target { get; }
+
 		/// <remarks>
 		/// These properties should be minimally equatable to the same property for another object of the same type. This includes
 		/// for base class properties for two different derived types.
