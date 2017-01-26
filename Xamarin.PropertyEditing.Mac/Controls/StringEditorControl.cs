@@ -24,10 +24,10 @@ namespace Xamarin.PropertyEditing.Mac
 				viewModel = value;
 				if (ViewModel.Value == null)
 					ViewModel.Value = string.Empty;
-				StringEditor.StringValue = ViewModel.Value;
+				StringEditor.StringValue = ViewModel.Value ?? string.Empty;
 				value.PropertyChanged += (sender, e) => {
 					if (e.PropertyName == nameof (StringPropertyViewModel.Value)) {
-						StringEditor.StringValue = ViewModel.Value;
+						StringEditor.StringValue = ViewModel.Value ?? string.Empty;
 					}
 				};
 			}
