@@ -69,19 +69,15 @@ namespace Xamarin.PropertyEditing.Mac
 				AutoresizingMask = NSViewResizingMask.WidthSizable
 			};
 
-			//// create columns for our table
+			// create columns for the panel
 			NSTableColumn propertiesList = new NSTableColumn ("PropertiesList") { Title = "Properties" };
 			NSTableColumn propertyEditors = new NSTableColumn ("PropertyEditors") { Title = "Editors" };
 			propertiesList.Width = 150;
 			propertyEditors.Width = 250;
-
 			propertyTable.AddColumn (propertiesList);
 			propertyTable.AddColumn (propertyEditors);
 
-			// Create the Product Table Data Source and populate it
-			//var dataSource = EditorProvider; 
-			// TODO: for each Property in Properties, generate data to add to table
-
+			// add the panel to the window
 			tableContainer.DocumentView = propertyTable;
 			AddSubview (tableContainer);
 		}

@@ -18,7 +18,6 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 			base.ViewDidLoad ();
 			// Do any additional setup after loading the view.
 
-			// TODO: grab table.Editors.Row1.Text
 			PropertyPanel.EditorProvider = new ReflectionEditorProvider ();
 		}
 
@@ -32,6 +31,7 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 			}
 		}
 
+		// load panel from active designer item, clear it if none selected
 		partial void OnClickEvent (NSObject sender)
 		{
 			if (PropertyPanel.SelectedItems.Contains (sender)) {

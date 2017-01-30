@@ -18,18 +18,12 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			PropertyViewModel property = DataSource.ViewModel.Properties [(int)row];
 			string cellIdentifier;
-
-			// This pattern allows you reuse existing views when they are no-longer in use.
-			// If the returned view is null, you instance up a new view
-			// If a non-null view is returned, you modify it enough to reflect the new data
-
-
-			// TODO: can do this differently
-			// Setup view based on the column selected
 			NSView view = new NSView ();
+
+			// Setup view based on the column
+			// FIXME: could do this differently
 			switch (tableColumn.Title) {
 			case "Properties":
-				//view.StringValue = DataSource.Properties [(int)row].Name;
 				cellIdentifier = "cell";
 				view = (NSTextView)tableView.MakeView (cellIdentifier, this);
 				if (view == null) {
@@ -37,11 +31,9 @@ namespace Xamarin.PropertyEditing.Mac
 					view.Identifier = cellIdentifier;
 				}
 				((NSTextView)view).Value = property.Property.Name;
-				//((StringEditorControl)view).StringEditor.StringValue = property.Property.Name;
 
 				break;
 			case "Editors":
-				//view.StringValue = DataSource.Properties [(int)row].PropertyValue;
 				cellIdentifier = property.GetType ().Name;
 				view = tableView.MakeView (cellIdentifier, this);
 				if (view == null) {
