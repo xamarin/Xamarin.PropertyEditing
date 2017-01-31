@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AppKit;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -20,6 +21,12 @@ namespace Xamarin.PropertyEditing.Mac
 			string cellIdentifier;
 			NSView view = new NSView ();
 
+			// FIXME: see how this works for now
+			Dictionary<Type, int> viewModelTypes = new Dictionary<Type, int>
+			{
+				{typeof (StringPropertyViewModel), 0}
+			};
+
 			// Setup view based on the column
 			// FIXME: could do this differently
 			switch (tableColumn.Title) {
@@ -34,17 +41,22 @@ namespace Xamarin.PropertyEditing.Mac
 
 				break;
 			case "Editors":
-				cellIdentifier = property.GetType ().Name;
+				var type = property.GetType ();
+				cellIdentifier = type.Name;
 				view = tableView.MakeView (cellIdentifier, this);
-				if (view == null) {
-					if (property is StringPropertyViewModel) {
-						view = new StringEditorControl ();
-						view.Identifier = cellIdentifier;
+
+				if (viewModelTypes.ContainsKey (type)) {
+					// set up the editor based on the type of view model
+					switch (viewModelTypes [type]){
+					case 0:
+						if (view == null) {
+							view = new StringEditorControl ();
+							view.Identifier = cellIdentifier;
+						}
+						((StringEditorControl)view).ViewModel = (StringPropertyViewModel)property;
+						break;
 					}
 				}
-				if (property is StringPropertyViewModel)
-					((StringEditorControl)view).ViewModel = (StringPropertyViewModel)property;
-
 				break;
 			}
 
