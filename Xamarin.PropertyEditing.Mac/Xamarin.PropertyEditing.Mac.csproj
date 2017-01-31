@@ -61,9 +61,6 @@
     <Compile Include="PropertyTableDataSource.cs" />
   </ItemGroup>
   <ItemGroup>
-    <InterfaceDefinition Include="PropertyEditorPanel.xib" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Controls\" />
   </ItemGroup>
   <ItemGroup>
