@@ -41,14 +41,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			switch (e.Action) {
 				case NotifyCollectionChangedAction.Add: {
-						Task<IObjectEditor>[] newEditorTasks = new Task<IObjectEditor>[e.NewItems.Count];
-						for (int i = 0; i < newEditorTasks.Length; i++)
-							newEditorTasks[i] = EditorProvider.GetObjectEditorAsync (e.NewItems[i]);
-
-						newEditors = await Task.WhenAll (newEditorTasks);
-						this.editors.AddRange (newEditors);
-						break;
-					}
+					newEditors = await AddEditorsAsync (e);
+					break;
+				}
 
 				case NotifyCollectionChangedAction.Remove:
 					removedEditors = new IObjectEditor[e.OldItems.Count];
@@ -61,20 +56,35 @@ namespace Xamarin.PropertyEditing.ViewModels
 				case NotifyCollectionChangedAction.Replace:
 				case NotifyCollectionChangedAction.Move:
 				case NotifyCollectionChangedAction.Reset: {
-						removedEditors = this.editors.ToArray();
-						this.editors.Clear ();
+					removedEditors = this.editors.ToArray();
+					this.editors.Clear ();
 
-						Task<IObjectEditor>[] newEditorTasks = new Task<IObjectEditor>[SelectedObjects.Count];
-						for (int i = 0; i < this.selectedObjects.Count; i++) {
-							newEditorTasks[i] = EditorProvider.GetObjectEditorAsync (this.selectedObjects[i]);
-						}
-
-						newEditors = await Task.WhenAll (newEditorTasks);
-						this.editors.AddRange (newEditors);
-						break;
+					Task<IObjectEditor>[] newEditorTasks = new Task<IObjectEditor>[SelectedObjects.Count];
+					for (int i = 0; i < this.selectedObjects.Count; i++) {
+						newEditorTasks[i] = EditorProvider.GetObjectEditorAsync (this.selectedObjects[i]);
 					}
+
+					newEditors = await Task.WhenAll (newEditorTasks);
+					for (int i = 0; i < newEditors.Length; i++) {
+						var notifier = newEditors[i].Properties as INotifyCollectionChanged;
+						if (notifier != null)
+							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
+					}
+
+					this.editors.AddRange (newEditors);
+					break;
+				}
 			}
 
+			UpdateProperties (removedEditors, newEditors);
+		}
+
+		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
+		private readonly ObservableCollection<PropertyViewModel> properties = new ObservableCollection<PropertyViewModel> ();
+		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
+
+		private void UpdateProperties (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
+		{
 			if (this.editors.Count == 0) {
 				this.properties.Clear();
 				return;
@@ -108,9 +118,28 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
-		private readonly ObservableCollection<PropertyViewModel> properties = new ObservableCollection<PropertyViewModel> ();
-		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
+		private async Task<IObjectEditor[]> AddEditorsAsync (NotifyCollectionChangedEventArgs e)
+		{
+			Task<IObjectEditor>[] newEditorTasks = new Task<IObjectEditor>[e.NewItems.Count];
+			for (int i = 0; i < newEditorTasks.Length; i++) {
+				newEditorTasks[i] = EditorProvider.GetObjectEditorAsync (e.NewItems[i]);
+			}
+
+			IObjectEditor[] newEditors = await Task.WhenAll (newEditorTasks);
+			for (int i = 0; i < newEditors.Length; i++) {
+				var notifier = newEditors[i].Properties as INotifyCollectionChanged;
+				if (notifier != null)
+					notifier.CollectionChanged += OnObjectEditorPropertiesChanged;
+			}
+
+			this.editors.AddRange (newEditors);
+			return newEditors;
+		}
+
+		private void OnObjectEditorPropertiesChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			UpdateProperties();
+		}
 
 		private PropertyViewModel GetViewModel (IPropertyInfo property)
 		{

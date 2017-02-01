@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -154,6 +155,100 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (property, Is.SameAs (vm.Properties[0]));
 			Assert.That (property.Editors, Contains.Item (editor));
 			Assert.That (property.Editors.Count, Is.EqualTo (1));
+		}
+
+
+		[Test]
+		public void PropertiesListItemRemoved ()
+		{
+			var mockProperty1 = new Mock<IPropertyInfo> ();
+			mockProperty1.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var mockProperty2 = new Mock<IPropertyInfo> ();
+			mockProperty2.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var properties = new ObservableCollection<IPropertyInfo> { mockProperty1.Object, mockProperty2.Object };
+			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.SetupGet (e => e.Properties).Returns (properties);
+
+			var obj = new object ();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
+
+			var vm = new PanelViewModel (provider.Object);
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.Properties.Count, Is.EqualTo (2));
+			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
+			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty2.Object));
+
+			properties.Remove (mockProperty2.Object);
+			Assert.That (vm.Properties.Count, Is.EqualTo (1));
+			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
+		}
+
+		[Test]
+		public void PropertiesListItemAdded ()
+		{
+			var mockProperty1 = new Mock<IPropertyInfo> ();
+			mockProperty1.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var mockProperty2 = new Mock<IPropertyInfo> ();
+			mockProperty2.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var properties = new ObservableCollection<IPropertyInfo> { mockProperty1.Object };
+			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.SetupGet (e => e.Properties).Returns (properties);
+
+			var obj = new object ();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
+
+			var vm = new PanelViewModel (provider.Object);
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.Properties.Count, Is.EqualTo (1));
+			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
+
+			properties.Add (mockProperty2.Object);
+
+			Assert.That (vm.Properties.Count, Is.EqualTo (2));
+			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
+			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty2.Object));
+		}
+
+		[Test]
+		public void PropertiesListItemRemovedJointList ()
+		{
+			var baseObj = new object ();
+			var derivedObj = new object ();
+
+			var baseProperty = new Mock<IPropertyInfo> ();
+			baseProperty.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var baseProperties = new ObservableCollectionEx<IPropertyInfo> { baseProperty.Object };
+			var derivedProperties = new ObservableCollectionEx<IPropertyInfo> { baseProperty.Object };
+
+			var baseEditorMock = new Mock<IObjectEditor> ();
+			baseEditorMock.SetupGet (e => e.Properties).Returns (baseProperties);
+
+			var derivedEditorMock = new Mock<IObjectEditor> ();
+			derivedEditorMock.SetupGet (e => e.Properties).Returns (derivedProperties);
+
+			var providerMock = new Mock<IEditorProvider> ();
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (derivedObj)).ReturnsAsync (derivedEditorMock.Object);
+
+			var vm = new PanelViewModel (providerMock.Object);
+			vm.SelectedObjects.AddItems (new[] { baseObj, derivedObj });
+
+			Assume.That (vm.Properties.Count, Is.EqualTo (1));
+			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (baseProperty.Object));
+
+			derivedProperties.Remove (baseProperty.Object);
+			Assert.That (vm.Properties, Is.Empty);
 		}
 	}
 }
