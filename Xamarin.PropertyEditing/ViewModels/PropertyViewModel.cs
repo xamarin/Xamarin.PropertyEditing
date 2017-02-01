@@ -242,7 +242,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					if (cancelToken.IsCancellationRequested)
 						return;
 
-					this.resources.AddRange (gottenResources);
+					this.resources.AddItems (gottenResources);
 				} catch (OperationCanceledException) {
 					return;
 				}
@@ -272,7 +272,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			var observableEditors = new ObservableCollection<IObjectEditor>();
 			Editors = observableEditors;
 			observableEditors.CollectionChanged += OnEditorsChanged;
-			observableEditors.AddRange (editors); // Purposefully after the event hookup
+			observableEditors.AddItems (editors); // Purposefully after the event hookup
 		}
 
 		/// <remarks>Exists primarily to support PropertyGroupDescription</remarks>

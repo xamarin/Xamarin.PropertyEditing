@@ -158,7 +158,7 @@ namespace Xamarin.PropertyEditing.Windows
 				case NotifyCollectionChangedAction.Move:
 				case NotifyCollectionChangedAction.Reset:
 					this.vm.SelectedObjects.Clear();
-					this.vm.SelectedObjects.AddRange (SelectedItems);
+					this.vm.SelectedObjects.AddItems (SelectedItems);
 					break;
 			}
 		}
