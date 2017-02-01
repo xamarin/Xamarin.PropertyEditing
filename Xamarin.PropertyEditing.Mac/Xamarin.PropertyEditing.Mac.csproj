@@ -49,7 +49,6 @@
     <Reference Include="Xamarin.Mac" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyEditorPanel.cs" />
     <Compile Include="PropertyEditorPanel.designer.cs">
