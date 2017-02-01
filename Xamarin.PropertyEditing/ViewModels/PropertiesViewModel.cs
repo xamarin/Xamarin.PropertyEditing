@@ -85,9 +85,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 				newSet.IntersectWith (this.editors[i].Properties);
 			}
 
-			foreach (PropertyViewModel vm in this.properties.ToArray()) {
+			foreach (PropertyViewModel vm in this.properties.ToArray ()) {
 				if (!newSet.Remove (vm.Property)) {
 					this.properties.Remove (vm);
+					vm.Editors.Clear ();
 					continue;
 				}
 
