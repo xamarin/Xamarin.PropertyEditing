@@ -21,7 +21,8 @@ namespace Xamarin.PropertyEditing.Mac
 		internal StringPropertyViewModel ViewModel {
 			get { return viewModel; }
 			set {
-				viewModel = value;
+				if (viewModel == value)
+					viewModel = value;
 				if (ViewModel.Value == null)
 					ViewModel.Value = string.Empty;
 				StringEditor.StringValue = ViewModel.Value ?? string.Empty;
