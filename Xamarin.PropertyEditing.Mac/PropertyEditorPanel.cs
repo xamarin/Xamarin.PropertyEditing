@@ -50,7 +50,8 @@ namespace Xamarin.PropertyEditing.Mac
 				propertyTable.DataSource = dataSource;
 				propertyTable.Delegate = new PropertyTableDelegate (dataSource);
 				propertiesChanged = dataSource.ViewModel.Properties as INotifyCollectionChanged;
-				propertiesChanged.CollectionChanged += (sender, e) => { propertyTable.ReloadData (); };
+				if (propertiesChanged != null)
+					propertiesChanged.CollectionChanged += (sender, e) => { propertyTable.ReloadData (); };
 			}
 		}
 
