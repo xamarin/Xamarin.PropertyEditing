@@ -39,21 +39,32 @@ namespace Xamarin.PropertyEditing.Mac
 		NSTableView propertyTable;
 		PropertyTableDataSource dataSource;
 		PanelViewModel viewModel;
-		INotifyCollectionChanged propertiesChanged;
+		INotifyCollectionChanged PropertiesChanged => viewModel?.Properties as INotifyCollectionChanged;
 		public IEditorProvider EditorProvider {
 			get { return editorProvider; }
 			set {
+				// if the propertiesChanged is already subscribed to, remove the event
+				if (PropertiesChanged != null)
+					PropertiesChanged.CollectionChanged -= HandleCollectionChanged;
+
 				// Populate the Properety Table
 				editorProvider = value;
 				viewModel = new PanelViewModel (editorProvider);
 				dataSource = new PropertyTableDataSource (viewModel);
 				propertyTable.DataSource = dataSource;
 				propertyTable.Delegate = new PropertyTableDelegate (dataSource);
-				propertiesChanged = dataSource.ViewModel.Properties as INotifyCollectionChanged;
-				if (propertiesChanged != null)
-					propertiesChanged.CollectionChanged += (sender, e) => { propertyTable.ReloadData (); };
+
+				// if propertiesChanged exists
+				if (PropertiesChanged != null)
+					PropertiesChanged.CollectionChanged += HandleCollectionChanged;
 			}
 		}
+
+		void HandleCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			propertyTable.ReloadData ();
+		}
+
 
 		public ICollection<object> SelectedItems => this.dataSource.SelectedItems;
 
