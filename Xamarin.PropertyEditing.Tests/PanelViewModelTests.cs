@@ -1,5 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -269,9 +272,11 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var baseEditorMock = new Mock<IObjectEditor> ();
 			baseEditorMock.SetupGet (e => e.Properties).Returns (baseProperties);
+			baseEditorMock.SetupGet (e => e.Target).Returns (baseObj);
 
 			var derivedEditorMock = new Mock<IObjectEditor> ();
 			derivedEditorMock.SetupGet (e => e.Properties).Returns (derivedProperties);
+			derivedEditorMock.SetupGet (e => e.Target).Returns (derivedObj);
 
 			var providerMock = new Mock<IEditorProvider> ();
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
@@ -285,6 +290,83 @@ namespace Xamarin.PropertyEditing.Tests
 
 			derivedProperties.Remove (baseProperty.Object);
 			Assert.That (vm.Properties, Is.Empty);
+		}
+
+		[Test]
+		public void PropertiesListSelectedItemRemovedStopsListening ()
+		{
+			var baseObj = new object ();
+			var derivedObj = new object ();
+
+			var baseProperty = new Mock<IPropertyInfo> ();
+			baseProperty.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var baseProperties = new ObservableCollectionEx<IPropertyInfo> { baseProperty.Object };
+			var derivedProperties = new ObservableCollectionEx<IPropertyInfo> { baseProperty.Object };
+
+			var baseEditorMock = new Mock<IObjectEditor> ();
+			baseEditorMock.SetupGet (e => e.Properties).Returns (baseProperties);
+			baseEditorMock.SetupGet (e => e.Target).Returns (baseObj);
+
+			var derivedEditorMock = new Mock<IObjectEditor> ();
+			derivedEditorMock.SetupGet (e => e.Properties).Returns (derivedProperties);
+			derivedEditorMock.SetupGet (e => e.Target).Returns (derivedObj);
+
+			var providerMock = new Mock<IEditorProvider> ();
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (derivedObj)).ReturnsAsync (derivedEditorMock.Object);
+
+			var vm = new PanelViewModel (providerMock.Object);
+			vm.SelectedObjects.AddItems (new[] { baseObj, derivedObj });
+
+			Assume.That (vm.Properties.Count, Is.EqualTo (1));
+			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (baseProperty.Object));
+
+			vm.SelectedObjects.Remove (derivedObj);
+			Assume.That (vm.Properties, Is.Not.Empty);
+
+			var changedField = typeof(ObservableCollection<IPropertyInfo>).GetField (nameof (INotifyCollectionChanged.CollectionChanged), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+			MulticastDelegate d = (MulticastDelegate)changedField.GetValue (derivedProperties);
+			Assert.That (d, Is.Null);
+		}
+
+		[Test]
+		public void PropertiesListSelectedItemResetStopsListening ()
+		{
+			var baseObj = new object ();
+			var derivedObj = new object ();
+
+			var baseProperty = new Mock<IPropertyInfo> ();
+			baseProperty.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var baseProperties = new ObservableCollectionEx<IPropertyInfo> { baseProperty.Object };
+			var derivedProperties = new ObservableCollectionEx<IPropertyInfo> { baseProperty.Object };
+
+			var baseEditorMock = new Mock<IObjectEditor> ();
+			baseEditorMock.SetupGet (e => e.Properties).Returns (baseProperties);
+			baseEditorMock.SetupGet (e => e.Target).Returns (baseObj);
+
+			var derivedEditorMock = new Mock<IObjectEditor> ();
+			derivedEditorMock.SetupGet (e => e.Properties).Returns (derivedProperties);
+			derivedEditorMock.SetupGet (e => e.Target).Returns (derivedObj);
+
+			var providerMock = new Mock<IEditorProvider> ();
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (derivedObj)).ReturnsAsync (derivedEditorMock.Object);
+
+			var vm = new PanelViewModel (providerMock.Object);
+			vm.SelectedObjects.AddItems (new[] { baseObj, derivedObj });
+
+			Assume.That (vm.Properties.Count, Is.EqualTo (1));
+			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (baseProperty.Object));
+
+			Assume.That (vm.SelectedObjects, Is.TypeOf<ObservableCollectionEx<object>>());
+			((ObservableCollectionEx<object>) vm.SelectedObjects).Reset (new[] { baseObj });
+			Assume.That (vm.Properties, Is.Not.Empty);
+
+			var changedField = typeof (ObservableCollection<IPropertyInfo>).GetField (nameof (INotifyCollectionChanged.CollectionChanged), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+			MulticastDelegate d = (MulticastDelegate)changedField.GetValue (derivedProperties);
+			Assert.That (d, Is.Null);
 		}
 	}
 }

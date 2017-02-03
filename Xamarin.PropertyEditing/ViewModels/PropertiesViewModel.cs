@@ -49,15 +49,27 @@ namespace Xamarin.PropertyEditing.ViewModels
 				case NotifyCollectionChangedAction.Remove:
 					removedEditors = new IObjectEditor[e.OldItems.Count];
 					for (int i = 0; i < e.OldItems.Count; i++) {
-						removedEditors[i] = this.editors.First (oe => oe.Target == e.OldItems[i]);
-						this.editors.Remove (removedEditors[i]);
+						IObjectEditor editor = this.editors.First (oe => oe.Target == e.OldItems[i]);
+						INotifyCollectionChanged notifier = editor.Properties as INotifyCollectionChanged;
+						if (notifier != null)
+							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
+
+						removedEditors[i] = editor;
+						this.editors.Remove (editor);
 					}
 					break;
 
 				case NotifyCollectionChangedAction.Replace:
 				case NotifyCollectionChangedAction.Move:
 				case NotifyCollectionChangedAction.Reset: {
-					removedEditors = this.editors.ToArray();
+					removedEditors = new IObjectEditor[this.editors.Count];
+					for (int i = 0; i < removedEditors.Length; i++) {
+						removedEditors[i] = this.editors[i];
+						INotifyCollectionChanged notifier = removedEditors[i].Properties as INotifyCollectionChanged;
+						if (notifier != null)
+							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
+					}
+
 					this.editors.Clear ();
 
 					newEditors = await AddEditorsAsync (this.selectedObjects);
