@@ -16,22 +16,22 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		internal NSTextField StringEditor { get; set; }
-		StringPropertyViewModel viewModel;
 
-		internal StringPropertyViewModel ViewModel {
-			get { return viewModel; }
-			set {
-				if (viewModel == value)
-					return;
+		internal new StringPropertyViewModel ViewModel {
+			get { return (StringPropertyViewModel)base.ViewModel; }
+			set { base.ViewModel = value; }
+		}
 
-				viewModel = value;
-				StringEditor.StringValue = ViewModel.Value ?? string.Empty;
-				value.PropertyChanged += (sender, e) => {
-					if (e.PropertyName == nameof (StringPropertyViewModel.Value)) {
-						StringEditor.StringValue = ViewModel.Value ?? string.Empty;
-					}
-				};
+		protected override void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == nameof (StringPropertyViewModel.Value)) {
+				UpdateModelValue ();
 			}
+		}
+
+		protected override void UpdateModelValue ()
+		{
+			StringEditor.StringValue = ViewModel.Value ?? string.Empty;
 		}
 	}
 }
