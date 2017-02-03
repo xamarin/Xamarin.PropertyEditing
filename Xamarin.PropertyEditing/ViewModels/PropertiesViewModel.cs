@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -41,7 +42,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			switch (e.Action) {
 				case NotifyCollectionChangedAction.Add: {
-					newEditors = await AddEditorsAsync (e);
+					newEditors = await AddEditorsAsync (e.NewItems);
 					break;
 				}
 
@@ -59,18 +60,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					removedEditors = this.editors.ToArray();
 					this.editors.Clear ();
 
-					Task<IObjectEditor>[] newEditorTasks = new Task<IObjectEditor>[SelectedObjects.Count];
-					for (int i = 0; i < this.selectedObjects.Count; i++) {
-						newEditorTasks[i] = EditorProvider.GetObjectEditorAsync (this.selectedObjects[i]);
-					}
-
-					newEditors = await Task.WhenAll (newEditorTasks);
-					for (int i = 0; i < newEditors.Length; i++) {
-						var notifier = newEditors[i].Properties as INotifyCollectionChanged;
-						if (notifier != null)
-							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
-					}
-
+					newEditors = await AddEditorsAsync (this.selectedObjects);
 					this.editors.AddRange (newEditors);
 					break;
 				}
@@ -118,11 +108,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		private async Task<IObjectEditor[]> AddEditorsAsync (NotifyCollectionChangedEventArgs e)
+		private async Task<IObjectEditor[]> AddEditorsAsync (IList newItems)
 		{
-			Task<IObjectEditor>[] newEditorTasks = new Task<IObjectEditor>[e.NewItems.Count];
+			Task<IObjectEditor>[] newEditorTasks = new Task<IObjectEditor>[newItems.Count];
 			for (int i = 0; i < newEditorTasks.Length; i++) {
-				newEditorTasks[i] = EditorProvider.GetObjectEditorAsync (e.NewItems[i]);
+				newEditorTasks[i] = EditorProvider.GetObjectEditorAsync (newItems[i]);
 			}
 
 			IObjectEditor[] newEditors = await Task.WhenAll (newEditorTasks);

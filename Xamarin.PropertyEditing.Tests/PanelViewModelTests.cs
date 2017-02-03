@@ -220,6 +220,42 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public void PropertiesListItemAddedWithReset ()
+		{
+			var mockProperty1 = new Mock<IPropertyInfo> ();
+			mockProperty1.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var mockProperty2 = new Mock<IPropertyInfo> ();
+			mockProperty2.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var properties = new ObservableCollection<IPropertyInfo> { mockProperty1.Object };
+			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.SetupGet (e => e.Properties).Returns (properties);
+
+			var obj = new object ();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
+
+			var vm = new PanelViewModel (provider.Object);
+			
+			// We need access to the custom reset method here to ensure compliance
+			// It's a bit hacky but this is unlikely to change. If it does, this test
+			// will ensure the new notifier works as it should when resetting.
+			Assume.That (vm.SelectedObjects, Is.TypeOf<ObservableCollectionEx<object>>());
+			((ObservableCollectionEx<object>) vm.SelectedObjects).Reset (new[] { obj });
+
+			Assume.That (vm.Properties.Count, Is.EqualTo (1));
+			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
+
+			properties.Add (mockProperty2.Object);
+
+			Assert.That (vm.Properties.Count, Is.EqualTo (2));
+			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
+			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty2.Object));
+		}
+
+		[Test]
 		public void PropertiesListItemRemovedJointList ()
 		{
 			var baseObj = new object ();
