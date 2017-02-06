@@ -7,7 +7,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class StringEditorControl : PropertyEditorControl
 	{
-		internal StringEditorControl ()
+		public StringEditorControl ()
 		{
 			StringEditor = new NSTextField (new CGRect (0, 0, 150, 20));
 			StringEditor.BackgroundColor = NSColor.Clear;

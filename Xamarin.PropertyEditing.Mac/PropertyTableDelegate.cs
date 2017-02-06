@@ -21,14 +21,12 @@ namespace Xamarin.PropertyEditing.Mac
 			string cellIdentifier;
 			NSView view = new NSView ();
 
-			// FIXME: see how this works for now
-			Dictionary<Type, int> viewModelTypes = new Dictionary<Type, int>
+			Dictionary<Type, Type> viewModelTypes = new Dictionary<Type, Type>
 			{
-				{typeof (StringPropertyViewModel), 0}
+				{typeof (StringPropertyViewModel), typeof (StringEditorControl)}
 			};
 
 			// Setup view based on the column
-			// FIXME: could do this differently
 			switch (tableColumn.Title) {
 			case "Properties":
 				cellIdentifier = "cell";
@@ -41,24 +39,33 @@ namespace Xamarin.PropertyEditing.Mac
 
 				break;
 			case "Editors":
-				var type = property.GetType ();
-				cellIdentifier = type.Name;
+				// figure out what type of view model we have
+				var propertyType = property.GetType ();
+				cellIdentifier = propertyType.Name;
 				view = tableView.MakeView (cellIdentifier, this);
 
-				if (viewModelTypes.ContainsKey (type)) {
-					// set up the editor based on the type of view model
-					switch (viewModelTypes [type]){
-					case 0:
-						if (view == null) {
-							view = new StringEditorControl ();
-							view.Identifier = cellIdentifier;
-						}
-						((StringEditorControl)view).ViewModel = (StringPropertyViewModel)property;
-						break;
-					}
-				}
+				// we don't need to do any setup if the editor already exists
+				if (view != null)
+					return view;
+
+				Type controlType;
+				if (viewModelTypes.TryGetValue (propertyType, out controlType))
+					view = SetUpEditor (view, controlType, property);
+
 				break;
 			}
+
+			return view;
+		}
+
+		// set up the editor based on the type of view model
+		NSView SetUpEditor (NSView view, Type controlType, PropertyViewModel property)
+		{
+			if (view == null) {
+				view = (PropertyEditorControl)Activator.CreateInstance (controlType);
+				view.Identifier = property.GetType ().Name;
+			}
+			((PropertyEditorControl)view).ViewModel = property;
 
 			return view;
 		}
