@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
@@ -37,6 +38,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected virtual async void OnSelectedObjectsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
+			var tcs = new TaskCompletionSource<bool> ();
+			var existingTask = Interlocked.Exchange (ref this.busyTask, tcs.Task);
+			if (existingTask != null)
+				await existingTask;
+
 			IObjectEditor[] newEditors = null;
 			IObjectEditor[] removedEditors = null;
 
@@ -79,6 +85,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			UpdateProperties (removedEditors, newEditors);
+			tcs.SetResult (true);
 		}
 
 		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
@@ -156,6 +163,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			
 			return new StringPropertyViewModel (property, this.editors);
 		}
+
+		private Task busyTask;
 
 		private static readonly Dictionary<Type,Func<IPropertyInfo,IEnumerable<IObjectEditor>,PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
 			{ typeof(string), (p,e) => new StringPropertyViewModel (p, e) },
