@@ -7,9 +7,9 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	public class PropertyTableDataSource : NSTableViewDataSource
 	{
-		internal PropertyTableDataSource (PanelViewModel viewModel /*IEditorProvider data*/)
+		internal PropertyTableDataSource (PanelViewModel viewModel)
 		{
-			ViewModel = viewModel; //new PanelViewModel (data);
+			ViewModel = viewModel;
 		}
 
 		internal PanelViewModel ViewModel { get; private set; }
