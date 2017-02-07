@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
@@ -36,47 +38,54 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected virtual async void OnSelectedObjectsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
+			var tcs = new TaskCompletionSource<bool> ();
+			var existingTask = Interlocked.Exchange (ref this.busyTask, tcs.Task);
+			if (existingTask != null)
+				await existingTask;
+
 			IObjectEditor[] newEditors = null;
 			IObjectEditor[] removedEditors = null;
 
 			switch (e.Action) {
 				case NotifyCollectionChangedAction.Add: {
-					newEditors = await AddEditorsAsync (e);
+					newEditors = await AddEditorsAsync (e.NewItems);
 					break;
 				}
 
 				case NotifyCollectionChangedAction.Remove:
 					removedEditors = new IObjectEditor[e.OldItems.Count];
 					for (int i = 0; i < e.OldItems.Count; i++) {
-						removedEditors[i] = this.editors.First (oe => oe.Target == e.OldItems[i]);
-						this.editors.Remove (removedEditors[i]);
+						IObjectEditor editor = this.editors.First (oe => oe.Target == e.OldItems[i]);
+						INotifyCollectionChanged notifier = editor.Properties as INotifyCollectionChanged;
+						if (notifier != null)
+							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
+
+						removedEditors[i] = editor;
+						this.editors.Remove (editor);
 					}
 					break;
 
 				case NotifyCollectionChangedAction.Replace:
 				case NotifyCollectionChangedAction.Move:
 				case NotifyCollectionChangedAction.Reset: {
-					removedEditors = this.editors.ToArray();
-					this.editors.Clear ();
-
-					Task<IObjectEditor>[] newEditorTasks = new Task<IObjectEditor>[SelectedObjects.Count];
-					for (int i = 0; i < this.selectedObjects.Count; i++) {
-						newEditorTasks[i] = EditorProvider.GetObjectEditorAsync (this.selectedObjects[i]);
-					}
-
-					newEditors = await Task.WhenAll (newEditorTasks);
-					for (int i = 0; i < newEditors.Length; i++) {
-						var notifier = newEditors[i].Properties as INotifyCollectionChanged;
+					removedEditors = new IObjectEditor[this.editors.Count];
+					for (int i = 0; i < removedEditors.Length; i++) {
+						removedEditors[i] = this.editors[i];
+						INotifyCollectionChanged notifier = removedEditors[i].Properties as INotifyCollectionChanged;
 						if (notifier != null)
 							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
 					}
 
+					this.editors.Clear ();
+
+					newEditors = await AddEditorsAsync (this.selectedObjects);
 					this.editors.AddRange (newEditors);
 					break;
 				}
 			}
 
 			UpdateProperties (removedEditors, newEditors);
+			tcs.SetResult (true);
 		}
 
 		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
@@ -118,11 +127,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		private async Task<IObjectEditor[]> AddEditorsAsync (NotifyCollectionChangedEventArgs e)
+		private async Task<IObjectEditor[]> AddEditorsAsync (IList newItems)
 		{
-			Task<IObjectEditor>[] newEditorTasks = new Task<IObjectEditor>[e.NewItems.Count];
+			Task<IObjectEditor>[] newEditorTasks = new Task<IObjectEditor>[newItems.Count];
 			for (int i = 0; i < newEditorTasks.Length; i++) {
-				newEditorTasks[i] = EditorProvider.GetObjectEditorAsync (e.NewItems[i]);
+				newEditorTasks[i] = EditorProvider.GetObjectEditorAsync (newItems[i]);
 			}
 
 			IObjectEditor[] newEditors = await Task.WhenAll (newEditorTasks);
@@ -154,6 +163,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			
 			return new StringPropertyViewModel (property, this.editors);
 		}
+
+		private Task busyTask;
 
 		private static readonly Dictionary<Type,Func<IPropertyInfo,IEnumerable<IObjectEditor>,PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
 			{ typeof(string), (p,e) => new StringPropertyViewModel (p, e) },

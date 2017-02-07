@@ -18,5 +18,13 @@ namespace Xamarin.PropertyEditing
 
 			OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, list, index));
 		}
+
+		/// <remarks>Only used for testing <see cref="INotifyCollectionChanged"/> compliance.</remarks>
+		internal void Reset (IEnumerable<T> newContents)
+		{
+			Items.Clear();
+			Items.AddItems (newContents);
+			OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Reset));
+		}
 	}
 }

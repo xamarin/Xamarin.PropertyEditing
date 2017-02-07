@@ -1,5 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -28,6 +32,12 @@ namespace Xamarin.PropertyEditing.Tests
 				get;
 				set;
 			}
+		}
+
+		[SetUp]
+		public void Setup ()
+		{
+			SynchronizationContext.SetSynchronizationContext (this.context = new TestContext());
 		}
 
 		[Test]
@@ -220,6 +230,42 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public void PropertiesListItemAddedWithReset ()
+		{
+			var mockProperty1 = new Mock<IPropertyInfo> ();
+			mockProperty1.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var mockProperty2 = new Mock<IPropertyInfo> ();
+			mockProperty2.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var properties = new ObservableCollection<IPropertyInfo> { mockProperty1.Object };
+			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.SetupGet (e => e.Properties).Returns (properties);
+
+			var obj = new object ();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
+
+			var vm = new PanelViewModel (provider.Object);
+			
+			// We need access to the custom reset method here to ensure compliance
+			// It's a bit hacky but this is unlikely to change. If it does, this test
+			// will ensure the new notifier works as it should when resetting.
+			Assume.That (vm.SelectedObjects, Is.TypeOf<ObservableCollectionEx<object>>());
+			((ObservableCollectionEx<object>) vm.SelectedObjects).Reset (new[] { obj });
+
+			Assume.That (vm.Properties.Count, Is.EqualTo (1));
+			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
+
+			properties.Add (mockProperty2.Object);
+
+			Assert.That (vm.Properties.Count, Is.EqualTo (2));
+			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
+			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty2.Object));
+		}
+
+		[Test]
 		public void PropertiesListItemRemovedJointList ()
 		{
 			var baseObj = new object ();
@@ -233,9 +279,11 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var baseEditorMock = new Mock<IObjectEditor> ();
 			baseEditorMock.SetupGet (e => e.Properties).Returns (baseProperties);
+			baseEditorMock.SetupGet (e => e.Target).Returns (baseObj);
 
 			var derivedEditorMock = new Mock<IObjectEditor> ();
 			derivedEditorMock.SetupGet (e => e.Properties).Returns (derivedProperties);
+			derivedEditorMock.SetupGet (e => e.Target).Returns (derivedObj);
 
 			var providerMock = new Mock<IEditorProvider> ();
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
@@ -250,5 +298,126 @@ namespace Xamarin.PropertyEditing.Tests
 			derivedProperties.Remove (baseProperty.Object);
 			Assert.That (vm.Properties, Is.Empty);
 		}
+
+		[Test]
+		public void PropertiesListSelectedItemRemovedStopsListening ()
+		{
+			var baseObj = new object ();
+			var derivedObj = new object ();
+
+			var baseProperty = new Mock<IPropertyInfo> ();
+			baseProperty.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var baseProperties = new ObservableCollectionEx<IPropertyInfo> { baseProperty.Object };
+			var derivedProperties = new ObservableCollectionEx<IPropertyInfo> { baseProperty.Object };
+
+			var baseEditorMock = new Mock<IObjectEditor> ();
+			baseEditorMock.SetupGet (e => e.Properties).Returns (baseProperties);
+			baseEditorMock.SetupGet (e => e.Target).Returns (baseObj);
+
+			var derivedEditorMock = new Mock<IObjectEditor> ();
+			derivedEditorMock.SetupGet (e => e.Properties).Returns (derivedProperties);
+			derivedEditorMock.SetupGet (e => e.Target).Returns (derivedObj);
+
+			var providerMock = new Mock<IEditorProvider> ();
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (derivedObj)).ReturnsAsync (derivedEditorMock.Object);
+
+			var vm = new PanelViewModel (providerMock.Object);
+			vm.SelectedObjects.AddItems (new[] { baseObj, derivedObj });
+
+			Assume.That (vm.Properties.Count, Is.EqualTo (1));
+			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (baseProperty.Object));
+
+			vm.SelectedObjects.Remove (derivedObj);
+			Assume.That (vm.Properties, Is.Not.Empty);
+
+			var changedField = typeof(ObservableCollection<IPropertyInfo>).GetField (nameof (INotifyCollectionChanged.CollectionChanged), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+			MulticastDelegate d = (MulticastDelegate)changedField.GetValue (derivedProperties);
+			Assert.That (d, Is.Null);
+		}
+
+		[Test]
+		public void PropertiesListSelectedItemResetStopsListening ()
+		{
+			var baseObj = new object ();
+			var derivedObj = new object ();
+
+			var baseProperty = new Mock<IPropertyInfo> ();
+			baseProperty.SetupGet (pi => pi.Type).Returns (typeof (string));
+
+			var baseProperties = new ObservableCollectionEx<IPropertyInfo> { baseProperty.Object };
+			var derivedProperties = new ObservableCollectionEx<IPropertyInfo> { baseProperty.Object };
+
+			var baseEditorMock = new Mock<IObjectEditor> ();
+			baseEditorMock.SetupGet (e => e.Properties).Returns (baseProperties);
+			baseEditorMock.SetupGet (e => e.Target).Returns (baseObj);
+
+			var derivedEditorMock = new Mock<IObjectEditor> ();
+			derivedEditorMock.SetupGet (e => e.Properties).Returns (derivedProperties);
+			derivedEditorMock.SetupGet (e => e.Target).Returns (derivedObj);
+
+			var providerMock = new Mock<IEditorProvider> ();
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (derivedObj)).ReturnsAsync (derivedEditorMock.Object);
+
+			var vm = new PanelViewModel (providerMock.Object);
+			vm.SelectedObjects.AddItems (new[] { baseObj, derivedObj });
+
+			Assume.That (vm.Properties.Count, Is.EqualTo (1));
+			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (baseProperty.Object));
+
+			Assume.That (vm.SelectedObjects, Is.TypeOf<ObservableCollectionEx<object>>());
+			((ObservableCollectionEx<object>) vm.SelectedObjects).Reset (new[] { baseObj });
+			Assume.That (vm.Properties, Is.Not.Empty);
+
+			var changedField = typeof (ObservableCollection<IPropertyInfo>).GetField (nameof (INotifyCollectionChanged.CollectionChanged), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+			MulticastDelegate d = (MulticastDelegate)changedField.GetValue (derivedProperties);
+			Assert.That (d, Is.Null);
+		}
+
+		[Test]
+		[Description ("We must be sure that if the selected objects list changes while the provider is still retrieving that we end up with the right result")]
+		public async Task InteruptedEditorRetrievalResolvesCorrectlyItemAdded ()
+		{
+			var obj1 = new object ();
+			var obj2 = new object ();
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (pi => pi.Type).Returns (typeof(string));
+
+			var editor1 = new Mock<IObjectEditor> ();
+			editor1.SetupGet (oe => oe.Target).Returns (obj1);
+			editor1.SetupGet (oe => oe.Properties).Returns (new[] { property.Object });
+
+			var editor2 = new Mock<IObjectEditor> ();
+			editor2.SetupGet (oe => oe.Target).Returns (obj2);
+			editor2.SetupGet (oe => oe.Properties).Returns (new[] { property.Object });
+
+			Task<IObjectEditor> returnObject = null;
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (obj1)).Returns (() => {
+				returnObject = Task.Delay (2000).ContinueWith (t => editor1.Object);
+				return returnObject;
+			});
+			provider.Setup (ep => ep.GetObjectEditorAsync (obj2)).ReturnsAsync (editor2.Object);
+
+			var vm = new PanelViewModel (provider.Object);
+			vm.SelectedObjects.Add (obj1);
+
+			Assume.That (returnObject, Is.Not.Null);
+			Assume.That (returnObject.IsCompleted, Is.False);
+
+			vm.SelectedObjects.Remove (obj1);
+
+			await returnObject;
+			await Task.Yield ();
+
+			Assert.That (vm.Properties, Is.Empty);
+			this.context.ThrowPendingExceptions();
+		}
+
+		private TestContext context;
 	}
 }
