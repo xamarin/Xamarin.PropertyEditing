@@ -58,6 +58,7 @@
     <Compile Include="Controls\PropertyEditorControl.cs" />
     <Compile Include="PropertyTableDelegate.cs" />
     <Compile Include="PropertyTableDataSource.cs" />
+    <Compile Include="Controls\NumericEditorControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
