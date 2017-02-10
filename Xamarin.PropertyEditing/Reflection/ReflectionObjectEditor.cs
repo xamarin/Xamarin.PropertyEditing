@@ -22,10 +22,8 @@ namespace Xamarin.PropertyEditing.Reflection
 					continue;
 				}
 
-				if (!CheckAvailability (property))
-					return;
-
-				this.properties.Add (new ReflectionPropertyInfo (property));
+				if (CheckAvailability (property))
+					this.properties.Add (new ReflectionPropertyInfo (property));
 			}
 		}
 
