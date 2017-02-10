@@ -12,17 +12,13 @@ using System.Windows.Input;
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class PropertyViewModel<TValue>
-		: PropertyViewModel, INotifyDataErrorInfo
+		: PropertyViewModel
 	{
 		public PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (property, editors)
 		{
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 		}
-
-		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-		public bool HasErrors => this.error != null;
 
 		public ValueSource ValueSource => this.value.Source;
 
@@ -60,11 +56,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		public IEnumerable GetErrors (string propertyName)
-		{
-			return (this.error != null) ? new[] { this.error } : Enumerable.Empty<string> ();
-		}
-
 		protected override void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
 			base.OnEditorsChanged (sender, e);
@@ -85,16 +76,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			UpdateCurrentValue ();
 		}
 
-		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
-		protected void SetError (string newError)
-		{
-			if (this.error == newError)
-				return;
-
-			this.error = newError;
-			OnErrorsChanged (new DataErrorsChangedEventArgs (nameof (Property)));
-		}
-
 		protected virtual void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
 		{
 			if (e.Property != null && !Equals (e.Property, Property))
@@ -113,7 +94,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 		}
 
-		private string error;
 		private readonly List<IObjectEditor> subscribedEditors = new List<IObjectEditor> ();
 		private readonly ObservableCollection<Resource> resources = new ObservableCollection<Resource> ();
 		private ValueInfo<TValue> value;
@@ -250,16 +230,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			((RelayCommand<Resource>)SetValueResourceCommand).ChangeCanExecute ();
 		}
-
-		private void OnErrorsChanged (DataErrorsChangedEventArgs e)
-		{
-			ErrorsChanged?.Invoke (this, e);
-		}
 	}
 
 	internal abstract class PropertyViewModel
-		: ViewModelBase
+		: ViewModelBase, INotifyDataErrorInfo
 	{
+		private ObjectViewModel valueModel;
+		private bool multipleValues;
+		private PropertyVariation variation;
+		private string error;
+
 		protected PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
 			if (property == null)
@@ -281,6 +261,30 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public IPropertyInfo Property
 		{
 			get;
+		}
+
+		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+		public bool HasErrors => this.error != null;
+
+		public IEnumerable GetErrors (string propertyName)
+		{
+			return (this.error != null) ? new [] { this.error } : Enumerable.Empty<string> ();
+		}
+
+		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
+		protected void SetError (string newError)
+		{
+			if (this.error == newError)
+				return;
+
+			this.error = newError;
+			OnErrorsChanged (new DataErrorsChangedEventArgs (nameof (Property)));
+		}
+
+		private void OnErrorsChanged (DataErrorsChangedEventArgs e)
+		{
+			ErrorsChanged?.Invoke (this, e);
 		}
 
 		/// <summary>
@@ -333,10 +337,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 			private set;
 		}
-
-		private ObjectViewModel valueModel;
-		private bool multipleValues;
-		private PropertyVariation variation;
 
 		protected virtual void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{

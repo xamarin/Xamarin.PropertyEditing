@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Diagnostics;
 using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.ViewModels;
@@ -12,6 +14,7 @@ namespace Xamarin.PropertyEditing.Mac
 			StringEditor = new NSTextField (new CGRect (0, 0, 150, 20));
 			StringEditor.BackgroundColor = NSColor.Clear;
 			StringEditor.StringValue = string.Empty;
+
 			// update the value on 'enter'
 			StringEditor.Activated += (sender, e) => {
 				ViewModel.Value = StringEditor.StringValue;
@@ -36,6 +39,24 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateModelValue ()
 		{
 			StringEditor.StringValue = ViewModel.Value ?? string.Empty;
+		}
+
+		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
+		{
+			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
+		}
+
+		protected override void UpdateErrorsDisplayed (IEnumerable errors)
+		{
+			if (ViewModel.HasErrors) {
+				StringEditor.BackgroundColor = NSColor.Red;
+				Debug.WriteLine ("Your input triggered an error:");
+				foreach (var error in errors) {
+					Debug.WriteLine (error.ToString () + "\n");
+				}
+			} else {
+				StringEditor.BackgroundColor = NSColor.Clear;
+			}
 		}
 	}
 }
