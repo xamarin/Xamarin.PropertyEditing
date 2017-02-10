@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using AppKit;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -25,11 +26,22 @@ namespace Xamarin.PropertyEditing.Mac
 				viewModel = value;
 				UpdateModelValue ();
 				viewModel.PropertyChanged += HandlePropertyChanged;
+
+				// FIXME: figure out what we want errors to display as (tooltip, etc.)
+				viewModel.ErrorsChanged += (object sender, System.ComponentModel.DataErrorsChangedEventArgs e) => {
+					UpdateErrorsDisplayed (viewModel.GetErrors (viewModel.Property.Name));
+				};
 			}
 		}
 
 		protected abstract void UpdateModelValue ();
 
 		protected abstract void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e);
+
+		/// <summary>
+		/// Update the display with any errors we need to show or remove
+		/// </summary>
+		/// <param name="errors">The error messages to display to the user</param>
+		protected abstract void UpdateErrorsDisplayed (IEnumerable errors);
 	}
 }
