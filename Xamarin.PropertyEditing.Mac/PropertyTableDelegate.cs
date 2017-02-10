@@ -24,9 +24,9 @@ namespace Xamarin.PropertyEditing.Mac
 			Dictionary<Type, Type> viewModelTypes = new Dictionary<Type, Type>
 			{
 				{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
-				{typeof (FloatingPropertyViewModel), typeof (IntegerNumericEditorControl)},
+				{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
 				{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
-				{typeof (FloatingPropertyViewModel), typeof (CurrencyNumericEditorControl)},
+				{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
 			};
 
 			// Setup view based on the column
