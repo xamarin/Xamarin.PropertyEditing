@@ -20,17 +20,17 @@ namespace Xamarin.PropertyEditing.Mac
 				if (viewModel == value)
 					return;
 
-				if (viewModel != null)
+				if (viewModel != null) {
 					viewModel.PropertyChanged -= HandlePropertyChanged;
+					viewModel.ErrorsChanged -= HandleErrorsChanged;
+				}
 
 				viewModel = value;
 				UpdateModelValue ();
 				viewModel.PropertyChanged += HandlePropertyChanged;
 
 				// FIXME: figure out what we want errors to display as (tooltip, etc.)
-				viewModel.ErrorsChanged += (object sender, System.ComponentModel.DataErrorsChangedEventArgs e) => {
-					UpdateErrorsDisplayed (viewModel.GetErrors (viewModel.Property.Name));
-				};
+				viewModel.ErrorsChanged += HandleErrorsChanged;
 			}
 		}
 
@@ -43,5 +43,7 @@ namespace Xamarin.PropertyEditing.Mac
 		/// </summary>
 		/// <param name="errors">The error messages to display to the user</param>
 		protected abstract void UpdateErrorsDisplayed (IEnumerable errors);
+
+		protected abstract void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e);
 	}
 }

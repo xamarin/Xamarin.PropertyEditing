@@ -40,6 +40,11 @@ namespace Xamarin.PropertyEditing.Mac
 			StringEditor.StringValue = ViewModel.Value ?? string.Empty;
 		}
 
+		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
+		{
+			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
+		}
+
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
 			if (ViewModel.HasErrors) {
