@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.ViewModels;
@@ -49,9 +50,9 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (ViewModel.HasErrors) {
 				StringEditor.BackgroundColor = NSColor.Red;
-				System.Console.Out.WriteLine ("Your input triggered an error:");
+				Debug.WriteLine ("Your input triggered an error:");
 				foreach (var error in errors) {
-					System.Console.Out.WriteLine (error.ToString () + "\n");
+					Debug.WriteLine (error.ToString () + "\n");
 				}
 			} else {
 				StringEditor.BackgroundColor = NSColor.Clear;
