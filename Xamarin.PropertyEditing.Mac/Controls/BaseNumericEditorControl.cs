@@ -24,19 +24,16 @@ namespace Xamarin.PropertyEditing.Mac
 			NumericEditor.DoubleValue = 0.0;
 			NumericEditor.Alignment = NSTextAlignment.Right;
 
-			formatter.FormatterBehavior = NSNumberFormatterBehavior.Version_10_4;
-			formatter.Locale = NSLocale.CurrentLocale;
+			Formatter.FormatterBehavior = NSNumberFormatterBehavior.Version_10_4;
+			Formatter.Locale = NSLocale.CurrentLocale;
 
-			NumericEditor.Cell.Formatter = formatter;
+			NumericEditor.Cell.Formatter = Formatter;
 			NumericEditor.Cell.ControlSize = controlSize;
-
-
 
 			Stepper = new NSStepper ();
 			Stepper.TranslatesAutoresizingMaskIntoConstraints = false;
 			Stepper.ValueWraps = false;
 			Stepper.Cell.ControlSize = controlSize;
-
 
 			AddSubview (Stepper);
 			AddSubview (NumericEditor);
@@ -53,13 +50,13 @@ namespace Xamarin.PropertyEditing.Mac
 		internal NSTextField NumericEditor { get; set; }
 		internal NSStepper Stepper { get; set; }
 
-		NSNumberFormatter formatter = new NSNumberFormatter ();
+		protected NSNumberFormatter Formatter = new NSNumberFormatter ();
 		NSNumberFormatterStyle numberStyle;
 		protected NSNumberFormatterStyle NumberStyle {
 			get { return numberStyle; }
 			set {
 				numberStyle = value;
-				formatter.NumberStyle = numberStyle;
+				Formatter.NumberStyle = numberStyle;
 			}
 		}
 
@@ -84,76 +81,6 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
 		{
 			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
-		}
-	}
-
-	internal class IntegerNumericEditorControl : BaseNumericEditorControl
-	{
-		public IntegerNumericEditorControl ()
-		{
-			NumberStyle = NSNumberFormatterStyle.None;
-
-			// update the VM value
-			NumericEditor.Activated += (sender, e) => {
-				ViewModel.Value = NumericEditor.NIntValue;
-			};
-
-			Stepper.Activated += (s, e) => {
-				ViewModel.Value = Stepper.NIntValue;
-			};
-		}
-
-		internal new IntegerPropertyViewModel ViewModel {
-			get { return (IntegerPropertyViewModel)base.ViewModel; }
-			set { base.ViewModel = value; }
-		}
-
-		protected override void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == nameof (IntegerPropertyViewModel.Value)) {
-				UpdateModelValue ();
-			}
-		}
-
-		protected override void UpdateModelValue ()
-		{
-			Stepper.NIntValue = (nint)ViewModel.Value;
-			NumericEditor.NIntValue = (nint)ViewModel.Value;
-		}
-	}
-
-	internal class DecimalNumericEditorControl : BaseNumericEditorControl
-	{
-		public DecimalNumericEditorControl () 
-		{
-			NumberStyle = NSNumberFormatterStyle.Decimal;
-
-			// update the VM value
-			NumericEditor.Activated += (sender, e) => {
-				ViewModel.Value = NumericEditor.DoubleValue;
-			};
-
-			Stepper.Activated += (s, e) => {
-				ViewModel.Value = Stepper.DoubleValue;
-			};
-		}
-
-		internal new FloatingPropertyViewModel ViewModel {
-			get { return (FloatingPropertyViewModel)base.ViewModel; }
-			set { base.ViewModel = value; }
-		}
-
-		protected override void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == nameof (FloatingPropertyViewModel.Value)) {
-				UpdateModelValue ();
-			}
-		}
-
-		protected override void UpdateModelValue ()
-		{
-			Stepper.DoubleValue = ViewModel.Value;
-			NumericEditor.DoubleValue = ViewModel.Value;
 		}
 	}
 }
