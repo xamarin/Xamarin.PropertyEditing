@@ -4,3 +4,4 @@ obj
 *.suo
 *.DotSettings
 /Xamarin.PropertyEditing.userprefs
+/TestResult.xml
