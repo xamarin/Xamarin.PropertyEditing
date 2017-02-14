@@ -3,26 +3,21 @@ using System.Collections;
 using System.Diagnostics;
 using AppKit;
 using Foundation;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class BooleanEditorControl : PropertyEditorControl
 	{
-		static NSProcessInfo processInfo;
-		static bool BezelColourAvailable;
+		const string setBezelColorSelector = "setBezelColor:";
+
 		public BooleanEditorControl ()
 		{
 			BooleanEditor = new NSButton () { TranslatesAutoresizingMaskIntoConstraints = false };
 			BooleanEditor.SetButtonType (NSButtonType.Switch);
 
-			// Only do this check once and store the value for future use.
-			if (processInfo == null) {
-				processInfo = new NSProcessInfo ();
-				BezelColourAvailable = processInfo.IsOperatingSystemAtLeastVersion (new NSOperatingSystemVersion (10, 12, 1));
-			}
-
-			if (BezelColourAvailable) {
+			if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector))) {
 				BooleanEditor.BezelColor = NSColor.Clear;
 			}
 
@@ -62,7 +57,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
 			if (ViewModel.HasErrors) {
-				if (BezelColourAvailable) {
+				if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector))) {
 					BooleanEditor.BezelColor = NSColor.Red;
 				}
 				Debug.WriteLine ("Your input triggered an error:");
@@ -71,7 +66,7 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			}
 			else {
-				if (BezelColourAvailable) {
+				if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector))) {
 					BooleanEditor.BezelColor = NSColor.Clear;
 				}
 			}
