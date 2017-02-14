@@ -2,21 +2,26 @@
 using System.Collections;
 using System.Diagnostics;
 using AppKit;
-using CoreGraphics;
 using Foundation;
-using Xamarin.PropertyEditing.Reflection;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class BooleanEditorControl : PropertyEditorControl
 	{
-		bool BezelColourAvailable;
+		static NSProcessInfo processInfo;
+		static bool BezelColourAvailable;
 		public BooleanEditorControl ()
 		{
 			BooleanEditor = new NSButton () { TranslatesAutoresizingMaskIntoConstraints = false };
 			BooleanEditor.SetButtonType (NSButtonType.Switch);
-			BezelColourAvailable = ReflectionObjectEditor.CheckAvailability (BooleanEditor.GetType ().GetProperty ("BezelColor"));
+
+			// Only do this check once and store the value for future use.
+			if (processInfo == null) {
+				processInfo = new NSProcessInfo ();
+				BezelColourAvailable = processInfo.IsOperatingSystemAtLeastVersion (new NSOperatingSystemVersion (10, 12, 1));
+			}
+
 			if (BezelColourAvailable) {
 				BooleanEditor.BezelColor = NSColor.Clear;
 			}

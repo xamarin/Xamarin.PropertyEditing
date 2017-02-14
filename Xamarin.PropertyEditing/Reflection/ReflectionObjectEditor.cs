@@ -76,7 +76,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
 		}
 
-		public static bool CheckAvailability (PropertyInfo property)
+		private static bool CheckAvailability (PropertyInfo property)
 		{
 			Attribute availibility = property.GetCustomAttributes ().FirstOrDefault (a => a.GetType ().Name == "IntroducedAttribute");
 			if (availibility == null)
