@@ -77,7 +77,7 @@ namespace Xamarin.PropertyEditing.Mac
 			NSScrollView tableContainer = new NSScrollView (Frame) {
 				AutoresizingMask = NSViewResizingMask.WidthSizable|NSViewResizingMask.HeightSizable
 			};
-			propertyTable = new NSTableView () {
+			propertyTable = new FirstResponderTableView () {
 				AutoresizingMask = NSViewResizingMask.WidthSizable
 			};
 
@@ -92,6 +92,15 @@ namespace Xamarin.PropertyEditing.Mac
 			// add the panel to the window
 			tableContainer.DocumentView = propertyTable;
 			AddSubview (tableContainer);
+		}
+
+		class FirstResponderTableView : NSTableView
+		{
+			[Export ("validateProposedFirstResponder:forEvent:")]
+			public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
+			{
+				return true;
+			}
 		}
 	}
 }
