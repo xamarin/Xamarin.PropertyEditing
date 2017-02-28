@@ -58,5 +58,17 @@ namespace Xamarin.PropertyEditing.Mac
 				StringEditor.BackgroundColor = NSColor.Clear;
 			}
 		}
+
+		protected override void SetEnabledColour ()
+		{
+			if (ViewModel.Property.CanWrite) {
+				StringEditor.BackgroundColor = NSColor.Clear;
+				StringEditor.TextColor = NSColor.ControlText;
+			}
+			else {
+				StringEditor.BackgroundColor = NSColor.DarkGray;
+				StringEditor.TextColor = NSColor.DisabledControlText;
+			}
+		}
 	}
 }

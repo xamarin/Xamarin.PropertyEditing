@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Mac
 			BooleanEditor.SetButtonType (NSButtonType.Switch);
 
 			if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector))) {
-				BooleanEditor.BezelColor = NSColor.Clear;
+				SetEnabledColour ();
 			}
 
 			BooleanEditor.Title = string.Empty;
@@ -67,7 +67,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 			else {
 				if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector))) {
-					BooleanEditor.BezelColor = NSColor.Clear;
+					SetEnabledColour ();
 				}
 			}
 		}
@@ -75,6 +75,16 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
 		{
 			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
+		}
+
+		protected override void SetEnabledColour ()
+		{
+			if (ViewModel.Property.CanWrite) {
+				BooleanEditor.BezelColor = NSColor.Clear;
+			}
+			else {
+				BooleanEditor.BezelColor = NSColor.DarkGray;
+			}
 		}
 	}
 }
