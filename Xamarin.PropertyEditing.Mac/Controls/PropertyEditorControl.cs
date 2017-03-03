@@ -35,12 +35,10 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public override NSView HitTest (CGPoint aPoint)
+		protected virtual void UpdateModelValue ()
 		{
-			return viewModel.Property.CanWrite ? base.HitTest (aPoint) : null;
+			SetEnabled ();
 		}
-
-		protected abstract void UpdateModelValue ();
 
 		protected abstract void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e);
 
@@ -52,6 +50,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected abstract void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e);
 
-		protected abstract void SetEnabledColour ();
+		protected abstract void SetEnabled ();
 	}
 }
