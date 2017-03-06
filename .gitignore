@@ -3,6 +3,5 @@ bin
 obj
 *.suo
 *.DotSettings
-/out
 /Xamarin.PropertyEditing.userprefs
 /TestResult.xml
