@@ -17,16 +17,13 @@ namespace Xamarin.PropertyEditing.Mac
 			BooleanEditor = new NSButton () { TranslatesAutoresizingMaskIntoConstraints = false };
 			BooleanEditor.SetButtonType (NSButtonType.Switch);
 
-			if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector))) {
-				SetEnabled ();
-			}
-
 			BooleanEditor.Title = string.Empty;
 
 			// update the value on 'enter'
 			BooleanEditor.Activated += (sender, e) => {
 				ViewModel.Value = BooleanEditor.State == NSCellStateValue.On ? true : false;
 			};
+
 			AddSubview (BooleanEditor);
 		}
 
@@ -67,9 +64,7 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			}
 			else {
-				if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector))) {
-					SetEnabled ();
-				}
+				SetEnabled ();
 			}
 		}
 
@@ -81,7 +76,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void SetEnabled ()
 		{
 			BooleanEditor.Enabled = ViewModel.Property.CanWrite;
-			if (BooleanEditor.Enabled) {
+			if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector)) && BooleanEditor.Enabled) {
 				BooleanEditor.BezelColor = NSColor.Clear;
 			}
 		}

@@ -20,7 +20,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			NumericEditor = new NSTextField ();
 			NumericEditor.TranslatesAutoresizingMaskIntoConstraints = false;
-			SetEnabled ();
 			NumericEditor.DoubleValue = 0.0;
 			NumericEditor.Alignment = NSTextAlignment.Right;
 
