@@ -36,6 +36,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateModelValue ()
 		{
+			base.UpdateModelValue ();
 			Stepper.DoubleValue = ViewModel.Value;
 			NumericEditor.DoubleValue = ViewModel.Value;
 		}

@@ -34,6 +34,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateModelValue ()
 		{
+			base.UpdateModelValue ();
 			Stepper.NIntValue = (nint)ViewModel.Value;
 			NumericEditor.NIntValue = (nint)ViewModel.Value;
 		}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using AppKit;
+using CoreGraphics;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -34,7 +35,10 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		protected abstract void UpdateModelValue ();
+		protected virtual void UpdateModelValue ()
+		{
+			SetEnabled ();
+		}
 
 		protected abstract void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e);
 
@@ -45,5 +49,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected abstract void UpdateErrorsDisplayed (IEnumerable errors);
 
 		protected abstract void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e);
+
+		protected abstract void SetEnabled ();
 	}
 }

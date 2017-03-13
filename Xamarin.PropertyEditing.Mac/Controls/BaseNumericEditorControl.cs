@@ -20,7 +20,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			NumericEditor = new NSTextField ();
 			NumericEditor.TranslatesAutoresizingMaskIntoConstraints = false;
-			NumericEditor.BackgroundColor = NSColor.Clear;
 			NumericEditor.DoubleValue = 0.0;
 			NumericEditor.Alignment = NSTextAlignment.Right;
 
@@ -62,7 +61,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override abstract void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e);
 
-		protected override abstract void UpdateModelValue ();
+		protected override void UpdateModelValue ()
+		{
+			base.UpdateModelValue ();
+		}
 
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
@@ -75,12 +77,19 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 			else {
 				NumericEditor.BackgroundColor = NSColor.Clear;
+				SetEnabled ();
 			}
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
 		{
 			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
+		}
+
+		protected override void SetEnabled ()
+		{
+			NumericEditor.Editable = ViewModel.Property.CanWrite;
+			Stepper.Enabled = ViewModel.Property.CanWrite;
 		}
 	}
 }

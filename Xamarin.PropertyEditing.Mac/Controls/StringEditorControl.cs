@@ -38,6 +38,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateModelValue ()
 		{
+			base.UpdateModelValue ();
 			StringEditor.StringValue = ViewModel.Value ?? string.Empty;
 		}
 
@@ -56,7 +57,13 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			} else {
 				StringEditor.BackgroundColor = NSColor.Clear;
+				SetEnabled ();
 			}
+		}
+
+		protected override void SetEnabled ()
+		{
+			StringEditor.Editable = ViewModel.Property.CanWrite;
 		}
 	}
 }
