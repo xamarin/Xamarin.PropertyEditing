@@ -76,6 +76,7 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			}
 			else {
+				NumericEditor.BackgroundColor = NSColor.Clear;
 				SetEnabled ();
 			}
 		}
@@ -89,9 +90,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			NumericEditor.Editable = ViewModel.Property.CanWrite;
 			Stepper.Enabled = ViewModel.Property.CanWrite;
-			if (NumericEditor.Editable) {
-				NumericEditor.BackgroundColor = NSColor.Clear;
-			}
 		}
 	}
 }

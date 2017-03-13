@@ -56,17 +56,14 @@ namespace Xamarin.PropertyEditing.Mac
 					Debug.WriteLine (error.ToString () + "\n");
 				}
 			} else {
+				StringEditor.BackgroundColor = NSColor.Clear;
 				SetEnabled ();
-
 			}
 		}
 
 		protected override void SetEnabled ()
 		{
 			StringEditor.Editable = ViewModel.Property.CanWrite;
-			if (StringEditor.Editable) {
-				StringEditor.BackgroundColor = NSColor.Clear;
-			}
 		}
 	}
 }
