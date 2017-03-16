@@ -90,13 +90,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
-		private readonly ObservableCollection<PropertyViewModel> properties = new ObservableCollection<PropertyViewModel> ();
+		private ObservableCollection<PropertyViewModel> properties = new ObservableCollection<PropertyViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
+
+		string filterText;
+		PropertyArrangeMode filterMode;
 
 		private void UpdateProperties (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
 		{
 			if (this.editors.Count == 0) {
-				this.properties.Clear();
+				this.properties.Clear ();
 				return;
 			}
 
@@ -124,7 +127,25 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			foreach (IPropertyInfo property in newSet) {
-				this.properties.Add (GetViewModel (property));
+				if (string.IsNullOrEmpty (filterText)) {
+					this.properties.Add (GetViewModel (property));
+				}
+				else {
+					switch (filterMode) {
+						case PropertyArrangeMode.Name:
+							if (property.Name.StartsWith (filterText, StringComparison.InvariantCultureIgnoreCase)) {
+								this.properties.Add (GetViewModel (property));
+							}
+							break;
+						case PropertyArrangeMode.Category:
+							if (property.Name.StartsWith (filterText, StringComparison.InvariantCultureIgnoreCase)) {
+								this.properties.Add (GetViewModel (property));
+							}
+							break;
+						case PropertyArrangeMode.ValueSource:
+							break;
+					}
+				}
 			}
 		}
 
@@ -163,6 +184,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return vmFactory (property, this.editors);
 			
 			return new StringPropertyViewModel (property, this.editors);
+		}
+
+		internal void FilterData (string filterText, PropertyArrangeMode filterMode)
+		{
+            this.filterText = filterText;
+			this.filterMode = filterMode;
+			this.properties.Clear ();
+
+			UpdateProperties ();
 		}
 
 		private Task busyTask;
