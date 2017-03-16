@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CoreGraphics;
 using Foundation;
 using AppKit;
 using Xamarin.PropertyEditing;
@@ -16,6 +17,9 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	public partial class PropertyEditorPanel : AppKit.NSView
 	{
+		NSSearchField propertyFilter;
+		NSComboBox propertyFilterMode;
+
 		public PropertyEditorPanel ()
 		{
 			Initialize ();
@@ -73,8 +77,41 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
 
+			propertyFilter = new NSSearchField (new CGRect (10, Frame.Height - 25, 170, 24));
+			propertyFilter.PlaceholderString = "Property Filter";
+			propertyFilter.ControlSize = NSControlSize.Regular;
+			AddSubview (propertyFilter);
+
+			var label = new NSTextField (new CGRect (195, Frame.Height - 28, 150, 24)) {
+				BackgroundColor = NSColor.Clear,
+				TextColor = NSColor.Black,
+				Editable = false,
+				Bezeled = false,
+				ControlSize = NSControlSize.Regular,
+				StringValue = "Property Filter Mode"
+			};
+			AddSubview (label);
+
+			propertyFilterMode = new NSComboBox (new CGRect (320, Frame.Height - 25, 100, 24));
+			propertyFilterMode.ControlSize = NSControlSize.Regular;
+            AddSubview (propertyFilter);
+
+
+			var enumValues = Enum.GetValues (typeof (PropertyArrangeMode));
+
+			foreach (var item in enumValues) {
+				propertyFilterMode.Add (new NSString (item.ToString ()));
+			}
+			propertyFilterMode.SelectItem (0);
+
+			AddSubview (propertyFilterMode);
+
+			// If either the Filter Mode or PropertySearchFilter Change Filter the Data
+			propertyFilterMode.Changed += PropertyFilterMode_Changed;
+			propertyFilter.Changed += PropertyFilterMode_Changed;
+
 			// create a table view and a scroll view
-			NSScrollView tableContainer = new NSScrollView (Frame) {
+			var tableContainer = new NSScrollView (new CGRect (10, Frame.Height - 240, Frame.Width - 20, Frame.Height - 30)) {
 				AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable
 			};
 			propertyTable = new NSTableView {
@@ -99,6 +136,27 @@ namespace Xamarin.PropertyEditing.Mac
 			// add the panel to the window
 			tableContainer.DocumentView = propertyTable;
 			AddSubview (tableContainer);
+		}
+
+		void PropertyFilterMode_Changed (object sender, EventArgs e)
+		{
+			PropertyArrangeMode filterMode;
+			Enum.TryParse<PropertyArrangeMode> (propertyFilterMode.GetItemObject (0).ToString (), out filterMode);
+			FilterData (propertyFilter.Cell.Title, filterMode);
+		}
+
+		public void FilterData (string title, PropertyArrangeMode filterMode)
+		{
+			viewModel.FilterData (title, filterMode);
+		}
+
+		class FirstResponderTableView : NSTableView
+		{
+			[Export ("validateProposedFirstResponder:forEvent:")]
+			public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
+			{
+				return true;
+			}
 		}
 	}
 }
