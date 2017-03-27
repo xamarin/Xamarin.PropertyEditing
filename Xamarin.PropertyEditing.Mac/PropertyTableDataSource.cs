@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AppKit;
+using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class PropertyTableDataSource : NSTableViewDataSource
+	public class PropertyTableDataSource : NSOutlineViewDataSource
 	{
 		internal PropertyTableDataSource (PanelViewModel viewModel)
 		{
@@ -16,10 +18,90 @@ namespace Xamarin.PropertyEditing.Mac
 
 		internal PanelViewModel ViewModel { get; private set; }
 		public ICollection<object> SelectedItems => this.ViewModel.SelectedObjects;
+		List<PropertyViewModel> properties => this.ViewModel.Properties.ToList ();
 
-		public override nint GetRowCount (NSTableView tableView)
+		public override nint GetChildrenCount (NSOutlineView outlineView, NSObject item)
 		{
-			return ViewModel.Properties.Count;
+			if (this.ViewModel.ArrangeMode == PropertyArrangeMode.Name) {
+				return this.properties.Count;
+			}
+			else {
+				var grouped = this.ViewModel.Properties.GroupBy (arg => arg.Category);
+				if (item == null) {
+					var count = grouped.Count ();
+					return count;
+				}
+				else {
+					var facade = (item as NSObjectFacade);
+					var where = grouped.Where ((arg1, arg2) => arg1.Key == facade.CategoryName);
+					var count = where.ToList()[0].Count ();
+					return count;
+				}
+			}
+		}
+
+		public override NSObject GetChild (NSOutlineView outlineView, nint childIndex, NSObject item)
+		{
+			if (this.ViewModel.ArrangeMode == PropertyArrangeMode.Name) {
+				return NSObjectFacade.WrapIt (this.properties[(int)childIndex]);
+			}
+			else {
+				var grouped = this.properties.GroupBy (arg => arg.Category);
+				var groupedList = grouped.ToList ();
+				if (item == null) {
+					var listItem = groupedList[(int)childIndex];
+					return NSObjectFacade.WrapIt (null, listItem.Key);
+				}
+				else {
+					var facade = (item as NSObjectFacade);
+					if (!string.IsNullOrEmpty (facade.CategoryName)) {
+						var where = grouped.Where ((arg1, arg2) => arg1.Key == facade.CategoryName);
+						var wherelist = where.ToList ();
+						return NSObjectFacade.WrapIt (wherelist[0].ElementAt ((int)childIndex));
+					}
+					else {
+						return null;
+					}
+				}
+			}
+		}
+
+		public override bool ItemExpandable (NSOutlineView outlineView, NSObject item)
+		{
+			if (this.ViewModel.ArrangeMode == PropertyArrangeMode.Name) {
+				return false;
+			}
+			else {
+				return string.IsNullOrEmpty ((item as NSObjectFacade).CategoryName) ? false : true;
+			}
+		}
+
+		public override NSObject GetObjectValue (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
+		{
+			// I don't believe this is correct
+			if (string.IsNullOrEmpty ((item as NSObjectFacade).CategoryName)) {
+				return (NSString)((item as NSObjectFacade).WrappedObject as PropertyViewModel).Property.Name;
+			}
+			else {
+				return (NSString)(item as NSObjectFacade).CategoryName;
+			}
+		}
+	}
+
+	class NSObjectFacade : NSObject
+	{
+		public object WrappedObject;
+		public string CategoryName;
+
+		public NSObjectFacade (object obj, string categoryName = null) : base ()
+		{
+			this.WrappedObject = obj;
+			this.CategoryName = categoryName;
+		}
+
+		public static NSObjectFacade WrapIt (object obj, string categoryName = null)
+		{
+			return new NSObjectFacade (obj, categoryName);
 		}
 	}
 }
