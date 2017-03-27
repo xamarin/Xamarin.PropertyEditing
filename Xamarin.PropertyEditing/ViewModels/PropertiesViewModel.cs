@@ -33,6 +33,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
+		public Dictionary<string, bool> ExpandedNode { get; internal set; }
+
 		// TODO: Consider having the property hooks at the top level and a map of IPropertyInfo -> PropertyViewModel
 		// the hash lookup would be likely faster than doing a property info compare in every property and would
 		// reduce the number event attach/detatches
@@ -93,8 +95,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private ObservableCollection<PropertyViewModel> properties = new ObservableCollection<PropertyViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
 
-		string filterText;
-		PropertyArrangeMode filterMode;
+		public string FilterText {
+			get;
+			private set;
+		}
+		public PropertyArrangeMode ArrangeMode {
+			get;
+			private set;
+		}
 
 		private void UpdateProperties (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
 		{
@@ -127,23 +135,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			foreach (IPropertyInfo property in newSet) {
-				if (string.IsNullOrEmpty (filterText)) {
+				if (string.IsNullOrEmpty (FilterText)) {
 					this.properties.Add (GetViewModel (property));
 				}
 				else {
-					switch (filterMode) {
-						case PropertyArrangeMode.Name:
-							if (property.Name.StartsWith (filterText, StringComparison.InvariantCultureIgnoreCase)) {
-								this.properties.Add (GetViewModel (property));
-							}
-							break;
-						case PropertyArrangeMode.Category:
-							if (property.Name.StartsWith (filterText, StringComparison.InvariantCultureIgnoreCase)) {
-								this.properties.Add (GetViewModel (property));
-							}
-							break;
-						case PropertyArrangeMode.ValueSource:
-							break;
+					if (property.Name.StartsWith (FilterText, StringComparison.InvariantCultureIgnoreCase)) {
+						this.properties.Add (GetViewModel (property));
 					}
 				}
 			}
@@ -188,8 +185,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		internal void FilterData (string filterText, PropertyArrangeMode filterMode)
 		{
-            this.filterText = filterText;
-			this.filterMode = filterMode;
+            this.FilterText = filterText;
+			this.ArrangeMode = filterMode;
 			this.properties.Clear ();
 
 			UpdateProperties ();

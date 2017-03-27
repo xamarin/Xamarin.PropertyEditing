@@ -1,11 +1,12 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using AppKit;
+using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class PropertyTableDelegate : NSTableViewDelegate
+	public class PropertyTableDelegate : NSOutlineViewDelegate
 	{
 		PropertyTableDataSource DataSource;
 
@@ -24,64 +25,81 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		// the table is looking for this method, picks it up automagically
-		public override NSView GetViewForItem (NSTableView tableView, NSTableColumn tableColumn, nint row)
+		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
-			PropertyViewModel property = DataSource.ViewModel.Properties[(int)row];
-			var propertyType = property.GetType ();
-			var cellIdentifier = propertyType.Name;
+			var facade = (item as NSObjectFacade);
+			PropertyViewModel property = (PropertyViewModel)facade.WrappedObject; ;
+
+			string cellIdentifier;
+			if (string.IsNullOrEmpty (facade.CategoryName)) {
+				cellIdentifier = property.Property.Name;
+			} else {
+				cellIdentifier = facade.CategoryName;
+			}
 
 			// Setup view based on the column
 			switch (tableColumn.Identifier) {
-			case "PropertiesList":
-				var view = tableView.MakeView (cellIdentifier + "props", this);
-				if (view == null) {
-					view = new UnfocusableTextView (new CoreGraphics.CGRect (0, -5, 75, 20), property.Property.Name) {
-						TextContainerInset = new CoreGraphics.CGSize (0, 7),
-						Identifier = cellIdentifier + "props",
-						Alignment = NSTextAlignment.Right,
-					};
-				}
-				return view;
-
-			case "PropertyEditors":
-				var editor = (PropertyEditorControl)tableView.MakeView (cellIdentifier  + "edits", this);
-
-				if (editor == null) {
-					Type controlType;
-					if (viewModelTypes.TryGetValue (propertyType, out controlType)) {
-						editor = SetUpEditor (controlType, property, tableView);
+				case "PropertiesList":
+					var view = outlineView.MakeView (cellIdentifier + "props", this);
+					if (view == null) {
+						view = new UnfocusableTextView (new CoreGraphics.CGRect (0, -5, 75, 20), property.Property.Name) {
+							TextContainerInset = new CoreGraphics.CGSize (0, 7),
+							Identifier = cellIdentifier + "props",
+							Alignment = NSTextAlignment.Right,
+						};
 					}
-					else {
-						if (propertyType.IsGenericType) {
-							Type genericType = propertyType.GetGenericTypeDefinition ();
-							if (genericType == typeof (EnumPropertyViewModel<>))
-								controlType = typeof (EnumEditorControl<>).MakeGenericType (property.Property.Type);
-							editor = SetUpEditor (controlType, property, tableView);
+					return view;
+
+				case "PropertyEditors":
+					if (!String.IsNullOrEmpty (facade.CategoryName)) {
+						var editor = (PropertyEditorControl)outlineView.MakeView (cellIdentifier + "edits", this);
+						if (editor == null) {
+							Type controlType;
+							Type propertyType = property.GetType ();
+							if (viewModelTypes.TryGetValue (propertyType, out controlType)) {
+								editor = SetUpEditor (controlType, property, outlineView);
+							} else {
+								if (propertyType.IsGenericType) {
+									Type genericType = propertyType.GetGenericTypeDefinition ();
+									if (genericType == typeof (EnumPropertyViewModel<>))
+										controlType = typeof (EnumEditorControl<>).MakeGenericType (property.Property.Type);
+									editor = SetUpEditor (controlType, property, outlineView);
+								}
+							}
 						}
-					}
-				}
 
-				// we must reset these every time, as the view may have been reused
-				editor.ViewModel = property;
-				editor.TableRow = row;
-				return editor;
+						// we must reset these every time, as the view may have been reused
+						editor.ViewModel = property;
+						//editor.TableRow = row;
+						return editor;
+					}
+					break;
 			}
 
 			throw new Exception ("Unknown column identifier: " + tableColumn.Identifier);
 		}
 
-		public override nfloat GetRowHeight (NSTableView tableView, nint row)
+		public override bool ShouldSelectItem (NSOutlineView outlineView, NSObject item)
 		{
-			/*var col = tableView.TableColumns ()[1];
-			var cell = col.DataCellForRow (row);
-			var view = tableView.GetView (1, row, false) as PropertyEditorControl;
-			if (view != null) {
-				return view.Frame.Height;
-			}
-			else {*/
+			var facade = (item as NSObjectFacade);
+			// Don't allow selecttion if CategoryName is populated
+			return (string.IsNullOrEmpty (facade.CategoryName));
+		}
 
-			return 24;
-			//}
+		public override void ItemDidCollapse (NSNotification notification)
+		{
+			var facade = notification.UserInfo.ObjectForKey (new NSString ("NSObject")) as NSObjectFacade;
+			if (!string.IsNullOrEmpty (facade.CategoryName)) {
+				DataSource.ViewModel.ExpandedNode[facade.CategoryName] = false;
+			}
+		}
+
+		public override void ItemDidExpand (NSNotification notification)
+		{
+			var facade = notification.UserInfo.ObjectForKey (new NSString ("NSObject")) as NSObjectFacade;
+			if (!string.IsNullOrEmpty (facade.CategoryName)) {
+				DataSource.ViewModel.ExpandedNode[facade.CategoryName] = true;
+			}
 		}
 
 		// set up the editor based on the type of view model
