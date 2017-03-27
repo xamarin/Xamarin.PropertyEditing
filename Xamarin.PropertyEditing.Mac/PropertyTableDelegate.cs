@@ -86,22 +86,6 @@ namespace Xamarin.PropertyEditing.Mac
 			return (string.IsNullOrEmpty (facade.CategoryName));
 		}
 
-		public override void ItemDidCollapse (NSNotification notification)
-		{
-			var facade = notification.UserInfo.ObjectForKey (new NSString ("NSObject")) as NSObjectFacade;
-			if (!string.IsNullOrEmpty (facade.CategoryName)) {
-				DataSource.ViewModel.ExpandedNode[facade.CategoryName] = false;
-			}
-		}
-
-		public override void ItemDidExpand (NSNotification notification)
-		{
-			var facade = notification.UserInfo.ObjectForKey (new NSString ("NSObject")) as NSObjectFacade;
-			if (!string.IsNullOrEmpty (facade.CategoryName)) {
-				DataSource.ViewModel.ExpandedNode[facade.CategoryName] = true;
-			}
-		}
-
 		// set up the editor based on the type of view model
 		PropertyEditorControl SetUpEditor (Type controlType, PropertyViewModel property, NSTableView table)
 		{

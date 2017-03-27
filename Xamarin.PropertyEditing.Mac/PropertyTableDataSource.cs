@@ -34,7 +34,7 @@ namespace Xamarin.PropertyEditing.Mac
 				else {
 					var facade = (item as NSObjectFacade);
 					var where = grouped.Where ((arg1, arg2) => arg1.Key == facade.CategoryName);
-					var count = where.ToList()[0].Count ();
+					var count = where.ToList ()[0].Count ();
 					return count;
 				}
 			}

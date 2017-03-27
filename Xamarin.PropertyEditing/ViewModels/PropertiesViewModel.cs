@@ -33,8 +33,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		public Dictionary<string, bool> ExpandedNode { get; internal set; }
-
 		// TODO: Consider having the property hooks at the top level and a map of IPropertyInfo -> PropertyViewModel
 		// the hash lookup would be likely faster than doing a property info compare in every property and would
 		// reduce the number event attach/detatches
@@ -92,16 +90,35 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
-		private ObservableCollection<PropertyViewModel> properties = new ObservableCollection<PropertyViewModel> ();
+		private readonly ObservableCollection<PropertyViewModel> properties = new ObservableCollection<PropertyViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
 
+		string filterText;
 		public string FilterText {
-			get;
-			private set;
+			get {
+				return filterText;
+			}
+			private set {
+				if (filterText == value)
+					return;
+
+				this.filterText = value;
+				OnPropertyChanged ();
+			}
 		}
+
+		PropertyArrangeMode arrangeMode;
 		public PropertyArrangeMode ArrangeMode {
-			get;
-			private set;
+			get {
+				return arrangeMode;
+			}
+			private set {
+				if (arrangeMode == value)
+					return;
+
+				this.arrangeMode = value;
+				OnPropertyChanged ();
+			}
 		}
 
 		private void UpdateProperties (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
