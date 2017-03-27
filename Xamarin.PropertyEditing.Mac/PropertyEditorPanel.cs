@@ -79,7 +79,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
 
 			propertyFilter = new NSSearchField (new CGRect (10, Frame.Height - 25, 170, 24));
-			propertyFilter.PlaceholderString = "Property Filter";
+			propertyFilter.PlaceholderString = "Property Filter"; // TODO Localize
 			propertyFilter.ControlSize = NSControlSize.Regular;
 			AddSubview (propertyFilter);
 
