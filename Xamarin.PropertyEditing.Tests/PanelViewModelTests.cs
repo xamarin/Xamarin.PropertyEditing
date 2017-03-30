@@ -430,7 +430,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			Assert.That (vm.Properties, Is.Not.Empty);
 			Assume.That (vm.Properties.Count, Is.EqualTo (2));
-			vm.FilterData ("sub", PropertyArrangeMode.Name);
+			vm.FilterText = "sub";
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
 		}
 
@@ -448,9 +448,9 @@ namespace Xamarin.PropertyEditing.Tests
 
 			Assert.That (vm.Properties, Is.Not.Empty);
 			Assume.That (vm.Properties.Count, Is.EqualTo (2));
-			vm.FilterData ("sub", PropertyArrangeMode.Name);
+			vm.FilterText = "sub";
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
-			vm.FilterData (string.Empty, PropertyArrangeMode.Name);
+			vm.FilterText = string.Empty;
 			Assume.That (vm.Properties.Count, Is.EqualTo (2));
 		}
 

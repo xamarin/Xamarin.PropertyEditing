@@ -98,11 +98,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get {
 				return filterText;
 			}
-			private set {
+			set {
 				if (filterText == value)
 					return;
 
-				this.filterText = value;
+				filterText = value;
+
+				FilterData ();
 				OnPropertyChanged ();
 			}
 		}
@@ -112,11 +114,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get {
 				return arrangeMode;
 			}
-			private set {
+			set {
 				if (arrangeMode == value)
 					return;
 
-				this.arrangeMode = value;
+				arrangeMode = value;
+
+				FilterData ();
 				OnPropertyChanged ();
 			}
 		}
@@ -200,10 +204,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return new StringPropertyViewModel (property, this.editors);
 		}
 
-		internal void FilterData (string filterText, PropertyArrangeMode filterMode)
+		void FilterData ()
 		{
-            this.FilterText = filterText;
-			this.ArrangeMode = filterMode;
 			this.properties.Clear ();
 
 			UpdateProperties ();
