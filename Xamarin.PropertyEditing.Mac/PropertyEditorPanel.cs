@@ -110,8 +110,8 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (propertyArrangeMode);
 
 			// If either the Filter Mode or PropertySearchFilter Change Filter the Data
-			propertyArrangeMode.SelectionChanged += PropertyFilterMode_Changed;
-			propertyFilter.Changed += PropertyFilterMode_Changed;
+			propertyArrangeMode.SelectionChanged += PropertyFilterArrangeMode_Changed;
+			propertyFilter.Changed += PropertyFilterText_Changed;
 
 			// create a table view and a scroll view
 			var tableContainer = new NSScrollView (new CGRect (10, Frame.Height - 240, Frame.Width - 20, Frame.Height - 30)) {
@@ -139,16 +139,16 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (tableContainer);
 		}
 
-		void PropertyFilterMode_Changed (object sender, EventArgs e)
+		void PropertyFilterArrangeMode_Changed (object sender, EventArgs e)
 		{
 			PropertyArrangeMode filterMode;
 			Enum.TryParse<PropertyArrangeMode> (propertyArrangeMode.GetItemObject (propertyArrangeMode.SelectedIndex).ToString (), out filterMode);
-			FilterData (propertyFilter.Cell.Title, filterMode);
+			viewModel.ArrangeMode = filterMode;
 		}
 
-		public void FilterData (string title, PropertyArrangeMode arrangeMode)
+		void PropertyFilterText_Changed (object sender, EventArgs e)
 		{
-			viewModel.FilterData (title, arrangeMode);
+			viewModel.FilterText = propertyFilter.Cell.Title;
 		}
 
 		class FirstResponderOutlineView : NSOutlineView

@@ -19,6 +19,8 @@ namespace Xamarin.PropertyEditing.Mac
 		internal PanelViewModel ViewModel { get; private set; }
 		public ICollection<object> SelectedItems => this.ViewModel.SelectedObjects;
 		List<PropertyViewModel> properties => this.ViewModel.Properties.ToList ();
+		IEnumerable<IGrouping<string, PropertyViewModel>> propertiesGroupBy => this.properties.GroupBy (arg => arg.Category);
+		List<IGrouping<string, PropertyViewModel>> propertiesGroupByList => this.propertiesGroupBy.ToList ();
 
 		public override nint GetChildrenCount (NSOutlineView outlineView, NSObject item)
 		{
@@ -26,14 +28,13 @@ namespace Xamarin.PropertyEditing.Mac
 				return this.properties.Count;
 			}
 			else {
-				var grouped = this.ViewModel.Properties.GroupBy (arg => arg.Category);
 				if (item == null) {
-					var count = grouped.Count ();
+					var count = propertiesGroupBy.Count ();
 					return count;
 				}
 				else {
 					var facade = (item as NSObjectFacade);
-					var where = grouped.Where ((arg1, arg2) => arg1.Key == facade.CategoryName);
+					var where = propertiesGroupBy.Where ((arg1, arg2) => arg1.Key == facade.CategoryName);
 					var count = where.ToList ()[0].Count ();
 					return count;
 				}
@@ -46,16 +47,14 @@ namespace Xamarin.PropertyEditing.Mac
 				return NSObjectFacade.WrapIt (this.properties[(int)childIndex]);
 			}
 			else {
-				var grouped = this.properties.GroupBy (arg => arg.Category);
-				var groupedList = grouped.ToList ();
 				if (item == null) {
-					var listItem = groupedList[(int)childIndex];
+					var listItem = propertiesGroupByList[(int)childIndex];
 					return NSObjectFacade.WrapIt (null, listItem.Key);
 				}
 				else {
 					var facade = (item as NSObjectFacade);
 					if (!string.IsNullOrEmpty (facade.CategoryName)) {
-						var where = grouped.Where ((arg1, arg2) => arg1.Key == facade.CategoryName);
+						var where = propertiesGroupBy.Where ((arg1, arg2) => arg1.Key == facade.CategoryName);
 						var wherelist = where.ToList ();
 						return NSObjectFacade.WrapIt (wherelist[0].ElementAt ((int)childIndex));
 					}
