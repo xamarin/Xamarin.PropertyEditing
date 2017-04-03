@@ -2,9 +2,9 @@
 
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyCompany ("")]
+[assembly: AssemblyCompany ("Microsoft Corporation")]
 [assembly: AssemblyProduct ("Xamarin.PropertyEditing")]
-[assembly: AssemblyCopyright ("Copyright © 2017 Microsoft")]
+[assembly: AssemblyCopyright ("Copyright © 2017 Microsoft Corporation")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 
