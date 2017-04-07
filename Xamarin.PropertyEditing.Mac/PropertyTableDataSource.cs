@@ -52,7 +52,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override nint GetChildrenCount (NSOutlineView outlineView, NSObject item)
 		{
 			if (ViewModel.ArrangeMode == PropertyArrangeMode.Name) {
-				return ViewModel.Properties.ToList ().Count;
+				return ViewModel.Properties.Count;
 			}
 			else {
 				if (item == null) {
