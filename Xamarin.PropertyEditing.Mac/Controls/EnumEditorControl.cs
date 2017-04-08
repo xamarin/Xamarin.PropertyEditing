@@ -13,15 +13,21 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		NSComboBox ComboBoxEditor;
 
+		dynamic EnumEditorViewModel => ViewModel;
+
 		public EnumEditorControl ()
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			ComboBoxEditor = new NSComboBox (new CGRect (0, 0, 150, 24));
+			ComboBoxEditor = new NSComboBox (new CGRect (0, 0, 150, 20));
 			ComboBoxEditor.TranslatesAutoresizingMaskIntoConstraints = false;
 			ComboBoxEditor.BackgroundColor = NSColor.Clear;
 			ComboBoxEditor.StringValue = string.Empty;
 			ComboBoxEditor.Cell.ControlSize = NSControlSize.Regular;
+
+			ComboBoxEditor.SelectionChanged += (sender, e) => {
+				EnumEditorViewModel.ValueName = ComboBoxEditor.SelectedValue.ToString ();
+			};
 
 			AddSubview (ComboBoxEditor);
 		}
@@ -35,10 +41,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void HandlePropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			Debug.WriteLine ("Proerty Name : {0}", e.PropertyName);
-			/* var type = ViewModel.Property.Type;
-			if (e.PropertyName == nameof (EnumPropertyViewModel<type>.Value)) {
+			if (e.PropertyName == nameof (EnumEditorViewModel.ValueName)) {
 				UpdateModelValue ();
-			}*/
+			}
 		}
 
 		protected override void SetEnabled ()
@@ -63,17 +68,16 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateModelValue ()
 		{
-			var property = ViewModel.Property;
-
-			if (property.Type.IsEnum && ComboBoxEditor.Count == 0) {
-				var enumValues = Enum.GetValues (ViewModel.Property.Type);
-
-				foreach (var item in enumValues) {
-					ComboBoxEditor.Add (new NSString (item.ToString ()));
+			// Once the VM is loaded we need a one time population
+			if (ViewModel.Property.Type.IsEnum && ComboBoxEditor.Count == 0) {
+				foreach (var item in EnumEditorViewModel.PossibleValues) {
+					ComboBoxEditor.Add (new NSString (item));
 				}
 			}
 
 			base.UpdateModelValue ();
+
+			ComboBoxEditor.StringValue = EnumEditorViewModel.ValueName;
 		}
 	}
 }
