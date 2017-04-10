@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -172,7 +173,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(float), (p,e) => new FloatingPropertyViewModel (p, e) },
 			{ typeof(double), (p,e) => new FloatingPropertyViewModel (p, e) },
 			{ typeof(int), (p,e) => new IntegerPropertyViewModel (p, e) },
-			{ typeof(long), (p,e) => new IntegerPropertyViewModel (p, e) }
+			{ typeof(long), (p,e) => new IntegerPropertyViewModel (p, e) },
+			{ typeof(Point), (p,e) => new PointPropertyViewModel (p, e) }
 		};
 	}
 }
