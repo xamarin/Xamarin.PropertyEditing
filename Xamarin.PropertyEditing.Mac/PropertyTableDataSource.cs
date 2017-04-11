@@ -12,35 +12,9 @@ namespace Xamarin.PropertyEditing.Mac
 		internal PanelViewModel ViewModel { get; private set; }
 		public ICollection<object> SelectedItems => ViewModel.SelectedObjects;
 
-		List<PropertyViewModel> properties;
-		List<PropertyViewModel> Properties {
-			get {
-				if (properties == null) {
-					properties = ViewModel.Properties.ToList ();
-				}
-				return properties;
-			}
-		}
-
-		IEnumerable<IGrouping<string, PropertyViewModel>> propertiesGroupBy;
-		IEnumerable<IGrouping<string, PropertyViewModel>> PropertiesGroupBy {
-			get {
-				if (propertiesGroupBy == null) {
-					propertiesGroupBy = ViewModel.Properties.GroupBy (arg => arg.Category);
-				}
-				return propertiesGroupBy;
-			}
-		}
-
 		internal PropertyTableDataSource (PanelViewModel viewModel)
 		{
 			ViewModel = viewModel;
-			PanelViewModel.ViewModelMap.Add (typeof (CoreGraphics.CGPoint), (p, e) => new PropertyViewModel<CoreGraphics.CGPoint> (p, e));
-			PanelViewModel.ViewModelMap.Add (typeof (CoreGraphics.CGRect), (p, e) => new PropertyViewModel<CoreGraphics.CGRect> (p, e));
-
-			ViewModel.PropertyChanged += (sender, e) => {
-				properties = null;
-			};
 		}
 
 		public override nint GetChildrenCount (NSOutlineView outlineView, NSObject item)
@@ -50,7 +24,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 			else {
 				if (item == null) {
-					var count = PropertiesGroupBy.Count ();
+					var count = ViewModel.CachedPropertiesGroupBy.Count ();
 					return count;
 				}
 				else {
@@ -63,19 +37,19 @@ namespace Xamarin.PropertyEditing.Mac
 		IGrouping<string, PropertyViewModel> GetRootNodeByCategory (NSObject item)
 		{
 			var facade = (item as NSObjectFacade);
-			var root = PropertiesGroupBy.First ((arg1) => arg1.Key == facade.CategoryName);
+			var root = ViewModel.CachedPropertiesGroupBy.First ((arg1) => arg1.Key == facade.CategoryName);
 			return root;
 		}
 
 		public override NSObject GetChild (NSOutlineView outlineView, nint childIndex, NSObject item)
 		{
 			if (ViewModel.ArrangeMode == PropertyArrangeMode.Name) {
-				return NSObjectFacade.WrapIt (Properties[(int)childIndex]);
+				return NSObjectFacade.WrapIt (ViewModel.CachedProperties[(int)childIndex]);
 			}
 			else {
 				// It item null it's a top level node
 				if (item == null) {
-					var listItem = PropertiesGroupBy.ToList ()[(int)childIndex];
+					var listItem = ViewModel.CachedPropertiesGroupBy.ToList ()[(int)childIndex];
 					return NSObjectFacade.WrapIt (null, listItem.Key);
 				}
 				else {
