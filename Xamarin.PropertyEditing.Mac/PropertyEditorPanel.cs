@@ -103,7 +103,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var enumValues = Enum.GetValues (typeof (PropertyArrangeMode));
 
 			foreach (var item in enumValues) {
-				propertyArrangeMode.Add (new NSString (item.ToString ()));
+				propertyArrangeMode.Add (new NSString (item.ToString ())); // TODO May need translating
 			}
 			propertyArrangeMode.SelectItem (0);
 

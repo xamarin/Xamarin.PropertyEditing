@@ -32,21 +32,15 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		List<IGrouping<string, PropertyViewModel>> propertiesGroupByList;
-		List<IGrouping<string, PropertyViewModel>> PropertiesGroupByList {
-			get {
-				if (propertiesGroupByList == null) {
-					propertiesGroupByList = PropertiesGroupBy.ToList ();
-				}
-				return propertiesGroupByList;
-			}
-		}
-
 		internal PropertyTableDataSource (PanelViewModel viewModel)
 		{
 			ViewModel = viewModel;
 			PanelViewModel.ViewModelMap.Add (typeof (CoreGraphics.CGPoint), (p, e) => new PropertyViewModel<CoreGraphics.CGPoint> (p, e));
 			PanelViewModel.ViewModelMap.Add (typeof (CoreGraphics.CGRect), (p, e) => new PropertyViewModel<CoreGraphics.CGRect> (p, e));
+
+			ViewModel.PropertyChanged += (sender, e) => {
+				properties = null;
+			};
 		}
 
 		public override nint GetChildrenCount (NSOutlineView outlineView, NSObject item)
@@ -60,17 +54,17 @@ namespace Xamarin.PropertyEditing.Mac
 					return count;
 				}
 				else {
-					var count = GetPropertyGroupByWhere (item).ToList ()[0].Count ();
+					var count = GetRootNodeByCategory (item).Count ();
 					return count;
 				}
 			}
 		}
 
-		IEnumerable<IGrouping<string, PropertyViewModel>> GetPropertyGroupByWhere (NSObject item)
+		IGrouping<string, PropertyViewModel> GetRootNodeByCategory (NSObject item)
 		{
 			var facade = (item as NSObjectFacade);
-			var where = PropertiesGroupBy.Where ((arg1, arg2) => arg1.Key == facade.CategoryName);
-			return where;
+			var root = PropertiesGroupBy.First ((arg1) => arg1.Key == facade.CategoryName);
+			return root;
 		}
 
 		public override NSObject GetChild (NSOutlineView outlineView, nint childIndex, NSObject item)
@@ -81,14 +75,14 @@ namespace Xamarin.PropertyEditing.Mac
 			else {
 				// It item null it's a top level node
 				if (item == null) {
-					var listItem = PropertiesGroupByList[(int)childIndex];
+					var listItem = PropertiesGroupBy.ToList ()[(int)childIndex];
 					return NSObjectFacade.WrapIt (null, listItem.Key);
 				}
 				else {
 					var facade = (item as NSObjectFacade);
 					if (!string.IsNullOrEmpty (facade.CategoryName)) {
-						var wherelist = GetPropertyGroupByWhere (item).ToList ();
-						return NSObjectFacade.WrapIt (wherelist[0].ElementAt ((int)childIndex));
+						var rootNode = GetRootNodeByCategory (item);
+						return NSObjectFacade.WrapIt (rootNode.ElementAt ((int)childIndex));
 					}
 					else {
 						return null;
