@@ -21,6 +21,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			EditorProvider = provider;
 
 			this.selectedObjects.CollectionChanged += OnSelectedObjectsChanged;
+			PropertyChanged += PropertiesViewModel_PropertyChanged;
 		}
 
 		/// <remarks>Consumers should check for <see cref="INotifyCollectionChanged"/> and hook appropriately.</remarks>
@@ -209,6 +210,31 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.properties.Clear ();
 
 			UpdateProperties ();
+		}
+
+		List<PropertyViewModel> cachedProperties;
+		public List<PropertyViewModel> CachedProperties {
+			get {
+				if (cachedProperties == null) {
+					cachedProperties = Properties.ToList ();
+				}
+				return cachedProperties;
+			}
+		}
+
+		IEnumerable<IGrouping<string, PropertyViewModel>> cachedPropertiesGroupBy;
+		public IEnumerable<IGrouping<string, PropertyViewModel>> CachedPropertiesGroupBy {
+			get {
+				if (cachedPropertiesGroupBy == null) {
+					cachedPropertiesGroupBy = CachedProperties.GroupBy (arg => arg.Category);
+				}
+				return cachedPropertiesGroupBy;
+			}
+		}
+
+		void PropertiesViewModel_PropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			cachedProperties = null;
 		}
 
 		private Task busyTask;
