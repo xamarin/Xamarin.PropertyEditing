@@ -18,6 +18,9 @@ namespace Xamarin.PropertyEditing.Mac
 			XEditor = new NSTextField (new CGRect (25, 0, 50, 20));
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.StringValue = string.Empty;
+			XEditor.Activated += (sender, e) => {
+				ViewModel.Value = new Rectangle (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
+			};
 
 			var yLabel = new NSTextView (new CGRect (75, 0, 20, 20)) {
 				Value = "Y:"
@@ -25,6 +28,9 @@ namespace Xamarin.PropertyEditing.Mac
 			YEditor = new NSTextField (new CGRect (80, 0, 50, 20));
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.StringValue = string.Empty;
+			YEditor.Activated += (sender, e) => {
+				ViewModel.Value = new Rectangle (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
+			};
 
 			var widthLabel = new NSTextView (new CGRect (0, 30, 40, 20)) {
 				Value = "Width:"
@@ -32,6 +38,9 @@ namespace Xamarin.PropertyEditing.Mac
 			WidthEditor = new NSTextField (new CGRect (45, 30, 50, 20));
 			WidthEditor.BackgroundColor = NSColor.Clear;
 			WidthEditor.StringValue = string.Empty;
+			WidthEditor.Activated += (sender, e) => {
+				ViewModel.Value = new Rectangle (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
+			};
 
 			var heightLabel = new NSTextView (new CGRect (100, 30, 40, 20)) {
 				Value = "Height:"
@@ -39,6 +48,9 @@ namespace Xamarin.PropertyEditing.Mac
 			HeightEditor = new NSTextField (new CGRect (145, 30, 50, 20));
 			HeightEditor.BackgroundColor = NSColor.Clear;
 			HeightEditor.StringValue = string.Empty;
+			HeightEditor.Activated += (sender, e) => {
+				ViewModel.Value = new Rectangle (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
+			};
 
 			// update the value on 'enter'
 			XEditor.Activated += (sender, e) => {
