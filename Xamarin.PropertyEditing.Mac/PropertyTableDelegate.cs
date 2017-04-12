@@ -9,13 +9,13 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		PropertyTableDataSource DataSource;
 
-		Dictionary<Type, Type> viewModelTypes = new Dictionary<Type, Type>
-					{
+		Dictionary<Type, Type> viewModelTypes = new Dictionary<Type, Type> 
+		{
 				{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
 				{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
 				{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
 				{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
-			};
+		};
 
 		public PropertyTableDelegate (PropertyTableDataSource datasource)
 		{
@@ -31,40 +31,40 @@ namespace Xamarin.PropertyEditing.Mac
 
 			// Setup view based on the column
 			switch (tableColumn.Title) {
-				case "Properties":
-					cellIdentifier = "cell";
-					view = (NSTextView)tableView.MakeView (cellIdentifier, this);
-					if (view == null) {
-						view = new NSTextView ();
-						view.Identifier = cellIdentifier;
-					}
+			case "Properties":
+				cellIdentifier = "cell";
+				view = (NSTextView)tableView.MakeView (cellIdentifier, this);
+				if (view == null) {
+					view = new NSTextView ();
+					view.Identifier = cellIdentifier;
+				}
 				((NSTextView)view).Value = property.Property.Name;
 
-					break;
-				case "Editors":
-					// figure out what type of view model we have
-					var propertyType = property.GetType ();
-					cellIdentifier = propertyType.Name;
-					view = tableView.MakeView (cellIdentifier, this);
+				break;
+			case "Editors":
+				// figure out what type of view model we have
+				var propertyType = property.GetType ();
+				cellIdentifier = propertyType.Name;
+				view = tableView.MakeView (cellIdentifier, this);
 
-					// we don't need to do any setup if the editor already exists
-					if (view != null)
-						return view;
+				// we don't need to do any setup if the editor already exists
+				if (view != null)
+					return view;
 
-					Type controlType;
-					if (viewModelTypes.TryGetValue (propertyType, out controlType)) {
+				Type controlType;
+				if (viewModelTypes.TryGetValue (propertyType, out controlType)) {
+					view = SetUpEditor (view, controlType, property);
+				}
+				else {
+					if (propertyType.IsGenericType) {
+						Type genericType = propertyType.GetGenericTypeDefinition ();
+						if (genericType == typeof (EnumPropertyViewModel<>))
+							controlType = typeof (EnumEditorControl<>).MakeGenericType (property.Property.Type);
 						view = SetUpEditor (view, controlType, property);
 					}
-					else {
-						if (propertyType.IsGenericType) {
-							Type genericType = propertyType.GetGenericTypeDefinition ();
-							if (genericType == typeof(EnumPropertyViewModel<>))
-								controlType = typeof(EnumEditorControl);
-							view = SetUpEditor (view, controlType, property);
-						}
-					}
+				}
 
-					break;
+				break;
 			}
 
 			return view;

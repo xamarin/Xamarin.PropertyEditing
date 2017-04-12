@@ -9,11 +9,12 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class EnumEditorControl : PropertyEditorControl
+	internal class EnumEditorControl<T> : PropertyEditorControl
+		where T : struct
 	{
 		NSComboBox ComboBoxEditor;
 
-		dynamic EnumEditorViewModel => ViewModel;
+		EnumPropertyViewModel<T> EnumEditorViewModel => (EnumPropertyViewModel<T>)ViewModel;
 
 		public EnumEditorControl ()
 		{
