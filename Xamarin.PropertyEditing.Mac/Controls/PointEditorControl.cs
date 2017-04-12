@@ -13,14 +13,14 @@ namespace Xamarin.PropertyEditing.Mac
 		internal NSTextField XEditor { get; set; }
 		internal NSTextField YEditor { get; set; }
 
-		internal new PointPropertyViewModel ViewModel {
-			get { return (PointPropertyViewModel)base.ViewModel; }
+		internal new PropertyViewModel<CGPoint> ViewModel {
+			get { return (PropertyViewModel<CGPoint>)base.ViewModel; }
 			set { base.ViewModel = value; }
 		}
 
 		public PointEditorControl ()
 		{
-			var xLabel = new NSTextView (new CGRect (0, 0, 20, 20)) {
+			var xLabel = new NSTextView (new CGRect (0, -5, 25, 20)) {
 				Value = "X:", 
 			};
 
@@ -28,17 +28,17 @@ namespace Xamarin.PropertyEditing.Mac
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.StringValue = string.Empty;
 
-			var yLabel = new NSTextView (new CGRect (75, 0, 20, 20)) {
+			var yLabel = new NSTextView (new CGRect (85, -5, 25, 20)) {
 				Value = "Y:", 
 			};
 
-			YEditor = new NSTextField (new CGRect (80, 0, 50, 20));
+			YEditor = new NSTextField (new CGRect (110, 0, 50, 20));
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.StringValue = string.Empty;
 
 			// update the value on 'enter'
 			XEditor.Activated += (sender, e) => {
-				ViewModel.Value = new Point (XEditor.IntValue, YEditor.IntValue);
+				ViewModel.Value = new CGPoint (XEditor.IntValue, YEditor.IntValue);
 			};
 
 			AddSubview (xLabel);
@@ -49,7 +49,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == nameof (PointPropertyViewModel.Value)) {
+			if (e.PropertyName == nameof (PropertyViewModel<CGPoint>.Value)) {
 				UpdateModelValue ();
 			}
 		}
@@ -57,8 +57,8 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateModelValue ()
 		{
 			base.UpdateModelValue ();
-			XEditor.IntValue = ViewModel.Value.X;
-			YEditor.IntValue = ViewModel.Value.Y;
+			XEditor.IntValue = (int)ViewModel.Value.X;
+			YEditor.IntValue = (int)ViewModel.Value.Y;
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)

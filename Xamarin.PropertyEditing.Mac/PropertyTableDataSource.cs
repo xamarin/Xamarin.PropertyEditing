@@ -10,6 +10,7 @@ namespace Xamarin.PropertyEditing.Mac
 		internal PropertyTableDataSource (PanelViewModel viewModel)
 		{
 			ViewModel = viewModel;
+			PanelViewModel.ViewModelMap.Add (typeof (CoreGraphics.CGPoint), (p, e) => new PropertyViewModel<CoreGraphics.CGPoint> (p, e));
 		}
 
 		internal PanelViewModel ViewModel { get; private set; }

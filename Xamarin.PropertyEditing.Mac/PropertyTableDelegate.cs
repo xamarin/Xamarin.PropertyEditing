@@ -35,7 +35,7 @@ namespace Xamarin.PropertyEditing.Mac
 				{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
 				{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
 				{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
-				{typeof (PointPropertyViewModel), typeof (PointEditorControl)},
+				{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (PointEditorControl)},
 			};
 
 			// Setup view based on the column
