@@ -47,6 +47,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Controls\IntegerNumericEditorControl.cs" />
     <Compile Include="Controls\DecimalNumericEditorControl.cs" />
     <Compile Include="Controls\EnumEditorControl.cs" />
+    <Compile Include="Controls\PointEditorControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

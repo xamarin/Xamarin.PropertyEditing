@@ -29,6 +29,15 @@ namespace Xamarin.PropertyEditing.Mac
 			string cellIdentifier;
 			NSView view = new NSView ();
 
+			Dictionary<Type, Type> viewModelTypes = new Dictionary<Type, Type>
+			{
+				{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
+				{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
+				{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
+				{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
+				{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (PointEditorControl)},
+			};
+
 			// Setup view based on the column
 			switch (tableColumn.Title) {
 			case "Properties":
