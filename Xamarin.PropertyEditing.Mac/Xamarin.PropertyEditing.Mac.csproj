@@ -62,6 +62,7 @@
     <Compile Include="Controls\BooleanEditorControl.cs" />
     <Compile Include="Controls\IntegerNumericEditorControl.cs" />
     <Compile Include="Controls\DecimalNumericEditorControl.cs" />
+    <Compile Include="Controls\EnumEditorControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

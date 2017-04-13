@@ -78,7 +78,8 @@ namespace Xamarin.PropertyEditing.Mac
 				AutoresizingMask = NSViewResizingMask.WidthSizable|NSViewResizingMask.HeightSizable
 			};
 			propertyTable = new FirstResponderTableView () {
-				AutoresizingMask = NSViewResizingMask.WidthSizable
+				AutoresizingMask = NSViewResizingMask.WidthSizable,
+				RowHeight = 24,
 			};
 
 			// create columns for the panel

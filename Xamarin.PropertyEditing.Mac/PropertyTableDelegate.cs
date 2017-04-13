@@ -9,6 +9,14 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		PropertyTableDataSource DataSource;
 
+		Dictionary<Type, Type> viewModelTypes = new Dictionary<Type, Type> 
+		{
+				{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
+				{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
+				{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
+				{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
+		};
+
 		public PropertyTableDelegate (PropertyTableDataSource datasource)
 		{
 			this.DataSource = datasource;
@@ -17,17 +25,9 @@ namespace Xamarin.PropertyEditing.Mac
 		// the table is looking for this method, picks it up automagically
 		public override NSView GetViewForItem (NSTableView tableView, NSTableColumn tableColumn, nint row)
 		{
-			PropertyViewModel property = DataSource.ViewModel.Properties [(int)row];
+			PropertyViewModel property = DataSource.ViewModel.Properties[(int)row];
 			string cellIdentifier;
 			NSView view = new NSView ();
-
-			Dictionary<Type, Type> viewModelTypes = new Dictionary<Type, Type>
-			{
-				{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
-				{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
-				{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
-				{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
-			};
 
 			// Setup view based on the column
 			switch (tableColumn.Title) {
@@ -52,8 +52,17 @@ namespace Xamarin.PropertyEditing.Mac
 					return view;
 
 				Type controlType;
-				if (viewModelTypes.TryGetValue (propertyType, out controlType))
+				if (viewModelTypes.TryGetValue (propertyType, out controlType)) {
 					view = SetUpEditor (view, controlType, property);
+				}
+				else {
+					if (propertyType.IsGenericType) {
+						Type genericType = propertyType.GetGenericTypeDefinition ();
+						if (genericType == typeof (EnumPropertyViewModel<>))
+							controlType = typeof (EnumEditorControl<>).MakeGenericType (property.Property.Type);
+						view = SetUpEditor (view, controlType, property);
+					}
+				}
 
 				break;
 			}
