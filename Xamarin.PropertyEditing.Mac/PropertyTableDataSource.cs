@@ -11,6 +11,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			ViewModel = viewModel;
 			PanelViewModel.ViewModelMap.Add (typeof (CoreGraphics.CGPoint), (p, e) => new PropertyViewModel<CoreGraphics.CGPoint> (p, e));
+			PanelViewModel.ViewModelMap.Add (typeof (CoreGraphics.CGRect), (p, e) => new PropertyViewModel<CoreGraphics.CGRect> (p, e));
 		}
 
 		internal PanelViewModel ViewModel { get; private set; }

@@ -27,6 +27,9 @@ namespace Xamarin.PropertyEditing.Mac
 			XEditor = new NSTextField (new CGRect (25, 0, 50, 20));
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.StringValue = string.Empty;
+			XEditor.Activated += (sender, e) => {
+				ViewModel.Value = new CGPoint (XEditor.IntValue, YEditor.IntValue);
+			};
 
 			var yLabel = new NSTextView (new CGRect (85, -5, 25, 20)) {
 				Value = "Y:", 
@@ -35,9 +38,7 @@ namespace Xamarin.PropertyEditing.Mac
 			YEditor = new NSTextField (new CGRect (110, 0, 50, 20));
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.StringValue = string.Empty;
-
-			// update the value on 'enter'
-			XEditor.Activated += (sender, e) => {
+			YEditor.Activated += (sender, e) => {
 				ViewModel.Value = new CGPoint (XEditor.IntValue, YEditor.IntValue);
 			};
 

@@ -85,8 +85,8 @@ namespace Xamarin.PropertyEditing.Mac
 			// create columns for the panel
 			NSTableColumn propertiesList = new NSTableColumn ("PropertiesList") { Title = "Properties" };
 			NSTableColumn propertyEditors = new NSTableColumn ("PropertyEditors") { Title = "Editors" };
-			propertiesList.Width = 150;
-			propertyEditors.Width = 250;
+			propertiesList.Width = 200;
+			propertyEditors.Width = 350;
 			propertyTable.AddColumn (propertiesList);
 			propertyTable.AddColumn (propertyEditors);
 

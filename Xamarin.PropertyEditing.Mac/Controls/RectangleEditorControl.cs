@@ -12,49 +12,44 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public RectangleEditorControl ()
 		{
-			var xLabel = new NSTextView (new CGRect (0, 0, 20, 20)) {
+			var xLabel = new NSTextView (new CGRect (0, -5, 25, 20)) {
 				Value = "X:"
 			};
 			XEditor = new NSTextField (new CGRect (25, 0, 50, 20));
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.StringValue = string.Empty;
 			XEditor.Activated += (sender, e) => {
-				ViewModel.Value = new Rectangle (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
+				ViewModel.Value = new CGRect (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
 			};
 
-			var yLabel = new NSTextView (new CGRect (75, 0, 20, 20)) {
+			var yLabel = new NSTextView (new CGRect (80, -5, 20, 20)) {
 				Value = "Y:"
 			};
-			YEditor = new NSTextField (new CGRect (80, 0, 50, 20));
+			YEditor = new NSTextField (new CGRect (105, 0, 50, 20));
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.StringValue = string.Empty;
 			YEditor.Activated += (sender, e) => {
-				ViewModel.Value = new Rectangle (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
+				ViewModel.Value = new CGRect (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
 			};
 
-			var widthLabel = new NSTextView (new CGRect (0, 30, 40, 20)) {
+			var widthLabel = new NSTextView (new CGRect (160, -5, 45, 20)) {
 				Value = "Width:"
 			};
-			WidthEditor = new NSTextField (new CGRect (45, 30, 50, 20));
+			WidthEditor = new NSTextField (new CGRect (205, 0, 50, 20));
 			WidthEditor.BackgroundColor = NSColor.Clear;
 			WidthEditor.StringValue = string.Empty;
 			WidthEditor.Activated += (sender, e) => {
-				ViewModel.Value = new Rectangle (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
+				ViewModel.Value = new CGRect (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
 			};
 
-			var heightLabel = new NSTextView (new CGRect (100, 30, 40, 20)) {
+			var heightLabel = new NSTextView (new CGRect (260, -5, 45, 20)) {
 				Value = "Height:"
 			};
-			HeightEditor = new NSTextField (new CGRect (145, 30, 50, 20));
+			HeightEditor = new NSTextField (new CGRect (305, 0, 50, 20));
 			HeightEditor.BackgroundColor = NSColor.Clear;
 			HeightEditor.StringValue = string.Empty;
 			HeightEditor.Activated += (sender, e) => {
-				ViewModel.Value = new Rectangle (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
-			};
-
-			// update the value on 'enter'
-			XEditor.Activated += (sender, e) => {
-				ViewModel.Value = new Rectangle (XEditor.IntValue, XEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
+				ViewModel.Value = new CGRect (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
 			};
 
 			AddSubview (xLabel);
@@ -72,14 +67,14 @@ namespace Xamarin.PropertyEditing.Mac
 		internal NSTextField WidthEditor { get; set; }
 		internal NSTextField HeightEditor { get; set; }
 
-		internal new RectanglePropertyViewModel ViewModel {
-			get { return (RectanglePropertyViewModel)base.ViewModel; }
+		internal new PropertyViewModel<CGRect> ViewModel {
+			get { return (PropertyViewModel<CGRect>)base.ViewModel; }
 			set { base.ViewModel = value; }
 		}
 
 		protected override void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == nameof (RectanglePropertyViewModel.Value)) {
+			if (e.PropertyName == nameof (PropertyViewModel<CGRect>.Value)) {
 				UpdateModelValue ();
 			}
 		}
@@ -87,10 +82,10 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateModelValue ()
 		{
 			base.UpdateModelValue ();
-			XEditor.IntValue = ViewModel.Value.X;
-			YEditor.IntValue = ViewModel.Value.Y;
-			WidthEditor.IntValue = ViewModel.Value.Width;
-			HeightEditor.IntValue = ViewModel.Value.Height;
+			XEditor.IntValue = (int)ViewModel.Value.X;
+			YEditor.IntValue = (int)ViewModel.Value.Y;
+			WidthEditor.IntValue = (int)ViewModel.Value.Width;
+			HeightEditor.IntValue = (int)ViewModel.Value.Height;
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
