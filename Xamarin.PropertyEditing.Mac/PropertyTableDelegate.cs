@@ -14,7 +14,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
 			{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
 			{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
-			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (PointEditorControl)},
+			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (PointEditorControl<CoreGraphics.CGPoint>)},
 			{typeof (PropertyViewModel<CoreGraphics.CGRect>), typeof (CGRectEditorControl)},
 		};
 
