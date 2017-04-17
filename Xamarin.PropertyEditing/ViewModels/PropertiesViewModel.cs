@@ -167,14 +167,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private Task busyTask;
 
-		private static readonly Dictionary<Type,Func<IPropertyInfo,IEnumerable<IObjectEditor>,PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
+		public static readonly Dictionary<Type,Func<IPropertyInfo,IEnumerable<IObjectEditor>,PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
 			{ typeof(string), (p,e) => new StringPropertyViewModel (p, e) },
 			{ typeof(bool), (p,e) => new PropertyViewModel<bool> (p, e) },
 			{ typeof(float), (p,e) => new FloatingPropertyViewModel (p, e) },
 			{ typeof(double), (p,e) => new FloatingPropertyViewModel (p, e) },
 			{ typeof(int), (p,e) => new IntegerPropertyViewModel (p, e) },
 			{ typeof(long), (p,e) => new IntegerPropertyViewModel (p, e) },
-			{ typeof(Point), (p,e) => new PointPropertyViewModel (p, e) }
 		};
 	}
 }
