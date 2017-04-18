@@ -5,30 +5,29 @@ using System.Drawing;
 using System.Reflection;
 using AppKit;
 using CoreGraphics;
-using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class PointEditorControl : BasePointEditorControl<CGPoint>
+	internal class SizeEditorControl : BasePointEditorControl<CGSize>
 	{
-		public PointEditorControl ()
+		public SizeEditorControl ()
 		{
 			XLabel.Frame = new CGRect (0, -5, 25, 20);
-			XLabel.Value = "X:";
+			XLabel.Value = "Width:";
 
 			XEditor.Frame = new CGRect (25, 0, 50, 20);
 
 			YLabel.Frame = new CGRect (85, -5, 25, 20);
-			YLabel.Value = "Y:";
+			YLabel.Value = "Height:";
 
 			YEditor.Frame = new CGRect (110, 0, 50, 20);
 		}
 
 		protected override void UpdateModelValue ()
 		{
-			XEditor.StringValue = ViewModel.Value.X.ToString ();
-			YEditor.StringValue = ViewModel.Value.Y.ToString ();
+			XEditor.StringValue = ViewModel.Value.Width.ToString ();
+			YEditor.StringValue = ViewModel.Value.Width.ToString ();
 		}
 	}
 }
