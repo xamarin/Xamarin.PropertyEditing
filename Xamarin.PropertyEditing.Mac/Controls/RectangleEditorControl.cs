@@ -2,123 +2,56 @@
 using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
+using System.Reflection;
 using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class RectangleEditorControl : PropertyEditorControl
+	internal class RectangleEditorControl<T> : BaseRectangleEditorControl<T>
+		where T : struct
 	{
 		public RectangleEditorControl ()
 		{
-			var xLabel = new NSTextView (new CGRect (0, -5, 25, 20)) {
-				Value = "X:"
-			};
-			XEditor = new NSTextField (new CGRect (25, 0, 50, 20));
-			XEditor.BackgroundColor = NSColor.Clear;
-			XEditor.StringValue = string.Empty;
-			XEditor.Activated += (sender, e) => {
-				ViewModel.Value = new CGRect (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
-			};
+			XLabel.Frame = new CGRect (0, -5, 25, 20);
+			XLabel.Value = "X:";
 
-			var yLabel = new NSTextView (new CGRect (80, -5, 20, 20)) {
-				Value = "Y:"
-			};
-			YEditor = new NSTextField (new CGRect (105, 0, 50, 20));
-			YEditor.BackgroundColor = NSColor.Clear;
-			YEditor.StringValue = string.Empty;
-			YEditor.Activated += (sender, e) => {
-				ViewModel.Value = new CGRect (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
-			};
+			XEditor.Frame = new CGRect (25, 0, 50, 20);
 
-			var widthLabel = new NSTextView (new CGRect (160, -5, 45, 20)) {
-				Value = "Width:"
-			};
-			WidthEditor = new NSTextField (new CGRect (205, 0, 50, 20));
-			WidthEditor.BackgroundColor = NSColor.Clear;
-			WidthEditor.StringValue = string.Empty;
-			WidthEditor.Activated += (sender, e) => {
-				ViewModel.Value = new CGRect (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
-			};
+			YLabel.Frame = new CGRect (85, -5, 25, 20);
+			YLabel.Value = "Y:";
 
-			var heightLabel = new NSTextView (new CGRect (260, -5, 45, 20)) {
-				Value = "Height:"
-			};
-			HeightEditor = new NSTextField (new CGRect (305, 0, 50, 20));
-			HeightEditor.BackgroundColor = NSColor.Clear;
-			HeightEditor.StringValue = string.Empty;
-			HeightEditor.Activated += (sender, e) => {
-				ViewModel.Value = new CGRect (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
-			};
+			YEditor.Frame = new CGRect (105, 0, 50, 20);
 
-			AddSubview (xLabel);
-			AddSubview (XEditor);
-			AddSubview (yLabel);
-			AddSubview (YEditor);
-			AddSubview (widthLabel);
-			AddSubview (WidthEditor);
-			AddSubview (heightLabel);
-			AddSubview (HeightEditor);
-		}
+			WidthLabel.Frame = new CGRect (160, -5, 45, 20);
+			WidthLabel.Value = "Width:";
 
-		internal NSTextField XEditor { get; set; }
-		internal NSTextField YEditor { get; set; }
-		internal NSTextField WidthEditor { get; set; }
-		internal NSTextField HeightEditor { get; set; }
+			WidthEditor.Frame = new CGRect (205, 0, 50, 20);
 
-		internal new PropertyViewModel<CGRect> ViewModel {
-			get { return (PropertyViewModel<CGRect>)base.ViewModel; }
-			set { base.ViewModel = value; }
-		}
+			HeightLabel.Frame = new CGRect (260, -5, 45, 20);
+			HeightLabel.Value = "Height:";
 
-		protected override void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == nameof (PropertyViewModel<CGRect>.Value)) {
-				UpdateModelValue ();
-			}
+			HeightEditor.Frame = new CGRect (305, 0, 50, 20);
 		}
 
 		protected override void UpdateModelValue ()
 		{
-			base.UpdateModelValue ();
-			XEditor.IntValue = (int)ViewModel.Value.X;
-			YEditor.IntValue = (int)ViewModel.Value.Y;
-			WidthEditor.IntValue = (int)ViewModel.Value.Width;
-			HeightEditor.IntValue = (int)ViewModel.Value.Height;
-		}
+			var rectType = ViewModel.Value.GetType ();
+			var xProp = rectType.GetProperty ("X");
+			var xValue = (nfloat)xProp.GetValue (ViewModel.Value);
+			var yProp = rectType.GetProperty ("Y");
+			var yValue = (nfloat)yProp.GetValue (ViewModel.Value);
+			var wProp = rectType.GetProperty ("Width");
+			var wValue = (nfloat)wProp.GetValue (ViewModel.Value);
+			var hProp = rectType.GetProperty ("Height");
+			var hValue = (nfloat)hProp.GetValue (ViewModel.Value);
 
-		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
-		{
-			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
-		}
-
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
-			if (ViewModel.HasErrors) {
-				XEditor.BackgroundColor = NSColor.Red;
-				YEditor.BackgroundColor = NSColor.Red;
-				WidthEditor.BackgroundColor = NSColor.Red;
-				HeightEditor.BackgroundColor = NSColor.Red;
-				Debug.WriteLine ("Your input triggered an error:");
-				foreach (var error in errors) {
-					Debug.WriteLine (error.ToString () + "\n");
-				}
-			} else {
-				XEditor.BackgroundColor = NSColor.Clear;
-				YEditor.BackgroundColor = NSColor.Clear;
-				WidthEditor.BackgroundColor = NSColor.Clear;
-				HeightEditor.BackgroundColor = NSColor.Clear;
-				SetEnabled ();
-			}
-		}
-
-		protected override void SetEnabled ()
-		{
-			XEditor.Editable = ViewModel.Property.CanWrite;
-			YEditor.Editable = ViewModel.Property.CanWrite;
-			WidthEditor.Editable = ViewModel.Property.CanWrite;
-			HeightEditor.Editable = ViewModel.Property.CanWrite;
+			CGRect rect = new CGRect (xValue, yValue, wValue, hValue);
+			XEditor.StringValue = rect.X.ToString ();
+			YEditor.StringValue = rect.Y.ToString ();
+			WidthEditor.StringValue = rect.Width.ToString ();
+			HeightEditor.StringValue = rect.Height.ToString ();
 		}
 	}
 }
