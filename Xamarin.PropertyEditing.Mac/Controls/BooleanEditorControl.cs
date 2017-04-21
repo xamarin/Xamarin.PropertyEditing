@@ -50,6 +50,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.UpdateModelValue ();
 			BooleanEditor.State = ViewModel.Value ? NSCellStateValue.On : NSCellStateValue.Off;
+			BooleanEditor.Title = ViewModel.Value.ToString ();
 		}
 
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
