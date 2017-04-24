@@ -12,6 +12,7 @@ using Xamarin.PropertyEditing.Reflection;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.PropertyEditing.Mac.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -42,7 +43,7 @@ namespace Xamarin.PropertyEditing.Mac
 		IEditorProvider editorProvider;
 		NSOutlineView propertyTable;
 		PropertyTableDataSource dataSource;
-		PanelViewModel viewModel;
+		MacPanelViewModel viewModel;
 		INotifyCollectionChanged PropertiesChanged => viewModel?.Properties as INotifyCollectionChanged;
 
 		public IEditorProvider EditorProvider {
@@ -54,7 +55,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				// Populate the Properety Table
 				editorProvider = value;
-				viewModel = new PanelViewModel (editorProvider);
+				viewModel = new MacPanelViewModel (editorProvider);
 				dataSource = new PropertyTableDataSource (viewModel);
 				propertyTable.Delegate = new PropertyTableDelegate (dataSource);
 				propertyTable.DataSource = dataSource;

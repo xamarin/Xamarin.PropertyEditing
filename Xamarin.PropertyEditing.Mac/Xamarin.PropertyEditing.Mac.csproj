@@ -68,6 +68,7 @@
     <Compile Include="Controls\BaseRectangleEditorControl.cs" />
     <Compile Include="Controls\CGRectEditorControl.cs" />
     <Compile Include="Controls\PointEditorControl.cs" />
+    <Compile Include="ViewModels\MacPanelViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
