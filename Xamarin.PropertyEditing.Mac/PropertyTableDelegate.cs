@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AppKit;
 using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
+using Xamarin.PropertyEditing.Mac.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
