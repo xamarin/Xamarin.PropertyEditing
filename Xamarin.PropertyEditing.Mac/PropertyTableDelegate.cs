@@ -40,8 +40,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			// Setup view based on the column
 			switch (tableColumn.Identifier) {
-				case "PropertiesList":
-					var view = outlineView.MakeView (cellIdentifier + "props", this);
+				case PropertyEditorPanel.PropertyListTitle:
+					view = outlineView.MakeView (cellIdentifier + "props", this);
 					if (view == null) {
 						view = new UnfocusableTextView (new CoreGraphics.CGRect (0, -5, 75, 20), property.Property.Name) {
 							TextContainerInset = new CoreGraphics.CGSize (0, 7),
@@ -51,7 +51,7 @@ namespace Xamarin.PropertyEditing.Mac
 					}
 					return view;
 
-				case "PropertyEditors":
+				case PropertyEditorPanel.PropertyEditorTitle:
 					if (!String.IsNullOrEmpty (facade.CategoryName)) {
 						var editor = (PropertyEditorControl)outlineView.MakeView (cellIdentifier + "edits", this);
 						if (editor == null) {
