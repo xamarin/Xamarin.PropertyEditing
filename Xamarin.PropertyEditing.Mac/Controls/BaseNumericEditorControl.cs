@@ -10,7 +10,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class BaseNumericEditorControl : PropertyEditorControl
 	{
-		protected NSLayoutConstraint rightSideConstraint;
+		//protected NSLayoutConstraint rightSideConstraint;
 
 		public BaseNumericEditorControl ()
 		{
@@ -37,12 +37,10 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (Stepper);
 			AddSubview (NumericEditor);
 
-			AddConstraints (new NSLayoutConstraint[] {
-				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1, 0),
-				(rightSideConstraint = NSLayoutConstraint.Create (Stepper, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1, 0)),
-				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, Stepper, NSLayoutAttribute.Left, 1, -3),
-				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 0),
-				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 0)
+			this.DoConstraints ( new[] {
+				NumericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - 17),
+				Stepper.ConstraintTo (NumericEditor, (s, n) => s.Left == n.Right + 5),
+				Stepper.ConstraintTo (NumericEditor, (s, n) => s.Top == n.Top + 1),
 			});
 		}
 
