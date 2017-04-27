@@ -31,6 +31,10 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			AddSubview (ComboBoxEditor);
+
+			this.DoConstraints (new[] {
+				ComboBoxEditor.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
+			});
 		}
 
 

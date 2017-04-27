@@ -11,7 +11,8 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public StringEditorControl ()
 		{
-			StringEditor = new NSTextField (new CGRect (0, 0, 150, 20));
+			StringEditor = new NSTextField (new CGRect (0, 0, 240, 20));
+			StringEditor.TranslatesAutoresizingMaskIntoConstraints = false;
 			StringEditor.BackgroundColor = NSColor.Clear;
 			StringEditor.StringValue = string.Empty;
 
@@ -20,6 +21,10 @@ namespace Xamarin.PropertyEditing.Mac
 				ViewModel.Value = StringEditor.StringValue;
 			};
 			AddSubview (StringEditor);
+
+            this.DoConstraints (new[] {
+				StringEditor.ConstraintTo (this, (s, c) => s.Width == c.Width),
+			});
 		}
 
 		internal NSTextField StringEditor { get; set; }

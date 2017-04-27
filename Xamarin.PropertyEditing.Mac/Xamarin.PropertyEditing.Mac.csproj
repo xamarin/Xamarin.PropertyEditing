@@ -65,6 +65,7 @@
     <Compile Include="Controls\DecimalNumericEditorControl.cs" />
     <Compile Include="Controls\EnumEditorControl.cs" />
     <Compile Include="Controls\PointEditorControl.cs" />
+    <Compile Include="Controls\ConstraintExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
