@@ -43,7 +43,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			// Setup view based on the column
 			switch (tableColumn.Title) {
-				case "Properties":
+				case PropertyEditorPanel.PropertyListTitle:
 					view = (NSTextView)outlineView.MakeView (cellIdentifier + "props", this);
 					if (view == null) {
 						view = new NSTextView () {
@@ -54,7 +54,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 					((NSTextView)view).Value = cellIdentifier;
 					break;
-				case "Editors":
+				case PropertyEditorPanel.PropertyEditorTitle:
 					if (string.IsNullOrEmpty (facade.CategoryName)) {
 						// figure out what type of view model we have
 						view = outlineView.MakeView (cellIdentifier + "edits", this);

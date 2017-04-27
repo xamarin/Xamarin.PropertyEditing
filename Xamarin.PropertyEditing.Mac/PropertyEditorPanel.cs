@@ -21,6 +21,9 @@ namespace Xamarin.PropertyEditing.Mac
 		NSSearchField propertyFilter;
 		NSComboBox propertyArrangeMode;
 
+		public const string PropertyListTitle = "Property"; // TODO Localise
+		public const string PropertyEditorTitle = "Value";  // TODO Localise
+
 		public PropertyEditorPanel ()
 		{
 			Initialize ();
@@ -79,22 +82,25 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
 
-			propertyFilter = new NSSearchField (new CGRect (10, Frame.Height - 25, 170, 24));
-			propertyFilter.PlaceholderString = "Property Filter"; // TODO Localize
-			propertyFilter.ControlSize = NSControlSize.Regular;
+			propertyFilter = new NSSearchField (new CGRect (10, Frame.Height - 25, 170, 24)) {
+				TranslatesAutoresizingMaskIntoConstraints = false,
+				PlaceholderString = "Property Filter", // TODO Localize
+				ControlSize = NSControlSize.Regular,
+			};
 			AddSubview (propertyFilter);
 
-			var label = new NSTextField (new CGRect (250, Frame.Height - 28, 150, 24)) {
+			var propertyArrangeModeLabel = new NSTextField (new CGRect (245, Frame.Height - 28, 150, 24)) {
+				TranslatesAutoresizingMaskIntoConstraints = false,
 				BackgroundColor = NSColor.Clear,
 				TextColor = NSColor.Black,
 				Editable = false,
 				Bezeled = false,
-				ControlSize = NSControlSize.Regular,
 				StringValue = "Arrange By:"
 			};
-			AddSubview (label);
+			AddSubview (propertyArrangeModeLabel);
 
-			propertyArrangeMode = new NSComboBox (new CGRect (320, Frame.Height - 25, 100, 24)) {
+			propertyArrangeMode = new NSComboBox (new CGRect (320, Frame.Height - 25, 153, 24)) {
+				TranslatesAutoresizingMaskIntoConstraints = false,
 				Editable = false,
 				ControlSize = NSControlSize.Regular,
 			};
@@ -115,8 +121,8 @@ namespace Xamarin.PropertyEditing.Mac
 			propertyFilter.Changed += PropertyFilterText_Changed;
 
 			// create a table view and a scroll view
-			var tableContainer = new NSScrollView (new CGRect (10, Frame.Height - 240, Frame.Width - 20, Frame.Height - 30)) {
-				AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable
+			var tableContainer = new NSScrollView (new CGRect (10, Frame.Height - 210, Frame.Width - 20, Frame.Height - 55)) {
+				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
 			propertyTable = new FirstResponderOutlineView () {
@@ -125,10 +131,10 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			// create columns for the panel
-			NSTableColumn propertiesList = new NSTableColumn ("PropertiesList") { Title = "Properties" };
-			NSTableColumn propertyEditors = new NSTableColumn ("PropertyEditors") { Title = "Editors" };
-			propertiesList.Width = 200;
-			propertyEditors.Width = 255;
+			NSTableColumn propertiesList = new NSTableColumn ("PropertiesList") { Title = PropertyListTitle };
+			NSTableColumn propertyEditors = new NSTableColumn ("PropertyEditors") { Title = PropertyEditorTitle };
+			propertiesList.Width = 150;
+			propertyEditors.Width = 250;
 			propertyTable.AddColumn (propertiesList);
 			propertyTable.AddColumn (propertyEditors);
 
@@ -138,6 +144,22 @@ namespace Xamarin.PropertyEditing.Mac
 			// add the panel to the window
 			tableContainer.DocumentView = propertyTable;
 			AddSubview (tableContainer);
+
+			this.DoConstraints (new NSLayoutConstraint[] { 
+				propertyFilter.ConstraintTo(this, (pf, c) => pf.Top == c.Top + 3),
+				propertyFilter.ConstraintTo(this, (pf, c) => pf.Left == c.Left + 12),
+
+				propertyArrangeModeLabel.ConstraintTo(this, (pl, c) => pl.Top == c.Top + 5),
+				propertyArrangeModeLabel.ConstraintTo(propertyArrangeMode, (pl, pa) => pl.Left == pa.Left - 73),
+
+				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Top == c.Top + 3),
+				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Left == c.Left + 312),
+				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Width == 154),
+
+				tableContainer.ConstraintTo(this, (t, c) => t.Top == c.Top + 30),
+				tableContainer.ConstraintTo(this, (t, c) => t.Width == c.Width - 20),
+				tableContainer.ConstraintTo(this, (t, c) => t.Height == c.Height - 40),
+			});
 		}
 
 		void PropertyFilterArrangeMode_Changed (object sender, EventArgs e)
