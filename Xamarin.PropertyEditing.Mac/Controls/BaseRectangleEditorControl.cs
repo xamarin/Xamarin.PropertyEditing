@@ -11,20 +11,19 @@ namespace Xamarin.PropertyEditing.Mac
 	internal abstract class BaseRectangleEditorControl<T> : PropertyEditorControl
 		where T : struct
 	{
-		internal NSTextView XLabel { get; set; }
-		internal NSTextField XEditor { get; set; }
-		internal NSTextView YLabel { get; set; }
-		internal NSTextField YEditor { get; set; }
-		internal NSTextView WidthLabel { get; set; }
-		internal NSTextField WidthEditor { get; set; }
-		internal NSTextView HeightLabel { get; set; }
-		internal NSTextField HeightEditor { get; set; }
+		protected NSTextView XLabel { get; set; }
+		protected NSTextField XEditor { get; set; }
+		protected NSTextView YLabel { get; set; }
+		protected NSTextField YEditor { get; set; }
+		protected NSTextView WidthLabel { get; set; }
+		protected NSTextField WidthEditor { get; set; }
+		protected NSTextView HeightLabel { get; set; }
+		protected NSTextField HeightEditor { get; set; }
 
 		internal new PropertyViewModel<T> ViewModel {
 			get { return (PropertyViewModel<T>)base.ViewModel; }
 			set { base.ViewModel = value; }
 		}
-
 
 		public BaseRectangleEditorControl ()
 		{
@@ -72,13 +71,6 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (HeightEditor);
 		}
 
-		protected override void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == nameof (PropertyViewModel<T>.Value)) {
-				UpdateModelValue ();
-			}
-		}
-
 		protected override abstract void UpdateModelValue ();
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
@@ -97,7 +89,8 @@ namespace Xamarin.PropertyEditing.Mac
 				foreach (var error in errors) {
 					Debug.WriteLine (error.ToString () + "\n");
 				}
-			} else {
+			}
+			else {
 				XEditor.BackgroundColor = NSColor.Clear;
 				YEditor.BackgroundColor = NSColor.Clear;
 				WidthEditor.BackgroundColor = NSColor.Clear;
