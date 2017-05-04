@@ -5,7 +5,7 @@ using CoreGraphics;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class AdaptingTextView : NSTextView
+	internal class AdaptingTextView : NSTextView
 	{
 		public AdaptingTextView ()
 		{
