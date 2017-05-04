@@ -16,8 +16,8 @@ namespace Xamarin.PropertyEditing.Mac
 			StringEditor.BackgroundColor = NSColor.Clear;
 			StringEditor.StringValue = string.Empty;
 
-			// update the value on 'enter'
-			StringEditor.Activated += (sender, e) => {
+			// update the value on keypress
+			StringEditor.Changed += (sender, e) => {
 				ViewModel.Value = StringEditor.StringValue;
 			};
 			AddSubview (StringEditor);
