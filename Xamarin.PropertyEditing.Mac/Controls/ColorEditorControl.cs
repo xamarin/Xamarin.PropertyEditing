@@ -3,32 +3,50 @@ using System.Collections;
 using System.Diagnostics;
 using AppKit;
 using CoreGraphics;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class ColorEditorControl : PropertyEditorControl
 	{
-		internal NSColorWell ColorEditor { get; set; }
-		internal NSTextView ColorLabel { get; set; }
+		const string setBezelColorSelector = "setBezelColor:";
+
+		MacColorButton ColorEditor { get; set; }
+
+		PredefinedColor[] predefinedColors;
 
 		public override NSView FirstKeyView => ColorEditor;
 		public override NSView LastKeyView => ColorEditor;
 
 		public ColorEditorControl ()
 		{
-			ColorEditor = new NSColorWell (new CGRect (0, 0, 40, 20));
+			RefreshPredefinedColors ();
 
-			ColorLabel = new NSTextView (new CGRect (45, 0, 250, 20)) {
-				Value = string.Empty,
-			};
+			ColorEditor = new MacColorButton (MacColorButton.Mode.WithText, predefinedColors);
 
 			// update the value on 'enter'
-			ColorEditor.Activated += (sender, e) => {
-				ViewModel.Value = ColorEditor.Color;
+			ColorEditor.CommitEvent += (NSColor color) => {
+				Debug.WriteLine ("{0}", color);
+				ViewModel.Value = color;
 			};
 			AddSubview (ColorEditor);
-            AddSubview (ColorLabel);
+
+			this.DoConstraints (new[] {
+				ColorEditor.ConstraintTo (this, (ce, c) => ce.Width == c.Width),
+				ColorEditor.ConstraintTo (this, (ce, c) => ce.Left == c.Left),
+			});
+		}
+
+		void RefreshPredefinedColors ()
+		{
+			predefinedColors = new PredefinedColor[] {
+				PredefinedColor.New (null, "Black", MacColorButton.ColorToString(NSColor.Black.UsingColorSpace (NSColorSpace.GenericRGBColorSpace), true)),
+				PredefinedColor.New (null, "Dark Gray", MacColorButton.ColorToString(NSColor.DarkGray.UsingColorSpace (NSColorSpace.GenericRGBColorSpace), true)),
+				PredefinedColor.New (null, "Light Gray", MacColorButton.ColorToString(NSColor.LightGray.UsingColorSpace (NSColorSpace.GenericRGBColorSpace), true)),
+				PredefinedColor.New (null, "White", MacColorButton.ColorToString(NSColor.White.UsingColorSpace (NSColorSpace.GenericRGBColorSpace), true)),
+				PredefinedColor.New (null, "Clear", MacColorButton.ColorToString(NSColor.Clear.UsingColorSpace (NSColorSpace.GenericRGBColorSpace), true)),
+			};
 		}
 
 		internal new PropertyViewModel<NSColor> ViewModel {
@@ -46,8 +64,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateModelValue ()
 		{
 			base.UpdateModelValue ();
-			ColorEditor.Color = ViewModel.Value ?? NSColor.Clear;
-			ColorLabel.Value = ColorEditor.Color.ToString ();
+			ColorEditor.SetColor (ViewModel.Value ?? NSColor.Clear);
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
@@ -58,14 +75,18 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
 			if (ViewModel.HasErrors) {
-				//ColorEditor.BackgroundColor = NSColor.Red;
+				if (ColorEditor.RespondsToSelector (new Selector (setBezelColorSelector))) {
+					ColorEditor.BezelColor = NSColor.Red;
+				}
 				Debug.WriteLine ("Your input triggered an error:");
 				foreach (var error in errors) {
 					Debug.WriteLine (error.ToString () + "\n");
 				}
 			}
 			else {
-				// ColorEditor.BackgroundColor = NSColor.Clear;
+				if (ColorEditor.RespondsToSelector (new Selector (setBezelColorSelector))) {
+					ColorEditor.BezelColor = NSColor.Clear;
+				}
 				SetEnabled ();
 			}
 		}
