@@ -10,11 +10,11 @@ namespace Xamarin.PropertyEditing.Mac
 		PropertyTableDataSource DataSource;
 
 		Dictionary<Type, Type> viewModelTypes = new Dictionary<Type, Type> {
-				{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
-				{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
-				{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
-				{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
-				{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (PointEditorControl)},
+			{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
+			{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
+			{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
+			{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
+			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (PointEditorControl)},
 		};
 
 		public PropertyTableDelegate (PropertyTableDataSource datasource)
@@ -26,26 +26,23 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView GetViewForItem (NSTableView tableView, NSTableColumn tableColumn, nint row)
 		{
 			PropertyViewModel property = DataSource.ViewModel.Properties[(int)row];
-			string cellIdentifier;
+			var propertyType = property.GetType ();
+			var cellIdentifier = propertyType.Name;
 			NSView view = new NSView ();
 
 			// Setup view based on the column
 			switch (tableColumn.Title) {
 			case "Properties":
-				cellIdentifier = "cell";
-				view = (NSTextView)tableView.MakeView (cellIdentifier, this);
+				view = (NSTextView)tableView.MakeView (cellIdentifier + "props", this);
 				if (view == null) {
 					view = new NSTextView ();
-					view.Identifier = cellIdentifier;
 				}
 				((NSTextView)view).Value = property.Property.Name;
 
 				break;
 			case "Editors":
 				// figure out what type of view model we have
-				var propertyType = property.GetType ();
-				cellIdentifier = propertyType.Name;
-				view = tableView.MakeView (cellIdentifier, this);
+				view = tableView.MakeView (cellIdentifier  + "edits", this);
 
 				// we don't need to do any setup if the editor already exists
 				if (view != null)
