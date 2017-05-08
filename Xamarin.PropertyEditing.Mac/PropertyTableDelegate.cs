@@ -35,7 +35,10 @@ namespace Xamarin.PropertyEditing.Mac
 			case "Properties":
 				view = (NSTextView)tableView.MakeView (cellIdentifier + "props", this);
 				if (view == null) {
-					view = new NSTextView ();
+					view = new NSTextView () {
+						TextContainerInset = new CoreGraphics.CGSize (0, 7),
+						Identifier = cellIdentifier + "props",
+					};
 				}
 				((NSTextView)view).Value = property.Property.Name;
 
