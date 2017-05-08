@@ -47,7 +47,7 @@ namespace Xamarin.PropertyEditing.Mac
 					view = (NSTextView)outlineView.MakeView (cellIdentifier + "props", this);
 					if (view == null) {
 						view = new NSTextView () {
-							TextContainerInset = new CoreGraphics.CGSize (0, 7),
+							TextContainerInset = new CoreGraphics.CGSize (0, 9),
 							Identifier = cellIdentifier + "props",
 						};
 					}

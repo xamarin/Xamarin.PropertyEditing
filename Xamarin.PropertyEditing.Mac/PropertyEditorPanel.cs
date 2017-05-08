@@ -181,6 +181,17 @@ namespace Xamarin.PropertyEditing.Mac
 			{
 				return true;
 			}
+
+			public override CGRect FrameOfOutlineCellAtRow (nint row)
+			{
+				var obj = (this.ItemAtRow (row) as NSObjectFacade);
+				if (!string.IsNullOrEmpty(obj.CategoryName)) {
+					return new CGRect (8, 11, 10, 10);
+				}
+				else {
+					return base.FrameOfOutlineCellAtRow (row);
+				}
+			}
 		}
 	}
 }
