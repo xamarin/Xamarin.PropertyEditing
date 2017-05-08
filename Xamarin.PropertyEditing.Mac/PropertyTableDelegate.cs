@@ -44,7 +44,7 @@ namespace Xamarin.PropertyEditing.Mac
 					view = outlineView.MakeView (cellIdentifier + "props", this);
 					if (view == null) {
 						view = new UnfocusableTextView (new CoreGraphics.CGRect (0, -5, 75, 20), property.Property.Name) {
-							TextContainerInset = new CoreGraphics.CGSize (0, 7),
+							TextContainerInset = new CoreGraphics.CGSize (0, 9),
 							Identifier = cellIdentifier + "props",
 							Alignment = NSTextAlignment.Right,
 						};
