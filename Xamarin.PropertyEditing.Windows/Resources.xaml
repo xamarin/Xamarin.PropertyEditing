@@ -104,7 +104,7 @@
 						</Grid.ColumnDefinitions>
 
 						<Label Target="{Binding ElementName=CheckBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
-						<CheckBox Name="CheckBox" Grid.Column="1" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                        <CheckBox Name="CheckBox" Grid.Column="1" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" Content="{Binding Value}" VerticalAlignment="Center"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
