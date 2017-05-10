@@ -74,8 +74,28 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	
-	<Style TargetType="local:StringEditorControl">
+
+    <Style TargetType="local:IntegerUpDownControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:IntegerUpDownControl}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" Grid.Column="0" VerticalContentAlignment="Center" />
+                        <StackPanel Grid.Column="1">
+                            <Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
+                            <Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
+                        </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="local:StringEditorControl">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:StringEditorControl">
@@ -104,6 +124,76 @@
                         </Grid.ColumnDefinitions>
                         <Label Target="{Binding ElementName=CheckBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
                         <CheckBox Name="CheckBox" Grid.Column="1" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" Content="{Binding Value}" VerticalAlignment="Center" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="local:PointEditorControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:PointEditorControl">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="Label" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Target="{Binding ElementName=StackPanel,Mode=OneTime}" Content="{TemplateBinding Label}" />
+                        <StackPanel Name="StackPanel" Orientation="Horizontal" Grid.Column="1">
+                            <Label Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="X" />
+                            <local:DoubleUpDownControl x:Name="XTextBox" Value="{Binding Value.X}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                            <Label Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="Y" />
+                            <local:DoubleUpDownControl x:Name="YTextBox" Value="{Binding Value.Y}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                        </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="local:SizeEditorControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:SizeEditorControl">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="Label" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Target="{Binding ElementName=StackPanel,Mode=OneTime}" Content="{TemplateBinding Label}" />
+                        <StackPanel Name="StackPanel" Orientation="Horizontal" Grid.Column="1">
+                            <Label Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="Width" />
+                            <local:DoubleUpDownControl Value="{Binding Value.Width}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                            <Label Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="Height" />
+                            <local:DoubleUpDownControl Value="{Binding Value.Height}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                        </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="local:ThicknessEditorControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:ThicknessEditorControl">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="Label" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Target="{Binding ElementName=StackPanel,Mode=OneTime}" Content="{TemplateBinding Label}" />
+                        <StackPanel Name="StackPanel" Orientation="Horizontal" Grid.Column="1">
+                            <Label Target="{Binding ElementName=LeftTextBox,Mode=OneTime}" Content="Left" />
+                            <local:IntegerUpDownControl Value="{Binding Value.Left}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                            <Label Target="{Binding ElementName=TopTextBox,Mode=OneTime}" Content="Top" />
+                            <local:IntegerUpDownControl Value="{Binding Value.Top}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                            <Label Target="{Binding ElementName=RightTextBox,Mode=OneTime}" Content="Right" />
+                            <local:IntegerUpDownControl Value="{Binding Value.Right}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                            <Label Target="{Binding ElementName=BottomTextBox,Mode=OneTime}" Content="Bottom" />
+                            <local:IntegerUpDownControl Value="{Binding Value.Bottom}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                        </StackPanel>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
