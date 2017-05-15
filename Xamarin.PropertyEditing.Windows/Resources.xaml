@@ -133,12 +133,12 @@
 								</ObjectDataProvider>
 							</StackPanel.Resources>
 							<!-- TODO localize !-->
-							<Label Target="{Binding ElementName=arrangeBy,Mode=OneTime}">Arrange by:</Label>
-							<ComboBox Name="arrangeBy" SelectedItem="{Binding ArrangeMode,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ItemsSource="{Binding Source={StaticResource arrangeModes}}" />
+							<Label Name="arrangeLabel" Target="{Binding ElementName=arrangeBy,Mode=OneTime}">Arrange by:</Label>
+							<ComboBox Name="arrangeBy" AutomationProperties.LabeledBy="{Binding ElementName=arrangeLabel,Mode=OneTime}" SelectedItem="{Binding ArrangeMode,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ItemsSource="{Binding Source={StaticResource arrangeModes}}" />
 						</StackPanel>
 						
 						<ScrollViewer Grid.Row="2">
-							<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}">
+							<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}" Focusable="False">
 								<ItemsControl.ItemTemplateSelector>
 									<local:EditorPropertySelector />
 								</ItemsControl.ItemTemplateSelector>
