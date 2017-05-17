@@ -10,9 +10,9 @@ namespace Xamarin.PropertyEditing.Mac
 		where T : struct
 	{
 		internal UnfocusableTextField XLabel { get; set; }
-		internal NSTextField XEditor { get; set; }
+		internal NumericSpinEditor XEditor { get; set; }
 		internal UnfocusableTextField YLabel { get; set; }
-		internal NSTextField YEditor { get; set; }
+		internal NumericSpinEditor YEditor { get; set; }
 
 		public override NSView FirstKeyView => XEditor;
 		public override NSView LastKeyView => YEditor;
@@ -27,24 +27,27 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			XLabel = new UnfocusableTextField ();
 
-			XEditor = new NSTextField ();
+			XEditor = new NumericSpinEditor ();
 			XEditor.BackgroundColor = NSColor.Clear;
-			XEditor.StringValue = string.Empty;
-			XEditor.Activated += OnInputUpdated;
-			XEditor.EditingEnded += OnInputUpdated;
+			XEditor.Value = 0.0f;
+			XEditor.ValueChanged += OnInputUpdated;
 
 			YLabel = new UnfocusableTextField ();
 
-			YEditor = new NSTextField ();
+			YEditor = new NumericSpinEditor ();
 			YEditor.BackgroundColor = NSColor.Clear;
-			YEditor.StringValue = string.Empty;
-			YEditor.Activated += OnInputUpdated;
-			YEditor.EditingEnded += OnInputUpdated;
+			YEditor.Value = 0.0f;
+			YEditor.ValueChanged += OnInputUpdated;
 
 			AddSubview (XLabel);
 			AddSubview (XEditor);
 			AddSubview (YLabel);
 			AddSubview (YEditor);
+
+			this.DoConstraints (new[] {
+				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 50),
+				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 50),
+			});
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)

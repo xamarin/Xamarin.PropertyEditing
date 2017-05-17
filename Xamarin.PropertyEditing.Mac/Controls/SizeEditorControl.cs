@@ -32,13 +32,13 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		protected override void UpdateValue ()
 		{
-			XEditor.StringValue = ViewModel.Value.Width.ToString ();
-			YEditor.StringValue = ViewModel.Value.Height.ToString ();
+			XEditor.Value = ViewModel.Value.Width;
+			YEditor.Value = ViewModel.Value.Height;
 		}
 
 		protected override void OnInputUpdated (object sender, EventArgs e)
 		{
-			ViewModel.Value = new Size (XEditor.IntValue, YEditor.IntValue);
+			ViewModel.Value = new Size ((int)XEditor.Value, (int)YEditor.Value);
 		}
 	}
 
@@ -46,13 +46,13 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		protected override void UpdateValue ()
 		{
-			XEditor.StringValue = ViewModel.Value.Width.ToString ();
-			YEditor.StringValue = ViewModel.Value.Height.ToString ();
+			XEditor.Value = ViewModel.Value.Width;
+			YEditor.Value = ViewModel.Value.Height;
 		}
 
 		protected override void OnInputUpdated (object sender, EventArgs e)
 		{
-			ViewModel.Value = new CommonSize (XEditor.IntValue, YEditor.IntValue);
+			ViewModel.Value = new CommonSize (XEditor.Value, YEditor.Value);
 		}
 	}
 }

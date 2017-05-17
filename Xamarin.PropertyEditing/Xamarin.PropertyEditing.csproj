@@ -112,6 +112,12 @@
     <Compile Include="ObservableLookup.cs" />
     <Compile Include="IMutableLookup.cs" />
     <Compile Include="OrderedDictionary.cs" />
+    <Compile Include="Controls\ValidationType.cs" />
+    <Compile Include="Controls\FieldValidation.cs" />
+    <Compile Include="Controls\StringConversionExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

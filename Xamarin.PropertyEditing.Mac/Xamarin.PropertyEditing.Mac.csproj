@@ -75,9 +75,12 @@
     <Compile Include="Controls\PointEditorControl.cs" />
     <Compile Include="Controls\RectangleEditorControl.cs" />
     <Compile Include="Controls\SizeEditorControl.cs" />
+    <Compile Include="Controls\Custom\NumericSpinEditor.cs" />
+    <Compile Include="Controls\Custom\NumericTextField.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
+    <Folder Include="Controls\Custom\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">

@@ -13,12 +13,8 @@ namespace Xamarin.PropertyEditing.Mac
 			Formatter.MaximumFractionDigits = 15;
 
 			// update the VM value
-			NumericEditor.Activated += (sender, e) => {
-				ViewModel.Value = NumericEditor.DoubleValue;
-			};
-
-			Stepper.Activated += (s, e) => {
-				ViewModel.Value = Stepper.DoubleValue;
+			NumericEditor.ValueChanged += (sender, e) => {
+				ViewModel.Value = NumericEditor.Value;
 			};
 		}
 
@@ -29,8 +25,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateValue ()
 		{
-			Stepper.DoubleValue = ViewModel.Value;
-			NumericEditor.DoubleValue = ViewModel.Value;
+			NumericEditor.Value = ViewModel.Value;
 		}
 	}
 }
