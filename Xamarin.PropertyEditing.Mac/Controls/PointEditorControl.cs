@@ -18,11 +18,17 @@ namespace Xamarin.PropertyEditing.Mac
 			XLabel.Value = "X:";
 
 			XEditor.Frame = new CGRect (25, 0, 50, 20);
+			XEditor.Activated += (sender, e) => {
+				ViewModel.Value = new CGPoint (XEditor.FloatValue, YEditor.FloatValue);
+			};
 
 			YLabel.Frame = new CGRect (85, -5, 25, 20);
 			YLabel.Value = "Y:";
 
 			YEditor.Frame = new CGRect (110, 0, 50, 20);
+			YEditor.Activated += (sender, e) => {
+				ViewModel.Value = new CGPoint (XEditor.FloatValue, YEditor.FloatValue);
+			};
 		}
 
 		protected override void UpdateModelValue ()

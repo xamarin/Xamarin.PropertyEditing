@@ -13,21 +13,27 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public SizeEditorControl ()
 		{
-			XLabel.Frame = new CGRect (0, -5, 25, 20);
+			XLabel.Frame = new CGRect (0, -5, 45, 20);
 			XLabel.Value = "Width:";
 
-			XEditor.Frame = new CGRect (25, 0, 50, 20);
+			XEditor.Frame = new CGRect (50, 0, 50, 20);
+			XEditor.Activated += (sender, e) => {
+				ViewModel.Value = new CGSize (XEditor.FloatValue, YEditor.FloatValue);
+			};
 
-			YLabel.Frame = new CGRect (85, -5, 25, 20);
+			YLabel.Frame = new CGRect (105, -5, 50, 20);
 			YLabel.Value = "Height:";
 
-			YEditor.Frame = new CGRect (110, 0, 50, 20);
+			YEditor.Frame = new CGRect (160, 0, 50, 20);
+			YEditor.Activated += (sender, e) => {
+				ViewModel.Value = new CGSize (XEditor.FloatValue, YEditor.FloatValue);
+			};
 		}
 
 		protected override void UpdateModelValue ()
 		{
 			XEditor.StringValue = ViewModel.Value.Width.ToString ();
-			YEditor.StringValue = ViewModel.Value.Width.ToString ();
+			YEditor.StringValue = ViewModel.Value.Height.ToString ();
 		}
 	}
 }

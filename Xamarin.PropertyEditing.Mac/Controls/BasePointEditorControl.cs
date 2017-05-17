@@ -34,20 +34,12 @@ namespace Xamarin.PropertyEditing.Mac
 			XEditor = new NSTextField ();
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.StringValue = string.Empty;
-			XEditor.Activated += (sender, e) => {
-				ViewModel.Value = (T)Activator.CreateInstance (typeParameterType, XEditor.FloatValue, YEditor.FloatValue);
-			};
 
 			YLabel = new NSTextView ();
 
 			YEditor = new NSTextField (new CGRect (110, 0, 50, 20));
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.StringValue = string.Empty;
-
-			// update the value on 'enter'
-			YEditor.Activated += (sender, e) => {
-				ViewModel.Value = (T)Activator.CreateInstance (typeParameterType, XEditor.FloatValue, YEditor.FloatValue);
-			};
 
 			AddSubview (XLabel);
 			AddSubview (XEditor);
