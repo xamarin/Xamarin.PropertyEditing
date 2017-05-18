@@ -121,8 +121,8 @@
 							<RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-
-						<TextBox Name="search" Grid.Row="0" />
+						<!-- TODO localize !-->
+						<TextBox Name="search" Grid.Row="0" AutomationProperties.Name="Search" />
 
 						<StackPanel Grid.Row="1" Orientation="Horizontal">
 							<StackPanel.Resources>
