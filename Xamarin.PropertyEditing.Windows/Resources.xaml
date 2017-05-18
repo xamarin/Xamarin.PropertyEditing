@@ -141,10 +141,10 @@
                         </Grid.ColumnDefinitions>
                         <Label Target="{Binding ElementName=StackPanel,Mode=OneTime}" Content="{TemplateBinding Label}" />
                         <StackPanel Name="StackPanel" Orientation="Horizontal" Grid.Column="1">
-                            <Label Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="X" />
-                            <local:DoubleUpDownControl x:Name="XTextBox" Value="{Binding Value.X}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
-                            <Label Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="Y" />
-                            <local:DoubleUpDownControl x:Name="YTextBox" Value="{Binding Value.Y}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                            <Label Name="XLabel" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="X" />
+                            <local:DoubleUpDownControl x:Name="XTextBox" Value="{Binding Value.X}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=XLabel,Mode=OneTime}"/>
+                            <Label Name="YLabel" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="Y" />
+                            <local:DoubleUpDownControl x:Name="YTextBox" Value="{Binding Value.Y}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=YLabel,Mode=OneTime}" />
                         </StackPanel>
                     </Grid>
                 </ControlTemplate>
@@ -163,10 +163,10 @@
                         </Grid.ColumnDefinitions>
                         <Label Target="{Binding ElementName=StackPanel,Mode=OneTime}" Content="{TemplateBinding Label}" />
                         <StackPanel Name="StackPanel" Orientation="Horizontal" Grid.Column="1">
-                            <Label Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="Width" />
-                            <local:DoubleUpDownControl Value="{Binding Value.Width}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
-                            <Label Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="Height" />
-                            <local:DoubleUpDownControl Value="{Binding Value.Height}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                            <Label Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="Width" />
+                            <local:DoubleUpDownControl Value="{Binding Value.Width}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}"/>
+                            <Label Name="HeightLabel" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="Height" />
+                            <local:DoubleUpDownControl Value="{Binding Value.Height}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}"/>
                         </StackPanel>
                     </Grid>
                 </ControlTemplate>
@@ -185,14 +185,14 @@
                         </Grid.ColumnDefinitions>
                         <Label Target="{Binding ElementName=StackPanel,Mode=OneTime}" Content="{TemplateBinding Label}" />
                         <StackPanel Name="StackPanel" Orientation="Horizontal" Grid.Column="1">
-                            <Label Target="{Binding ElementName=LeftTextBox,Mode=OneTime}" Content="Left" />
-                            <local:IntegerUpDownControl Value="{Binding Value.Left}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
-                            <Label Target="{Binding ElementName=TopTextBox,Mode=OneTime}" Content="Top" />
-                            <local:IntegerUpDownControl Value="{Binding Value.Top}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
-                            <Label Target="{Binding ElementName=RightTextBox,Mode=OneTime}" Content="Right" />
-                            <local:IntegerUpDownControl Value="{Binding Value.Right}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
-                            <Label Target="{Binding ElementName=BottomTextBox,Mode=OneTime}" Content="Bottom" />
-                            <local:IntegerUpDownControl Value="{Binding Value.Bottom}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+                            <Label Name="LeftLabel" Target="{Binding ElementName=LeftTextBox,Mode=OneTime}" Content="Left" />
+                            <local:IntegerUpDownControl Value="{Binding Value.Left}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=LeftLabel,Mode=OneTime}"/>
+                            <Label Name="TopLabel" Target="{Binding ElementName=TopTextBox,Mode=OneTime}" Content="Top" />
+                            <local:IntegerUpDownControl Value="{Binding Value.Top}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=TopLabel,Mode=OneTime}"/>
+                            <Label Name="RightLabel" Target="{Binding ElementName=RightTextBox,Mode=OneTime}" Content="Right" />
+                            <local:IntegerUpDownControl Value="{Binding Value.Right}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=RightLabel,Mode=OneTime}" />
+                            <Label Name="BottomLabel" Target="{Binding ElementName=BottomTextBox,Mode=OneTime}" Content="Bottom" />
+                            <local:IntegerUpDownControl Value="{Binding Value.Bottom}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=BottomLabel,Mode=OneTime}" />
                         </StackPanel>
                     </Grid>
                 </ControlTemplate>
