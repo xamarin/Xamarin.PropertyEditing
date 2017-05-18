@@ -66,5 +66,10 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			StringEditor.Editable = ViewModel.Property.CanWrite;
 		}
+
+		protected override void UpdateAccessibilityValues ()
+		{
+			StringEditor.AccessibilityTitle = ViewModel.Property.Name + " String Editor"; // TODO Localization
+		}
 	}
 }

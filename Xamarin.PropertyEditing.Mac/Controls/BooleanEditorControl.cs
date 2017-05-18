@@ -81,5 +81,11 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			BooleanEditor.Enabled = ViewModel.Property.CanWrite;
 		}
+
+		protected override void UpdateAccessibilityValues ()
+		{
+			BooleanEditor.AccessibilityEnabled = BooleanEditor.Enabled;
+			BooleanEditor.AccessibilityTitle = ViewModel.Property.Name + " Boolean Editor"; // TODO Localization
+		}
 	}
 }

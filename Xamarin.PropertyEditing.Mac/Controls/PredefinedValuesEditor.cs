@@ -84,5 +84,11 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		private readonly NSComboBox comboBox;
+
+		protected override void UpdateAccessibilityValues ()
+		{
+			comboBox.AccessibilityEnabled = comboBox.Enabled;
+			comboBox.AccessibilityTitle = ViewModel.Property.Name + " Enumeration Combo Box"; // TODO Localization
+		}
 	}
 }

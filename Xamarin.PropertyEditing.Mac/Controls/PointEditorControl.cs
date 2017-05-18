@@ -29,5 +29,14 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			ViewModel.Value = new Point (XEditor.IntValue, YEditor.IntValue);
 		}
+
+		protected override void UpdateAccessibilityValues ()
+		{
+			XEditor.AccessibilityEnabled = XEditor.Enabled;
+			XEditor.AccessibilityTitle = ViewModel.Property.Name + " X Editor"; // TODO Localization
+
+			YEditor.AccessibilityEnabled = YEditor.Enabled;
+			YEditor.AccessibilityTitle = ViewModel.Property.Name + " Y Editor"; // TODO Localization
+		}
 	}
 }

@@ -106,5 +106,20 @@ namespace Xamarin.PropertyEditing.Mac
 			WidthEditor.Editable = ViewModel.Property.CanWrite;
 			HeightEditor.Editable = ViewModel.Property.CanWrite;
 		}
+
+		protected override void UpdateAccessibilityValues ()
+		{
+			XEditor.AccessibilityEnabled = XEditor.Enabled;
+			XEditor.AccessibilityTitle = ViewModel.Property.Name + " X Editor"; // TODO Localization
+
+			YEditor.AccessibilityEnabled = YEditor.Enabled;
+			YEditor.AccessibilityTitle = ViewModel.Property.Name + " Y Editor"; // TODO Localization
+
+			WidthEditor.AccessibilityEnabled = WidthEditor.Enabled;
+			WidthEditor.AccessibilityTitle = ViewModel.Property.Name + " Width Editor"; // TODO Localization
+
+			HeightEditor.AccessibilityEnabled = XEditor.Enabled;
+			HeightEditor.AccessibilityTitle = ViewModel.Property.Name + " Height Editor"; // TODO Localization
+		}
 	}
 }
