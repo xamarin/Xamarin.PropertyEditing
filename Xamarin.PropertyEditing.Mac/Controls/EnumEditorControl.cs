@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using AppKit;
 using CoreGraphics;
 using Foundation;
@@ -83,6 +84,15 @@ namespace Xamarin.PropertyEditing.Mac
 			base.UpdateModelValue ();
 
 			ComboBoxEditor.StringValue = EnumEditorViewModel.ValueName;
+		}
+
+		protected override void UpdateAccessibilityValues ()
+		{
+			ComboBoxEditor.AccessibilityEnabled = ComboBoxEditor.Enabled;
+
+			var values = string.Join (", ", EnumEditorViewModel.PossibleValues.ToArray ()) + ".";
+			ComboBoxEditor.AccessibilityHelp = string.Format ("Select one of the following enumeration values: {0} ", values); // TODO Localization
+			ComboBoxEditor.AccessibilityTitle = string.Format ("{0} Enumeration Editor", typeof (T)); // TODO Localization
 		}
 	}
 }
