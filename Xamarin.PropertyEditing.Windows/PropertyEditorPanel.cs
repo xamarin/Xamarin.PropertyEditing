@@ -23,6 +23,13 @@ namespace Xamarin.PropertyEditing.Windows
 	public class PropertyEditorPanel
 		: Control
 	{
+		static PropertyEditorPanel ()
+		{
+			// Add Windows specific types
+			PanelViewModel.ViewModelMap.Add (typeof (Point), (p, e) => new PropertyViewModel<Point> (p, e));
+			PanelViewModel.ViewModelMap.Add (typeof (Size), (p, e) => new PropertyViewModel<Size> (p, e));
+			PanelViewModel.ViewModelMap.Add (typeof (Thickness), (p, e) => new PropertyViewModel<Thickness> (p, e));
+		}
 		public PropertyEditorPanel ()
 		{
 			DefaultStyleKey = typeof(PropertyEditorPanel);
@@ -30,11 +37,6 @@ namespace Xamarin.PropertyEditing.Windows
 			var selectedItems = new ObservableCollection<object> ();
 			selectedItems.CollectionChanged += OnSelectedItemsChanged;
 			SelectedItems = selectedItems;
-
-			// Add Windows specific types
-			PanelViewModel.ViewModelMap.Add (typeof (Point), (p, e) => new PropertyViewModel<Point> (p, e));
-			PanelViewModel.ViewModelMap.Add (typeof (Size), (p, e) => new PropertyViewModel<Size> (p, e));
-			PanelViewModel.ViewModelMap.Add (typeof (Thickness), (p, e) => new PropertyViewModel<Thickness> (p, e));
 		}
 
 		public static readonly DependencyProperty EditorProviderProperty = DependencyProperty.Register (
