@@ -93,10 +93,48 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private readonly ObservableCollection<PropertyViewModel> properties = new ObservableCollection<PropertyViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
 
+		string filterText;
+		public string FilterText {
+			get {
+				return filterText;
+			}
+			set {
+				if (filterText == value)
+					return;
+
+				filterText = value;
+
+				FilterData ();
+				OnPropertyChanged ();
+			}
+		}
+
+		PropertyArrangeMode arrangeMode;
+		public PropertyArrangeMode ArrangeMode {
+			get {
+				return arrangeMode;
+			}
+			set {
+				if (arrangeMode == value)
+					return;
+
+				arrangeMode = value;
+
+				FilterData ();
+				OnPropertyChanged ();
+			}
+		}
+
+		bool IsFiltering {
+			get {
+				return !string.IsNullOrEmpty (filterText);
+			}
+		}
+
 		private void UpdateProperties (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
 		{
 			if (this.editors.Count == 0) {
-				this.properties.Clear();
+				this.properties.Clear ();
 				return;
 			}
 
@@ -124,7 +162,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			foreach (IPropertyInfo property in newSet) {
-				this.properties.Add (GetViewModel (property));
+				if (!IsFiltering) {
+					this.properties.Add (GetViewModel (property));
+				}
+				else {
+					if (property.Name.StartsWith (FilterText, StringComparison.InvariantCultureIgnoreCase)) {
+						this.properties.Add (GetViewModel (property));
+					}
+				}
 			}
 		}
 
@@ -163,6 +208,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return vmFactory (property, this.editors);
 			
 			return new StringPropertyViewModel (property, this.editors);
+		}
+
+		void FilterData ()
+		{
+			this.properties.Clear ();
+
+			UpdateProperties ();
 		}
 
 		private Task busyTask;
