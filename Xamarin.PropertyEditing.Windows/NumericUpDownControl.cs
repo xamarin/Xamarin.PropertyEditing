@@ -62,6 +62,11 @@ namespace Xamarin.PropertyEditing.Windows
 		: Control
 		where T : struct, IComparable<T>
 	{
+		static NumericUpDownControl ()
+		{
+			FocusableProperty.OverrideMetadata (typeof (NumericUpDownControl<T>), new FrameworkPropertyMetadata (false));
+		}
+
 		public NumericUpDownControl ()
 		{
 			// Hacky but we only really need the one template, can override easily if need be.

@@ -6,6 +6,11 @@ namespace Xamarin.PropertyEditing.Windows
 	public abstract class PropertyEditorControl
 		: Control
 	{
+		static PropertyEditorControl ()
+		{
+			FocusableProperty.OverrideMetadata (typeof(PropertyEditorControl), new FrameworkPropertyMetadata (false));
+		}
+
 		public static readonly DependencyProperty LabelProperty = DependencyProperty.Register (
 			"Label", typeof(object), typeof(PropertyEditorControl), new PropertyMetadata (default(object)));
 

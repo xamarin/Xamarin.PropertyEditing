@@ -105,8 +105,8 @@
 							<ColumnDefinition />
 						</Grid.ColumnDefinitions>
 
-						<Label Target="{Binding ElementName=TextBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
-                        <TextBox Name="TextBox" Grid.Column="1" Text="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalContentAlignment="Center" />
+						<Label Name="Label" Target="{Binding ElementName=TextBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
+                        <TextBox Name="TextBox" AutomationProperties.LabeledBy="{Binding ElementName=Label,Mode=OneTime}" Grid.Column="1" Text="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalContentAlignment="Center" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -122,8 +122,8 @@
                             <ColumnDefinition SharedSizeGroup="Label" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Label Target="{Binding ElementName=CheckBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
-                        <CheckBox Name="CheckBox" Grid.Column="1" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" Content="{Binding Value}" VerticalAlignment="Center" />
+                        <Label Name="Label" Target="{Binding ElementName=CheckBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
+                        <CheckBox Name="CheckBox" AutomationProperties.LabeledBy="{Binding ElementName=Label,Mode=OneTime}" Grid.Column="1" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" Content="{Binding Value}" VerticalAlignment="Center" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -211,8 +211,8 @@
 							<RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-
-						<TextBox Name="search" Grid.Row="0" />
+						<!-- TODO localize !-->
+						<TextBox Name="search" Grid.Row="0" AutomationProperties.Name="Search" />
 
 						<StackPanel Grid.Row="1" Orientation="Horizontal">
 							<StackPanel.Resources>
@@ -223,12 +223,12 @@
 								</ObjectDataProvider>
 							</StackPanel.Resources>
 							<!-- TODO localize !-->
-							<Label Target="{Binding ElementName=arrangeBy,Mode=OneTime}">Arrange by:</Label>
-							<ComboBox Name="arrangeBy" SelectedItem="{Binding ArrangeMode,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ItemsSource="{Binding Source={StaticResource arrangeModes}}" />
+							<Label Name="arrangeLabel" Target="{Binding ElementName=arrangeBy,Mode=OneTime}">Arrange by:</Label>
+							<ComboBox Name="arrangeBy" AutomationProperties.LabeledBy="{Binding ElementName=arrangeLabel,Mode=OneTime}" SelectedItem="{Binding ArrangeMode,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ItemsSource="{Binding Source={StaticResource arrangeModes}}" />
 						</StackPanel>
 						
 						<ScrollViewer Grid.Row="2">
-							<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}">
+							<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}" Focusable="False">
 								<ItemsControl.ItemTemplateSelector>
 									<local:EditorPropertySelector />
 								</ItemsControl.ItemTemplateSelector>
