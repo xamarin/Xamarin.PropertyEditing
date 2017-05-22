@@ -32,24 +32,28 @@ namespace Xamarin.PropertyEditing.Mac
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.StringValue = string.Empty;
 			XEditor.Activated += OnInputUpdated;
+			XEditor.EditingEnded += OnInputUpdated;
 
 			YLabel = new NSTextView ();
 			YEditor = new NSTextField ();
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.StringValue = string.Empty;
 			YEditor.Activated += OnInputUpdated;
+			YEditor.EditingEnded += OnInputUpdated;
 
 			WidthLabel = new NSTextView ();
 			WidthEditor = new NSTextField ();
 			WidthEditor.BackgroundColor = NSColor.Clear;
 			WidthEditor.StringValue = string.Empty;
 			WidthEditor.Activated += OnInputUpdated;
+			WidthEditor.EditingEnded += OnInputUpdated;
 
 			HeightLabel = new NSTextView ();
 			HeightEditor = new NSTextField ();
 			HeightEditor.BackgroundColor = NSColor.Clear;
 			HeightEditor.StringValue = string.Empty;
 			HeightEditor.Activated += OnInputUpdated;
+			HeightEditor.EditingEnded += OnInputUpdated;
 
 			AddSubview (XLabel);
 			AddSubview (XEditor);
