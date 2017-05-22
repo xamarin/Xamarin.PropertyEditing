@@ -27,39 +27,29 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public BaseRectangleEditorControl ()
 		{
-			var typeParameterType = typeof (T);
-
 			XLabel = new NSTextView ();
 			XEditor = new NSTextField ();
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.StringValue = string.Empty;
-			XEditor.Activated += (sender, e) => {
-				ViewModel.Value = (T)Activator.CreateInstance (typeParameterType, XEditor.FloatValue, YEditor.FloatValue, WidthEditor.FloatValue, HeightEditor.FloatValue);
-			};
+			XEditor.Activated += OnInputUpdated;
 
 			YLabel = new NSTextView ();
 			YEditor = new NSTextField ();
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.StringValue = string.Empty;
-			YEditor.Activated += (sender, e) => {
-				ViewModel.Value = (T)Activator.CreateInstance (typeParameterType, XEditor.FloatValue, YEditor.FloatValue, WidthEditor.FloatValue, HeightEditor.FloatValue);
-			};
+			YEditor.Activated += OnInputUpdated;
 
 			WidthLabel = new NSTextView ();
 			WidthEditor = new NSTextField ();
 			WidthEditor.BackgroundColor = NSColor.Clear;
 			WidthEditor.StringValue = string.Empty;
-			WidthEditor.Activated += (sender, e) => {
-				ViewModel.Value = (T)Activator.CreateInstance (typeParameterType, XEditor.FloatValue, YEditor.FloatValue, WidthEditor.FloatValue, HeightEditor.FloatValue);
-			};
+			WidthEditor.Activated += OnInputUpdated;
 
 			HeightLabel = new NSTextView ();
 			HeightEditor = new NSTextField ();
 			HeightEditor.BackgroundColor = NSColor.Clear;
 			HeightEditor.StringValue = string.Empty;
-			HeightEditor.Activated += (sender, e) => {
-				ViewModel.Value = (T)Activator.CreateInstance (typeParameterType, XEditor.FloatValue, YEditor.FloatValue, WidthEditor.FloatValue, HeightEditor.FloatValue);
-			};
+			HeightEditor.Activated += OnInputUpdated;
 
 			AddSubview (XLabel);
 			AddSubview (XEditor);
@@ -71,7 +61,10 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (HeightEditor);
 		}
 
-		protected override abstract void UpdateModelValue ();
+		protected virtual void OnInputUpdated (object sender, EventArgs e)
+		{
+			ViewModel.Value = (T)Activator.CreateInstance (typeof(T), XEditor.FloatValue, YEditor.FloatValue, WidthEditor.FloatValue, HeightEditor.FloatValue);
+		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
 		{

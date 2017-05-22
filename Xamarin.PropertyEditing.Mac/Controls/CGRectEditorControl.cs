@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections;
-using System.Diagnostics;
-using System.Drawing;
-using System.Reflection;
-using AppKit;
 using CoreGraphics;
-using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class CGRectEditorControl : BaseRectangleEditorControl<CGRect>
+	internal class CGRectEditorControl
+		: BaseRectangleEditorControl<CGRect>
 	{
 		public CGRectEditorControl ()
 		{
+			// TODO localize
 			XLabel.Frame = new CGRect (0, -5, 25, 20);
 			XLabel.Value = "X:";
 
@@ -39,6 +35,11 @@ namespace Xamarin.PropertyEditing.Mac
 			if (e.PropertyName == nameof (ViewModel.Value)) {
 				UpdateModelValue ();
 			}
+		}
+
+		protected override void OnInputUpdated (object sender, EventArgs e)
+		{
+			ViewModel.Value = new CGRect (XEditor.FloatValue, YEditor.FloatValue, WidthEditor.FloatValue, HeightEditor.FloatValue);
 		}
 
 		protected override void UpdateModelValue ()
