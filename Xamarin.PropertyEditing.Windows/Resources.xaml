@@ -4,6 +4,10 @@
                     xmlns:System="clr-namespace:System;assembly=mscorlib"
                     xmlns:vm="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing">
 
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="Themes/VS.Light.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+	
 	<Style TargetType="{x:Type local:EnumEditorControl}">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -202,56 +206,64 @@
 
     <Style TargetType="local:PropertyEditorPanel">
 		<Setter Property="Grid.IsSharedSizeScope" Value="True" />
+		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyEditorPanel">
-					<Grid>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto" />
-							<RowDefinition Height="Auto" />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-						<!-- TODO localize !-->
-						<TextBox Name="search" Grid.Row="0" AutomationProperties.Name="Search" />
+					<Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="Auto" />
+								<RowDefinition />
+							</Grid.RowDefinitions>
+							<TextBox Name="search" Grid.Row="0" AutomationProperties.Name="Search" />
 
-						<StackPanel Grid.Row="1" Orientation="Horizontal">
-							<StackPanel.Resources>
-								<ObjectDataProvider x:Key="arrangeModes" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-									<ObjectDataProvider.MethodParameters>
-										<x:Type TypeName="local:PropertyArrangeMode" />
-									</ObjectDataProvider.MethodParameters>
-								</ObjectDataProvider>
-							</StackPanel.Resources>
-							<!-- TODO localize !-->
-							<Label Name="arrangeLabel" Target="{Binding ElementName=arrangeBy,Mode=OneTime}">Arrange by:</Label>
-							<ComboBox Name="arrangeBy" AutomationProperties.LabeledBy="{Binding ElementName=arrangeLabel,Mode=OneTime}" SelectedItem="{Binding ArrangeMode,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ItemsSource="{Binding Source={StaticResource arrangeModes}}" />
-						</StackPanel>
-						
-						<ScrollViewer Grid.Row="2">
-							<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}" Focusable="False">
-								<ItemsControl.ItemTemplateSelector>
-									<local:EditorPropertySelector />
-								</ItemsControl.ItemTemplateSelector>
-								<ItemsControl.GroupStyle>
-									<GroupStyle>
-										<GroupStyle.ContainerStyle>
-											<Style TargetType="GroupItem">
-												<Setter Property="Template">
-													<Setter.Value>
-														<ControlTemplate TargetType="GroupItem">
-															<Expander Header="{Binding Name}">
-																<ItemsPresenter />
-															</Expander>
-														</ControlTemplate>
-													</Setter.Value>
-												</Setter>
-											</Style>
-										</GroupStyle.ContainerStyle>
-									</GroupStyle>
-								</ItemsControl.GroupStyle>
-							</ItemsControl>
-						</ScrollViewer>
-					</Grid>
+							<StackPanel Grid.Row="1" Orientation="Horizontal">
+								<StackPanel.Resources>
+									<ObjectDataProvider x:Key="arrangeModes" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+										<ObjectDataProvider.MethodParameters>
+											<x:Type TypeName="local:PropertyArrangeMode" />
+										</ObjectDataProvider.MethodParameters>
+									</ObjectDataProvider>
+								</StackPanel.Resources>
+								<!-- TODO localize !-->
+								<Label Name="arrangeLabel" Target="{Binding ElementName=arrangeBy,Mode=OneTime}">Arrange by:</Label>
+								<ComboBox Name="arrangeBy" AutomationProperties.LabeledBy="{Binding ElementName=arrangeLabel,Mode=OneTime}" SelectedItem="{Binding ArrangeMode,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ItemsSource="{Binding Source={StaticResource arrangeModes}}" />
+							</StackPanel>
+
+							<ScrollViewer Grid.Row="2">
+								<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}" Focusable="False">
+									<ItemsControl.ItemTemplate>
+										<DataTemplate DataType="vm:PropertyViewModel">
+											<local:PropertyPresenter Label="{Binding Property.Name}" Content="{Binding}">
+												<local:PropertyPresenter.ContentTemplateSelector>
+													<local:EditorPropertySelector />
+												</local:PropertyPresenter.ContentTemplateSelector>
+											</local:PropertyPresenter>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+									<ItemsControl.GroupStyle>
+										<GroupStyle>
+											<GroupStyle.ContainerStyle>
+												<Style TargetType="GroupItem">
+													<Setter Property="Template">
+														<Setter.Value>
+															<ControlTemplate TargetType="GroupItem">
+																<Expander Header="{Binding Name}">
+																	<ItemsPresenter />
+																</Expander>
+															</ControlTemplate>
+														</Setter.Value>
+													</Setter>
+												</Style>
+											</GroupStyle.ContainerStyle>
+										</GroupStyle>
+									</ItemsControl.GroupStyle>
+								</ItemsControl>
+							</ScrollViewer>
+						</Grid>
+					</Border>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

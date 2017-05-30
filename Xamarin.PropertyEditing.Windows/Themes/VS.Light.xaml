@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<SolidColorBrush x:Key="PanelBackgroundBrush">#F5F5F5</SolidColorBrush>
+	<SolidColorBrush x:Key="SubPanelBackgroundBrush">#EEEEF2</SolidColorBrush>
+	<SolidColorBrush x:Key="TabBackgroundBrush">#E7E8EC</SolidColorBrush>
+	<SolidColorBrush x:Key="SelectorBackgroundBrush">#FFFFFF</SolidColorBrush>
+
+	<SolidColorBrush x:Key="HoverBrush">#C9DEF5</SolidColorBrush>
+
+		<SolidColorBrush x:Key="PropertyButtonBackgroundBrush">#F2F2F6</SolidColorBrush>
+	<SolidColorBrush x:Key="PropertyButtonBorderBrush">#717171</SolidColorBrush>
+	<SolidColorBrush x:Key="PropertyLocalValueBrush">#1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="PropertyBoundValueBrush">#FFCF00</SolidColorBrush>
+	<SolidColorBrush x:Key="PropertyResourceBrush">#00FF00</SolidColorBrush>
+</ResourceDictionary>
