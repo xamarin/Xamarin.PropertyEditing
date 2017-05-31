@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal abstract class PropertiesViewModel
-		: ViewModelBase
+		: NotifyingObject
 	{
 		public PropertiesViewModel (IEditorProvider provider)
 		{
