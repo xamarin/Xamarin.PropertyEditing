@@ -6,10 +6,13 @@
 	<SolidColorBrush x:Key="SelectorBackgroundBrush">#FFFFFF</SolidColorBrush>
 
 	<SolidColorBrush x:Key="HoverBrush">#C9DEF5</SolidColorBrush>
-
-		<SolidColorBrush x:Key="PropertyButtonBackgroundBrush">#F2F2F6</SolidColorBrush>
+	<SolidColorBrush x:Key="BorderBrush">#CCCEDB</SolidColorBrush>
+	
+	<SolidColorBrush x:Key="PropertyButtonBackgroundBrush">#F2F2F6</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyButtonBorderBrush">#717171</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyLocalValueBrush">#1E1E1E</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyBoundValueBrush">#FFCF00</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyResourceBrush">#00FF00</SolidColorBrush>
+	
+	<SolidColorBrush x:Key="PropertyMenuBackgroundBrush">#F6F6F6</SolidColorBrush>
 </ResourceDictionary>
