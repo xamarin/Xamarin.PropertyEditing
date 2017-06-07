@@ -27,28 +27,36 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public BaseRectangleEditorControl ()
 		{
-			XLabel = new NSTextView ();
+			XLabel = new NSTextView {
+				Editable = false,
+			};
 			XEditor = new NSTextField ();
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.StringValue = string.Empty;
 			XEditor.Activated += OnInputUpdated;
 			XEditor.EditingEnded += OnInputUpdated;
 
-			YLabel = new NSTextView ();
+			YLabel =  new NSTextView {
+				Editable = false,
+			};
 			YEditor = new NSTextField ();
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.StringValue = string.Empty;
 			YEditor.Activated += OnInputUpdated;
 			YEditor.EditingEnded += OnInputUpdated;
 
-			WidthLabel = new NSTextView ();
+			WidthLabel = new NSTextView {
+				Editable = false,
+			};
 			WidthEditor = new NSTextField ();
 			WidthEditor.BackgroundColor = NSColor.Clear;
 			WidthEditor.StringValue = string.Empty;
 			WidthEditor.Activated += OnInputUpdated;
 			WidthEditor.EditingEnded += OnInputUpdated;
 
-			HeightLabel = new NSTextView ();
+			HeightLabel =  new NSTextView {
+				Editable = false,
+			};
 			HeightEditor = new NSTextField ();
 			HeightEditor.BackgroundColor = NSColor.Clear;
 			HeightEditor.StringValue = string.Empty;

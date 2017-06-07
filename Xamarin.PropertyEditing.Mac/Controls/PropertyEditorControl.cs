@@ -2,6 +2,7 @@
 using System.Collections;
 using AppKit;
 using CoreGraphics;
+using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -51,5 +52,11 @@ namespace Xamarin.PropertyEditing.Mac
 		protected abstract void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e);
 
 		protected abstract void SetEnabled ();
+
+		[Export ("validateProposedFirstResponder:forEvent:")]
+		public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
+		{
+			return true;
+		}
 	}
 }

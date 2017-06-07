@@ -34,22 +34,22 @@ namespace Xamarin.PropertyEditing.Mac
 			// Setup view based on the column
 			switch (tableColumn.Title) {
 			case "Properties":
-				view = (NSTextView)tableView.MakeView (cellIdentifier + "props", this);
+				view = (UnfocusableTextField)tableView.MakeView (cellIdentifier + "props", this);
 				if (view == null) {
-					view = new NSTextView () {
+					view = new UnfocusableTextField (new CoreGraphics.CGRect (0, -5, 75, 20), property.Property.Name) {
 						TextContainerInset = new CoreGraphics.CGSize (0, 7),
 						Identifier = cellIdentifier + "props",
+						Alignment = NSTextAlignment.Right,
 					};
 				}
-				((NSTextView)view).Value = property.Property.Name;
+				//((UnfocusableTextField)view).Value = property.Property.Name;
 
 				break;
 			case "Editors":
-				// figure out what type of view model we have
 				view = tableView.MakeView (cellIdentifier  + "edits", this);
 
 				// we don't need to do any setup if the editor already exists
-				if (view != null)
+				if (view != null) 
 					return view;
 
 				Type controlType;
@@ -64,11 +64,33 @@ namespace Xamarin.PropertyEditing.Mac
 						view = SetUpEditor (view, controlType, property);
 					}
 				}
-
+					var lookupRow = row - 1;
+					if (lookupRow< 0)
+						lookupRow = DataSource.ViewModel.Properties.Count - 1;
+				var ViewAtRow = tableView.GetView (1, lookupRow, false);
+					if (ViewAtRow != null) {
+						ViewAtRow.NextKeyView = view;
+						ViewAtRow.NextResponder = view;
+					}
+						
 				break;
 			}
 
 			return view;
+		}
+
+		public override nfloat GetRowHeight (NSTableView tableView, nint row)
+		{
+			/*var col = tableView.TableColumns ()[1];
+			var cell = col.DataCellForRow (row);
+			var view = tableView.GetView (1, row, false) as PropertyEditorControl;
+			if (view != null) {
+				return view.Frame.Height;
+			}
+			else {*/
+
+			return 24;
+			//}
 		}
 
 		// set up the editor based on the type of view model
@@ -81,6 +103,11 @@ namespace Xamarin.PropertyEditing.Mac
 			((PropertyEditorControl)view).ViewModel = property;
 
 			return view;
+		}
+
+		public override bool ShouldSelectRow (NSTableView tableView, nint row)
+		{
+			return false;
 		}
 	}
 }
