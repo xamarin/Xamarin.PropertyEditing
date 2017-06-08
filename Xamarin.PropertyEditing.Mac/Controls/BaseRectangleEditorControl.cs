@@ -11,13 +11,13 @@ namespace Xamarin.PropertyEditing.Mac
 	internal abstract class BaseRectangleEditorControl<T> : PropertyEditorControl
 		where T : struct
 	{
-		protected NSTextView XLabel { get; set; }
+		protected UnfocusableTextView XLabel { get; set; }
 		protected NSTextField XEditor { get; set; }
-		protected NSTextView YLabel { get; set; }
+		protected UnfocusableTextView YLabel { get; set; }
 		protected NSTextField YEditor { get; set; }
-		protected NSTextView WidthLabel { get; set; }
+		protected UnfocusableTextView WidthLabel { get; set; }
 		protected NSTextField WidthEditor { get; set; }
-		protected NSTextView HeightLabel { get; set; }
+		protected UnfocusableTextView HeightLabel { get; set; }
 		protected NSTextField HeightEditor { get; set; }
 
 		public override NSView FirstKeyView => XEditor;
@@ -30,39 +30,28 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public BaseRectangleEditorControl ()
 		{
-			XLabel = new NSTextView {
-				Editable = false,
-			};
+			XLabel = new UnfocusableTextView ();
 			XEditor = new NSTextField ();
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.StringValue = string.Empty;
 			XEditor.Activated += OnInputUpdated;
 			XEditor.EditingEnded += OnInputUpdated;
 
-			YLabel =  new NSTextView {
-				Editable = false,
-				Selectable = false,
-			};
+			YLabel =  new UnfocusableTextView ();
 			YEditor = new NSTextField ();
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.StringValue = string.Empty;
 			YEditor.Activated += OnInputUpdated;
 			YEditor.EditingEnded += OnInputUpdated;
 
-			WidthLabel = new NSTextView {
-				Editable = false,
-				Selectable = false,
-			};
+			WidthLabel = new UnfocusableTextView ();
 			WidthEditor = new NSTextField ();
 			WidthEditor.BackgroundColor = NSColor.Clear;
 			WidthEditor.StringValue = string.Empty;
 			WidthEditor.Activated += OnInputUpdated;
 			WidthEditor.EditingEnded += OnInputUpdated;
 
-			HeightLabel =  new NSTextView {
-				Editable = false,
-				Selectable = false,
-			};
+			HeightLabel =  new UnfocusableTextView ();
 			HeightEditor = new NSTextField ();
 			HeightEditor.BackgroundColor = NSColor.Clear;
 			HeightEditor.StringValue = string.Empty;

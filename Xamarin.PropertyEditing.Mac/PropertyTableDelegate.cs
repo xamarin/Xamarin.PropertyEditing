@@ -35,14 +35,12 @@ namespace Xamarin.PropertyEditing.Mac
 			case "PropertiesList":
 				var view = tableView.MakeView (cellIdentifier + "props", this);
 				if (view == null) {
-					view = new UnfocusableTextField (new CoreGraphics.CGRect (0, -5, 75, 20), property.Property.Name) {
+					view = new UnfocusableTextView (new CoreGraphics.CGRect (0, -5, 75, 20), property.Property.Name) {
 						TextContainerInset = new CoreGraphics.CGSize (0, 7),
 						Identifier = cellIdentifier + "props",
 						Alignment = NSTextAlignment.Right,
 					};
 				}
-				//((UnfocusableTextField)view).Value = property.Property.Name;
-
 				return view;
 
 			case "PropertyEditors":

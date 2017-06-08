@@ -24,7 +24,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public PointEditorControl ()
 		{
-			var xLabel = new UnfocusableTextField (new CGRect (0, -5, 25, 20), "X:");
+			var xLabel = new UnfocusableTextView (new CGRect (0, -5, 25, 20), "X:");
 
 			XEditor = new NSTextField (new CGRect (25, 0, 50, 20));
 			XEditor.BackgroundColor = NSColor.Clear;
@@ -33,7 +33,7 @@ namespace Xamarin.PropertyEditing.Mac
 				ViewModel.Value = new CGPoint (XEditor.IntValue, YEditor.IntValue);
 			};
 
-			var yLabel = new UnfocusableTextField (new CGRect (85, -5, 25, 20), "Y:");
+			var yLabel = new UnfocusableTextView (new CGRect (85, -5, 25, 20), "Y:");
 
 			YEditor = new NSTextField (new CGRect (110, 0, 50, 20));
 			YEditor.BackgroundColor = NSColor.Clear;
@@ -89,28 +89,5 @@ namespace Xamarin.PropertyEditing.Mac
 			XEditor.Editable = ViewModel.Property.CanWrite;
 			YEditor.Editable = ViewModel.Property.CanWrite;
 		}
-	}
-
-	class UnfocusableTextField : NSTextView
-	{
-		public UnfocusableTextField (CGRect frameRect, string text) : base (frameRect)
-		{
-			Value = text;
-			Editable = false;
-			Selectable = false;
-			var t = ResignFirstResponder ();
-			Debug.WriteLine ("Resigned: {0}", t);
-		}
-		
-		[Export ("validateProposedFirstResponder:forEvent:")]
-		public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
-		{
-			return false;
-		}
-
-		/* public override bool BecomeFirstResponder ()
-		{
-			return false;
-		}*/
 	}
 }
