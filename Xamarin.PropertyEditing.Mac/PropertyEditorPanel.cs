@@ -77,9 +77,10 @@ namespace Xamarin.PropertyEditing.Mac
 			NSScrollView tableContainer = new NSScrollView (Frame) {
 				AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable
 			};
-			propertyTable = new FirstResponderTableView {
+			propertyTable = new NSTableView {
+				RefusesFirstResponder = true,
 				AutoresizingMask = NSViewResizingMask.WidthSizable,
-				// SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
+				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 			};
 
 			// create columns for the panel
@@ -98,51 +99,6 @@ namespace Xamarin.PropertyEditing.Mac
 			// add the panel to the window
 			tableContainer.DocumentView = propertyTable;
 			AddSubview (tableContainer);
-		}
-
-		class FirstResponderTableView : NSTableView
-		{
-			const int NSTabTextMovement = 0x11;
-			[Export ("validateProposedFirstResponder:forEvent:")]
-			public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
-			{
-				return true;
-			}
-
-			/* [Export ("shouldSelectRow:NSTableView:RowIndex")]
-			public bool shouldSelectRow (NSTableView table, nint row)
-			{
-				return false;
-			}*/
-
-			public override void TextDidEndEditing (NSNotification notification)
-			{
-				nint editedColumn = this.EditedColumn;
-				nint editedRow = this.EditedRow;
-				nint lastColumn = this.ColumnCount - 1;
-				nint lastRow = this.RowCount - 1;
-
-				NSDictionary userInfo = notification.UserInfo;
-
-				int textMovement = int.Parse (userInfo.ValueForKey (new NSString ("NSTextMovement")).ToString ());
-
-				base.TextDidEndEditing (notification);
-
-				if (textMovement == NSTabTextMovement) {
-					if (editedColumn != lastColumn - 1) {
-						this.SelectRows (NSIndexSet.FromIndex (editedRow), false);
-						this.EditColumn (editedColumn + 1, editedRow, null, true);
-					}
-					else {
-						if (editedRow != lastRow - 1) {
-							this.EditColumn (0, editedRow + 1, null, true);
-						}
-						else {
-							this.EditColumn (0, 0, null, true);// Go to the first cell
-						}
-					}
-				}
-			}
 		}
 	}
 }

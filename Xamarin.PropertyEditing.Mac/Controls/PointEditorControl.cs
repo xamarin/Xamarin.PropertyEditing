@@ -14,6 +14,9 @@ namespace Xamarin.PropertyEditing.Mac
 		internal NSTextField XEditor { get; set; }
 		internal NSTextField YEditor { get; set; }
 
+		public override NSView FirstKeyView => XEditor;
+		public override NSView LastKeyView => YEditor;
+
 		internal new PropertyViewModel<CGPoint> ViewModel {
 			get { return (PropertyViewModel<CGPoint>)base.ViewModel; }
 			set { base.ViewModel = value; }
@@ -29,8 +32,6 @@ namespace Xamarin.PropertyEditing.Mac
 			XEditor.Activated += (sender, e) => {
 				ViewModel.Value = new CGPoint (XEditor.IntValue, YEditor.IntValue);
 			};
-			xLabel.NextResponder = XEditor;
-			XEditor.BecomeFirstResponder ();
 
 			var yLabel = new UnfocusableTextField (new CGRect (85, -5, 25, 20), "Y:");
 
@@ -40,8 +41,6 @@ namespace Xamarin.PropertyEditing.Mac
 			YEditor.Activated += (sender, e) => {
 				ViewModel.Value = new CGPoint (XEditor.IntValue, YEditor.IntValue);
 			};
-			yLabel.NextResponder = YEditor;
-			YEditor.BecomeFirstResponder ();
 
 			AddSubview (xLabel);
 			AddSubview (XEditor);
@@ -98,6 +97,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			Value = text;
 			Editable = false;
+			Selectable = false;
 			var t = ResignFirstResponder ();
 			Debug.WriteLine ("Resigned: {0}", t);
 		}

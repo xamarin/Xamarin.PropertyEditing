@@ -29,6 +29,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		internal NSTextField StringEditor { get; set; }
 
+		public override NSView FirstKeyView => StringEditor;
+		public override NSView LastKeyView => StringEditor;
+
 		internal new StringPropertyViewModel ViewModel {
 			get { return (StringPropertyViewModel)base.ViewModel; }
 			set { base.ViewModel = value; }

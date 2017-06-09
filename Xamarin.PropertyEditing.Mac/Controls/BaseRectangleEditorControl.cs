@@ -20,6 +20,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected NSTextView HeightLabel { get; set; }
 		protected NSTextField HeightEditor { get; set; }
 
+		public override NSView FirstKeyView => XEditor;
+		public override NSView LastKeyView => HeightEditor;
+
 		internal new PropertyViewModel<T> ViewModel {
 			get { return (PropertyViewModel<T>)base.ViewModel; }
 			set { base.ViewModel = value; }
@@ -38,6 +41,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			YLabel =  new NSTextView {
 				Editable = false,
+				Selectable = false,
 			};
 			YEditor = new NSTextField ();
 			YEditor.BackgroundColor = NSColor.Clear;
@@ -47,6 +51,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			WidthLabel = new NSTextView {
 				Editable = false,
+				Selectable = false,
 			};
 			WidthEditor = new NSTextField ();
 			WidthEditor.BackgroundColor = NSColor.Clear;
@@ -56,6 +61,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			HeightLabel =  new NSTextView {
 				Editable = false,
+				Selectable = false,
 			};
 			HeightEditor = new NSTextField ();
 			HeightEditor.BackgroundColor = NSColor.Clear;

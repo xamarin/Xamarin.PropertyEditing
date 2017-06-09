@@ -29,6 +29,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		internal NSButton BooleanEditor { get; set; }
 
+		public override NSView FirstKeyView => BooleanEditor;
+		public override NSView LastKeyView => BooleanEditor;
+
 		public string Title { 
 			get { return BooleanEditor.Title; } 
 			set { BooleanEditor.Title = value; } 

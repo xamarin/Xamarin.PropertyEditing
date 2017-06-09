@@ -49,6 +49,9 @@ namespace Xamarin.PropertyEditing.Mac
 		internal NSTextField NumericEditor { get; set; }
 		internal NSStepper Stepper { get; set; }
 
+		public override NSView FirstKeyView => NumericEditor;
+		public override NSView LastKeyView => NumericEditor;
+
 		protected NSNumberFormatter Formatter = new NSNumberFormatter ();
 		NSNumberFormatterStyle numberStyle;
 		protected NSNumberFormatterStyle NumberStyle {

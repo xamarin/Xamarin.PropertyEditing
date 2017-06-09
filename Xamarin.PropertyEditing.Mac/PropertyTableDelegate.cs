@@ -29,12 +29,11 @@ namespace Xamarin.PropertyEditing.Mac
 			PropertyViewModel property = DataSource.ViewModel.Properties[(int)row];
 			var propertyType = property.GetType ();
 			var cellIdentifier = propertyType.Name;
-			NSView view = new NSView ();
 
 			// Setup view based on the column
-			switch (tableColumn.Title) {
-			case "Properties":
-				view = (UnfocusableTextField)tableView.MakeView (cellIdentifier + "props", this);
+			switch (tableColumn.Identifier) {
+			case "PropertiesList":
+				var view = tableView.MakeView (cellIdentifier + "props", this);
 				if (view == null) {
 					view = new UnfocusableTextField (new CoreGraphics.CGRect (0, -5, 75, 20), property.Property.Name) {
 						TextContainerInset = new CoreGraphics.CGSize (0, 7),
@@ -44,39 +43,34 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 				//((UnfocusableTextField)view).Value = property.Property.Name;
 
-				break;
-			case "Editors":
-				view = tableView.MakeView (cellIdentifier  + "edits", this);
+				return view;
 
-				// we don't need to do any setup if the editor already exists
-				if (view != null) 
-					return view;
+			case "PropertyEditors":
+				var editor = (PropertyEditorControl)tableView.MakeView (cellIdentifier  + "edits", this);
 
-				Type controlType;
-				if (viewModelTypes.TryGetValue (propertyType, out controlType)) {
-					view = SetUpEditor (view, controlType, property);
-				}
-				else {
-					if (propertyType.IsGenericType) {
-						Type genericType = propertyType.GetGenericTypeDefinition ();
-						if (genericType == typeof (EnumPropertyViewModel<>))
-							controlType = typeof (EnumEditorControl<>).MakeGenericType (property.Property.Type);
-						view = SetUpEditor (view, controlType, property);
+				if (editor == null) {
+					Type controlType;
+					if (viewModelTypes.TryGetValue (propertyType, out controlType)) {
+						editor = SetUpEditor (controlType, property, tableView);
+					}
+					else {
+						if (propertyType.IsGenericType) {
+							Type genericType = propertyType.GetGenericTypeDefinition ();
+							if (genericType == typeof (EnumPropertyViewModel<>))
+								controlType = typeof (EnumEditorControl<>).MakeGenericType (property.Property.Type);
+							editor = SetUpEditor (controlType, property, tableView);
+						}
 					}
 				}
-					var lookupRow = row - 1;
-					if (lookupRow< 0)
-						lookupRow = DataSource.ViewModel.Properties.Count - 1;
-				var ViewAtRow = tableView.GetView (1, lookupRow, false);
-					if (ViewAtRow != null) {
-						ViewAtRow.NextKeyView = view;
-						ViewAtRow.NextResponder = view;
-					}
-						
-				break;
+
+				// we must reset these every time, as the view may have been reused
+				editor.ViewModel = property;
+				editor.TableRow = row;
+				editor.UpdateKeyViews ();
+				return editor;
 			}
 
-			return view;
+			throw new Exception ("Unknown column identifier: " + tableColumn.Identifier);
 		}
 
 		public override nfloat GetRowHeight (NSTableView tableView, nint row)
@@ -94,20 +88,13 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		// set up the editor based on the type of view model
-		NSView SetUpEditor (NSView view, Type controlType, PropertyViewModel property)
+		PropertyEditorControl SetUpEditor (Type controlType, PropertyViewModel property, NSTableView table)
 		{
-			if (view == null) {
-				view = (PropertyEditorControl)Activator.CreateInstance (controlType);
-				view.Identifier = property.GetType ().Name;
-			}
-			((PropertyEditorControl)view).ViewModel = property;
+			var view = (PropertyEditorControl)Activator.CreateInstance (controlType);
+			view.Identifier = property.GetType ().Name;
+			view.TableView = table;
 
 			return view;
-		}
-
-		public override bool ShouldSelectRow (NSTableView tableView, nint row)
-		{
-			return false;
 		}
 	}
 }

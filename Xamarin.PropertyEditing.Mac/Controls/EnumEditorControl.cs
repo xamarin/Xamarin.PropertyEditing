@@ -14,6 +14,9 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		NSComboBox ComboBoxEditor;
 
+		public override NSView FirstKeyView => ComboBoxEditor;
+		public override NSView LastKeyView => ComboBoxEditor;
+
 		EnumPropertyViewModel<T> EnumEditorViewModel => (EnumPropertyViewModel<T>)ViewModel;
 
 		public EnumEditorControl ()
