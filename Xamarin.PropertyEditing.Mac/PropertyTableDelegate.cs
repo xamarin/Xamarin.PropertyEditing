@@ -64,7 +64,6 @@ namespace Xamarin.PropertyEditing.Mac
 				// we must reset these every time, as the view may have been reused
 				editor.ViewModel = property;
 				editor.TableRow = row;
-				editor.UpdateKeyViews ();
 				return editor;
 			}
 

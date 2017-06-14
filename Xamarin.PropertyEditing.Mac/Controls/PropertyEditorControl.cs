@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Runtime.InteropServices;
 
 using AppKit;
-using CoreGraphics;
 using Foundation;
-using ObjCRuntime;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -51,10 +48,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (child == FirstKeyView || child == LastKeyView) {
 				UpdateKeyViews ();
-			} else {
-				//FIXME: Unfortunately, XamMac doesn't provide an easier way to call super on a selector
-				//  we manually declare with [Export]
-				objc_msgSendSuper (SuperHandle, Selector.GetHandle ("_primitiveSetDefaultNextKeyView:"), child.Handle);
 			}
 		}
 
@@ -86,8 +79,5 @@ namespace Xamarin.PropertyEditing.Mac
 		protected abstract void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e);
 
 		protected abstract void SetEnabled ();
-
-		[DllImport (Constants.ObjectiveCLibrary)]
-		static extern void objc_msgSendSuper (IntPtr objc_super, IntPtr sel, IntPtr arg);
 	}
 }
