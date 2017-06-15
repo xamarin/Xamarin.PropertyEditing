@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using AppKit;
 using CoreGraphics;
+using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -13,6 +14,9 @@ namespace Xamarin.PropertyEditing.Mac
 		internal NSTextField XEditor { get; set; }
 		internal NSTextField YEditor { get; set; }
 
+		public override NSView FirstKeyView => XEditor;
+		public override NSView LastKeyView => YEditor;
+
 		internal new PropertyViewModel<CGPoint> ViewModel {
 			get { return (PropertyViewModel<CGPoint>)base.ViewModel; }
 			set { base.ViewModel = value; }
@@ -20,9 +24,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public PointEditorControl ()
 		{
-			var xLabel = new NSTextView (new CGRect (0, -5, 25, 20)) {
-				Value = "X:", 
-			};
+			var xLabel = new UnfocusableTextView (new CGRect (0, -5, 25, 20), "X:");
 
 			XEditor = new NSTextField (new CGRect (25, 0, 50, 20));
 			XEditor.BackgroundColor = NSColor.Clear;
@@ -31,9 +33,7 @@ namespace Xamarin.PropertyEditing.Mac
 				ViewModel.Value = new CGPoint (XEditor.IntValue, YEditor.IntValue);
 			};
 
-			var yLabel = new NSTextView (new CGRect (85, -5, 25, 20)) {
-				Value = "Y:", 
-			};
+			var yLabel = new UnfocusableTextView (new CGRect (85, -5, 25, 20), "Y:");
 
 			YEditor = new NSTextField (new CGRect (110, 0, 50, 20));
 			YEditor.BackgroundColor = NSColor.Clear;

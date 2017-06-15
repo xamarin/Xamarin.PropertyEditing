@@ -18,10 +18,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 			var controlSize = NSControlSize.Small;
 
-			NumericEditor = new NSTextField ();
-			NumericEditor.TranslatesAutoresizingMaskIntoConstraints = false;
-			NumericEditor.DoubleValue = 0.0;
-			NumericEditor.Alignment = NSTextAlignment.Right;
+			NumericEditor = new NSTextField {
+				TranslatesAutoresizingMaskIntoConstraints = false,
+				DoubleValue = 0.0,
+				Alignment = NSTextAlignment.Right,
+				Editable = false,
+			};
 
 			Formatter.FormatterBehavior = NSNumberFormatterBehavior.Version_10_4;
 			Formatter.Locale = NSLocale.CurrentLocale;
@@ -46,6 +48,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		internal NSTextField NumericEditor { get; set; }
 		internal NSStepper Stepper { get; set; }
+
+		public override NSView FirstKeyView => NumericEditor;
+		public override NSView LastKeyView => NumericEditor;
 
 		protected NSNumberFormatter Formatter = new NSNumberFormatter ();
 		NSNumberFormatterStyle numberStyle;

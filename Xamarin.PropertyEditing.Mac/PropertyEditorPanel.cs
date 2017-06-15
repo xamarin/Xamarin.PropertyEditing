@@ -75,33 +75,30 @@ namespace Xamarin.PropertyEditing.Mac
 
 			// create a table view and a scroll view
 			NSScrollView tableContainer = new NSScrollView (Frame) {
-				AutoresizingMask = NSViewResizingMask.WidthSizable|NSViewResizingMask.HeightSizable
+				AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable
 			};
-			propertyTable = new FirstResponderTableView () {
+			propertyTable = new NSTableView {
+				RefusesFirstResponder = true,
 				AutoresizingMask = NSViewResizingMask.WidthSizable,
-				RowHeight = 24,
+				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 			};
 
 			// create columns for the panel
-			NSTableColumn propertiesList = new NSTableColumn ("PropertiesList") { Title = "Properties" };
-			NSTableColumn propertyEditors = new NSTableColumn ("PropertyEditors") { Title = "Editors" };
-			propertiesList.Width = 200;
-			propertyEditors.Width = 255;
+			NSTableColumn propertiesList = new NSTableColumn ("PropertiesList") {
+				Title = "Properties",
+				Width = 200,
+			};
+
+			NSTableColumn propertyEditors = new NSTableColumn ("PropertyEditors") {
+				Title = "Editors",
+				Width = 255,
+			};
 			propertyTable.AddColumn (propertiesList);
 			propertyTable.AddColumn (propertyEditors);
 
 			// add the panel to the window
 			tableContainer.DocumentView = propertyTable;
 			AddSubview (tableContainer);
-		}
-
-		class FirstResponderTableView : NSTableView
-		{
-			[Export ("validateProposedFirstResponder:forEvent:")]
-			public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
-			{
-				return true;
-			}
 		}
 	}
 }
