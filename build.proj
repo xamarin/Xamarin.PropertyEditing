@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- Set up some basic properties to control the build configuration -->
+	<PropertyGroup>
+		<Release Condition=" '$(Release)' == ''">false</Release>
+
+		<IsMac>false</IsMac>
+		<IsMac Condition="'$(OS)' == 'Unix'">true</IsMac>
+
+		<IsWindows>false</IsWindows>
+		<IsWindows Condition="!$(IsMac)">true</IsWindows>
+
+		<Mono64 Condition="$(IsMac)">mono64 --debug</Mono64>
+	</PropertyGroup>
+
+	<!-- Choose the correct Debug/Release configuration for the current platform -->
+	<PropertyGroup Condition="'$(Configuration)' == ''">
+		<Configuration>Debug</Configuration>
+		<Configuration Condition=" '$(Release)' ">Release</Configuration>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<BinDir>bin\Debug\</BinDir>
+		<BinDir Condition=" '$(Release)' ">bin\Release\</BinDir>
+
+		<CommonBuildProperties>$(CommonBuildProperties);Configuration=$(Configuration)</CommonBuildProperties>
+
+		<TestAssemblyDirectory>Xamarin.PropertyEditing.Tests\$(BinDir)\</TestAssemblyDirectory>
+		<TestAssembly>$(TestAssemblyDirectory)Xamarin.PropertyEditing.Tests.dll</TestAssembly>
+		<TestRunner>packages/NUnit.Runners.2.6.4/tools/nunit-console.exe</TestRunner>
+
+		<Out Condition="'$(Out)' == ''">out</Out>
+	</PropertyGroup>
+
+	<!-- List the sln files we need to build -->
+	<ItemGroup>
+		<SolutionFiles Include="$(MSBuildThisFileDirectory)Xamarin.PropertyEditing.sln" />
+	</ItemGroup>
+
+	<Target Name="Build">
+		<MSBuild Projects="@(SolutionFiles)" Properties="$(CommonBuildProperties)" Targets="Build" />
+	</Target>
+
+	<Target Name="Clean">
+		<MSBuild Projects="@(SolutionFiles)" Properties="$(CommonBuildProperties)" Targets="Clean" />
+		<RemoveDir Directories="$(Out)" Condition=" Exists('$(Out)') " />
+	</Target>
+
+	<Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+
+	<Target Name="Test" DependsOnTargets="TestMac">
+
+	</Target>
+
+	<Target Name="TestMac" Condition=" '$(IsMac)' ">
+		<MakeDir Directories="$(Out)" />
+		<Exec Command="$(Mono64) $(TestRunner) $(TestAssembly) -result=$(Out)\TestResult.xml" />
+	</Target>
+
+</Project>
