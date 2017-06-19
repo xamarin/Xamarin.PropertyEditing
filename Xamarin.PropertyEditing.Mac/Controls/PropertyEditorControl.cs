@@ -14,7 +14,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public abstract NSView FirstKeyView { get; }
 		public abstract NSView LastKeyView { get; }
 
-		public nint TableRow { get; set; }
+		public nint TableRow { get; set; } = -1;
 		public NSTableView TableView { get; set; }
 
 		PropertyViewModel viewModel;
@@ -53,6 +53,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public void UpdateKeyViews (bool backward = true, bool forward = true)
 		{
+			if (TableRow < 0)
+				return;
+
 			PropertyEditorControl ctrl = null;
 
 			//FIXME: don't hardcode column

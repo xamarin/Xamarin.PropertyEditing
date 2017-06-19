@@ -89,52 +89,44 @@ namespace Xamarin.PropertyEditing.ViewModels
 			tcs.SetResult (true);
 		}
 
+		protected virtual void OnAddProperties (IEnumerable<PropertyViewModel> properties)
+		{
+		}
+
+		protected virtual void OnRemoveProperties (IEnumerable<PropertyViewModel> properties)
+		{
+		}
+
+		protected virtual void OnClearProperties()
+		{
+		}
+
 		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
-		private readonly ObservableCollection<PropertyViewModel> properties = new ObservableCollection<PropertyViewModel> ();
+		private readonly ObservableCollectionEx<PropertyViewModel> properties = new ObservableCollectionEx<PropertyViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
 
-		string filterText;
-		public string FilterText {
-			get {
-				return filterText;
-			}
-			set {
-				if (filterText == value)
-					return;
-
-				filterText = value;
-
-				FilterData ();
-				OnPropertyChanged ();
-			}
+		private void AddProperties (IEnumerable<PropertyViewModel> properties)
+		{
+			this.properties.AddRange (properties);
+			OnAddProperties (properties);
 		}
 
-		PropertyArrangeMode arrangeMode;
-		public PropertyArrangeMode ArrangeMode {
-			get {
-				return arrangeMode;
-			}
-			set {
-				if (arrangeMode == value)
-					return;
-
-				arrangeMode = value;
-
-				FilterData ();
-				OnPropertyChanged ();
-			}
+		private void RemoveProperties (IEnumerable<PropertyViewModel> properties)
+		{
+			this.properties.RemoveRange (properties);
+			OnRemoveProperties (properties);
 		}
 
-		bool IsFiltering {
-			get {
-				return !string.IsNullOrEmpty (filterText);
-			}
+		private void ClearProperties()
+		{
+			this.properties.Clear ();
+			OnClearProperties ();
 		}
 
 		private void UpdateProperties (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
 		{
 			if (this.editors.Count == 0) {
-				this.properties.Clear ();
+				ClearProperties ();
 				return;
 			}
 
@@ -143,9 +135,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 				newSet.IntersectWith (this.editors[i].Properties);
 			}
 
+			List<PropertyViewModel> toRemove = new List<PropertyViewModel> ();
 			foreach (PropertyViewModel vm in this.properties.ToArray ()) {
 				if (!newSet.Remove (vm.Property)) {
-					this.properties.Remove (vm);
+					toRemove.Add (vm);
 					vm.Editors.Clear ();
 					continue;
 				}
@@ -161,16 +154,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				}
 			}
 
-			foreach (IPropertyInfo property in newSet) {
-				if (!IsFiltering) {
-					this.properties.Add (GetViewModel (property));
-				}
-				else {
-					if (property.Name.StartsWith (FilterText, StringComparison.InvariantCultureIgnoreCase)) {
-						this.properties.Add (GetViewModel (property));
-					}
-				}
-			}
+			RemoveProperties (toRemove);
+			AddProperties (newSet.Select (GetViewModel));
 		}
 
 		private async Task<IObjectEditor[]> AddEditorsAsync (IList newItems)
@@ -208,13 +193,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return vmFactory (property, this.editors);
 			
 			return new StringPropertyViewModel (property, this.editors);
-		}
-
-		void FilterData ()
-		{
-			this.properties.Clear ();
-
-			UpdateProperties ();
 		}
 
 		private Task busyTask;

@@ -29,5 +29,14 @@ namespace Xamarin.PropertyEditing
 			foreach (T item in enumerable)
 				self.Add (item);
 		}
+
+		public static bool TryRemove<TKey, TElement> (this IDictionary<TKey, TElement> self, TKey key, out TElement element)
+		{
+			if (!self.TryGetValue (key, out element))
+				return false;
+
+			self.Remove (key);
+			return true;
+		}
 	}
 }
