@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using CoreGraphics;
 using Foundation;
 using AppKit;
-using Xamarin.PropertyEditing;
-using System.Collections.ObjectModel;
 using Xamarin.PropertyEditing.ViewModels;
-using System.Diagnostics.Contracts;
-using Xamarin.PropertyEditing.Reflection;
-using System.Collections.Specialized;
-using System.Threading;
-using System.Threading.Tasks;
-using Xamarin.PropertyEditing.Mac.ViewModels;
+
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -21,8 +14,8 @@ namespace Xamarin.PropertyEditing.Mac
 		NSSearchField propertyFilter;
 		NSComboBox propertyArrangeMode;
 
-		public const string PropertyListTitle = "Property"; // TODO Localise
-		public const string PropertyEditorTitle = "Value";  // TODO Localise
+		internal const string PropertyListColId = "PropertiesList";
+		internal const string PropertyEditorColId = "PropertyEditors";
 
 		public PropertyEditorPanel ()
 		{
@@ -46,39 +39,32 @@ namespace Xamarin.PropertyEditing.Mac
 		IEditorProvider editorProvider;
 		NSOutlineView propertyTable;
 		PropertyTableDataSource dataSource;
-		MacPanelViewModel viewModel;
-		INotifyCollectionChanged PropertiesChanged => viewModel?.Properties as INotifyCollectionChanged;
+		PanelViewModel viewModel;
 
-		public IEditorProvider EditorProvider {
+		public IEditorProvider EditorProvider
+		{
 			get { return editorProvider; }
-			set {
-				// if the propertiesChanged is already subscribed to, remove the event
-				if (PropertiesChanged != null)
-					PropertiesChanged.CollectionChanged -= HandleCollectionChanged;
+			set
+			{
+				if (this.viewModel != null)
+					this.viewModel.ArrangedPropertiesChanged -= OnPropertiesChanged;
 
-				// Populate the Properety Table
+				// Populate the Property Table
 				editorProvider = value;
-				viewModel = new MacPanelViewModel (editorProvider);
+				viewModel = new PanelViewModel (editorProvider);
 				dataSource = new PropertyTableDataSource (viewModel);
 				propertyTable.Delegate = new PropertyTableDelegate (dataSource);
 				propertyTable.DataSource = dataSource;
 
-				// if propertiesChanged exists
-				if (PropertiesChanged != null)
-					PropertiesChanged.CollectionChanged += HandleCollectionChanged;
+				if (this.viewModel != null)
+					this.viewModel.ArrangedPropertiesChanged += OnPropertiesChanged;
 			}
 		}
 
-		void HandleCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
-		{
-			propertyTable.ReloadData ();
-		}
-
-
-		public ICollection<object> SelectedItems => this.dataSource.SelectedItems;
+		public ICollection<object> SelectedItems => this.viewModel.SelectedObjects;
 
 		// Shared initialization code
-		void Initialize ()
+		private void Initialize ()
 		{
 			AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
 
@@ -117,8 +103,8 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (propertyArrangeMode);
 
 			// If either the Filter Mode or PropertySearchFilter Change Filter the Data
-			propertyArrangeMode.SelectionChanged += PropertyFilterArrangeMode_Changed;
-			propertyFilter.Changed += PropertyFilterText_Changed;
+			propertyArrangeMode.SelectionChanged += OnArrageModeChanged;
+			propertyFilter.Changed += OnPropertyFilterChanged;
 
 			// create a table view and a scroll view
 			var tableContainer = new NSScrollView (new CGRect (10, Frame.Height - 210, Frame.Width - 20, Frame.Height - 55)) {
@@ -129,11 +115,12 @@ namespace Xamarin.PropertyEditing.Mac
 				RefusesFirstResponder = true,
 				AutoresizingMask = NSViewResizingMask.WidthSizable,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
+				RowHeight = 24,
 			};
 
-			// create columns for the panel
-			NSTableColumn propertiesList = new NSTableColumn ("PropertiesList") { Title = PropertyListTitle };
-			NSTableColumn propertyEditors = new NSTableColumn ("PropertyEditors") { Title = PropertyEditorTitle };
+			// TODO: localize
+			NSTableColumn propertiesList = new NSTableColumn (PropertyListColId) { Title = "Properties" };
+			NSTableColumn propertyEditors = new NSTableColumn (PropertyEditorColId) { Title = "Value" };
 			propertiesList.Width = 150;
 			propertyEditors.Width = 250;
 			propertyTable.AddColumn (propertiesList);
@@ -163,16 +150,25 @@ namespace Xamarin.PropertyEditing.Mac
 			});
 		}
 
-		void PropertyFilterArrangeMode_Changed (object sender, EventArgs e)
+		private void OnPropertiesChanged (object sender, EventArgs e)
+		{
+			this.propertyTable.ReloadData ();
+
+			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
+		}
+
+		private void OnArrageModeChanged (object sender, EventArgs e)
 		{
 			PropertyArrangeMode filterMode;
 			Enum.TryParse<PropertyArrangeMode> (propertyArrangeMode.GetItemObject (propertyArrangeMode.SelectedIndex).ToString (), out filterMode);
 			viewModel.ArrangeMode = filterMode;
 		}
 
-		void PropertyFilterText_Changed (object sender, EventArgs e)
+		private void OnPropertyFilterChanged (object sender, EventArgs e)
 		{
 			viewModel.FilterText = propertyFilter.Cell.Title;
+
+			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
 		}
 
 		class FirstResponderOutlineView : NSOutlineView
@@ -185,13 +181,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 			public override CGRect FrameOfOutlineCellAtRow (nint row)
 			{
-				var obj = (this.ItemAtRow (row) as NSObjectFacade);
-				if (!string.IsNullOrEmpty(obj.CategoryName)) {
+				var obj = (NSObjectFacade)ItemAtRow (row);
+				if (obj.Target is IGroupingList<string, PropertyViewModel>)
 					return new CGRect (8, 11, 10, 10);
-				}
-				else {
-					return base.FrameOfOutlineCellAtRow (row);
-				}
+
+				return base.FrameOfOutlineCellAtRow (row);
 			}
 		}
 	}

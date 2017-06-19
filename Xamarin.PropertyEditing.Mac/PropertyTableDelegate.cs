@@ -1,16 +1,15 @@
 ﻿﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AppKit;
 using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
-using Xamarin.PropertyEditing.Mac.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class PropertyTableDelegate : NSOutlineViewDelegate
+	internal class PropertyTableDelegate
+		: NSOutlineViewDelegate
 	{
-		PropertyTableDataSource DataSource;
-
 		Dictionary<Type, Type> viewModelTypes = new Dictionary<Type, Type> {
 			{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
 			{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
@@ -22,59 +21,78 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public PropertyTableDelegate (PropertyTableDataSource datasource)
 		{
-			this.DataSource = datasource;
+			this.dataSource = datasource;
+		}
+
+		public void UpdateExpansions (NSOutlineView outlineView)
+		{
+			this.isExpanding = true;
+
+			if (!String.IsNullOrWhiteSpace (this.dataSource.DataContext.FilterText)) {
+				outlineView.ExpandItem (null, true);
+			} else {
+				foreach (IGrouping<string, PropertyViewModel> g in this.dataSource.DataContext.ArrangedProperties) {
+					NSObject item;
+					if (!this.dataSource.TryGetFacade (g, out item))
+						continue;
+
+					if (this.dataSource.DataContext.GetIsExpanded (g.Key))
+						outlineView.ExpandItem (item);
+					else
+						outlineView.CollapseItem (item);
+				}
+			}
+			this.isExpanding = false;
 		}
 
 		// the table is looking for this method, picks it up automagically
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
-			var facade = (item as NSObjectFacade);
-			PropertyViewModel property = (PropertyViewModel)facade.WrappedObject; ;
-
-			string cellIdentifier;
-			if (string.IsNullOrEmpty (facade.CategoryName)) {
-				cellIdentifier = property.Property.Name;
-			} else {
-				cellIdentifier = facade.CategoryName;
-			}
+			var facade = (NSObjectFacade)item;
+			var vm = facade.Target as PropertyViewModel;
+			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
+			string cellIdentifier = (group == null) ? vm.Property.Name : group.Key;
 
 			// Setup view based on the column
 			switch (tableColumn.Identifier) {
-				case PropertyEditorPanel.PropertyListTitle:
-					view = outlineView.MakeView (cellIdentifier + "props", this);
+				case PropertyEditorPanel.PropertyListColId:
+					var view = (UnfocusableTextView)outlineView.MakeView (cellIdentifier + "props", this);
 					if (view == null) {
-						view = new UnfocusableTextView (new CoreGraphics.CGRect (0, -5, 75, 20), property.Property.Name) {
+						view = new UnfocusableTextView {
+							Frame = new CoreGraphics.CGRect (0, -5, 75, 20),
 							TextContainerInset = new CoreGraphics.CGSize (0, 9),
 							Identifier = cellIdentifier + "props",
 							Alignment = NSTextAlignment.Right,
 						};
 					}
+
+					view.Value = cellIdentifier;
 					return view;
 
-				case PropertyEditorPanel.PropertyEditorTitle:
-					if (!String.IsNullOrEmpty (facade.CategoryName)) {
-						var editor = (PropertyEditorControl)outlineView.MakeView (cellIdentifier + "edits", this);
-						if (editor == null) {
-							Type controlType;
-							Type propertyType = property.GetType ();
-							if (viewModelTypes.TryGetValue (propertyType, out controlType)) {
-								editor = SetUpEditor (controlType, property, outlineView);
-							} else {
-								if (propertyType.IsGenericType) {
-									Type genericType = propertyType.GetGenericTypeDefinition ();
-									if (genericType == typeof (EnumPropertyViewModel<>))
-										controlType = typeof (EnumEditorControl<>).MakeGenericType (property.Property.Type);
-									editor = SetUpEditor (controlType, property, outlineView);
-								}
+				case PropertyEditorPanel.PropertyEditorColId:
+					if (vm == null)
+						return null;
+
+					var editor = (PropertyEditorControl)outlineView.MakeView (cellIdentifier + "edits", this);
+					if (editor == null) {
+						Type controlType;
+						Type propertyType = vm.GetType ();
+						if (viewModelTypes.TryGetValue (propertyType, out controlType)) {
+							editor = SetUpEditor (controlType, vm, outlineView);
+						} else {
+							if (propertyType.IsGenericType) {
+								Type genericType = propertyType.GetGenericTypeDefinition ();
+								if (genericType == typeof (EnumPropertyViewModel<>))
+									controlType = typeof (EnumEditorControl<>).MakeGenericType (vm.Property.Type);
+								editor = SetUpEditor (controlType, vm, outlineView);
 							}
 						}
-
-						// we must reset these every time, as the view may have been reused
-						editor.ViewModel = property;
-						//editor.TableRow = row;
-						return editor;
 					}
-					break;
+
+					// we must reset these every time, as the view may have been reused
+					editor.ViewModel = vm;
+					//editor.TableRow = row;
+					return editor;
 			}
 
 			throw new Exception ("Unknown column identifier: " + tableColumn.Identifier);
@@ -82,17 +100,40 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override bool ShouldSelectItem (NSOutlineView outlineView, NSObject item)
 		{
-			var facade = (item as NSObjectFacade);
-			// Don't allow selecttion if CategoryName is populated
-			return (string.IsNullOrEmpty (facade.CategoryName));
+			return (!(item is NSObjectFacade) || !(((NSObjectFacade)item).Target is IGroupingList<string, PropertyViewModel>));
 		}
 
+		public override void ItemDidExpand (NSNotification notification)
+		{
+			if (this.isExpanding)
+				return;
+
+			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
+			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
+			if (group != null)
+				this.dataSource.DataContext.SetIsExpanded (group.Key, isExpanded: true);
+		}
+
+		public override void ItemDidCollapse (NSNotification notification)
+		{
+			if (this.isExpanding)
+				return;
+
+			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
+			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
+			if (group != null)
+				this.dataSource.DataContext.SetIsExpanded (group.Key, isExpanded: false);
+		}
+
+		private PropertyTableDataSource dataSource;
+		private bool isExpanding;
+
 		// set up the editor based on the type of view model
-		PropertyEditorControl SetUpEditor (Type controlType, PropertyViewModel property, NSTableView table)
+		private PropertyEditorControl SetUpEditor (Type controlType, PropertyViewModel property, NSOutlineView outline)
 		{
 			var view = (PropertyEditorControl)Activator.CreateInstance (controlType);
 			view.Identifier = property.GetType ().Name;
-			view.TableView = table;
+			view.TableView = outline;
 
 			return view;
 		}

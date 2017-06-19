@@ -71,21 +71,4 @@ namespace Xamarin.PropertyEditing.Mac.ViewModels
 			}
 		}
 	}
-
-	class NSObjectFacade : NSObject
-	{
-		public object WrappedObject;
-		public string CategoryName;
-
-		public NSObjectFacade (object obj, string categoryName = null)
-		{
-			this.WrappedObject = obj;
-			this.CategoryName = categoryName;
-		}
-
-		public static NSObjectFacade WrapIt (object obj, string categoryName = null)
-		{
-			return new NSObjectFacade (obj, categoryName);
-		}
-	}
 }
