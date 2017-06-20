@@ -16,8 +16,11 @@
 
 	<!-- Choose the correct Debug/Release configuration for the current platform -->
 	<PropertyGroup Condition="'$(Configuration)' == ''">
-		<Configuration>Debug</Configuration>
-		<Configuration Condition=" '$(Release)' ">Release</Configuration>
+		<Configuration Condition=" '!$(Release)' And '$(IsMac)' ">DebugMac</Configuration>
+		<Configuration Condition=" '!$(Release)' And '$(IsWindows)' ">Debug</Configuration>
+
+		<Configuration Condition=" '$(Release)' And '$(IsMac)' ">ReleaseMac</Configuration>
+		<Configuration Condition=" '$(Release)' And '$(IsWindows)' ">Release</Configuration>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -28,10 +31,13 @@
 
 		<TestAssemblyDirectory>Xamarin.PropertyEditing.Tests\$(BinDir)\</TestAssemblyDirectory>
 		<TestAssembly>$(TestAssemblyDirectory)Xamarin.PropertyEditing.Tests.dll</TestAssembly>
-		<TestRunner>packages/NUnit.Runners.2.6.4/tools/nunit-console.exe</TestRunner>
 
 		<Out Condition="'$(Out)' == ''">out</Out>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<NunitConsoleRunner Include="**/nunit3-console.exe" />
+	</ItemGroup>
 
 	<!-- List the sln files we need to build -->
 	<ItemGroup>
@@ -49,13 +55,15 @@
 
 	<Target Name="Rebuild" DependsOnTargets="Clean;Build" />
 
-	<Target Name="Test" DependsOnTargets="TestMac">
-
+	<Target Name="Test" DependsOnTargets="TestMac;TestWindows">
+		<MakeDir Directories="$(Out)" />
+		<Exec Command="$(Mono64) @(NunitConsoleRunner) $(TestAssembly) -result=$(Out)\TestResult.xml" />
 	</Target>
 
 	<Target Name="TestMac" Condition=" '$(IsMac)' ">
-		<MakeDir Directories="$(Out)" />
-		<Exec Command="$(Mono64) $(TestRunner) $(TestAssembly) -result=$(Out)\TestResult.xml" />
+	</Target>
+
+	<Target Name="TestWindows" Condition=" '$(IsWindows)' ">
 	</Target>
 
 </Project>
