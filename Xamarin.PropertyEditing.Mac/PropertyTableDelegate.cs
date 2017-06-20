@@ -91,7 +91,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 					// we must reset these every time, as the view may have been reused
 					editor.ViewModel = vm;
-					//editor.TableRow = row;
+					editor.TableRow = outlineView.RowForItem (item);
 					return editor;
 			}
 
