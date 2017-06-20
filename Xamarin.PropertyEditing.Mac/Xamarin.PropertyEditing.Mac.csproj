@@ -69,9 +69,16 @@
     <Compile Include="Controls\CGRectEditorControl.cs" />
     <Compile Include="Controls\PointEditorControl.cs" />
     <Compile Include="Controls\UnfocusableTextView.cs" />
+    <Compile Include="Controls\ColorEditorControl.cs" />
+    <Compile Include="Controls\Custom\AdaptingTextView.cs" />
+    <Compile Include="Controls\Custom\MacColorButton.cs" />
+    <Compile Include="Controls\Custom\PredefinedColor.cs" />
+    <Compile Include="Controls\Custom\IPopOver.cs" />
+    <Compile Include="Controls\Custom\NSPopOverWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
+    <Folder Include="Controls\Custom\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">

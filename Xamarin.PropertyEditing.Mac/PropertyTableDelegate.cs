@@ -16,6 +16,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
 			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (PointEditorControl)},
 			{typeof (PropertyViewModel<CoreGraphics.CGRect>), typeof (CGRectEditorControl)},
+			{typeof (PropertyViewModel<NSColor>), typeof (ColorEditorControl)},
 		};
 
 		public PropertyTableDelegate (PropertyTableDataSource datasource)
