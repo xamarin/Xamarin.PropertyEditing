@@ -134,7 +134,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public async void ValueChangedWhenValuesDisagree ()
+		public async Task ValueChangedWhenValuesDisagree ()
 		{
 			TValue value = GetNonDefaultRandomTestValue ();
 			TValue otherValue = GetRandomTestValue ();
