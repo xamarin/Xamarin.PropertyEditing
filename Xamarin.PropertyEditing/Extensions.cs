@@ -38,5 +38,13 @@ namespace Xamarin.PropertyEditing
 			self.Remove (key);
 			return true;
 		}
+
+		public static bool Contains (this string self, string value, StringComparison comparison)
+		{
+			if (self == null)
+				throw new ArgumentNullException (nameof(self));
+
+			return self.IndexOf (value, comparison) >= 0;
+		}
 	}
 }

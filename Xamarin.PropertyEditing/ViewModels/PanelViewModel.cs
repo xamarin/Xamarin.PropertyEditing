@@ -131,9 +131,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private void Filter (string oldFilter)
 		{
 			FilterState state = FilterState.Unknown;
-			if (String.IsNullOrWhiteSpace (oldFilter) || FilterText.StartsWith (oldFilter))
+			if (String.IsNullOrWhiteSpace (oldFilter) || FilterText.StartsWith (oldFilter, StringComparison.OrdinalIgnoreCase))
 				state = FilterState.Longer;
-			else if (oldFilter.StartsWith (FilterText))
+			else if (oldFilter.StartsWith (FilterText, StringComparison.OrdinalIgnoreCase))
 				state = FilterState.Shorter;
 
 			if (state != FilterState.Shorter) {
@@ -158,30 +158,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return (ArrangeMode == PropertyArrangeMode.Name) ? "0" : vm.Category;
 		}
 
-		private ObservableGrouping<string, PropertyViewModel> GetGroupList (PropertyViewModel propertyVm)
-		{
-			switch (ArrangeMode) {
-				case PropertyArrangeMode.Name:
-					return (arranged.Count > 0) ? arranged[0] as ObservableGrouping<string, PropertyViewModel> : null;
-				case PropertyArrangeMode.Category:
-					return arranged[propertyVm.Category] as ObservableGrouping<string, PropertyViewModel>;
-
-				default:
-					return null;
-			}
-		}
-
 		private bool MatchesFilter (PropertyViewModel vm)
 		{
 			if (String.IsNullOrWhiteSpace (FilterText))
 				return true;
 
-			string filter = FilterText.ToLower ();
-			if (ArrangeMode == PropertyArrangeMode.Category && vm.Category != null && vm.Category.ToLower().Contains (filter)) {
+			if (ArrangeMode == PropertyArrangeMode.Category && vm.Category != null && vm.Category.Contains (FilterText, StringComparison.OrdinalIgnoreCase)) {
 				return true;
 			}
 
-			return vm.Property.Name.ToLower ().Contains (filter);
+			return vm.Property.Name.Contains (FilterText, StringComparison.OrdinalIgnoreCase);
 		}
 	}
 }
