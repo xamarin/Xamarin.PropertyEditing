@@ -426,12 +426,14 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 
 			var vm = new PanelViewModel (provider);
+			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
 			vm.SelectedObjects.Add (obj);
 
-			Assert.That (vm.Properties, Is.Not.Empty);
-			Assume.That (vm.Properties.Count, Is.EqualTo (2));
+			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
+			Assume.That (vm.ArrangedProperties[0].Count, Is.EqualTo (2));
+
 			vm.FilterText = "sub";
-			Assume.That (vm.Properties.Count, Is.EqualTo (1));
+			Assert.That (vm.ArrangedProperties[0].Count, Is.EqualTo (1));
 		}
 
 		[Test]
@@ -442,16 +444,19 @@ namespace Xamarin.PropertyEditing.Tests
 			var obj = new TestClassSub ();
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
-
+			
 			var vm = new PanelViewModel (provider);
+			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
 			vm.SelectedObjects.Add (obj);
 
-			Assert.That (vm.Properties, Is.Not.Empty);
-			Assume.That (vm.Properties.Count, Is.EqualTo (2));
+			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
+			Assume.That (vm.ArrangedProperties[0].Count, Is.EqualTo (2));
+
 			vm.FilterText = "sub";
-			Assume.That (vm.Properties.Count, Is.EqualTo (1));
-			vm.FilterText = string.Empty;
-			Assume.That (vm.Properties.Count, Is.EqualTo (2));
+			Assume.That (vm.ArrangedProperties[0].Count, Is.EqualTo (1));
+
+			vm.FilterText = String.Empty;
+			Assert.That (vm.ArrangedProperties[0].Count, Is.EqualTo (2));
 		}
 
 		private TestContext context;
