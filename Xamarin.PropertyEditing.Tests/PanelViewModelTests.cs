@@ -26,6 +26,7 @@ namespace Xamarin.PropertyEditing.Tests
 		private class TestClassSub
 			: TestClass
 		{
+			[System.ComponentModel.Category ("Sub")]
 			public int SubProperty {
 				get;
 				set;
@@ -457,6 +458,42 @@ namespace Xamarin.PropertyEditing.Tests
 
 			vm.FilterText = String.Empty;
 			Assert.That (vm.ArrangedProperties[0].Count, Is.EqualTo (2));
+		}
+
+		[Test]
+		public async Task PropertyCategoryArrange ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+
+			var vm = new PanelViewModel (provider) { ArrangeMode = PropertyArrangeMode.Category };
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
+			Assert.That (vm.ArrangedProperties.FirstOrDefault (g => g.Key == "Sub"), Is.Not.Null);
+		}
+
+		[Test]
+		public async Task PropertyListCategoryFiltered ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+
+			var vm = new PanelViewModel (provider) { ArrangeMode = PropertyArrangeMode.Category };
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
+
+			vm.FilterText = "sub";
+			Assert.That (vm.ArrangedProperties.Count, Is.EqualTo (1));
+
+			var group = vm.ArrangedProperties.FirstOrDefault (g => g.Key == "Sub");
+			Assert.That (group, Is.Not.Null);
+			Assert.That (group.Count, Is.EqualTo (1));
 		}
 
 		private TestContext context;
