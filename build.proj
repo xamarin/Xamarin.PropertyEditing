@@ -52,13 +52,15 @@
 
 	<Target Name="Rebuild" DependsOnTargets="Clean;Build" />
 
-	<Target Name="Test" DependsOnTargets="TestMac">
-
+	<Target Name="Test" DependsOnTargets="TestMac;TestWindows">
+		<MakeDir Directories="$(Out)" />
+		<Exec Command="$(Mono64) $(TestRunner) $(TestAssembly) -result=$(Out)\TestResult.xml" />
 	</Target>
 
 	<Target Name="TestMac" Condition=" '$(IsMac)' ">
-		<MakeDir Directories="$(Out)" />
-		<Exec Command="$(Mono64) $(TestRunner) $(TestAssembly) -result=$(Out)\TestResult.xml" />
+	</Target>
+
+	<Target Name="TestWindows" Condition=" '$(IsWindows)' ">
 	</Target>
 
 </Project>
