@@ -16,8 +16,11 @@
 
 	<!-- Choose the correct Debug/Release configuration for the current platform -->
 	<PropertyGroup Condition="'$(Configuration)' == ''">
-		<Configuration>Debug</Configuration>
-		<Configuration Condition=" '$(Release)' ">Release</Configuration>
+		<Configuration Condition=" '!$(Release)' And '$(IsMac)' ">DebugMac</Configuration>
+		<Configuration Condition=" '!$(Release)' And '$(IsWindows)' ">Debug</Configuration>
+
+		<Configuration Condition=" '$(Release)' And '$(IsMac)' ">ReleaseMac</Configuration>
+		<Configuration Condition=" '$(Release)' And '$(IsWindows)' ">Release</Configuration>
 	</PropertyGroup>
 
 	<PropertyGroup>
