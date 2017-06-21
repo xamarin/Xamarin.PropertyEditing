@@ -11,13 +11,6 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
 {
-	public enum PropertyArrangeMode
-	{
-		Name = 0,
-		Category = 1,
-		ValueSource = 2
-	}
-
 	[TemplatePart (Name = "search", Type = typeof(TextBox))]
 	[TemplatePart (Name = "propertyItems", Type = typeof(ItemsControl))]
 	public class PropertyEditorPanel

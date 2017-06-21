@@ -89,14 +89,44 @@ namespace Xamarin.PropertyEditing.ViewModels
 			tcs.SetResult (true);
 		}
 
+		protected virtual void OnAddProperties (IEnumerable<PropertyViewModel> properties)
+		{
+		}
+
+		protected virtual void OnRemoveProperties (IEnumerable<PropertyViewModel> properties)
+		{
+		}
+
+		protected virtual void OnClearProperties()
+		{
+		}
+
 		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
-		private readonly ObservableCollection<PropertyViewModel> properties = new ObservableCollection<PropertyViewModel> ();
+		private readonly ObservableCollectionEx<PropertyViewModel> properties = new ObservableCollectionEx<PropertyViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
+
+		private void AddProperties (IEnumerable<PropertyViewModel> properties)
+		{
+			this.properties.AddRange (properties);
+			OnAddProperties (properties);
+		}
+
+		private void RemoveProperties (IEnumerable<PropertyViewModel> properties)
+		{
+			this.properties.RemoveRange (properties);
+			OnRemoveProperties (properties);
+		}
+
+		private void ClearProperties()
+		{
+			this.properties.Clear ();
+			OnClearProperties ();
+		}
 
 		private void UpdateProperties (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
 		{
 			if (this.editors.Count == 0) {
-				this.properties.Clear();
+				ClearProperties ();
 				return;
 			}
 
@@ -105,9 +135,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 				newSet.IntersectWith (this.editors[i].Properties);
 			}
 
+			List<PropertyViewModel> toRemove = new List<PropertyViewModel> ();
 			foreach (PropertyViewModel vm in this.properties.ToArray ()) {
 				if (!newSet.Remove (vm.Property)) {
-					this.properties.Remove (vm);
+					toRemove.Add (vm);
 					vm.Editors.Clear ();
 					continue;
 				}
@@ -123,9 +154,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				}
 			}
 
-			foreach (IPropertyInfo property in newSet) {
-				this.properties.Add (GetViewModel (property));
-			}
+			RemoveProperties (toRemove);
+			AddProperties (newSet.Select (GetViewModel));
 		}
 
 		private async Task<IObjectEditor[]> AddEditorsAsync (IList newItems)

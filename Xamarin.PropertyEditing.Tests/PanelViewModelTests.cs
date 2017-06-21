@@ -17,8 +17,7 @@ namespace Xamarin.PropertyEditing.Tests
 	{
 		private class TestClass
 		{
-			public string Property
-			{
+			public string Property {
 				get;
 				set;
 			}
@@ -27,8 +26,8 @@ namespace Xamarin.PropertyEditing.Tests
 		private class TestClassSub
 			: TestClass
 		{
-			public int SubProperty
-			{
+			[System.ComponentModel.Category ("Sub")]
+			public int SubProperty {
 				get;
 				set;
 			}
@@ -37,14 +36,14 @@ namespace Xamarin.PropertyEditing.Tests
 		[SetUp]
 		public void Setup ()
 		{
-			SynchronizationContext.SetSynchronizationContext (this.context = new TestContext());
+			SynchronizationContext.SetSynchronizationContext (this.context = new TestContext ());
 		}
 
 		[Test]
 		public async Task PropertiesAddedFromEditor ()
 		{
 			var provider = new ReflectionEditorProvider ();
-			var obj = new TestClass();
+			var obj = new TestClass ();
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (1));
 
@@ -52,20 +51,20 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedObjects.Add (obj);
 
 			Assert.That (vm.Properties, Is.Not.Empty);
-			Assert.That (vm.Properties[0].Property, Is.EqualTo (editor.Properties.Single()));
+			Assert.That (vm.Properties[0].Property, Is.EqualTo (editor.Properties.Single ()));
 		}
 
 		[Test]
 		[Description ("When editors of two different types are selected, the properties that are common should be listed")]
 		public void PropertiesFromCommonSubset ()
 		{
-			var obj1 = new TestClass();
-			var obj2 = new TestClassSub();
+			var obj1 = new TestClass ();
+			var obj2 = new TestClassSub ();
 
 			var sharedPropertyMock = new Mock<IPropertyInfo> ();
-			sharedPropertyMock.SetupGet (pi => pi.Type).Returns (typeof(string));
+			sharedPropertyMock.SetupGet (pi => pi.Type).Returns (typeof (string));
 			var subPropertyMock = new Mock<IPropertyInfo> ();
-			subPropertyMock.SetupGet (pi => pi.Type).Returns (typeof(int));
+			subPropertyMock.SetupGet (pi => pi.Type).Returns (typeof (int));
 
 			var editor1Mock = new Mock<IObjectEditor> ();
 			editor1Mock.SetupGet (oe => oe.Properties).Returns (new[] { sharedPropertyMock.Object });
@@ -126,10 +125,10 @@ namespace Xamarin.PropertyEditing.Tests
 		[Description ("Adding or removing editors shouldn't remake other editors or duplicate")]
 		public void EditorsShouldBeConsistent ()
 		{
-			var provider = new ReflectionEditorProvider();
+			var provider = new ReflectionEditorProvider ();
 
-			var obj1 = new TestClass();
-			var obj2 = new TestClass();
+			var obj1 = new TestClass ();
+			var obj2 = new TestClass ();
 
 			var vm = new PanelViewModel (provider);
 			vm.SelectedObjects.Add (obj1);
@@ -137,7 +136,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var property = vm.Properties[0];
 			Assume.That (property.Editors.Count, Is.EqualTo (1));
 
-			var editor = property.Editors.Single();
+			var editor = property.Editors.Single ();
 
 			vm.SelectedObjects.Add (obj2);
 
@@ -248,12 +247,12 @@ namespace Xamarin.PropertyEditing.Tests
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
 
 			var vm = new PanelViewModel (provider.Object);
-			
+
 			// We need access to the custom reset method here to ensure compliance
 			// It's a bit hacky but this is unlikely to change. If it does, this test
 			// will ensure the new notifier works as it should when resetting.
-			Assume.That (vm.SelectedObjects, Is.TypeOf<ObservableCollectionEx<object>>());
-			((ObservableCollectionEx<object>) vm.SelectedObjects).Reset (new[] { obj });
+			Assume.That (vm.SelectedObjects, Is.TypeOf<ObservableCollectionEx<object>> ());
+			((ObservableCollectionEx<object>)vm.SelectedObjects).Reset (new[] { obj });
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
 			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
@@ -332,7 +331,7 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedObjects.Remove (derivedObj);
 			Assume.That (vm.Properties, Is.Not.Empty);
 
-			var changedField = typeof(ObservableCollection<IPropertyInfo>).GetField (nameof (INotifyCollectionChanged.CollectionChanged), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+			var changedField = typeof (ObservableCollection<IPropertyInfo>).GetField (nameof (INotifyCollectionChanged.CollectionChanged), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 			MulticastDelegate d = (MulticastDelegate)changedField.GetValue (derivedProperties);
 			Assert.That (d, Is.Null);
 		}
@@ -367,8 +366,8 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
 			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (baseProperty.Object));
 
-			Assume.That (vm.SelectedObjects, Is.TypeOf<ObservableCollectionEx<object>>());
-			((ObservableCollectionEx<object>) vm.SelectedObjects).Reset (new[] { baseObj });
+			Assume.That (vm.SelectedObjects, Is.TypeOf<ObservableCollectionEx<object>> ());
+			((ObservableCollectionEx<object>)vm.SelectedObjects).Reset (new[] { baseObj });
 			Assume.That (vm.Properties, Is.Not.Empty);
 
 			var changedField = typeof (ObservableCollection<IPropertyInfo>).GetField (nameof (INotifyCollectionChanged.CollectionChanged), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
@@ -384,7 +383,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var obj2 = new object ();
 
 			var property = new Mock<IPropertyInfo> ();
-			property.SetupGet (pi => pi.Type).Returns (typeof(string));
+			property.SetupGet (pi => pi.Type).Returns (typeof (string));
 
 			var editor1 = new Mock<IObjectEditor> ();
 			editor1.SetupGet (oe => oe.Target).Returns (obj1);
@@ -415,7 +414,86 @@ namespace Xamarin.PropertyEditing.Tests
 			await Task.Yield ();
 
 			Assert.That (vm.Properties, Is.Empty);
-			this.context.ThrowPendingExceptions();
+			this.context.ThrowPendingExceptions ();
+		}
+
+		[Test]
+		[Description ("When filtered Text exists then list is reduced.")]
+		public async Task PropertyListFilteredTextReducesList ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+
+			var vm = new PanelViewModel (provider);
+			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
+			Assume.That (vm.ArrangedProperties[0].Count, Is.EqualTo (2));
+
+			vm.FilterText = "sub";
+			Assert.That (vm.ArrangedProperties[0].Count, Is.EqualTo (1));
+		}
+
+		[Test]
+		[Description ("When filtered Text is cleared then list is restored back to its original.")]
+		public async Task PropertyListFilteredTextClearedRestoresList ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+			
+			var vm = new PanelViewModel (provider);
+			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
+			Assume.That (vm.ArrangedProperties[0].Count, Is.EqualTo (2));
+
+			vm.FilterText = "sub";
+			Assume.That (vm.ArrangedProperties[0].Count, Is.EqualTo (1));
+
+			vm.FilterText = String.Empty;
+			Assert.That (vm.ArrangedProperties[0].Count, Is.EqualTo (2));
+		}
+
+		[Test]
+		public async Task PropertyCategoryArrange ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+
+			var vm = new PanelViewModel (provider) { ArrangeMode = PropertyArrangeMode.Category };
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
+			Assert.That (vm.ArrangedProperties.FirstOrDefault (g => g.Key == "Sub"), Is.Not.Null);
+		}
+
+		[Test]
+		public async Task PropertyListCategoryFiltered ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+
+			var vm = new PanelViewModel (provider) { ArrangeMode = PropertyArrangeMode.Category };
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
+
+			vm.FilterText = "sub";
+			Assert.That (vm.ArrangedProperties.Count, Is.EqualTo (1));
+
+			var group = vm.ArrangedProperties.FirstOrDefault (g => g.Key == "Sub");
+			Assert.That (group, Is.Not.Null);
+			Assert.That (group.Count, Is.EqualTo (1));
 		}
 
 		private TestContext context;

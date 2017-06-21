@@ -19,6 +19,12 @@ namespace Xamarin.PropertyEditing
 			OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, list, index));
 		}
 
+		public void RemoveRange (IEnumerable<T> range)
+		{
+			foreach (T element in range)
+				Remove (element);
+		}
+
 		/// <remarks>Only used for testing <see cref="INotifyCollectionChanged"/> compliance.</remarks>
 		internal void Reset (IEnumerable<T> newContents)
 		{

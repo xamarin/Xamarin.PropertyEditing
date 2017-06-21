@@ -68,6 +68,11 @@
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\StringPropertyViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="PropertyArrangeMode.cs" />
+    <Compile Include="IGroupingList.cs" />
+    <Compile Include="ObservableLookup.cs" />
+    <Compile Include="IMutableLookup.cs" />
+    <Compile Include="OrderedDictionary.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
