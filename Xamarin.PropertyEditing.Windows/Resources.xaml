@@ -131,22 +131,23 @@
 		</Setter>
 	</Style>
 
-    <Style TargetType="local:BoolEditorControl">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:BoolEditorControl">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="Label" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Label Name="Label" Target="{Binding ElementName=CheckBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
-                        <CheckBox Name="CheckBox" AutomationProperties.LabeledBy="{Binding ElementName=Label,Mode=OneTime}" Grid.Column="1" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" Content="{Binding Value}" VerticalAlignment="Center" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+	<Style TargetType="local:BoolEditorControl">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:BoolEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition SharedSizeGroup="Label" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<Label Name="Label" Target="{Binding ElementName=CheckBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
+						<CheckBox Name="CheckBox" AutomationProperties.LabeledBy="{Binding ElementName=Label,Mode=OneTime}" Grid.Column="1" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalAlignment="Center" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
     <Style TargetType="local:PointEditorControl">
         <Setter Property="Template">
