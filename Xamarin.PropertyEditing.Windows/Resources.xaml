@@ -10,6 +10,8 @@
 		<ResourceDictionary Source="Themes/VS.Light.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 	
+	<BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+	
 	<FontFamily x:Key="EnvironmentFontFamily">SegoeUI</FontFamily>
 	<System:Double x:Key="EnvironmentFontSize">12</System:Double>
 
@@ -47,6 +49,7 @@
 	</local:NumericTemplateSelector>
 
 	<Style TargetType="local:NumericEditorControl">
+		<Setter Property="Height" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:NumericEditorControl">
@@ -65,6 +68,8 @@
 	</Style>
 
 	<Style TargetType="local:DoubleUpDownControl">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="ShowSpinner" Value="False" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:DoubleUpDownControl}">
@@ -76,7 +81,7 @@
 
                         <TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" Grid.Column="0" VerticalContentAlignment="Center" />
 						
-						<StackPanel Grid.Column="1">
+						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
 							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
 							<Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
 						</StackPanel>
@@ -86,25 +91,27 @@
 		</Setter>
 	</Style>
 
-    <Style TargetType="local:IntegerUpDownControl">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:IntegerUpDownControl}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" Grid.Column="0" VerticalContentAlignment="Center" />
-                        <StackPanel Grid.Column="1">
-                            <Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
-                            <Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
-                        </StackPanel>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+	<Style TargetType="local:IntegerUpDownControl">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="ShowSpinner" Value="False" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:IntegerUpDownControl}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" Grid.Column="0" VerticalContentAlignment="Center" />
+						<StackPanel Grid.Column="1">
+							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
+							<Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
+						</StackPanel>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
     <Style TargetType="local:StringEditorControl">
 		<Setter Property="Template">

@@ -100,6 +100,15 @@ namespace Xamarin.PropertyEditing.Windows
 			set { SetValue (MaximumValueProperty, value); }
 		}
 
+		public static readonly DependencyProperty ShowSpinnerProperty = DependencyProperty.Register (
+			"ShowSpinner", typeof(bool), typeof(NumericUpDownControl<T>), new PropertyMetadata (default(bool)));
+
+		public bool ShowSpinner
+		{
+			get { return (bool) GetValue (ShowSpinnerProperty); }
+			set { SetValue (ShowSpinnerProperty, value); }
+		}
+
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
