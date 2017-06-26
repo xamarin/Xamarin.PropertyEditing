@@ -64,25 +64,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 					var editor = (PropertyEditorControl)outlineView.MakeView (cellIdentifier + "edits", this);
 					if (editor == null) {
-						Type[] genericArgs = null;
-						Type controlType;
-						Type propertyType = vm.GetType ();
-						if (!ViewModelTypes.TryGetValue (propertyType, out controlType)) {
-							if (propertyType.IsConstructedGenericType) {
-								genericArgs = propertyType.GetGenericArguments ();
-								propertyType = propertyType.GetGenericTypeDefinition ();
-								ViewModelTypes.TryGetValue (propertyType, out controlType);
-							}
-						}
-
-						if (controlType == null)
-							return null;
-
-						if (controlType.IsGenericTypeDefinition) {
-							controlType = controlType.MakeGenericType (genericArgs);
-						}
-
-						editor = SetUpEditor (controlType, vm, outlineView);
+						editor = GetEditor (vm, outlineView);
 					}
 
 					// we must reset these every time, as the view may have been reused
@@ -92,6 +74,29 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			throw new Exception ("Unknown column identifier: " + tableColumn.Identifier);
+		}
+
+		PropertyEditorControl GetEditor (PropertyViewModel vm, NSOutlineView outlineView)
+		{
+			Type[] genericArgs = null;
+			Type controlType;
+			Type propertyType = vm.GetType ();
+			if (!ViewModelTypes.TryGetValue (propertyType, out controlType)) {
+				if (propertyType.IsConstructedGenericType) {
+					genericArgs = propertyType.GetGenericArguments ();
+					propertyType = propertyType.GetGenericTypeDefinition ();
+					ViewModelTypes.TryGetValue (propertyType, out controlType);
+				}
+			}
+
+			if (controlType == null)
+				return null;
+
+			if (controlType.IsGenericTypeDefinition) {
+				controlType = controlType.MakeGenericType (genericArgs);
+			}
+
+			return SetUpEditor (controlType, vm, outlineView);
 		}
 
 		public override bool ShouldSelectItem (NSOutlineView outlineView, NSObject item)
@@ -119,6 +124,20 @@ namespace Xamarin.PropertyEditing.Mac
 			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
 			if (group != null)
 				this.dataSource.DataContext.SetIsExpanded (group.Key, isExpanded: false);
+		}
+
+		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
+		{
+			var facade = (NSObjectFacade)item;
+			var vm = facade.Target as PropertyViewModel;
+			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
+			string cellIdentifier = (group == null) ? vm.Property.Name : group.Key;
+
+			var editor = (PropertyEditorControl)outlineView.MakeView (cellIdentifier + "edits", this);
+			if (editor == null) {
+				editor = GetEditor (vm, outlineView);
+			}
+			return editor.RowHeight;
 		}
 
 		private PropertyTableDataSource dataSource;
