@@ -139,7 +139,6 @@ namespace Xamarin.PropertyEditing.Mac
 				RefusesFirstResponder = true,
 				AutoresizingMask = NSViewResizingMask.WidthSizable,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
-				RowHeight = 24,
 			};
 
 			// TODO: localize
