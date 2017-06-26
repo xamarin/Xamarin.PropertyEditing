@@ -68,6 +68,9 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
 
+			PropertiesViewModel.ViewModelMap.Add (typeof (CoreGraphics.CGPoint), (p, e) => new PropertyViewModel<CoreGraphics.CGPoint> (p, e));
+			PropertiesViewModel.ViewModelMap.Add (typeof (CoreGraphics.CGRect), (p, e) => new PropertyViewModel<CoreGraphics.CGRect> (p, e));
+
 			propertyFilter = new NSSearchField (new CGRect (10, Frame.Height - 25, 170, 24)) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				PlaceholderString = "Property Filter", // TODO Localize
@@ -115,7 +118,6 @@ namespace Xamarin.PropertyEditing.Mac
 				RefusesFirstResponder = true,
 				AutoresizingMask = NSViewResizingMask.WidthSizable,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
-				RowHeight = 24,
 			};
 
 			// TODO: localize

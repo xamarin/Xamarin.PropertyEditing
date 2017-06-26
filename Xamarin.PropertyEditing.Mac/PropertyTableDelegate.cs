@@ -125,6 +125,14 @@ namespace Xamarin.PropertyEditing.Mac
 				this.dataSource.DataContext.SetIsExpanded (group.Key, isExpanded: false);
 		}
 
+		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
+		{
+			var facade = (NSObjectFacade)item;
+			var vm = facade.Target as PropertyViewModel;
+			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
+			return  (group == null) ? vm.RowHeight : group.ElementAtOrDefault(1).RowHeight;
+		}
+
 		private PropertyTableDataSource dataSource;
 		private bool isExpanding;
 
