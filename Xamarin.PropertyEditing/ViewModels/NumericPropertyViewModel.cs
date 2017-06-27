@@ -9,10 +9,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public IntegerPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (property, editors)
 		{
-			if (!IsConstrained) {
-				MinimumValue = Int64.MinValue;
-				MaximumValue = Int64.MaxValue;
-			}
 		}
 
 		protected override long IncrementValue (long value)
@@ -32,10 +28,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public FloatingPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (property, editors)
 		{
-			if (!IsConstrained) {
-				MaximumValue = Double.MaxValue;
-				MinimumValue = Double.MinValue;
-			}
 		}
 
 		protected override double IncrementValue (double value)

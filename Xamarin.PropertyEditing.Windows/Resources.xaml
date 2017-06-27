@@ -31,12 +31,12 @@
 	<local:NumericTemplateSelector x:Key="NumericTemplateSelector">
 		<local:NumericTemplateSelector.FloatingTemplate>
 			<DataTemplate DataType="vm:FloatingPropertyViewModel">
-				<local:DoubleUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
+				<local:DoubleUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.FloatingTemplate>
 		<local:NumericTemplateSelector.IntegerTemplate>
 			<DataTemplate DataType="vm:IntegerPropertyViewModel">
-				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
+				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.IntegerTemplate>
 	</local:NumericTemplateSelector>
@@ -136,8 +136,8 @@
         </Setter>
     </Style>
 
-    <Style TargetType="local:ThicknessEditorControl">
-        <Setter Property="Template">
+	<Style TargetType="local:ThicknessEditorControl">
+		<Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ThicknessEditorControl">
                     <Grid>

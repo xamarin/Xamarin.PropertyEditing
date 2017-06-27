@@ -16,6 +16,17 @@ namespace Xamarin.PropertyEditing.Windows
 
 		protected override bool TryParse (string text, out double value)
 		{
+			if (text == nameof(Double.NaN)) {
+				value = Double.NaN;
+				return true;
+			} else if (text == "∞" || text == nameof (Double.PositiveInfinity)) {
+				value = Double.PositiveInfinity;
+				return true;
+			} else if (text == "-∞" || text == nameof (Double.NegativeInfinity)) {
+				value = Double.NegativeInfinity;
+				return true;
+			}
+
 			return Double.TryParse (text, out value);
 		}
 
@@ -109,6 +120,15 @@ namespace Xamarin.PropertyEditing.Windows
 			set { SetValue (ShowSpinnerProperty, value); }
 		}
 
+		public static readonly DependencyProperty IsConstrainedProperty = DependencyProperty.Register (
+			"IsConstrained", typeof(bool), typeof(NumericUpDownControl<T>), new PropertyMetadata (default(bool)));
+
+		public bool IsConstrained
+		{
+			get { return (bool) GetValue (IsConstrainedProperty); }
+			set { SetValue (IsConstrainedProperty, value); }
+		}
+
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
@@ -126,6 +146,9 @@ namespace Xamarin.PropertyEditing.Windows
 
 		protected virtual object OnCoerceValue (object value)
 		{
+			if (!IsConstrained)
+				return value;
+
 			T v = (T)value;
 			if (v.CompareTo (MinimumValue) < 0)
 				v = MinimumValue;
@@ -150,7 +173,7 @@ namespace Xamarin.PropertyEditing.Windows
 			if (TryParse (this.textBox.Text, out value)) {
 				SetCurrentValue (ValueProperty, value);
 			} else {
-				// TODO error, disable buttons
+				// TODO ignore and reset value
 			}
 		}
 
