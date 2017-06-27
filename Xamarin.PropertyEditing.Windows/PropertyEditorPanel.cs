@@ -53,6 +53,15 @@ namespace Xamarin.PropertyEditing.Windows
 			private set { SetValue (SelectedItemsPropertyKey, value); }
 		}
 
+		public static readonly DependencyProperty IsArrangeEnabledProperty = DependencyProperty.Register (
+			"IsArrangeEnabled", typeof(bool), typeof(PropertyEditorPanel), new PropertyMetadata (true));
+
+		public bool IsArrangeEnabled
+		{
+			get { return (bool) GetValue (IsArrangeEnabledProperty); }
+			set { SetValue (IsArrangeEnabledProperty, value); }
+		}
+
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();

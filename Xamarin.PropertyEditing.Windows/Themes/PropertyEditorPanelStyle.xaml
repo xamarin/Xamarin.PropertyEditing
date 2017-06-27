@@ -129,6 +129,13 @@
 							<TextBox Name="search" Grid.Row="0" AutomationProperties.Name="Search" Text="{Binding FilterText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
 
 							<local:MenuButton Grid.Row="1" x:Name="arrangeBy" Header="Arrange by:" Margin="0,0,18,0" Content="{Binding ArrangeMode}">
+								<local:MenuButton.Visibility>
+									<Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsArrangeEnabled">
+										<Binding.Converter>
+											<BooleanToVisibilityConverter />
+										</Binding.Converter>
+									</Binding>
+								</local:MenuButton.Visibility>
 								<local:MenuButton.ContextMenu>
 									<ContextMenu ItemsSource="{Binding ArrangeModes,Mode=OneTime}">
 										<ContextMenu.ItemTemplate>
