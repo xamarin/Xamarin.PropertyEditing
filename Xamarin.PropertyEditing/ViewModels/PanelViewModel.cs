@@ -10,6 +10,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public PanelViewModel (IEditorProvider provider)
 			: base (provider)
 		{
+			ArrangeModes = new List<ArrangeModeViewModel> {
+				new ArrangeModeViewModel (PropertyArrangeMode.Name, this),
+				new ArrangeModeViewModel (PropertyArrangeMode.Category, this)
+			};
 		}
 
 		public event EventHandler ArrangedPropertiesChanged;
@@ -43,6 +47,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 				Arrange ();
 				OnPropertyChanged ();
 			}
+		}
+
+		public IReadOnlyList<ArrangeModeViewModel> ArrangeModes
+		{
+			get;
 		}
 
 		public bool GetIsExpanded (string group)
@@ -155,7 +164,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private string GetGroup (PropertyViewModel vm)
 		{
-			return (ArrangeMode == PropertyArrangeMode.Name) ? "0" : vm.Category;
+			return (ArrangeMode == PropertyArrangeMode.Name) ? "0" : vm.Property.Category;
 		}
 
 		private bool MatchesFilter (PropertyViewModel vm)
@@ -163,7 +172,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (String.IsNullOrWhiteSpace (FilterText))
 				return true;
 
-			if (ArrangeMode == PropertyArrangeMode.Category && vm.Category != null && vm.Category.Contains (FilterText, StringComparison.OrdinalIgnoreCase)) {
+			if (ArrangeMode == PropertyArrangeMode.Category && vm.Property.Category != null && vm.Property.Category.Contains (FilterText, StringComparison.OrdinalIgnoreCase)) {
 				return true;
 			}
 
