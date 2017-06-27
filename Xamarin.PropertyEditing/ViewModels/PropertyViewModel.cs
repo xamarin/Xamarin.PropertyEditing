@@ -239,6 +239,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private bool multipleValues;
 		private PropertyVariation variation;
 		private string error;
+		int rowHeight = 24;
 
 		protected PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
@@ -329,6 +330,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.valueModel = value;
 				OnPropertyChanged ();
 				OnPropertyChanged (nameof (CanDelve));
+			}
+		}
+
+		public int RowHeight
+		{
+			get
+			{
+				return this.rowHeight;
+			}
+
+			internal set
+			{
+				this.rowHeight = value;
 			}
 		}
 
