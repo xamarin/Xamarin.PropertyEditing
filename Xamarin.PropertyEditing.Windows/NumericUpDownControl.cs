@@ -12,6 +12,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			MaximumValueProperty.OverrideMetadata (typeof (DoubleUpDownControl), new PropertyMetadata (Double.MaxValue));
 			MinimumValueProperty.OverrideMetadata (typeof (DoubleUpDownControl), new PropertyMetadata (Double.MinValue));
+			DefaultStyleKeyProperty.OverrideMetadata (typeof(DoubleUpDownControl), new FrameworkPropertyMetadata (typeof(DoubleUpDownControl)));
 		}
 
 		protected override bool TryParse (string text, out double value)
@@ -48,6 +49,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			MaximumValueProperty.OverrideMetadata (typeof(IntegerUpDownControl), new PropertyMetadata (Int64.MaxValue));
 			MinimumValueProperty.OverrideMetadata (typeof(IntegerUpDownControl), new PropertyMetadata (Int64.MinValue));
+			DefaultStyleKeyProperty.OverrideMetadata (typeof(IntegerUpDownControl), new FrameworkPropertyMetadata (typeof(IntegerUpDownControl)));
 		}
 
 		protected override bool TryParse (string text, out long value)
@@ -76,12 +78,6 @@ namespace Xamarin.PropertyEditing.Windows
 		static NumericUpDownControl ()
 		{
 			FocusableProperty.OverrideMetadata (typeof (NumericUpDownControl<T>), new FrameworkPropertyMetadata (false));
-		}
-
-		public NumericUpDownControl ()
-		{
-			// Hacky but we only really need the one template, can override easily if need be.
-			DefaultStyleKey = typeof(DoubleUpDownControl);
 		}
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register (
