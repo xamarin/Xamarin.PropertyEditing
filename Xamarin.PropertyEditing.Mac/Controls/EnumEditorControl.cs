@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using AppKit;
@@ -13,11 +14,14 @@ namespace Xamarin.PropertyEditing.Mac
 		where T : struct
 	{
 		NSComboBox ComboBoxEditor;
+		List<NSButton> FlagsList = new List<NSButton> ();
 
 		public override NSView FirstKeyView => ComboBoxEditor;
 		public override NSView LastKeyView => ComboBoxEditor;
 
 		EnumPropertyViewModel<T> EnumEditorViewModel => (EnumPropertyViewModel<T>)ViewModel;
+
+		bool dataPopulated;
 
 		public EnumEditorControl ()
 		{
@@ -32,12 +36,6 @@ namespace Xamarin.PropertyEditing.Mac
 			ComboBoxEditor.SelectionChanged += (sender, e) => {
 				EnumEditorViewModel.ValueName = ComboBoxEditor.SelectedValue.ToString ();
 			};
-
-			AddSubview (ComboBoxEditor);
-
-			this.DoConstraints (new[] {
-				ComboBoxEditor.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
-			});
 		}
 
 
@@ -76,16 +74,57 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateModelValue ()
 		{
-			// Once the VM is loaded we need a one time population
-			if (ViewModel.Property.Type.IsEnum && ComboBoxEditor.Count == 0) {
-				foreach (var item in EnumEditorViewModel.PossibleValues) {
-					ComboBoxEditor.Add (new NSString (item));
+			if (!dataPopulated) {
+				if (EnumEditorViewModel.IsFlags) {
+					var top = 0;
+					foreach (var item in EnumEditorViewModel.PossibleValues) {
+						var BooleanEditor = new NSButton (new CGRect(0, top, 200, 24)) { TranslatesAutoresizingMaskIntoConstraints = false };
+						BooleanEditor.SetButtonType (NSButtonType.Switch);
+						BooleanEditor.Title = item.Key;
+						BooleanEditor.State = item.Value ? NSCellStateValue.On : NSCellStateValue.Off;
+						BooleanEditor.Activated += BooleanEditor_Activated;
+						BooleanEditor.Enabled = false; // TODO Remove this line once EnumEditorViewModel.Value is updated correctly.
+                        AddSubview (BooleanEditor);
+						FlagsList.Add (BooleanEditor);
+						top += 24;
+					}
+
+					EnumEditorViewModel.RowHeight = EnumEditorViewModel.PossibleValues.Count * 24;
+				} else {
+					// Once the VM is loaded we need a one time population
+					if (ViewModel.Property.Type.IsEnum && ComboBoxEditor.Count == 0) {
+						foreach (var item in EnumEditorViewModel.PossibleValues) {
+							ComboBoxEditor.Add (new NSString (item.Key));
+						}
+					}
+					AddSubview (ComboBoxEditor);
+
+					this.DoConstraints (new[] {
+					ComboBoxEditor.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
+				});
 				}
+				dataPopulated = true;
 			}
 
 			base.UpdateModelValue ();
 
-			ComboBoxEditor.StringValue = EnumEditorViewModel.ValueName;
+			if (EnumEditorViewModel.IsFlags) {
+				for (int i = 0; i > FlagsList.Count - 1; i++) {
+					FlagsList[i].State = EnumEditorViewModel.PossibleValues[FlagsList[i].Title] ? NSCellStateValue.On : NSCellStateValue.Off;
+				}
+			} else {
+				ComboBoxEditor.StringValue = EnumEditorViewModel.ValueName;
+			}
+		}
+
+		void BooleanEditor_Activated (object sender, EventArgs e)
+		{
+			var btn = sender as NSButton;
+			T realValue;
+			if (Enum.TryParse<T> (btn.Title, out realValue)) {
+				// TODO we need an elegant way for EnumEditorViewModel.Value |= realValue; to work
+			}
+
 		}
 	}
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reflection;
 
 namespace Xamarin.PropertyEditing.ViewModels
@@ -11,8 +13,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public EnumPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (property, editors)
 		{
-			PossibleValues = Enum.GetNames (property.Type);
+			var enumNames = Enum.GetNames (property.Type);
 			IsFlags = property.Type.GetCustomAttribute<FlagsAttribute> () != null;
+			if (IsFlags) {
+				var dict = new Dictionary<string, bool> ();
+				foreach (var item in enumNames) {
+					dict.Add (item, (Value as Enum).HasFlag ((Enum)Enum.Parse (property.Type, item)));
+				}
+				PossibleValues = dict;
+			} else {
+				PossibleValues = enumNames.ToDictionary (x => x, y => false);
+			}
 		}
 
 		public bool IsFlags
@@ -20,7 +31,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		public IReadOnlyList<string> PossibleValues
+		public IReadOnlyDictionary<string, bool> PossibleValues
 		{
 			get;
 		}
