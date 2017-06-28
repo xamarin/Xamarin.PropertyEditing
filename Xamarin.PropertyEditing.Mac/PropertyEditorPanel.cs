@@ -11,9 +11,6 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	public partial class PropertyEditorPanel : AppKit.NSView
 	{
-		NSSearchField propertyFilter;
-		NSComboBox propertyArrangeMode;
-
 		internal const string PropertyListColId = "PropertiesList";
 		internal const string PropertyEditorColId = "PropertyEditors";
 
@@ -35,11 +32,23 @@ namespace Xamarin.PropertyEditing.Mac
 			Initialize ();
 		}
 
-		// when this property changes, need to create new datasource
-		IEditorProvider editorProvider;
-		NSOutlineView propertyTable;
-		PropertyTableDataSource dataSource;
-		PanelViewModel viewModel;
+		public bool IsArrangeEnabled
+		{
+			get { return this.isArrangeEnabled; }
+			set {
+				if (this.isArrangeEnabled == value)
+					return;
+
+				this.isArrangeEnabled = value;
+				if (value) {
+					AddSubview (this.propertyArrangeMode);
+					AddSubview (this.propertyArrangeModeLabel);
+				} else {
+					this.propertyArrangeMode.RemoveFromSuperview ();
+					this.propertyArrangeModeLabel.RemoveFromSuperview ();
+				}
+			}
+		}
 
 		public IEditorProvider EditorProvider
 		{
@@ -63,6 +72,17 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public ICollection<object> SelectedItems => this.viewModel.SelectedObjects;
 
+		private bool isArrangeEnabled = true;
+		// when this property changes, need to create new datasource
+		private IEditorProvider editorProvider;
+		private NSOutlineView propertyTable;
+		private PropertyTableDataSource dataSource;
+		private PanelViewModel viewModel;
+
+		private NSSearchField propertyFilter;
+		private NSComboBox propertyArrangeMode;
+		private NSTextField propertyArrangeModeLabel;
+
 		// Shared initialization code
 		private void Initialize ()
 		{
@@ -75,7 +95,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (propertyFilter);
 
-			var propertyArrangeModeLabel = new NSTextField (new CGRect (245, Frame.Height - 28, 150, 24)) {
+			this.propertyArrangeModeLabel = new NSTextField (new CGRect (245, Frame.Height - 28, 150, 24)) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				BackgroundColor = NSColor.Clear,
 				TextColor = NSColor.Black,
@@ -83,7 +103,6 @@ namespace Xamarin.PropertyEditing.Mac
 				Bezeled = false,
 				StringValue = "Arrange By:"
 			};
-			AddSubview (propertyArrangeModeLabel);
 
 			propertyArrangeMode = new NSComboBox (new CGRect (320, Frame.Height - 25, 153, 24)) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
@@ -92,7 +111,6 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (propertyFilter);
 
-
 			var enumValues = Enum.GetValues (typeof (PropertyArrangeMode));
 
 			foreach (var item in enumValues) {
@@ -100,7 +118,10 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 			propertyArrangeMode.SelectItem (0);
 
-			AddSubview (propertyArrangeMode);
+			if (IsArrangeEnabled) {
+				AddSubview (this.propertyArrangeMode);
+				AddSubview (this.propertyArrangeModeLabel);
+			}
 
 			// If either the Filter Mode or PropertySearchFilter Change Filter the Data
 			propertyArrangeMode.SelectionChanged += OnArrageModeChanged;
