@@ -118,8 +118,8 @@
 	</DataTemplate>
 
 	<Style x:Key="PropertySearchTextBox" TargetType="TextBox">
-		<Setter Property="Margin" Value="3,0,3,1" />
-		<Setter Property="Height" Value="20" />
+		<Setter Property="Margin" Value="4,1,4,2" />
+		<Setter Property="Height" Value="18" />
 		<Setter Property="Background" Value="{DynamicResource SearchControlBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource SearchControlBorderBrush}" />
 	</Style>
@@ -127,6 +127,8 @@
 	<Style TargetType="local:PropertyEditorPanel">
 		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
 		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}" />
+		<Setter Property="UseLayoutRounding" Value="True" />
+		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyEditorPanel">
