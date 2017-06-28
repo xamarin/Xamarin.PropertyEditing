@@ -10,6 +10,11 @@ namespace Xamarin.PropertyEditing
 	{
 		public void AddRange (IEnumerable<T> range)
 		{
+			foreach (T element in range)
+				Add (element);
+
+			return;
+
 			int index = Count;
 			var list = range.ToList ();
 			for (int i = 0; i < list.Count; i++) {

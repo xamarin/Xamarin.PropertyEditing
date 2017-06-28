@@ -2,70 +2,95 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows"
                     xmlns:System="clr-namespace:System;assembly=mscorlib"
-                    xmlns:vm="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing">
+                    xmlns:vm="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing"
+                    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
 
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="Themes/VS.Light.xaml" />
+		<ResourceDictionary Source="Themes/MenuButtonStyle.xaml" />
+		<ResourceDictionary Source="Themes/PropertyEditorPanelStyle.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+	
+	<BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+	
+	<FontFamily x:Key="EnvironmentFontFamily">SegoeUI</FontFamily>
+	<System:Double x:Key="EnvironmentFontSize">12</System:Double>
+
+	<Color x:Key="DropShadowBackgroundColor">#72000000</Color>
+	
 	<Style TargetType="{x:Type local:EnumEditorControl}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:EnumEditorControl}">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition SharedSizeGroup="Label" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-
-						<Label Grid.Column="0" Content="{TemplateBinding Label}" Target="{Binding ElementName=ComboBox, Mode=OneTime}" />
-                        <ComboBox x:Name="ComboBox" Grid.Column="1" ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding ValueName}" VerticalContentAlignment="Center" />
-					</Grid>
+					<ComboBox x:Name="ComboBox" ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding ValueName}" VerticalContentAlignment="Center" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>
-
+	
 	<local:NumericTemplateSelector x:Key="NumericTemplateSelector">
 		<local:NumericTemplateSelector.FloatingTemplate>
 			<DataTemplate DataType="vm:FloatingPropertyViewModel">
-				<local:DoubleUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+				<local:DoubleUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.FloatingTemplate>
 		<local:NumericTemplateSelector.IntegerTemplate>
 			<DataTemplate DataType="vm:IntegerPropertyViewModel">
-				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" />
+				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.IntegerTemplate>
 	</local:NumericTemplateSelector>
 
 	<Style TargetType="local:NumericEditorControl">
+		<Setter Property="Height" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:NumericEditorControl">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition SharedSizeGroup="Label" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-
-						<Label Grid.Column="0" Content="{TemplateBinding Label}" />
-						<ContentPresenter Grid.Column="1" Content="{Binding}" ContentTemplateSelector="{StaticResource NumericTemplateSelector}" />
-					</Grid>
+					<ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource NumericTemplateSelector}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>
 
+	<Style TargetType="local:IntegerUpDownControl">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="ShowSpinner" Value="False" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:IntegerUpDownControl}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" Grid.Column="0" VerticalContentAlignment="Center" />
+
+						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
+							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
+							<Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
+						</StackPanel>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
 	<Style TargetType="local:DoubleUpDownControl">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="ShowSpinner" Value="False" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:DoubleUpDownControl}">
 					<Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
 
-                        <TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" Grid.Column="0" VerticalContentAlignment="Center" />
-						
-						<StackPanel Grid.Column="1">
+						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" Grid.Column="0" VerticalContentAlignment="Center" />
+
+						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
 							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
 							<Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
 						</StackPanel>
@@ -75,183 +100,200 @@
 		</Setter>
 	</Style>
 
-    <Style TargetType="local:IntegerUpDownControl">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:IntegerUpDownControl}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" Grid.Column="0" VerticalContentAlignment="Center" />
-                        <StackPanel Grid.Column="1">
-                            <Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
-                            <Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
-                        </StackPanel>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style TargetType="local:StringEditorControl">
+	<Style TargetType="local:StringEditorControl">
+		<Setter Property="Height" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:StringEditorControl">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition SharedSizeGroup="Label" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-
-						<Label Name="Label" Target="{Binding ElementName=TextBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
-                        <TextBox Name="TextBox" AutomationProperties.LabeledBy="{Binding ElementName=Label,Mode=OneTime}" Grid.Column="1" Text="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalContentAlignment="Center" />
-					</Grid>
+					<TextBox Name="TextBox" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}"  Text="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalContentAlignment="Center" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>
 
-    <Style TargetType="local:BoolEditorControl">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:BoolEditorControl">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="Label" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Label Name="Label" Target="{Binding ElementName=CheckBox,Mode=OneTime}" Content="{TemplateBinding Label}" />
-                        <CheckBox Name="CheckBox" AutomationProperties.LabeledBy="{Binding ElementName=Label,Mode=OneTime}" Grid.Column="1" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" Content="{Binding Value}" VerticalAlignment="Center" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+	<Style TargetType="local:BoolEditorControl">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:BoolEditorControl">
+					<CheckBox Name="CheckBox" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalAlignment="Center" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
     <Style TargetType="local:PointEditorControl">
+		<Setter Property="Height" Value="24" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:PointEditorControl">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="Label" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Label Target="{Binding ElementName=StackPanel,Mode=OneTime}" Content="{TemplateBinding Label}" />
-                        <StackPanel Name="StackPanel" Orientation="Horizontal" Grid.Column="1">
-                            <Label Name="XLabel" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="X" />
-                            <local:DoubleUpDownControl x:Name="XTextBox" Value="{Binding Value.X}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=XLabel,Mode=OneTime}"/>
-                            <Label Name="YLabel" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="Y" />
-                            <local:DoubleUpDownControl x:Name="YTextBox" Value="{Binding Value.Y}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=YLabel,Mode=OneTime}" />
-                        </StackPanel>
-                    </Grid>
+                    <StackPanel Name="StackPanel" Orientation="Horizontal">
+                        <Label Name="XLabel" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="X" />
+                        <local:DoubleUpDownControl x:Name="XTextBox" Value="{Binding Value.X}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=XLabel,Mode=OneTime}"/>
+                        <Label Name="YLabel" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="Y" />
+                        <local:DoubleUpDownControl x:Name="YTextBox" Value="{Binding Value.Y}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=YLabel,Mode=OneTime}" />
+                    </StackPanel>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
     <Style TargetType="local:SizeEditorControl">
-        <Setter Property="Template">
+	    <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:SizeEditorControl">
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="Label" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Label Target="{Binding ElementName=StackPanel,Mode=OneTime}" Content="{TemplateBinding Label}" />
-                        <StackPanel Name="StackPanel" Orientation="Horizontal" Grid.Column="1">
-                            <Label Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="Width" />
-                            <local:DoubleUpDownControl Value="{Binding Value.Width}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}"/>
-                            <Label Name="HeightLabel" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="Height" />
-                            <local:DoubleUpDownControl Value="{Binding Value.Height}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}"/>
-                        </StackPanel>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Label Grid.Column="0" Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="Width" />
+						<local:DoubleUpDownControl Grid.Column="1" Value="{Binding Value.Width}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}"/>
+						<Label Name="HeightLabel" Grid.Column="2" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="Height" />
+						<local:DoubleUpDownControl Grid.Column="3" Value="{Binding Value.Height}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
-    <Style TargetType="local:ThicknessEditorControl">
-        <Setter Property="Template">
+	<Style TargetType="local:ThicknessEditorControl">
+		<Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ThicknessEditorControl">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="Label" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Label Target="{Binding ElementName=StackPanel,Mode=OneTime}" Content="{TemplateBinding Label}" />
-                        <StackPanel Name="StackPanel" Orientation="Horizontal" Grid.Column="1">
-                            <Label Name="LeftLabel" Target="{Binding ElementName=LeftTextBox,Mode=OneTime}" Content="Left" />
-                            <local:IntegerUpDownControl Value="{Binding Value.Left}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=LeftLabel,Mode=OneTime}"/>
-                            <Label Name="TopLabel" Target="{Binding ElementName=TopTextBox,Mode=OneTime}" Content="Top" />
-                            <local:IntegerUpDownControl Value="{Binding Value.Top}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=TopLabel,Mode=OneTime}"/>
-                            <Label Name="RightLabel" Target="{Binding ElementName=RightTextBox,Mode=OneTime}" Content="Right" />
-                            <local:IntegerUpDownControl Value="{Binding Value.Right}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=RightLabel,Mode=OneTime}" />
-                            <Label Name="BottomLabel" Target="{Binding ElementName=BottomTextBox,Mode=OneTime}" Content="Bottom" />
-                            <local:IntegerUpDownControl Value="{Binding Value.Bottom}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=BottomLabel,Mode=OneTime}" />
-                        </StackPanel>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+                            <ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition />
+							<RowDefinition />
+						</Grid.RowDefinitions>
 
-    <Style TargetType="local:PropertyEditorPanel">
-		<Setter Property="Grid.IsSharedSizeScope" Value="True" />
+                        <Label Name="LeftLabel" Grid.Column="0" Grid.Row="0" Target="{Binding ElementName=LeftTextBox,Mode=OneTime}" Content="Left" />
+                        <local:IntegerUpDownControl Grid.Column="1" Grid.Row="0" Value="{Binding Value.Left}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=LeftLabel,Mode=OneTime}"/>
+						<Label Grid.Column="2" Grid.Row="0" Name="TopLabel" Target="{Binding ElementName=TopTextBox,Mode=OneTime}" Content="Top" />
+						<local:IntegerUpDownControl Grid.Column="3" Grid.Row="0" Value="{Binding Value.Top}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=TopLabel,Mode=OneTime}"/>
+						<Label Grid.Column="0" Grid.Row="1" Name="RightLabel" Target="{Binding ElementName=RightTextBox,Mode=OneTime}" Content="Right" />
+						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Value="{Binding Value.Right}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=RightLabel,Mode=OneTime}" />
+						<Label Grid.Column="2" Grid.Row="1" Name="BottomLabel" Target="{Binding ElementName=BottomTextBox,Mode=OneTime}" Content="Bottom" />
+						<local:IntegerUpDownControl Grid.Column="3" Grid.Row="1" Value="{Binding Value.Bottom}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=BottomLabel,Mode=OneTime}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<Style TargetType="local:PropertyPresenter">
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="local:PropertyEditorPanel">
-					<Grid>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto" />
-							<RowDefinition Height="Auto" />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-						<!-- TODO localize !-->
-						<TextBox Name="search" Grid.Row="0" AutomationProperties.Name="Search" />
+				<ControlTemplate TargetType="local:PropertyPresenter">
+					<Border Padding="{TemplateBinding Padding}">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition MinWidth="100" MaxWidth="180" Width="0.4*" />
+								<ColumnDefinition MinWidth="134" Width="0.6*" />
+								<ColumnDefinition Width="12" />
+							</Grid.ColumnDefinitions>
 
-						<StackPanel Grid.Row="1" Orientation="Horizontal">
-							<StackPanel.Resources>
-								<ObjectDataProvider x:Key="arrangeModes" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-									<ObjectDataProvider.MethodParameters>
-										<x:Type TypeName="local:PropertyArrangeMode" />
-									</ObjectDataProvider.MethodParameters>
-								</ObjectDataProvider>
-							</StackPanel.Resources>
-							<!-- TODO localize !-->
-							<Label Name="arrangeLabel" Target="{Binding ElementName=arrangeBy,Mode=OneTime}">Arrange by:</Label>
-							<ComboBox Name="arrangeBy" AutomationProperties.LabeledBy="{Binding ElementName=arrangeLabel,Mode=OneTime}" SelectedItem="{Binding ArrangeMode,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ItemsSource="{Binding Source={StaticResource arrangeModes}}" />
-						</StackPanel>
+							<TextBlock Name="Label" Grid.Column="0" Text="{TemplateBinding Label}" Height="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+							<ContentPresenter Grid.Column="1" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" AutomationProperties.LabeledBy="{Binding ElementName=Label, Mode=OneTime}" />
+						</Grid>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="MenuItem">
+					<Border x:Name="templateRoot" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+						<Grid Margin="-1">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition MinWidth="22" SharedSizeGroup="MenuItemIconColumnGroup" Width="Auto"/>
+								<ColumnDefinition Width="13"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="30"/>
+								<ColumnDefinition SharedSizeGroup="MenuItemIGTColumnGroup" Width="Auto"/>
+								<ColumnDefinition Width="20"/>
+							</Grid.ColumnDefinitions>
+							<ContentPresenter x:Name="Icon" Content="{TemplateBinding Icon}" ContentSource="Icon" HorizontalAlignment="Center" Height="16" Margin="3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center" Width="16"/>
+							<Border x:Name="GlyphPanel" BorderBrush="#FF26A0DA" BorderThickness="1" Background="#3D26A0DA" ClipToBounds="False" HorizontalAlignment="Center" Height="22" Margin="-1,0,0,0" Visibility="Hidden" VerticalAlignment="Center" Width="22">
+								<Path x:Name="Glyph" Data="F1M10,1.2L4.7,9.1 4.5,9.1 0,5.2 1.3,3.5 4.3,6.1 8.3,0 10,1.2z" Fill="#FF212121" FlowDirection="LeftToRight" Height="11" Width="10"/>
+							</Border>
+							<ContentPresenter x:Name="menuHeaderContainer" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Grid.Column="2" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentSource="Header" HorizontalAlignment="Left" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
+							<TextBlock x:Name="menuGestureText" Grid.Column="4" Margin="{TemplateBinding Padding}" Opacity="0.7" Text="{TemplateBinding InputGestureText}" VerticalAlignment="Center"/>
+						</Grid>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="Icon" Value="{x:Null}">
+							<Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+						</Trigger>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter Property="Visibility" TargetName="GlyphPanel" Value="Visible"/>
+							<Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+						</Trigger>
+						<Trigger Property="IsHighlighted" Value="True">
+							<Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource HoverBrush}"/>
+							<!--<Setter Property="BorderBrush" TargetName="templateRoot" Value="#FF26A0DA"/>-->
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="TextElement.Foreground" TargetName="templateRoot" Value="#FF707070"/>
+							<Setter Property="Fill" TargetName="Glyph" Value="#FF707070"/>
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsHighlighted" Value="True"/>
+								<Condition Property="IsEnabled" Value="False"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="Background" TargetName="templateRoot" Value="#0A000000"/>
+							<Setter Property="BorderBrush" TargetName="templateRoot" Value="#21000000"/>
+						</MultiTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<Color x:Key="BorderMediumColor">#FF888888</Color>
+	<Style TargetType="{x:Type ContextMenu}">
+		<Setter Property="FontFamily" Value="{DynamicResource EnvironmentFontFamily}" />
+		<Setter Property="FontSize" Value="{DynamicResource EnvironmentFontSize}" />
+		<Setter Property="SnapsToDevicePixels" Value="True" />
+		<Setter Property="Background" Value="{DynamicResource MenuBackgroundBrush}" />
+		<Setter Property="Grid.IsSharedSizeScope" Value="true" />
+		<Setter Property="Padding" Value="2" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="BorderBrush" Value="{DynamicResource MenuBorderBrush}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ContextMenu}">
+					<theme:SystemDropShadowChrome x:Name="shadow" Color="Transparent">
+						<Border x:Name="Border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+							<StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+						</Border>
+					</theme:SystemDropShadowChrome>
+					
+					<ControlTemplate.Triggers>
+						<MultiDataTrigger>
+							<MultiDataTrigger.Conditions>
+								<Condition Binding="{Binding HasDropShadow,RelativeSource={RelativeSource Self}}" Value="True" />
+								<Condition Binding="{Binding AreGradientsAllowed,Source={x:Static local:HostEnvironment.Current}}" Value="True" />
+							</MultiDataTrigger.Conditions>
+							
+							<Setter TargetName="shadow" Property="Margin" Value="0,0,5,5" />
+							<Setter TargetName="shadow" Property="Color" Value="{DynamicResource DropShadowBackgroundColor}" />
+						</MultiDataTrigger>
 						
-						<ScrollViewer Grid.Row="2">
-							<ItemsControl Name="propertyItems" ItemsSource="{Binding Properties}" Focusable="False">
-								<ItemsControl.ItemTemplateSelector>
-									<local:EditorPropertySelector />
-								</ItemsControl.ItemTemplateSelector>
-								<ItemsControl.GroupStyle>
-									<GroupStyle>
-										<GroupStyle.ContainerStyle>
-											<Style TargetType="GroupItem">
-												<Setter Property="Template">
-													<Setter.Value>
-														<ControlTemplate TargetType="GroupItem">
-															<Expander Header="{Binding Name}">
-																<ItemsPresenter />
-															</Expander>
-														</ControlTemplate>
-													</Setter.Value>
-												</Setter>
-											</Style>
-										</GroupStyle.ContainerStyle>
-									</GroupStyle>
-								</ItemsControl.GroupStyle>
-							</ItemsControl>
-						</ScrollViewer>
-					</Grid>
+						
+					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

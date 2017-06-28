@@ -233,7 +233,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 	}
 
 	internal abstract class PropertyViewModel
-		: ViewModelBase, INotifyDataErrorInfo
+		: NotifyingObject, INotifyDataErrorInfo
 	{
 		private ObjectViewModel valueModel;
 		private bool multipleValues;
@@ -254,9 +254,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			observableEditors.CollectionChanged += OnEditorsChanged;
 			observableEditors.AddItems (editors); // Purposefully after the event hookup
 		}
-
-		/// <remarks>Exists primarily to support PropertyGroupDescription</remarks>
-		public string Category => (!String.IsNullOrWhiteSpace(Property.Category)) ? Property.Category : "Miscellaneous"; // TODO: Localize;
 
 		public IPropertyInfo Property
 		{

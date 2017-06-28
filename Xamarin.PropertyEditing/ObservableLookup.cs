@@ -106,9 +106,10 @@ namespace Xamarin.PropertyEditing
 
 			ObservableGrouping<TKey, TElement> grouping;
 			if (key == null) {
+				bool wasEmpty = this.nullGrouping.Count == 0;
 				grouping = nullGrouping;
 				grouping.AddRange (elements);
-				if (grouping.Count == 0)
+				if (wasEmpty)
 					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, grouping, 0));
 			} else if (!this.groupings.TryGetValue (key, out grouping)) {
 				if (!ReuseGroups || !this.oldGroups.TryRemove (key, out grouping))
@@ -123,6 +124,15 @@ namespace Xamarin.PropertyEditing
 
 		public void Add (IGrouping<TKey, TElement> grouping)
 		{
+			if (grouping.Key == null) {
+				bool wasEmpty = this.nullGrouping.Count == 0;
+				this.nullGrouping.AddRange (grouping);
+				if (wasEmpty)
+					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, grouping, 0));
+
+				return;
+			}
+			
 			ObservableGrouping<TKey, TElement> og;
 			if (!ReuseGroups || !this.oldGroups.TryRemove (grouping.Key, out og)) {
 				og = new ObservableGrouping<TKey, TElement> (grouping.Key);

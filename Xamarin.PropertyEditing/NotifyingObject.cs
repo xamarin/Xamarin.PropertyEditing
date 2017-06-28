@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Xamarin.PropertyEditing.ViewModels
+namespace Xamarin.PropertyEditing
 {
-	internal abstract class ViewModelBase
+	internal abstract class NotifyingObject
 		: INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;

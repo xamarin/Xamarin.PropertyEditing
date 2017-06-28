@@ -7,6 +7,52 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
 {
+	internal class EditorTreeSelectorOptions
+		: DependencyObject
+	{
+		public static readonly DependencyProperty ParentTemplateProperty = DependencyProperty.Register (
+			"ParentTemplate", typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
+
+		public DataTemplate ParentTemplate
+		{
+			get { return (DataTemplate) GetValue (ParentTemplateProperty); }
+			set { SetValue (ParentTemplateProperty, value); }
+		}
+
+		public static readonly DependencyProperty EditorTemplateProperty = DependencyProperty.Register (
+			"EditorTemplate", typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
+
+		public DataTemplate EditorTemplate
+		{
+			get { return (DataTemplate) GetValue (EditorTemplateProperty); }
+			set { SetValue (EditorTemplateProperty, value); }
+		}
+	}
+
+
+	internal class EditorTreeSelector
+		: DataTemplateSelector
+	{
+		public EditorTreeSelectorOptions Options
+		{
+			get;
+			set;
+		}
+
+		public override DataTemplate SelectTemplate (object item, DependencyObject container)
+		{
+			var vm = item as PropertyViewModel;
+			if (vm != null) {
+				if (!vm.CanDelve)
+					return Options.EditorTemplate;
+				else
+					return Options.ParentTemplate;
+			}
+
+			return Options.ParentTemplate;
+		}
+	}
+
 	internal class EditorPropertySelector
 		: DataTemplateSelector
 	{
@@ -30,7 +76,6 @@ namespace Xamarin.PropertyEditing.Windows
 						this.templates[type] = template = new DataTemplate (type) {
 							VisualTree = new FrameworkElementFactory (controlType)
 						};
-						template.VisualTree.SetBinding (PropertyEditorControl.LabelProperty, new Binding ("Property.Name") { Mode = BindingMode.OneTime });
 					}
 				}
 

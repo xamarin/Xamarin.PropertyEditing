@@ -12,10 +12,22 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			MaximumValueProperty.OverrideMetadata (typeof (DoubleUpDownControl), new PropertyMetadata (Double.MaxValue));
 			MinimumValueProperty.OverrideMetadata (typeof (DoubleUpDownControl), new PropertyMetadata (Double.MinValue));
+			DefaultStyleKeyProperty.OverrideMetadata (typeof(DoubleUpDownControl), new FrameworkPropertyMetadata (typeof(DoubleUpDownControl)));
 		}
 
 		protected override bool TryParse (string text, out double value)
 		{
+			if (text == nameof(Double.NaN)) {
+				value = Double.NaN;
+				return true;
+			} else if (text == "∞" || text == nameof (Double.PositiveInfinity)) {
+				value = Double.PositiveInfinity;
+				return true;
+			} else if (text == "-∞" || text == nameof (Double.NegativeInfinity)) {
+				value = Double.NegativeInfinity;
+				return true;
+			}
+
 			return Double.TryParse (text, out value);
 		}
 
@@ -37,6 +49,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			MaximumValueProperty.OverrideMetadata (typeof(IntegerUpDownControl), new PropertyMetadata (Int64.MaxValue));
 			MinimumValueProperty.OverrideMetadata (typeof(IntegerUpDownControl), new PropertyMetadata (Int64.MinValue));
+			DefaultStyleKeyProperty.OverrideMetadata (typeof(IntegerUpDownControl), new FrameworkPropertyMetadata (typeof(IntegerUpDownControl)));
 		}
 
 		protected override bool TryParse (string text, out long value)
@@ -67,12 +80,6 @@ namespace Xamarin.PropertyEditing.Windows
 			FocusableProperty.OverrideMetadata (typeof (NumericUpDownControl<T>), new FrameworkPropertyMetadata (false));
 		}
 
-		public NumericUpDownControl ()
-		{
-			// Hacky but we only really need the one template, can override easily if need be.
-			DefaultStyleKey = typeof(DoubleUpDownControl);
-		}
-
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register (
 			"Value", typeof(T), typeof(NumericUpDownControl<T>), new FrameworkPropertyMetadata (default(T), (d,e) => ((NumericUpDownControl<T>)d).OnValueChanged (e), (d,e) => ((NumericUpDownControl<T>)d).OnCoerceValue(e)) { BindsTwoWayByDefault = true });
 
@@ -100,6 +107,24 @@ namespace Xamarin.PropertyEditing.Windows
 			set { SetValue (MaximumValueProperty, value); }
 		}
 
+		public static readonly DependencyProperty ShowSpinnerProperty = DependencyProperty.Register (
+			"ShowSpinner", typeof(bool), typeof(NumericUpDownControl<T>), new PropertyMetadata (default(bool)));
+
+		public bool ShowSpinner
+		{
+			get { return (bool) GetValue (ShowSpinnerProperty); }
+			set { SetValue (ShowSpinnerProperty, value); }
+		}
+
+		public static readonly DependencyProperty IsConstrainedProperty = DependencyProperty.Register (
+			"IsConstrained", typeof(bool), typeof(NumericUpDownControl<T>), new PropertyMetadata (default(bool)));
+
+		public bool IsConstrained
+		{
+			get { return (bool) GetValue (IsConstrainedProperty); }
+			set { SetValue (IsConstrainedProperty, value); }
+		}
+
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
@@ -117,6 +142,9 @@ namespace Xamarin.PropertyEditing.Windows
 
 		protected virtual object OnCoerceValue (object value)
 		{
+			if (!IsConstrained)
+				return value;
+
 			T v = (T)value;
 			if (v.CompareTo (MinimumValue) < 0)
 				v = MinimumValue;
@@ -141,7 +169,7 @@ namespace Xamarin.PropertyEditing.Windows
 			if (TryParse (this.textBox.Text, out value)) {
 				SetCurrentValue (ValueProperty, value);
 			} else {
-				// TODO error, disable buttons
+				// TODO ignore and reset value
 			}
 		}
 
