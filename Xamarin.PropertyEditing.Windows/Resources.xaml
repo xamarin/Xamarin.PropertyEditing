@@ -201,7 +201,7 @@
 								<ColumnDefinition Width="12" />
 							</Grid.ColumnDefinitions>
 
-							<TextBlock Name="Label" Grid.Column="0" Text="{TemplateBinding Label}" Height="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+							<TextBlock Name="Label" Grid.Column="0" Text="{TemplateBinding Label}" ToolTip="{TemplateBinding Label}" Height="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
 							<ContentPresenter Grid.Column="1" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" AutomationProperties.LabeledBy="{Binding ElementName=Label, Mode=OneTime}" />
 						</Grid>
 					</Border>
