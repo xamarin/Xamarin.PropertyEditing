@@ -9,13 +9,32 @@
 	<SolidColorBrush x:Key="MenuHoverBrush">#C9DEF5</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuBorderBrush">#CCCEDB</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuSeparatorBrush">#E0E3E6</SolidColorBrush>
-	
+
 	<SolidColorBrush x:Key="PropertyButtonBackgroundBrush">#F2F2F6</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyButtonBorderBrush">#717171</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyLocalValueBrush">#1E1E1E</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyBoundValueBrush">#FFCF00</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyResourceBrush">#00FF00</SolidColorBrush>
-	
+
+	<SolidColorBrush x:Key="ListBackgroundBrush">#FFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="PanelGroupSecondaryDimmedForegroundBrush">#FF1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="PanelForegroundBrush">#FF1E1E1E</SolidColorBrush>
+
+	<SolidColorBrush x:Key="SearchControlBackgroundBrush">#FFFFFFFF</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlBorderBrush">#FFCCCEDB</SolidColorBrush>
+
+	<SolidColorBrush x:Key="InputBackgroundBrush">#FFFFFFFF</SolidColorBrush>
+	<SolidColorBrush x:Key="InputBorderBrush">#FFCCCEDB</SolidColorBrush>
+	<SolidColorBrush x:Key="InputForegroundBrush">#FF1E1E1E</SolidColorBrush>
 	
+	<SolidColorBrush x:Key="CategoryExpanderBorderBrush">#E9E9E9</SolidColorBrush>
+
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarBackgroundBrush">#F5F5F5</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarThumbBackgroundBrush">#C2C3C9</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarThumbMouseOverBackgroundBrush">#686868</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarThumbPressedBackgroundBrush">#5B5B5B</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarArrowGlyphBrush">#868999</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarArrowGlyphMouseOverBrush">#1C97EA</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarArrowGlyphPressedBrush">#0007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarArrowDisabledBackgroundBrush">#F5F5F5</SolidColorBrush>
 </ResourceDictionary>
