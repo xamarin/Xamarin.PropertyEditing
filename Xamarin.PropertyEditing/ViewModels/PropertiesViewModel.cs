@@ -154,8 +154,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 				}
 			}
 
-			RemoveProperties (toRemove);
-			AddProperties (newSet.Select (GetViewModel));
+			if (toRemove.Count > 0)
+				RemoveProperties (toRemove);
+			if (newSet.Count > 0)
+				AddProperties (newSet.Select (GetViewModel));
 		}
 
 		private async Task<IObjectEditor[]> AddEditorsAsync (IList newItems)

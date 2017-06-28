@@ -62,16 +62,30 @@ namespace Xamarin.PropertyEditing.Windows
 			set { SetValue (IsArrangeEnabledProperty, value); }
 		}
 
+		public static readonly DependencyProperty ArrangeModeProperty = DependencyProperty.Register (
+			"ArrangeMode", typeof(PropertyArrangeMode), typeof(PropertyEditorPanel), new PropertyMetadata (PropertyArrangeMode.Name, (o, args) => ((PropertyEditorPanel)o).OnArrangeModeChanged ((PropertyArrangeMode)args.NewValue)));
+
+		public PropertyArrangeMode ArrangeMode
+		{
+			get { return (PropertyArrangeMode) GetValue (ArrangeModeProperty); }
+			set { SetValue (ArrangeModeProperty, value); }
+		}
+
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
 
 			this.root = (FrameworkElement) GetTemplateChild ("root");
+			this.items = (ItemsControl) GetTemplateChild ("propertyItems");
 			OnEditorProviderChanged();
+
+			if (this.vm.SelectedObjects.Count > 0)
+				OnArrangeModeChanged (ArrangeMode);
 		}
 
 		private FrameworkElement root;
 		private PanelViewModel vm;
+		private ItemsControl items;
 
 		private void OnSelectedItemsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
@@ -96,6 +110,9 @@ namespace Xamarin.PropertyEditing.Windows
 					this.vm.SelectedObjects.AddItems (SelectedItems);
 					break;
 			}
+
+			if (ArrangeMode == PropertyArrangeMode.Name)
+				OnArrangeModeChanged (ArrangeMode);
 		}
 
 		private void OnEditorProviderChanged ()
@@ -103,7 +120,33 @@ namespace Xamarin.PropertyEditing.Windows
 			if (this.root == null)
 				return;
 
+			if (this.vm != null)
+				this.vm.PropertyChanged -= OnVmPropertyChanged;
+
 			this.root.DataContext = this.vm = (EditorProvider != null) ? new PanelViewModel (EditorProvider) : null;
+			
+			if (this.vm != null)
+				this.vm.PropertyChanged += OnVmPropertyChanged;
+		}
+
+		private void OnVmPropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == nameof(PanelViewModel.ArrangeMode))
+				SetCurrentValue (ArrangeModeProperty, this.vm.ArrangeMode);
+		}
+
+		private void OnArrangeModeChanged (PropertyArrangeMode newMode)
+		{
+			if (this.items == null)
+				return;
+
+			Binding itemsSource;
+			if (newMode == PropertyArrangeMode.Name)
+				itemsSource = new Binding ("ArrangedProperties[0]");
+			else
+				itemsSource = new Binding ("ArrangedProperties");
+
+			this.items.SetBinding (ItemsControl.ItemsSourceProperty, itemsSource);
 		}
 	}
 }
