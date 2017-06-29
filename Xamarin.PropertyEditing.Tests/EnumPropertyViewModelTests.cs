@@ -9,7 +9,7 @@ using Xamarin.PropertyEditing.ViewModels;
 namespace Xamarin.PropertyEditing.Tests
 {
 	internal abstract class EnumPropertyViewModelTests<T>
-		: PropertyViewModelTests<T>
+		: PropertyViewModelTests<T, EnumPropertyViewModel<T>>
 		where T : struct
 	{
 		[Test]
@@ -105,7 +105,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return values[index];
 		}
 
-		protected override PropertyViewModel<TestEnum> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override EnumPropertyViewModel<TestEnum> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
 			return new EnumPropertyViewModel<TestEnum> (property, editors);
 		}
@@ -146,7 +146,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return value;
 		}
 
-		protected override PropertyViewModel<FlagsTestEnum> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override EnumPropertyViewModel<FlagsTestEnum> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
 			return new EnumPropertyViewModel<FlagsTestEnum> (property, editors);
 		}

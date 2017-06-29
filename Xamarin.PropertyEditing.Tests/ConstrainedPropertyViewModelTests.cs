@@ -5,9 +5,10 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Tests
 {
-	internal abstract class ConstrainedPropertyViewModelTests<T>
-		: PropertyViewModelTests<T>
+	internal abstract class ConstrainedPropertyViewModelTests<T, TViewModel>
+		: PropertyViewModelTests<T, TViewModel>
 		where T : IComparable<T>
+		where TViewModel : ConstrainedPropertyViewModel<T>
 	{
 		[Test]
 		public void SelfConstrainedValues ()
@@ -118,7 +119,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 		protected ConstrainedPropertyViewModel<T> GetViewModel (IPropertyInfo property, IObjectEditor editor)
 	    {
-	        return (ConstrainedPropertyViewModel<T>) GetViewModel (property, new[] { editor });
+	        return GetViewModel (property, new[] { editor });
 	    }
 	}
 }

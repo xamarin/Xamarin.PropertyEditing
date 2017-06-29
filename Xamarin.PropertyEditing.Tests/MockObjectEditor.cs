@@ -53,6 +53,11 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (null));
 		}
+
+		public void RaisePropertyChanged (IPropertyInfo property)
+		{
+			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
+		}
 		
 		public void SetValue<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
 		{
@@ -77,6 +82,12 @@ namespace Xamarin.PropertyEditing.Tests
 				ValueInfo<T> info = value as ValueInfo<T>;
 				if (info != null)
 					return info;
+				else if (value != null) {
+					return new ValueInfo<T> {
+						Value = (T)value,
+						Source = ValueSource.Local
+					};
+				}
 			}
 
 			return new ValueInfo<T> {
@@ -85,6 +96,6 @@ namespace Xamarin.PropertyEditing.Tests
 			};
 		}
 
-		private readonly Dictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
+		internal readonly Dictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
 	}
 }
