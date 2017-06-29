@@ -5,9 +5,13 @@
 	<SolidColorBrush x:Key="TabBackgroundBrush">#E7E8EC</SolidColorBrush>
 	<SolidColorBrush x:Key="SelectorBackgroundBrush">#FFFFFF</SolidColorBrush>
 
-	<SolidColorBrush x:Key="MenuBackgroundBrush">#F6F6F6</SolidColorBrush>
-	<SolidColorBrush x:Key="MenuHoverBrush">#C9DEF5</SolidColorBrush>
-	<SolidColorBrush x:Key="MenuBorderBrush">#CCCEDB</SolidColorBrush>
+	<SolidColorBrush x:Key="MenuPopupBackgroundBrush">#F6F6F6</SolidColorBrush>
+	<SolidColorBrush x:Key="MenuPopupBorderBrush">#CCCEDB</SolidColorBrush>
+	<SolidColorBrush x:Key="ListItemForegroundBrush">#1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="ListItemHighlightForegroundBrush">#1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="ListItemHighlightBackgroundBrush">#C9DEF5</SolidColorBrush>
+	<SolidColorBrush x:Key="ListItemHighlightBorderBrush">#C9DEF5</SolidColorBrush>
+	<SolidColorBrush x:Key="ListItemDisabledForegroundBrush">#FFA2A4A5</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuSeparatorBrush">#E0E3E6</SolidColorBrush>
 
 	<SolidColorBrush x:Key="PropertyButtonBackgroundBrush">#F2F2F6</SolidColorBrush>
