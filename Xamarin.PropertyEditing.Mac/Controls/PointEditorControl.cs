@@ -89,5 +89,16 @@ namespace Xamarin.PropertyEditing.Mac
 			XEditor.Editable = ViewModel.Property.CanWrite;
 			YEditor.Editable = ViewModel.Property.CanWrite;
 		}
+
+		protected override void UpdateAccessibilityValues ()
+		{
+			XEditor.AccessibilityEnabled = XEditor.Enabled;
+			XEditor.AccessibilityHelp = "Set the X value."; // TODO Localization
+			XEditor.AccessibilityTitle = "X Editor"; // TODO Localization
+
+			YEditor.AccessibilityEnabled = YEditor.Enabled;
+			YEditor.AccessibilityHelp =" Set the Y value."; // TODO Localization
+			YEditor.AccessibilityLabel = "Y Editor"; // TODO Localization
+		}
 	}
 }

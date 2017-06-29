@@ -41,6 +41,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected virtual void UpdateModelValue ()
 		{
 			SetEnabled ();
+			UpdateAccessibilityValues ();
 		}
 
 		[Export ("_primitiveSetDefaultNextKeyView:")]
@@ -82,5 +83,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected abstract void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e);
 
 		protected abstract void SetEnabled ();
+
+		protected abstract void UpdateAccessibilityValues ();
 	}
 }
