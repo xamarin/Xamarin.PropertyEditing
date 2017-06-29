@@ -150,13 +150,7 @@
 									</Binding>
 								</local:MenuButton.Visibility>
 								<local:MenuButton.ContextMenu>
-									<ContextMenu ItemsSource="{Binding ArrangeModes,Mode=OneTime}">
-										<ContextMenu.ItemTemplate>
-											<DataTemplate DataType="vms:ArrangeModeViewModel">
-												<MenuItem Header="{Binding ArrangeMode,Mode=OneTime}" IsCheckable="True" IsChecked="{Binding IsChecked,Mode=TwoWay}" />
-											</DataTemplate>
-										</ContextMenu.ItemTemplate>
-									</ContextMenu>
+									<ContextMenu ItemsSource="{Binding ArrangeModes,Mode=OneTime}" StaysOpen="True" ItemContainerStyle="{DynamicResource ArrangeMenuItem}" />
 								</local:MenuButton.ContextMenu>
 							</local:MenuButton>
 							<ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Focusable="False">
