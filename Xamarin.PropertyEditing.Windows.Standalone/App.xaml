@@ -6,7 +6,7 @@
     <Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="pack://application:,,,/Xamarin.PropertyEditing.Windows;component/Resources.xaml" />
+				<ResourceDictionary Source="pack://application:,,,/Xamarin.PropertyEditing.Windows;component/Themes/Resources.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
     </Application.Resources>

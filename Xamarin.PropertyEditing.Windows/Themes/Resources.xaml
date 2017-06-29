@@ -6,9 +6,9 @@
                     xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
 
 	<ResourceDictionary.MergedDictionaries>
-		<ResourceDictionary Source="Themes/VS.Light.xaml" />
-		<ResourceDictionary Source="Themes/MenuButtonStyle.xaml" />
-		<ResourceDictionary Source="Themes/PropertyEditorPanelStyle.xaml" />
+		<ResourceDictionary Source="VS.Light.xaml" />
+		<ResourceDictionary Source="MenuButtonStyle.xaml" />
+		<ResourceDictionary Source="PropertyEditorPanelStyle.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 
 	<BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
