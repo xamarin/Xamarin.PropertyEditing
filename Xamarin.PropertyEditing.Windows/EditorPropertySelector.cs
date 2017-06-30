@@ -60,22 +60,11 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			if (item != null) {
 				Type type = item.GetType ();
-
-				DataTemplate template = null;
-				if (!this.templates.TryGetValue (type, out template)) {
-					Type controlType;
-					if (!TypeMap.TryGetValue (type, out controlType)) {
-						if (type.IsGenericType) {
-							Type genericType = type.GetGenericTypeDefinition ();
-							if (genericType == typeof(EnumPropertyViewModel<>))
-								controlType = typeof(EnumEditorControl);
-						}
-					}
-
-					if (controlType != null) {
-						this.templates[type] = template = new DataTemplate (type) {
-							VisualTree = new FrameworkElementFactory (controlType)
-						};
+				DataTemplate template;
+				if (!TryGetTemplate (type, out template)) {
+					if (type.IsConstructedGenericType) {
+						type = type.GetGenericTypeDefinition ();
+						TryGetTemplate (type, out template);
 					}
 				}
 
@@ -87,6 +76,23 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		private readonly Dictionary<Type, DataTemplate> templates = new Dictionary<Type, DataTemplate> ();
+
+		private bool TryGetTemplate (Type type, out DataTemplate template)
+		{
+			if (this.templates.TryGetValue (type, out template))
+				return true;
+
+			Type controlType;
+			if (TypeMap.TryGetValue (type, out controlType)) {
+				this.templates[type] = template = new DataTemplate (type) {
+					VisualTree = new FrameworkElementFactory (controlType)
+				};
+
+				return true;
+			}
+
+			return false;
+		}
 
 		// We can improve on this, but it'll get us started
 		private static readonly Dictionary<Type, Type> TypeMap = new Dictionary<Type, Type> {
