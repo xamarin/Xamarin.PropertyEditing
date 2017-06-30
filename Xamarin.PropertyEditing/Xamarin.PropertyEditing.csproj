@@ -68,6 +68,7 @@
     <Compile Include="ViewModels\NumericPropertyViewModel.cs" />
     <Compile Include="ViewModels\ObjectViewModel.cs" />
     <Compile Include="ViewModels\PanelViewModel.cs" />
+    <Compile Include="ViewModels\PredefinedValuesViewModel.cs" />
     <Compile Include="ViewModels\PropertiesViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
