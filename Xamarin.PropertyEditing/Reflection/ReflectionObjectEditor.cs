@@ -22,8 +22,12 @@ namespace Xamarin.PropertyEditing.Reflection
 					continue;
 				}
 
-				if (CheckAvailability (property))
-					this.properties.Add (new ReflectionPropertyInfo (property));
+				if (CheckAvailability (property)) {
+					if (property.PropertyType.IsEnum) {
+						this.properties.Add ((ReflectionPropertyInfo)Activator.CreateInstance (typeof(ReflectionEnumPropertyInfo<>).MakeGenericType (Enum.GetUnderlyingType (property.PropertyType)), property));
+					} else
+						this.properties.Add (new ReflectionPropertyInfo (property));
+				}
 			}
 		}
 

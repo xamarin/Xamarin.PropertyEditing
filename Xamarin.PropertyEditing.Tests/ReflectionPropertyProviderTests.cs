@@ -208,6 +208,32 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (editor.Properties.Single ().Name, Is.EqualTo (nameof (Unbrowsable.VisibleProperty)));
 		}
 
+		[Test]
+		public async Task CombinableEnum ()
+		{
+			var enumObj = new EnumClass ();
+
+			var provider = new ReflectionEditorProvider ();
+			IObjectEditor editor = await provider.GetObjectEditorAsync (enumObj);
+
+			List<int> values = new List<int> ();
+			values.Add ((int)FlagsTestEnum.Flag1);
+			values.Add ((int)FlagsTestEnum.Flag3);
+
+			FlagsTestEnum expected = FlagsTestEnum.Flag1 | FlagsTestEnum.Flag3;
+
+			editor.SetValue (editor.Properties.First (), new ValueInfo<IReadOnlyList<int>> {
+				Value = values
+			});
+
+			ValueInfo<int> underlying = editor.GetValue<int> (editor.Properties.First());
+			Assert.That ((FlagsTestEnum) underlying.Value, Is.EqualTo (expected));
+
+			ValueInfo<IReadOnlyList<int>> underlyingList = editor.GetValue<IReadOnlyList<int>> (editor.Properties.First ());
+			Assert.That (underlyingList.Value, Contains.Item ((int) FlagsTestEnum.Flag1));
+			Assert.That (underlyingList.Value, Contains.Item ((int) FlagsTestEnum.Flag3));
+		}
+
 		private class Unbrowsable
 		{
 			public string VisibleProperty
@@ -311,6 +337,15 @@ namespace Xamarin.PropertyEditing.Tests
 		private class TestClass
 		{
 			public string Property
+			{
+				get;
+				set;
+			}
+		}
+
+		private class EnumClass
+		{
+			public FlagsTestEnum Value
 			{
 				get;
 				set;
