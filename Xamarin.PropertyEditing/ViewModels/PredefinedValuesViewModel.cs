@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cadenza.Collections;
 
 namespace Xamarin.PropertyEditing.ViewModels
@@ -14,7 +15,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (this.predefinedValues == null)
 				throw new ArgumentException (nameof(property) + " did not have predefined values", nameof(property));
 
-			this.valueLookup = new BidirectionalDictionary<string, TValue> (this.predefinedValues.PredefinedValues);
 			UpdateValueName();
 		}
 
@@ -32,7 +32,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					return;
 
 				TValue realValue;
-				if (!this.valueLookup.TryGetValue (value, out realValue)) {
+				if (!this.predefinedValues.PredefinedValues.TryGetValue (value, out realValue)) {
 					if (this.predefinedValues.IsConstrainedToPredefined) {
 						SetError ("Invalid value"); // TODO: Localize & improve
 						return;
@@ -51,7 +51,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected override TValue ValidateValue (TValue validationValue)
 		{
-			if (!this.predefinedValues.IsConstrainedToPredefined || this.valueLookup.ContainsValue (validationValue))
+			if (!this.predefinedValues.IsConstrainedToPredefined || IsValueDefined (validationValue))
 				return validationValue;
 
 			return Value;
@@ -67,13 +67,31 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private string valueName;
-		private BidirectionalDictionary<string, TValue> valueLookup;
-		private IHavePredefinedValues<TValue> predefinedValues;
+		private readonly IHavePredefinedValues<TValue> predefinedValues;
+
+		private bool IsValueDefined (TValue value)
+		{
+			return this.predefinedValues.PredefinedValues.Values.Contains (value);
+		}
+
+		private bool TryGetValueName (TValue value, out string name)
+		{
+			name = null;
+
+			foreach (var kvp in this.predefinedValues.PredefinedValues) {
+				if (Equals (kvp.Value, value)) {
+					name = kvp.Key;
+					return true;
+				}
+			}
+
+			return false;
+		}
 
 		private void UpdateValueName ()
 		{
 			string newValueName;
-			if (this.valueLookup.TryGetKey (Value, out newValueName)) {
+			if (TryGetValueName (Value, out newValueName)) {
 				this.valueName = newValueName;
 				OnPropertyChanged (nameof(ValueName));
 			}

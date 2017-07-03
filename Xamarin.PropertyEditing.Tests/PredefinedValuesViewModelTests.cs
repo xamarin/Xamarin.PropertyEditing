@@ -88,6 +88,35 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (changed, Is.True);
 		}
 
+		[Test]
+		public void DuplicateValues ()
+		{
+			T testValue = GetNonDefaultRandomTestValue ();
+
+			var property = GetPropertyMock ();
+			var predefined = property.As<IHavePredefinedValues<T>> ();
+			predefined.SetupGet (p => p.PredefinedValues).Returns (new Dictionary<string, T> {
+				{ "Value", testValue },
+				{ "SameValue", testValue }
+			});
+
+			var vm = GetViewModel (property.Object, new[] { GetBasicEditor (property.Object) });
+
+			Assume.That (vm.ValueName, Is.Not.EqualTo ("Value"));
+			vm.ValueName = "Value";
+			Assert.That (vm.Value, Is.EqualTo (testValue));
+			
+			bool changed = false;
+			vm.PropertyChanged += (sender, args) => {
+				if (args.PropertyName == nameof(vm.Value))
+					changed = true;
+			};
+
+			vm.ValueName = "SameValue";
+			Assert.That (vm.Value, Is.EqualTo (testValue));
+			Assert.That (changed, Is.False);
+		}
+
 		protected abstract bool IsConstrained { get; }
 		protected abstract IReadOnlyDictionary<string, T> Values { get; }
 
