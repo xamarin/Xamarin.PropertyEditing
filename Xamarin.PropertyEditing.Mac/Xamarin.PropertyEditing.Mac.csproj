@@ -63,7 +63,6 @@
     <Compile Include="Controls\BooleanEditorControl.cs" />
     <Compile Include="Controls\IntegerNumericEditorControl.cs" />
     <Compile Include="Controls\DecimalNumericEditorControl.cs" />
-    <Compile Include="Controls\EnumEditorControl.cs" />
     <Compile Include="Controls\ConstraintExtensions.cs" />
     <Compile Include="Controls\BaseRectangleEditorControl.cs" />
     <Compile Include="Controls\CGRectEditorControl.cs" />

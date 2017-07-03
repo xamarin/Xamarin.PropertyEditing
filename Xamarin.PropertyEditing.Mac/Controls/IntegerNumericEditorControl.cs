@@ -25,16 +25,8 @@ namespace Xamarin.PropertyEditing.Mac
 			set { base.ViewModel = value; }
 		}
 
-		protected override void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		protected override void UpdateValue ()
 		{
-			if (e.PropertyName == nameof (IntegerPropertyViewModel.Value)) {
-				UpdateModelValue ();
-			}
-		}
-
-		protected override void UpdateModelValue ()
-		{
-			base.UpdateModelValue ();
 			Stepper.NIntValue = (nint)ViewModel.Value;
 			NumericEditor.NIntValue = (nint)ViewModel.Value;
 		}

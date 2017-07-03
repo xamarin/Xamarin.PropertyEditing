@@ -7,7 +7,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public abstract class PropertyEditorControl : NSView
+	internal abstract class PropertyEditorControl : NSView
 	{
 		public string Label { get; set; }
 
@@ -18,29 +18,25 @@ namespace Xamarin.PropertyEditing.Mac
 		public NSTableView TableView { get; set; }
 
 		PropertyViewModel viewModel;
-		internal PropertyViewModel ViewModel {
+		public PropertyViewModel ViewModel {
 			get { return viewModel; }
 			set {
 				if (viewModel == value)
 					return;
 
-				if (viewModel != null) {
-					viewModel.PropertyChanged -= HandlePropertyChanged;
-					viewModel.ErrorsChanged -= HandleErrorsChanged;
+				PropertyViewModel oldModel = this.viewModel;
+				if (oldModel != null) {
+					oldModel.PropertyChanged -= OnPropertyChanged;
+					oldModel.ErrorsChanged -= HandleErrorsChanged;
 				}
 
-				viewModel = value;
-				UpdateModelValue ();
-				viewModel.PropertyChanged += HandlePropertyChanged;
+				this.viewModel = value;
+				OnViewModelChanged (oldModel);
+				viewModel.PropertyChanged += OnPropertyChanged;
 
 				// FIXME: figure out what we want errors to display as (tooltip, etc.)
 				viewModel.ErrorsChanged += HandleErrorsChanged;
 			}
-		}
-
-		protected virtual void UpdateModelValue ()
-		{
-			SetEnabled ();
 		}
 
 		[Export ("_primitiveSetDefaultNextKeyView:")]
@@ -71,7 +67,20 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		protected abstract void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e);
+		protected abstract void UpdateValue ();
+
+		protected virtual void OnViewModelChanged (PropertyViewModel oldModel)
+		{
+			SetEnabled ();
+			UpdateValue ();
+		}
+
+		protected virtual void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Value") {
+				UpdateValue ();
+			}
+		}
 
 		/// <summary>
 		/// Update the display with any errors we need to show or remove

@@ -10,15 +10,6 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class PropertyTableDelegate
 		: NSOutlineViewDelegate
 	{
-		Dictionary<Type, Type> viewModelTypes = new Dictionary<Type, Type> {
-			{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
-			{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
-			{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
-			{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
-			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (PointEditorControl)},
-			{typeof (PropertyViewModel<CoreGraphics.CGRect>), typeof (CGRectEditorControl)},
-		};
-
 		public PropertyTableDelegate (PropertyTableDataSource datasource)
 		{
 			this.dataSource = datasource;
@@ -137,5 +128,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 			return view;
 		}
+
+		private static readonly Dictionary<Type, Type> ViewModelTypes = new Dictionary<Type, Type> {
+			{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
+			{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
+			{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
+			{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
+			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (PointEditorControl)},
+			{typeof (PropertyViewModel<CoreGraphics.CGRect>), typeof (CGRectEditorControl)},
+		};
 	}
 }

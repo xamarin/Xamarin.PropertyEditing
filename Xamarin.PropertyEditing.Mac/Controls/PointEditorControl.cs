@@ -44,20 +44,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (xLabel);
 			AddSubview (XEditor);
-            AddSubview (yLabel);
-            AddSubview (YEditor);
+			AddSubview (yLabel);
+			AddSubview (YEditor);
 		}
 
-		protected override void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		protected override void UpdateValue ()
 		{
-			if (e.PropertyName == nameof (PropertyViewModel<CGPoint>.Value)) {
-				UpdateModelValue ();
-			}
-		}
-
-		protected override void UpdateModelValue ()
-		{
-			base.UpdateModelValue ();
 			XEditor.IntValue = (int)ViewModel.Value.X;
 			YEditor.IntValue = (int)ViewModel.Value.Y;
 		}

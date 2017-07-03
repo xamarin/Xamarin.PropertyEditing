@@ -62,13 +62,6 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		protected override abstract void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e);
-
-		protected override void UpdateModelValue ()
-		{
-			base.UpdateModelValue ();
-		}
-
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
 			if (ViewModel.HasErrors) {

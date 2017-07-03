@@ -37,16 +37,8 @@ namespace Xamarin.PropertyEditing.Mac
 			set { base.ViewModel = value; }
 		}
 
-		protected override void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		protected override void UpdateValue ()
 		{
-			if (e.PropertyName == nameof (StringPropertyViewModel.Value)) {
-				UpdateModelValue ();
-			}
-		}
-
-		protected override void UpdateModelValue ()
-		{
-			base.UpdateModelValue ();
 			StringEditor.StringValue = ViewModel.Value ?? string.Empty;
 		}
 
