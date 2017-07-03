@@ -149,6 +149,13 @@ namespace Xamarin.PropertyEditing.Reflection
 					generator.Emit (OpCodes.Ldarg_1);
 					generator.Emit (OpCodes.And); // arg0 & arg1
 					generator.Emit (OpCodes.Ldc_I4_0);
+					if (typeof (T) == typeof (uint))
+						generator.Emit (OpCodes.Conv_U4);
+					else if (typeof (T) == typeof (long))
+						generator.Emit (OpCodes.Conv_I8);
+					else if (typeof (T) == typeof (ulong))
+						generator.Emit (OpCodes.Conv_U8);
+
 					generator.Emit (OpCodes.Ceq); // pushes 1 if not equal
 					generator.Emit (OpCodes.Ldc_I4_0);
 					generator.Emit (OpCodes.Ceq); // reverses
