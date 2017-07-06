@@ -4,21 +4,22 @@ using CoreGraphics;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class UnfocusableTextView : NSTextView
+	class UnfocusableTextField : NSTextField
 	{
-		public UnfocusableTextView () : base ()
+		public UnfocusableTextField () : base ()
 		{
 			SetDefaultProperties ();
 		}
 
-		public UnfocusableTextView (CGRect frameRect, string text) : base (frameRect)
+		public UnfocusableTextField (CGRect frameRect, string text) : base (frameRect)
 		{
-			Value = text;
+			StringValue = text;
 			SetDefaultProperties ();
 		}
 
 		void SetDefaultProperties ()
 		{
+			Bordered = false;
 			Editable = false;
 			Selectable = false;
 		}

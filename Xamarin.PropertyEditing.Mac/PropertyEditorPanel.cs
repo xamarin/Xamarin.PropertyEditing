@@ -140,9 +140,9 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			// TODO: localize
-			NSTableColumn propertiesList = new NSTableColumn (PropertyListColId) { Title = "Properties" };
+			NSTableColumn propertiesList = new NSTableColumn (PropertyListColId) { Title = "Property" };
 			NSTableColumn propertyEditors = new NSTableColumn (PropertyEditorColId) { Title = "Value" };
-			propertiesList.Width = 150;
+			propertiesList.Width = 200;
 			propertyEditors.Width = 250;
 			propertyTable.AddColumn (propertiesList);
 			propertyTable.AddColumn (propertyEditors);

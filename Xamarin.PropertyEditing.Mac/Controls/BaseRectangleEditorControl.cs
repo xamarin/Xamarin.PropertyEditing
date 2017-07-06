@@ -11,13 +11,13 @@ namespace Xamarin.PropertyEditing.Mac
 	internal abstract class BaseRectangleEditorControl<T> : PropertyEditorControl
 		where T : struct
 	{
-		protected UnfocusableTextView XLabel { get; set; }
+		protected UnfocusableTextField XLabel { get; set; }
 		protected NSTextField XEditor { get; set; }
-		protected UnfocusableTextView YLabel { get; set; }
+		protected UnfocusableTextField YLabel { get; set; }
 		protected NSTextField YEditor { get; set; }
-		protected UnfocusableTextView WidthLabel { get; set; }
+		protected UnfocusableTextField WidthLabel { get; set; }
 		protected NSTextField WidthEditor { get; set; }
-		protected UnfocusableTextView HeightLabel { get; set; }
+		protected UnfocusableTextField HeightLabel { get; set; }
 		protected NSTextField HeightEditor { get; set; }
 
 		public override NSView FirstKeyView => XEditor;
@@ -30,28 +30,28 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public BaseRectangleEditorControl ()
 		{
-			XLabel = new UnfocusableTextView ();
+			XLabel = new UnfocusableTextField ();
 			XEditor = new NSTextField ();
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.StringValue = string.Empty;
 			XEditor.Activated += OnInputUpdated;
 			XEditor.EditingEnded += OnInputUpdated;
 
-			YLabel =  new UnfocusableTextView ();
+			YLabel =  new UnfocusableTextField ();
 			YEditor = new NSTextField ();
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.StringValue = string.Empty;
 			YEditor.Activated += OnInputUpdated;
 			YEditor.EditingEnded += OnInputUpdated;
 
-			WidthLabel = new UnfocusableTextView ();
+			WidthLabel = new UnfocusableTextField ();
 			WidthEditor = new NSTextField ();
 			WidthEditor.BackgroundColor = NSColor.Clear;
 			WidthEditor.StringValue = string.Empty;
 			WidthEditor.Activated += OnInputUpdated;
 			WidthEditor.EditingEnded += OnInputUpdated;
 
-			HeightLabel =  new UnfocusableTextView ();
+			HeightLabel =  new UnfocusableTextField ();
 			HeightEditor = new NSTextField ();
 			HeightEditor.BackgroundColor = NSColor.Clear;
 			HeightEditor.StringValue = string.Empty;

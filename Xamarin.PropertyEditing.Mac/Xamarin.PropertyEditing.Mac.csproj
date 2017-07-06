@@ -67,7 +67,7 @@
     <Compile Include="Controls\BaseRectangleEditorControl.cs" />
     <Compile Include="Controls\CGRectEditorControl.cs" />
     <Compile Include="Controls\PointEditorControl.cs" />
-    <Compile Include="Controls\UnfocusableTextView.cs" />
+    <Compile Include="Controls\UnfocusableTextField.cs" />
     <Compile Include="NSObjectFacade.cs" />
     <Compile Include="Controls\PredefinedValuesEditor.cs" />
   </ItemGroup>
