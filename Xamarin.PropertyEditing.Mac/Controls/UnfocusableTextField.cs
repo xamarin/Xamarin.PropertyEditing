@@ -23,5 +23,13 @@ namespace Xamarin.PropertyEditing.Mac
 			Editable = false;
 			Selectable = false;
 		}
+
+		public override void DrawRect (CGRect dirtyRect)
+		{
+			CGPoint origin = new CGPoint (0.0f, 7.0f);
+			CGRect rect = new CGRect (origin, new CGSize (this.Bounds.Width, this.Bounds.Height));
+
+			this.AttributedStringValue.DrawInRect (rect);
+		}
 	}
 }
