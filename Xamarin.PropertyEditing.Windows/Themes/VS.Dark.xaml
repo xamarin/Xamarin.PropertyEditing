@@ -8,5 +8,14 @@
 	<SolidColorBrush x:Key="MenuHoverBorderBrush">#353535</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuSeparatorBrush">#333337</SolidColorBrush>
 
-	<SolidColorBrush x:Key="PropertyLocalValueBrush">#F1F1F1</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarBackgroundBrush">#3E3E42</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarBorderBrush">#1C1C1C</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarThumbBackgroundBrush">#686868</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarThumbMouseOverBackgroundBrush">#9E9E9E</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarThumbPressedBackgroundBrush">#5B5B5B</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarArrowBackgroundBrush">#3E3E42</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarArrowGlyphBrush">#999999</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarArrowGlyphMouseOverBrush">#1C97EA</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarArrowGlyphPressedBrush">#007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="VS.Environment.ScrollBarArrowDisabledBackgroundBrush">#555558</SolidColorBrush>
 </ResourceDictionary>
