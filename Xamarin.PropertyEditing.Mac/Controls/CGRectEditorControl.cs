@@ -30,19 +30,12 @@ namespace Xamarin.PropertyEditing.Mac
 			HeightEditor.Frame = new CGRect (305, 0, 50, 20);
 		}
 
-		protected override void HandlePropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == nameof (ViewModel.Value)) {
-				UpdateModelValue ();
-			}
-		}
-
 		protected override void OnInputUpdated (object sender, EventArgs e)
 		{
 			ViewModel.Value = new CGRect (XEditor.FloatValue, YEditor.FloatValue, WidthEditor.FloatValue, HeightEditor.FloatValue);
 		}
 
-		protected override void UpdateModelValue ()
+		protected override void UpdateValue ()
 		{
 			XEditor.StringValue = ViewModel.Value.X.ToString ();
 			YEditor.StringValue = ViewModel.Value.Y.ToString ();

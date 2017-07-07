@@ -7,14 +7,14 @@ namespace Xamarin.PropertyEditing.Tests
 {
 	[TestFixture]
 	internal class FloatingPropertyViewModelTests
-		: ConstrainedPropertyViewModelTests<double>
+		: ConstrainedPropertyViewModelTests<double, FloatingPropertyViewModel>
 	{
 		protected override double GetRandomTestValue (Random rand)
 		{
 			return rand.NextDouble ();
 		}
 
-		protected override PropertyViewModel<double> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override FloatingPropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
 			return new FloatingPropertyViewModel (property, editors);
 		}

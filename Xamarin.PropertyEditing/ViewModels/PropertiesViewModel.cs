@@ -185,7 +185,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private PropertyViewModel GetViewModel (IPropertyInfo property)
 		{
-			if (property.Type.IsEnum) {
+			Type[] interfaces = property.GetType ().GetInterfaces ();
+
+			Type hasPredefinedValues = interfaces.FirstOrDefault (t => t.IsGenericType && t.GetGenericTypeDefinition () == typeof(IHavePredefinedValues<>));
+			if (hasPredefinedValues != null) {
+				Type type = typeof(PredefinedValuesViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0]);
+				return (PropertyViewModel) Activator.CreateInstance (type, property, this.editors);
+			} else if (property.Type.IsEnum) {
 				Type type = typeof(EnumPropertyViewModel<>).MakeGenericType (property.Type);
 				return (PropertyViewModel) Activator.CreateInstance (type, property, this.editors);
 			}

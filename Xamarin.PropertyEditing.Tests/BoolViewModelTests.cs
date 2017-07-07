@@ -5,7 +5,7 @@ using Xamarin.PropertyEditing.ViewModels;
 namespace Xamarin.PropertyEditing.Tests
 {
 	class BoolViewModelTests
-		: PropertyViewModelTests<bool>
+		: PropertyViewModelTests<bool, PropertyViewModel<bool>>
 	{
 		protected override bool GetRandomTestValue (Random rand)
 		{

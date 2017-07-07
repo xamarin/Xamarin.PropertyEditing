@@ -10,15 +10,6 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class PropertyTableDelegate
 		: NSOutlineViewDelegate
 	{
-		Dictionary<Type, Type> viewModelTypes = new Dictionary<Type, Type> {
-			{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
-			{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
-			{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
-			{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
-			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (PointEditorControl)},
-			{typeof (PropertyViewModel<CoreGraphics.CGRect>), typeof (CGRectEditorControl)},
-		};
-
 		public PropertyTableDelegate (PropertyTableDataSource datasource)
 		{
 			this.dataSource = datasource;
@@ -75,18 +66,25 @@ namespace Xamarin.PropertyEditing.Mac
 
 					var editor = (PropertyEditorControl)outlineView.MakeView (cellIdentifier + "edits", this);
 					if (editor == null) {
+						Type[] genericArgs = null;
 						Type controlType;
 						Type propertyType = vm.GetType ();
-						if (viewModelTypes.TryGetValue (propertyType, out controlType)) {
-							editor = SetUpEditor (controlType, vm, outlineView);
-						} else {
-							if (propertyType.IsGenericType) {
-								Type genericType = propertyType.GetGenericTypeDefinition ();
-								if (genericType == typeof (EnumPropertyViewModel<>))
-									controlType = typeof (EnumEditorControl<>).MakeGenericType (vm.Property.Type);
-								editor = SetUpEditor (controlType, vm, outlineView);
+						if (!ViewModelTypes.TryGetValue (propertyType, out controlType)) {
+							if (propertyType.IsConstructedGenericType) {
+								genericArgs = propertyType.GetGenericArguments ();
+								propertyType = propertyType.GetGenericTypeDefinition ();
+								ViewModelTypes.TryGetValue (propertyType, out controlType);
 							}
 						}
+
+						if (controlType == null)
+							return null;
+
+						if (controlType.IsGenericTypeDefinition) {
+							controlType = controlType.MakeGenericType (genericArgs);
+						}
+
+						editor = SetUpEditor (controlType, vm, outlineView);
 					}
 
 					// we must reset these every time, as the view may have been reused
@@ -137,5 +135,15 @@ namespace Xamarin.PropertyEditing.Mac
 
 			return view;
 		}
+
+		private static readonly Dictionary<Type, Type> ViewModelTypes = new Dictionary<Type, Type> {
+			{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
+			{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
+			{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
+			{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
+			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (PointEditorControl)},
+			{typeof (PropertyViewModel<CoreGraphics.CGRect>), typeof (CGRectEditorControl)},
+			{typeof (PredefinedValuesViewModel<>), typeof(PredefinedValuesEditor<>)},
+		};
 	}
 }

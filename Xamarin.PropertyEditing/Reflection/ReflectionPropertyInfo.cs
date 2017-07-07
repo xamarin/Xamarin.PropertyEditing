@@ -48,7 +48,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public IReadOnlyList<IAvailabilityConstraint> AvailabilityConstraints => EmptyConstraints;
 
-		public void SetValue<T> (object target, T value)
+		public virtual void SetValue<T> (object target, T value)
 		{
 			object realValue = value;
 			object converted;
@@ -61,7 +61,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			this.propertyInfo.SetValue (target, realValue);
 		}
 
-		public T GetValue<T> (object target)
+		public virtual T GetValue<T> (object target)
 		{
 			object value = this.propertyInfo.GetValue (target);
 			T converted;
@@ -113,6 +113,8 @@ namespace Xamarin.PropertyEditing.Reflection
 		{
 			return !Equals (left, right);
 		}
+
+		protected PropertyInfo PropertyInfo => this.propertyInfo;
 
 		private readonly Lazy<List<TypeConverter>> typeConverter;
 		private readonly Lazy<string> category;

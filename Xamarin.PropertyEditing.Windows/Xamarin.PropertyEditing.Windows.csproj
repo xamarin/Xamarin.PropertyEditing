@@ -67,7 +67,7 @@
     <Compile Include="StringEditorControl.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Resources.xaml">
+    <Page Include="Themes\Resources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

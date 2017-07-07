@@ -7,9 +7,9 @@ namespace Xamarin.PropertyEditing.Tests
 {
 	[TestFixture]
 	internal class StringViewModelTests
-		: PropertyViewModelTests<string>
+		: PropertyViewModelTests<string, StringPropertyViewModel>
 	{
-		protected override PropertyViewModel<string> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override StringPropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
 			return new StringPropertyViewModel (property, editors);
 		}

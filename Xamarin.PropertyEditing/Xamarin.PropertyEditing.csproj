@@ -41,10 +41,12 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BidirectionalDictionary.cs" />
     <Compile Include="IAvailabilityConstraint.cs" />
     <Compile Include="IClampedPropertyInfo.cs" />
     <Compile Include="IEditorProvider.cs" />
     <Compile Include="IObjectEditor.cs" />
+    <Compile Include="IHavePredefinedValues.cs" />
     <Compile Include="IPropertyInfo.cs" />
     <Compile Include="IResourceProvider.cs" />
     <Compile Include="ISelfConstrainedPropertyInfo.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="Properties\GlobalAssemblyInfo.cs" />
     <Compile Include="PropertyVariation.cs" />
     <Compile Include="Reflection\ReflectionEditorProvider.cs" />
+    <Compile Include="Reflection\ReflectionEnumPropertyInfo.cs" />
     <Compile Include="Reflection\ReflectionObjectEditor.cs" />
     <Compile Include="Reflection\ReflectionPropertyInfo.cs" />
     <Compile Include="ValueInfo.cs" />
@@ -65,6 +68,7 @@
     <Compile Include="ViewModels\NumericPropertyViewModel.cs" />
     <Compile Include="ViewModels\ObjectViewModel.cs" />
     <Compile Include="ViewModels\PanelViewModel.cs" />
+    <Compile Include="ViewModels\PredefinedValuesViewModel.cs" />
     <Compile Include="ViewModels\PropertiesViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />

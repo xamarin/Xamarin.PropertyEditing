@@ -58,6 +58,7 @@
     <Compile Include="IntegerPropertyViewModelTests.cs" />
     <Compile Include="MockObjectEditor.cs" />
     <Compile Include="PanelViewModelTests.cs" />
+    <Compile Include="PredefinedValuesViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyViewModelTests.cs" />
     <Compile Include="ReflectionPropertyProviderTests.cs" />
