@@ -25,6 +25,11 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			AddSubview (BooleanEditor);
+
+            this.DoConstraints (new[] {
+				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
+				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Left == c.Left)
+			});
 		}
 
 		internal NSButton BooleanEditor { get; set; }
