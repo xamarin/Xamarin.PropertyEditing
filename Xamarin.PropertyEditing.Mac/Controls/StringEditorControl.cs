@@ -11,10 +11,11 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public StringEditorControl ()
 		{
-			StringEditor = new NSTextField (new CGRect (0, 0, 240, 20));
-			StringEditor.TranslatesAutoresizingMaskIntoConstraints = false;
-			StringEditor.BackgroundColor = NSColor.Clear;
-			StringEditor.StringValue = string.Empty;
+			StringEditor = new NSTextField {
+				TranslatesAutoresizingMaskIntoConstraints = false,
+				BackgroundColor = NSColor.Clear,
+				StringValue = string.Empty,
+			};
 
 			// update the value on keypress
 			StringEditor.Changed += (sender, e) => {

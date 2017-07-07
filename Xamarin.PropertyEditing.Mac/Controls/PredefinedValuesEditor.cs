@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			this.comboBox = new NSComboBox (new CGRect (0, 0, 150, 20)) {
+			this.comboBox = new NSComboBox () {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				BackgroundColor = NSColor.Clear,
 				StringValue = String.Empty,
@@ -35,6 +35,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.DoConstraints (new[] {
 				comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
+				comboBox.ConstraintTo (this, (cb, c) => cb.Left == c.Left),
 			});
 		}
 

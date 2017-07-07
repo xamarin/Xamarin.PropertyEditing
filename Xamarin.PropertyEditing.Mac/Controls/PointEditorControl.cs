@@ -24,7 +24,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public PointEditorControl ()
 		{
-			var xLabel = new UnfocusableTextView (new CGRect (0, -5, 25, 20), "X:");
+			var xLabel = new UnfocusableTextField (new CGRect (0, 4, 25, 20), "X:");
 
 			XEditor = new NSTextField (new CGRect (25, 0, 50, 20));
 			XEditor.BackgroundColor = NSColor.Clear;
@@ -33,7 +33,7 @@ namespace Xamarin.PropertyEditing.Mac
 				ViewModel.Value = new CGPoint (XEditor.IntValue, YEditor.IntValue);
 			};
 
-			var yLabel = new UnfocusableTextView (new CGRect (85, -5, 25, 20), "Y:");
+			var yLabel = new UnfocusableTextField (new CGRect (85, 4, 25, 20), "Y:");
 
 			YEditor = new NSTextField (new CGRect (110, 0, 50, 20));
 			YEditor.BackgroundColor = NSColor.Clear;

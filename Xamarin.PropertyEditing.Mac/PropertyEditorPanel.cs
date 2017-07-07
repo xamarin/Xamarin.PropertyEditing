@@ -88,6 +88,9 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
 
+			PropertiesViewModel.ViewModelMap.Add (typeof (CGPoint), (p, e) => new PropertyViewModel<CGPoint> (p, e));
+			PropertiesViewModel.ViewModelMap.Add (typeof (CGRect), (p, e) => new PropertyViewModel<CGRect> (p, e));
+
 			propertyFilter = new NSSearchField (new CGRect (10, Frame.Height - 25, 170, 24)) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				PlaceholderString = "Property Filter", // TODO Localize
@@ -140,9 +143,9 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			// TODO: localize
-			NSTableColumn propertiesList = new NSTableColumn (PropertyListColId) { Title = "Properties" };
+			NSTableColumn propertiesList = new NSTableColumn (PropertyListColId) { Title = "Property" };
 			NSTableColumn propertyEditors = new NSTableColumn (PropertyEditorColId) { Title = "Value" };
-			propertiesList.Width = 150;
+			propertiesList.Width = 200;
 			propertyEditors.Width = 250;
 			propertyTable.AddColumn (propertiesList);
 			propertyTable.AddColumn (propertyEditors);

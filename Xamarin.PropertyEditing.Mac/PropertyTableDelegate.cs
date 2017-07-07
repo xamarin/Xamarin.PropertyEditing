@@ -47,17 +47,15 @@ namespace Xamarin.PropertyEditing.Mac
 			// Setup view based on the column
 			switch (tableColumn.Identifier) {
 				case PropertyEditorPanel.PropertyListColId:
-					var view = (UnfocusableTextView)outlineView.MakeView (cellIdentifier + "props", this);
+					var view = (UnfocusableTextField)outlineView.MakeView (cellIdentifier + "props", this);
 					if (view == null) {
-						view = new UnfocusableTextView {
-							Frame = new CoreGraphics.CGRect (0, -5, 75, 20),
-							TextContainerInset = new CoreGraphics.CGSize (0, 9),
+						view = new UnfocusableTextField {
 							Identifier = cellIdentifier + "props",
 							Alignment = NSTextAlignment.Right,
 						};
 					}
 
-					view.Value = cellIdentifier;
+					view.StringValue = cellIdentifier;
 					return view;
 
 				case PropertyEditorPanel.PropertyEditorColId:
