@@ -16,6 +16,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public nint TableRow { get; set; } = -1;
 		public NSTableView TableView { get; set; }
+		public nfloat RowHeight { get; set; } = 24;
 
 		PropertyViewModel viewModel;
 		public PropertyViewModel ViewModel {
