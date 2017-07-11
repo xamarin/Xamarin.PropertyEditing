@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			const string value = "value";
 
-			editor.SetValue (editor.Properties.Single (), new ValueInfo<string> {
+			await editor.SetValueAsync (editor.Properties.Single (), new ValueInfo<string> {
 				Value = value
 			});
 
@@ -54,7 +54,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var provider = new ReflectionEditorProvider ();
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 
-			var info = editor.GetValue<string> (editor.Properties.Single ());
+			ValueInfo<string> info = await editor.GetValueAsync<string> (editor.Properties.Single ());
 			Assert.That (info.Value, Is.EqualTo (value));
 			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
 		}
@@ -69,7 +69,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			const string value = "1";
 
-			editor.SetValue (editor.Properties.Single (), new ValueInfo<int> {
+			await editor.SetValueAsync (editor.Properties.Single (), new ValueInfo<int> {
 				Value = 1
 			});
 
@@ -85,7 +85,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var provider = new ReflectionEditorProvider ();
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 
-			var info = editor.GetValue<int> (editor.Properties.Single ());
+			ValueInfo<int> info = await editor.GetValueAsync<int> (editor.Properties.Single ());
 			Assert.That (info.Value, Is.EqualTo (1));
 			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
 		}
@@ -107,7 +107,7 @@ namespace Xamarin.PropertyEditing.Tests
 					changed = true;
 			};
 
-			editor.SetValue (property, new ValueInfo<string> {
+			await editor.SetValueAsync (property, new ValueInfo<string> {
 				Value = value
 			});
 
@@ -128,7 +128,7 @@ namespace Xamarin.PropertyEditing.Tests
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (1));
 
-			ValueInfo<string> info = editor.GetValue<string> (editor.Properties.Single ());
+			ValueInfo<string> info = await editor.GetValueAsync<string> (editor.Properties.Single ());
 			Assert.That (info.Value, Is.EqualTo (value));
 			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
 		}
@@ -143,7 +143,7 @@ namespace Xamarin.PropertyEditing.Tests
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (1));
 
-			editor.SetValue (editor.Properties.Single (), new ValueInfo<string> {
+			await editor.SetValueAsync (editor.Properties.Single (), new ValueInfo<string> {
 				Value = value,
 				Source = ValueSource.Local
 			});
@@ -166,7 +166,7 @@ namespace Xamarin.PropertyEditing.Tests
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (1));
 
-			ValueInfo<string> info = editor.GetValue<string> (editor.Properties.Single ());
+			ValueInfo<string> info = await editor.GetValueAsync<string> (editor.Properties.Single ());
 			Assert.That (info.Value, Is.EqualTo (value));
 			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
 		}
@@ -181,7 +181,7 @@ namespace Xamarin.PropertyEditing.Tests
 			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (1));
 
-			editor.SetValue (editor.Properties.Single (), new ValueInfo<string> {
+			await editor.SetValueAsync (editor.Properties.Single (), new ValueInfo<string> {
 				Value = value,
 				Source = ValueSource.Local
 			});
@@ -222,14 +222,14 @@ namespace Xamarin.PropertyEditing.Tests
 
 			FlagsTestEnum expected = FlagsTestEnum.Flag1 | FlagsTestEnum.Flag3;
 
-			editor.SetValue (editor.Properties.First (), new ValueInfo<IReadOnlyList<int>> {
+			await editor.SetValueAsync (editor.Properties.First (), new ValueInfo<IReadOnlyList<int>> {
 				Value = values
 			});
 
-			ValueInfo<int> underlying = editor.GetValue<int> (editor.Properties.First());
+			ValueInfo<int> underlying = await editor.GetValueAsync<int> (editor.Properties.First());
 			Assert.That ((FlagsTestEnum) underlying.Value, Is.EqualTo (expected));
 
-			ValueInfo<IReadOnlyList<int>> underlyingList = editor.GetValue<IReadOnlyList<int>> (editor.Properties.First ());
+			ValueInfo<IReadOnlyList<int>> underlyingList = await editor.GetValueAsync<IReadOnlyList<int>> (editor.Properties.First ());
 			Assert.That (underlyingList.Value, Contains.Item ((int) FlagsTestEnum.Flag1));
 			Assert.That (underlyingList.Value, Contains.Item ((int) FlagsTestEnum.Flag3));
 		}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Xamarin.PropertyEditing.ViewModels;
@@ -18,7 +19,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (max, Is.GreaterThan (min));
 			Assume.That (value, Is.LessThan (max));
 			Assume.That (value, Is.GreaterThan (min));
-			
+
 			var mockProperty = new Mock<IPropertyInfo> ();
 			var constrainedMock = mockProperty.As<ISelfConstrainedPropertyInfo<T>> ();
 			constrainedMock.SetupGet (pi => pi.MaxValue).Returns (max);
@@ -85,32 +86,35 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-	    public void PropertyClamped ()
-	    {
-            T max, min;
-            T value = GetConstrainedRandomValue (Random, out max, out min);
-            Assume.That (max, Is.GreaterThan (min));
-            Assume.That (value, Is.LessThan (max));
-            Assume.That (value, Is.GreaterThan (min));
+		public void PropertyClamped ()
+		{
+			T max, min;
+			T value = GetConstrainedRandomValue (Random, out max, out min);
+			Assume.That (max, Is.GreaterThan (min));
+			Assume.That (value, Is.LessThan (max));
+			Assume.That (value, Is.GreaterThan (min));
 
-            var mockMaxProperty = new Mock<IPropertyInfo> ();
-            var mockMinProperty = new Mock<IPropertyInfo> ();
+			var mockMaxProperty = new Mock<IPropertyInfo> ();
+			var mockMinProperty = new Mock<IPropertyInfo> ();
 
-            var mockValueProperty = new Mock<IPropertyInfo> ();
-	        var mockConstrainedValueProperty = mockValueProperty.As<IClampedPropertyInfo> ();
-	        mockConstrainedValueProperty.SetupGet (pi => pi.MaximumProperty).Returns (mockMaxProperty.Object);
-	        mockConstrainedValueProperty.SetupGet (pi => pi.MinimumProperty).Returns (mockMinProperty.Object);
+			var mockValueProperty = new Mock<IPropertyInfo> ();
+			var mockConstrainedValueProperty = mockValueProperty.As<IClampedPropertyInfo> ();
+			mockConstrainedValueProperty.SetupGet (pi => pi.MaximumProperty).Returns (mockMaxProperty.Object);
+			mockConstrainedValueProperty.SetupGet (pi => pi.MinimumProperty).Returns (mockMinProperty.Object);
 
-            var mockEditor = new Mock<IObjectEditor> ();
-	        mockEditor.Setup (oe => oe.GetValue<T> (mockMaxProperty.Object, null)).Returns (new ValueInfo<T> { Value = max, Source = ValueSource.Local });
-            mockEditor.Setup (oe => oe.GetValue<T> (mockMinProperty.Object, null)).Returns (new ValueInfo<T> { Value = min, Source = ValueSource.Local });
+			var mockEditor = new Mock<IObjectEditor> ();
+			mockEditor.Setup (oe => oe.GetValueAsync<T> (mockMaxProperty.Object, null)).Returns (Task.FromResult (new ValueInfo<T> { Value = max, Source = ValueSource.Local }));
+			mockEditor.Setup (oe => oe.GetValueAsync<T> (mockMinProperty.Object, null)).Returns (Task.FromResult (new ValueInfo<T> { Value = min, Source = ValueSource.Local }));
 
-	        var vm = GetViewModel (mockValueProperty.Object, mockEditor.Object);
-	        Assert.That (vm.MinimumValue, Is.EqualTo (min));
-	        Assert.That (vm.MaximumValue, Is.EqualTo (max));
-	    }
+			var vm = GetViewModel (mockValueProperty.Object, mockEditor.Object);
+			Assert.That (vm.MinimumValue, Is.EqualTo (min));
+			Assert.That (vm.MaximumValue, Is.EqualTo (max));
+		}
 
-		protected abstract Tuple<T,T> MaxMin { get; }
+		protected abstract Tuple<T, T> MaxMin
+		{
+			get;
+		}
 
 		protected abstract T GetConstrainedRandomValue (Random rand, out T max, out T min);
 
@@ -118,8 +122,8 @@ namespace Xamarin.PropertyEditing.Tests
 		protected abstract T GetConstrainedRandomValueBelowBounds (Random rand, out T max, out T min);
 
 		protected ConstrainedPropertyViewModel<T> GetViewModel (IPropertyInfo property, IObjectEditor editor)
-	    {
-	        return GetViewModel (property, new[] { editor });
-	    }
+		{
+			return GetViewModel (property, new[] { editor });
+		}
 	}
 }

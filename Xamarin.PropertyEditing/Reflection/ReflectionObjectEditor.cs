@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.Reflection
 {
@@ -41,7 +42,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public IReadOnlyList<IObjectEditor> DirectChildren => EmptyDirectChildren;
 
-		public void SetValue<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
+		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
 		{
 			if (property == null)
 				throw new ArgumentNullException (nameof (property));
@@ -50,11 +51,11 @@ namespace Xamarin.PropertyEditing.Reflection
 			if (info == null)
 				throw new ArgumentException();
 
-			info.SetValue (this.target, value.Value);
+			await info.SetValueAsync (this.target, value.Value);
 			OnPropertyChanged (info);
 		}
 
-		public ValueInfo<T> GetValue<T> (IPropertyInfo property, PropertyVariation variation = null)
+		public async Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null)
 		{
 			if (property == null)
 				throw new ArgumentNullException (nameof (property));
@@ -63,9 +64,11 @@ namespace Xamarin.PropertyEditing.Reflection
 			if (info == null)
 				throw new ArgumentException();
 
+			T value = await info.GetValueAsync<T> (this.target);
+
 			return new ValueInfo<T> {
 				Source = ValueSource.Local,
-				Value = info.GetValue<T> (this.target)
+				Value = value
 			};
 		}
 
