@@ -95,7 +95,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected override void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
 		{
-			if (this.selfConstraint != null) {
+			if (this.clampProperties != null) {
 				if (e.Property == null || e.Property.Equals (this.clampProperties.MaximumProperty) || e.Property.Equals (this.clampProperties.MinimumProperty))
 					UpdateMaxMin ();
 			}
