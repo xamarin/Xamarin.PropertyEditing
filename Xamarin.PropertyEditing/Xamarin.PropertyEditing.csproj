@@ -41,6 +41,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncWorkQueue.cs" />
     <Compile Include="BidirectionalDictionary.cs" />
     <Compile Include="IAvailabilityConstraint.cs" />
     <Compile Include="IClampedPropertyInfo.cs" />
@@ -79,6 +80,5 @@
     <Compile Include="IMutableLookup.cs" />
     <Compile Include="OrderedDictionary.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
