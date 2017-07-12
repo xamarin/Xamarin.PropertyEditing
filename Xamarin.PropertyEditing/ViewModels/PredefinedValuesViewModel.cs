@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cadenza.Collections;
+using Xamarin.PropertyEditing.Reflection;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -11,16 +12,39 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public PredefinedValuesViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (property, editors)
 		{
-			this.predefinedValues = property as IHavePredefinedValues<TValue>;
+			this.predefinedValues = property as ReflectionEnumPropertyInfo<TValue>;
 			if (this.predefinedValues == null)
 				throw new ArgumentException (nameof(property) + " did not have predefined values", nameof(property));
 
-			UpdateValueName();
+			if (IsCombinable) {
+				var dict = new Dictionary<string, bool> ();
+				foreach (var item in this.predefinedValues.PredefinedValues.Keys) {
+					dict.Add (item, (Enum.ToObject(property.Type , Value) as Enum).HasFlag ((Enum)Enum.Parse (property.Type, item)));
+				}
+				PossibleValues = dict;
+			} else {
+				PossibleValues =  this.predefinedValues.PredefinedValues.Keys.ToDictionary (x => x, y => false);
+			}
+
+			UpdateValueName ();
 		}
 
-		public IEnumerable<string> PossibleValues
+		public bool IsCombinable
 		{
-			get { return this.predefinedValues.PredefinedValues.Keys; }
+			get
+			{
+				return this.predefinedValues.IsValueCombinable;
+			}
+		}
+
+		public void SetValue<T> (object target, T value)
+		{
+			this.predefinedValues.SetValue (target, value);
+		}
+
+		public IReadOnlyDictionary<string, bool> PossibleValues
+		{
+			get;
 		}
 
 		public string ValueName
@@ -67,7 +91,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private string valueName;
-		private readonly IHavePredefinedValues<TValue> predefinedValues;
+		private readonly ReflectionEnumPropertyInfo<TValue> predefinedValues;
 
 		private bool IsValueDefined (TValue value)
 		{
