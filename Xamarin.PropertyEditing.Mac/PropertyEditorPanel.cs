@@ -90,6 +90,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			PropertiesViewModel.ViewModelMap.Add (typeof (CGPoint), (p, e) => new PropertyViewModel<CGPoint> (p, e));
 			PropertiesViewModel.ViewModelMap.Add (typeof (CGRect), (p, e) => new PropertyViewModel<CGRect> (p, e));
+			PropertiesViewModel.ViewModelMap.Add (typeof (CGSize), (p, e) => new PropertyViewModel<CGSize> (p, e));
 
 			propertyFilter = new NSSearchField (new CGRect (10, Frame.Height - 25, 170, 24)) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
