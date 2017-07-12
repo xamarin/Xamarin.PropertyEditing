@@ -33,6 +33,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					Source = ValueSource.Local,
 					Value = value
 				});
+                OnPropertyChanged ();
 			}
 		}
 

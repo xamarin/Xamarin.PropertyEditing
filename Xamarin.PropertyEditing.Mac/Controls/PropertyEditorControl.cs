@@ -16,7 +16,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public nint TableRow { get; set; } = -1;
 		public NSTableView TableView { get; set; }
-		public nfloat RowHeight { get; set; } = 24;
+
+		const int DefaultRowHeight = 24;
+		public nfloat RowHeight { get; set; } = DefaultRowHeight;
+		public bool TriggerRowChange => RowHeight != DefaultRowHeight;
 
 		PropertyViewModel viewModel;
 		public PropertyViewModel ViewModel {

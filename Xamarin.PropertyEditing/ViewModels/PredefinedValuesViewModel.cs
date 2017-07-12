@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Cadenza.Collections;
+using Xamarin.PropertyEditing.Reflection;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -11,16 +13,22 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public PredefinedValuesViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (property, editors)
 		{
-			this.predefinedValues = property as IHavePredefinedValues<TValue>;
+			this.predefinedValues = property as ReflectionEnumPropertyInfo<TValue>;
 			if (this.predefinedValues == null)
-				throw new ArgumentException (nameof(property) + " did not have predefined values", nameof(property));
+				throw new ArgumentException (nameof (property) + " did not have predefined values", nameof (property));
 
-			UpdateValueName();
+			UpdatePossibleValues ();
+			UpdateValueName ();
 		}
 
-		public IEnumerable<string> PossibleValues
+		public bool IsCombinable {
+			get { return this.predefinedValues.IsValueCombinable; }
+		}
+
+		IReadOnlyDictionary<string, ValueChecked> possibleValues;
+		public IReadOnlyDictionary<string, ValueChecked> PossibleValues
 		{
-			get { return this.predefinedValues.PredefinedValues.Keys; }
+			get { return this.possibleValues; }
 		}
 
 		public string ValueName
@@ -39,11 +47,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 					}
 
 					// TODO: Figure out where the conversion needs to happen
-				} else
+				} else {
+                    this.valueName = value;
 					Value = realValue;
-
-				this.valueName = value;
-				OnPropertyChanged ();
+				}
 			}
 		}
 
@@ -63,15 +70,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (this.predefinedValues == null)
 				return;
 
-			UpdateValueName();
+			UpdatePossibleValues ();
+			UpdateValueName ();
 		}
 
 		private string valueName;
-		private readonly IHavePredefinedValues<TValue> predefinedValues;
+		private readonly ReflectionEnumPropertyInfo<TValue> predefinedValues;
 
 		private bool IsValueDefined (TValue value)
 		{
-			return this.predefinedValues.PredefinedValues.Values.Contains (value);
+			if (IsCombinable) {
+				return Enum.ToObject (Property.Type, value) != null;
+			} else {
+				return this.predefinedValues.PredefinedValues.Values.Contains (value);
+			}
 		}
 
 		private bool TryGetValueName (TValue value, out string name)
@@ -95,6 +107,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.valueName = newValueName;
 				OnPropertyChanged (nameof(ValueName));
 			}
+		}
+
+		void UpdatePossibleValues ()
+		{
+			if (IsCombinable) {
+				possibleValues = this.predefinedValues.PredefinedValues.ToDictionary (x => x.Key, y => new ValueChecked { Value = y.Value, Checked = (Convert.ToInt64 (y.Value) & Convert.ToInt64 (this.Value)) == Convert.ToInt64 (y.Value) });
+			} else {
+				possibleValues = this.predefinedValues.PredefinedValues.ToDictionary (x => x.Key, y => new ValueChecked ());
+			}
+		}
+
+		public class ValueChecked
+		{
+			public TValue Value;
+			public bool Checked;
 		}
 	}
 }
