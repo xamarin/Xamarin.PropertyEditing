@@ -95,7 +95,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected override void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
 		{
-			if (this.selfConstraint != null) {
+			if (this.clampProperties != null) {
 				if (e.Property == null || e.Property.Equals (this.clampProperties.MaximumProperty) || e.Property.Equals (this.clampProperties.MinimumProperty))
 					UpdateMaxMin ();
 			}
@@ -103,7 +103,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			base.OnEditorPropertyChanged (sender, e);
 		}
 
-	    private void UpdateMaxMin ()
+	    private async void UpdateMaxMin ()
 	    {
 			bool isDefault = true;
 			T max = default(T), min = default(T);
@@ -114,21 +114,24 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			if (this.clampProperties != null && Editors.Count > 0) {
-		        bool doMax = this.clampProperties.MaximumProperty != null;
-		        bool doMin = this.clampProperties.MinimumProperty != null;
+				bool doMax = this.clampProperties.MaximumProperty != null;
+				bool doMin = this.clampProperties.MinimumProperty != null;
 
-		        foreach (IObjectEditor editor in Editors) {
-			        if (doMax) {
-				        ValueInfo<T> maxinfo = editor.GetValue<T> (this.clampProperties.MaximumProperty);
-				        max = (isDefault) ? maxinfo.Value : Min (max, maxinfo.Value);
-			        }
+				using (await AsyncWork.RequestAsyncWork (this)) {
+					// TODO: max/min property get error case
+					foreach (IObjectEditor editor in Editors) {
+						if (doMax) {
+							ValueInfo<T> maxinfo = await editor.GetValueAsync<T> (this.clampProperties.MaximumProperty);
+							max = (isDefault) ? maxinfo.Value : Min (max, maxinfo.Value);
+						}
 
-			        if (doMin) {
-				        ValueInfo<T> mininfo = editor.GetValue<T> (this.clampProperties.MinimumProperty);
-				        min = (isDefault) ? mininfo.Value : Max (min, mininfo.Value);
-			        }
-		        }
-	        }
+						if (doMin) {
+							ValueInfo<T> mininfo = await editor.GetValueAsync<T> (this.clampProperties.MinimumProperty);
+							min = (isDefault) ? mininfo.Value : Max (min, mininfo.Value);
+						}
+					}
+				}
+			}
 
 	        MaximumValue = max;
 	        MinimumValue = min;

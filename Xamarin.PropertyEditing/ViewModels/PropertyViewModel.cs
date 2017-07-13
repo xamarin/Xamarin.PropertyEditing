@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -119,27 +120,30 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		private void UpdateCurrentValue ()
+		private async void UpdateCurrentValue ()
 		{
 			ValueInfo<TValue> currentValue = null;
 
-			bool disagree = false;
-			foreach (ValueInfo<TValue> valueInfo in Editors.Select (ed => ed.GetValue<TValue> (Property, Variation))) {
-				if (currentValue == null)
-					currentValue = valueInfo;
-				else if (currentValue.Source != valueInfo.Source || !Equals (currentValue.Value, valueInfo.Value)) {
-					// Even if the value is the same, they are not equal if the source is not the same because
-					// it means the value is set differently at the source.
-					disagree = true;
-					currentValue = null;
-					break;
+			using (await AsyncWork.RequestAsyncWork (this)) {
+				bool disagree = false;
+				ValueInfo<TValue>[] values = await Task.WhenAll (Editors.Select (ed => ed.GetValueAsync<TValue> (Property, Variation)).ToArray ());
+				foreach (ValueInfo<TValue> valueInfo in values) {
+					if (currentValue == null)
+						currentValue = valueInfo;
+					else if (currentValue.Source != valueInfo.Source || !Equals (currentValue.Value, valueInfo.Value)) {
+						// Even if the value is the same, they are not equal if the source is not the same because
+						// it means the value is set differently at the source.
+						disagree = true;
+						currentValue = null;
+						break;
+					}
 				}
+
+				MultipleValues = disagree;
+
+				// The public setter for Value is a local set for binding
+				SetCurrentValue ((currentValue != null) ? currentValue : null);
 			}
-
-			MultipleValues = disagree;
-
-			// The public setter for Value is a local set for binding
-			SetCurrentValue ((currentValue != null) ? currentValue : null);
 		}
 
 		private bool SetCurrentValue (ValueInfo<TValue> newValue)
@@ -153,27 +157,33 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return true;
 		}
 
-		private void SetValue (ValueInfo<TValue> newValue)
+		private async void SetValue (ValueInfo<TValue> newValue)
 		{
 			if (this.value == newValue)
 				return;
 
 			SetError (null);
 
-			try {
-				foreach (IObjectEditor editor in Editors)
-					editor.SetValue (Property, newValue);
-			} catch (Exception ex) {
-				AggregateException aggregate = ex as AggregateException;
-				if (aggregate != null) {
-					aggregate = aggregate.Flatten ();
-					ex = aggregate.InnerExceptions[0];
+			using (await AsyncWork.RequestAsyncWork (this)) {
+				try {
+					Task[] setValues = new Task[Editors.Count];
+					int i = 0;
+					foreach (IObjectEditor editor in Editors) {
+						setValues[i++] = editor.SetValueAsync (Property, newValue);
+					}
+
+					await Task.WhenAll (setValues);
+					UpdateCurrentValue ();
+				} catch (Exception ex) {
+					AggregateException aggregate = ex as AggregateException;
+					if (aggregate != null) {
+						aggregate = aggregate.Flatten ();
+						ex = aggregate.InnerExceptions[0];
+					}
+
+					SetError (ex.ToString ());
 				}
-
-				SetError (ex.ToString());
 			}
-
-			UpdateCurrentValue();
 		}
 
 		private bool CanSetValueToResource (Resource resource)
@@ -235,11 +245,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal abstract class PropertyViewModel
 		: NotifyingObject, INotifyDataErrorInfo
 	{
-		private ObjectViewModel valueModel;
-		private bool multipleValues;
-		private PropertyVariation variation;
-		private string error;
-
 		protected PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
 			if (property == null)
@@ -267,21 +272,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public IEnumerable GetErrors (string propertyName)
 		{
 			return (this.error != null) ? new [] { this.error } : Enumerable.Empty<string> ();
-		}
-
-		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
-		protected void SetError (string newError)
-		{
-			if (this.error == newError)
-				return;
-
-			this.error = newError;
-			OnErrorsChanged (new DataErrorsChangedEventArgs (nameof (Property)));
-		}
-
-		private void OnErrorsChanged (DataErrorsChangedEventArgs e)
-		{
-			ErrorsChanged?.Invoke (this, e);
 		}
 
 		/// <summary>
@@ -340,5 +330,30 @@ namespace Xamarin.PropertyEditing.ViewModels
 			// properties will support multi-selection of designer items by self-handling having multiple
 			// property editors.
 		}
+
+		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
+		protected void SetError (string newError)
+		{
+			if (this.error == newError)
+				return;
+
+			this.error = newError;
+			OnErrorsChanged (new DataErrorsChangedEventArgs (nameof (Property)));
+		}
+
+		private ObjectViewModel valueModel;
+		private bool multipleValues;
+		private PropertyVariation variation;
+		private string error;
+
+		private void OnErrorsChanged (DataErrorsChangedEventArgs e)
+		{
+			ErrorsChanged?.Invoke (this, e);
+		}
+
+		protected static AsyncWorkQueue AsyncWork
+		{
+			get;
+		} = new AsyncWorkQueue();
 	}
 }

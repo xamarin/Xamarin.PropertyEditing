@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.Reflection
 {
@@ -48,7 +49,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public IReadOnlyList<IAvailabilityConstraint> AvailabilityConstraints => EmptyConstraints;
 
-		public virtual void SetValue<T> (object target, T value)
+		public virtual async Task SetValueAsync<T> (object target, T value)
 		{
 			object realValue = value;
 			object converted;
@@ -61,7 +62,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			this.propertyInfo.SetValue (target, realValue);
 		}
 
-		public virtual T GetValue<T> (object target)
+		public virtual async Task<T> GetValueAsync<T> (object target)
 		{
 			object value = this.propertyInfo.GetValue (target);
 			T converted;

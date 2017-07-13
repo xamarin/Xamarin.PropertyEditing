@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.Tests
 {
@@ -59,7 +60,7 @@ namespace Xamarin.PropertyEditing.Tests
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
 		}
 		
-		public void SetValue<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
+		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
 		{
 			if (variation != null)
 				throw new NotSupportedException(); // TODO
@@ -72,7 +73,7 @@ namespace Xamarin.PropertyEditing.Tests
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
 		}
 
-		public ValueInfo<T> GetValue<T> (IPropertyInfo property, PropertyVariation variation = null)
+		public async Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null)
 		{
 			if (variation != null)
 				throw new NotSupportedException (); // TODO

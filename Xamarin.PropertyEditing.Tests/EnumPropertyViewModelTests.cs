@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
@@ -44,7 +45,7 @@ namespace Xamarin.PropertyEditing.Tests
 			T value = GetNonDefaultRandomTestValue ();
 			Assume.That (value, Is.Not.EqualTo (default(T)));
 
-			mockEditor.Setup (oe => oe.GetValue<T> (mockProperty.Object, null)).Returns (new ValueInfo<T> { Source = ValueSource.Local, Value = value });
+			mockEditor.Setup (oe => oe.GetValueAsync<T> (mockProperty.Object, null)).Returns (Task.FromResult (new ValueInfo<T> { Source = ValueSource.Local, Value = value }));
 
 			var vm = new EnumPropertyViewModel<T> (mockProperty.Object, new[] { mockEditor.Object });
 			Assume.That (vm.Value, Is.EqualTo (value));
@@ -52,7 +53,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void ValueNameChanged ()
+		public async Task ValueNameChanged ()
 		{
 			var mockProperty = new Mock<IPropertyInfo> ();
 			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (T));
@@ -61,7 +62,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (value, Is.Not.EqualTo (default (T)));
 
 			var editor = new MockObjectEditor (mockProperty.Object);
-			editor.SetValue (mockProperty.Object, new ValueInfo<T> { Source = ValueSource.Local, Value = value });
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<T> { Source = ValueSource.Local, Value = value });
 
 			var vm = new EnumPropertyViewModel<T> (mockProperty.Object, new[] { editor });
 			Assume.That (vm.Value, Is.EqualTo (value));

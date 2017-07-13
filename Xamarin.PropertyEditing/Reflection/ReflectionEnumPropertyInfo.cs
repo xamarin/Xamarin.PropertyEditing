@@ -44,7 +44,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			get;
 		}
 
-		public override void SetValue<TValue> (object target, TValue value)
+		public override async Task SetValueAsync<TValue> (object target, TValue value)
 		{
 			IReadOnlyList<T> values = value as IReadOnlyList<T>;
 			if (values != null) {
@@ -65,7 +65,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			}
 		}
 
-		public override TValue GetValue<TValue> (object target)
+		public override async Task<TValue> GetValueAsync<TValue> (object target)
 		{
 			if (typeof(TValue) == typeof(IReadOnlyList<T>)) {
 				T realValue = (T)PropertyInfo.GetValue (target);

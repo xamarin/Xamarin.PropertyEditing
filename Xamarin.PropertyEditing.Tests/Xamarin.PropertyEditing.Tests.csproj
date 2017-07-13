@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncWorkQueueTests.cs" />
     <Compile Include="BoolViewModelTests.cs" />
     <Compile Include="ConstrainedPropertyViewModelTests.cs" />
     <Compile Include="EnumPropertyViewModelTests.cs" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Xamarin.PropertyEditing.ViewModels;
@@ -21,7 +22,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void SetValue ()
+		public async Task SetValue ()
 		{
 			TValue testValue = GetRandomTestValue ();
 
@@ -29,7 +30,9 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (vm.Value, Is.EqualTo (default (TValue)));
 
 			vm.Value = testValue;
-			Assert.That (vm.Editors.First().GetValue<TValue> (vm.Property).Value, Is.EqualTo (testValue));
+
+			ValueInfo<TValue> valueInfo = await vm.Editors.First ().GetValueAsync<TValue> (vm.Property);
+			Assert.That (valueInfo.Value, Is.EqualTo (testValue));
 		}
 
 		[Test]
@@ -46,7 +49,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void SetSameValueMultiEditor ()
+		public async Task SetSameValueMultiEditor ()
 		{
 			TValue testValue = GetRandomTestValue ();
 
@@ -56,17 +59,20 @@ namespace Xamarin.PropertyEditing.Tests
 
 			vm.Value = testValue;
 
-			Assert.That (vm.Editors.First().GetValue<TValue> (vm.Property).Value, Is.EqualTo (testValue));
-			Assert.That (vm.Editors.Skip (1).First().GetValue<TValue> (vm.Property).Value, Is.EqualTo (testValue));
+			ValueInfo<TValue> valueInfo = await vm.Editors.First ().GetValueAsync<TValue> (vm.Property);
+			Assert.That (valueInfo.Value, Is.EqualTo (testValue));
+
+			valueInfo = await vm.Editors.Skip (1).First ().GetValueAsync<TValue> (vm.Property);
+			Assert.That (valueInfo.Value, Is.EqualTo (testValue));
 		}
 
 		[Test]
-		public void EditorValueChanged ()
+		public async Task EditorValueChanged ()
 		{
 			TValue testValue = GetRandomTestValue ();
 			var vm = GetBasicTestModel();
 
-			vm.Editors.First().SetValue (vm.Property, new ValueInfo<TValue> {
+			await vm.Editors.First().SetValueAsync (vm.Property, new ValueInfo<TValue> {
 				Source = ValueSource.Local,
 				Value = testValue
 			});
@@ -139,7 +145,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 		[Test]
 		[Description ("Once an editor is removed we should not listen for its property changes")]
-		public void UnsubscribedValueChanged ()
+		public async Task UnsubscribedValueChanged ()
 		{
 			TValue testValue = GetNonDefaultRandomTestValue ();
 			Assume.That (testValue, Is.Not.EqualTo (default(TValue)));
@@ -152,7 +158,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var editor = vm.Editors.Single ();
 			Assume.That (vm.Editors.Remove (editor), Is.True);
-			editor.SetValue (vm.Property, new ValueInfo<TValue> { Source = ValueSource.Local, Value = testValue });
+			await editor.SetValueAsync (vm.Property, new ValueInfo<TValue> { Source = ValueSource.Local, Value = testValue });
 
 			Assert.That (vm.Value, Is.Not.EqualTo (testValue));
 		}
@@ -270,7 +276,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void GetValueAlreadySetToResource ()
+		public async Task GetValueAlreadySetToResource ()
 		{
 			var value = GetNonDefaultRandomTestValue ();
 
@@ -282,7 +288,7 @@ namespace Xamarin.PropertyEditing.Tests
 			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			var editor = new MockObjectEditor (mockProperty.Object);
-			editor.SetValue (mockProperty.Object, new ValueInfo<TValue> {
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
 				Source = ValueSource.Resource,
 				ValueDescriptor = resource,
 				Value = value
@@ -297,14 +303,14 @@ namespace Xamarin.PropertyEditing.Tests
 
 		[Test]
 		[Description ("For performance reasons, we should never raise a value change when it hasn't changed")]
-		public void ValueNotChangedForSameValue ()
+		public async Task ValueNotChangedForSameValue ()
 		{
 			var value = GetNonDefaultRandomTestValue ();
 
 			var mockProperty = GetPropertyMock ();
 
 			var editor = new MockObjectEditor (mockProperty.Object);
-			editor.SetValue (mockProperty.Object, new ValueInfo<TValue> {
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
 				Source = ValueSource.Local,
 				Value = value
 			});
@@ -352,17 +358,55 @@ namespace Xamarin.PropertyEditing.Tests
 			var mockProperty = GetPropertyMock ();
 
 			var editorMock = new Mock<IObjectEditor> ();
-			editorMock.Setup (oe => oe.GetValue<TValue> (mockProperty.Object, null)).Returns (new ValueInfo<TValue> {
+			editorMock.Setup (oe => oe.GetValueAsync<TValue> (mockProperty.Object, null)).Returns (Task.FromResult (new ValueInfo<TValue> {
 				Value = value,
 				Source = ValueSource.Local
-			});
+			}));
 
 			var vm = GetViewModel (mockProperty.Object, new[] { editorMock.Object });
 			Assume.That (vm.Value, Is.EqualTo (value));
 
 			vm.Value = value;
 
-			editorMock.Verify (oe => oe.SetValue (mockProperty.Object, It.IsAny<ValueInfo<TValue>> (), null), Times.Never);
+			editorMock.Verify (oe => oe.SetValueAsync (mockProperty.Object, It.IsAny<ValueInfo<TValue>> (), null), Times.Never);
+		}
+
+		[Test]
+		[Description ("We need to ensure async value operations complete before moving on to other value operations")]
+		public void ValueTriggersOtherPropertyChangeOutOfOrder ()
+		{
+			var mockProperty1 = GetPropertyMock ();
+			var mockProperty2 = GetPropertyMock ();
+
+			var property1Value = GetRandomTestValue ();
+			var next1Value = GetRandomTestValue (notValue: property1Value);
+			TValue original2Value = GetRandomTestValue ();
+			var property2Value = original2Value;
+			var next2Value = GetRandomTestValue (notValue: property2Value);
+
+			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.SetupGet (ioe => ioe.Properties).Returns (new[] { mockProperty1.Object, mockProperty2.Object });
+			editorMock.Setup (ioe => ioe.GetValueAsync<TValue> (mockProperty2.Object, null))
+				.Returns (() => Task.FromResult (new ValueInfo<TValue> { Source = ValueSource.Local, Value = property2Value }));
+			editorMock.Setup (ioe => ioe.GetValueAsync<TValue> (mockProperty1.Object, null))
+				.Returns (() => Task.FromResult (new ValueInfo<TValue> { Source = ValueSource.Local, Value = property1Value }));
+
+			var tcs = new TaskCompletionSource<bool> ();
+			var info = new ValueInfo<TValue> { Source = ValueSource.Local, Value = next1Value };
+			editorMock.Setup (ioe => ioe.SetValueAsync (mockProperty1.Object, info, null)).Callback (() => {
+				property1Value = next1Value;
+				property2Value = next2Value;
+				editorMock.Raise (ioe => ioe.PropertyChanged += null, new EditorPropertyChangedEventArgs (mockProperty2.Object));
+			}).Returns (tcs.Task);
+
+			var vm1 = GetViewModel (mockProperty1.Object, new[] { editorMock.Object });
+			var vm2 = GetViewModel (mockProperty2.Object, new[] { editorMock.Object });
+
+			vm1.Value = next1Value;
+			Assert.That (vm2.Value, Is.EqualTo (original2Value));
+
+			tcs.SetResult (true);
+			Assert.That (vm2.Value, Is.EqualTo (property2Value));
 		}
 
 		protected TValue GetNonDefaultRandomTestValue ()
@@ -398,6 +442,16 @@ namespace Xamarin.PropertyEditing.Tests
 		protected TValue GetRandomTestValue ()
 		{
 			return GetRandomTestValue (this.rand);
+		}
+
+		protected TValue GetRandomTestValue (TValue notValue)
+		{
+			TValue value = GetRandomTestValue ();
+			while (Equals (value, notValue)) {
+				value = GetRandomTestValue ();
+			}
+
+			return value;
 		}
 
 		protected MockObjectEditor GetBasicEditor (IPropertyInfo property = null)
