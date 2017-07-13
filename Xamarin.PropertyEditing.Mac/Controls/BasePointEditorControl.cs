@@ -9,49 +9,45 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class PointEditorControl : PropertyEditorControl
+	internal abstract class BasePointEditorControl<T> : PropertyEditorControl
+		where T : struct
 	{
+		internal UnfocusableTextField XLabel { get; set; }
 		internal NSTextField XEditor { get; set; }
+		internal UnfocusableTextField YLabel { get; set; }
 		internal NSTextField YEditor { get; set; }
 
 		public override NSView FirstKeyView => XEditor;
 		public override NSView LastKeyView => YEditor;
 
-		internal new PropertyViewModel<CGPoint> ViewModel {
-			get { return (PropertyViewModel<CGPoint>)base.ViewModel; }
+		internal new PropertyViewModel<T> ViewModel
+		{
+			get { return (PropertyViewModel<T>)base.ViewModel; }
 			set { base.ViewModel = value; }
 		}
 
-		public PointEditorControl ()
+		public BasePointEditorControl ()
 		{
-			var xLabel = new UnfocusableTextField (new CGRect (0, 4, 25, 20), "X:");
+			XLabel = new UnfocusableTextField ();
 
-			XEditor = new NSTextField (new CGRect (25, 0, 50, 20));
+			XEditor = new NSTextField ();
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.StringValue = string.Empty;
-			XEditor.Activated += (sender, e) => {
-				ViewModel.Value = new CGPoint (XEditor.IntValue, YEditor.IntValue);
-			};
+			XEditor.Activated += OnInputUpdated;
+			XEditor.EditingEnded += OnInputUpdated;
 
-			var yLabel = new UnfocusableTextField (new CGRect (85, 4, 25, 20), "Y:");
+			YLabel = new UnfocusableTextField ();
 
-			YEditor = new NSTextField (new CGRect (110, 0, 50, 20));
+			YEditor = new NSTextField ();
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.StringValue = string.Empty;
-			YEditor.Activated += (sender, e) => {
-				ViewModel.Value = new CGPoint (XEditor.IntValue, YEditor.IntValue);
-			};
+			YEditor.Activated += OnInputUpdated;
+			YEditor.EditingEnded += OnInputUpdated;
 
-			AddSubview (xLabel);
+			AddSubview (XLabel);
 			AddSubview (XEditor);
-			AddSubview (yLabel);
+			AddSubview (YLabel);
 			AddSubview (YEditor);
-		}
-
-		protected override void UpdateValue ()
-		{
-			XEditor.IntValue = (int)ViewModel.Value.X;
-			YEditor.IntValue = (int)ViewModel.Value.Y;
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
@@ -68,8 +64,7 @@ namespace Xamarin.PropertyEditing.Mac
 				foreach (var error in errors) {
 					Debug.WriteLine (error.ToString () + "\n");
 				}
-			}
-			else {
+			} else {
 				XEditor.BackgroundColor = NSColor.Clear;
 				YEditor.BackgroundColor = NSColor.Clear;
 				SetEnabled ();
@@ -81,5 +76,7 @@ namespace Xamarin.PropertyEditing.Mac
 			XEditor.Editable = ViewModel.Property.CanWrite;
 			YEditor.Editable = ViewModel.Property.CanWrite;
 		}
+
+		protected abstract void OnInputUpdated (object sender, EventArgs e);
 	}
 }
