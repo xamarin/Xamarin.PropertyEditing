@@ -212,6 +212,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(double), (p,e) => new FloatingPropertyViewModel (p, e) },
 			{ typeof(int), (p,e) => new IntegerPropertyViewModel (p, e) },
 			{ typeof(long), (p,e) => new IntegerPropertyViewModel (p, e) },
+			{ typeof(Point), (p,e) => new PropertyViewModel<Point> (p, e) },
+			{ typeof(Size), (p,e) => new PropertyViewModel<Size> (p, e) },
+			{ typeof(Rectangle), (p,e) => new PropertyViewModel<Rectangle> (p, e) },
 		};
 	}
 }
