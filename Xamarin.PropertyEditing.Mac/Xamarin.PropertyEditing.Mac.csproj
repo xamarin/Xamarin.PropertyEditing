@@ -72,6 +72,9 @@
     <Compile Include="Controls\PredefinedValuesEditor.cs" />
     <Compile Include="Controls\BasePointEditorControl.cs" />
     <Compile Include="Controls\CGSizeEditorControl.cs" />
+    <Compile Include="Controls\PointEditorControl.cs" />
+    <Compile Include="Controls\RectangleEditorControl.cs" />
+    <Compile Include="Controls\SizeEditorControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
