@@ -11,9 +11,11 @@
 	</Style>
 
 	<Style TargetType="local:MenuButton">
-		<Setter Property="Background" Value="{DynamicResource SubPanelBackgroundBrush}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource PanelGroupSecondaryBackgroundBrush}" />
+		<Setter Property="Background" Value="{DynamicResource PanelGroupSecondaryBackgroundBrush}" />
+		<Setter Property="Foreground" Value="{DynamicResource PanelGroupSecondaryDimmedForegroundBrush}" />
 		<Setter Property="Padding" Value="1" />
-		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:MenuButton">
@@ -35,7 +37,9 @@
 		</Setter>
 		<Style.Triggers>
 			<Trigger Property="IsMouseOver" Value="True">
-				<Setter Property="Background" Value="{DynamicResource MenuHoverBrush}" />
+				<Setter Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemMouseOverBorderBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource ToggleItemMouseOverForegroundBrush}" />
 			</Trigger>
 		</Style.Triggers>
 	</Style>
