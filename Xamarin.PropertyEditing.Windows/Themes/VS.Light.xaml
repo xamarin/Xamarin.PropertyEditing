@@ -4,7 +4,8 @@
 	<SolidColorBrush x:Key="SubPanelBackgroundBrush">#EEEEF2</SolidColorBrush>
 	<SolidColorBrush x:Key="TabBackgroundBrush">#E7E8EC</SolidColorBrush>
 	<SolidColorBrush x:Key="SelectorBackgroundBrush">#FFFFFF</SolidColorBrush>
-
+	<SolidColorBrush x:Key="CategoryExpanderBorderBrush">#E9E9E9</SolidColorBrush>
+	
 	<SolidColorBrush x:Key="MenuPopupBackgroundBrush">#F6F6F6</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuPopupBorderBrush">#CCCEDB</SolidColorBrush>
 	<SolidColorBrush x:Key="ListItemForegroundBrush">#1E1E1E</SolidColorBrush>
@@ -30,8 +31,9 @@
 	<SolidColorBrush x:Key="InputBackgroundBrush">#FFFFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="InputBorderBrush">#FFCCCEDB</SolidColorBrush>
 	<SolidColorBrush x:Key="InputForegroundBrush">#FF1E1E1E</SolidColorBrush>
-	
-	<SolidColorBrush x:Key="CategoryExpanderBorderBrush">#E9E9E9</SolidColorBrush>
+
+	<SolidColorBrush x:Key="ThicknessIconBackgroundBrush">#EEEEF2</SolidColorBrush>
+	<SolidColorBrush x:Key="ThicknessIconBorderBrush">#EEEEF2</SolidColorBrush>
 
 	<SolidColorBrush x:Key="VS.Environment.ScrollBarBackgroundBrush">#F5F5F5</SolidColorBrush>
 	<SolidColorBrush x:Key="VS.Environment.ScrollBarThumbBackgroundBrush">#C2C3C9</SolidColorBrush>
