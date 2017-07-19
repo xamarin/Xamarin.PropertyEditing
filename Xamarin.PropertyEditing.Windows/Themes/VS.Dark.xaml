@@ -8,6 +8,9 @@
 	<SolidColorBrush x:Key="MenuHoverBorderBrush">#353535</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuSeparatorBrush">#333337</SolidColorBrush>
 
+	<SolidColorBrush x:Key="ThicknessIconBackgroundBrush">#292929</SolidColorBrush>
+	<SolidColorBrush x:Key="ThicknessIconBorderBrush">#292929</SolidColorBrush>
+
 	<SolidColorBrush x:Key="VS.Environment.ScrollBarBackgroundBrush">#3E3E42</SolidColorBrush>
 	<SolidColorBrush x:Key="VS.Environment.ScrollBarBorderBrush">#1C1C1C</SolidColorBrush>
 	<SolidColorBrush x:Key="VS.Environment.ScrollBarThumbBackgroundBrush">#686868</SolidColorBrush>
