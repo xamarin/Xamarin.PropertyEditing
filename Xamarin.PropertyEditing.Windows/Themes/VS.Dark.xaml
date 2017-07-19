@@ -1,16 +1,56 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<SolidColorBrush x:Key="ListBackgroundBrush">#252526</SolidColorBrush>
 	<SolidColorBrush x:Key="PanelBackgroundBrush">#252526</SolidColorBrush>
-	
-	<SolidColorBrush x:Key="MenuBackgroundBrush">#1B1B1C</SolidColorBrush>
-	<SolidColorBrush x:Key="MenuBorderBrush">#333337</SolidColorBrush>
-	<SolidColorBrush x:Key="MenuHoverBrush">#3E3E40</SolidColorBrush>
-	<SolidColorBrush x:Key="MenuHoverBorderBrush">#353535</SolidColorBrush>
+	<SolidColorBrush x:Key="PanelForegroundBrush">#F1F1F1</SolidColorBrush>
+	<SolidColorBrush x:Key="PanelGroupBackgroundBrush">#252526</SolidColorBrush>
+	<SolidColorBrush x:Key="PanelGroupForegroundBrush">#F1F1F1</SolidColorBrush>
+	<SolidColorBrush x:Key="PanelGroupSecondaryBackgroundBrush">#292929</SolidColorBrush>
+	<SolidColorBrush x:Key="PanelGroupSecondaryBorderBrush">#252526</SolidColorBrush>
+	<SolidColorBrush x:Key="PanelGroupSecondaryDimmedForegroundBrush">#F1F1F1</SolidColorBrush>
+
+	<SolidColorBrush x:Key="AdvancedExpanderCollapsedForegroundBrush">#F1F1F1</SolidColorBrush>
+	<SolidColorBrush x:Key="AdvancedExpanderMouseOverForegroundBrush">#007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBorderBrush">#3E3E40</SolidColorBrush>
+	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBackgroundBrush">#3E3E40</SolidColorBrush>
+
+	<SolidColorBrush x:Key="ToggleItemMouseOverBackgroundBrush" Color="#3E3E40"/>
+	<SolidColorBrush x:Key="ToggleItemMouseOverBorderBrush" Color="#3E3E40"/>
+	<SolidColorBrush x:Key="ToggleItemMouseOverForegroundBrush" Color="#F1F1F1" />
+
+	<SolidColorBrush x:Key="MenuPopupBackgroundBrush">#1B1B1C</SolidColorBrush>
+	<SolidColorBrush x:Key="MenuPopupBorderBrush">#333337</SolidColorBrush>
+	<SolidColorBrush x:Key="ListItemHighlightForegroundBrush">#F1F1F1</SolidColorBrush>
+	<SolidColorBrush x:Key="ListItemHighlightBorderBrush">#72555555</SolidColorBrush>
+	<SolidColorBrush x:Key="ListItemHighlightBackgroundBrush">#3E3E40</SolidColorBrush>
+	<SolidColorBrush x:Key="ListItemDisabledForegroundBrush">#656565</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuSeparatorBrush">#333337</SolidColorBrush>
+
+	<SolidColorBrush x:Key="SearchControlBackgroundBrush">#333337</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlBorderBrush">#3F3F46</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlForegroundBrush">#D0D2D3</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlActiveBorderBrush">#007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlActiveBackgroundBrush">#3F3F46</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlActiveForegroundBrush">#F1F1F1</SolidColorBrush>
+
+	<SolidColorBrush x:Key="InputBackgroundBrush">#333337</SolidColorBrush>
+	<SolidColorBrush x:Key="InputBorderBrush">#434346</SolidColorBrush>
+	<SolidColorBrush x:Key="InputForegroundBrush">#F1F1F1</SolidColorBrush>
 
 	<SolidColorBrush x:Key="ThicknessIconBackgroundBrush">#292929</SolidColorBrush>
 	<SolidColorBrush x:Key="ThicknessIconBorderBrush">#292929</SolidColorBrush>
 
+	<SolidColorBrush x:Key="CategoryExpanderBorderBrush" Color="#333333" />
+	
+	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Fill" Color="Transparent"/>
+	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Stroke" Color="#F1F1F1"/>
+	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Fill" Color="#F1F1F1"/>
+	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Stroke" Color="#F1F1F1"/>
+	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Stroke" Color="#007ACC"/>
+	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Fill" Color="Transparent"/>
+	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Checked.Stroke" Color="#007ACC"/>
+	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Checked.Fill" Color="#007ACC"/>
+	
 	<SolidColorBrush x:Key="VS.Environment.ScrollBarBackgroundBrush">#3E3E42</SolidColorBrush>
 	<SolidColorBrush x:Key="VS.Environment.ScrollBarBorderBrush">#1C1C1C</SolidColorBrush>
 	<SolidColorBrush x:Key="VS.Environment.ScrollBarThumbBackgroundBrush">#686868</SolidColorBrush>
