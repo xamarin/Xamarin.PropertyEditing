@@ -74,6 +74,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			SetEnabled ();
 			UpdateValue ();
+			UpdateAccessibilityValues ();
 		}
 
 		protected virtual void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -92,5 +93,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected abstract void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e);
 
 		protected abstract void SetEnabled ();
+
+		protected abstract void UpdateAccessibilityValues ();
 	}
 }

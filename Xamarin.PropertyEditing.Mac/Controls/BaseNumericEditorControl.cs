@@ -87,5 +87,14 @@ namespace Xamarin.PropertyEditing.Mac
 			NumericEditor.Editable = ViewModel.Property.CanWrite;
 			Stepper.Enabled = ViewModel.Property.CanWrite;
 		}
+
+		protected override void UpdateAccessibilityValues ()
+		{
+			NumericEditor.AccessibilityEnabled = NumericEditor.Enabled;
+			NumericEditor.AccessibilityTitle = ViewModel.Property.Name + " Numeric Editor"; // TODO Localization
+
+			Stepper.AccessibilityEnabled = Stepper.Enabled;
+			Stepper.AccessibilityTitle = ViewModel.Property.Name + " Numeric Stepper"; // TODO Localization
+		}
 	}
 }

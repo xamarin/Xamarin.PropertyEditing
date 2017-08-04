@@ -34,5 +34,14 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			ViewModel.Value = new CGSize (XEditor.FloatValue, YEditor.FloatValue);
 		}
+
+		protected override void UpdateAccessibilityValues ()
+		{
+			XEditor.AccessibilityEnabled = XEditor.Enabled;
+			XEditor.AccessibilityTitle = ViewModel.Property.Name + " Width Editor"; // TODO Localization
+
+			YEditor.AccessibilityEnabled = YEditor.Enabled;
+			YEditor.AccessibilityTitle = ViewModel.Property.Name + " Height Editor"; // TODO Localization
+		}
 	}
 }
