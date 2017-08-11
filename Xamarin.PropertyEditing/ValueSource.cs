@@ -12,6 +12,8 @@ namespace Xamarin.PropertyEditing
 		Binding = 2,
 		Resource = 3,
 		Style = 4,
+		Inherited = 5,
+		DefaultStyle = 6,
 	}
 
 	[Flags]

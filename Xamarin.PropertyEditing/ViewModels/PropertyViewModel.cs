@@ -110,6 +110,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.value = newValue;
 			OnValueChanged ();
 			OnPropertyChanged (nameof (Value));
+			OnPropertyChanged (nameof (ValueSource));
+
+			((RelayCommand) ClearValueCommand)?.ChangeCanExecute ();
+
 			return true;
 		}
 
