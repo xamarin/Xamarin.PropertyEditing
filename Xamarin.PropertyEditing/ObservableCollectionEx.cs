@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -10,6 +11,9 @@ namespace Xamarin.PropertyEditing
 	{
 		public void AddRange (IEnumerable<T> range)
 		{
+			if (range == null)
+				throw new ArgumentNullException (nameof(range));
+
 			foreach (T element in range)
 				Add (element);
 
@@ -30,9 +34,11 @@ namespace Xamarin.PropertyEditing
 				Remove (element);
 		}
 
-		/// <remarks>Only used for testing <see cref="INotifyCollectionChanged"/> compliance.</remarks>
-		internal void Reset (IEnumerable<T> newContents)
+		public void Reset (IEnumerable<T> newContents)
 		{
+			if (newContents == null)
+				throw new ArgumentNullException (nameof(newContents));
+
 			Items.Clear();
 			Items.AddItems (newContents);
 			OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Reset));
