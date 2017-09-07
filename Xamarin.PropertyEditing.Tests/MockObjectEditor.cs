@@ -59,7 +59,8 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
 		}
-		
+
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
 		{
 			if (variation != null)
@@ -96,6 +97,7 @@ namespace Xamarin.PropertyEditing.Tests
 				Value = default(T)
 			};
 		}
+#pragma warning restore CS1998
 
 		internal readonly Dictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
 	}
