@@ -43,20 +43,20 @@ namespace Xamarin.PropertyEditing.Mac
 			var facade = (NSObjectFacade)item;
 			var vm = facade.Target as PropertyViewModel;
 			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
-			string cellIdentifier = (group == null) ? vm.Property.Name : group.Key;
+			string cellIdentifier = (group == null) ? vm.GetType ().Name : group.Key;
 
 			// Setup view based on the column
 			switch (tableColumn.Identifier) {
 				case PropertyEditorPanel.PropertyListColId:
-					var view = (UnfocusableTextField)outlineView.MakeView (cellIdentifier + "props", this);
+					var view = (UnfocusableTextField)outlineView.MakeView ("label", this);
 					if (view == null) {
 						view = new UnfocusableTextField {
-							Identifier = cellIdentifier + "props",
+							Identifier = "label",
 							Alignment = NSTextAlignment.Right,
 						};
 					}
 
-					view.StringValue = cellIdentifier;
+					view.StringValue = ((group == null) ? vm.Property.Name : group.Key) ?? String.Empty;
 					return view;
 
 				case PropertyEditorPanel.PropertyEditorColId:
@@ -130,11 +130,13 @@ namespace Xamarin.PropertyEditing.Mac
 		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
 		{
 			var facade = (NSObjectFacade)item;
-			var vm = facade.Target as PropertyViewModel;
 			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
-			string cellIdentifier = (group == null) ? vm.Property.Name : group.Key;
+			if (group != null) {
+				return 30;
+			}
 
-			var editor = (PropertyEditorControl)outlineView.MakeView (cellIdentifier + "edits", this);
+			var vm = (PropertyViewModel)facade.Target;
+			var editor = (PropertyEditorControl)outlineView.MakeView (vm.GetType ().Name + "edits", this);
 			if (editor == null) {
 				editor = GetEditor (vm, outlineView);
 			}
