@@ -28,6 +28,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public ICollection<object> SelectedObjects => this.selectedObjects;
 
+		public string TypeName
+		{
+			get { return this.typeName; }
+			private set
+			{
+				if (this.typeName == value)
+					return;
+
+				this.typeName = value;
+				OnPropertyChanged ();
+			}
+		}
+
 		protected IEditorProvider EditorProvider
 		{
 			get;
@@ -101,6 +114,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 		}
 
+		private string typeName;
 		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
 		private readonly ObservableCollectionEx<PropertyViewModel> properties = new ObservableCollectionEx<PropertyViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
@@ -119,6 +133,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void ClearProperties()
 		{
+			TypeName = null;
 			this.properties.Clear ();
 			OnClearProperties ();
 		}
@@ -130,10 +145,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return;
 			}
 
+			string newTypeName = this.editors[0].TypeName;
 			var newSet = new HashSet<IPropertyInfo> (this.editors[0].Properties);
 			for (int i = 1; i < this.editors.Count; i++) {
-				newSet.IntersectWith (this.editors[i].Properties);
+				IObjectEditor editor = this.editors[i];
+				newSet.IntersectWith (editor.Properties);
+
+				if (newTypeName != editor.TypeName)
+					newTypeName = String.Format (PropertyEditing.Properties.Resources.MultipleObjectsSelected, this.editors.Count);
 			}
+
+			TypeName = newTypeName;
 
 			List<PropertyViewModel> toRemove = new List<PropertyViewModel> ();
 			foreach (PropertyViewModel vm in this.properties.ToArray ()) {
