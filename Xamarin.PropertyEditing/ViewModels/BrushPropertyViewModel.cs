@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
