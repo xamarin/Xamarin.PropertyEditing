@@ -15,13 +15,13 @@ namespace Xamarin.PropertyEditing
 
 			return;
 
-			int index = Count;
-			var list = range.ToList ();
-			for (int i = 0; i < list.Count; i++) {
-				Items.Add (list[i]);
-			}
+			//int index = Count;
+			//var list = range.ToList ();
+			//for (int i = 0; i < list.Count; i++) {
+			//	Items.Add (list[i]);
+			//}
 
-			OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, list, index));
+			//OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, list, index));
 		}
 
 		public void RemoveRange (IEnumerable<T> range)

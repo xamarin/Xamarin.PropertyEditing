@@ -49,6 +49,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public IReadOnlyList<IAvailabilityConstraint> AvailabilityConstraints => EmptyConstraints;
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 		public virtual async Task SetValueAsync<T> (object target, T value)
 		{
 			object realValue = value;
@@ -77,6 +78,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 			return (T)value;
 		}
+#pragma warning restore CS1998
 
 		public bool Equals (ReflectionPropertyInfo other)
 		{

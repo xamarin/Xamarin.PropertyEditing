@@ -44,6 +44,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			get;
 		}
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 		public override async Task SetValueAsync<TValue> (object target, TValue value)
 		{
 			IReadOnlyList<T> values = value as IReadOnlyList<T>;
@@ -85,6 +86,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			return (TValue) PropertyInfo.GetValue (target);
 		}
 	}
+#pragma warning restore CS1998
 
 	internal static class DynamicBuilder
 	{
