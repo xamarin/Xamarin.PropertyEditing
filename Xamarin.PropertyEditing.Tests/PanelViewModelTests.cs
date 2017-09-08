@@ -496,6 +496,69 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (group.Count, Is.EqualTo (1));
 		}
 
+		[Test]
+		public void TypeName()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+
+			var vm = new PanelViewModel (provider);
+			Assume.That (vm.TypeName, Is.Null);
+
+			vm.SelectedObjects.Add (obj);
+
+			Assert.That (vm.TypeName, Is.EqualTo (nameof (TestClassSub)));
+		}
+
+		[Test]
+		public void TypeNameNoneSelected()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+
+			var vm = new PanelViewModel (provider);
+			Assume.That (vm.TypeName, Is.Null);
+
+			vm.SelectedObjects.Add (obj);
+			Assume.That (vm.TypeName, Is.EqualTo (nameof (TestClassSub)));
+
+			vm.SelectedObjects.Remove (obj);
+			Assert.That (vm.TypeName, Is.EqualTo (null));
+		}
+
+		[Test]
+		public void TypeNameMultipleSameSelected()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var obj2 = new TestClassSub ();
+
+			var vm = new PanelViewModel (provider);
+			Assume.That (vm.TypeName, Is.Null);
+
+			vm.SelectedObjects.Add (obj);
+			vm.SelectedObjects.Add (obj2);
+
+			Assert.That (vm.TypeName, Is.EqualTo (nameof (TestClassSub)));
+		}
+
+		[Test]
+		public void TypeNameMultipleNotSameSelected ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var obj2 = new TestClass ();
+
+			var vm = new PanelViewModel (provider);
+			Assume.That (vm.TypeName, Is.Null);
+
+			vm.SelectedObjects.Add (obj);
+			vm.SelectedObjects.Add (obj2);
+
+			Assert.That (vm.TypeName, Is.Not.EqualTo (nameof (TestClassSub)));
+			Assert.That (vm.TypeName, Is.Not.EqualTo (nameof (TestClass)));
+		}
+
 		private TestContext context;
 	}
 }

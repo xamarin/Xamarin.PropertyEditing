@@ -29,6 +29,12 @@ namespace Xamarin.PropertyEditing
 		/// </summary>
 		object Target { get; }
 
+		/// <summary>
+		/// Gets the real type name for the object.
+		/// </summary>
+		/// <remarks>Also used for iconography.</remarks>
+		string TypeName { get; }
+
 		/// <remarks>
 		/// These properties should be minimally equatable to the same property for another object of the same type. This includes
 		/// for base class properties for two different derived types.

@@ -36,6 +36,8 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public object Target => this.target;
 
+		public string TypeName => this.target.GetType ().Name;
+
 		public IReadOnlyCollection<IPropertyInfo> Properties => this.properties;
 
 		public IObjectEditor Parent => null;
