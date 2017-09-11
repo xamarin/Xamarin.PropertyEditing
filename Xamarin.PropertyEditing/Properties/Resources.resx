@@ -118,9 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="MultipleObjectsSelected" xml:space="preserve">
-    <value>{0} objects selected.</value>
+    <value>{0} objects selected</value>
   </data>
   <data name="MultipleTypesSelected" xml:space="preserve">
-    <value>{0} types selected.</value>
+    <value>{0} types selected</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NoName" xml:space="preserve">
+    <value>&lt;No Name&gt;</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
   </data>
 </root>

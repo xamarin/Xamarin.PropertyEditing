@@ -61,7 +61,7 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} objects selected..
+        ///   Looks up a localized string similar to {0} objects selected.
         /// </summary>
         public static string MultipleObjectsSelected {
             get {
@@ -70,11 +70,38 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} types selected..
+        ///   Looks up a localized string similar to {0} types selected.
         /// </summary>
         public static string MultipleTypesSelected {
             get {
                 return ResourceManager.GetString("MultipleTypesSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;No Name&gt;.
+        /// </summary>
+        public static string NoName {
+            get {
+                return ResourceManager.GetString("NoName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        public static string Type {
+            get {
+                return ResourceManager.GetString("Type", resourceCulture);
             }
         }
     }
