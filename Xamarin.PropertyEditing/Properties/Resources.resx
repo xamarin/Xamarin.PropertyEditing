@@ -123,4 +123,7 @@
   <data name="MultipleTypesSelected" xml:space="preserve">
     <value>{0} types selected.</value>
   </data>
+  <data name="NoName" xml:space="preserve">
+    <value>&lt;No Name&gt;</value>
+  </data>
 </root>

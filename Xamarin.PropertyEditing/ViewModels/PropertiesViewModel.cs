@@ -41,6 +41,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public bool IsObjectNameable => this.nameable != null;
+
+		public string ObjectName
+		{
+			get { return this.objectName; }
+			set
+			{
+				if (this.objectName == value)
+					return;
+
+				SetObjectName (value);
+			}
+		}
+
 		protected IEditorProvider EditorProvider
 		{
 			get;
@@ -114,7 +128,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 		}
 
-		private string typeName;
+		private INameableObject nameable;
+		private bool objectNameable;
+		private string typeName, objectName;
 		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
 		private readonly ObservableCollectionEx<PropertyViewModel> properties = new ObservableCollectionEx<PropertyViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
@@ -131,9 +147,35 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnRemoveProperties (properties);
 		}
 
+		private async void SetObjectName (string value)
+		{
+			if (this.nameable == null)
+				return;
+
+			// TODO: Errors, async work
+			// not sure we have to worry about async here, the name shouldn't affect other elements
+			// and it is not (currently) re-queried so sending a second name should be ok
+			await this.nameable.SetNameAsync (value);
+			SetCurrentObjectName (value);
+		}
+
+		private void SetNameable (INameableObject nameable)
+		{
+			this.nameable = nameable;
+			OnPropertyChanged (nameof (IsObjectNameable));
+		}
+
+		private void SetCurrentObjectName (string value)
+		{
+			this.objectName = value;
+			OnPropertyChanged (nameof (ObjectName));
+		}
+
 		private void ClearProperties()
 		{
 			TypeName = null;
+			SetNameable (null);
+			SetCurrentObjectName (null);
 			this.properties.Clear ();
 			OnClearProperties ();
 		}
@@ -143,6 +185,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (this.editors.Count == 0) {
 				ClearProperties ();
 				return;
+			}
+
+			Task<string> nameQuery = null;
+			if (this.editors.Count == 1) {
+				SetNameable (this.editors[0] as INameableObject);
+				nameQuery = this.nameable?.GetNameAsync ();
+			} else {
+				SetNameable (null);
 			}
 
 			string newTypeName = this.editors[0].TypeName;
@@ -180,6 +230,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 				RemoveProperties (toRemove);
 			if (newSet.Count > 0)
 				AddProperties (newSet.Select (GetViewModel));
+
+			string name = (this.editors.Count > 1) ? String.Format (PropertyEditing.Properties.Resources.MultipleObjectsSelected, this.editors.Count) : PropertyEditing.Properties.Resources.NoName;
+			if (this.editors.Count == 1) {
+				string tname = nameQuery?.Result;
+				if (tname != null)
+					name = tname;
+			}
+
+			SetCurrentObjectName (name);
 		}
 
 		private async Task<IObjectEditor[]> AddEditorsAsync (IList newItems)

@@ -77,5 +77,14 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("MultipleTypesSelected", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;No Name&gt;.
+        /// </summary>
+        public static string NoName {
+            get {
+                return ResourceManager.GetString("NoName", resourceCulture);
+            }
+        }
     }
 }
