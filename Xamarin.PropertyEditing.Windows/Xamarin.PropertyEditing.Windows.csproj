@@ -57,12 +57,14 @@
     <Compile Include="NumericEditorControl.cs" />
     <Compile Include="NumericTemplateSelector.cs" />
     <Compile Include="NumericUpDownControl.cs" />
+    <Compile Include="OppositeBoolConverter.cs" />
     <Compile Include="PointEditorControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyEditorControl.cs" />
     <Compile Include="PropertyEditorPanel.cs" />
     <Compile Include="PropertyPresenter.cs" />
     <Compile Include="SizeEditorControl.cs" />
+    <Compile Include="SubmitTextBox.cs" />
     <Compile Include="ThicknessEditorControl.cs" />
     <Compile Include="StringEditorControl.cs" />
   </ItemGroup>
