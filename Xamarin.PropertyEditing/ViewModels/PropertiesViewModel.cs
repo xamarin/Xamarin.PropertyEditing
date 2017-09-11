@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal abstract class PropertiesViewModel
-		: NotifyingObject
+		: NotifyingObject, INotifyDataErrorInfo
 	{
 		public PropertiesViewModel (IEditorProvider provider)
 		{
@@ -22,6 +23,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			this.selectedObjects.CollectionChanged += OnSelectedObjectsChanged;
 		}
+
+		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
 		/// <remarks>Consumers should check for <see cref="INotifyCollectionChanged"/> and hook appropriately.</remarks>
 		public IReadOnlyList<PropertyViewModel> Properties => this.properties;
@@ -41,9 +44,69 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public bool IsObjectNameable => this.nameable != null;
+
+		public bool IsObjectNameReadOnly
+		{
+			get { return this.nameReadOnly; }
+			private set
+			{
+				if (this.nameReadOnly == value)
+					return;
+
+				this.nameReadOnly = value;
+				OnPropertyChanged ();
+			}
+		}
+
+		public string ObjectName
+		{
+			get { return this.objectName; }
+			set
+			{
+				if (this.objectName == value)
+					return;
+
+				SetObjectName (value);
+			}
+		}
+
+		public bool HasErrors => this.errors.IsValueCreated && this.errors.Value.Count > 0;
+
 		protected IEditorProvider EditorProvider
 		{
 			get;
+		}
+
+		public IEnumerable GetErrors (string propertyName)
+		{
+			if (!this.errors.IsValueCreated)
+				return Enumerable.Empty<string> ();
+
+			string error;
+			if (this.errors.Value.TryGetValue (propertyName, out error))
+				return new[] { error };
+
+			return Enumerable.Empty<string> ();
+		}
+
+		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
+		protected void SetError (string property, string newError)
+		{
+			if (this.errors.IsValueCreated) {
+				string prevError;
+				if (this.errors.Value.TryGetValue (property, out prevError)) {
+					if (prevError == newError)
+						return;
+				}
+			}
+
+			if (newError == null)
+				this.errors.Value.Remove (property);
+			else
+				this.errors.Value[property] = newError;
+
+			OnErrorsChanged (new DataErrorsChangedEventArgs (property));
 		}
 
 		// TODO: Consider having the property hooks at the top level and a map of IPropertyInfo -> PropertyViewModel
@@ -114,10 +177,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 		}
 
-		private string typeName;
+		private INameableObject nameable;
+		private bool nameReadOnly;
+		private string typeName, objectName;
 		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
 		private readonly ObservableCollectionEx<PropertyViewModel> properties = new ObservableCollectionEx<PropertyViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
+		private Lazy<Dictionary<string, string>> errors = new Lazy<Dictionary<string, string>>();
+
+		private void OnErrorsChanged (DataErrorsChangedEventArgs e)
+		{
+			ErrorsChanged?.Invoke (this, e);
+		}
 
 		private void AddProperties (IEnumerable<PropertyViewModel> properties)
 		{
@@ -131,9 +202,44 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnRemoveProperties (properties);
 		}
 
+		private async void SetObjectName (string value)
+		{
+			if (this.nameable == null)
+				return;
+
+			try {
+				await this.nameable.SetNameAsync (value);
+			} catch (Exception ex) {
+				AggregateException aggregate = ex as AggregateException;
+				if (aggregate != null) {
+					aggregate = aggregate.Flatten ();
+					ex = aggregate.InnerExceptions[0];
+				}
+
+				SetError (nameof(ObjectName), ex.ToString());
+			} finally {
+				SetCurrentObjectName (value, isReadonly: false);
+			}
+		}
+
+		private void SetNameable (INameableObject nameable)
+		{
+			this.nameable = nameable;
+			OnPropertyChanged (nameof (IsObjectNameable));
+		}
+
+		private void SetCurrentObjectName (string value, bool isReadonly)
+		{
+			IsObjectNameReadOnly = isReadonly;
+			this.objectName = value;
+			OnPropertyChanged (nameof (ObjectName));
+		}
+
 		private void ClearProperties()
 		{
 			TypeName = null;
+			SetNameable (null);
+			SetCurrentObjectName (null, isReadonly: true);
 			this.properties.Clear ();
 			OnClearProperties ();
 		}
@@ -145,11 +251,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return;
 			}
 
+			Task<string> nameQuery = null;
+			INameableObject firstNameable = this.editors[0] as INameableObject;
+			if (this.editors.Count == 1) {
+				nameQuery = firstNameable?.GetNameAsync ();
+			}
+
 			string newTypeName = this.editors[0].TypeName;
 			var newSet = new HashSet<IPropertyInfo> (this.editors[0].Properties);
 			for (int i = 1; i < this.editors.Count; i++) {
 				IObjectEditor editor = this.editors[i];
 				newSet.IntersectWith (editor.Properties);
+
+				if (firstNameable == null)
+					firstNameable = editor as INameableObject;
 
 				if (newTypeName != editor.TypeName)
 					newTypeName = String.Format (PropertyEditing.Properties.Resources.MultipleObjectsSelected, this.editors.Count);
@@ -180,6 +295,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 				RemoveProperties (toRemove);
 			if (newSet.Count > 0)
 				AddProperties (newSet.Select (GetViewModel));
+
+			string name = (this.editors.Count > 1) ? String.Format (PropertyEditing.Properties.Resources.MultipleObjectsSelected, this.editors.Count) : PropertyEditing.Properties.Resources.NoName;
+			if (this.editors.Count == 1) {
+				string tname = nameQuery?.Result;
+				if (tname != null)
+					name = tname;
+			}
+
+			SetNameable (firstNameable);
+			SetCurrentObjectName (name, this.editors.Count > 1);
 		}
 
 		private async Task<IObjectEditor[]> AddEditorsAsync (IList newItems)
