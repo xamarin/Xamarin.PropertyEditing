@@ -14,25 +14,8 @@ namespace Xamarin.PropertyEditing.Tests
 {
 	[TestFixture]
 	public class PanelViewModelTests
+		: PropertiesViewModelTests
 	{
-		private class TestClass
-		{
-			public string Property {
-				get;
-				set;
-			}
-		}
-
-		private class TestClassSub
-			: TestClass
-		{
-			[System.ComponentModel.Category ("Sub")]
-			public int SubProperty {
-				get;
-				set;
-			}
-		}
-
 		[SetUp]
 		public void Setup ()
 		{
@@ -494,6 +477,11 @@ namespace Xamarin.PropertyEditing.Tests
 			var group = vm.ArrangedProperties.FirstOrDefault (g => g.Key == "Sub");
 			Assert.That (group, Is.Not.Null);
 			Assert.That (group.Count, Is.EqualTo (1));
+		}
+
+		internal override PropertiesViewModel CreateVm (IEditorProvider provider)
+		{
+			return new PanelViewModel (provider);
 		}
 
 		private TestContext context;

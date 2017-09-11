@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Xamarin.PropertyEditing.Reflection
 {
 	public class ReflectionObjectEditor
-		: IObjectEditor
+		: IObjectEditor, INameableObject
 	{
 		public ReflectionObjectEditor (object target)
 		{
@@ -36,11 +36,30 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public object Target => this.target;
 
+		public string TypeName => this.target.GetType ().Name;
+
 		public IReadOnlyCollection<IPropertyInfo> Properties => this.properties;
 
 		public IObjectEditor Parent => null;
 
 		public IReadOnlyList<IObjectEditor> DirectChildren => EmptyDirectChildren;
+
+		public string Name
+		{
+			get;
+			private set;
+		}
+
+		public Task SetNameAsync (string name)
+		{
+			Name = name;
+			return Task.FromResult (true);
+		}
+
+		public Task<string> GetNameAsync()
+		{
+			return Task.FromResult (Name);
+		}
 
 		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
 		{
