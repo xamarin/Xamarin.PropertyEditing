@@ -3,8 +3,10 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
                     xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows"
                     xmlns:core="clr-namespace:Xamarin.PropertyEditing;assembly=Xamarin.PropertyEditing"
+                    xmlns:prop="clr-namespace:Xamarin.PropertyEditing.Properties;assembly=Xamarin.PropertyEditing"
                     xmlns:vms="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing">
-	
+
+	<local:OppositeBoolConverter x:Key="OppositeBoolConverter" />
 	<local:EditorPropertySelector x:Key="PropertyEditorSelector" />
 	<local:EditorTreeSelector x:Key="EditorTreeSelector">
 		<local:EditorTreeSelector.Options>
@@ -130,11 +132,38 @@
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto" />
 								<RowDefinition Height="Auto" />
+								<RowDefinition Height="Auto" />
 								<RowDefinition />
 							</Grid.RowDefinitions>
-							<TextBox Name="search" Grid.Row="0" Style="{StaticResource PropertySearchTextBox}" AutomationProperties.Name="Search" Text="{Binding FilterText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
 
-							<local:MenuButton Grid.Row="1" x:Name="arrangeBy" Header="Arrange by:" Margin="0,0,18,0" Content="{Binding ArrangeMode}">
+							<Border  Grid.Row="0" Margin="4,2,4,2" Background="{DynamicResource PanelHeaderBackgroundBrush}" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource PanelGroupSecondaryBorderBrush}">
+								<Grid Grid.Row="0" Margin="4,2,4,2">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+									</Grid.RowDefinitions>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="Auto" />
+										<ColumnDefinition Width="Auto" />
+										<ColumnDefinition Width="*" />
+										<ColumnDefinition Width="Auto" />
+									</Grid.ColumnDefinitions>
+
+									<Border Visibility="Collapsed" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Height="32" Width="32" Margin="1,6,5,2" Background="{DynamicResource PropertiesPanelIconBackgroundBrush}" VerticalAlignment="Center">
+										<!-- type icon -->
+									</Border>
+
+									<TextBlock Name="nameLabel" Grid.Row="0" Grid.Column="1" Margin="0,2,0,2" Text="{x:Static prop:Resources.Name}" />
+									<local:SubmitTextBox Grid.Row="0" Grid.Column="2" Margin="4,2,0,2" Text="{Binding ObjectName,Mode=TwoWay}" FocusSelectsAll="True" IsReadOnly="{Binding IsObjectNameReadonly}" Focusable="{Binding IsObjectNameReadOnly,Converter={StaticResource OppositeBoolConverter}}" AutomationProperties.LabeledBy="{Binding ElementName=nameLabel,Mode=OneTime}" />
+
+									<TextBlock Name="typeLabel" Grid.Row="1" Grid.Column="1" Margin="0,4,0,4" Text="{x:Static prop:Resources.Type}" />
+									<TextBlock Grid.Row="1" Grid.Column="2" Margin="9,4,0,4" Text="{Binding TypeName}" />
+								</Grid>
+							</Border>
+
+							<TextBox Name="search" Grid.Row="1" Style="{StaticResource PropertySearchTextBox}" AutomationProperties.Name="Search" Text="{Binding FilterText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+
+							<local:MenuButton Grid.Row="2" x:Name="arrangeBy" Header="Arrange by:" Margin="0,0,18,0" Content="{Binding ArrangeMode}">
 								<local:MenuButton.Visibility>
 									<Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsArrangeEnabled">
 										<Binding.Converter>
@@ -146,7 +175,7 @@
 									<ContextMenu ItemsSource="{Binding ArrangeModes,Mode=OneTime}" StaysOpen="True" ItemContainerStyle="{DynamicResource ArrangeMenuItem}" />
 								</local:MenuButton.ContextMenu>
 							</local:MenuButton>
-							<ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+							<ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled" Focusable="False">
 								<ItemsControl Name="propertyItems" Background="{DynamicResource ListBackgroundBrush}" Grid.IsSharedSizeScope="True" Style="{StaticResource PropertyListStyle}" />
 							</ScrollViewer>
 						</Grid>
