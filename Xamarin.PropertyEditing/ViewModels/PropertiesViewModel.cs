@@ -29,6 +29,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		/// <remarks>Consumers should check for <see cref="INotifyCollectionChanged"/> and hook appropriately.</remarks>
 		public IReadOnlyList<PropertyViewModel> Properties => this.properties;
 
+		public IReadOnlyList<EventViewModel> Events => this.events;
+
 		public ICollection<object> SelectedObjects => this.selectedObjects;
 
 		public string TypeName
@@ -68,6 +70,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 					return;
 
 				SetObjectName (value);
+			}
+		}
+
+		public bool EventsEnabled
+		{
+			get { return this.eventsEnabled; }
+			private set
+			{
+				if (this.eventsEnabled == value)
+					return;
+
+				this.eventsEnabled = value;
+				OnPropertyChanged ();
 			}
 		}
 
@@ -179,10 +194,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private INameableObject nameable;
 		private bool nameReadOnly;
+		private bool eventsEnabled;
 		private string typeName, objectName;
 		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
 		private readonly ObservableCollectionEx<PropertyViewModel> properties = new ObservableCollectionEx<PropertyViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
+		private readonly ObservableCollectionEx<EventViewModel> events = new ObservableCollectionEx<EventViewModel> (); 
 		private readonly Lazy<Dictionary<string, string>> errors = new Lazy<Dictionary<string, string>>();
 
 		private void OnErrorsChanged (DataErrorsChangedEventArgs e)
@@ -241,6 +258,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			SetNameable (null);
 			SetCurrentObjectName (null, isReadonly: true);
 			this.properties.Clear ();
+			this.events.Clear ();
 			OnClearProperties ();
 		}
 
@@ -257,21 +275,79 @@ namespace Xamarin.PropertyEditing.ViewModels
 				nameQuery = firstNameable?.GetNameAsync ();
 			}
 
+			IObjectEventEditor events = this.editors[0] as IObjectEventEditor;
+			var newEventSet = new HashSet<IEventInfo> (events?.Events ?? Enumerable.Empty<IEventInfo> ());
+
 			string newTypeName = this.editors[0].TypeName;
-			var newSet = new HashSet<IPropertyInfo> (this.editors[0].Properties);
+			var newPropertySet = new HashSet<IPropertyInfo> (this.editors[0].Properties);
 			for (int i = 1; i < this.editors.Count; i++) {
 				IObjectEditor editor = this.editors[i];
-				newSet.IntersectWith (editor.Properties);
+				newPropertySet.IntersectWith (editor.Properties);
+
+				if (editor is IObjectEventEditor) {
+					events = (IObjectEventEditor)editor;
+					newEventSet.IntersectWith (events.Events);
+				}
 
 				if (firstNameable == null)
 					firstNameable = editor as INameableObject;
 
 				if (newTypeName != editor.TypeName)
-					newTypeName = String.Format (PropertyEditing.Properties.Resources.MultipleObjectsSelected, this.editors.Count);
+					newTypeName = String.Format (PropertyEditing.Properties.Resources.MultipleTypesSelected, this.editors.Count);
 			}
 
 			TypeName = newTypeName;
 
+			UpdateProperties (newPropertySet, removedEditors, newEditors);
+
+			EventsEnabled = events != null;
+			UpdateEvents (newEventSet, removedEditors, newEditors);
+
+			string name = (this.editors.Count > 1) ? String.Format (PropertyEditing.Properties.Resources.MultipleObjectsSelected, this.editors.Count) : PropertyEditing.Properties.Resources.NoName;
+			if (this.editors.Count == 1) {
+				string tname = nameQuery?.Result;
+				if (tname != null)
+					name = tname;
+			}
+
+			SetNameable (firstNameable);
+			SetCurrentObjectName (name, this.editors.Count > 1);
+		}
+
+		private void UpdateEvents (HashSet<IEventInfo> newSet, IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
+		{
+			if (this.editors.Count > 1) {
+				this.events.Clear ();
+				return;
+			}
+
+			var toRemove = new List<EventViewModel> ();
+			foreach (EventViewModel vm in this.events.ToArray ()) {
+				if (!newSet.Remove (vm.Event)) {
+					toRemove.Add (vm);
+					vm.Editors.Clear ();
+					continue;
+				}
+
+				if (removedEditors != null) {
+					for (int i = 0; i < removedEditors.Length; i++)
+						vm.Editors.Remove (removedEditors[i]);
+				}
+
+				if (newEditors != null) {
+					for (int i = 0; i < newEditors.Length; i++)
+						vm.Editors.Add (newEditors[i]);
+				}
+			}
+
+			if (toRemove.Count > 0)
+				this.events.RemoveRange (toRemove);
+			if (newSet.Count > 0)
+				this.events.AddRange (newSet.Select (i => new EventViewModel (i, this.editors)));
+		}
+
+		private void UpdateProperties (HashSet<IPropertyInfo> newSet, IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
+		{
 			List<PropertyViewModel> toRemove = new List<PropertyViewModel> ();
 			foreach (PropertyViewModel vm in this.properties.ToArray ()) {
 				if (!newSet.Remove (vm.Property)) {
@@ -295,16 +371,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				RemoveProperties (toRemove);
 			if (newSet.Count > 0)
 				AddProperties (newSet.Select (GetViewModel));
-
-			string name = (this.editors.Count > 1) ? String.Format (PropertyEditing.Properties.Resources.MultipleObjectsSelected, this.editors.Count) : PropertyEditing.Properties.Resources.NoName;
-			if (this.editors.Count == 1) {
-				string tname = nameQuery?.Result;
-				if (tname != null)
-					name = tname;
-			}
-
-			SetNameable (firstNameable);
-			SetCurrentObjectName (name, this.editors.Count > 1);
 		}
 
 		private async Task<IObjectEditor[]> AddEditorsAsync (IList newItems)

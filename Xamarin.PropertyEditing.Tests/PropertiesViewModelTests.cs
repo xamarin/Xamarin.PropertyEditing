@@ -375,6 +375,90 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.ObjectName, Is.EqualTo (name));
 		}
 
+		[Test]
+		public void EventsNotEnabled()
+		{
+			var obj = new object ();
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (obj)).ReturnsAsync (editor.Object);
+
+			var vm = CreateVm (provider.Object);
+			Assert.That (vm.EventsEnabled, Is.False);
+
+			vm.SelectedObjects.Add (obj);
+			Assert.That (vm.EventsEnabled, Is.False);
+		}
+
+		[Test]
+		public void Events()
+		{
+			var obj = new object ();
+
+			var ev = new Mock<IEventInfo> ();
+			ev.SetupGet (e => e.Name).Returns ("name");
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
+			var eeditor = editor.As<IObjectEventEditor> ();
+			eeditor.SetupGet (e => e.Events).Returns (new[] { ev.Object });
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (obj)).ReturnsAsync (editor.Object);
+
+			var vm = CreateVm (provider.Object);
+			Assume.That (vm.EventsEnabled, Is.False);
+
+			bool changed = false;
+			vm.PropertyChanged += (o, e) => {
+				if (e.PropertyName == nameof (PropertiesViewModel.EventsEnabled))
+					changed = true;
+			};
+
+			vm.SelectedObjects.Add (obj);
+
+			Assert.That (vm.EventsEnabled, Is.True);
+			Assert.That (changed, Is.True);
+			Assert.That (vm.Events.Count, Is.EqualTo (1));
+			Assert.That (vm.Events[0].Event, Is.SameAs (ev.Object));
+		}
+
+		[Test]
+		[Description ("Currently we just clear the events list if multiple objects are selected regardless of typ")]
+		public void MultipleObjectEvents ()
+		{
+			var obj = new object();
+			var obj2 = new object();
+
+			var ev = new Mock<IEventInfo> ();
+			ev.SetupGet (e => e.Name).Returns ("name");
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
+			var eeditor = editor.As<IObjectEventEditor> ();
+			eeditor.SetupGet (e => e.Events).Returns (new[] { ev.Object });
+
+			var editor2 = new Mock<IObjectEditor> ();
+			editor2.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
+			var eeditor2 = editor.As<IObjectEventEditor> ();
+			eeditor2.SetupGet (e => e.Events).Returns (new[] { ev.Object });
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (obj)).ReturnsAsync (editor.Object);
+			provider.Setup (p => p.GetObjectEditorAsync (obj2)).ReturnsAsync (editor2.Object);
+
+			var vm = CreateVm (provider.Object);
+			vm.SelectedObjects.Add (obj);
+			Assume.That (vm.EventsEnabled, Is.True);
+			Assume.That (vm.Events.Count, Is.EqualTo (1));
+
+			vm.SelectedObjects.Add (obj2);
+			Assert.That (vm.Events.Count, Is.EqualTo (0));
+		}
+
 		internal abstract PropertiesViewModel CreateVm (IEditorProvider provider);
 	}
 }
