@@ -1,44 +1,106 @@
+using System;
+using System.Collections.Generic;
+
 namespace Xamarin.PropertyEditing.Drawing
 {
 	/// <summary>
 	/// Describes a way to paint a region by using one or more tiles.
 	/// </summary>
-	public abstract class CommonTileBrush : CommonBrush
+	public abstract class CommonTileBrush : CommonBrush, IEquatable<CommonTileBrush>
 	{
+		public CommonTileBrush(
+			CommonAlignmentX alignmentX,
+			CommonAlignmentY alignmentY,
+			CommonStretch stretch,
+			CommonTileMode tileMode,
+			CommonRectangle viewBox,
+			CommonBrushMappingMode viewBoxUnits,
+			CommonRectangle viewPort,
+			CommonBrushMappingMode viewPortUnits,
+			double opacity = 1.0)
+			: base(opacity)
+		{
+			AlignmentX = alignmentX;
+			AlignmentY = alignmentY;
+			Stretch = stretch;
+			TileMode = tileMode;
+			ViewBox = viewBox;
+			ViewBoxUnits = viewBoxUnits;
+			ViewPort = viewPort;
+			ViewPortUnits = viewPortUnits;
+		}
+
 		/// <summary>
-		/// Gets or sets the horizontal alignment of content in the brush tile.
+		/// The horizontal alignment of content in the brush tile.
 		/// </summary>
-		public CommonAlignmentX AlignmentX { get; set; }
+		public CommonAlignmentX AlignmentX { get; }
 		/// <summary>
-		/// Gets or sets the vertical alignment of content in the brush tile.
+		/// The vertical alignment of content in the brush tile.
 		/// </summary>
-		public CommonAlignmentY AlignmentY { get; set; }
+		public CommonAlignmentY AlignmentY { get; }
 		/// <summary>
-		/// Gets or sets a value that specifies how the content of this TileBrush stretches to fit its tiles.
+		/// Describes how the content of this TileBrush stretches to fit its tiles.
 		/// </summary>
-		public CommonStretch Stretch { get; set; }
+		public CommonStretch Stretch { get; }
 		/// <summary>
 		/// Describes how a TileBrush paints tiles onto an output area.
 		/// </summary>
-		public CommonTileMode TileMode { get; set; }
+		public CommonTileMode TileMode { get; }
 		/// <summary>
-		/// Gets or sets the position and dimensions of the content in a TileBrush tile.
+		/// The position and dimensions of the content in a TileBrush tile.
 		/// </summary>
-		public CommonRectangle ViewBox { get; set; }
+		public CommonRectangle ViewBox { get; }
 		/// <summary>
-		/// Gets or sets a value that specifies whether the Viewbox value is relative
+		/// Specifies whether the Viewbox value is relative
 		/// to the bounding box of the TileBrush contents or whether the value is absolute.
 		/// </summary>
-		public CommonBrushMappingMode ViewBoxUnits { get; set; }
+		public CommonBrushMappingMode ViewBoxUnits { get; }
 		/// <summary>
-		/// Gets or sets the position and dimensions of the base tile for a TileBrush.
+		/// The position and dimensions of the base tile for a TileBrush.
 		/// </summary>
-		public CommonRectangle ViewPort { get; set; }
+		public CommonRectangle ViewPort { get; }
 		/// <summary>
-		/// Gets or sets a BrushMappingMode enumeration that specifies whether the value
+		/// Specifies whether the value
 		/// of the Viewport, which indicates the size and position of the TileBrush base tile,
 		/// is relative to the size of the output area.
 		/// </summary>
-		public CommonBrushMappingMode ViewPortUnits { get; set; }
+		public CommonBrushMappingMode ViewPortUnits { get; }
+
+		public override bool Equals (object obj)
+		{
+			var brush = obj as CommonTileBrush;
+			if (brush == null) return false;
+			return Equals (brush);
+		}
+
+		public bool Equals (CommonTileBrush other)
+		{
+			return other != null &&
+				   base.Equals (other) &&
+				   AlignmentX == other.AlignmentX &&
+				   AlignmentY == other.AlignmentY &&
+				   Stretch == other.Stretch &&
+				   TileMode == other.TileMode &&
+				   ViewBox.Equals (other.ViewBox) &&
+				   ViewBoxUnits == other.ViewBoxUnits &&
+				   ViewPort.Equals (other.ViewPort) &&
+				   ViewPortUnits == other.ViewPortUnits;
+		}
+
+		public override int GetHashCode ()
+		{
+			var hashCode = base.GetHashCode ();
+			unchecked {
+				hashCode = hashCode * -1521134295 + AlignmentX.GetHashCode ();
+				hashCode = hashCode * -1521134295 + AlignmentY.GetHashCode ();
+				hashCode = hashCode * -1521134295 + Stretch.GetHashCode ();
+				hashCode = hashCode * -1521134295 + TileMode.GetHashCode ();
+				hashCode = hashCode * -1521134295 + ViewBox.GetHashCode ();
+				hashCode = hashCode * -1521134295 + ViewBoxUnits.GetHashCode ();
+				hashCode = hashCode * -1521134295 + ViewPort.GetHashCode ();
+				hashCode = hashCode * -1521134295 + ViewPortUnits.GetHashCode ();
+			}
+			return hashCode;
+		}
 	}
 }
