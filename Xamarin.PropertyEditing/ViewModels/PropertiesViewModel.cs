@@ -161,7 +161,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				}
 			}
 
-			UpdateProperties (removedEditors, newEditors);
+			UpdateMembers (removedEditors, newEditors);
 			tcs.SetResult (true);
 		}
 
@@ -183,7 +183,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
 		private readonly ObservableCollectionEx<PropertyViewModel> properties = new ObservableCollectionEx<PropertyViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
-		private Lazy<Dictionary<string, string>> errors = new Lazy<Dictionary<string, string>>();
+		private readonly Lazy<Dictionary<string, string>> errors = new Lazy<Dictionary<string, string>>();
 
 		private void OnErrorsChanged (DataErrorsChangedEventArgs e)
 		{
@@ -235,7 +235,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof (ObjectName));
 		}
 
-		private void ClearProperties()
+		private void ClearMembers()
 		{
 			TypeName = null;
 			SetNameable (null);
@@ -244,10 +244,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnClearProperties ();
 		}
 
-		private void UpdateProperties (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
+		private void UpdateMembers (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
 		{
 			if (this.editors.Count == 0) {
-				ClearProperties ();
+				ClearMembers ();
 				return;
 			}
 
@@ -327,7 +327,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void OnObjectEditorPropertiesChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
-			UpdateProperties();
+			UpdateMembers();
 		}
 
 		private PropertyViewModel GetViewModel (IPropertyInfo property)

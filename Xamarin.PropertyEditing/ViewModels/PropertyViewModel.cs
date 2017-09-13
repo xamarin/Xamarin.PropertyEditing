@@ -19,6 +19,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			: base (property, editors)
 		{
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
+			UpdateCurrentValue ();
 		}
 
 		public ValueSource ValueSource => this.value.Source;
@@ -57,26 +58,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		protected override void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
-		{
-			base.OnEditorsChanged (sender, e);
-
-			switch (e.Action) {
-				case NotifyCollectionChangedAction.Add:
-					AddEditors (e.NewItems);
-					break;
-				case NotifyCollectionChangedAction.Remove:
-					RemoveEditors (e.OldItems);
-					break;
-				case NotifyCollectionChangedAction.Reset:
-					RemoveEditors (this.subscribedEditors);
-					AddEditors ((IList)Editors);
-					break;
-			}
-
-			UpdateCurrentValue ();
-		}
-
 		protected virtual void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
 		{
 			if (e.Property != null && !Equals (e.Property, Property))
@@ -95,33 +76,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 		}
 
-		private readonly List<IObjectEditor> subscribedEditors = new List<IObjectEditor> ();
-		private readonly ObservableCollection<Resource> resources = new ObservableCollection<Resource> ();
-		private ValueInfo<TValue> value;
-		private IResourceProvider resourceProvider;
-		private CancellationTokenSource cancelTokenSource;
-		private Task updateResourcesTask;
-
-		private void AddEditors (IList editors)
+		protected override async void UpdateCurrentValue ()
 		{
-			for (int i = 0; i < editors.Count; i++) {
-				IObjectEditor editor = (IObjectEditor)editors[i];
-				editor.PropertyChanged += OnEditorPropertyChanged;
-				this.subscribedEditors.Add (editor);
-			}
-		}
+			if (Property == null)
+				return;
 
-		private void RemoveEditors (IList editors)
-		{
-			for (int i = 0; i < editors.Count; i++) {
-				IObjectEditor editor = (IObjectEditor)editors[i];
-				editor.PropertyChanged -= OnEditorPropertyChanged;
-				this.subscribedEditors.Remove (editor);
-			}
-		}
-
-		private async void UpdateCurrentValue ()
-		{
 			ValueInfo<TValue> currentValue = null;
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
@@ -145,6 +104,24 @@ namespace Xamarin.PropertyEditing.ViewModels
 				SetCurrentValue ((currentValue != null) ? currentValue : null);
 			}
 		}
+
+		protected override void SetupEditor (IObjectEditor editor)
+		{
+			base.SetupEditor (editor);
+			editor.PropertyChanged += OnEditorPropertyChanged;
+		}
+
+		protected override void TeardownEditor (IObjectEditor editor)
+		{
+			base.TeardownEditor (editor);
+			editor.PropertyChanged -= OnEditorPropertyChanged;
+		}
+
+		private readonly ObservableCollection<Resource> resources = new ObservableCollection<Resource> ();
+		private ValueInfo<TValue> value;
+		private IResourceProvider resourceProvider;
+		private CancellationTokenSource cancelTokenSource;
+		private Task updateResourcesTask;
 
 		private bool SetCurrentValue (ValueInfo<TValue> newValue)
 		{
@@ -243,21 +220,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 	}
 
 	internal abstract class PropertyViewModel
-		: NotifyingObject, INotifyDataErrorInfo
+		: EditorViewModel, INotifyDataErrorInfo
 	{
 		protected PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (editors)
 		{
 			if (property == null)
 				throw new ArgumentNullException (nameof (property));
-			if (editors == null)
-				throw new ArgumentNullException (nameof (editors));
 
 			Property = property;
-
-			var observableEditors = new ObservableCollection<IObjectEditor>();
-			Editors = observableEditors;
-			observableEditors.CollectionChanged += OnEditorsChanged;
-			observableEditors.AddItems (editors); // Purposefully after the event hookup
 		}
 
 		public IPropertyInfo Property
@@ -290,22 +261,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		/// <summary>
-		/// Gets if the property's value can not be determined because multiple editors disagree.
-		/// </summary>
-		public bool MultipleValues
-		{
-			get { return this.multipleValues; }
-			protected set
-			{
-				if (this.multipleValues == value)
-					return;
-
-				this.multipleValues = value;
-				OnPropertyChanged ();
-			}
-		}
-
 		public bool CanDelve => ValueModel != null;
 
 		public ObjectViewModel ValueModel
@@ -317,18 +272,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				OnPropertyChanged ();
 				OnPropertyChanged (nameof (CanDelve));
 			}
-		}
-
-		public ICollection<IObjectEditor> Editors
-		{
-			get;
-			private set;
-		}
-
-		protected virtual void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
-		{
-			// properties will support multi-selection of designer items by self-handling having multiple
-			// property editors.
 		}
 
 		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
@@ -350,10 +293,5 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			ErrorsChanged?.Invoke (this, e);
 		}
-
-		protected static AsyncWorkQueue AsyncWork
-		{
-			get;
-		} = new AsyncWorkQueue();
 	}
 }
