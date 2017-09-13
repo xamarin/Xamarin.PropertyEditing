@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Xamarin.PropertyEditing.Tests
 {
 	internal class MockObjectEditor
-		: IObjectEditor
+		: IObjectEditor, IObjectEventEditor
 	{
 		public MockObjectEditor ()
 		{
@@ -22,7 +22,7 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			get;
 			set;
-		}
+		} = new object ();
 
 		public string TypeName
 		{
@@ -42,7 +42,13 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			get;
 			set;
-		}
+		} = new IPropertyInfo[0];
+
+		public IReadOnlyCollection<IEventInfo> Events
+		{
+			get;
+			set;
+		} = new IEventInfo[0];
 
 		public IObjectEditor Parent
 		{
@@ -64,6 +70,27 @@ namespace Xamarin.PropertyEditing.Tests
 		public void RaisePropertyChanged (IPropertyInfo property)
 		{
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
+		}
+
+		public Task AttachHandlerAsync (IEventInfo ev, string handlerName)
+		{
+			this.events[ev] = handlerName;
+			return Task.FromResult (true);
+		}
+
+		public Task DetatchHandlerAsync (IEventInfo ev, string handlerName)
+		{
+			this.events.Remove (ev);
+			return Task.FromResult (true);
+		}
+
+		public Task<IReadOnlyList<string>> GetHandlersAsync (IEventInfo ev)
+		{
+			string handler;
+			if (this.events.TryGetValue (ev, out handler))
+				return Task.FromResult<IReadOnlyList<string>> (new[] { handler });
+
+			return Task.FromResult<IReadOnlyList<string>> (new string[0]);
 		}
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -106,5 +133,6 @@ namespace Xamarin.PropertyEditing.Tests
 #pragma warning restore CS1998
 
 		internal readonly Dictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
+		internal readonly Dictionary<IEventInfo, string> events = new Dictionary<IEventInfo, string> ();
 	}
 }

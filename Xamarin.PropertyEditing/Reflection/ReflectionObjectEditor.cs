@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Xamarin.PropertyEditing.Reflection
 {
 	public class ReflectionObjectEditor
-		: IObjectEditor, INameableObject
+		: IObjectEditor, INameableObject, IObjectEventEditor
 	{
 		public ReflectionObjectEditor (object target)
 		{
@@ -16,8 +16,9 @@ namespace Xamarin.PropertyEditing.Reflection
 				throw new ArgumentNullException (nameof (target));
 
 			this.target = target;
+			Type targetType = target.GetType ();
 
-			foreach (PropertyInfo property in target.GetType ().GetProperties ()) {
+			foreach (PropertyInfo property in targetType.GetProperties ()) {
 				DebuggerBrowsableAttribute browsable = property.GetCustomAttribute<DebuggerBrowsableAttribute> ();
 				if (browsable != null && browsable.State == DebuggerBrowsableState.Never) {
 					continue;
@@ -30,6 +31,10 @@ namespace Xamarin.PropertyEditing.Reflection
 						this.properties.Add (new ReflectionPropertyInfo (property));
 				}
 			}
+
+			foreach (EventInfo ev in targetType.GetEvents ()) {
+				this.events.Add (new ReflectionEventInfo (ev));
+			}
 		}
 
 		public event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
@@ -39,6 +44,8 @@ namespace Xamarin.PropertyEditing.Reflection
 		public string TypeName => this.target.GetType ().Name;
 
 		public IReadOnlyCollection<IPropertyInfo> Properties => this.properties;
+
+		public IReadOnlyCollection<IEventInfo> Events => this.events;
 
 		public IObjectEditor Parent => null;
 
@@ -59,6 +66,28 @@ namespace Xamarin.PropertyEditing.Reflection
 		public Task<string> GetNameAsync()
 		{
 			return Task.FromResult (Name);
+		}
+
+		public Task AttachHandlerAsync (IEventInfo ev, string handlerName)
+		{
+			throw new NotSupportedException ();
+		}
+
+		public Task DetatchHandlerAsync (IEventInfo ev, string handlerName)
+		{
+			throw new NotSupportedException ();
+		}
+
+		public Task<IReadOnlyList<string>> GetHandlersAsync (IEventInfo ev)
+		{
+			if (ev == null)
+				throw new ArgumentNullException (nameof (ev));
+
+			ReflectionEventInfo info = ev as ReflectionEventInfo;
+			if (info == null)
+				throw new ArgumentException ();
+
+			return Task.FromResult (info.GetHandlers (this.target));
 		}
 
 		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
@@ -93,6 +122,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		private readonly object target;
 		private readonly List<ReflectionPropertyInfo> properties = new List<ReflectionPropertyInfo> ();
+		private readonly List<ReflectionEventInfo> events = new List<ReflectionEventInfo> ();
 
 		private static readonly IObjectEditor[] EmptyDirectChildren = new IObjectEditor[0];
 		private static Version OSVersion;
