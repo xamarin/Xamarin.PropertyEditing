@@ -341,8 +341,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			if (toRemove.Count > 0)
 				this.events.RemoveRange (toRemove);
-			if (newSet.Count > 0)
-				this.events.AddRange (newSet.Select (i => new EventViewModel (i, this.editors)));
+			if (newSet.Count > 0) {
+				this.events.Reset (this.events.Concat (newSet.Select (i => new EventViewModel (i, this.editors))).OrderBy (e => e.Event.Name).ToArray());
+			}
 		}
 
 		private void UpdateProperties (HashSet<IPropertyInfo> newSet, IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
