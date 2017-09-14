@@ -16,9 +16,18 @@
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBorderBrush">#3E3E40</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBackgroundBrush">#3E3E40</SolidColorBrush>
 
+	<SolidColorBrush x:Key="ToggleItemOuterBorderBrush" Color="#3F3F46" />
 	<SolidColorBrush x:Key="ToggleItemMouseOverBackgroundBrush" Color="#3E3E40"/>
 	<SolidColorBrush x:Key="ToggleItemMouseOverBorderBrush" Color="#3E3E40"/>
 	<SolidColorBrush x:Key="ToggleItemMouseOverForegroundBrush" Color="#F1F1F1" />
+	<SolidColorBrush x:Key="ToggleItemSelectedBackgroundBrush" Color="#252526" />
+	<SolidColorBrush x:Key="ToggleItemSelectedBorderBrush" Color="#007ACC" />
+	<SolidColorBrush x:Key="ToggleItemSelectedForegroundBrush" Color="#F1F1F1" />
+	<SolidColorBrush x:Key="ToggleItemBackgroundBrush" Color="#252526" />
+	<SolidColorBrush x:Key="ToggleItemBorderBrush" Color="#252526" />
+	<SolidColorBrush x:Key="ToggleItemForegroundBrush" Color="#F1F1F1" />
+	<SolidColorBrush x:Key="ToggleItemPressedBackgroundBrush" Color="#007ACC" />
+	<SolidColorBrush x:Key="ToggleItemPressedBorderBrush" Color="#00A7CC" />
 
 	<SolidColorBrush x:Key="MenuPopupBackgroundBrush">#1B1B1C</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuPopupBorderBrush">#333337</SolidColorBrush>
