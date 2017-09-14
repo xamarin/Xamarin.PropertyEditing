@@ -13,6 +13,7 @@ namespace Xamarin.PropertyEditing.Windows
 {
 	[TemplatePart (Name = "search", Type = typeof(TextBox))]
 	[TemplatePart (Name = "propertyItems", Type = typeof(ItemsControl))]
+	[TemplatePart (Name = "paneSelector", Type = typeof(ChoiceControl))]
 	public class PropertyEditorPanel
 		: Control
 	{
@@ -77,6 +78,11 @@ namespace Xamarin.PropertyEditing.Windows
 
 			this.root = (FrameworkElement) GetTemplateChild ("root");
 			this.items = (ItemsControl) GetTemplateChild ("propertyItems");
+			this.propertiesPane = (FrameworkElement) GetTemplateChild ("propertiesPane");
+			this.eventsPane = (FrameworkElement) GetTemplateChild ("eventsPane");
+			this.paneSelector = (ChoiceControl) GetTemplateChild ("paneSelector");
+			this.paneSelector.SelectedItem = EditingPane.Properties;
+			this.paneSelector.SelectedItemChanged += OnPaneChanged;
 			OnEditorProviderChanged();
 
 			if (this.vm.SelectedObjects.Count > 0)
@@ -86,6 +92,24 @@ namespace Xamarin.PropertyEditing.Windows
 		private FrameworkElement root;
 		private PanelViewModel vm;
 		private ItemsControl items;
+		private ChoiceControl paneSelector;
+		private FrameworkElement propertiesPane, eventsPane;
+
+		private void OnPaneChanged (object sender, EventArgs e)
+		{
+			object selected = this.paneSelector.SelectedItem;
+			EditingPane pane = EditingPane.Properties;
+			if (selected != null)
+				pane = (EditingPane)selected;
+
+			if (pane == EditingPane.Properties) {
+				this.eventsPane.Visibility = Visibility.Collapsed;
+				this.propertiesPane.Visibility = Visibility.Visible;
+			} else if (pane == EditingPane.Events) {
+				this.propertiesPane.Visibility = Visibility.Collapsed;
+				this.eventsPane.Visibility = Visibility.Visible;
+			}
+		}
 
 		private void OnSelectedItemsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
@@ -148,5 +172,11 @@ namespace Xamarin.PropertyEditing.Windows
 
 			this.items.SetBinding (ItemsControl.ItemsSourceProperty, itemsSource);
 		}
+	}
+
+	internal enum EditingPane
+	{
+		Properties,
+		Events
 	}
 }
