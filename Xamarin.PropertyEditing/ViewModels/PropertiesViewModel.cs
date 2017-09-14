@@ -171,7 +171,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 					this.editors.Clear ();
 
 					newEditors = await AddEditorsAsync (this.selectedObjects);
-					this.editors.AddRange (newEditors);
 					break;
 				}
 			}
