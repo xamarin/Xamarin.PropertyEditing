@@ -70,6 +70,7 @@
     <Compile Include="IPropertyInfo.cs" />
     <Compile Include="IResourceProvider.cs" />
     <Compile Include="ISelfConstrainedPropertyInfo.cs" />
+    <Compile Include="ISolidBrushPropertyInfo.cs" />
     <Compile Include="NotifyingObject.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,6 +82,7 @@
     </Compile>
     <Compile Include="PropertyVariation.cs" />
     <Compile Include="Reflection\ReflectionEditorProvider.cs" />
+    <Compile Include="Reflection\ReflectionSolidBrushPropertyInfo.cs" />
     <Compile Include="Reflection\ReflectionEnumPropertyInfo.cs" />
     <Compile Include="Reflection\ReflectionEventInfo.cs" />
     <Compile Include="Reflection\ReflectionObjectEditor.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="ViewModels\PropertiesViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
+    <Compile Include="ViewModels\SolidBrushPropertyViewModel.cs" />
     <Compile Include="ViewModels\StringPropertyViewModel.cs" />
     <Compile Include="PropertyArrangeMode.cs" />
     <Compile Include="IGroupingList.cs" />
