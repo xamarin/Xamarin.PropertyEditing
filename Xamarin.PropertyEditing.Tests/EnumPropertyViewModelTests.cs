@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -100,11 +100,7 @@ namespace Xamarin.PropertyEditing.Tests
 		: EnumPropertyViewModelTests<TestEnum>
 	{
 		protected override TestEnum GetRandomTestValue (Random rand)
-		{
-			TestEnum[] values = (TestEnum[])Enum.GetValues (typeof(TestEnum));
-			int index = rand.Next (0, values.Length - 1);
-			return values[index];
-		}
+			=> rand.Next<TestEnum> ();
 
 		protected override EnumPropertyViewModel<TestEnum> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{

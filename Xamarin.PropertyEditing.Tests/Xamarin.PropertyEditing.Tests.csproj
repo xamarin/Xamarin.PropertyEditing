@@ -43,6 +43,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,6 +57,12 @@
   <ItemGroup>
     <Compile Include="AsyncWorkQueueTests.cs" />
     <Compile Include="BoolViewModelTests.cs" />
+    <Compile Include="BrushPropertyViewModelTests.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="RadialGradientBrushPropertyViewModelTests.cs" />
+    <Compile Include="LinearGradientBrushPropertyViewModelTests.cs" />
+    <Compile Include="ImageBrushPropertyViewModelTests.cs" />
+    <Compile Include="SolidBrushPropertyViewModelTests.cs" />
     <Compile Include="ConstrainedPropertyViewModelTests.cs" />
     <Compile Include="EnumPropertyViewModelTests.cs" />
     <Compile Include="EventViewModelTests.cs" />

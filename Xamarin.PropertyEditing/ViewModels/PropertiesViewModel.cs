@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -428,6 +429,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(Point), (p,e) => new PropertyViewModel<Point> (p, e) },
 			{ typeof(Size), (p,e) => new PropertyViewModel<Size> (p, e) },
 			{ typeof(Rectangle), (p,e) => new PropertyViewModel<Rectangle> (p, e) },
+			{ typeof(CommonBrush), (p, e) => new BrushPropertyViewModel(p, e) },
 		};
 	}
 }

@@ -43,6 +43,22 @@
   <ItemGroup>
     <Compile Include="AsyncWorkQueue.cs" />
     <Compile Include="BidirectionalDictionary.cs" />
+    <Compile Include="Drawing\CommonAlignment.cs" />
+    <Compile Include="Drawing\CommonBrush.cs" />
+    <Compile Include="Drawing\CommonBrushMappingMode.cs" />
+    <Compile Include="Drawing\CommonColorInterpolationMode.cs" />
+    <Compile Include="Drawing\CommonGradientBrush.cs" />
+    <Compile Include="Drawing\CommonGradientSpreadMethod.cs" />
+    <Compile Include="Drawing\CommonGradientStop.cs" />
+    <Compile Include="Drawing\CommonLinearGradientBrush.cs" />
+    <Compile Include="Drawing\CommonPoint.cs" />
+    <Compile Include="Drawing\CommonRadialGradientBrush.cs" />
+    <Compile Include="Drawing\CommonRectangle.cs" />
+    <Compile Include="Drawing\CommonSolidBrush.cs" />
+    <Compile Include="Drawing\CommonStretch.cs" />
+    <Compile Include="Drawing\CommonTileBrush.cs" />
+    <Compile Include="Drawing\CommonTileMode.cs" />
+    <Compile Include="Drawing\CommonImageBrush.cs" />
     <Compile Include="IAvailabilityConstraint.cs" />
     <Compile Include="IClampedPropertyInfo.cs" />
     <Compile Include="IEditorProvider.cs" />
@@ -72,6 +88,7 @@
     <Compile Include="ValueInfo.cs" />
     <Compile Include="ValueSource.cs" />
     <Compile Include="ViewModels\ArrangeModeViewModel.cs" />
+    <Compile Include="ViewModels\BrushPropertyViewModel.cs" />
     <Compile Include="ViewModels\ConstrainedPropertyViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\EnumPropertyViewModel.cs" />
