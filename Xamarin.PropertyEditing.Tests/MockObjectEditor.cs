@@ -78,7 +78,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult (true);
 		}
 
-		public Task DetatchHandlerAsync (IEventInfo ev, string handlerName)
+		public Task DetachHandlerAsync (IEventInfo ev, string handlerName)
 		{
 			this.events.Remove (ev);
 			return Task.FromResult (true);

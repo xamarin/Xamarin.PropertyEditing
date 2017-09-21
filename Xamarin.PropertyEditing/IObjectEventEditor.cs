@@ -14,7 +14,7 @@ namespace Xamarin.PropertyEditing
 		Task AttachHandlerAsync (IEventInfo ev, string handlerName);
 
 		/// <exception cref="ArgumentNullException"><paramref name="ev"/> or <paramref name="handlerName"/> is <c>null</c>.</exception>
-		Task DetatchHandlerAsync (IEventInfo ev, string handlerName);
+		Task DetachHandlerAsync (IEventInfo ev, string handlerName);
 
 		/// <summary>
 		/// Gets the method names for the handlers attached to <paramref name="ev"/>

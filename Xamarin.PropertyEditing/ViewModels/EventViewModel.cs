@@ -94,7 +94,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			IObjectEventEditor editor = Editors.OfType<IObjectEventEditor>().First ();
 
 			if (this.methodName != null)
-				await editor.DetatchHandlerAsync (Event, this.methodName);
+				await editor.DetachHandlerAsync (Event, this.methodName);
 
 			if (!String.IsNullOrWhiteSpace (name))
 				await editor.AttachHandlerAsync (Event, name);
