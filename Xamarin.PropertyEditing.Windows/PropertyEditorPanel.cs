@@ -81,7 +81,7 @@ namespace Xamarin.PropertyEditing.Windows
 			this.propertiesPane = (FrameworkElement) GetTemplateChild ("propertiesPane");
 			this.eventsPane = (FrameworkElement) GetTemplateChild ("eventsPane");
 			this.paneSelector = (ChoiceControl) GetTemplateChild ("paneSelector");
-			this.paneSelector.SelectedItem = EditingPane.Properties;
+			this.paneSelector.SelectedValue = EditingPane.Properties;
 			this.paneSelector.SelectedItemChanged += OnPaneChanged;
 			OnEditorProviderChanged();
 
@@ -97,7 +97,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnPaneChanged (object sender, EventArgs e)
 		{
-			object selected = this.paneSelector.SelectedItem;
+			object selected = this.paneSelector.SelectedValue;
 			EditingPane pane = EditingPane.Properties;
 			if (selected != null)
 				pane = (EditingPane)selected;
