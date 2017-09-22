@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using Xamarin.PropertyEditing.Tests;
 
 namespace Xamarin.PropertyEditing.Windows.Standalone
