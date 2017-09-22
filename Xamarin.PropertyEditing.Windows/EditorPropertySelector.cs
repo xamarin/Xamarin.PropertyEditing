@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
+using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -101,8 +101,11 @@ namespace Xamarin.PropertyEditing.Windows
 			{ typeof(IntegerPropertyViewModel), typeof(NumericEditorControl) },
 			{ typeof(FloatingPropertyViewModel), typeof(NumericEditorControl) },
 			{ typeof(PropertyViewModel<Point>), typeof(PointEditorControl) },
+			{ typeof(PropertyViewModel<CommonPoint>), typeof(PointEditorControl) },
 			{ typeof(PropertyViewModel<Size>), typeof(SizeEditorControl) },
+			{ typeof(PropertyViewModel<CommonSize>), typeof(SizeEditorControl) },
 			{ typeof(PropertyViewModel<Thickness>), typeof(ThicknessEditorControl) },
+			{ typeof(PropertyViewModel<CommonThickness>), typeof(ThicknessEditorControl) },
 			{ typeof(PredefinedValuesViewModel<>), typeof(EnumEditorControl) }
 		};
 	}

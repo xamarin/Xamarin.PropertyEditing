@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.PropertyEditing.Tests.MockControls;
 
 namespace Xamarin.PropertyEditing.Tests
 {
@@ -16,6 +17,15 @@ namespace Xamarin.PropertyEditing.Tests
 		public MockObjectEditor (params IPropertyInfo[] properties)
 		{
 			Properties = properties.ToArray ();
+		}
+
+		public MockObjectEditor (MockControl control)
+		{
+			Properties = control.Properties.ToArray();
+			values = control.Values;
+			Events = control.Events.ToArray ();
+			events = control.EventHandlers;
+			Target = control;
 		}
 
 		public object Target
@@ -132,7 +142,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 #pragma warning restore CS1998
 
-		internal readonly Dictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
-		internal readonly Dictionary<IEventInfo, string> events = new Dictionary<IEventInfo, string> ();
+		internal readonly IDictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
+		internal readonly IDictionary<IEventInfo, string> events = new Dictionary<IEventInfo, string> ();
 	}
 }
