@@ -222,8 +222,6 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			#endregion
 		}
 
-		public class NotImplemented { }
-
 		public enum FlowDirection
 		{
 			LeftToRight,

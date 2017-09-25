@@ -28,6 +28,11 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			Values.Add (propertyInfo, default (T));
 		}
 
+		public void AddReadOnlyProperty<T> (string name)
+		{
+			AddProperty<T> (name, "", false);
+		}
+
 		public void AddEvent(string name)
 		{
 			var eventInfo = new MockEventInfo (name);
@@ -44,5 +49,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 
 		public IPropertyInfo GetPropertyInfo (string name)
 			=> PropertyInfos[name];
+
+		public class NotImplemented { }
 	}
 }

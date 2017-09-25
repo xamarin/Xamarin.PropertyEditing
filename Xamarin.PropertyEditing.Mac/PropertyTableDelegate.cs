@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using AppKit;
 using Foundation;
+using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -166,8 +167,10 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (PredefinedValuesViewModel<>), typeof(PredefinedValuesEditor<>)},
 			{typeof (PropertyViewModel<CoreGraphics.CGSize>), typeof (CGSizeEditorControl)},
 			{typeof (PropertyViewModel<Point>), typeof (PointEditorControl)},
+			{typeof (PropertyViewModel<CommonPoint>), typeof (PointEditorControl) },
 			{typeof (PropertyViewModel<Size>), typeof (SizeEditorControl)},
-			{typeof (PropertyViewModel<Rectangle>), typeof (RectangleEditorControl)},
+			{typeof (PropertyViewModel<CommonSize>), typeof (SizeEditorControl) },
+			{typeof (PropertyViewModel<Rectangle>), typeof (RectangleEditorControl)}
 		};
 	}
 }

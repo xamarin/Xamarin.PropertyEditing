@@ -9,7 +9,7 @@
     <RootNamespace>Xamarin.PropertyEditing.Mac.Standalone</RootNamespace>
     <AssemblyName>Xamarin.PropertyEditing.Mac.Standalone</AssemblyName>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
-    <UseXamMacFullFramework>true</UseXamMacFullFramework>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -81,6 +81,10 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="MockedAppKitControlButton.cs" />
+    <Compile Include="MockedAppKitControlButton.designer.cs">
+      <DependentUpon>MockedAppKitControlButton.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
@@ -93,6 +97,10 @@
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">
       <Project>{A0B6FE73-D046-4E1C-BA9D-F20683889C5A}</Project>
       <Name>Xamarin.PropertyEditing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xamarin.PropertyEditing.Tests\Xamarin.PropertyEditing.Tests.csproj">
+      <Project>{84101D04-9CE4-4CE7-916E-21F86EE96898}</Project>
+      <Name>Xamarin.PropertyEditing.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />

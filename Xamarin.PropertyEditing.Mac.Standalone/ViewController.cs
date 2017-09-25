@@ -2,7 +2,7 @@
 
 using AppKit;
 using Foundation;
-using Xamarin.PropertyEditing.Reflection;
+using Xamarin.PropertyEditing.Tests;
 
 namespace Xamarin.PropertyEditing.Mac.Standalone
 {
@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 			base.ViewDidLoad ();
 			// Do any additional setup after loading the view.
 
-			PropertyPanel.EditorProvider = new ReflectionEditorProvider ();
+			PropertyPanel.EditorProvider = new MockEditorProvider ();
 		}
 
 		public override NSObject RepresentedObject {
@@ -34,10 +34,14 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 		// load panel from active designer item, clear it if none selected
 		partial void OnClickEvent (NSObject sender)
 		{
-			if (PropertyPanel.SelectedItems.Contains (sender)) {
-				PropertyPanel.SelectedItems.Remove (sender);
+			var clickedButton = sender as NSButton;
+			var mockedButton = clickedButton?.Cell as MockedAppKitButton;
+			var inspectedObject = (mockedButton == null || mockedButton.MockedControl == null)
+				? (object)sender : mockedButton.MockedControl;
+			if (PropertyPanel.SelectedItems.Contains (inspectedObject)) {
+				PropertyPanel.SelectedItems.Remove (inspectedObject);
 			} else {
-				PropertyPanel.SelectedItems.Add (sender);
+				PropertyPanel.SelectedItems.Add (inspectedObject);
 			}
 		}
 	}

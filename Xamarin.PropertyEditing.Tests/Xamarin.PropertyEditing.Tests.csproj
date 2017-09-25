@@ -86,6 +86,8 @@
     <Compile Include="StringViewModelTests.cs" />
     <Compile Include="TestContext.cs" />
     <Compile Include="ValueInfoTests.cs" />
+    <Compile Include="MockControls\MockNSControl.cs" />
+    <Compile Include="MockControls\MockNSButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
