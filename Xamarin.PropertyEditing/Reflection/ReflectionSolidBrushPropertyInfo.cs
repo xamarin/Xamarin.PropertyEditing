@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Xamarin.PropertyEditing.Reflection
 {
-	public class ReflectionSolidBrushPropertyInfo : ReflectionPropertyInfo, ISolidBrushPropertyInfo
+	public class ReflectionSolidBrushPropertyInfo : ReflectionPropertyInfo, IColorSpaced
 	{
 		public ReflectionSolidBrushPropertyInfo (PropertyInfo propertyInfo, IEnumerable<string> colorSpaces = null)
 			: base (propertyInfo)

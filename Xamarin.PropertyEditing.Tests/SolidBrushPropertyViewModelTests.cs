@@ -26,9 +26,9 @@ namespace Xamarin.PropertyEditing.Tests
 		[Test]
 		public void ColorSpaces ()
 		{
-			var mockProperty = new Mock<ISolidBrushPropertyInfo> ();
+			var mockProperty = new Mock<IPropertyInfo> ();
 			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (SolidBrush));
-			mockProperty.SetupGet (pi => pi.ColorSpaces).Returns (SampleColorSpaces);
+			mockProperty.As<IColorSpaced>().SetupGet (pi => pi.ColorSpaces).Returns (SampleColorSpaces);
 			var mockEditor = new Mock<IObjectEditor> ();
 
 			var vm = new SolidBrushPropertyViewModel(mockProperty.Object, new[] { mockEditor.Object });
