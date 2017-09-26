@@ -9,7 +9,7 @@ namespace Xamarin.PropertyEditing.Reflection
 		public ReflectionSolidBrushPropertyInfo (PropertyInfo propertyInfo, IEnumerable<string> colorSpaces = null)
 			: base (propertyInfo)
 		{
-			ColorSpaces = colorSpaces.ToArray();
+			ColorSpaces = colorSpaces?.ToArray();
 		}
 
 		public IReadOnlyList<string> ColorSpaces { get; }
