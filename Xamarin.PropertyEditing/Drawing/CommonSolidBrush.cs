@@ -9,16 +9,22 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// </summary>
 	public class CommonSolidBrush : CommonBrush, IEquatable<CommonSolidBrush>
 	{
-		public CommonSolidBrush(Color color, double opacity = 1.0)
+		public CommonSolidBrush(Color color, string colorSpace = null, double opacity = 1.0)
 			: base(opacity)
 		{
 			Color = color;
+			ColorSpace = colorSpace;
 		}
 
 		/// <summary>
 		/// The color of the brush.
 		/// </summary>
 		public Color Color { get; }
+
+		/// <summary>
+		/// The color space the brush is defined in.
+		/// </summary>
+		public string ColorSpace { get; }
 
 		public override bool Equals (object obj)
 		{
@@ -30,7 +36,8 @@ namespace Xamarin.PropertyEditing.Drawing
 		public bool Equals (CommonSolidBrush other)
 		{
 			return other != null &&
-				   EqualityComparer<Color>.Default.Equals (Color, other.Color) &&
+				   Color.Equals(other.Color) &&
+				   ColorSpace == other.ColorSpace &&
 				   Opacity == other.Opacity;
 		}
 
@@ -39,6 +46,7 @@ namespace Xamarin.PropertyEditing.Drawing
 			var hashCode = base.GetHashCode ();
 			unchecked {
 				hashCode = hashCode * -1521134295 + Color.GetHashCode ();
+				hashCode = hashCode * -1521134295 + ColorSpace.GetHashCode ();
 			}
 			return hashCode;
 		}

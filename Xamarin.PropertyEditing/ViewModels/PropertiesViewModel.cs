@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -429,6 +429,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(Point), (p,e) => new PropertyViewModel<Point> (p, e) },
 			{ typeof(Size), (p,e) => new PropertyViewModel<Size> (p, e) },
 			{ typeof(Rectangle), (p,e) => new PropertyViewModel<Rectangle> (p, e) },
+			{ typeof(CommonSolidBrush), (p, e) => new SolidBrushPropertyViewModel(p, e) },
 			{ typeof(CommonBrush), (p, e) => new BrushPropertyViewModel(p, e) },
 		};
 	}

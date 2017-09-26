@@ -28,10 +28,13 @@ namespace Xamarin.PropertyEditing.Tests
 		static char GetConsonnant (this Random rand) => consonnants[rand.Next (0, vowels.Length)];
 
 		public static string NextFilename (this Random rand, string extension)
-			=> string.Concat(
-				rand.GetConsonnant(), rand.GetVowel(),
+			=> rand.NextString () + extension;
+
+		public static string NextString (this Random rand)
+			=> string.Concat (
 				rand.GetConsonnant (), rand.GetVowel (),
 				rand.GetConsonnant (), rand.GetVowel (),
-				extension);
+				rand.GetConsonnant (), rand.GetVowel ()
+				);
 	}
 }
