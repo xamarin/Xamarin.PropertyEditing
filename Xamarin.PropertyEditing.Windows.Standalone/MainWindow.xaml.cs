@@ -16,7 +16,7 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 
 		private void Button_Click (object sender, RoutedEventArgs e)
 		{
-			var mockedButton = sender as MockedWpfButton;
+			var mockedButton = sender as IMockedControl;
 			var inspectedObject = (mockedButton == null || mockedButton.MockedControl == null)
 				? sender : mockedButton.MockedControl;
 			if (this.panel.SelectedItems.Contains (inspectedObject))

@@ -60,6 +60,7 @@
     <Compile Include="BrushPropertyViewModelTests.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="MockControls\MockControl.cs" />
+    <Compile Include="MockControls\MockSampleControl.cs" />
     <Compile Include="MockControls\MockWpfButton.cs" />
     <Compile Include="MockControls\MockWpfControl.cs" />
     <Compile Include="MockEditorProvider.cs" />

@@ -28,9 +28,9 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			Values.Add (propertyInfo, default (T));
 		}
 
-		public void AddReadOnlyProperty<T> (string name)
+		public void AddReadOnlyProperty<T> (string name, string category = "")
 		{
-			AddProperty<T> (name, "", false);
+			AddProperty<T> (name, category, false);
 		}
 
 		public void AddEvent(string name)
