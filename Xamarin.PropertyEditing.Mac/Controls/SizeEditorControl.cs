@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using CoreGraphics;
+using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class SizeEditorControl : BasePointEditorControl<Size>
+	internal abstract class SizeEditorControl<T> : BasePointEditorControl<T>
+		where T : struct
 	{
 		public SizeEditorControl ()
 		{
@@ -19,6 +21,15 @@ namespace Xamarin.PropertyEditing.Mac
 			YEditor.Frame = new CGRect (155, 0, 50, 20);
 		}
 
+		protected override void UpdateAccessibilityValues ()
+		{
+			XEditor.AccessibilityTitle = ViewModel.Property.Name + " Width Editor"; // TODO Localization
+			YEditor.AccessibilityTitle = ViewModel.Property.Name + " Height Editor"; // TODO Localization
+		}
+	}
+
+	internal class SystemSizeEditorControl : SizeEditorControl<Size>
+	{
 		protected override void UpdateValue ()
 		{
 			XEditor.StringValue = ViewModel.Value.Width.ToString ();
@@ -29,11 +40,19 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			ViewModel.Value = new Size (XEditor.IntValue, YEditor.IntValue);
 		}
+	}
 
-		protected override void UpdateAccessibilityValues ()
+	internal class CommonSizeEditorControl : SizeEditorControl<CommonSize>
+	{
+		protected override void UpdateValue ()
 		{
-			XEditor.AccessibilityTitle = ViewModel.Property.Name + " Width Editor"; // TODO Localization
-			YEditor.AccessibilityTitle = ViewModel.Property.Name + " Height Editor"; // TODO Localization
+			XEditor.StringValue = ViewModel.Value.Width.ToString ();
+			YEditor.StringValue = ViewModel.Value.Height.ToString ();
+		}
+
+		protected override void OnInputUpdated (object sender, EventArgs e)
+		{
+			ViewModel.Value = new CommonSize (XEditor.IntValue, YEditor.IntValue);
 		}
 	}
 }

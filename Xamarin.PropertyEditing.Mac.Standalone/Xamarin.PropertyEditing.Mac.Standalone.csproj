@@ -81,10 +81,10 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="MockedAppKitControlButton.cs" />
-    <Compile Include="MockedAppKitControlButton.designer.cs">
-      <DependentUpon>MockedAppKitControlButton.cs</DependentUpon>
-    </Compile>
+    <Compile Include="MockedControlButton.cs" />
+    <Compile Include="MockedAppKitButton.cs" />
+    <Compile Include="IMockedControl.cs" />
+    <Compile Include="MockedSampleControlButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />

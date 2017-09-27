@@ -35,7 +35,7 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 		partial void OnClickEvent (NSObject sender)
 		{
 			var clickedButton = sender as NSButton;
-			var mockedButton = clickedButton?.Cell as MockedAppKitButton;
+			var mockedButton = clickedButton?.Cell as IMockedControl;
 			var inspectedObject = (mockedButton == null || mockedButton.MockedControl == null)
 				? (object)sender : mockedButton.MockedControl;
 			if (PropertyPanel.SelectedItems.Contains (inspectedObject)) {
