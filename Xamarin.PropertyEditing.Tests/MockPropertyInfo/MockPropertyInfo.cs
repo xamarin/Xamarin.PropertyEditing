@@ -77,6 +77,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		{
 			converted = default (TValue);
 
+			if (TypeConverters == null) return false;
 			foreach (var converter in TypeConverters) {
 				if (converter.CanConvertTo (typeof (TValue))) {
 					converted = (TValue)converter.ConvertTo (value, typeof (TValue));
