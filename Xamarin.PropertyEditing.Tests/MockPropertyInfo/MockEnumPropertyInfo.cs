@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Xamarin.PropertyEditing.Tests.MockControls;
 
 namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
@@ -40,16 +41,21 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 		public override TValue GetValue<TValue> (MockControl target)
 		{
-			if (typeof(IEnumerable).IsAssignableFrom(typeof (TValue))) {
-				var realValue = Convert.ToUInt64 (target.GetValue<T> (this));
+			var enumerationType = typeof (TValue)
+				.GetInterfaces ()
+				.FirstOrDefault (i => i.IsGenericType && i.GetGenericTypeDefinition () == typeof (IEnumerable<>));
+			if (enumerationType != null) {
+				var enumeratedType = enumerationType.GetGenericArguments ()[0];
+				var listOfEnumeratedType = typeof (List<>).MakeGenericType (enumeratedType);
 
-				var values = new List<T> ();
+				var realValue = Convert.ToUInt64 (target.GetValue<T> (this));
+				var values = (IList)Activator.CreateInstance(listOfEnumeratedType);
 				for (var i = 0; i < Values.Length; i++) {
 					if ((LongValues[i] & realValue) != 0)
 						values.Add (Values[i]);
 				}
 
-				return (TValue)(object)(values.ToArray());
+				return (TValue)(object)(values);
 			}
 
 			return target.GetValue<TValue> (this);
