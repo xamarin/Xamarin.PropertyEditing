@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Tests.MockControls;
-using Xamarin.PropertyEditing.Tests.MockPropertyInfo;
 
 namespace Xamarin.PropertyEditing.Tests
 {

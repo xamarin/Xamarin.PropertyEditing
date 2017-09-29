@@ -6,8 +6,7 @@ namespace Xamarin.PropertyEditing
 	/// <remarks>
 	/// <para>The <see cref="Source"/> and <see cref="ValueDescriptor"/> for the value must match for two ValueInfos to be considered equal.</para>
 	/// </remarks>
-	public class ValueInfo<T>
-		: IEquatable<ValueInfo<T>>, IHasValue
+	public class ValueInfo<T> : IEquatable<ValueInfo<T>>
 	{
 		public T Value
 		{
@@ -29,8 +28,6 @@ namespace Xamarin.PropertyEditing
 			get;
 			set;
 		}
-
-		object IHasValue.Value => Value;
 
 		public bool Equals (ValueInfo<T> other)
 		{

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Cadenza.Collections;
 using Xamarin.PropertyEditing.Tests.MockPropertyInfo;
 
@@ -23,9 +24,16 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			bool canWrite = true, bool flag = false,
 			IEnumerable<Type> converterTypes = null)
 		{
-			var propertyInfo = typeof (T).IsEnum
-				? new MockEnumPropertyInfo<T> (name, category, canWrite, flag, converterTypes)
-				: new MockPropertyInfo<T> (name, category, canWrite, converterTypes);
+			IPropertyInfo propertyInfo;
+			if (typeof(T).IsEnum) {
+				var underlyingType = typeof (T).GetEnumUnderlyingType ();
+				var enumPropertyInfoType = typeof (MockEnumPropertyInfo<,>)
+					.MakeGenericType (underlyingType, typeof (T));
+				propertyInfo = (IPropertyInfo)Activator.CreateInstance (enumPropertyInfoType, name, category, canWrite, flag, converterTypes);
+			}
+			else {
+				propertyInfo = new MockPropertyInfo<T> (name, category, canWrite, converterTypes);
+			}
 			PropertyInfos.Add (name, propertyInfo);
 			Values.Add (propertyInfo, new ValueInfo<T> {
 				Value = default (T),
@@ -59,10 +67,11 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 
 		public T GetValue<T> (IPropertyInfo info)
 		{
-			var valueInfo = Values[info] as ValueInfo<T>;
+			var infoObject = Values[info];
+			var valueInfo = infoObject as ValueInfo<T>;
 			if (valueInfo != null)
 				return valueInfo.Value;
-			return (T)Convert.ChangeType (((IHasValue)Values[info]).Value, typeof (T));
+			return default(T);
 		}
 
 		public void SetValue<T> (string name, T value)

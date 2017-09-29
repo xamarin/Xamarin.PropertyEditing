@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -285,7 +285,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private ObjectViewModel valueModel;
-		private bool multipleValues;
 		private PropertyVariation variation;
 		private string error;
 
