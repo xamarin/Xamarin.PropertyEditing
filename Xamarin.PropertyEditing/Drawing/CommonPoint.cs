@@ -18,11 +18,11 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <summary>
 		/// The horizontal coordinate of the point.
 		/// </summary>
-		public double X { get; }
+		public double X { get; set; }
 		/// <summary>
 		/// The vertical coordinate of the point.
 		/// </summary>
-		public double Y { get; }
+		public double Y { get; set; }
 
 		public override bool Equals (object obj)
 		{

@@ -54,8 +54,10 @@
     <Compile Include="Drawing\CommonPoint.cs" />
     <Compile Include="Drawing\CommonRadialGradientBrush.cs" />
     <Compile Include="Drawing\CommonRectangle.cs" />
+    <Compile Include="Drawing\CommonSize.cs" />
     <Compile Include="Drawing\CommonSolidBrush.cs" />
     <Compile Include="Drawing\CommonStretch.cs" />
+    <Compile Include="Drawing\CommonThickness.cs" />
     <Compile Include="Drawing\CommonTileBrush.cs" />
     <Compile Include="Drawing\CommonTileMode.cs" />
     <Compile Include="Drawing\CommonImageBrush.cs" />

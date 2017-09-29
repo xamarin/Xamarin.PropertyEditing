@@ -59,6 +59,17 @@
     <Compile Include="BoolViewModelTests.cs" />
     <Compile Include="BrushPropertyViewModelTests.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="IGetAndSet.cs" />
+    <Compile Include="MockControls\MockControl.cs" />
+    <Compile Include="MockControls\MockSampleControl.cs" />
+    <Compile Include="MockControls\MockWpfButton.cs" />
+    <Compile Include="MockControls\MockWpfControl.cs" />
+    <Compile Include="MockEditorProvider.cs" />
+    <Compile Include="MockPropertyInfo\MockEventInfo.cs" />
+    <Compile Include="MockPropertyInfo\MockPropertyCategories.cs" />
+    <Compile Include="MockPropertyInfo\MockPropertyInfo.cs" />
+    <Compile Include="MockPropertyInfo\MockEnumPropertyInfo.cs" />
+    <Compile Include="MockPropertyProviderTests.cs" />
     <Compile Include="RadialGradientBrushPropertyViewModelTests.cs" />
     <Compile Include="LinearGradientBrushPropertyViewModelTests.cs" />
     <Compile Include="ImageBrushPropertyViewModelTests.cs" />
@@ -78,6 +89,8 @@
     <Compile Include="StringViewModelTests.cs" />
     <Compile Include="TestContext.cs" />
     <Compile Include="ValueInfoTests.cs" />
+    <Compile Include="MockControls\MockNSControl.cs" />
+    <Compile Include="MockControls\MockNSButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -91,6 +104,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

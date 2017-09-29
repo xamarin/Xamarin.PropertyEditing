@@ -62,12 +62,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IMockedControl.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MockedControlButton.cs" />
+    <Compile Include="MockedSampleControlButton.cs" />
+    <Compile Include="MockedWpfControlButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -94,6 +98,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Xamarin.PropertyEditing.Tests\Xamarin.PropertyEditing.Tests.csproj">
+      <Project>{84101d04-9ce4-4ce7-916e-21f86ee96898}</Project>
+      <Name>Xamarin.PropertyEditing.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Xamarin.PropertyEditing.Windows\Xamarin.PropertyEditing.Windows.csproj">
       <Project>{60af04be-1b6b-411b-bcba-c95eafbd7ac0}</Project>
       <Name>Xamarin.PropertyEditing.Windows</Name>

@@ -82,7 +82,7 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.MethodName = newMethodName;
 
 			Assert.That (changed, Is.True);
-			eeditor.Verify (i => i.DetatchHandlerAsync (info.Object, oldHandler));
+			eeditor.Verify (i => i.DetachHandlerAsync (info.Object, oldHandler));
 			eeditor.Verify (i => i.AttachHandlerAsync (info.Object, newMethodName));
 		}
 

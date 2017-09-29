@@ -78,7 +78,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			throw new NotSupportedException ();
 		}
 
-		public Task DetatchHandlerAsync (IEventInfo ev, string handlerName)
+		public Task DetachHandlerAsync (IEventInfo ev, string handlerName)
 		{
 			throw new NotSupportedException ();
 		}

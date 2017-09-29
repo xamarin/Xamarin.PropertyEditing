@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.PropertyEditing.Tests.MockControls;
 
 namespace Xamarin.PropertyEditing.Tests
 {
@@ -10,12 +11,20 @@ namespace Xamarin.PropertyEditing.Tests
 	{
 		public MockObjectEditor ()
 		{
-			
 		}
 
 		public MockObjectEditor (params IPropertyInfo[] properties)
 		{
 			Properties = properties.ToArray ();
+		}
+
+		public MockObjectEditor (MockControl control)
+		{
+			Properties = control.Properties.ToArray();
+			values = control.Values;
+			Events = control.Events.ToArray ();
+			events = control.EventHandlers;
+			Target = control;
 		}
 
 		public object Target
@@ -78,7 +87,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult (true);
 		}
 
-		public Task DetatchHandlerAsync (IEventInfo ev, string handlerName)
+		public Task DetachHandlerAsync (IEventInfo ev, string handlerName)
 		{
 			this.events.Remove (ev);
 			return Task.FromResult (true);
@@ -103,7 +112,20 @@ namespace Xamarin.PropertyEditing.Tests
 				value.Value = (T)ValueEvaluator (property, value.ValueDescriptor);
 			}
 
-			this.values[property] = value;
+			var mockControl = Target as MockControl;
+			if (mockControl != null) {
+				var mockPropertyInfo = property as IGetAndSet;
+				if (mockPropertyInfo != null) {
+					mockPropertyInfo.SetValue (mockControl, value.Value);
+				}
+				else {
+					values[property] = value;
+				}
+			}
+			else {
+				values[property] = value;
+			}
+
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
 		}
 
@@ -112,9 +134,20 @@ namespace Xamarin.PropertyEditing.Tests
 			if (variation != null)
 				throw new NotSupportedException (); // TODO
 
+			var mockControl = Target as MockControl;
+			if (mockControl != null) {
+				var mockPropertyInfo = property as IGetAndSet;
+				if (mockPropertyInfo != null) {
+					return new ValueInfo<T> {
+						Value = mockPropertyInfo.GetValue<T> (mockControl),
+						Source = ValueSource.Local
+					};
+				}
+			}
+
 			object value;
-			if (this.values.TryGetValue (property, out value)) {
-				ValueInfo<T> info = value as ValueInfo<T>;
+			if (values.TryGetValue (property, out value)) {
+				var info = value as ValueInfo<T>;
 				if (info != null)
 					return info;
 				else if (value != null) {
@@ -132,7 +165,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 #pragma warning restore CS1998
 
-		internal readonly Dictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
-		internal readonly Dictionary<IEventInfo, string> events = new Dictionary<IEventInfo, string> ();
+		internal readonly IDictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
+		internal readonly IDictionary<IEventInfo, string> events = new Dictionary<IEventInfo, string> ();
 	}
 }

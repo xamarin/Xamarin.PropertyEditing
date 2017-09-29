@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Xamarin.PropertyEditing
@@ -6,8 +6,7 @@ namespace Xamarin.PropertyEditing
 	/// <remarks>
 	/// <para>The <see cref="Source"/> and <see cref="ValueDescriptor"/> for the value must match for two ValueInfos to be considered equal.</para>
 	/// </remarks>
-	public class ValueInfo<T>
-		: IEquatable<ValueInfo<T>>
+	public class ValueInfo<T> : IEquatable<ValueInfo<T>>
 	{
 		public T Value
 		{
