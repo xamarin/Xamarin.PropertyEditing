@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace Xamarin.PropertyEditing.Drawing
 {
@@ -10,7 +8,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	[Serializable]
 	public class CommonGradientStop : IEquatable<CommonGradientStop>
 	{
-		public CommonGradientStop (Color color, double offset)
+		public CommonGradientStop (CommonColor color, double offset)
 		{
 			Color = color;
 			Offset = offset;
@@ -19,7 +17,8 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <summary>
 		/// Gets or sets the color of the gradient stop.
 		/// </summary>
-		public Color Color { get; }
+		public CommonColor Color { get; }
+
 		/// <summary>
 		/// Gets or sets the location of the gradient stop within the gradient vector.
 		/// </summary>

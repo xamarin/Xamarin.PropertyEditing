@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 
 namespace Xamarin.PropertyEditing.Drawing
 {
@@ -9,17 +8,20 @@ namespace Xamarin.PropertyEditing.Drawing
 	[Serializable]
 	public class CommonSolidBrush : CommonBrush, IEquatable<CommonSolidBrush>
 	{
-		public CommonSolidBrush(Color color, string colorSpace = null, double opacity = 1.0)
+		public CommonSolidBrush(CommonColor color, string colorSpace = null, double opacity = 1.0)
 			: base(opacity)
 		{
 			Color = color;
 			ColorSpace = colorSpace;
 		}
 
+		public CommonSolidBrush(byte r, byte g, byte b, byte a = 255, string colorSpace = null, double opacity = 1.0)
+			: this(new CommonColor(r, g, b, a), colorSpace, opacity) { }
+
 		/// <summary>
 		/// The color of the brush.
 		/// </summary>
-		public Color Color { get; }
+		public CommonColor Color { get; }
 
 		/// <summary>
 		/// The color space the brush is defined in.
@@ -46,7 +48,8 @@ namespace Xamarin.PropertyEditing.Drawing
 			var hashCode = base.GetHashCode ();
 			unchecked {
 				hashCode = hashCode * -1521134295 + Color.GetHashCode ();
-				hashCode = hashCode * -1521134295 + ColorSpace.GetHashCode ();
+				if (ColorSpace != null)
+					hashCode = hashCode * -1521134295 + ColorSpace.GetHashCode ();
 			}
 			return hashCode;
 		}
