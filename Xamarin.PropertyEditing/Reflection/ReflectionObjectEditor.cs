@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Drawing;
 
 namespace Xamarin.PropertyEditing.Reflection
 {
@@ -27,13 +26,11 @@ namespace Xamarin.PropertyEditing.Reflection
 
 				if (CheckAvailability (property)) {
 					if (property.PropertyType.IsEnum) {
-						this.properties.Add ((ReflectionPropertyInfo)Activator.CreateInstance (typeof(ReflectionEnumPropertyInfo<>).MakeGenericType (Enum.GetUnderlyingType (property.PropertyType)), property));
-					} else if (typeof (SolidBrush).IsAssignableFrom(property.PropertyType)) {
-						// Note: this only supports `System.Drawing`'s `SolidBrush` for now. Do we need more for the reflection model?
-						this.properties.Add (new ReflectionSolidBrushPropertyInfo (property));
+						this.properties.Add ((ReflectionPropertyInfo)Activator.CreateInstance (typeof (ReflectionEnumPropertyInfo<>).MakeGenericType (Enum.GetUnderlyingType (property.PropertyType)), property));
 					}
-					else
+					else {
 						this.properties.Add (new ReflectionPropertyInfo (property));
+					}
 				}
 			}
 

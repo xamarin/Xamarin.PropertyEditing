@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Tests
 {
@@ -14,12 +15,17 @@ namespace Xamarin.PropertyEditing.Tests
 			return values[index];
 		}
 
-		public static Color NextColor(this Random rand)
-			=> Color.FromArgb(
-				rand.Next(0, 256),
-				rand.Next(0, 256),
-				rand.Next(0, 256),
-				rand.Next(0, 256));
+		public static byte NextByte(this Random rand)
+		{
+			return (byte)rand.Next (0, 256);
+		}
+
+		public static CommonColor NextColor(this Random rand)
+			=> new CommonColor(
+				rand.NextByte(),
+				rand.NextByte(),
+				rand.NextByte(),
+				rand.NextByte());
 
 		static char[] vowels = new[] { 'a', 'e', 'i', 'o', 'u' };
 		static char[] consonnants = new[] { 'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w', 'x', 'z' };
