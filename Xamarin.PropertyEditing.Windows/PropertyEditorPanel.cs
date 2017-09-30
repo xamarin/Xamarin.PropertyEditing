@@ -72,6 +72,8 @@ namespace Xamarin.PropertyEditing.Windows
 			set { SetValue (ArrangeModeProperty, value); }
 		}
 
+		public static PropertyEditing.Themes.WinThemeManager ThemeManager = new PropertyEditing.Themes.WinThemeManager();
+
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();

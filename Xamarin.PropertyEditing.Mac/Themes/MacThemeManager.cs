@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Themes
 		NSAppearance DarkAppearance = NSAppearance.GetAppearance (NSAppearance.NameVibrantDark);
 		NSAppearance LightAppearance = NSAppearance.GetAppearance (NSAppearance.NameAqua);
 
-		protected override void SetStyles ()
+		protected override void SetTheme ()
 		{
 			switch (Theme) {
 				case PropertyEditorTheme.Dark:

@@ -17,6 +17,9 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 
 		[Action ("OnClickEvent:")]
 		partial void OnClickEvent (Foundation.NSObject sender);
+
+		[Action ("OnThemeChanged:")]
+		partial void OnThemeChanged (Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{

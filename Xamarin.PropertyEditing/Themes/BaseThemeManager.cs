@@ -16,7 +16,7 @@ namespace Xamarin.PropertyEditing.Themes
 			NotifyThemeChanged ();
 		}
 
-		protected abstract void SetStyles ();
+		protected abstract void SetTheme ();
 
 		public PropertyEditorTheme Theme
 		{
@@ -34,7 +34,7 @@ namespace Xamarin.PropertyEditing.Themes
 
 		void NotifyThemeChanged ()
 		{
-			SetStyles ();
+			SetTheme ();
 			if (ThemeChanged != null)
 				ThemeChanged (null, EventArgs.Empty);
 		}

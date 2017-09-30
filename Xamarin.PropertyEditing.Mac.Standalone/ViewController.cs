@@ -44,5 +44,19 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 				PropertyPanel.SelectedItems.Add (inspectedObject);
 			}
 		}
+
+		// If theme toggled, then notify our manager
+		partial void OnThemeChanged (NSObject sender)
+		{
+			var themeControl = sender as NSSegmentedControl;
+			switch (themeControl.SelectedSegment) {
+				case 0:
+					PropertyEditorPanel.ThemeManager.Theme = Themes.PropertyEditorTheme.Dark;
+					break;
+				case 1:
+					PropertyEditorPanel.ThemeManager.Theme = Themes.PropertyEditorTheme.Light;
+					break;
+			}
+		}
 	}
 }
