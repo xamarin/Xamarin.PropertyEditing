@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections;
-
 using AppKit;
+using CoreGraphics;
 using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal abstract class PropertyEditorControl : NSView
+	internal abstract class PropertyEditorControl : ThemedControl
 	{
 		public string Label { get; set; }
 
@@ -95,5 +95,20 @@ namespace Xamarin.PropertyEditing.Mac
 		protected abstract void SetEnabled ();
 
 		protected abstract void UpdateAccessibilityValues ();
+	}
+
+	internal class ThemedControl : NSView
+	{
+		public ThemedControl ()
+		{
+			PropertyEditorPanel.ThemeManager.ThemeChanged += (object sender, EventArgs e) => {
+				UpdateTheme ();
+			};
+		}
+
+		protected void UpdateTheme ()
+		{
+			this.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
+		}
 	}
 }

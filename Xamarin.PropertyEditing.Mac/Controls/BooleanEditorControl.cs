@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Diagnostics;
 using AppKit;
@@ -31,6 +31,8 @@ namespace Xamarin.PropertyEditing.Mac
 				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
 				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Left == c.Left)
 			});
+
+			UpdateTheme ();
 		}
 
 		internal NSButton BooleanEditor { get; set; }
@@ -64,8 +66,7 @@ namespace Xamarin.PropertyEditing.Mac
 				foreach (var error in errors) {
 					Debug.WriteLine (error.ToString () + "\n");
 				}
-			}
-			else {
+			} else {
 				if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector)) && BooleanEditor.Enabled) {
 					BooleanEditor.BezelColor = NSColor.Clear;
 				}

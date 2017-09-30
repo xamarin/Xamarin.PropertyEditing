@@ -125,6 +125,8 @@
   <ItemGroup>
     <Folder Include="Controls\" />
     <Folder Include="Resources\" />
+    <Compile Include="Themes\BaseThemeManager.cs" />
+    <Compile Include="Themes\ThemeStyle.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -135,6 +137,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LocalizationResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

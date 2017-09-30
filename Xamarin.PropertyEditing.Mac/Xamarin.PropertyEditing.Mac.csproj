@@ -85,6 +85,11 @@
     <Folder Include="Controls\" />
     <Folder Include="Controls\Custom\" />
     <Folder Include="Resources\" />
+    <Compile Include="Themes\MacThemeManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\" />
+    <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">

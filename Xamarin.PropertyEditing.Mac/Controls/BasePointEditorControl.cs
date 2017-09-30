@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Diagnostics;
 using AppKit;
@@ -48,6 +48,8 @@ namespace Xamarin.PropertyEditing.Mac
 				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 50),
 				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 50),
 			});
+
+			UpdateTheme ();
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
