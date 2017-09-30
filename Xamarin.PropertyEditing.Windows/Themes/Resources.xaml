@@ -334,19 +334,19 @@
 						</Canvas>
 						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="0" VerticalAlignment="Top">
 							<Label Content="R" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<local:IntegerUpDownControl Name="redEntry" Margin="14,0,2,0" Value="{Binding Value.Color.R}" MaximumValue="255" MinimumValue="0" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Red" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+							<TextBox Name="redEntry" Margin="14,0,2,0" Text="{Binding Value.Color.R,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Red" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
 						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Top">
 							<Label Content="G" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<local:IntegerUpDownControl Name="greenEntry" Margin="14,0,2,0" Value="{Binding Value.Color.G}" MaximumValue="255" MinimumValue="0" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Green" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+							<TextBox Name="greenEntry" Margin="14,0,2,0" Text="{Binding Value.Color.G,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Green" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
 						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Top">
 							<Label Content="B" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<local:IntegerUpDownControl Name="blueEntry" Margin="14,0,2,0" Value="{Binding Value.Color.B}" MaximumValue="255" MinimumValue="0" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Blue" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+							<TextBox Name="blueEntry" Margin="14,0,2,0" Text="{Binding Value.Color.B,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Blue" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
 						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Top">
 							<Label Content="A" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<local:IntegerUpDownControl Name="alphaEntry" Margin="14,0,2,0" Value="{Binding Value.Color.A}" MaximumValue="255" MinimumValue="0" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+							<TextBox Name="alphaEntry" Margin="14,0,2,0" Text="{Binding Value.Color.A,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
 						<Rectangle Name="colorChooser" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="15" Margin="3" Stroke="Black">
 							<Rectangle.Fill>

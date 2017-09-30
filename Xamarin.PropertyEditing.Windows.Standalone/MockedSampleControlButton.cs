@@ -1,4 +1,3 @@
-using System.Drawing;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Tests.MockControls;
 
