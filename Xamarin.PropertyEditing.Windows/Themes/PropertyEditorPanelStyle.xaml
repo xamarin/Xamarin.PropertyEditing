@@ -120,12 +120,6 @@
 		<Setter Property="BorderBrush" Value="{DynamicResource SearchControlBorderBrush}" />
 	</Style>
 
-	<ObjectDataProvider x:Key="PaneData" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
-		<ObjectDataProvider.MethodParameters>
-			<x:Type TypeName="local:EditingPane" />
-		</ObjectDataProvider.MethodParameters>
-	</ObjectDataProvider>
-
 	<Style TargetType="local:PropertyEditorPanel">
 		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
 		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}" />
@@ -141,8 +135,8 @@
 								<RowDefinition />
 							</Grid.RowDefinitions>
 
-							<Border  Grid.Row="0" Margin="4,2,4,2" Background="{DynamicResource PanelHeaderBackgroundBrush}" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource PanelGroupSecondaryBorderBrush}">
-								<Grid Grid.Row="0" Margin="4,2,4,2">
+							<Border Grid.Row="0" Margin="4,2,4,2" Background="{DynamicResource PanelHeaderBackgroundBrush}" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource PanelGroupSecondaryBorderBrush}">
+								<Grid Margin="4,2,4,2">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="Auto" />
 										<RowDefinition Height="Auto" />
@@ -164,7 +158,12 @@
 									<TextBlock Name="typeLabel" Grid.Row="1" Grid.Column="1" Margin="0,4,0,4" Text="{x:Static prop:Resources.Type}" />
 									<TextBlock Grid.Row="1" Grid.Column="2" Margin="9,4,0,4" Text="{Binding TypeName}" />
 
-									<local:ChoiceControl x:Name="paneSelector" Grid.Row="0" Grid.Column="3" ItemsSource="{Binding Source={StaticResource PaneData}}" Visibility="{Binding EventsEnabled,Converter={StaticResource BoolToVisibilityConverter}}" />
+									<local:ChoiceControl x:Name="paneSelector" AutomationProperties.HelpText="{x:Static prop:Resources.ViewPropertiesOrEvents}" Style="{DynamicResource PanelChoice}" Grid.Row="0" Grid.Column="3" Margin="4,0,0,0" Visibility="{Binding EventsEnabled,Converter={StaticResource BoolToVisibilityConverter}}">
+										<local:ChoiceControl.Items>
+											<local:ChoiceItem Name="{x:Static prop:Resources.Properties}" Tooltip="{x:Static prop:Resources.PropertiesSelectedElement}" Value="{x:Static local:EditingPane.Properties}" />
+											<local:ChoiceItem Name="{x:Static prop:Resources.Events}" Tooltip="{x:Static prop:Resources.EventHandlersSelectedElement}" Value="{x:Static local:EditingPane.Events}" />
+										</local:ChoiceControl.Items>
+									</local:ChoiceControl>
 								</Grid>
 							</Border>
 

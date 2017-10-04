@@ -332,13 +332,13 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (vm.IsObjectNameReadOnly, Is.False);
 
 			vm.SelectedObjects.Add (obj);
-			Assume.That (vm.IsObjectNameReadOnly, Is.True);
+			Assume.That (vm.IsObjectNameReadOnly, Is.False);
 
 			vm.SelectedObjects.Add (obj2);
-			Assert.That (vm.IsObjectNameReadOnly, Is.False);
+			Assert.That (vm.IsObjectNameReadOnly, Is.True);
 
 			vm.SelectedObjects.Remove (obj2);
-			Assert.That (vm.IsObjectNameReadOnly, Is.True);
+			Assert.That (vm.IsObjectNameReadOnly, Is.False);
 		}
 
 		[Test]

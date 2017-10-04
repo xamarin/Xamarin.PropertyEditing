@@ -3,7 +3,8 @@
                     xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows"
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:vm="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing"
-                    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
+                    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+                    xmlns:prop="clr-namespace:Xamarin.PropertyEditing.Properties;assembly=Xamarin.PropertyEditing">
 
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="VS.Light.xaml" />
@@ -25,16 +26,20 @@
 		</Setter>
 	</Style>
 
-	<Style x:Key="ChoiceControlItem" BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
+	<Style x:Key="ChoiceControlItem" BasedOn="{StaticResource {x:Type RadioButton}}" TargetType="RadioButton">
 		<Setter Property="Background" Value="{DynamicResource ToggleItemBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemBorderBrush}" />
 		<Setter Property="Foreground" Value="{DynamicResource ToggleItemForegroundBrush}" />
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Padding" Value="4,2,4,2" />
 		<Setter Property="Margin" Value="1,0,0,0" />
+		<Setter Property="FocusVisualStyle" Value="{x:Null}" />
+		<Setter Property="ToolTip" Value="{Binding Tooltip}" />
+		<Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+		<Setter Property="AutomationProperties.HelpText" Value="{Binding Tooltip}" />
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="ListBoxItem">
+				<ControlTemplate TargetType="RadioButton">
 					<Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Padding="{TemplateBinding Padding}">
 						<ContentPresenter />
 					</Border>
@@ -42,20 +47,28 @@
 			</Setter.Value>
 		</Setter>
 		<Style.Triggers>
-			<Trigger Property="IsSelected" Value="True">
+			<Trigger Property="IsChecked" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemSelectedBorderBrush}" />
 				<Setter Property="Background" Value="{DynamicResource ToggleItemSelectedBackgroundBrush}" />
 				<Setter Property="Foreground" Value="{DynamicResource ToggleItemSelectedForegroundBrush}" />
 			</Trigger>
 			<Trigger Property="IsMouseOver" Value="True">
-				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemMouseOverBorderBrush}" />
+				<Setter Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource ToggleItemMouseOverForegroundBrush}" />
+			</Trigger>
+			<Trigger Property="IsFocused" Value="True">
 				<Setter Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}" />
 			</Trigger>
-			<!--<Trigger Property="IsMouseDown" Value="True">
+			<Trigger Property="IsPressed" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemPressedBorderBrush}" />
 				<Setter Property="Background" Value="{DynamicResource ToggleItemPressedBackgroundBrush}" />
-			</Trigger>!-->
+			</Trigger>
 		</Style.Triggers>
+	</Style>
+
+	<Style x:Key="PanelChoiceItem" BasedOn="{StaticResource ChoiceControlItem}" TargetType="RadioButton">
+		<Setter Property="Padding" Value="1" />
+		<Setter Property="Width" Value="22" />
 	</Style>
 
 	<Style TargetType="{x:Type local:ChoiceControl}">
@@ -63,28 +76,38 @@
 		<Setter Property="BorderThickness" Value="0,1,1,1" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemOuterBorderBrush}" />
 		<Setter Property="Background" Value="{DynamicResource ToggleItemOuterBorderBrush}" />
+		<Setter Property="Focusable" Value="False" />
+		<Setter Property="SelectedValuePath" Value="Value" />
 		<Setter Property="ItemTemplate">
 			<Setter.Value>
 				<DataTemplate>
-					<Image Height="16" Width="16" Margin="-1" />
+					<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+						<Image Height="16" Width="16" Margin="-1" />
+					</RadioButton>
 				</DataTemplate>
 			</Setter.Value>
 		</Setter>
-		<Setter Property="Template">
+		<Setter Property="ItemsPanel">
 			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type local:ChoiceControl}">
-					<ListBox Name="list" ItemTemplate="{TemplateBinding ItemTemplate}" ItemsSource="{TemplateBinding ItemsSource}" SelectedItem="{TemplateBinding SelectedItem}" SelectionMode="Single" ItemContainerStyle="{StaticResource ChoiceControlItem}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-						<ListBox.ItemsPanel>
-							<ItemsPanelTemplate>
-								<StackPanel Orientation="Horizontal" />
-							</ItemsPanelTemplate>
-						</ListBox.ItemsPanel>
-					</ListBox>
-				</ControlTemplate>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Horizontal" />
+				</ItemsPanelTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>
-	
+
+	<Style x:Key="PanelChoice" BasedOn="{StaticResource {x:Type local:ChoiceControl}}" TargetType="local:ChoiceControl">
+		<Setter Property="ItemTemplate">
+			<Setter.Value>
+				<DataTemplate>
+					<RadioButton Style="{DynamicResource PanelChoiceItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+						<Image Height="16" Width="16" Margin="-1" />
+					</RadioButton>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<local:NumericTemplateSelector x:Key="NumericTemplateSelector">
 		<local:NumericTemplateSelector.FloatingTemplate>
 			<DataTemplate DataType="vm:FloatingPropertyViewModel">
