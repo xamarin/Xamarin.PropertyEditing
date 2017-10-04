@@ -1,4 +1,4 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows"
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
@@ -268,6 +268,79 @@
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource BottomThicknessGeometry}" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Value.Bottom}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Bottom" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:SolidBrushEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:SolidBrushEditorControl">
+					<Grid VerticalAlignment="Top" Margin="0,6,0,0">
+						<Grid.RowDefinitions>
+							<RowDefinition/>
+							<RowDefinition/>
+							<RowDefinition/>
+							<RowDefinition/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition/>
+							<ColumnDefinition/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<ComboBox Name="colorSpacePicker" Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding ColorSpaces}" SelectedItem="{Binding Value.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center" AutomationProperties.HelpText="Color space" />
+						<Rectangle Name="bottomShadeChooser" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" Stroke="Black" VerticalAlignment="Stretch" Margin="3,6,3,3">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+									<GradientStop Color="White" Offset="0"/>
+									<GradientStop Color="Red" Offset="1"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Rectangle Name="topShadeChooser" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" Stroke="Black" VerticalAlignment="Stretch" Panel.ZIndex="1" Margin="3,6,3,3">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#00000000" Offset="0"/>
+									<GradientStop Color="Black" Offset="1"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Canvas Name="cursor" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" VerticalAlignment="Stretch" Panel.ZIndex="2" IsHitTestVisible="False">
+							<Ellipse IsHitTestVisible="False" Width="10" Height="10" Stroke="#7F000000" StrokeThickness="4"/>
+							<Ellipse IsHitTestVisible="False" Width="10" Height="10" Stroke="#7FFFFFFF" StrokeThickness="2"/>
+						</Canvas>
+						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Top">
+							<Label Content="R" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
+							<TextBox Name="redEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Red" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+						</DockPanel>
+						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Top">
+							<Label Content="G" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
+							<TextBox Name="greenEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Green" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+						</DockPanel>
+						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Top">
+							<Label Content="B" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
+							<TextBox Name="blueEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Blue" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+						</DockPanel>
+						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="4" VerticalAlignment="Top">
+							<Label Content="A" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
+							<TextBox Name="alphaEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+						</DockPanel>
+						<Rectangle Name="hueChooser" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="15" Margin="3" Stroke="Black">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+									<GradientStop Color="Red" Offset="0"/>
+									<GradientStop Color="Yellow" Offset="0.167"/>
+									<GradientStop Color="Lime" Offset="0.333"/>
+									<GradientStop Color="Cyan" Offset="0.500"/>
+									<GradientStop Color="Blue" Offset="0.667"/>
+									<GradientStop Color="Magenta" Offset="0.833"/>
+									<GradientStop Color="Red" Offset="1"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

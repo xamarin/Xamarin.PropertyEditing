@@ -1,3 +1,4 @@
+using System.Windows.Controls;
 using Xamarin.PropertyEditing.Tests.MockControls;
 
 namespace Xamarin.PropertyEditing.Windows.Standalone

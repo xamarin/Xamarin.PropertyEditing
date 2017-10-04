@@ -38,7 +38,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncWorkQueue.cs" />
@@ -46,6 +45,7 @@
     <Compile Include="Drawing\CommonAlignment.cs" />
     <Compile Include="Drawing\CommonBrush.cs" />
     <Compile Include="Drawing\CommonBrushMappingMode.cs" />
+    <Compile Include="Drawing\CommonColor.cs" />
     <Compile Include="Drawing\CommonColorInterpolationMode.cs" />
     <Compile Include="Drawing\CommonGradientBrush.cs" />
     <Compile Include="Drawing\CommonGradientSpreadMethod.cs" />
@@ -84,11 +84,11 @@
     </Compile>
     <Compile Include="PropertyVariation.cs" />
     <Compile Include="Reflection\ReflectionEditorProvider.cs" />
-    <Compile Include="Reflection\ReflectionSolidBrushPropertyInfo.cs" />
     <Compile Include="Reflection\ReflectionEnumPropertyInfo.cs" />
     <Compile Include="Reflection\ReflectionEventInfo.cs" />
     <Compile Include="Reflection\ReflectionObjectEditor.cs" />
     <Compile Include="Reflection\ReflectionPropertyInfo.cs" />
+    <Compile Include="SolidBrushPropertyInfo.cs" />
     <Compile Include="ValueInfo.cs" />
     <Compile Include="ValueSource.cs" />
     <Compile Include="ViewModels\ArrangeModeViewModel.cs" />
