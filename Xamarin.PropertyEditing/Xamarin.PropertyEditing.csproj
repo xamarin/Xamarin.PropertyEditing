@@ -88,6 +88,7 @@
     <Compile Include="Reflection\ReflectionEventInfo.cs" />
     <Compile Include="Reflection\ReflectionObjectEditor.cs" />
     <Compile Include="Reflection\ReflectionPropertyInfo.cs" />
+    <Compile Include="SolidBrushPropertyInfo.cs" />
     <Compile Include="ValueInfo.cs" />
     <Compile Include="ValueSource.cs" />
     <Compile Include="ViewModels\ArrangeModeViewModel.cs" />

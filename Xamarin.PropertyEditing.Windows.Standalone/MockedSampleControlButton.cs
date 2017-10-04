@@ -8,9 +8,11 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 		public MockedSampleControlButton () : base (new MockSampleControl ())
 		{
 			// TODO: Move the declaration of this property to MockSampleControl once SolidBrush is supported on both platforms.
-			MockedControl.AddProperty<CommonSolidBrush> ("SolidBrush", "Windows Only");
-			MockedControl.SetValue("SolidBrush",
-				new CommonSolidBrush(20, 120, 220, 240));
+			var brushPropertyInfo = new SolidBrushPropertyInfo ("SolidBrush", "Windows Only", true,
+				new[] { "RGB", "sRGB" });
+			MockedControl.AddProperty<CommonSolidBrush> (brushPropertyInfo);
+			MockedControl.SetValue(brushPropertyInfo,
+				new CommonSolidBrush(20, 120, 220, 240, "sRGB"));
 		}
 	}
 }
