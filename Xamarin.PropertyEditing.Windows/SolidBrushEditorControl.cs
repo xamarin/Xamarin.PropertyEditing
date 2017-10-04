@@ -19,6 +19,7 @@ namespace Xamarin.PropertyEditing.Windows
 			DefaultStyleKey = typeof (SolidBrushEditorControl);
 		}
 
+		ComboBox colorSpacePicker;
 		TextBox redEntry;
 		TextBox greenEntry;
 		TextBox blueEntry;
@@ -39,6 +40,11 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnApplyTemplate ();
 
+			colorSpacePicker = (ComboBox)GetTemplateChild ("colorSpacePicker");
+			if (ViewModel.ColorSpaces == null || ViewModel.ColorSpaces.Count == 0) {
+				colorSpacePicker.Visibility = Visibility.Collapsed;
+			}
+
 			redEntry = (TextBox)GetTemplateChild ("redEntry");
 			greenEntry = (TextBox)GetTemplateChild ("greenEntry");
 			blueEntry = (TextBox)GetTemplateChild ("blueEntry");
@@ -51,6 +57,11 @@ namespace Xamarin.PropertyEditing.Windows
 			cursorHeight = (cursor.Children.Cast<Shape> ()).Max (c => c.Height);
 
 			if (ViewModel.Property.CanWrite) {
+				// Handle color space changes
+				colorSpacePicker.SelectionChanged += (s, e) => {
+					ViewModel.Value = new CommonSolidBrush (ViewModel.Value.Color, (string)e.AddedItems[0]);
+				};
+
 				// Handle changes on ARGB text boxes
 				redEntry.PreviewTextInput += ConstrainToDigits;
 				redEntry.LostFocus += (s, e) => UpdateFromTextBoxes ();

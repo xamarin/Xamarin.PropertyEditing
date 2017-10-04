@@ -306,13 +306,15 @@
 							<RowDefinition/>
 							<RowDefinition/>
 							<RowDefinition/>
+							<RowDefinition/>
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition/>
 							<ColumnDefinition/>
 							<ColumnDefinition/>
 						</Grid.ColumnDefinitions>
-						<Rectangle Name="bottomShadeChooser" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Stroke="Black" VerticalAlignment="Stretch" Margin="3,6,3,3">
+						<ComboBox Name="colorSpacePicker" Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding ColorSpaces}" SelectedItem="{Binding Value.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center" AutomationProperties.HelpText="Color space" />
+						<Rectangle Name="bottomShadeChooser" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" Stroke="Black" VerticalAlignment="Stretch" Margin="3,6,3,3">
 							<Rectangle.Fill>
 								<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
 									<GradientStop Color="White" Offset="0"/>
@@ -320,7 +322,7 @@
 								</LinearGradientBrush>
 							</Rectangle.Fill>
 						</Rectangle>
-						<Rectangle Name="topShadeChooser" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Stroke="Black" VerticalAlignment="Stretch" Panel.ZIndex="1" Margin="3,6,3,3">
+						<Rectangle Name="topShadeChooser" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" Stroke="Black" VerticalAlignment="Stretch" Panel.ZIndex="1" Margin="3,6,3,3">
 							<Rectangle.Fill>
 								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 									<GradientStop Color="#00000000" Offset="0"/>
@@ -328,27 +330,27 @@
 								</LinearGradientBrush>
 							</Rectangle.Fill>
 						</Rectangle>
-						<Canvas Name="cursor" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Panel.ZIndex="2" IsHitTestVisible="False">
+						<Canvas Name="cursor" Grid.ColumnSpan="2" Grid.RowSpan="3" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" VerticalAlignment="Stretch" Panel.ZIndex="2" IsHitTestVisible="False">
 							<Ellipse IsHitTestVisible="False" Width="10" Height="10" Stroke="#7F000000" StrokeThickness="4"/>
 							<Ellipse IsHitTestVisible="False" Width="10" Height="10" Stroke="#7FFFFFFF" StrokeThickness="2"/>
 						</Canvas>
-						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="0" VerticalAlignment="Top">
+						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Top">
 							<Label Content="R" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
 							<TextBox Name="redEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Red" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
-						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Top">
+						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Top">
 							<Label Content="G" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
 							<TextBox Name="greenEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Green" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
-						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Top">
+						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Top">
 							<Label Content="B" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
 							<TextBox Name="blueEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Blue" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
-						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Top">
+						<DockPanel Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="4" VerticalAlignment="Top">
 							<Label Content="A" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
 							<TextBox Name="alphaEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
-						<Rectangle Name="hueChooser" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="15" Margin="3" Stroke="Black">
+						<Rectangle Name="hueChooser" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="15" Margin="3" Stroke="Black">
 							<Rectangle.Fill>
 								<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
 									<GradientStop Color="Red" Offset="0"/>

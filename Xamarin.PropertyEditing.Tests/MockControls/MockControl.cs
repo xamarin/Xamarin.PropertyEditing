@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		public ICollection<IPropertyInfo> Properties => PropertyInfos.Values;
 		public ICollection<IEventInfo> Events => EventInfos.Values;
 
-		public void AddProperty<T> (string name, string category = "",
+		public IPropertyInfo AddProperty<T> (string name, string category = "",
 			bool canWrite = true, bool flag = false,
 			IEnumerable<Type> converterTypes = null)
 		{
@@ -34,16 +34,22 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			else {
 				propertyInfo = new MockPropertyInfo<T> (name, category, canWrite, converterTypes);
 			}
-			PropertyInfos.Add (name, propertyInfo);
+			return AddProperty<T>(propertyInfo);
+		}
+
+		public IPropertyInfo AddProperty<T>(IPropertyInfo propertyInfo)
+		{
+			PropertyInfos.Add (propertyInfo.Name, propertyInfo);
 			Values.Add (propertyInfo, new ValueInfo<T> {
 				Value = default (T),
 				Source = ValueSource.Local
 			});
+			return propertyInfo;
 		}
 
-		public void AddReadOnlyProperty<T> (string name, string category = "")
+		public IPropertyInfo AddReadOnlyProperty<T> (string name, string category = "")
 		{
-			AddProperty<T> (name, category, false);
+			return AddProperty<T> (name, category, false);
 		}
 
 		public void AddEvent (string name)
