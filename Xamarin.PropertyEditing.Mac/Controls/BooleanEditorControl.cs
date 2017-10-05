@@ -59,17 +59,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
 			if (ViewModel.HasErrors) {
-				if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector))) {
-					BooleanEditor.BezelColor = NSColor.Red;
-				}
-				Debug.WriteLine ("Your input triggered an error:");
-				foreach (var error in errors) {
-					Debug.WriteLine (error.ToString () + "\n");
-				}
+				SetErrors (errors);
 			} else {
-				if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector)) && BooleanEditor.Enabled) {
-					BooleanEditor.BezelColor = NSColor.Clear;
-				}
+				SetErrors (null);
 				SetEnabled ();
 			}
 		}

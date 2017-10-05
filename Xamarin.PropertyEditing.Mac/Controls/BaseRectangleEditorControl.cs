@@ -80,20 +80,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
 			if (ViewModel.HasErrors) {
-				XEditor.BackgroundColor = NSColor.Red;
-				YEditor.BackgroundColor = NSColor.Red;
-				WidthEditor.BackgroundColor = NSColor.Red;
-				HeightEditor.BackgroundColor = NSColor.Red;
-				Debug.WriteLine ("Your input triggered an error:");
-				foreach (var error in errors) {
-					Debug.WriteLine (error.ToString () + "\n");
-				}
-			}
-			else {
-				XEditor.BackgroundColor = NSColor.Clear;
-				YEditor.BackgroundColor = NSColor.Clear;
-				WidthEditor.BackgroundColor = NSColor.Clear;
-				HeightEditor.BackgroundColor = NSColor.Clear;
+				SetErrors (errors);
+			} else {
+				SetErrors (null);
 				SetEnabled ();
 			}
 		}

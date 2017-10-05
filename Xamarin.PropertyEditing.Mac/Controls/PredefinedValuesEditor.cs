@@ -36,7 +36,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.comboBox);
 
 			this.DoConstraints (new[] {
-				comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
+				comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 28),
 				comboBox.ConstraintTo (this, (cb, c) => cb.Left == c.Left),
 			});
 
@@ -61,13 +61,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
 			if (ViewModel.HasErrors) {
-				this.comboBox.BackgroundColor = NSColor.Red;
-				Debug.WriteLine ("Your input triggered an error:");
-				foreach (var error in errors) {
-					Debug.WriteLine (error.ToString () + "\n");
-				}
+				SetErrors (errors);
 			} else {
-				comboBox.BackgroundColor = NSColor.Clear;
+				SetErrors (null);
 				SetEnabled ();
 			}
 		}

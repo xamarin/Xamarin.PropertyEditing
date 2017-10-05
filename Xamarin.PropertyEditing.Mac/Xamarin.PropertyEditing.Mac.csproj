@@ -86,6 +86,8 @@
     <Folder Include="Controls\Custom\" />
     <Folder Include="Resources\" />
     <Compile Include="Themes\MacThemeManager.cs" />
+    <Compile Include="Controls\BaseEditorControl.cs" />
+    <Compile Include="Controls\ErrorMessageView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
