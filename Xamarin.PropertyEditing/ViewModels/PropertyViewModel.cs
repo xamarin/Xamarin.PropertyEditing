@@ -58,15 +58,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		protected virtual void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
-		{
-			if (e.Property != null && !Equals (e.Property, Property))
-				return;
-
-			// TODO: Smarter querying, can query the single editor and check against MultipleValues
-			UpdateCurrentValue ();
-		}
-
 		protected virtual TValue ValidateValue (TValue validationValue)
 		{
 			return validationValue;
@@ -103,18 +94,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				// The public setter for Value is a local set for binding
 				SetCurrentValue ((currentValue != null) ? currentValue : null);
 			}
-		}
-
-		protected override void SetupEditor (IObjectEditor editor)
-		{
-			base.SetupEditor (editor);
-			editor.PropertyChanged += OnEditorPropertyChanged;
-		}
-
-		protected override void TeardownEditor (IObjectEditor editor)
-		{
-			base.TeardownEditor (editor);
-			editor.PropertyChanged -= OnEditorPropertyChanged;
 		}
 
 		private readonly ObservableCollection<Resource> resources = new ObservableCollection<Resource> ();
@@ -229,14 +208,28 @@ namespace Xamarin.PropertyEditing.ViewModels
 				throw new ArgumentNullException (nameof (property));
 
 			Property = property;
+			SetupConstraints ();
 		}
+
+		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
 		public IPropertyInfo Property
 		{
 			get;
 		}
 
-		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+		public bool IsAvailable
+		{
+			get { return this.isAvailable.Result; }
+			private set
+			{
+				if (this.isAvailable.Result == value)
+					return;
+
+				this.isAvailable = Task.FromResult (value);
+				OnPropertyChanged();
+			}
+		}
 
 		public bool HasErrors => this.error != null;
 
@@ -284,13 +277,93 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnErrorsChanged (new DataErrorsChangedEventArgs (nameof (Property)));
 		}
 
+		protected virtual async void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
+		{
+			if (e.Property != null && !Equals (e.Property, Property))
+				return;
+
+			IDisposable work = null;
+			if (this.constraintProperties != null && this.constraintProperties.Contains (e.Property)) {
+				work = await AsyncWork.RequestAsyncWork (this);
+				IsAvailable = await RequeryAvailabilityAsync ();
+			}
+
+			try {
+				// TODO: Smarter querying, can query the single editor and check against MultipleValues
+				UpdateCurrentValue ();
+			} finally {
+				work?.Dispose ();
+			}
+		}
+
+		protected override void SetupEditor (IObjectEditor editor)
+		{
+			base.SetupEditor (editor);
+			editor.PropertyChanged += OnEditorPropertyChanged;
+		}
+
+		protected override void TeardownEditor (IObjectEditor editor)
+		{
+			base.TeardownEditor (editor);
+			editor.PropertyChanged -= OnEditorPropertyChanged;
+		}
+
+		private HashSet<IPropertyInfo> constraintProperties;
 		private ObjectViewModel valueModel;
 		private PropertyVariation variation;
 		private string error;
+		private Task<bool> isAvailable;
 
 		private void OnErrorsChanged (DataErrorsChangedEventArgs e)
 		{
 			ErrorsChanged?.Invoke (this, e);
+		}
+
+		private void SetupConstraints ()
+		{
+			IReadOnlyList<IAvailabilityConstraint> constraints = Property.AvailabilityConstraints;
+			if (constraints == null || constraints.Count == 0)
+				return;
+
+			for (int i = 0; i < constraints.Count; i++) {
+				IAvailabilityConstraint constraint = constraints[i];
+				IReadOnlyList<IPropertyInfo> properties = constraint.ConstrainingProperties;
+				if (properties != null) {
+					if (this.constraintProperties == null)
+						this.constraintProperties = new HashSet<IPropertyInfo> ();
+
+					foreach (IPropertyInfo property in properties)
+						this.constraintProperties.Add (property);
+				}
+			}
+
+			this.isAvailable = RequeryAvailabilityAsync ();
+		}
+
+		private async Task<bool> RequeryAvailabilityAsync()
+		{
+			var constraints = Property.AvailabilityConstraints;
+			if (constraints == null || constraints.Count == 0)
+				return true;
+
+			using (await AsyncWork.RequestAsyncWork (this)) {
+				HashSet<Task<bool>> tasks = new HashSet<Task<bool>> ();
+				foreach (IObjectEditor editor in Editors) {
+					foreach (IAvailabilityConstraint constraint in constraints) {
+						tasks.Add (constraint.GetIsAvailableAsync (editor));
+					}
+				}
+
+				while (tasks.Count > 0) {
+					Task<bool> task = await Task.WhenAny (tasks);
+					tasks.Remove (task);
+
+					if (!task.Result)
+						return false;
+				}
+
+				return true;
+			}
 		}
 	}
 }
