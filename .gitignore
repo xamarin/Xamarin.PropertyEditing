@@ -1,8 +1,8 @@
 packages
 bin
 obj
-*.suo
 *.DotSettings
 /Xamarin.PropertyEditing.userprefs
 /TestResult.xml
 /out
+.vs
