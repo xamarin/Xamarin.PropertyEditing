@@ -409,6 +409,103 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm2.Value, Is.EqualTo (property2Value));
 		}
 
+		[Test]
+		public void AvailabilityConstraintUnavailable ()
+		{
+			var constraint = new Mock<IAvailabilityConstraint> ();
+			
+			var prop = GetPropertyMock ();
+			prop.SetupGet (p => p.AvailabilityConstraints).Returns (new List<IAvailabilityConstraint> { constraint.Object });
+			
+			IObjectEditor editor = GetBasicEditor (prop.Object);
+			constraint.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (false);
+
+			var vm = GetViewModel (prop.Object, new[] { editor });
+			Assert.That (vm.IsAvailable, Is.False);
+		}
+
+		[Test]
+		public void MultiAvailabilityConstraintUnavailable ()
+		{
+			var constraint1 = new Mock<IAvailabilityConstraint> ();
+			var constraint2 = new Mock<IAvailabilityConstraint> ();
+			
+			var prop = GetPropertyMock ();
+			prop.SetupGet (p => p.AvailabilityConstraints).Returns (new List<IAvailabilityConstraint> { constraint1.Object, constraint2.Object });
+			
+			IObjectEditor editor = GetBasicEditor (prop.Object);
+			constraint1.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (false);
+			constraint2.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (true);
+
+			var vm = GetViewModel (prop.Object, new[] { editor });
+			Assert.That (vm.IsAvailable, Is.False);
+		}
+
+		[Test]
+		public void AvailabilityConstraintAvailable ()
+		{
+			var constraint = new Mock<IAvailabilityConstraint> ();
+			
+			var prop = GetPropertyMock ();
+			prop.SetupGet (p => p.AvailabilityConstraints).Returns (new List<IAvailabilityConstraint> { constraint.Object });
+			
+			IObjectEditor editor = GetBasicEditor (prop.Object);
+			constraint.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (true);
+
+			var vm = GetViewModel (prop.Object, new[] { editor });
+			Assert.That (vm.IsAvailable, Is.True);
+		}
+
+		[Test]
+		public void MultiAvailabilityConstraintAvailable ()
+		{
+			var constraint1 = new Mock<IAvailabilityConstraint> ();
+			var constraint2 = new Mock<IAvailabilityConstraint> ();
+			
+			var prop = GetPropertyMock ();
+			prop.SetupGet (p => p.AvailabilityConstraints).Returns (new List<IAvailabilityConstraint> { constraint1.Object, constraint2.Object });
+			
+			IObjectEditor editor = GetBasicEditor (prop.Object);
+			constraint1.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (true);
+			constraint2.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (true);
+
+			var vm = GetViewModel (prop.Object, new[] { editor });
+			Assert.That (vm.IsAvailable, Is.True);
+		}
+
+		[Test]
+		public async Task PropertyChangeRequeriesAvailability ()
+		{
+			var prop = GetPropertyMock ();
+
+
+			var constraint = new Mock<IAvailabilityConstraint> ();
+			constraint.SetupGet (c => c.ConstrainingProperties).Returns (new[] { prop.Object });
+			prop.SetupGet (p => p.AvailabilityConstraints).Returns (new List<IAvailabilityConstraint> { constraint.Object });
+
+			bool isAvailable = true;
+			IObjectEditor editor = GetBasicEditor (prop.Object);
+			constraint.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (() => isAvailable);
+
+			var vm = GetViewModel (prop.Object, new[] { editor });
+			Assume.That (vm.IsAvailable, Is.True);
+
+			bool changed = false;
+			vm.PropertyChanged += (o, e) => {
+				if (e.PropertyName == nameof(PropertyViewModel.IsAvailable))
+					changed = true;
+			};
+
+			isAvailable = false;
+			await editor.SetValueAsync (prop.Object, new ValueInfo<TValue> {
+				Value = GetRandomTestValue(),
+				Source = ValueSource.Local
+			});
+
+			Assert.That (vm.IsAvailable, Is.False);
+			Assert.That (changed, Is.True);
+		}
+
 		protected TValue GetNonDefaultRandomTestValue ()
 		{
 			TValue value = default (TValue);
