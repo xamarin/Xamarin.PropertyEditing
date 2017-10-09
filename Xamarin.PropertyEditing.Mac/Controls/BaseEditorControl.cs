@@ -15,11 +15,10 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			errorButton = new NSButton () {
 				Bordered = false,
-				Cell = { BackgroundColor = NSColor.Clear },
 				Enabled = false,
+				ImageScaling = NSImageScale.AxesIndependently,
 				Title = string.Empty,
 				TranslatesAutoresizingMaskIntoConstraints = false,
-				ImageScaling = NSImageScale.AxesIndependently,
 			};
 
 			errorButton.Activated += (object sender, EventArgs e) => {

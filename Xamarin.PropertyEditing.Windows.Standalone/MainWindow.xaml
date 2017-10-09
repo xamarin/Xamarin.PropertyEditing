@@ -20,8 +20,8 @@
 			<RowDefinition />
 			<RowDefinition />
 		</Grid.RowDefinitions>
-        <RadioButton Grid.Row="0" Grid.Column="0" Click="Theme_Click">Dark Theme</RadioButton>
-        <RadioButton Grid.Row="0" Grid.Column="1" Click="Theme_Click" IsChecked="True">Light Theme</RadioButton>
+        <RadioButton Grid.Row="0" Grid.Column="0" Click="Theme_Click" IsChecked="True">Dark Theme</RadioButton>
+        <RadioButton Grid.Row="0" Grid.Column="1" Click="Theme_Click">Light Theme</RadioButton>
         <local:MockedSampleControlButton Grid.Row="1" Grid.Column="0" Click="Button_Click">Mocked Sample 1</local:MockedSampleControlButton>
 		<local:MockedSampleControlButton Grid.Row="2" Grid.Column="0" Click="Button_Click">Mocked Sample 2</local:MockedSampleControlButton>
 		<local:MockedWpfButton Grid.Row="3" Grid.Column="0" Click="Button_Click">Mocked WPF button</local:MockedWpfButton>
