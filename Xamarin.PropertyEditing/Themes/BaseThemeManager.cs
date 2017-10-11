@@ -8,11 +8,8 @@ namespace Xamarin.PropertyEditing.Themes
 	{
 		PropertyEditorTheme theme;
 
-		public ThemeStyle Style { get; private set; }
-
 		public BaseThemeManager ()
 		{
-			Style = new ThemeStyle ();
 			NotifyThemeChanged ();
 		}
 

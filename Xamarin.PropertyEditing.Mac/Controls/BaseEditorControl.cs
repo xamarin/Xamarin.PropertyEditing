@@ -43,9 +43,19 @@ namespace Xamarin.PropertyEditing.Mac
 				errorButton.ConstraintTo (this, (cb, c) => cb.Top == c.Top + 4),
 			});
 
-			PropertyEditorPanel.ThemeManager.ThemeChanged += (object sender, EventArgs e) => {
-				UpdateTheme ();
-			};
+			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
+		}
+
+		protected override void Dispose (bool disposing)
+		{
+			if (disposing) {
+				PropertyEditorPanel.ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
+			}
+		}
+
+		void ThemeManager_ThemeChanged (object sender, EventArgs e)
+		{
+			UpdateTheme ();
 		}
 
 		protected void UpdateTheme ()

@@ -29,7 +29,7 @@ namespace Xamarin.PropertyEditing.Mac
 
             this.DoConstraints (new[] {
 				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
-				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Left == c.Left)
+				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Left == c.Left + 3)
 			});
 
 			UpdateTheme ();

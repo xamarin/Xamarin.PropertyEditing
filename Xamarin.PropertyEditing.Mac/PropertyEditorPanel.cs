@@ -177,10 +177,20 @@ namespace Xamarin.PropertyEditing.Mac
 				tableContainer.ConstraintTo(this, (t, c) => t.Height == c.Height - 40),
 			});
 
-			ThemeManager.ThemeChanged += (object sender, EventArgs e) => {
-				UpdateTheme ();
-			};
+			ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
 
+			UpdateTheme ();
+		}
+
+		protected override void Dispose (bool disposing)
+		{
+			if (disposing) {
+				PropertyEditorPanel.ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
+			}
+		}
+
+		void ThemeManager_ThemeChanged (object sender, EventArgs e)
+		{
 			UpdateTheme ();
 		}
 

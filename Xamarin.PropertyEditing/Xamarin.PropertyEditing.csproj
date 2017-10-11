@@ -126,7 +126,7 @@
     <Folder Include="Controls\" />
     <Folder Include="Resources\" />
     <Compile Include="Themes\BaseThemeManager.cs" />
-    <Compile Include="Themes\ThemeStyle.cs" />
+    <Compile Include="Themes\PropertyEditorTheme.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

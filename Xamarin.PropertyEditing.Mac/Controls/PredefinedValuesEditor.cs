@@ -37,7 +37,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.DoConstraints (new[] {
 				comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 28),
-				comboBox.ConstraintTo (this, (cb, c) => cb.Left == c.Left),
+				comboBox.ConstraintTo (this, (cb, c) => cb.Left == c.Left + 3),
 			});
 
 			UpdateTheme ();

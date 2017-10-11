@@ -26,6 +26,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.DoConstraints (new[] {
 				StringEditor.ConstraintTo (this, (s, c) => s.Width == c.Width - 30),
+				StringEditor.ConstraintTo (this, (s, c) => s.Left == s.Left + 3),
 			});
 
 			UpdateTheme ();
