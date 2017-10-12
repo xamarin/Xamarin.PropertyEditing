@@ -99,7 +99,7 @@ namespace Xamarin.PropertyEditing.Windows
 		void OnHueChanged (object s, MouseEventArgs e)
 		{
 			var position = e.GetPosition ((IInputElement)s);
-			CurrentHue = GetHueFromPosition (position);
+			CurrentHue = GetHueFromPosition (position.Y / hueChooser.ActualHeight);
 			var color = GetColorFromPosition (CurrentCursorPosition);
 			UpdateCurrentColor (color.R, color.G, color.B, skipShadeUpdate: true);
 		}
@@ -179,11 +179,11 @@ namespace Xamarin.PropertyEditing.Windows
 		/// G:   0 | 255 | 255 | 255 |   0 |   0 |   0
 		/// B:   0 |   0 |   0 | 255 | 255 | 255 |   0
 		/// </summary>
-		/// <param name="position">The horizontal position on the hue picker</param>
+		/// <param name="position">The horizontal position on the hue picker, between 0 and 1</param>
 		/// <returns>The hue</returns>
-		CommonColor GetHueFromPosition (Point position)
+		CommonColor GetHueFromPosition (double position)
 		{
-			var dialPosition = Math.Min(Math.Max(0, position.X * 6 / hueChooser.ActualWidth), 6);
+			var dialPosition = Math.Min(Math.Max(0, position * 6), 6);
 			return new CommonColor (
 				GetHueComponent (dialPosition, redRanges),
 				GetHueComponent (dialPosition, greenRanges),
