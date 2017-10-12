@@ -220,7 +220,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool IsAvailable
 		{
-			get { return this.isAvailable.Result; }
+			get { return this.isAvailable == null ? false : this.isAvailable.Result; }
 			private set
 			{
 				if (this.isAvailable.Result == value)
