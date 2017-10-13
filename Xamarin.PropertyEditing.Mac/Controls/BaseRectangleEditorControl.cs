@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using AppKit;
 using CoreGraphics;
+using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -106,16 +107,16 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			XEditor.AccessibilityEnabled = XEditor.Enabled;
-			XEditor.AccessibilityTitle = ViewModel.Property.Name + " X Editor"; // TODO Localization
+			XEditor.AccessibilityTitle = Strings.AccessibilityXEditor (ViewModel.Property.Name);
 
 			YEditor.AccessibilityEnabled = YEditor.Enabled;
-			YEditor.AccessibilityTitle = ViewModel.Property.Name + " Y Editor"; // TODO Localization
+			YEditor.AccessibilityTitle = Strings.AccessibilityYEditor (ViewModel.Property.Name);
 
 			WidthEditor.AccessibilityEnabled = WidthEditor.Enabled;
-			WidthEditor.AccessibilityTitle = ViewModel.Property.Name + " Width Editor"; // TODO Localization
+			WidthEditor.AccessibilityTitle = Strings.AccessibilityWidthEditor (ViewModel.Property.Name);
 
-			HeightEditor.AccessibilityEnabled = XEditor.Enabled;
-			HeightEditor.AccessibilityTitle = ViewModel.Property.Name + " Height Editor"; // TODO Localization
+			HeightEditor.AccessibilityEnabled = HeightEditor.Enabled;
+			HeightEditor.AccessibilityTitle = Strings.AccessibilityHeightEditor (ViewModel.Property.Name);
 		}
 	}
 }

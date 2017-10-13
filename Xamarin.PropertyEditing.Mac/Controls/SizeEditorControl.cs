@@ -2,6 +2,7 @@
 using System.Drawing;
 using CoreGraphics;
 using Xamarin.PropertyEditing.Drawing;
+using Xamarin.PropertyEditing.Mac.Resources;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -11,20 +12,20 @@ namespace Xamarin.PropertyEditing.Mac
 		public SizeEditorControl ()
 		{
 			XLabel.Frame = new CGRect (0, 0, 40, 24);
-			XLabel.StringValue = "Width:"; // TODO Localise
+			XLabel.StringValue = "Width:";
 
 			XEditor.Frame = new CGRect (45, 0, 50, 20);
 
 			YLabel.Frame = new CGRect (105, 0, 45, 24);
-			YLabel.StringValue = "Height:"; // TODO Localise
+			YLabel.StringValue = "Height:"; 
 
 			YEditor.Frame = new CGRect (155, 0, 50, 20);
 		}
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			XEditor.AccessibilityTitle = ViewModel.Property.Name + " Width Editor"; // TODO Localization
-			YEditor.AccessibilityTitle = ViewModel.Property.Name + " Height Editor"; // TODO Localization
+			XEditor.AccessibilityTitle = Strings.AccessibilityWidthEditor (ViewModel.Property.Name);
+			YEditor.AccessibilityTitle = Strings.AccessibilityHeightEditor (ViewModel.Property.Name);
 		}
 	}
 

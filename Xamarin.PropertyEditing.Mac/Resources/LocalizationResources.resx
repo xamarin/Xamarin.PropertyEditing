@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="PropertyFilterLabel" xml:space="preserve">
+		<value>Property Filter</value>
+		<comment>Property Filter placeholder text</comment>
+	</data>
+	<data name="PropertyColumnTitle" xml:space="preserve">
+		<value>Property</value>
+		<comment>Title text for property column</comment>
+	</data>
+	<data name="ValueColumnTitle" xml:space="preserve">
+		<value>Value</value>
+		<comment>Title text for value column</comment>
+	</data>
+	<data name="AccessibilityNumeric" xml:space="preserve">
+		<value>{0} Numeric Editor</value>
+		<comment>Editor for Numeric Value</comment>
+	</data>
+	<data name="AccessibilityBoolean" xml:space="preserve">
+		<value>{0} Boolean Editor</value>
+		<comment>Editor for Boolean Value</comment>
+	</data>
+	<data name="AccessibilityCombobox" xml:space="preserve">
+		<value>{0} Combobox Editor</value>
+		<comment>Editor for Combobox Value</comment>
+	</data>
+	<data name="AccessibilityString" xml:space="preserve">
+		<value>{0} String Editor</value>
+		<comment>Editor for String Value</comment>
+	</data>
+	<data name="AccessibilityXEditor" xml:space="preserve">
+		<value>{0} X Editor</value>
+		<comment>Editor for X Value</comment>
+	</data>
+	<data name="AccessibilityYEditor" xml:space="preserve">
+		<value>{0} Y Editor</value>
+		<comment>Editor for Y Value</comment>
+	</data>
+	<data name="AccessibilityWidthEditor" xml:space="preserve">
+		<value>{0} Width Editor</value>
+		<comment>Editor for Width Value</comment>
+	</data>
+	<data name="AccessibilityHeightEditor" xml:space="preserve">
+		<value>{0} Height Editor</value>
+		<comment>Editor for Height Value</comment>
+	</data> 
+	<data name="ArrangeByLabel" xml:space="preserve">
+		<value>Arrange By:</value>
+	</data>
+</root>

@@ -8,6 +8,7 @@ using AppKit;
 using CoreGraphics;
 
 using Xamarin.PropertyEditing.ViewModels;
+using Xamarin.PropertyEditing.Mac.Resources;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -88,7 +89,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			comboBox.AccessibilityEnabled = comboBox.Enabled;
-			comboBox.AccessibilityTitle = ViewModel.Property.Name + " Enumeration Combo Box"; // TODO Localization
+			comboBox.AccessibilityTitle = Strings.AccessibilityCombobox (ViewModel.Property.Name);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Xamarin.PropertyEditing.Resources;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -32,7 +33,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{
 				TValue realValue;
 				if (!Enum.TryParse (value, out realValue)) {
-					SetError ("Can't parse value"); // TODO: Localize & improve
+					SetError (Strings.UnableToParseValue (value));
 					return;
 				}
 

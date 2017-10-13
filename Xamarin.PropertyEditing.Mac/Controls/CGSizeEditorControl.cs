@@ -5,6 +5,7 @@ using System.Drawing;
 using AppKit;
 using CoreGraphics;
 using Foundation;
+using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -14,12 +15,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public CGSizeEditorControl ()
 		{
 			XLabel.Frame = new CGRect (0, 0, 40, 24);
-			XLabel.StringValue = "Width:"; // TODO Localise
+			XLabel.StringValue = "Width:";
 
 			XEditor.Frame = new CGRect (45, 0, 50, 20);
 
 			YLabel.Frame = new CGRect (105, 0, 45, 24);
-			YLabel.StringValue = "Height:"; // TODO Localise
+			YLabel.StringValue = "Height:";
 
 			YEditor.Frame = new CGRect (155, 0, 50, 20);
 		}
@@ -38,10 +39,10 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			XEditor.AccessibilityEnabled = XEditor.Enabled;
-			XEditor.AccessibilityTitle = ViewModel.Property.Name + " Width Editor"; // TODO Localization
+			XEditor.AccessibilityTitle = Strings.AccessibilityWidthEditor (ViewModel.Property.Name);
 
 			YEditor.AccessibilityEnabled = YEditor.Enabled;
-			YEditor.AccessibilityTitle = ViewModel.Property.Name + " Height Editor"; // TODO Localization
+			YEditor.AccessibilityTitle = Strings.AccessibilityHeightEditor (ViewModel.Property.Name);
 		}
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cadenza.Collections;
+using Xamarin.PropertyEditing.Resources;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -34,7 +35,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				TValue realValue;
 				if (!this.predefinedValues.PredefinedValues.TryGetValue (value, out realValue)) {
 					if (this.predefinedValues.IsConstrainedToPredefined) {
-						SetError ("Invalid value"); // TODO: Localize & improve
+						SetError (Strings.InvalidValue (value)); 
 						return;
 					}
 
