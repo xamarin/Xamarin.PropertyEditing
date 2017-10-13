@@ -4,6 +4,7 @@ using System.Diagnostics;
 using AppKit;
 using CoreGraphics;
 using Foundation;
+using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -72,7 +73,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			NumericEditor.AccessibilityEnabled = NumericEditor.Enabled;
-			NumericEditor.AccessibilityTitle = ViewModel.Property.Name + " Numeric Editor"; // TODO Localization
+			NumericEditor.AccessibilityTitle = Strings.AccessibilityNumeric (ViewModel.Property.Name);
 		}
 	}
 }

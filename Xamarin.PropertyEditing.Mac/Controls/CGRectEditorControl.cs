@@ -8,7 +8,6 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public CGRectEditorControl ()
 		{
-			// TODO localize
 			XLabel.Frame = new CGRect (26, 23, 25, 24);
 			XLabel.StringValue = "X:";
 

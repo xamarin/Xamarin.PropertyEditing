@@ -5,6 +5,7 @@ using System.Drawing;
 using AppKit;
 using CoreGraphics;
 using Foundation;
+using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -14,12 +15,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public CGPointEditorControl ()
 		{
 			XLabel.Frame = new CGRect (0, 0, 25, 24);
-			XLabel.StringValue = "X:"; // TODO Localise
+			XLabel.StringValue = "X:";
 
 			XEditor.Frame = new CGRect (25, 0, 50, 20);
 
 			YLabel.Frame = new CGRect (85, 0, 25, 24);
-			YLabel.StringValue = "Y:"; // TODO Localise
+			YLabel.StringValue = "Y:";
 
 			YEditor.Frame = new CGRect (110, 0, 50, 20);
 		}
@@ -38,10 +39,10 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			XEditor.AccessibilityEnabled = XEditor.Enabled;
-			XEditor.AccessibilityTitle = ViewModel.Property.Name + " X Editor"; // TODO Localization
+			XEditor.AccessibilityTitle = Strings.AccessibilityXEditor (ViewModel.Property.Name);
 
 			YEditor.AccessibilityEnabled = YEditor.Enabled;
-			YEditor.AccessibilityTitle = ViewModel.Property.Name + " Y Editor"; // TODO Localization
+			YEditor.AccessibilityTitle = Strings.AccessibilityYEditor (ViewModel.Property.Name);
 		}
 	}
 }

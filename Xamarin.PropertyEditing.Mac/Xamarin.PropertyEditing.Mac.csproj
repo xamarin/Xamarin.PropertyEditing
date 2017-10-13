@@ -77,10 +77,14 @@
     <Compile Include="Controls\SizeEditorControl.cs" />
     <Compile Include="Controls\Custom\NumericSpinEditor.cs" />
     <Compile Include="Controls\Custom\NumericTextField.cs" />
+    <Compile Include="Resources\LocalizationResources.Designer.cs">
+      <DependentUpon>LocalizationResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
     <Folder Include="Controls\Custom\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">
@@ -88,5 +92,15 @@
       <Name>Xamarin.PropertyEditing</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\LocalizationResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LocalizationResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <Import Project="..\packages\netfx-System.StringResources.3.0.14\build\netfx-System.StringResources.targets" Condition="Exists('..\packages\netfx-System.StringResources.3.0.14\build\netfx-System.StringResources.targets')" />
 </Project>

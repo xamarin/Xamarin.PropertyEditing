@@ -5,7 +5,7 @@ using CoreGraphics;
 using Foundation;
 using AppKit;
 using Xamarin.PropertyEditing.ViewModels;
-
+using Xamarin.PropertyEditing.Mac.Resources;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -97,7 +97,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			propertyFilter = new NSSearchField (new CGRect (10, Frame.Height - 25, 170, 24)) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
-				PlaceholderString = "Property Filter", // TODO Localize
+				PlaceholderString = Strings.PropertyFilterLabel,
 				ControlSize = NSControlSize.Regular,
 			};
 			AddSubview (propertyFilter);
@@ -108,7 +108,7 @@ namespace Xamarin.PropertyEditing.Mac
 				TextColor = NSColor.Black,
 				Editable = false,
 				Bezeled = false,
-				StringValue = "Arrange By:"
+				StringValue = Strings.ArrangeByLabel,
 			};
 
 			propertyArrangeMode = new NSComboBox (new CGRect (320, Frame.Height - 25, 153, 24)) {
@@ -145,9 +145,8 @@ namespace Xamarin.PropertyEditing.Mac
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 			};
 
-			// TODO: localize
-			NSTableColumn propertiesList = new NSTableColumn (PropertyListColId) { Title = "Property" };
-			NSTableColumn propertyEditors = new NSTableColumn (PropertyEditorColId) { Title = "Value" };
+			NSTableColumn propertiesList = new NSTableColumn (PropertyListColId) { Title = LocalizationResources.PropertyColumnTitle };
+			NSTableColumn propertyEditors = new NSTableColumn (PropertyEditorColId) { Title = LocalizationResources.ValueColumnTitle };
 			propertiesList.Width = 200;
 			propertyEditors.Width = 250;
 			propertyTable.AddColumn (propertiesList);

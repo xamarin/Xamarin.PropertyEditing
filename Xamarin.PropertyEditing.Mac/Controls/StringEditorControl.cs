@@ -3,6 +3,7 @@ using System.Collections;
 using System.Diagnostics;
 using AppKit;
 using CoreGraphics;
+using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -69,7 +70,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			StringEditor.AccessibilityTitle = ViewModel.Property.Name + " String Editor"; // TODO Localization
+			StringEditor.AccessibilityTitle = Strings.AccessibilityString (ViewModel.Property.Name);
 		}
 	}
 }
