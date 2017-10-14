@@ -66,6 +66,7 @@
     <Compile Include="PropertyEditorPanel.cs" />
     <Compile Include="PropertyPresenter.cs" />
     <Compile Include="SizeEditorControl.cs" />
+    <Compile Include="HueEditorControl.cs" />
     <Compile Include="SolidBrushEditorControl.cs" />
     <Compile Include="SubmitTextBox.cs" />
     <Compile Include="ThicknessEditorControl.cs" />

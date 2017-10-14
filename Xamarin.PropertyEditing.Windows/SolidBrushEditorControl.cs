@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -26,14 +27,13 @@ namespace Xamarin.PropertyEditing.Windows
 		TextBox alphaEntry;
 		Rectangle topShadeChooser;
 		Rectangle bottomShadeChooser;
-		Rectangle hueChooser;
+		HueEditorControl hueChooser;
 		Canvas cursor;
 		double cursorWidth;
 		double cursorHeight;
 
 		SolidBrushPropertyViewModel ViewModel => DataContext as SolidBrushPropertyViewModel;
 
-		CommonColor CurrentHue = new CommonColor (255, 0, 0);
 		Point CurrentCursorPosition;
 
 		public override void OnApplyTemplate ()
@@ -49,7 +49,7 @@ namespace Xamarin.PropertyEditing.Windows
 			greenEntry = (TextBox)GetTemplateChild ("greenEntry");
 			blueEntry = (TextBox)GetTemplateChild ("blueEntry");
 			alphaEntry = (TextBox)GetTemplateChild ("alphaEntry");
-			hueChooser = (Rectangle)GetTemplateChild ("hueChooser");
+			hueChooser = (HueEditorControl)GetTemplateChild ("hueChooser");
 			topShadeChooser = (Rectangle)GetTemplateChild ("topShadeChooser");
 			bottomShadeChooser = (Rectangle)GetTemplateChild ("bottomShadeChooser");
 			cursor = (Canvas)GetTemplateChild ("cursor");
@@ -57,9 +57,14 @@ namespace Xamarin.PropertyEditing.Windows
 			cursorHeight = (cursor.Children.Cast<Shape> ()).Max (c => c.Height);
 
 			if (ViewModel.Property.CanWrite) {
+				// Handle changes on the view model
+				ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+
 				// Handle color space changes
 				colorSpacePicker.SelectionChanged += (s, e) => {
-					ViewModel.Value = new CommonSolidBrush (ViewModel.Value.Color, (string)e.AddedItems[0]);
+					if (ViewModel != null && ViewModel.Value != null) {
+						ViewModel.Value = new CommonSolidBrush (ViewModel.Value.Color, (string)e.AddedItems[0]);
+					}
 				};
 
 				// Handle changes on ARGB text boxes
@@ -72,14 +77,6 @@ namespace Xamarin.PropertyEditing.Windows
 				alphaEntry.PreviewTextInput += ConstrainToDigits;
 				alphaEntry.LostFocus += (s, e) => UpdateFromTextBoxes ();
 
-				// Handle interaction with the hue chooser
-				hueChooser.MouseLeftButtonDown += OnHueChanged;
-				hueChooser.MouseMove += (s, e) => {
-					if (e.LeftButton == MouseButtonState.Pressed) {
-						OnHueChanged(s, e);
-					}
-				};
-
 				// Handle interaction with the top shade chooser
 				topShadeChooser.MouseLeftButtonDown += OnShadeChanged;
 				topShadeChooser.MouseMove += (s, e) => {
@@ -90,18 +87,19 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 		}
 
+		private void ViewModel_PropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+			// Handle interaction with the hue chooser
+			if (e.PropertyName == "Hue") {
+				var color = GetColorFromPosition (CurrentCursorPosition);
+				UpdateCurrentColor (color.R, color.G, color.B, skipHueUpdate: true);
+			}
+		}
+
 		protected override void OnRenderSizeChanged (SizeChangedInfo sizeInfo)
 		{
 			base.OnRenderSizeChanged (sizeInfo);
-			Update (ViewModel.Value.Color);
-		}
-
-		void OnHueChanged (object s, MouseEventArgs e)
-		{
-			var position = e.GetPosition ((IInputElement)s);
-			CurrentHue = GetHueFromPosition (position.Y / hueChooser.ActualHeight);
-			var color = GetColorFromPosition (CurrentCursorPosition);
-			UpdateCurrentColor (color.R, color.G, color.B, skipShadeUpdate: true);
+			Update (ViewModel.Value.Color, skipHueUpdate: true);
 		}
 
 		void OnShadeChanged (object s, MouseEventArgs e)
@@ -135,9 +133,9 @@ namespace Xamarin.PropertyEditing.Windows
 			var brightness = 1 - position.Y / topShadeChooser.ActualHeight;
 
 			return new CommonColor (
-				(byte)((255 + (CurrentHue.R - 255) * saturation) * brightness),
-				(byte)((255 + (CurrentHue.G - 255) * saturation) * brightness),
-				(byte)((255 + (CurrentHue.B - 255) * saturation) * brightness),
+				(byte)((255 + (ViewModel.Hue.R - 255) * saturation) * brightness),
+				(byte)((255 + (ViewModel.Hue.G - 255) * saturation) * brightness),
+				(byte)((255 + (ViewModel.Hue.B - 255) * saturation) * brightness),
 				255
 			);
 		}
@@ -167,113 +165,6 @@ namespace Xamarin.PropertyEditing.Windows
 		int[][] redRanges = new[] { new[] { 0, 1 }, new[] { 5, 6 } };
 		int[][] greenRanges = new[] { new[] { 1, 3 } };
 		int[][] blueRanges = new[] { new[] { 3, 5 } };
-
-		/// <summary>
-		/// Finds the hue from a position on the hue picker.
-		/// 
-		/// The hue dial is a gradient going through red, yellow, lime, cyan, blue, magenta, red.
-		/// This means the following variations for red, green, and blue components:
-		///      0 |   1 |   2 |   3 |   4 |   5 |   6
-		/// -------|-----|-----|-----|-----|-----|-----
-		/// R: 255 | 255 |   0 |   0 |   0 | 255 | 255
-		/// G:   0 | 255 | 255 | 255 |   0 |   0 |   0
-		/// B:   0 |   0 |   0 | 255 | 255 | 255 |   0
-		/// </summary>
-		/// <param name="position">The horizontal position on the hue picker, between 0 and 1</param>
-		/// <returns>The hue</returns>
-		CommonColor GetHueFromPosition (double position)
-		{
-			var dialPosition = Math.Min(Math.Max(0, position * 6), 6);
-			return new CommonColor (
-				GetHueComponent (dialPosition, redRanges),
-				GetHueComponent (dialPosition, greenRanges),
-				GetHueComponent (dialPosition, blueRanges)
-			);
-		}
-
-		/// <summary>
-		/// Gets a color component between 0 and 255 based on a position
-		/// between 0 and 6, and a set of ranges where the component is maxed out.
-		/// The component varies from 0 to 255 over the position range 1 unit to the
-		/// left of each interval, and from 255 to 0 over the position range 1 unit to
-		/// the right of each interval
-		/// </summary>
-		/// <param name="position">The position selected, between 0 (included), and 6 (not included)</param>
-		/// <param name="intervals">A set of intervals where the component is 255.</param>
-		/// <returns>The value of the component.</returns>
-		byte GetHueComponent (double position, int[][] intervals)
-		{
-			if (position < 0 || position > 6)
-				throw new ArgumentOutOfRangeException (nameof (position), "Position must be between 0 and 6.");
-			foreach (var interval in intervals) {
-				// Component is 255 inside the interval
-				if (position >= interval[0] && position <= interval[1])
-					return 255;
-				// Component linearly grows from 0 to 255 one unit left of the interval
-				if (position >= interval[0] - 1 && position < interval[0])
-					return (byte)((position - interval[0] + 1) * 255);
-				// Component linearly falls from 255 to 0 one unit right of the interval
-				if (position > interval[1] && position <= interval[1] + 1)
-					return (byte)(255 - (position - interval[1]) * 255);
-			}
-			// Otherwise, it's zero
-			return 0;
-		}
-
-		/// <summary>
-		/// Gets a hue from a color.
-		/// A hue has the highest component of the passed-in color at 255,
-		/// the lowest at 0, and the intermediate one is interpolated.
-		/// The result is a maximally saturated and bright color that looks
-		/// like the original color.
-		/// The precision of the mappin goes down as the color gets darker.
-		/// All shades of grey get arbitrarily mapped to red.
-		/// </summary>
-		/// <param name="color">The color for which to find the hue</param>
-		/// <returns>The hue</returns>
-		CommonColor GetHueFromColor (CommonColor color)
-		{
-			// Map grey to red
-			if (color.R == color.G && color.G == color.B)
-				return new CommonColor (255, 0, 0);
-
-			var isRedMax = color.R >= color.G && color.R >= color.B;
-			var isGreenMax = color.G >= color.R && color.G >= color.B;
-			var isRedMin = color.R <= color.G && color.R <= color.B;
-			var isGreenMin = color.G <= color.R && color.G <= color.B;
-			if (isRedMax) {
-				if (isGreenMin)
-					return new CommonColor (255, 0, InterpolateComponent (color.B, color.G, color.R));
-				else // blue is min
-					return new CommonColor (255, InterpolateComponent (color.G, color.B, color.R), 0);
-			}
-			if (isGreenMax) {
-				if (isRedMin)
-					return new CommonColor (0, 255, InterpolateComponent (color.B, color.R, color.G));
-				else // blue is min
-					return new CommonColor (InterpolateComponent (color.R, color.B, color.G), 255, 0);
-			}
-			// blue is max
-			if (isRedMin)
-				return new CommonColor (0, InterpolateComponent (color.G, color.R, color.B), 255);
-			else // green is min
-				return new CommonColor (InterpolateComponent (color.R, color.G, color.B), 0, 255);
-		}
-
-		/// <summary>
-		/// Computes where the third component should be if the top is mapped
-		/// to 255 and the lowest gets mapped to 0.
-		/// </summary>
-		/// <param name="component">The third component's value</param>
-		/// <param name="lowest">The lowest component value</param>
-		/// <param name="highest">The highest component value</param>
-		/// <returns>The interpolated third component</returns>
-		byte InterpolateComponent(byte component, byte lowest, byte highest)
-		{
-			var delta = highest - lowest;
-			if (delta == 0) return highest;
-			return (byte)((component - lowest) * 255 / delta);
-		}
 
 		/// <summary>
 		/// Updates the view model, as well as the hue and shade controls
@@ -328,17 +219,18 @@ namespace Xamarin.PropertyEditing.Windows
 
 			// Update the shade picker's gradient to reflect the current hue
 			if (!skipHueUpdate) {
-				CurrentHue = GetHueFromColor (newColor);
+				ViewModel.Hue = newColor.ToHue();
 			}
 			var newBrush = (LinearGradientBrush)bottomShadeChooser.Fill.Clone ();
 			var gradientStops = newBrush.GradientStops;
 			gradientStops.RemoveAt (1);
-			gradientStops.Add (new GradientStop (Color.FromRgb (CurrentHue.R, CurrentHue.G, CurrentHue.B), 1));
+			var currentHue = ViewModel.Hue;
+			gradientStops.Add (new GradientStop (Color.FromRgb (currentHue.R, currentHue.G, currentHue.B), 1));
 			bottomShadeChooser.Fill = newBrush;
 
 			if (!skipShadeUpdate) {
 				// Move the shade picker's cursor to the current color
-				CurrentCursorPosition = GetPositionFromColor (newColor, CurrentHue);
+				CurrentCursorPosition = GetPositionFromColor (newColor, currentHue);
 				foreach (var child in cursor.Children) {
 					var shape = child as Shape;
 					if (shape != null) {

@@ -341,19 +341,7 @@
 								<Ellipse IsHitTestVisible="False" Width="10" Height="10" Stroke="#7F000000" StrokeThickness="4"/>
 								<Ellipse IsHitTestVisible="False" Width="10" Height="10" Stroke="#7FFFFFFF" StrokeThickness="2"/>
 							</Canvas>
-							<Rectangle Name="hueChooser" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="15" Margin="1,6,3,3" Stroke="Transparent" StrokeThickness="0">
-								<Rectangle.Fill>
-									<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-										<GradientStop Color="Red" Offset="0"/>
-										<GradientStop Color="Yellow" Offset="0.167"/>
-										<GradientStop Color="Lime" Offset="0.333"/>
-										<GradientStop Color="Cyan" Offset="0.500"/>
-										<GradientStop Color="Blue" Offset="0.667"/>
-										<GradientStop Color="Magenta" Offset="0.833"/>
-										<GradientStop Color="Red" Offset="1"/>
-									</LinearGradientBrush>
-								</Rectangle.Fill>
-							</Rectangle>
+							<local:HueEditorControl x:Name="hueChooser" Hue="{Binding Path=Hue, Mode=TwoWay}" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="15" Margin="1,6,3,3"/>
 						</Grid>
 						<DockPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Top">
 							<Label Content="R" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
@@ -372,6 +360,28 @@
 							<TextBox Name="alphaEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
 					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:HueEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:HueEditorControl">
+					<Rectangle Name="hueChooser" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="15" Stroke="Transparent" StrokeThickness="0">
+						<Rectangle.Fill>
+							<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+								<GradientStop Color="Red" Offset="0"/>
+								<GradientStop Color="Yellow" Offset="0.167"/>
+								<GradientStop Color="Lime" Offset="0.333"/>
+								<GradientStop Color="Cyan" Offset="0.500"/>
+								<GradientStop Color="Blue" Offset="0.667"/>
+								<GradientStop Color="Magenta" Offset="0.833"/>
+								<GradientStop Color="Red" Offset="1"/>
+							</LinearGradientBrush>
+						</Rectangle.Fill>
+					</Rectangle>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

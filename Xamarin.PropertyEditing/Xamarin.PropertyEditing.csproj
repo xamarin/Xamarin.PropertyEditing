@@ -94,6 +94,7 @@
     <Compile Include="ValueSource.cs" />
     <Compile Include="ViewModels\ArrangeModeViewModel.cs" />
     <Compile Include="ViewModels\BrushPropertyViewModel.cs" />
+    <Compile Include="ViewModels\ColorViewModel.cs" />
     <Compile Include="ViewModels\ConstrainedPropertyViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\EnumPropertyViewModel.cs" />

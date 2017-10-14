@@ -15,5 +15,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		public IReadOnlyList<string> ColorSpaces { get; }
+
+		CommonColor? hue;
+		public CommonColor Hue {
+			get => hue.HasValue ? hue.Value : (hue = Value.Color.ToHue()).Value;
+			set {
+				if (!hue.Equals(value)) {
+					hue = value;
+					OnPropertyChanged ();
+				}
+			}
+		}
 	}
 }

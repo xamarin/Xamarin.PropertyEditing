@@ -21,12 +21,12 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <summary>
 		/// The color of the brush.
 		/// </summary>
-		public CommonColor Color { get; }
+		public CommonColor Color { get; set; }
 
 		/// <summary>
 		/// The color space the brush is defined in.
 		/// </summary>
-		public string ColorSpace { get; }
+		public string ColorSpace { get; set; }
 
 		public override bool Equals (object obj)
 		{
