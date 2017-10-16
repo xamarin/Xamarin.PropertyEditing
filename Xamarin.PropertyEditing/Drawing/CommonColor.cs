@@ -112,5 +112,10 @@ namespace Xamarin.PropertyEditing.Drawing
 			}
 			return hashCode;
 		}
+
+		public override string ToString ()
+		{
+			return $"{{R: {R}, G: {G}, B: {B}, A: {A}}}";
+		}
 	}
 }
