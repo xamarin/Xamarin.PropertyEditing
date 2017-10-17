@@ -321,43 +321,24 @@
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
-							<Rectangle Name="bottomShadeChooser" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Stroke="Transparent" StrokeThickness="0" VerticalAlignment="Stretch" Margin="3,6,0,3">
-								<Rectangle.Fill>
-									<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
-										<GradientStop Color="White" Offset="0"/>
-										<GradientStop Color="Red" Offset="1"/>
-									</LinearGradientBrush>
-								</Rectangle.Fill>
-							</Rectangle>
-							<Rectangle Name="topShadeChooser" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Stroke="Transparent" StrokeThickness="0" VerticalAlignment="Stretch" Panel.ZIndex="1" Margin="3,6,0,3">
-								<Rectangle.Fill>
-									<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-										<GradientStop Color="#00000000" Offset="0"/>
-										<GradientStop Color="Black" Offset="1"/>
-									</LinearGradientBrush>
-								</Rectangle.Fill>
-							</Rectangle>
-							<Canvas Name="cursor" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Panel.ZIndex="2" IsHitTestVisible="False">
-								<Ellipse IsHitTestVisible="False" Width="10" Height="10" Stroke="#7F000000" StrokeThickness="4"/>
-								<Ellipse IsHitTestVisible="False" Width="10" Height="10" Stroke="#7FFFFFFF" StrokeThickness="2"/>
-							</Canvas>
+							<local:ShadeEditorControl x:Name="shadeChooser" Shade="{Binding Path=Value.Color, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="3,6,0,3"/>
 							<local:HueEditorControl x:Name="hueChooser" Hue="{Binding Path=Hue, Mode=TwoWay}" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="15" Margin="1,6,3,3"/>
 						</Grid>
 						<DockPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Top">
 							<Label Content="R" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<TextBox Name="redEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Red" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+							<TextBox Name="redEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" Width="30" AutomationProperties.HelpText="Red" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
 						<DockPanel Grid.Column="1" Grid.Row="2" VerticalAlignment="Top">
 							<Label Content="G" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<TextBox Name="greenEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Green" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+							<TextBox Name="greenEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" Width="30" AutomationProperties.HelpText="Green" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
 						<DockPanel Grid.Column="1" Grid.Row="3" VerticalAlignment="Top">
 							<Label Content="B" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<TextBox Name="blueEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Blue" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+							<TextBox Name="blueEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" Width="30" AutomationProperties.HelpText="Blue" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
 						<DockPanel Grid.Column="1" Grid.Row="4" VerticalAlignment="Top">
 							<Label Content="A" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<TextBox Name="alphaEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+							<TextBox Name="alphaEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" Width="30" AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" DockPanel.Dock="Left"/>
 						</DockPanel>
 					</Grid>
 				</ControlTemplate>
@@ -382,6 +363,44 @@
 							</LinearGradientBrush>
 						</Rectangle.Fill>
 					</Rectangle>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:ShadeEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:ShadeEditorControl">
+					<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+						<Rectangle Name="saturationLayer" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Stroke="Transparent" StrokeThickness="0" VerticalAlignment="Stretch">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+									<GradientStop Color="White" Offset="0"/>
+									<GradientStop Color="Red" Offset="1"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Rectangle Name="luminosityLayer" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Stroke="Transparent" StrokeThickness="0" VerticalAlignment="Stretch" Panel.ZIndex="1">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#00000000" Offset="0"/>
+									<GradientStop Color="Black" Offset="1"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Canvas Name="cursor" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Panel.ZIndex="2" IsHitTestVisible="False">
+							<Canvas.RenderTransform><TranslateTransform X="-5" Y="-5"/></Canvas.RenderTransform>
+							<Ellipse
+								Canvas.Left="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition.X}"
+								Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition.Y}"
+								IsHitTestVisible="False" Width="10" Height="10" Stroke="#7F000000" StrokeThickness="4"/>
+							<Ellipse
+								Canvas.Left="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition.X}"
+								Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition.Y}"
+								IsHitTestVisible="False" Width="10" Height="10" Stroke="#7FFFFFFF" StrokeThickness="2"/>
+						</Canvas>
+					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
