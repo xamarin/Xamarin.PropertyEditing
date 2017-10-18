@@ -5,6 +5,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// Base class for brush descriptions.
 	/// </summary>
+	[Serializable]
 	public abstract class CommonBrush : IEquatable<CommonBrush>
 	{
 		// TODO: add transforms

@@ -1,8 +1,11 @@
+using System;
+
 namespace Xamarin.PropertyEditing.Drawing
 {
 	/// <summary>
 	/// Describes how a TileBrush paints tiles onto an output area.
 	/// </summary>
+	[Serializable]
 	public enum CommonTileMode
 	{
 		/// <summary>

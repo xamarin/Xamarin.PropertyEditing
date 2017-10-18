@@ -1,8 +1,11 @@
+using System;
+
 namespace Xamarin.PropertyEditing.Drawing
 {
 	/// <summary>
 	/// Describes how content is positioned horizontally in a container.
 	/// </summary>
+	[Serializable]
 	public enum CommonAlignmentX
 	{
 		/// <summary>
@@ -22,6 +25,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// Describes how content is positioned vertically in a container.
 	/// </summary>
+	[Serializable]
 	public enum CommonAlignmentY
 	{
 		/// <summary>

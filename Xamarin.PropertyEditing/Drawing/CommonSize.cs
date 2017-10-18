@@ -5,6 +5,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// A size in two-dimensional space.
 	/// </summary>
+	[Serializable]
 	public struct CommonSize : IEquatable<CommonSize>
 	{
 		public CommonSize(double width, double height)

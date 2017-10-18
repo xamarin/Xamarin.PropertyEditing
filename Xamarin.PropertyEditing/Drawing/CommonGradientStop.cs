@@ -7,6 +7,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// Describes the location and color of a transition point in a gradient.
 	/// </summary>
+	[Serializable]
 	public class CommonGradientStop : IEquatable<CommonGradientStop>
 	{
 		public CommonGradientStop (Color color, double offset)

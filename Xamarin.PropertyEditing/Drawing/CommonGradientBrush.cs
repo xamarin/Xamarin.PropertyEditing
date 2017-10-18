@@ -7,6 +7,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// An abstract description of a gradient brush, composed of gradient stops.
 	/// </summary>
+	[Serializable]
 	public abstract class CommonGradientBrush : CommonBrush, IEquatable<CommonGradientBrush>
 	{
 		protected CommonGradientBrush (

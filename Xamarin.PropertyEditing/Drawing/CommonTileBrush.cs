@@ -5,6 +5,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// Describes a way to paint a region by using one or more tiles.
 	/// </summary>
+	[Serializable]
 	public abstract class CommonTileBrush : CommonBrush, IEquatable<CommonTileBrush>
 	{
 		public CommonTileBrush(

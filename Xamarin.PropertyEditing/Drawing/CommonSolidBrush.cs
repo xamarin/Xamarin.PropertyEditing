@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 namespace Xamarin.PropertyEditing.Drawing
@@ -7,6 +6,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// Paints an area with a solid color.
 	/// </summary>
+	[Serializable]
 	public class CommonSolidBrush : CommonBrush, IEquatable<CommonSolidBrush>
 	{
 		public CommonSolidBrush(Color color, string colorSpace = null, double opacity = 1.0)

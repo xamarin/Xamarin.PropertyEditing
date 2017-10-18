@@ -5,6 +5,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// A two-dimensional thickness, such as the thickness of the border of a rectangle.
 	/// </summary>
+	[Serializable]
 	public struct CommonThickness : IEquatable<CommonThickness>
 	{
 		public CommonThickness(double uniformThickness)

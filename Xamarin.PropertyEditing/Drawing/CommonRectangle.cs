@@ -5,6 +5,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// Describes the width, height, and location of a rectangle.
 	/// </summary>
+	[Serializable]
 	public struct CommonRectangle : IEquatable<CommonRectangle>
 	{
 		/// <param name="x">The horizontal coordinate of left border of the rectangle.</param>

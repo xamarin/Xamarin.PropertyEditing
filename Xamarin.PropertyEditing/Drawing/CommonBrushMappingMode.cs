@@ -1,8 +1,11 @@
+using System;
+
 namespace Xamarin.PropertyEditing.Drawing
 {
 	/// <summary>
 	/// Specifies the coordinate system used by a brush.
 	/// </summary>
+	[Serializable]
 	public enum CommonBrushMappingMode
 	{
 		/// <summary>

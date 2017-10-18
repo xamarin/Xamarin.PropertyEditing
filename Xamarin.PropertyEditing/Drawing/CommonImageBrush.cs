@@ -5,6 +5,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// Paints an area with an image.
 	/// </summary>
+	[Serializable]
 	public class CommonImageBrush : CommonTileBrush, IEquatable<CommonImageBrush>
 	{
 		public CommonImageBrush(
