@@ -10,55 +10,37 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class BaseNumericEditorControl : PropertyEditorControl
 	{
-		//protected NSLayoutConstraint rightSideConstraint;
-
 		public BaseNumericEditorControl ()
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			var controlSize = NSControlSize.Small;
-
-			NumericEditor = new NSTextField {
-				TranslatesAutoresizingMaskIntoConstraints = false,
-				DoubleValue = 0.0,
-				Alignment = NSTextAlignment.Right,
-				Editable = false,
-			};
-
-			Formatter.FormatterBehavior = NSNumberFormatterBehavior.Version_10_4;
-			Formatter.Locale = NSLocale.CurrentLocale;
-
-			NumericEditor.Cell.Formatter = Formatter;
-			NumericEditor.Cell.ControlSize = controlSize;
-
-			Stepper = new NSStepper ();
-			Stepper.TranslatesAutoresizingMaskIntoConstraints = false;
-			Stepper.ValueWraps = false;
-			Stepper.Cell.ControlSize = controlSize;
-
-			AddSubview (Stepper);
+			NumericEditor = new NumericSpinEditor ();
 			AddSubview (NumericEditor);
 
 			this.DoConstraints ( new[] {
-				NumericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - 17),
-				Stepper.ConstraintTo (NumericEditor, (s, n) => s.Left == n.Right + 5),
-				Stepper.ConstraintTo (NumericEditor, (s, n) => s.Top == n.Top + 1),
+				NumericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width),
 			});
 		}
 
-		internal NSTextField NumericEditor { get; set; }
-		internal NSStepper Stepper { get; set; }
+		protected NumericSpinEditor NumericEditor { get; set; }
+
+		protected NSNumberFormatter Formatter {
+			get {
+				return NumericEditor.Formatter;
+			}
+			set {
+				NumericEditor.Formatter = value;
+			}
+		}
 
 		public override NSView FirstKeyView => NumericEditor;
 		public override NSView LastKeyView => NumericEditor;
 
-		protected NSNumberFormatter Formatter = new NSNumberFormatter ();
-		NSNumberFormatterStyle numberStyle;
 		protected NSNumberFormatterStyle NumberStyle {
-			get { return numberStyle; }
+			get { 
+				return NumericEditor.NumberStyle; }
 			set {
-				numberStyle = value;
-				Formatter.NumberStyle = numberStyle;
+				NumericEditor.NumberStyle = value;
 			}
 		}
 
@@ -85,16 +67,12 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void SetEnabled ()
 		{
 			NumericEditor.Editable = ViewModel.Property.CanWrite;
-			Stepper.Enabled = ViewModel.Property.CanWrite;
 		}
 
 		protected override void UpdateAccessibilityValues ()
 		{
 			NumericEditor.AccessibilityEnabled = NumericEditor.Enabled;
 			NumericEditor.AccessibilityTitle = ViewModel.Property.Name + " Numeric Editor"; // TODO Localization
-
-			Stepper.AccessibilityEnabled = Stepper.Enabled;
-			Stepper.AccessibilityTitle = ViewModel.Property.Name + " Numeric Stepper"; // TODO Localization
 		}
 	}
 }

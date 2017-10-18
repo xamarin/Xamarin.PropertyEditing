@@ -12,13 +12,13 @@ namespace Xamarin.PropertyEditing.Mac
 		where T : struct
 	{
 		protected UnfocusableTextField XLabel { get; set; }
-		protected NSTextField XEditor { get; set; }
+		protected NumericSpinEditor XEditor { get; set; }
 		protected UnfocusableTextField YLabel { get; set; }
-		protected NSTextField YEditor { get; set; }
+		protected NumericSpinEditor YEditor { get; set; }
 		protected UnfocusableTextField WidthLabel { get; set; }
-		protected NSTextField WidthEditor { get; set; }
+		protected NumericSpinEditor WidthEditor { get; set; }
 		protected UnfocusableTextField HeightLabel { get; set; }
-		protected NSTextField HeightEditor { get; set; }
+		protected NumericSpinEditor HeightEditor { get; set; }
 
 		public override NSView FirstKeyView => XEditor;
 		public override NSView LastKeyView => HeightEditor;
@@ -31,32 +31,28 @@ namespace Xamarin.PropertyEditing.Mac
 		public BaseRectangleEditorControl ()
 		{
 			XLabel = new UnfocusableTextField ();
-			XEditor = new NSTextField ();
+			XEditor = new NumericSpinEditor ();
 			XEditor.BackgroundColor = NSColor.Clear;
-			XEditor.StringValue = string.Empty;
-			XEditor.Activated += OnInputUpdated;
-			XEditor.EditingEnded += OnInputUpdated;
+			XEditor.Value = 0.0f;
+			XEditor.ValueChanged += OnInputUpdated;
 
 			YLabel =  new UnfocusableTextField ();
-			YEditor = new NSTextField ();
+			YEditor = new NumericSpinEditor ();
 			YEditor.BackgroundColor = NSColor.Clear;
-			YEditor.StringValue = string.Empty;
-			YEditor.Activated += OnInputUpdated;
-			YEditor.EditingEnded += OnInputUpdated;
+			YEditor.Value = 0.0f;
+			YEditor.ValueChanged += OnInputUpdated;
 
 			WidthLabel = new UnfocusableTextField ();
-			WidthEditor = new NSTextField ();
+			WidthEditor = new NumericSpinEditor ();
 			WidthEditor.BackgroundColor = NSColor.Clear;
-			WidthEditor.StringValue = string.Empty;
-			WidthEditor.Activated += OnInputUpdated;
-			WidthEditor.EditingEnded += OnInputUpdated;
+			WidthEditor.Value = 0.0f;
+			WidthEditor.ValueChanged += OnInputUpdated;
 
 			HeightLabel =  new UnfocusableTextField ();
-			HeightEditor = new NSTextField ();
+			HeightEditor = new NumericSpinEditor ();
 			HeightEditor.BackgroundColor = NSColor.Clear;
-			HeightEditor.StringValue = string.Empty;
-			HeightEditor.Activated += OnInputUpdated;
-			HeightEditor.EditingEnded += OnInputUpdated;
+			HeightEditor.Value = 0.0f;
+			HeightEditor.ValueChanged += OnInputUpdated;
 
 			AddSubview (XLabel);
 			AddSubview (XEditor);
@@ -70,7 +66,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected virtual void OnInputUpdated (object sender, EventArgs e)
 		{
-			ViewModel.Value = (T)Activator.CreateInstance (typeof(T), XEditor.FloatValue, YEditor.FloatValue, WidthEditor.FloatValue, HeightEditor.FloatValue);
+			ViewModel.Value = (T)Activator.CreateInstance (typeof(T), XEditor.Value, YEditor.Value, WidthEditor.Value, HeightEditor.Value);
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)

@@ -29,20 +29,27 @@ namespace Xamarin.PropertyEditing.Mac
 
 			HeightEditor.Frame = new CGRect (150, 0, 50, 20);
 
+			this.DoConstraints (new[] {
+				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 50),
+				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 50),
+				WidthEditor.ConstraintTo (this, (we, c) => we.Width == 50),
+				HeightEditor.ConstraintTo (this, (he, c) => he.Width == 50),
+			});
+
 			RowHeight = 48;
 		}
 
 		protected override void OnInputUpdated (object sender, EventArgs e)
 		{
-			ViewModel.Value = new CGRect (XEditor.FloatValue, YEditor.FloatValue, WidthEditor.FloatValue, HeightEditor.FloatValue);
+			ViewModel.Value = new CGRect (XEditor.Value, YEditor.Value, WidthEditor.Value, HeightEditor.Value);
 		}
 
 		protected override void UpdateValue ()
 		{
-			XEditor.StringValue = ViewModel.Value.X.ToString ();
-			YEditor.StringValue = ViewModel.Value.Y.ToString ();
-			WidthEditor.StringValue = ViewModel.Value.Width.ToString ();
-			HeightEditor.StringValue = ViewModel.Value.Height.ToString ();
+			XEditor.Value = ViewModel.Value.X;
+			YEditor.Value = ViewModel.Value.Y;
+			WidthEditor.Value = ViewModel.Value.Width;
+			HeightEditor.Value = ViewModel.Value.Height;
 		}
 	}
 }

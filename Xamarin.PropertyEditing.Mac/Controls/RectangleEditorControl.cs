@@ -35,15 +35,15 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void OnInputUpdated (object sender, EventArgs e)
 		{
-			ViewModel.Value = new Rectangle (XEditor.IntValue, YEditor.IntValue, WidthEditor.IntValue, HeightEditor.IntValue);
+			ViewModel.Value = new Rectangle ((int)XEditor.Value, (int)YEditor.Value, (int)WidthEditor.Value, (int)HeightEditor.Value);
 		}
 
 		protected override void UpdateValue ()
 		{
-			XEditor.StringValue = ViewModel.Value.X.ToString ();
-			YEditor.StringValue = ViewModel.Value.Y.ToString ();
-			WidthEditor.StringValue = ViewModel.Value.Width.ToString ();
-			HeightEditor.StringValue = ViewModel.Value.Height.ToString ();
+			XEditor.Value = ViewModel.Value.X;
+			YEditor.Value = ViewModel.Value.Y;
+			WidthEditor.Value = ViewModel.Value.Width;
+			HeightEditor.Value = ViewModel.Value.Height;
 		}
 	}
 }
