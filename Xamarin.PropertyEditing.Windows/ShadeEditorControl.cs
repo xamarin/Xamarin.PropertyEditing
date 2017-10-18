@@ -33,7 +33,7 @@ namespace Xamarin.PropertyEditing.Windows
 				"CursorPosition", typeof (Point), typeof (ShadeEditorControl),
 				new PropertyMetadata (new Point (0, 0)));
 
-		Point CursorPosition {
+		public Point CursorPosition {
 			get => (Point)GetValue (CursorPositionProperty);
 			set => SetValue (CursorPositionProperty, value);
 		}

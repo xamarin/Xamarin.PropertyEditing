@@ -118,6 +118,11 @@
 				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.IntegerTemplate>
+		<local:NumericTemplateSelector.ByteTemplate>
+			<DataTemplate DataType="vm:BytePropertyViewModel">
+				<local:ByteUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
+			</DataTemplate>
+		</local:NumericTemplateSelector.ByteTemplate>
 	</local:NumericTemplateSelector>
 
 	<Style TargetType="local:NumericEditorControl">
@@ -170,6 +175,31 @@
 						</Grid.ColumnDefinitions>
 
 						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Grid.Column="0" VerticalContentAlignment="Center" />
+
+						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
+							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
+							<Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
+						</StackPanel>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:ByteUpDownControl">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="ShowSpinner" Value="False" />
+		<Setter Property="MinHeight" Value="20" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:ByteUpDownControl}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" Grid.Column="0" VerticalContentAlignment="Center" />
 
 						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
 							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
@@ -304,16 +334,13 @@
 						<Grid.RowDefinitions>
 							<RowDefinition/>
 							<RowDefinition/>
-							<RowDefinition/>
-							<RowDefinition/>
-							<RowDefinition/>
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*"/>
 							<ColumnDefinition Width="Auto"/>
 						</Grid.ColumnDefinitions>
 						<ComboBox Name="colorSpacePicker" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding ColorSpaces}" SelectedItem="{Binding Value.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center" AutomationProperties.HelpText="Color space" />
-						<Grid Grid.RowSpan="3" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+						<Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="*"/>
 							</Grid.RowDefinitions>
@@ -324,22 +351,8 @@
 							<local:ShadeEditorControl x:Name="shadeChooser" Shade="{Binding Path=Value.Color, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="3,6,0,3"/>
 							<local:HueEditorControl x:Name="hueChooser" Hue="{Binding Path=Hue, Mode=TwoWay}" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="15" Margin="1,6,3,3"/>
 						</Grid>
-						<DockPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Top">
-							<Label Content="R" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<TextBox Name="redEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" Width="30" AutomationProperties.HelpText="Red" VerticalAlignment="Center" DockPanel.Dock="Left"/>
-						</DockPanel>
-						<DockPanel Grid.Column="1" Grid.Row="2" VerticalAlignment="Top">
-							<Label Content="G" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<TextBox Name="greenEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" Width="30" AutomationProperties.HelpText="Green" VerticalAlignment="Center" DockPanel.Dock="Left"/>
-						</DockPanel>
-						<DockPanel Grid.Column="1" Grid.Row="3" VerticalAlignment="Top">
-							<Label Content="B" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<TextBox Name="blueEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" Width="30" AutomationProperties.HelpText="Blue" VerticalAlignment="Center" DockPanel.Dock="Left"/>
-						</DockPanel>
-						<DockPanel Grid.Column="1" Grid.Row="4" VerticalAlignment="Top">
-							<Label Content="A" HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Left" />
-							<TextBox Name="alphaEntry" Margin="14,0,2,0" IsEnabled="{Binding Property.CanWrite, Mode=OneTime}" Width="30" AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" DockPanel.Dock="Left"/>
-						</DockPanel>
+						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Value.Color, Mode=TwoWay}"
+															Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -400,6 +413,48 @@
 								Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition.Y}"
 								IsHitTestVisible="False" Width="10" Height="10" Stroke="#7FFFFFFF" StrokeThickness="2"/>
 						</Canvas>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:ColorComponentsEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:ColorComponentsEditorControl">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition/>
+							<RowDefinition/>
+							<RowDefinition/>
+							<RowDefinition/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+						<Label Content="R" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" />
+						<local:ByteUpDownControl x:Name="redEntry" Width="50" Margin="14,0,2,0"
+												 AutomationProperties.HelpText="Red" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+												 Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color.R, Mode=TwoWay}"/>
+						<Label Content="G" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" />
+						<local:ByteUpDownControl x:Name="greenEntry" Width="50" Margin="14,0,2,0"
+												 AutomationProperties.HelpText="Green" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+												 Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color.G, Mode=TwoWay}"/>
+						<Label Content="B" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" />
+						<local:ByteUpDownControl x:Name="blueEntry" Width="50" Margin="14,0,2,0"
+												 AutomationProperties.HelpText="Blue" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+												 Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color.B, Mode=TwoWay}"/>
+						<Label Content="A" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" />
+						<local:ByteUpDownControl x:Name="alphaEntry" Width="50" Margin="14,0,2,0"
+												 AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+												 Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color.A, Mode=TwoWay}"/>
+						<TextBox Name="hexEntry" Width="70" Height="24" MinHeight="20" Margin="14,0,2,0"
+								 VerticalContentAlignment="Center" AutomationProperties.HelpText="Hex value" VerticalAlignment="Center"
+								 Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
