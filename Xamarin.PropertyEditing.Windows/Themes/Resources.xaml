@@ -432,25 +432,25 @@
 							<RowDefinition/>
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="*"/>
 							<ColumnDefinition Width="Auto"/>
 						</Grid.ColumnDefinitions>
 						<Label Content="R" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" />
-						<local:ByteUpDownControl x:Name="redEntry" Width="50" Margin="14,0,2,0"
-												 AutomationProperties.HelpText="Red" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
-												 Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color.R, Mode=TwoWay}"/>
+						<TextBox Name="redEntry" Width="50" Margin="14,0,2,0"
+								 AutomationProperties.HelpText="Red" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=R, Mode=TwoWay}"/>
 						<Label Content="G" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" />
-						<local:ByteUpDownControl x:Name="greenEntry" Width="50" Margin="14,0,2,0"
-												 AutomationProperties.HelpText="Green" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
-												 Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color.G, Mode=TwoWay}"/>
+						<TextBox Name="greenEntry" Width="50" Margin="14,0,2,0"
+								 AutomationProperties.HelpText="Green" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=G, Mode=TwoWay}"/>
 						<Label Content="B" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" />
-						<local:ByteUpDownControl x:Name="blueEntry" Width="50" Margin="14,0,2,0"
-												 AutomationProperties.HelpText="Blue" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
-												 Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color.B, Mode=TwoWay}"/>
+						<TextBox x:Name="blueEntry" Width="50" Margin="14,0,2,0"
+								 AutomationProperties.HelpText="Blue" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=B, Mode=TwoWay}"/>
 						<Label Content="A" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" />
-						<local:ByteUpDownControl x:Name="alphaEntry" Width="50" Margin="14,0,2,0"
-												 AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
-												 Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color.A, Mode=TwoWay}"/>
+						<TextBox Name="alphaEntry" Width="50" Margin="14,0,2,0"
+								 AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Mode=TwoWay}"/>
 						<TextBox Name="hexEntry" Width="70" Height="24" MinHeight="20" Margin="14,0,2,0"
 								 VerticalContentAlignment="Center" AutomationProperties.HelpText="Hex value" VerticalAlignment="Center"
 								 Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"

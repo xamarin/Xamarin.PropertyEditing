@@ -41,7 +41,7 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly DependencyProperty HueProperty =
 			DependencyProperty.Register (
 				"Hue", typeof (CommonColor), typeof (ShadeEditorControl),
-				new PropertyMetadata (new CommonColor (255, 0, 0), HueChanged));
+				new PropertyMetadata (new CommonColor (255, 0, 0), OnHueChanged));
 
 		public CommonColor Hue {
 			get => (CommonColor)GetValue (HueProperty);
@@ -77,7 +77,7 @@ namespace Xamarin.PropertyEditing.Windows
 			that.CursorPosition = that.GetPositionFromColor ((CommonColor)e.NewValue);
 		}
 
-		static void HueChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
+		static void OnHueChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
 		{
 			var that = source as ShadeEditorControl;
 			if (that == null || that.saturationLayer == null) return;

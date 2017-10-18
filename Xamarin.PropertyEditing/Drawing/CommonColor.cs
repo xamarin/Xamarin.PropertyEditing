@@ -5,6 +5,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// Describes a color.
 	/// </summary>
+	[Serializable]
 	public struct CommonColor : IEquatable<CommonColor>
 	{
 		public CommonColor (byte r, byte g, byte b, byte a = 255)

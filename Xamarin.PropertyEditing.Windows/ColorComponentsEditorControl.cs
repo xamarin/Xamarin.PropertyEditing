@@ -10,7 +10,7 @@ using Xamarin.PropertyEditing.Drawing;
 namespace Xamarin.PropertyEditing.Windows
 {
 	internal class ColorComponentsEditorControl : Control
-    {
+	{
 		public ColorComponentsEditorControl()
 		{
 			DefaultStyleKey = typeof (ColorComponentsEditorControl);
@@ -19,13 +19,72 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly DependencyProperty ColorProperty =
 			DependencyProperty.Register (
 				"Color", typeof (CommonColor), typeof (ColorComponentsEditorControl),
-				new PropertyMetadata (new CommonColor (0, 0, 0)));
+				new PropertyMetadata (new CommonColor (0, 0, 0), OnColorChanged));
 
 		public CommonColor Color {
 			get => (CommonColor)GetValue (ColorProperty);
 			set => SetValue (ColorProperty, value);
 		}
-    }
+
+		public static readonly DependencyProperty RedProperty =
+			DependencyProperty.Register (
+				"R", typeof (byte), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata ((byte)0, OnComponentChanged));
+
+		public byte R {
+			get => (byte)GetValue (RedProperty);
+			set => SetValue (RedProperty, value);
+		}
+
+		public static readonly DependencyProperty GreenProperty =
+			DependencyProperty.Register (
+				"G", typeof (byte), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata ((byte)0, OnComponentChanged));
+
+		public byte G {
+			get => (byte)GetValue (GreenProperty);
+			set => SetValue (GreenProperty, value);
+		}
+
+		public static readonly DependencyProperty BlueProperty =
+			DependencyProperty.Register (
+				"B", typeof (byte), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata ((byte)0, OnComponentChanged));
+
+		public byte B {
+			get => (byte)GetValue (BlueProperty);
+			set => SetValue (BlueProperty, value);
+		}
+
+		public static readonly DependencyProperty AlphaProperty =
+			DependencyProperty.Register (
+				"A", typeof (byte), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata ((byte)0, OnComponentChanged));
+
+		public byte A {
+			get => (byte)GetValue (AlphaProperty);
+			set => SetValue (AlphaProperty, value);
+		}
+
+		private static void OnComponentChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var control = (ColorComponentsEditorControl)d;
+			var newColor = new CommonColor (control.R, control.G, control.B, control.A);
+			if (!newColor.Equals(control.Color)) {
+				control.Color = newColor;
+			}
+		}
+
+		private static void OnColorChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var control = (ColorComponentsEditorControl)d;
+			var newColor = (CommonColor)e.NewValue;
+			if (control.R != newColor.R) control.R = newColor.R;
+			if (control.G != newColor.G) control.G = newColor.G;
+			if (control.B != newColor.B) control.B = newColor.B;
+			if (control.A != newColor.A) control.A = newColor.A;
+		}
+	}
 
 	[ValueConversion(typeof(CommonColor), typeof(string))]
 	internal class HexColorConverter : MarkupExtension, IValueConverter
