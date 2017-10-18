@@ -1,8 +1,11 @@
+using System;
+
 namespace Xamarin.PropertyEditing.Drawing
 {
 	/// <summary>
 	/// Specifies how to draw the gradient outside a gradient brush's gradient vector or space.
 	/// </summary>
+	[Serializable]
 	public enum CommonGradientSpreadMethod
 	{
 		/// <summary>

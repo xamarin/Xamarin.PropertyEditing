@@ -1,8 +1,11 @@
+using System;
+
 namespace Xamarin.PropertyEditing.Drawing
 {
 	/// <summary>
 	/// Describes how content is resized to fill its allocated space.
 	/// </summary>
+	[Serializable]
 	public enum CommonStretch
 	{
 		/// <summary>

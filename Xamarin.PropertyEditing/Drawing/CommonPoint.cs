@@ -5,6 +5,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// <summary>
 	/// A point in two-dimensional space.
 	/// </summary>
+	[Serializable]
 	public struct CommonPoint : IEquatable<CommonPoint>
 	{
 		/// <param name="x">The horizontal coordinate of the point.</param>
