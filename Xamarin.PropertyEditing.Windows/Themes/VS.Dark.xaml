@@ -1,4 +1,4 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<SolidColorBrush x:Key="ListBackgroundBrush">#252526</SolidColorBrush>
 	<SolidColorBrush x:Key="PanelBackgroundBrush">#252526</SolidColorBrush>
@@ -50,6 +50,8 @@
 
 	<SolidColorBrush x:Key="ThicknessIconBackgroundBrush">#292929</SolidColorBrush>
 	<SolidColorBrush x:Key="ThicknessIconBorderBrush">#292929</SolidColorBrush>
+
+	<SolidColorBrush x:Key="HuePickerCursorBrush">#000000</SolidColorBrush>
 
 	<SolidColorBrush x:Key="CategoryExpanderBorderBrush" Color="#333333" />
 	

@@ -54,7 +54,6 @@ namespace Xamarin.PropertyEditing.Windows
 
 			saturationLayer = (Rectangle)GetTemplateChild ("saturationLayer");
 			luminosityLayer = (Rectangle)GetTemplateChild ("luminosityLayer");
-			cursor = (Canvas)GetTemplateChild ("cursor");
 
 			luminosityLayer.MouseLeftButtonDown += OnCursorMoved;
 			luminosityLayer.MouseMove += (s, e) => {
@@ -74,6 +73,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		void OnCursorMoved(object source, MouseEventArgs e)
 		{
+			// TODO: find a way to prevent the hue from changing when picking a new shade because of lack of resolution near greys.
 			CursorPosition = e.GetPosition ((IInputElement)source);
 			if (saturationLayer == null) return;
 			Shade = GetColorFromPosition (CursorPosition);
@@ -82,10 +82,10 @@ namespace Xamarin.PropertyEditing.Windows
 		static void OnShadeChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
 		{
 			var that = source as ShadeEditorControl;
-			if (that == null || that.cursor == null) return;
-			that.CursorPosition = that.GetPositionFromColor ((CommonColor)e.NewValue);
+			if (that == null) return;
 			var oldHue = ((CommonColor)e.OldValue).Hue;
 			var newShade = ((CommonColor)e.NewValue);
+			that.CursorPosition = that.GetPositionFromColor (newShade);
 			var newHue = newShade.Hue;
 			if (!newHue.Equals(oldHue) && !newShade.IsGrey) {
 				OnHueChanged (source, new DependencyPropertyChangedEventArgs (HueProperty, oldHue, newHue));
@@ -142,6 +142,7 @@ namespace Xamarin.PropertyEditing.Windows
 			var luminosity = color.Luminosity;
 			var saturation = color.Saturation;
 
+			if (saturationLayer == null || luminosityLayer == null) return new Point (0, 0);
 			return new Point (
 				saturation * saturationLayer.ActualWidth + saturationLayer.Margin.Left ,
 				(1 - luminosity) * luminosityLayer.ActualHeight + luminosityLayer.Margin.Top);

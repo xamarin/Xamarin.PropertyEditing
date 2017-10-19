@@ -348,8 +348,8 @@
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
-							<local:ShadeEditorControl x:Name="shadeChooser" Shade="{Binding Path=Color, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="3,6,0,3"/>
-							<local:HueEditorControl x:Name="hueChooser" Hue="{Binding Path=Hue, Mode=TwoWay}" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="15" Margin="1,6,3,3"/>
+							<local:ShadeEditorControl x:Name="shadeChooser" Shade="{Binding Path=Color, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="3,6,0,3" Panel.ZIndex="1"/>
+							<local:HueEditorControl x:Name="hueChooser" Hue="{Binding Path=Hue, Mode=TwoWay}" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="1,6,3,3" Panel.ZIndex="0"/>
 						</Grid>
 						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Color, Mode=TwoWay}"
 															Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
@@ -363,19 +363,29 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:HueEditorControl">
-					<Rectangle Name="hueChooser" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="15" Stroke="Transparent" StrokeThickness="0">
-						<Rectangle.Fill>
-							<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-								<GradientStop Color="Red" Offset="0"/>
-								<GradientStop Color="Yellow" Offset="0.167"/>
-								<GradientStop Color="Lime" Offset="0.333"/>
-								<GradientStop Color="Cyan" Offset="0.500"/>
-								<GradientStop Color="Blue" Offset="0.667"/>
-								<GradientStop Color="Magenta" Offset="0.833"/>
-								<GradientStop Color="Red" Offset="1"/>
-							</LinearGradientBrush>
-						</Rectangle.Fill>
-					</Rectangle>
+					<Grid>
+						<Rectangle Name="hueChooser" Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="20" Stroke="Transparent" StrokeThickness="0">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+									<GradientStop Color="Red" Offset="0"/>
+									<GradientStop Color="Yellow" Offset="0.167"/>
+									<GradientStop Color="Lime" Offset="0.333"/>
+									<GradientStop Color="Cyan" Offset="0.500"/>
+									<GradientStop Color="Blue" Offset="0.667"/>
+									<GradientStop Color="Magenta" Offset="0.833"/>
+									<GradientStop Color="Red" Offset="1"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Canvas Name="cursorCanvas" Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="20" Panel.ZIndex="1" ClipToBounds="True">
+							<Canvas Width="{Binding ActualWidth, ElementName=cursorCanvas}" Height="{Binding ActualHeight, ElementName=cursorCanvas}"
+									Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition}">
+								<Canvas.RenderTransform><TranslateTransform X="0" Y="-4"/></Canvas.RenderTransform>
+								<Polygon Points="0,0 5,5 0,10" Stroke="{DynamicResource HuePickerCursorBrush}" Fill="{DynamicResource HuePickerCursorBrush}"/>
+								<Polygon Points="20,0 15,5 20,10" Stroke="{DynamicResource HuePickerCursorBrush}" Fill="{DynamicResource HuePickerCursorBrush}"/>
+							</Canvas>
+						</Canvas>
+					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

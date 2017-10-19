@@ -1,4 +1,4 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<SolidColorBrush x:Key="ListBackgroundBrush">#FFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="PanelBackgroundBrush">#F5F5F5</SolidColorBrush>
@@ -61,6 +61,8 @@
 
 	<SolidColorBrush x:Key="ThicknessIconBackgroundBrush">#EEEEF2</SolidColorBrush>
 	<SolidColorBrush x:Key="ThicknessIconBorderBrush">#EEEEF2</SolidColorBrush>
+
+	<SolidColorBrush x:Key="HuePickerCursorBrush">#000000</SolidColorBrush>
 
 	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Fill" Color="#FF595959"/>
 	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Stroke" Color="#FF262626"/>

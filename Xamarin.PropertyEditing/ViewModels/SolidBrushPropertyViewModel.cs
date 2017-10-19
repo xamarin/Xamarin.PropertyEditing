@@ -49,8 +49,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 		protected override void OnValueChanged ()
 		{
 			base.OnValueChanged ();
-			OnPropertyChanged (nameof (Hue));
 			OnPropertyChanged (nameof (Color));
+			hue = Color.Hue;
+			OnPropertyChanged (nameof (Hue));
+
 		}
 	}
 }
