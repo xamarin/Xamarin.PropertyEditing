@@ -19,19 +19,19 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <summary>
 		/// Alpha channel
 		/// </summary>
-		public byte A { get; set; }
+		public byte A { get; }
 		/// <summary>
 		/// Red component
 		/// </summary>
-		public byte R { get; set; }
+		public byte R { get; }
 		/// <summary>
 		/// Green component
 		/// </summary>
-		public byte G { get; set; }
+		public byte G { get; }
 		/// <summary>
 		/// Blue component
 		/// </summary>
-		public byte B { get; set; }
+		public byte B { get; }
 
 		/// <summary>
 		/// Gets a hue from this color.
@@ -162,6 +162,9 @@ namespace Xamarin.PropertyEditing.Drawing
 				   G == other.G &&
 				   B == other.B;
 		}
+
+		public static bool operator == (CommonColor left, CommonColor right) => Equals (left, right);
+		public static bool operator != (CommonColor left, CommonColor right) => !Equals (left, right);
 
 		public override int GetHashCode ()
 		{

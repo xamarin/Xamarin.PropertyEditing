@@ -87,6 +87,9 @@ namespace Xamarin.PropertyEditing.Drawing
 				   ViewPortUnits == other.ViewPortUnits;
 		}
 
+		public static bool operator == (CommonTileBrush left, CommonTileBrush right) => Equals (left, right);
+		public static bool operator != (CommonTileBrush left, CommonTileBrush right) => !Equals (left, right);
+
 		public override int GetHashCode ()
 		{
 			var hashCode = base.GetHashCode ();

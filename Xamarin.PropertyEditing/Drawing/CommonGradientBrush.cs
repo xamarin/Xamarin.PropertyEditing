@@ -67,6 +67,9 @@ namespace Xamarin.PropertyEditing.Drawing
 				   SpreadMethod == other.SpreadMethod;
 		}
 
+		public static bool operator == (CommonGradientBrush left, CommonGradientBrush right) => Equals (left, right);
+		public static bool operator != (CommonGradientBrush left, CommonGradientBrush right) => !Equals (left, right);
+
 		public override int GetHashCode ()
 		{
 			var hashCode = base.GetHashCode ();

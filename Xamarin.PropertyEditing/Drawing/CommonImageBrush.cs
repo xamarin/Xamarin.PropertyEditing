@@ -43,6 +43,9 @@ namespace Xamarin.PropertyEditing.Drawing
 				   ImageSource == other.ImageSource;
 		}
 
+		public static bool operator == (CommonImageBrush left, CommonImageBrush right) => Equals (left, right);
+		public static bool operator != (CommonImageBrush left, CommonImageBrush right) => !Equals (left, right);
+
 		public override int GetHashCode ()
 		{
 			var hashCode = base.GetHashCode ();

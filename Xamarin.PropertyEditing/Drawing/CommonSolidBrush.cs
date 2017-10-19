@@ -21,12 +21,12 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <summary>
 		/// The color of the brush.
 		/// </summary>
-		public CommonColor Color { get; set; }
+		public CommonColor Color { get; }
 
 		/// <summary>
 		/// The color space the brush is defined in.
 		/// </summary>
-		public string ColorSpace { get; set; }
+		public string ColorSpace { get; }
 
 		public override bool Equals (object obj)
 		{
@@ -42,6 +42,9 @@ namespace Xamarin.PropertyEditing.Drawing
 				   ColorSpace == other.ColorSpace &&
 				   Opacity == other.Opacity;
 		}
+
+		public static bool operator == (CommonSolidBrush left, CommonSolidBrush right) => Equals (left, right);
+		public static bool operator != (CommonSolidBrush left, CommonSolidBrush right) => !Equals (left, right);
 
 		public override int GetHashCode ()
 		{

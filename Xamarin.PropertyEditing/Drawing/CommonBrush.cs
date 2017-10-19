@@ -33,6 +33,9 @@ namespace Xamarin.PropertyEditing.Drawing
 				   Opacity == other.Opacity;
 		}
 
+		public static bool operator == (CommonBrush left, CommonBrush right) => Equals (left, right);
+		public static bool operator != (CommonBrush left, CommonBrush right) => !Equals (left, right);
+
 		public override int GetHashCode ()
 		{
 			return unchecked(1107944354 * -1521134295 + Opacity.GetHashCode ());

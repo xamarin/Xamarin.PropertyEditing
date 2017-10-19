@@ -46,6 +46,9 @@ namespace Xamarin.PropertyEditing.Drawing
 				   EndPoint.Equals (other.EndPoint);
 		}
 
+		public static bool operator == (CommonLinearGradientBrush left, CommonLinearGradientBrush right) => Equals (left, right);
+		public static bool operator != (CommonLinearGradientBrush left, CommonLinearGradientBrush right) => !Equals (left, right);
+
 		public override int GetHashCode ()
 		{
 			var hashCode = base.GetHashCode ();

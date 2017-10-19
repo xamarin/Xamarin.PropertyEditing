@@ -62,6 +62,9 @@ namespace Xamarin.PropertyEditing.Drawing
 				   RadiusY == other.RadiusY;
 		}
 
+		public static bool operator == (CommonRadialGradientBrush left, CommonRadialGradientBrush right) => Equals (left, right);
+		public static bool operator != (CommonRadialGradientBrush left, CommonRadialGradientBrush right) => !Equals (left, right);
+
 		public override int GetHashCode ()
 		{
 			var hashCode = base.GetHashCode ();

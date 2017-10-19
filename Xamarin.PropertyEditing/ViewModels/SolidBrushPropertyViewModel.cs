@@ -25,7 +25,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					OnPropertyChanged ();
 					var luminosity = Value.Color.Luminosity;
 					var saturation = Value.Color.Saturation;
-					Value.Color = CommonColor.From (value, luminosity, saturation, Value.Color.A);
+					Value = new CommonSolidBrush(CommonColor.From (value, luminosity, saturation, Value.Color.A), Value.ColorSpace, Value.Opacity);
 					OnPropertyChanged (nameof (Color));
 				}
 			}
