@@ -85,8 +85,9 @@ namespace Xamarin.PropertyEditing.Windows
 			if (that == null || that.cursor == null) return;
 			that.CursorPosition = that.GetPositionFromColor ((CommonColor)e.NewValue);
 			var oldHue = ((CommonColor)e.OldValue).Hue;
-			var newHue = ((CommonColor)e.NewValue).Hue;
-			if (!newHue.Equals(oldHue)) {
+			var newShade = ((CommonColor)e.NewValue);
+			var newHue = newShade.Hue;
+			if (!newHue.Equals(oldHue) && !newShade.IsGrey) {
 				OnHueChanged (source, new DependencyPropertyChangedEventArgs (HueProperty, oldHue, newHue));
 			}
 		}

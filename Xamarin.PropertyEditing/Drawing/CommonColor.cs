@@ -46,8 +46,7 @@ namespace Xamarin.PropertyEditing.Drawing
 		{
 			get {
 				// Map grey to red
-				if (R == G && G == B)
-					return new CommonColor (255, 0, 0);
+				if (IsGrey) return new CommonColor (255, 0, 0);
 
 				var isRedMax = R >= G && R >= B;
 				var isGreenMax = G >= R && G >= B;
@@ -107,6 +106,11 @@ namespace Xamarin.PropertyEditing.Drawing
 					: (B / luminosity - 255) / (hue.B - 255);
 			}
 		}
+
+		/// <summary>
+		/// True if the color is a shade of grey.
+		/// </summary>
+		public bool IsGrey => R == G && G == B;
 
 		/// <summary>
 		/// Creates a color from hue, saturation, and luminosity.
