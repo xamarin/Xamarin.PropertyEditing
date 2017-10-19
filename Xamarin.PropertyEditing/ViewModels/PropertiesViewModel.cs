@@ -431,8 +431,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(Rectangle), (p,e) => new PropertyViewModel<Rectangle> (p, e) },
 			{ typeof(CommonSolidBrush), (p, e) => new SolidBrushPropertyViewModel(p, e) },
 			{ typeof(CommonBrush), (p, e) => new BrushPropertyViewModel(p, e) },
-			{ typeof(CommonPoint), (p,e) => new PropertyViewModel<CommonPoint> (p, e) },
-			{ typeof(CommonSize), (p,e) => new PropertyViewModel<CommonSize> (p, e) },
+			{ typeof(CommonPoint), (p,e) => new PointPropertyViewModel (p, e) },
+			{ typeof(CommonSize), (p,e) => new SizePropertyViewModel (p, e) },
 			{ typeof(CommonThickness), (p, e) => new PropertyViewModel<CommonThickness>(p, e) },
 		};
 	}
