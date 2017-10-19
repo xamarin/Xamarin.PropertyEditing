@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+using System;
 using System.Text;
 
 namespace Xamarin.PropertyEditing
