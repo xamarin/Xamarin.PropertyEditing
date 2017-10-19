@@ -16,8 +16,7 @@ namespace Xamarin.PropertyEditing.Drawing
 		{
 			X = x;
 			Y = y;
-			Width = width;
-			Height = height;
+			Size = new CommonSize (width, height);
 		}
 
 		/// <summary>
@@ -28,14 +27,21 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// The vertical coordinate of the top border of the rectangle.
 		/// </summary>
 		public double Y { get; }
+
 		/// <summary>
 		/// The width of the rectangle.
 		/// </summary>
-		public double Width { get; }
+		public double Width => Size.Width;
+
 		/// <summary>
 		/// The height of the rectangle.
 		/// </summary>
-		public double Height { get; }
+		public double Height => Size.Height;
+
+		public CommonSize Size
+		{
+			get;
+		}
 
 		public override bool Equals (object obj)
 		{

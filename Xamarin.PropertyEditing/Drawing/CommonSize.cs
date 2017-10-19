@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	[Serializable]
 	public struct CommonSize : IEquatable<CommonSize>
 	{
-		public CommonSize(double width, double height)
+		public CommonSize (double width, double height)
 		{
 			Width = width;
 			Height = height;
@@ -17,11 +17,33 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <summary>
 		/// The width.
 		/// </summary>
-		public double Width { get; set; }
+		public double Width { get; }
 		/// <summary>
 		/// The height.
 		/// </summary>
-		public double Height { get; set; }
+		public double Height { get; }
+
+		public bool IsEmpty => Width == 0 && Height == 0;
+
+		public static CommonSize operator + (CommonSize left, CommonSize right)
+		{
+			return new CommonSize (left.Width + right.Width, left.Height + right.Height);
+		}
+
+		public static CommonSize operator - (CommonSize left, CommonSize right)
+		{
+			return new CommonSize (left.Width - right.Width, left.Height - right.Height);
+		}
+
+		public static bool operator == (CommonSize left, CommonSize right)
+		{
+			return Equals (left, right);
+		}
+
+		public static bool operator != (CommonSize left, CommonSize right)
+		{
+			return !Equals (left, right);
+		}
 
 		public override bool Equals (object obj)
 		{

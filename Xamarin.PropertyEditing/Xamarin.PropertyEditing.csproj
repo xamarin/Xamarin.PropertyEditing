@@ -101,10 +101,12 @@
     <Compile Include="ViewModels\NumericPropertyViewModel.cs" />
     <Compile Include="ViewModels\ObjectViewModel.cs" />
     <Compile Include="ViewModels\PanelViewModel.cs" />
+    <Compile Include="ViewModels\PointPropertyViewModel.cs" />
     <Compile Include="ViewModels\PredefinedValuesViewModel.cs" />
     <Compile Include="ViewModels\PropertiesViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
+    <Compile Include="ViewModels\SizePropertyViewModel.cs" />
     <Compile Include="ViewModels\SolidBrushPropertyViewModel.cs" />
     <Compile Include="ViewModels\StringPropertyViewModel.cs" />
     <Compile Include="PropertyArrangeMode.cs" />
