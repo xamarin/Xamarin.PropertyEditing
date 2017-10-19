@@ -35,12 +35,22 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get => Value.Color;
 			set {
 				if (!Value.Color.Equals(value)) {
+					var oldHue = Value.Color.Hue;
+					var newHue = value.Hue;
 					Value = new CommonSolidBrush (value, Value.ColorSpace, Value.Opacity);
 					OnPropertyChanged ();
-					hue = value.Hue;
-					OnPropertyChanged (nameof (Hue));
+					if (!newHue.Equals(oldHue)) {
+						OnPropertyChanged (nameof (Hue));
+					}
 				}
 			}
+		}
+
+		protected override void OnValueChanged ()
+		{
+			base.OnValueChanged ();
+			OnPropertyChanged (nameof (Hue));
+			OnPropertyChanged (nameof (Color));
 		}
 	}
 }
