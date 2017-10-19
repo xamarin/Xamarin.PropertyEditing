@@ -64,10 +64,11 @@ namespace Xamarin.PropertyEditing.Windows
 			};
 		}
 
-		void OnCursorMoved(object s, MouseEventArgs e)
+		void OnCursorMoved(object source, MouseEventArgs e)
 		{
-			CursorPosition = e.GetPosition ((IInputElement)s);
-			SetValue (ShadeProperty, GetColorFromPosition (CursorPosition));
+			CursorPosition = e.GetPosition ((IInputElement)source);
+			if (saturationLayer == null) return;
+			Shade = GetColorFromPosition (CursorPosition);
 		}
 
 		static void OnShadeChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
@@ -88,7 +89,6 @@ namespace Xamarin.PropertyEditing.Windows
 			var currentHue = that.Hue;
 			gradientStops.Add (new GradientStop (Color.FromRgb (currentHue.R, currentHue.G, currentHue.B), 1));
 			saturationLayer.Fill = newBrush;
-			that.SetValue(ShadeProperty, that.GetColorFromPosition (that.CursorPosition));
 		}
 
 		/// <summary>
@@ -112,14 +112,9 @@ namespace Xamarin.PropertyEditing.Windows
 		CommonColor GetColorFromPosition (Point position)
 		{
 			var saturation = position.X / saturationLayer.ActualWidth;
-			var brightness = 1 - position.Y / luminosityLayer.ActualHeight;
+			var luminosity = 1 - position.Y / luminosityLayer.ActualHeight;
 
-			return new CommonColor (
-				(byte)((255 + (Hue.R - 255) * saturation) * brightness),
-				(byte)((255 + (Hue.G - 255) * saturation) * brightness),
-				(byte)((255 + (Hue.B - 255) * saturation) * brightness),
-				255
-			);
+			return CommonColor.From (Hue, luminosity, saturation);
 		}
 
 		/// <summary>
@@ -130,21 +125,12 @@ namespace Xamarin.PropertyEditing.Windows
 		/// <returns>The coordinates of the shade in the shade chooser</returns>
 		Point GetPositionFromColor (CommonColor color)
 		{
-			var hue = color.ToHue ();
-			var isRedMaxed = hue.R == 255;
-			var isGreenMaxed = hue.G == 255;
-			var alphaFactor = isRedMaxed ? (double)color.R / 255 : isGreenMaxed ? (double)color.G / 255 : (double)color.B / 255;
-			var isRedMin = hue.R == 0;
-			var isGreenMin = hue.G == 0;
-
-			var xrate =
-				isRedMin ? (color.R / alphaFactor - 255) / (hue.R - 255)
-				: isGreenMin ? (color.G / alphaFactor - 255) / (hue.G - 255)
-				: (color.B / alphaFactor - 255) / (hue.B - 255);
+			var luminosity = color.Luminosity;
+			var saturation = color.Saturation;
 
 			return new Point (
-				xrate * saturationLayer.ActualWidth + saturationLayer.Margin.Left ,
-				(1 - alphaFactor) * luminosityLayer.ActualHeight + luminosityLayer.Margin.Top);
+				saturation * saturationLayer.ActualWidth + saturationLayer.Margin.Left ,
+				(1 - luminosity) * luminosityLayer.ActualHeight + luminosityLayer.Margin.Top);
 		}
 	}
 }

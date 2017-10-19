@@ -42,34 +42,95 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// The precision of the mappin goes down as the color gets darker.
 		/// All shades of grey get arbitrarily mapped to red.
 		/// </summary>
-		/// <returns>The hue</returns>
-		public CommonColor ToHue ()
+		public CommonColor Hue
 		{
-			// Map grey to red
-			if (R == G && G == B)
-				return new CommonColor (255, 0, 0);
+			get {
+				// Map grey to red
+				if (R == G && G == B)
+					return new CommonColor (255, 0, 0);
 
-			var isRedMax = R >= G && R >= B;
-			var isGreenMax = G >= R && G >= B;
-			var isRedMin = R <= G && R <= B;
-			var isGreenMin = G <= R && G <= B;
-			if (isRedMax) {
-				if (isGreenMin)
-					return new CommonColor (255, 0, InterpolateComponent (B, G, R));
-				else // blue is min
-					return new CommonColor (255, InterpolateComponent (G, B, R), 0);
-			}
-			if (isGreenMax) {
+				var isRedMax = R >= G && R >= B;
+				var isGreenMax = G >= R && G >= B;
+				var isRedMin = R <= G && R <= B;
+				var isGreenMin = G <= R && G <= B;
+				if (isRedMax) {
+					if (isGreenMin)
+						return new CommonColor (255, 0, InterpolateComponent (B, G, R));
+					else // blue is min
+						return new CommonColor (255, InterpolateComponent (G, B, R), 0);
+				}
+				if (isGreenMax) {
+					if (isRedMin)
+						return new CommonColor (0, 255, InterpolateComponent (B, R, G));
+					else // blue is min
+						return new CommonColor (InterpolateComponent (R, B, G), 255, 0);
+				}
+				// blue is max
 				if (isRedMin)
-					return new CommonColor (0, 255, InterpolateComponent (B, R, G));
-				else // blue is min
-					return new CommonColor (InterpolateComponent (R, B, G), 255, 0);
+					return new CommonColor (0, InterpolateComponent (G, R, B), 255);
+				else // green is min
+					return new CommonColor (InterpolateComponent (R, G, B), 0, 255);
 			}
-			// blue is max
-			if (isRedMin)
-				return new CommonColor (0, InterpolateComponent (G, R, B), 255);
-			else // green is min
-				return new CommonColor (InterpolateComponent (R, G, B), 0, 255);
+		}
+
+		/// <summary>
+		/// A luminosity between 0 and 1, 1 being the measure for the hue of the color
+		/// (the hue being a fully-saturated version of the same color), and 0 being
+		/// the measure for black.
+		/// </summary>
+		public double Luminosity
+		{
+			get {
+				var hue = Hue;
+				var isRedMaxed = hue.R == 255;
+				var isGreenMaxed = hue.G == 255;
+				return isRedMaxed ? (double)R / 255 : isGreenMaxed ? (double)G / 255 : (double)B / 255;
+			}
+		}
+
+		/// <summary>
+		/// A saturation between 0 and 1, 1 being the measure for the hue of the color
+		/// (the hue being a fully saturated version of the color), and 0 being the
+		/// measure for white.
+		/// </summary>
+		public double Saturation
+		{
+			get {
+				var hue = Hue;
+				var luminosity = Luminosity;
+				var isRedMin = hue.R == 0;
+				var isGreenMin = hue.G == 0;
+
+				return
+					isRedMin ? (R / luminosity - 255) / (hue.R - 255)
+					: isGreenMin ? (G / luminosity - 255) / (hue.G - 255)
+					: (B / luminosity - 255) / (hue.B - 255);
+			}
+		}
+
+		/// <summary>
+		/// Creates a color from hue, saturation, and luminosity.
+		/// </summary>
+		/// <param name="hue">The hue</param>
+		/// <param name="luminosity">The luminosity between 0 and 1</param>
+		/// <param name="saturation">The saturation between 0 and 1</param>
+		/// <param name="alpha">The alpha channel value</param>
+		/// <returns>The color</returns>
+		public static CommonColor From (CommonColor hue, double luminosity, double saturation, byte alpha = 255)
+		{
+			hue = hue.Hue; // Coerce the hue to be a real hue
+			if (luminosity < 0 || luminosity > 1) {
+				throw new ArgumentOutOfRangeException (nameof (luminosity));
+			}
+			if (saturation < 0 || saturation > 1) {
+				throw new ArgumentOutOfRangeException (nameof (luminosity));
+			}
+			return new CommonColor (
+						   (byte)((255 + (hue.R - 255) * saturation) * luminosity),
+						   (byte)((255 + (hue.G - 255) * saturation) * luminosity),
+						   (byte)((255 + (hue.B - 255) * saturation) * luminosity),
+						   alpha
+					   );
 		}
 
 		/// <summary>

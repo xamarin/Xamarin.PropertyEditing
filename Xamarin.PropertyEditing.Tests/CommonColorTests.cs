@@ -7,7 +7,7 @@ namespace Xamarin.PropertyEditing.Tests
 	public class CommonColorTests
 	{
 		[Test, TestCaseSource (typeof(CommonColorTests), "HuesFromColors")]
-		public CommonColor HueFromColor (CommonColor color) => color.ToHue ();
+		public CommonColor HueFromColor (CommonColor color) => color.Hue;
 
 		private static IEnumerable HuesFromColors() {
 			// Shades of grey all map to red

@@ -348,10 +348,10 @@
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
-							<local:ShadeEditorControl x:Name="shadeChooser" Shade="{Binding Path=Value.Color, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="3,6,0,3"/>
+							<local:ShadeEditorControl x:Name="shadeChooser" Shade="{Binding Path=Color, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="3,6,0,3"/>
 							<local:HueEditorControl x:Name="hueChooser" Hue="{Binding Path=Hue, Mode=TwoWay}" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="15" Margin="1,6,3,3"/>
 						</Grid>
-						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Value.Color, Mode=TwoWay}"
+						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Color, Mode=TwoWay}"
 															Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 					</Grid>
 				</ControlTemplate>

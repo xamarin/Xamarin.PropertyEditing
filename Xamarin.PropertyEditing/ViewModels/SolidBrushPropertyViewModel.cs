@@ -18,11 +18,27 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		CommonColor? hue;
 		public CommonColor Hue {
-			get => hue.HasValue ? hue.Value : (hue = Value.Color.ToHue()).Value;
+			get => hue.HasValue ? hue.Value : (hue = Value.Color.Hue).Value;
 			set {
 				if (!hue.Equals(value)) {
 					hue = value;
 					OnPropertyChanged ();
+					var luminosity = Value.Color.Luminosity;
+					var saturation = Value.Color.Saturation;
+					Value.Color = CommonColor.From (value, luminosity, saturation, Value.Color.A);
+					OnPropertyChanged (nameof (Color));
+				}
+			}
+		}
+
+		public CommonColor Color {
+			get => Value.Color;
+			set {
+				if (!Value.Color.Equals(value)) {
+					Value = new CommonSolidBrush (value, Value.ColorSpace, Value.Opacity);
+					OnPropertyChanged ();
+					hue = value.Hue;
+					OnPropertyChanged (nameof (Hue));
 				}
 			}
 		}
