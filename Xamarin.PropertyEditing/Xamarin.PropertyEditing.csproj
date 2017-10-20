@@ -73,6 +73,7 @@
     <Compile Include="IPropertyInfo.cs" />
     <Compile Include="IResourceProvider.cs" />
     <Compile Include="ISelfConstrainedPropertyInfo.cs" />
+    <Compile Include="MultiAvailabilityConstraint.cs" />
     <Compile Include="NotifyingObject.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
