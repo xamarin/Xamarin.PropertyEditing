@@ -64,6 +64,9 @@
 
 	<SolidColorBrush x:Key="HuePickerCursorBrush">#000000</SolidColorBrush>
 
+	<SolidColorBrush x:Key="BrushBoxCheckerBoardLight">#FFFFFF</SolidColorBrush>
+	<SolidColorBrush x:Key="BrushBoxCheckerBoardDark">#D3D3D3</SolidColorBrush>
+
 	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Fill" Color="#FF595959"/>
 	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Stroke" Color="#FF262626"/>
 	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Stroke" Color="#FF27C7F7"/>

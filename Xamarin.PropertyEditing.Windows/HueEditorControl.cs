@@ -1,13 +1,12 @@
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Windows
 {
-	internal class HueEditorControl : Control
+	internal class HueEditorControl : CurrentColorCommitterControlBase
 	{
 		public HueEditorControl ()
 		{
@@ -47,6 +46,9 @@ namespace Xamarin.PropertyEditing.Windows
 				if (IsEnabled && e.LeftButton == MouseButtonState.Pressed) {
 					OnHuePicked(s, e);
 				}
+			};
+			hueChooser.MouseLeftButtonUp += (s, e) => {
+				RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 			};
 		}
 

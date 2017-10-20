@@ -51,8 +51,12 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BoolEditorControl.cs" />
+    <Compile Include="BrushBoxControl.cs" />
     <Compile Include="ChoiceControl.cs" />
     <Compile Include="ColorComponentsEditorControl.cs" />
+    <Compile Include="ColorEditorControlBase.cs" />
+    <Compile Include="CommonColorToColorConverter.cs" />
+    <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="EditorPropertySelector.cs" />
     <Compile Include="EnumEditorControl.cs" />
     <Compile Include="HostEnvironment.cs" />

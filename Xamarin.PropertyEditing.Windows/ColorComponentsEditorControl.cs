@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
@@ -9,21 +8,11 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Windows
 {
-	internal class ColorComponentsEditorControl : Control
+	internal class ColorComponentsEditorControl : ColorEditorControlBase
 	{
 		public ColorComponentsEditorControl()
 		{
 			DefaultStyleKey = typeof (ColorComponentsEditorControl);
-		}
-
-		public static readonly DependencyProperty ColorProperty =
-			DependencyProperty.Register (
-				"Color", typeof (CommonColor), typeof (ColorComponentsEditorControl),
-				new PropertyMetadata (new CommonColor (0, 0, 0), OnColorChanged));
-
-		public CommonColor Color {
-			get => (CommonColor)GetValue (ColorProperty);
-			set => SetValue (ColorProperty, value);
 		}
 
 		public static readonly DependencyProperty RedProperty =
@@ -75,14 +64,14 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 		}
 
-		private static void OnColorChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
+		protected override void OnColorChanged (CommonColor oldColor, CommonColor newColor)
 		{
-			var control = (ColorComponentsEditorControl)d;
-			var newColor = (CommonColor)e.NewValue;
-			if (control.R != newColor.R) control.R = newColor.R;
-			if (control.G != newColor.G) control.G = newColor.G;
-			if (control.B != newColor.B) control.B = newColor.B;
-			if (control.A != newColor.A) control.A = newColor.A;
+			base.OnColorChanged (oldColor, newColor);
+
+			if (R != newColor.R) R = newColor.R;
+			if (G != newColor.G) G = newColor.G;
+			if (B != newColor.B) B = newColor.B;
+			if (A != newColor.A) A = newColor.A;
 		}
 	}
 

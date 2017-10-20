@@ -343,13 +343,18 @@
 						<Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="*"/>
+								<RowDefinition Height="Auto"/>
 							</Grid.RowDefinitions>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
-							<local:ShadeEditorControl x:Name="shadeChooser" Shade="{Binding Path=Color, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="3,6,0,3" Panel.ZIndex="1"/>
-							<local:HueEditorControl x:Name="hueChooser" Hue="{Binding Path=Hue, Mode=TwoWay}" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="1,6,3,3" Panel.ZIndex="0"/>
+							<local:ShadeEditorControl x:Name="shadeChooser" Color="{Binding Path=Color, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}"
+													  Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,0,1" Panel.ZIndex="1"/>
+							<local:HueEditorControl x:Name="hueChooser" Hue="{Binding Path=Hue, Mode=TwoWay}"
+													Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="1,6,3,1" Panel.ZIndex="0"/>
+							<local:CurrentColorEditorControl Color="{Binding Path=Color, Mode=TwoWay}" InitialColor="{Binding InitialColor}" LastColor="{Binding LastColor}"
+															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0, 0, 0, 0" Panel.ZIndex="0"/>
 						</Grid>
 						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Color, Mode=TwoWay}"
 															Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
@@ -417,11 +422,11 @@
 							<Ellipse
 								Canvas.Left="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition.X}"
 								Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition.Y}"
-								IsHitTestVisible="False" Width="10" Height="10" Stroke="#7F000000" StrokeThickness="4"/>
+								IsHitTestVisible="False" Width="11" Height="11" Stroke="#FFFFFFFF" StrokeThickness="2.5"/>
 							<Ellipse
 								Canvas.Left="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition.X}"
 								Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition.Y}"
-								IsHitTestVisible="False" Width="10" Height="10" Stroke="#7FFFFFFF" StrokeThickness="2"/>
+								IsHitTestVisible="False" Width="9" Height="9" Margin="0.5,0.5" Stroke="#FF000000" StrokeThickness="1"/>
 						</Canvas>
 					</Grid>
 				</ControlTemplate>
@@ -465,6 +470,62 @@
 								 VerticalContentAlignment="Center" AutomationProperties.HelpText="Hex value" VerticalAlignment="Center"
 								 Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:CurrentColorEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:CurrentColorEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="20"/>
+						</Grid.ColumnDefinitions>
+						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="0" Panel.ZIndex="0">
+							<local:BrushBoxControl.Brush>
+								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=InitialColor, Converter={local:CommonColorToColorConverter}}"/>
+							</local:BrushBoxControl.Brush>
+						</local:BrushBoxControl>
+						<Button x:Name="initialColorButton" HorizontalAlignment="Stretch" Grid.Column="0" Panel.ZIndex="1" Opacity="0" FocusVisualStyle="{x:Null}" ToolTip="Initial color"/>
+						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="1" ToolTip="Current color">
+							<local:BrushBoxControl.Brush>
+								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:CommonColorToColorConverter}}"/>
+							</local:BrushBoxControl.Brush>
+						</local:BrushBoxControl>
+						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="2" ToolTip="Last color" Margin="1,0,0,0">
+							<local:BrushBoxControl.Brush>
+								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=LastColor, Converter={local:CommonColorToColorConverter}}"/>
+							</local:BrushBoxControl.Brush>
+						</local:BrushBoxControl>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:BrushBoxControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:BrushBoxControl">
+					<Grid>
+						<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Panel.ZIndex="0">
+							<Rectangle.Fill>
+								<DrawingBrush Stretch="None" TileMode="Tile" Viewport="0,0,20,20" ViewportUnits="Absolute">
+									<DrawingBrush.Drawing>
+										<DrawingGroup>
+											<GeometryDrawing Geometry="M0,0 L20,0 20,20, 0,20Z" Brush="{DynamicResource BrushBoxCheckerBoardLight}"/>
+											<GeometryDrawing Geometry="M0,10 L20,10 20,20, 10,20 10,0 0,0Z" Brush="{DynamicResource BrushBoxCheckerBoardDark}"/>
+										</DrawingGroup>
+									</DrawingBrush.Drawing>
+								</DrawingBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Fill="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brush}" Panel.ZIndex="1"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

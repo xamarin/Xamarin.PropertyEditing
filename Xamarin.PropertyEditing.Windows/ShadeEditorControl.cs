@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -7,7 +6,7 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Windows
 {
-	internal class ShadeEditorControl : Control
+	internal class ShadeEditorControl : ColorEditorControlBase
 	{
 		public ShadeEditorControl()
 		{
@@ -16,17 +15,6 @@ namespace Xamarin.PropertyEditing.Windows
 
 		Rectangle saturationLayer;
 		Rectangle luminosityLayer;
-		Canvas cursor;
-
-		public static readonly DependencyProperty ShadeProperty =
-			DependencyProperty.Register (
-				"Shade", typeof (CommonColor), typeof (ShadeEditorControl),
-				new PropertyMetadata (new CommonColor (0, 0, 0), OnShadeChanged));
-
-		public CommonColor Shade {
-			get => (CommonColor)GetValue (ShadeProperty);
-			set => SetValue (ShadeProperty, value);
-		}
 
 		public static readonly DependencyProperty CursorPositionProperty =
 			DependencyProperty.Register (
@@ -61,14 +49,17 @@ namespace Xamarin.PropertyEditing.Windows
 					OnCursorMoved (s, e);
 				}
 			};
+			luminosityLayer.MouseLeftButtonUp += (s, e) => {
+				RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+			};
 		}
 
 		protected override void OnRenderSizeChanged (SizeChangedInfo sizeInfo)
 		{
 			base.OnRenderSizeChanged (sizeInfo);
 
-			CursorPosition = GetPositionFromColor (Shade);
-			Hue = Shade.Hue;
+			CursorPosition = GetPositionFromColor (Color);
+			Hue = Color.Hue;
 		}
 
 		void OnCursorMoved(object source, MouseEventArgs e)
@@ -76,19 +67,19 @@ namespace Xamarin.PropertyEditing.Windows
 			// TODO: find a way to prevent the hue from changing when picking a new shade because of lack of resolution near greys.
 			CursorPosition = e.GetPosition ((IInputElement)source);
 			if (saturationLayer == null) return;
-			Shade = GetColorFromPosition (CursorPosition);
+			var newColor = GetColorFromPosition (CursorPosition);
+			Color = new CommonColor (newColor.R, newColor.G, newColor.B, Color.A);
 		}
 
-		static void OnShadeChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
+		protected override void OnColorChanged (CommonColor oldColor, CommonColor newColor)
 		{
-			var that = source as ShadeEditorControl;
-			if (that == null) return;
-			var oldHue = ((CommonColor)e.OldValue).Hue;
-			var newShade = ((CommonColor)e.NewValue);
-			that.CursorPosition = that.GetPositionFromColor (newShade);
-			var newHue = newShade.Hue;
-			if (!newHue.Equals(oldHue) && !newShade.IsGrey) {
-				OnHueChanged (source, new DependencyPropertyChangedEventArgs (HueProperty, oldHue, newHue));
+			base.OnColorChanged (oldColor, newColor);
+
+			CursorPosition = GetPositionFromColor (newColor);
+			var oldHue = oldColor.Hue;
+			var newHue = newColor.Hue;
+			if (!newHue.Equals(oldHue) && !newColor.IsGrey) {
+				OnHueChanged (this, new DependencyPropertyChangedEventArgs (HueProperty, oldHue, newHue));
 			}
 		}
 
@@ -101,7 +92,7 @@ namespace Xamarin.PropertyEditing.Windows
 			var gradientStops = newBrush.GradientStops;
 			gradientStops.RemoveAt (1);
 			var newHue = (CommonColor)e.NewValue;
-			gradientStops.Add (new GradientStop (Color.FromRgb (newHue.R, newHue.G, newHue.B), 1));
+			gradientStops.Add (new GradientStop (System.Windows.Media.Color.FromRgb (newHue.R, newHue.G, newHue.B), 1));
 			saturationLayer.Fill = newBrush;
 		}
 
@@ -128,7 +119,7 @@ namespace Xamarin.PropertyEditing.Windows
 			var saturation = position.X / saturationLayer.ActualWidth;
 			var luminosity = 1 - position.Y / luminosityLayer.ActualHeight;
 
-			return CommonColor.From (Shade.Hue, luminosity, saturation);
+			return CommonColor.From (Color.Hue, luminosity, saturation);
 		}
 
 		/// <summary>
