@@ -70,6 +70,7 @@
     <Compile Include="MockPropertyInfo\MockPropertyInfo.cs" />
     <Compile Include="MockPropertyInfo\MockEnumPropertyInfo.cs" />
     <Compile Include="MockPropertyProviderTests.cs" />
+    <Compile Include="MultiAvailabilityConstraintTests.cs" />
     <Compile Include="PointViewModelTests.cs" />
     <Compile Include="RadialGradientBrushPropertyViewModelTests.cs" />
     <Compile Include="LinearGradientBrushPropertyViewModelTests.cs" />
