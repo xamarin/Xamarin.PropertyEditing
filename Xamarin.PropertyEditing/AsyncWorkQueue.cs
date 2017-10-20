@@ -9,42 +9,79 @@ namespace Xamarin.PropertyEditing
 	/// The added capability here past just waiting on a task and swapping it with the new wait is child requests will pass
 	/// through.
 	/// </remarks>
-	/// 
-	/// The expectation here is the queue will only ever end up being less than 10 items deep, so ~no attention is paid
-	/// to performance for larger queues. If the intended use-cases end up with longer queues, we have a bigger problem.
 	internal class AsyncWorkQueue
 	{
 		public Task<IDisposable> RequestAsyncWork (object requester)
 		{
-			AsyncValueWorker worker = new AsyncValueWorker (requester);
+			var worker = new AsyncValueWorker (requester, this);
 			this.workers.AddLast (worker.Node);
-			if (this.workers.Count == 1)
+
+			if (this.workers.Count == 1 || ReferenceEquals (requester, this.activeRequester)) {
 				worker.Completion.SetResult (worker);
-			else if (this.workers.Count > 1) {
-				// If we're a child of the active worker, let us pass.
-				var node = this.workers.First;
-				while (node != null) {
-					if (node.Value.Completion.Task.IsCompleted) {
-						if (ReferenceEquals (node.Value.Requester, requester))
-							worker.Completion.SetResult (worker);
-
-						break;
-					}
-
-					node = node.Next;
-				}
+				this.activeRequester = requester;
 			}
 
 			return worker.Completion.Task;
 		}
-		
+
+		private object activeRequester;
 		private readonly LinkedList<AsyncValueWorker> workers = new LinkedList<AsyncValueWorker>();
+
+		private void CompleteWork (AsyncValueWorker worker)
+		{
+			LinkedListNode<AsyncValueWorker> left = worker.Node.Previous, right = worker.Node.Next;
+			AsyncValueWorker toFree = left?.Value ?? right?.Value;
+
+			List<AsyncValueWorker> related = null;
+
+			// If a worker is still in the queue, it's still working. All children/siblings of the
+			// current requester must be finished before it can move on.
+			while (left != null || right != null) {
+				if (ReferenceEquals (left?.Value.Requester, worker.Requester) || ReferenceEquals (right?.Value.Requester, worker.Requester)) {
+					toFree = null;
+					break;
+				}
+
+				if (ReferenceEquals (left?.Value.Requester, toFree?.Requester)) {
+					if (related == null)
+						related = new List<AsyncValueWorker> ();
+
+					related.Add (left.Value);
+				}
+
+				if (ReferenceEquals (right?.Value.Requester, toFree?.Requester)) {
+					if (related == null)
+						related = new List<AsyncValueWorker> ();
+
+					related.Add (right.Value);
+				}
+
+				left = left?.Previous;
+				right = right?.Next;
+			}
+
+			if (toFree != null) {
+				this.activeRequester = toFree.Requester;
+				toFree.Completion.SetResult (toFree);
+
+				if (related != null) {
+					// Once the active requester changes, we need to sure its children/siblings are all allowed
+					// same as if it had been the active one first.
+					foreach (var w in related) {
+						w.Completion.TrySetResult (w);
+					}
+				}
+			}
+
+			this.workers.Remove (worker);
+		}
 
 		private class AsyncValueWorker
 			: IDisposable
 		{
-			public AsyncValueWorker (object requester)
+			public AsyncValueWorker (object requester, AsyncWorkQueue queue)
 			{
+				this.queue = queue;
 				Requester = requester;
 				Node = new LinkedListNode<AsyncValueWorker> (this);
 			}
@@ -66,26 +103,15 @@ namespace Xamarin.PropertyEditing
 
 			public void Dispose ()
 			{
-				LinkedListNode<AsyncValueWorker> toFree = null, right = Node.Next, left = Node.Previous;
-				bool childActive = false;
-				while (right != null || left != null) {
-					if (ReferenceEquals (left?.Value.Requester, Requester) || ReferenceEquals (right?.Value.Requester, Requester)) {
-						childActive = true;
-						break;
-					}
+				if (this.isDisposed)
+					return;
 
-					if (toFree == null)
-						toFree = left ?? right;
-
-					left = left?.Previous;
-					right = right?.Next;
-				}
-
-				if (!childActive)
-					toFree?.Value.Completion.TrySetResult (toFree.Value);
-
-				Node.List.Remove (Node);
+				this.isDisposed = true;
+				this.queue.CompleteWork (this);
 			}
+
+			private bool isDisposed;
+			private readonly AsyncWorkQueue queue;
 		}
 	}
 }

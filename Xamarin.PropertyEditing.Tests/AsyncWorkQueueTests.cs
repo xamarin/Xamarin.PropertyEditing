@@ -47,6 +47,25 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test, Timeout (1000)]
+		[Description ("Worker siblings added while their requester isn't active should ALL unlock when their requester becomes active")]
+		public async Task SameRequesterAfterNonSameIsFreed ()
+		{
+			object requester1 = new object();
+			object requester2 = new object();
+
+			IDisposable work = await this.queue.RequestAsyncWork (requester1);
+			
+			var inWorkTask = this.queue.RequestAsyncWork (requester2);
+			Assume.That (inWorkTask.IsCompleted, Is.False);
+			var inWork2Task = this.queue.RequestAsyncWork (requester2);
+			Assume.That (inWork2Task.IsCompleted, Is.False);
+
+			work.Dispose();
+			(await inWorkTask).Dispose();
+			(await inWork2Task).Dispose();
+		}
+
+		[Test, Timeout (1000)]
 		public async Task WorkContinuesOnDisposeOfParentAndChild ()
 		{
 			string requester1 = "r1";
