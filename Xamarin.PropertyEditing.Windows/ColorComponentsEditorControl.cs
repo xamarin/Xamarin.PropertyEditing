@@ -72,6 +72,8 @@ namespace Xamarin.PropertyEditing.Windows
 			if (G != newColor.G) G = newColor.G;
 			if (B != newColor.B) B = newColor.B;
 			if (A != newColor.A) A = newColor.A;
+
+			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 		}
 	}
 
