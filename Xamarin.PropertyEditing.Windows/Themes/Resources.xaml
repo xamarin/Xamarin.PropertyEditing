@@ -349,11 +349,11 @@
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
-							<local:ShadeEditorControl x:Name="shadeChooser" Color="{Binding Path=Color, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}"
+							<local:ShadeEditorControl x:Name="shadeChooser" Color="{Binding Path=Shade, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}"
 													  Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,0,1" Panel.ZIndex="1"/>
 							<local:HueEditorControl x:Name="hueChooser" Hue="{Binding Path=Hue, Mode=TwoWay}"
 													Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="1,6,3,1" Panel.ZIndex="0"/>
-							<local:CurrentColorEditorControl Color="{Binding Path=Color, Mode=TwoWay}" InitialColor="{Binding InitialColor}" LastColor="{Binding LastColor}"
+							<local:CurrentColorEditorControl Color="{Binding Path=Shade, Mode=TwoWay}" InitialColor="{Binding InitialColor}" LastColor="{Binding LastColor}"
 															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0, 0, 0, 0" Panel.ZIndex="0"/>
 						</Grid>
 						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Color, Mode=TwoWay}"

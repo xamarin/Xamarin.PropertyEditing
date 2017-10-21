@@ -18,15 +18,28 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		CommonColor? hue;
 		public CommonColor Hue {
-			get => hue.HasValue ? hue.Value : (hue = Color.Hue).Value;
+			get => (hue.HasValue ? hue : (hue = LastColor.Hue)).Value;
 			set {
 				if (!hue.Equals(value)) {
-					hue = value;
-					OnPropertyChanged ();
 					var luminosity = Color.Luminosity;
 					var saturation = Color.Saturation;
-					Value = new CommonSolidBrush(CommonColor.From (value, luminosity, saturation, Color.A), Value.ColorSpace, Value.Opacity);
+					Color = CommonColor.From (value, luminosity, saturation, Color.A);
 					OnPropertyChanged (nameof (Color));
+					hue = value;
+					OnPropertyChanged ();
+					Value = new CommonSolidBrush(Color, Value.ColorSpace, Value.Opacity);
+				}
+			}
+		}
+
+		CommonColor? shade;
+		public CommonColor Shade {
+			get => (shade.HasValue ? shade : (shade = LastColor)).Value;
+			set {
+				if (!shade.Equals(value)) {
+					shade = value;
+					OnPropertyChanged ();
+					Value = new CommonSolidBrush (value, Value.ColorSpace, Value.Opacity);
 				}
 			}
 		}
@@ -35,12 +48,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get => Value.Color;
 			set {
 				if (!Value.Color.Equals(value)) {
-					var oldHue = Value.Color.Hue;
+					var oldHue = Hue;
 					var newHue = value.Hue;
 					Value = new CommonSolidBrush (value, Value.ColorSpace, Value.Opacity);
 					OnPropertyChanged ();
 					if (!newHue.Equals(oldHue)) {
+						hue = newHue;
 						OnPropertyChanged (nameof (Hue));
+					}
+					if (!value.Equals(shade)) {
+						shade = value;
+						OnPropertyChanged (nameof (Shade));
 					}
 					if (!initialColor.HasValue) {
 						initialColor = value;
@@ -62,14 +80,26 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public void CommitLastColor()
 		{
 			lastColor = Color;
+			shade = Color;
+			hue = Color.Hue;
 			OnPropertyChanged (nameof (LastColor));
+			OnPropertyChanged (nameof (Shade));
+			OnPropertyChanged (nameof (Hue));
+			Value = new CommonSolidBrush (Color, Value.ColorSpace, Value.Opacity);
+		}
+
+		public void CommitShade ()
+		{
+			lastColor = Shade;
+			OnPropertyChanged (nameof (LastColor));
+			Value = new CommonSolidBrush (Shade, Value.ColorSpace, Value.Opacity);
 		}
 
 		protected override void OnValueChanged ()
 		{
 			base.OnValueChanged ();
 			OnPropertyChanged (nameof (Color));
-			hue = Color.Hue;
+			OnPropertyChanged (nameof (Shade));
 			OnPropertyChanged (nameof (Hue));
 		}
 	}
