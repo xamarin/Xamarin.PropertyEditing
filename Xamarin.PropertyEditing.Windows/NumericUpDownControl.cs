@@ -130,8 +130,8 @@ namespace Xamarin.PropertyEditing.Windows
 			base.OnApplyTemplate ();
 
 			this.textBox = (TextBox) GetTemplateChild ("TextBox");
-			this.textBox.TextChanged += OnTextChanged;
 			this.textBox.Text = Value.ToString ();
+			this.textBox.TextChanged += OnTextChanged;
 
 			Button up = (Button) GetTemplateChild ("Up");
 			up.Click += (sender, args) => SetCurrentValue (ValueProperty, GetIncrementedValue (Value));
