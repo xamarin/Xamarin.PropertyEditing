@@ -330,10 +330,10 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:SolidBrushEditorControl">
-					<Grid VerticalAlignment="Top" Margin="0,6,0,0">
+					<Grid VerticalAlignment="Top" Margin="0,6,0,0" MinHeight="180">
 						<Grid.RowDefinitions>
-							<RowDefinition/>
-							<RowDefinition/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="*"/>
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*"/>
@@ -358,7 +358,7 @@
 															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0, 0, 0, 0" Panel.ZIndex="0"/>
 						</Grid>
 						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Shade, Mode=TwoWay}"
-															Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+															Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -441,35 +441,35 @@
 				<ControlTemplate TargetType="local:ColorComponentsEditorControl">
 					<Grid>
 						<Grid.RowDefinitions>
-							<RowDefinition/>
-							<RowDefinition/>
-							<RowDefinition/>
-							<RowDefinition/>
-							<RowDefinition/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="*"/>
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="*"/>
-							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="20"/>
+							<ColumnDefinition Width="80"/>
 						</Grid.ColumnDefinitions>
-						<Label Content="R" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" />
-						<TextBox Name="redEntry" Width="50" Margin="14,0,2,0"
-								 AutomationProperties.HelpText="Red" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+						<Label Content="R" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" />
+						<TextBox Name="redEntry" Margin="2,0,2,0"
+								 AutomationProperties.HelpText="Red" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=R, Mode=TwoWay}"/>
-						<Label Content="G" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" />
-						<TextBox Name="greenEntry" Width="50" Margin="14,0,2,0"
-								 AutomationProperties.HelpText="Green" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+						<Label Content="G" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" />
+						<TextBox Name="greenEntry" Margin="2,0,2,0"
+								 AutomationProperties.HelpText="Green" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=G, Mode=TwoWay}"/>
-						<Label Content="B" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" />
-						<TextBox x:Name="blueEntry" Width="50" Margin="14,0,2,0"
-								 AutomationProperties.HelpText="Blue" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+						<Label Content="B" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" />
+						<TextBox x:Name="blueEntry" Margin="2,0,2,0"
+								 AutomationProperties.HelpText="Blue" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=B, Mode=TwoWay}"/>
-						<Label Content="A" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" />
-						<TextBox Name="alphaEntry" Width="50" Margin="14,0,2,0"
-								 AutomationProperties.HelpText="Alpha" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+						<Label Content="A" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" />
+						<TextBox Name="alphaEntry" Margin="2,0,2,0"
+								 AutomationProperties.HelpText="Alpha" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Mode=TwoWay}"/>
-						<TextBox Name="hexEntry" Width="70" Height="24" MinHeight="20" Margin="14,0,2,0"
-								 VerticalContentAlignment="Center" AutomationProperties.HelpText="Hex value" VerticalAlignment="Center"
-								 Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"
+						<TextBox Name="hexEntry" Margin="2,0,2,0"
+								 AutomationProperties.HelpText="Hex value" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+								 Grid.Column="1" Grid.Row="4"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
 					</Grid>
 				</ControlTemplate>
