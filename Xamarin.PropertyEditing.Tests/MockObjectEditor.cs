@@ -20,10 +20,8 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public MockObjectEditor (MockControl control)
 		{
-			Properties = control.Properties.ToArray();
-			values = control.Values;
-			Events = control.Events.ToArray ();
-			events = control.EventHandlers;
+			Properties = control.Properties.Values.ToArray();
+			Events = control.Events.Values.ToArray();
 			Target = control;
 		}
 
@@ -112,20 +110,21 @@ namespace Xamarin.PropertyEditing.Tests
 				value.Value = (T)ValueEvaluator (property, value.ValueDescriptor);
 			}
 
-			var mockControl = Target as MockControl;
-			if (mockControl != null) {
-				var mockPropertyInfo = property as IGetAndSet;
-				if (mockPropertyInfo != null) {
-					mockPropertyInfo.SetValue (mockControl, value.Value);
-				}
-				else {
-					values[property] = value;
-				}
-			}
-			else {
-				values[property] = value;
-			}
+			object softValue = value;
 
+			if (typeof(T) != property.Type) {
+				IPropertyConverter converter = property as IPropertyConverter;
+
+				object v;
+				if (converter != null && converter.TryConvert (value.Value, property.Type, out v)) {
+					var softType = typeof(ValueInfo<>).MakeGenericType (property.Type);
+					softValue = Activator.CreateInstance (softType);
+					softType.GetProperty ("Value").SetValue (softValue, v);
+					softType.GetProperty ("Source").SetValue (softValue, value.Source);
+				}
+			}
+			
+			this.values[property] = softValue;
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
 		}
 
@@ -134,27 +133,32 @@ namespace Xamarin.PropertyEditing.Tests
 			if (variation != null)
 				throw new NotSupportedException (); // TODO
 
-			var mockControl = Target as MockControl;
-			if (mockControl != null) {
-				var mockPropertyInfo = property as IGetAndSet;
-				if (mockPropertyInfo != null) {
-					return new ValueInfo<T> {
-						Value = mockPropertyInfo.GetValue<T> (mockControl),
-						Source = ValueSource.Local
-					};
-				}
-			}
-
 			object value;
-			if (values.TryGetValue (property, out value)) {
+			if (this.values.TryGetValue (property, out value)) {
 				var info = value as ValueInfo<T>;
 				if (info != null)
 					return info;
-				else if (value != null) {
+				else if (value == null || value is T) {
 					return new ValueInfo<T> {
 						Value = (T)value,
 						Source = ValueSource.Local
 					};
+				} else {
+					ValueSource source = ValueSource.Local;
+					Type valueType = value.GetType ();
+					if (valueType.IsConstructedGenericType && valueType.GetGenericTypeDefinition () == typeof(ValueInfo<>)) {
+						source = (ValueSource)valueType.GetProperty ("Source").GetValue (value);
+						value = valueType.GetProperty ("Value").GetValue (value);
+					}
+
+					object newValue;
+					IPropertyConverter converter = property as IPropertyConverter;
+					if (converter != null && converter.TryConvert (value, typeof(T), out newValue)) {
+						return new ValueInfo<T> {
+							Source = source,
+							Value = (T)newValue
+						};
+					}
 				}
 			}
 

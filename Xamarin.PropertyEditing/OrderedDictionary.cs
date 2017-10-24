@@ -34,7 +34,7 @@ using System.Collections.ObjectModel;
 namespace Cadenza.Collections
 {
 	internal class OrderedDictionary<TKey, TValue>
-		: IDictionary<TKey, TValue>, IList<KeyValuePair<TKey, TValue>>
+		: IDictionary<TKey, TValue>, IList<KeyValuePair<TKey, TValue>>, IReadOnlyDictionary<TKey, TValue>
 	{
 		public OrderedDictionary ()
 			: this (0)
@@ -104,6 +104,16 @@ namespace Cadenza.Collections
 
 				this.dict[key] = value;
 			}
+		}
+
+		IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
+		{
+			get { return Keys; }
+		}
+
+		IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values
+		{
+			get { return Values; }
 		}
 
 		/// <summary>
