@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -18,7 +19,7 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly DependencyProperty RedProperty =
 			DependencyProperty.Register (
 				"R", typeof (byte), typeof (ColorComponentsEditorControl),
-				new PropertyMetadata ((byte)0, OnComponentChanged));
+				new PropertyMetadata ((byte)0));
 
 		public byte R {
 			get => (byte)GetValue (RedProperty);
@@ -28,7 +29,7 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly DependencyProperty GreenProperty =
 			DependencyProperty.Register (
 				"G", typeof (byte), typeof (ColorComponentsEditorControl),
-				new PropertyMetadata ((byte)0, OnComponentChanged));
+				new PropertyMetadata ((byte)0));
 
 		public byte G {
 			get => (byte)GetValue (GreenProperty);
@@ -38,7 +39,7 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly DependencyProperty BlueProperty =
 			DependencyProperty.Register (
 				"B", typeof (byte), typeof (ColorComponentsEditorControl),
-				new PropertyMetadata ((byte)0, OnComponentChanged));
+				new PropertyMetadata ((byte)0));
 
 		public byte B {
 			get => (byte)GetValue (BlueProperty);
@@ -48,20 +49,43 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly DependencyProperty AlphaProperty =
 			DependencyProperty.Register (
 				"A", typeof (byte), typeof (ColorComponentsEditorControl),
-				new PropertyMetadata ((byte)0, OnComponentChanged));
+				new PropertyMetadata ((byte)0));
 
 		public byte A {
 			get => (byte)GetValue (AlphaProperty);
 			set => SetValue (AlphaProperty, value);
 		}
 
-		private static void OnComponentChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
+		public override void OnApplyTemplate ()
 		{
-			var control = (ColorComponentsEditorControl)d;
-			var newColor = new CommonColor (control.R, control.G, control.B, control.A);
-			if (!newColor.Equals(control.Color)) {
-				control.Color = newColor;
+			base.OnApplyTemplate ();
+
+			foreach(var focusable in GetFocusableDescendants(this)) {
+				focusable.LostFocus += OnBlur;
 			}
+		}
+
+		IEnumerable<UIElement> GetFocusableDescendants(UIElement parent)
+		{
+			var childCount = VisualTreeHelper.GetChildrenCount (parent);
+			for (var i = 0; i < childCount; i++) {
+				var child = VisualTreeHelper.GetChild (parent, i) as UIElement;
+				if (child != null) {
+					if (child.Focusable) yield return child;
+					var grandChildren = GetFocusableDescendants (child);
+					foreach (var grandChild in grandChildren) yield return grandChild;
+				}
+			}
+		}
+
+		void OnBlur (object sender, RoutedEventArgs e)
+		{
+			var newColor = new CommonColor (R, G, B, A);
+			if (!newColor.Equals (Color)) {
+				Color = newColor;
+			}
+
+			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 		}
 
 		protected override void OnColorChanged (CommonColor oldColor, CommonColor newColor)
@@ -72,8 +96,6 @@ namespace Xamarin.PropertyEditing.Windows
 			if (G != newColor.G) G = newColor.G;
 			if (B != newColor.B) B = newColor.B;
 			if (A != newColor.A) A = newColor.A;
-
-			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 		}
 	}
 

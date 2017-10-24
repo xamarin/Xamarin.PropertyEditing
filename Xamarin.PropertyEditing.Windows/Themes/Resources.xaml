@@ -339,7 +339,8 @@
 							<ColumnDefinition Width="*"/>
 							<ColumnDefinition Width="Auto"/>
 						</Grid.ColumnDefinitions>
-						<ComboBox Name="colorSpacePicker" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding ColorSpaces}" SelectedItem="{Binding Value.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center" AutomationProperties.HelpText="Color space" />
+						<ComboBox Name="colorSpacePicker" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding ColorSpaces}"
+								  SelectedItem="{Binding Value.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center" AutomationProperties.HelpText="Color space" />
 						<Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="*"/>
@@ -356,7 +357,7 @@
 							<local:CurrentColorEditorControl Color="{Binding Path=Shade, Mode=TwoWay}" InitialColor="{Binding InitialColor}" LastColor="{Binding LastColor}"
 															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0, 0, 0, 0" Panel.ZIndex="0"/>
 						</Grid>
-						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Color, Mode=TwoWay}"
+						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Shade, Mode=TwoWay}"
 															Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 					</Grid>
 				</ControlTemplate>

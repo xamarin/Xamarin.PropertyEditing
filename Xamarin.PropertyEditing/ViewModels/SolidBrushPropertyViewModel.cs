@@ -94,13 +94,5 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof (LastColor));
 			Value = new CommonSolidBrush (Shade, Value.ColorSpace, Value.Opacity);
 		}
-
-		protected override void OnValueChanged ()
-		{
-			base.OnValueChanged ();
-			OnPropertyChanged (nameof (Color));
-			OnPropertyChanged (nameof (Shade));
-			OnPropertyChanged (nameof (Hue));
-		}
 	}
 }
