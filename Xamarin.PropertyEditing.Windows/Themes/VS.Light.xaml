@@ -62,6 +62,9 @@
 	<SolidColorBrush x:Key="ThicknessIconBackgroundBrush">#EEEEF2</SolidColorBrush>
 	<SolidColorBrush x:Key="ThicknessIconBorderBrush">#EEEEF2</SolidColorBrush>
 
+	<Color x:Key="ShadePickerCursorStrokeColor">#000000</Color>
+	<Color x:Key="ShadePickerCursorOutlineColor">#FFFFFF</Color>
+
 	<SolidColorBrush x:Key="HuePickerCursorBrush">#000000</SolidColorBrush>
 
 	<SolidColorBrush x:Key="BrushBoxCheckerBoardLight">#FFFFFF</SolidColorBrush>
