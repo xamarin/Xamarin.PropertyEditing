@@ -25,6 +25,12 @@ namespace Xamarin.PropertyEditing.Tests
 			Target = control;
 		}
 
+		public bool SupportsDefault
+		{
+			get;
+			set;
+		}
+
 		public object Target
 		{
 			get;
@@ -163,7 +169,7 @@ namespace Xamarin.PropertyEditing.Tests
 			}
 
 			return new ValueInfo<T> {
-				Source = ValueSource.Local,
+				Source = (SupportsDefault) ? ValueSource.Default : ValueSource.Local,
 				Value = default(T)
 			};
 		}
