@@ -60,6 +60,8 @@ namespace Xamarin.PropertyEditing
 				right = right?.Next;
 			}
 
+			this.workers.Remove (worker);
+
 			if (toFree != null) {
 				this.activeRequester = toFree.Requester;
 				toFree.Completion.SetResult (toFree);
@@ -72,8 +74,6 @@ namespace Xamarin.PropertyEditing
 					}
 				}
 			}
-
-			this.workers.Remove (worker);
 		}
 
 		private class AsyncValueWorker
