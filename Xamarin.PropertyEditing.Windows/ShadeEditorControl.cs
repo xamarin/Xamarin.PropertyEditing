@@ -45,15 +45,37 @@ namespace Xamarin.PropertyEditing.Windows
 
 			OnHueChanged (Hue);
 
-			luminosityLayer.MouseLeftButtonDown += OnCursorMoved;
+			luminosityLayer.MouseLeftButtonDown += (s, e) => {
+				if (!luminosityLayer.IsMouseCaptured)
+					luminosityLayer.CaptureMouse ();
+			};
 			luminosityLayer.MouseMove += (s, e) => {
-				if (e.LeftButton == MouseButtonState.Pressed) {
-					OnCursorMoved (s, e);
+				if (luminosityLayer.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed && saturationLayer != null) {
+					var cursorPosition = e.GetPosition ((IInputElement)s);
+					SetColorFromMousePosition (cursorPosition);
 				}
 			};
 			luminosityLayer.MouseLeftButtonUp += (s, e) => {
+				if (luminosityLayer.IsMouseCaptured) luminosityLayer.ReleaseMouseCapture ();
+				var cursorPosition = e.GetPosition ((IInputElement)s);
+				SetColorFromMousePosition (cursorPosition);
 				RaiseEvent (new RoutedEventArgs (CommitShadeEvent));
 			};
+		}
+
+		void SetColorFromMousePosition(Point cursorPosition)
+		{
+			if (cursorPosition.X < 0)
+				cursorPosition.X = 0;
+			if (cursorPosition.X > luminosityLayer.ActualWidth)
+				cursorPosition.X = luminosityLayer.ActualWidth;
+			if (cursorPosition.Y < 0)
+				cursorPosition.Y = 0;
+			if (cursorPosition.Y > luminosityLayer.ActualHeight)
+				cursorPosition.Y = luminosityLayer.ActualHeight;
+			CursorPosition = cursorPosition;
+			var newColor = GetColorFromPosition (cursorPosition);
+			Color = new CommonColor (newColor.R, newColor.G, newColor.B, Color.A);
 		}
 
 		protected override void OnRenderSizeChanged (SizeChangedInfo sizeInfo)
@@ -63,19 +85,12 @@ namespace Xamarin.PropertyEditing.Windows
 			CursorPosition = GetPositionFromColor (Color);
 		}
 
-		void OnCursorMoved(object source, MouseEventArgs e)
-		{
-			if (saturationLayer == null) return;
-			CursorPosition = e.GetPosition ((IInputElement)source);
-			var newColor = GetColorFromPosition (CursorPosition);
-			Color = new CommonColor (newColor.R, newColor.G, newColor.B, Color.A);
-		}
-
 		protected override void OnColorChanged (CommonColor oldColor, CommonColor newColor)
 		{
 			base.OnColorChanged (oldColor, newColor);
 
-			CursorPosition = GetPositionFromColor (newColor);
+			if (luminosityLayer == null || !luminosityLayer.IsMouseCaptured)
+				CursorPosition = GetPositionFromColor (newColor);
 		}
 
 		static void OnHuePropertyChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
