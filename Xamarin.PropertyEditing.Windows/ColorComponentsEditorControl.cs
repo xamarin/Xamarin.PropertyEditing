@@ -11,14 +11,14 @@ namespace Xamarin.PropertyEditing.Windows
 {
 	internal class ColorComponentsEditorControl : ColorEditorControlBase
 	{
-		public ColorComponentsEditorControl()
+		public ColorComponentsEditorControl ()
 		{
 			DefaultStyleKey = typeof (ColorComponentsEditorControl);
 		}
 
 		public static readonly DependencyProperty RedProperty =
 			DependencyProperty.Register (
-				nameof(R), typeof (byte), typeof (ColorComponentsEditorControl),
+				nameof (R), typeof (byte), typeof (ColorComponentsEditorControl),
 				new PropertyMetadata ((byte)0));
 
 		public byte R {
@@ -28,7 +28,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty GreenProperty =
 			DependencyProperty.Register (
-				nameof(G), typeof (byte), typeof (ColorComponentsEditorControl),
+				nameof (G), typeof (byte), typeof (ColorComponentsEditorControl),
 				new PropertyMetadata ((byte)0));
 
 		public byte G {
@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty BlueProperty =
 			DependencyProperty.Register (
-				nameof(B), typeof (byte), typeof (ColorComponentsEditorControl),
+				nameof (B), typeof (byte), typeof (ColorComponentsEditorControl),
 				new PropertyMetadata ((byte)0));
 
 		public byte B {
@@ -48,7 +48,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty AlphaProperty =
 			DependencyProperty.Register (
-				nameof(A), typeof (byte), typeof (ColorComponentsEditorControl),
+				nameof (A), typeof (byte), typeof (ColorComponentsEditorControl),
 				new PropertyMetadata ((byte)0));
 
 		public byte A {
@@ -60,12 +60,12 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnApplyTemplate ();
 
-			foreach(var focusable in GetFocusableDescendants(this)) {
+			foreach (var focusable in GetFocusableDescendants (this)) {
 				focusable.LostFocus += OnBlur;
 			}
 		}
 
-		IEnumerable<UIElement> GetFocusableDescendants(UIElement parent)
+		IEnumerable<UIElement> GetFocusableDescendants (UIElement parent)
 		{
 			var childCount = VisualTreeHelper.GetChildrenCount (parent);
 			for (var i = 0; i < childCount; i++) {
@@ -99,7 +99,7 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 	}
 
-	[ValueConversion(typeof(CommonColor), typeof(string))]
+	[ValueConversion (typeof (CommonColor), typeof (string))]
 	internal class HexColorConverter : MarkupExtension, IValueConverter
 	{
 		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
@@ -116,6 +116,36 @@ namespace Xamarin.PropertyEditing.Windows
 			if (string.IsNullOrWhiteSpace (stringValue)) return new CommonColor (0, 0, 0);
 			var color = (Color)ColorConverter.ConvertFromString (stringValue);
 			return new CommonColor (color.R, color.G, color.B, color.A);
+		}
+
+		public override object ProvideValue (IServiceProvider serviceProvider)
+		{
+			return this;
+		}
+	}
+
+	[ValueConversion (typeof (byte), typeof (string))]
+	internal class ByteToPercentageConverter : MarkupExtension, IValueConverter
+	{
+		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (!(value is byte)) return "100%";
+
+			var alpha = (byte)value;
+			return (alpha / 255d).ToString ("P0");
+		}
+
+		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var stringValue = value as string;
+			if (string.IsNullOrWhiteSpace (stringValue)) return (byte)255;
+			stringValue = stringValue.TrimEnd (' ', '%');
+			if (double.TryParse (stringValue, out var doubleValue)) {
+				if (doubleValue < 0) doubleValue = 0;
+				if (doubleValue > 100) doubleValue = 100;
+				return (byte)(doubleValue * 2.55);
+			}
+			return (byte)255;
 		}
 
 		public override object ProvideValue (IServiceProvider serviceProvider)

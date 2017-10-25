@@ -480,7 +480,7 @@
 						<Label Content="A" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" />
 						<local:ColorComponentBox x:Name="alphaEntry"
 								 AutomationProperties.HelpText="Alpha" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Mode=TwoWay}"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						<TextBox Name="hexEntry" Margin="2,0,2,0"
 								 AutomationProperties.HelpText="Hex value" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
