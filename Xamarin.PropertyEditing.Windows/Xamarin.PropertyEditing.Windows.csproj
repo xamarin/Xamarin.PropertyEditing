@@ -53,8 +53,11 @@
     <Compile Include="BoolEditorControl.cs" />
     <Compile Include="BrushBoxControl.cs" />
     <Compile Include="ChoiceControl.cs" />
+    <Compile Include="ColorComponentBox.cs" />
     <Compile Include="ColorComponentsEditorControl.cs" />
+    <Compile Include="ColorComponentToBrushConverter.cs" />
     <Compile Include="ColorEditorControlBase.cs" />
+    <Compile Include="ColorHelper.cs" />
     <Compile Include="CommonColorToColorConverter.cs" />
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="EditorPropertySelector.cs" />

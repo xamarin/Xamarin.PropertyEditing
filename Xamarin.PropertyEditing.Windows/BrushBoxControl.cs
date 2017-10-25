@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public static readonly DependencyProperty BrushProperty =
 			DependencyProperty.Register (
-				nameof(Brush), typeof (Brush), typeof (ColorEditorControlBase),
+				nameof(Brush), typeof (Brush), typeof (BrushBoxControl),
 				new PropertyMetadata (new SolidColorBrush (Color.FromArgb(0, 0, 0, 0))));
 
 		public Brush Brush {
