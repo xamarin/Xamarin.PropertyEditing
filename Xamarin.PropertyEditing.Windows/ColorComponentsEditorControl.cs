@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty RedProperty =
 			DependencyProperty.Register (
-				"R", typeof (byte), typeof (ColorComponentsEditorControl),
+				nameof(R), typeof (byte), typeof (ColorComponentsEditorControl),
 				new PropertyMetadata ((byte)0));
 
 		public byte R {
@@ -28,7 +28,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty GreenProperty =
 			DependencyProperty.Register (
-				"G", typeof (byte), typeof (ColorComponentsEditorControl),
+				nameof(G), typeof (byte), typeof (ColorComponentsEditorControl),
 				new PropertyMetadata ((byte)0));
 
 		public byte G {
@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty BlueProperty =
 			DependencyProperty.Register (
-				"B", typeof (byte), typeof (ColorComponentsEditorControl),
+				nameof(B), typeof (byte), typeof (ColorComponentsEditorControl),
 				new PropertyMetadata ((byte)0));
 
 		public byte B {
@@ -48,7 +48,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty AlphaProperty =
 			DependencyProperty.Register (
-				"A", typeof (byte), typeof (ColorComponentsEditorControl),
+				nameof(A), typeof (byte), typeof (ColorComponentsEditorControl),
 				new PropertyMetadata ((byte)0));
 
 		public byte A {

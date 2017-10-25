@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -35,7 +35,7 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static readonly DependencyProperty EditorProviderProperty = DependencyProperty.Register (
-			"EditorProvider", typeof(IEditorProvider), typeof(PropertyEditorPanel), new PropertyMetadata (default(IEditorProvider), (o, args) => ((PropertyEditorPanel)o).OnEditorProviderChanged()));
+			nameof(EditorProvider), typeof(IEditorProvider), typeof(PropertyEditorPanel), new PropertyMetadata (default(IEditorProvider), (o, args) => ((PropertyEditorPanel)o).OnEditorProviderChanged()));
 
 		public IEditorProvider EditorProvider
 		{
@@ -44,7 +44,7 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		private static readonly DependencyPropertyKey SelectedItemsPropertyKey = DependencyProperty.RegisterReadOnly (
-			"SelectedItems", typeof(IList), typeof(PropertyEditorPanel), new PropertyMetadata (default(IList)));
+			nameof(SelectedItems), typeof(IList), typeof(PropertyEditorPanel), new PropertyMetadata (default(IList)));
 
 		public static readonly DependencyProperty SelectedItemsProperty = SelectedItemsPropertyKey.DependencyProperty;
 
@@ -55,7 +55,7 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static readonly DependencyProperty IsArrangeEnabledProperty = DependencyProperty.Register (
-			"IsArrangeEnabled", typeof(bool), typeof(PropertyEditorPanel), new PropertyMetadata (true));
+			nameof(IsArrangeEnabled), typeof(bool), typeof(PropertyEditorPanel), new PropertyMetadata (true));
 
 		public bool IsArrangeEnabled
 		{
@@ -64,7 +64,7 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static readonly DependencyProperty ArrangeModeProperty = DependencyProperty.Register (
-			"ArrangeMode", typeof(PropertyArrangeMode), typeof(PropertyEditorPanel), new PropertyMetadata (PropertyArrangeMode.Name, (o, args) => ((PropertyEditorPanel)o).OnArrangeModeChanged ((PropertyArrangeMode)args.NewValue)));
+			nameof(ArrangeMode), typeof(PropertyArrangeMode), typeof(PropertyEditorPanel), new PropertyMetadata (PropertyArrangeMode.Name, (o, args) => ((PropertyEditorPanel)o).OnArrangeModeChanged ((PropertyArrangeMode)args.NewValue)));
 
 		public PropertyArrangeMode ArrangeMode
 		{

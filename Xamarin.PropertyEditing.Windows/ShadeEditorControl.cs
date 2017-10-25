@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty CursorPositionProperty =
 			DependencyProperty.Register (
-				"CursorPosition", typeof (Point), typeof (ShadeEditorControl),
+				nameof(CursorPosition), typeof (Point), typeof (ShadeEditorControl),
 				new PropertyMetadata (new Point (0, 0)));
 
 		public Point CursorPosition {
@@ -28,7 +28,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty HueProperty =
 			DependencyProperty.Register (
-				"Hue", typeof (CommonColor), typeof (ShadeEditorControl),
+				nameof(Hue), typeof (CommonColor), typeof (ShadeEditorControl),
 				new PropertyMetadata (new CommonColor (255, 0, 0), OnHuePropertyChanged));
 
 		public CommonColor Hue {

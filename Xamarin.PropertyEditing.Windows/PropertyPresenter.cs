@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -12,7 +12,7 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static readonly DependencyProperty LabelProperty = DependencyProperty.Register (
-			"Label", typeof(object), typeof(PropertyPresenter), new PropertyMetadata (default(object)));
+			nameof(Label), typeof(object), typeof(PropertyPresenter), new PropertyMetadata (default(object)));
 
 		public object Label
 		{

@@ -9,7 +9,7 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public static readonly RoutedEvent CommitCurrentColorEvent =
 			EventManager.RegisterRoutedEvent (
-				"CommitCurrentColor", RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (CurrentColorCommitterControlBase));
+				nameof(CommitCurrentColor), RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (CurrentColorCommitterControlBase));
 
 		public event RoutedEventHandler CommitCurrentColor {
 			add { AddHandler (CommitCurrentColorEvent, value); }
@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly RoutedEvent CommitShadeEvent =
 			EventManager.RegisterRoutedEvent (
-				"CommitShade", RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (CurrentColorCommitterControlBase));
+				nameof(CommitShade), RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (CurrentColorCommitterControlBase));
 
 		public event RoutedEventHandler CommitShade {
 			add { AddHandler (CommitShadeEvent, value); }

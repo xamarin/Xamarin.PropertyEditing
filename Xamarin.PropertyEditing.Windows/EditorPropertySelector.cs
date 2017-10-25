@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Windows
 		: DependencyObject
 	{
 		public static readonly DependencyProperty ParentTemplateProperty = DependencyProperty.Register (
-			"ParentTemplate", typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
+			nameof(ParentTemplate), typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
 
 		public DataTemplate ParentTemplate
 		{
@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static readonly DependencyProperty EditorTemplateProperty = DependencyProperty.Register (
-			"EditorTemplate", typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
+			nameof(EditorTemplate), typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
 
 		public DataTemplate EditorTemplate
 		{

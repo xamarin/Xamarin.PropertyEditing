@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public static readonly DependencyProperty InitialColorProperty =
 			DependencyProperty.Register (
-				"InitialColor", typeof (CommonColor), typeof (CurrentColorEditorControl),
+				nameof(InitialColor), typeof (CommonColor), typeof (CurrentColorEditorControl),
 				new PropertyMetadata (new CommonColor (0, 0, 0)));
 
 		public CommonColor InitialColor {
@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty LastColorProperty =
 			DependencyProperty.Register (
-				"LastColor", typeof (CommonColor), typeof (CurrentColorEditorControl),
+				nameof(LastColor), typeof (CommonColor), typeof (CurrentColorEditorControl),
 				new PropertyMetadata (new CommonColor (0, 0, 0)));
 
 		public CommonColor LastColor {
