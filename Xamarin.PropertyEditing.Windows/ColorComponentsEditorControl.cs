@@ -113,7 +113,7 @@ namespace Xamarin.PropertyEditing.Windows
 		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var stringValue = value as string;
-			if (string.IsNullOrWhiteSpace (stringValue)) return new CommonColor (0, 0, 0);
+			if (string.IsNullOrWhiteSpace (stringValue)) return DependencyProperty.UnsetValue;
 			var color = (Color)ColorConverter.ConvertFromString (stringValue);
 			return new CommonColor (color.R, color.G, color.B, color.A);
 		}
@@ -138,14 +138,14 @@ namespace Xamarin.PropertyEditing.Windows
 		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var stringValue = value as string;
-			if (string.IsNullOrWhiteSpace (stringValue)) return (byte)255;
+			if (string.IsNullOrWhiteSpace (stringValue)) return DependencyProperty.UnsetValue;
 			stringValue = stringValue.TrimEnd (' ', '%');
 			if (double.TryParse (stringValue, out var doubleValue)) {
 				if (doubleValue < 0) doubleValue = 0;
 				if (doubleValue > 100) doubleValue = 100;
 				return (byte)(doubleValue * 2.55);
 			}
-			return (byte)255;
+			return DependencyProperty.UnsetValue;
 		}
 
 		public override object ProvideValue (IServiceProvider serviceProvider)
