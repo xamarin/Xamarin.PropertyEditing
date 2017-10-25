@@ -5,13 +5,30 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Tests
 {
+	[SingleThreaded]
 	internal abstract class PropertyViewModelTests<TValue, TViewModel>
 		where TViewModel : PropertyViewModel<TValue>
 	{
+
+		[SetUp]
+		public void Setup ()
+		{
+			this.syncContext = new AsyncSynchronizationContext();
+			SynchronizationContext.SetSynchronizationContext (this.syncContext);
+		}
+
+		[TearDown]
+		public void TearDown ()
+		{
+			this.syncContext.WaitForPendingOperationsToComplete ();
+			SynchronizationContext.SetSynchronizationContext (null);
+		}
+
 		[Test]
 		public void GetValue ()
 		{
@@ -598,5 +615,6 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		private readonly Random rand = new Random (42);
+		private AsyncSynchronizationContext syncContext;
 	}
 }
