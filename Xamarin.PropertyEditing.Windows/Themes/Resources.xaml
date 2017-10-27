@@ -353,12 +353,12 @@
 							<local:ShadeEditorControl x:Name="shadeChooser" Color="{Binding Path=Shade, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}"
 													  Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,0,1" Panel.ZIndex="1"/>
 							<local:HueEditorControl x:Name="hueChooser" Hue="{Binding Path=Hue, Mode=TwoWay}"
-													Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,3,1" Panel.ZIndex="0"/>
+													Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,3,1" Panel.ZIndex="0" Focusable="False"/>
 							<local:CurrentColorEditorControl Color="{Binding Path=Shade, Mode=TwoWay}" InitialColor="{Binding InitialColor}" LastColor="{Binding LastColor}"
-															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,1,0" Panel.ZIndex="0"/>
+															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,1,0" Panel.ZIndex="0" Focusable="False"/>
 						</Grid>
 						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Shade, Mode=TwoWay}" Margin="0,4,0,0"
-															Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+															Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Focusable="False"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -366,6 +366,7 @@
 	</Style>
 
 	<Style TargetType="local:HueEditorControl">
+		<Setter Property="Focusable" Value="False"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:HueEditorControl">
@@ -398,6 +399,7 @@
 	</Style>
 
 	<Style TargetType="local:ShadeEditorControl">
+		<Setter Property="Focusable" Value="False"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:ShadeEditorControl">
@@ -447,6 +449,7 @@
 	</Style>
 
 	<Style TargetType="local:ColorComponentsEditorControl">
+		<Setter Property="Focusable" Value="False"/>
 		<Setter Property="ContextMenu">
 			<Setter.Value>
 				<ContextMenu Placement="Bottom">
@@ -476,7 +479,7 @@
 								<ColumnDefinition Width="23"/>
 								<ColumnDefinition Width="77"/>
 							</Grid.ColumnDefinitions>
-							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline">R</TextBlock>
 							</Label>
@@ -484,7 +487,7 @@
 								 AutomationProperties.HelpText="Red" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=R, Mode=TwoWay}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToRedBrushConverter}}"/>
-							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline">G</TextBlock>
 							</Label>
@@ -492,7 +495,7 @@
 								 AutomationProperties.HelpText="Green" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=G, Mode=TwoWay}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToGreenBrushConverter}}"/>
-							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline">B</TextBlock>
 							</Label>
@@ -518,7 +521,7 @@
 								<ColumnDefinition Width="23"/>
 								<ColumnDefinition Width="77"/>
 							</Grid.ColumnDefinitions>
-							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline">C</TextBlock>
 							</Label>
@@ -526,7 +529,7 @@
 								 AutomationProperties.HelpText="Cyan" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=C, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToCyanBrushConverter}}"/>
-							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline">M</TextBlock>
 							</Label>
@@ -534,7 +537,7 @@
 								 AutomationProperties.HelpText="Magenta" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=M, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToMagentaBrushConverter}}"/>
-							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline">Y</TextBlock>
 							</Label>
@@ -542,6 +545,7 @@
 								 AutomationProperties.HelpText="Yellow" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Y, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToYellowBrushConverter}}"/>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="3" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline">K</TextBlock>
 							</Label>
@@ -569,6 +573,8 @@
 		<Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
 		<Setter Property="Foreground" Value="{DynamicResource InputForegroundBrush}" />
+		<Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+		<Setter Property="IsTabStop" Value="False"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:ColorComponentBox">
@@ -579,14 +585,14 @@
 								 CacheMode="{TemplateBinding CacheMode}" CaretBrush="{TemplateBinding CaretBrush}" CharacterCasing="{TemplateBinding CharacterCasing}"
 								 Clip="{TemplateBinding Clip}" ClipToBounds="{TemplateBinding ClipToBounds}" ContextMenu="{TemplateBinding ContextMenu}"
 								 Cursor="{TemplateBinding Cursor}" DataContext="{TemplateBinding DataContext}" FlowDirection="{TemplateBinding FlowDirection}"
-								 Focusable="{TemplateBinding Focusable}" FocusVisualStyle="{TemplateBinding FocusVisualStyle}" FontFamily="{TemplateBinding FontFamily}"
+								 Focusable="True" FocusVisualStyle="{TemplateBinding FocusVisualStyle}" FontFamily="{TemplateBinding FontFamily}"
 								 FontSize="{TemplateBinding FontSize}" FontStretch="{TemplateBinding FontStretch}" FontStyle="{TemplateBinding FontStyle}"
 								 FontWeight="{TemplateBinding FontWeight}" ForceCursor="{TemplateBinding ForceCursor}" Foreground="{TemplateBinding Foreground}"
 								 Height="{TemplateBinding Height}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
 								 HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}" IsHitTestVisible="{TemplateBinding IsHitTestVisible}"
 								 IsEnabled="{TemplateBinding IsEnabled}" IsInactiveSelectionHighlightEnabled="{TemplateBinding IsInactiveSelectionHighlightEnabled}"
 								 IsManipulationEnabled="{TemplateBinding IsManipulationEnabled}" IsReadOnly="{TemplateBinding IsReadOnly}" IsReadOnlyCaretVisible="{TemplateBinding IsReadOnlyCaretVisible}"
-								 IsTabStop="{TemplateBinding IsTabStop}" IsUndoEnabled="{TemplateBinding IsUndoEnabled}" Margin="{TemplateBinding Margin}"
+								 IsTabStop="True" IsUndoEnabled="{TemplateBinding IsUndoEnabled}" Margin="{TemplateBinding Margin}"
 								 MaxHeight="{TemplateBinding MaxHeight}" MaxLength="{TemplateBinding MaxLength}" MaxLines="{TemplateBinding MaxLines}"
 								 MaxWidth="{TemplateBinding MaxWidth}" MinHeight="{TemplateBinding MinHeight}" MinLines="{TemplateBinding MinLines}"
 								 MinWidth="{TemplateBinding MinWidth}" Padding="{TemplateBinding Padding}" SelectionOpacity="{TemplateBinding SelectionOpacity}"
@@ -605,6 +611,7 @@
 	</Style>
 
 	<Style TargetType="local:CurrentColorEditorControl">
+		<Setter Property="IsTabStop" Value="False"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:CurrentColorEditorControl">
@@ -614,18 +621,18 @@
 							<ColumnDefinition Width="*"/>
 							<ColumnDefinition Width="20"/>
 						</Grid.ColumnDefinitions>
-						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="0" Panel.ZIndex="0">
+						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="0" Panel.ZIndex="0" IsTabStop="False">
 							<local:BrushBoxControl.Brush>
 								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=InitialColor, Converter={local:CommonColorToColorConverter}}"/>
 							</local:BrushBoxControl.Brush>
 						</local:BrushBoxControl>
-						<Button x:Name="initialColorButton" HorizontalAlignment="Stretch" Grid.Column="0" Panel.ZIndex="1" Opacity="0" FocusVisualStyle="{x:Null}" ToolTip="Initial color"/>
-						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="1" ToolTip="Current color">
+						<Button x:Name="initialColorButton" HorizontalAlignment="Stretch" Grid.Column="0" Panel.ZIndex="1" Opacity="0" FocusVisualStyle="{x:Null}" ToolTip="Initial color" IsTabStop="False"/>
+						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="1" ToolTip="Current color" IsTabStop="False">
 							<local:BrushBoxControl.Brush>
 								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:CommonColorToColorConverter}}"/>
 							</local:BrushBoxControl.Brush>
 						</local:BrushBoxControl>
-						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="2" ToolTip="Last color" Margin="1,0,0,0">
+						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="2" ToolTip="Last color" Margin="1,0,0,0" IsTabStop="False">
 							<local:BrushBoxControl.Brush>
 								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=LastColor, Converter={local:CommonColorToColorConverter}}"/>
 							</local:BrushBoxControl.Brush>
@@ -637,6 +644,7 @@
 	</Style>
 
 	<Style TargetType="local:BrushBoxControl">
+		<Setter Property="IsTabStop" Value="False"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BrushBoxControl">
