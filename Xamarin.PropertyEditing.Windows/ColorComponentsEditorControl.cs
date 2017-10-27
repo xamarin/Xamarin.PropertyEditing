@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Markup;
+using System.Windows.Controls;
 using System.Windows.Media;
 using Xamarin.PropertyEditing.Drawing;
 
@@ -56,12 +54,83 @@ namespace Xamarin.PropertyEditing.Windows
 			set => SetValue (AlphaProperty, value);
 		}
 
+		public static readonly DependencyProperty CyanProperty =
+			DependencyProperty.Register (
+				nameof (C), typeof (double), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata (0d));
+
+		public double C {
+			get => (double)GetValue (CyanProperty);
+			set => SetValue (CyanProperty, value);
+		}
+
+		public static readonly DependencyProperty MagentaProperty =
+			DependencyProperty.Register (
+				nameof (M), typeof (double), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata (0d));
+
+		public double M {
+			get => (double)GetValue (MagentaProperty);
+			set => SetValue (MagentaProperty, value);
+		}
+
+		public static readonly DependencyProperty YellowProperty =
+			DependencyProperty.Register (
+				nameof (Y), typeof (double), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata (0d));
+
+		public double Y {
+			get => (double)GetValue (YellowProperty);
+			set => SetValue (YellowProperty, value);
+		}
+
+		public static readonly DependencyProperty BlackProperty =
+			DependencyProperty.Register (
+				nameof (K), typeof (double), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata (0d));
+
+		public double K {
+			get => (double)GetValue (BlackProperty);
+			set => SetValue (BlackProperty, value);
+		}
+
+		public static readonly DependencyProperty ColorComponentModelProperty =
+			DependencyProperty.Register (
+				nameof (ColorComponentModel), typeof (ColorComponentModel), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata (ColorComponentModel.RGB, OnColorModelChanged));
+
+		public ColorComponentModel ColorComponentModel {
+			get => (ColorComponentModel)GetValue (ColorComponentModelProperty);
+			set => SetValue (ColorComponentModelProperty, value);
+		}
+
+		UIElement rgbPane;
+		UIElement cmykPane;
+
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
 
-			foreach (var focusable in GetFocusableDescendants (this)) {
-				focusable.LostFocus += OnBlur;
+			rgbPane = GetTemplateChild ("rgbPane") as UIElement;
+			cmykPane = GetTemplateChild ("cmykPane") as UIElement;
+
+			if (ContextMenu != null) {
+				foreach (MenuItem item in ContextMenu.Items) {
+					item.Click += (s, e) => {
+						ColorComponentModel = (ColorComponentModel)Enum.Parse (typeof (ColorComponentModel), item.Header.ToString ());
+					};
+					CheckIfCurrentModel (item);
+				}
+			}
+
+			foreach (UIElement focusable in GetFocusableDescendants (rgbPane)) {
+				focusable.LostFocus += OnRGBComponentBoxBlur;
+			}
+			foreach (UIElement focusable in GetFocusableDescendants (cmykPane)) {
+				focusable.LostFocus += OnCMYKComponentBoxBlur;
+			}
+			foreach (Button button in GetButtonDescendants (this)) {
+				button.Click += OnComponentLabelClick;
 			}
 		}
 
@@ -69,16 +138,27 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			var childCount = VisualTreeHelper.GetChildrenCount (parent);
 			for (var i = 0; i < childCount; i++) {
-				var child = VisualTreeHelper.GetChild (parent, i) as UIElement;
-				if (child != null) {
+				if (VisualTreeHelper.GetChild (parent, i) is UIElement child) {
 					if (child.Focusable) yield return child;
-					var grandChildren = GetFocusableDescendants (child);
-					foreach (var grandChild in grandChildren) yield return grandChild;
+					IEnumerable<UIElement> grandChildren = GetFocusableDescendants (child);
+					foreach (UIElement grandChild in grandChildren) yield return grandChild;
 				}
 			}
 		}
 
-		void OnBlur (object sender, RoutedEventArgs e)
+		IEnumerable<Button> GetButtonDescendants (UIElement parent)
+		{
+			var childCount = VisualTreeHelper.GetChildrenCount (parent);
+			for (var i = 0; i < childCount; i++) {
+				if (VisualTreeHelper.GetChild (parent, i) is UIElement child) {
+					if (child is Button button) yield return button;
+					IEnumerable<Button> grandChildren = GetButtonDescendants (child);
+					foreach (Button grandChild in grandChildren) yield return grandChild;
+				}
+			}
+		}
+
+		void OnRGBComponentBoxBlur (object sender, RoutedEventArgs e)
 		{
 			var newColor = new CommonColor (R, G, B, A);
 			if (!newColor.Equals (Color)) {
@@ -86,6 +166,47 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 
 			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+		}
+
+		void OnCMYKComponentBoxBlur (object sender, RoutedEventArgs e)
+		{
+			var newColor = CommonColor.FromCMYK(C, M, Y, K, A);
+			if (!newColor.Equals (Color)) {
+				Color = newColor;
+			}
+
+			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+		}
+
+		void OnComponentLabelClick (object sender, RoutedEventArgs e)
+		{
+			if (ContextMenu != null) {
+				ContextMenu.PlacementTarget = sender as UIElement;
+				ContextMenu.IsOpen = true;
+				foreach(MenuItem item in ContextMenu.Items) {
+					CheckIfCurrentModel (item);
+				}
+			}
+		}
+
+		private static void OnColorModelChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var that = d as ColorComponentsEditorControl;
+
+			var model = (ColorComponentModel)e.NewValue;
+
+			void UpdateVisibility(UIElement el, ColorComponentModel elModel)
+			{
+				if (el != null) el.Visibility = model == elModel ? Visibility.Visible : Visibility.Hidden;
+			}
+
+			UpdateVisibility(that.rgbPane, ColorComponentModel.RGB);
+			UpdateVisibility(that.cmykPane, ColorComponentModel.CMYK);
+		}
+
+		private void CheckIfCurrentModel (MenuItem item)
+		{
+			item.IsChecked = item.Header.ToString () == Enum.GetName (typeof (ColorComponentModel), ColorComponentModel);
 		}
 
 		protected override void OnColorChanged (CommonColor oldColor, CommonColor newColor)
@@ -96,61 +217,10 @@ namespace Xamarin.PropertyEditing.Windows
 			if (G != newColor.G) G = newColor.G;
 			if (B != newColor.B) B = newColor.B;
 			if (A != newColor.A) A = newColor.A;
-		}
-	}
-
-	[ValueConversion (typeof (CommonColor), typeof (string))]
-	internal class HexColorConverter : MarkupExtension, IValueConverter
-	{
-		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			if (!(value is CommonColor)) return "#FF000000";
-
-			var color = (CommonColor)value;
-			return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
-		}
-
-		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			var stringValue = value as string;
-			if (string.IsNullOrWhiteSpace (stringValue)) return DependencyProperty.UnsetValue;
-			var color = (Color)ColorConverter.ConvertFromString (stringValue);
-			return new CommonColor (color.R, color.G, color.B, color.A);
-		}
-
-		public override object ProvideValue (IServiceProvider serviceProvider)
-		{
-			return this;
-		}
-	}
-
-	[ValueConversion (typeof (byte), typeof (string))]
-	internal class ByteToPercentageConverter : MarkupExtension, IValueConverter
-	{
-		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			if (!(value is byte)) return "100%";
-
-			var alpha = (byte)value;
-			return (alpha / 255d).ToString ("P0");
-		}
-
-		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			var stringValue = value as string;
-			if (string.IsNullOrWhiteSpace (stringValue)) return DependencyProperty.UnsetValue;
-			stringValue = stringValue.TrimEnd (' ', '%');
-			if (double.TryParse (stringValue, out var doubleValue)) {
-				if (doubleValue < 0) doubleValue = 0;
-				if (doubleValue > 100) doubleValue = 100;
-				return (byte)(doubleValue * 2.55);
-			}
-			return DependencyProperty.UnsetValue;
-		}
-
-		public override object ProvideValue (IServiceProvider serviceProvider)
-		{
-			return this;
+			if (C != newColor.C) C = newColor.C;
+			if (M != newColor.M) M = newColor.M;
+			if (Y != newColor.Y) Y = newColor.Y;
+			if (K != newColor.K) K = newColor.K;
 		}
 	}
 }

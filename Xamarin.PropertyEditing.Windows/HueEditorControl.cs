@@ -123,7 +123,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			if (position < 0 || position > 6)
 				throw new ArgumentOutOfRangeException (nameof (position), "Position must be between 0 and 6.");
-			foreach (var interval in intervals) {
+			foreach (int[] interval in intervals) {
 				// Component is 255 inside the interval
 				if (position >= interval[0] && position <= interval[1])
 					return 255;

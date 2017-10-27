@@ -8,8 +8,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public SolidBrushPropertyViewModel(IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base(property, editors)
 		{
-			var solidBrushPropertyInfo = property as IColorSpaced;
-			if (solidBrushPropertyInfo != null) {
+			if (property is IColorSpaced solidBrushPropertyInfo) {
 				ColorSpaces = solidBrushPropertyInfo.ColorSpaces;
 			}
 		}
@@ -18,7 +17,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		CommonColor? hue;
 		public CommonColor Hue {
-			get => (hue.HasValue ? hue : (hue = LastColor.Hue)).Value;
+			get => (hue.HasValue ? hue : (hue = LastColor.HueColor)).Value;
 			set {
 				if (!hue.Equals(value)) {
 					var luminosity = Color.Luminosity;
@@ -48,8 +47,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get => Value.Color;
 			set {
 				if (!Value.Color.Equals(value)) {
-					var oldHue = Hue;
-					var newHue = value.Hue;
+					CommonColor oldHue = Hue;
+					CommonColor newHue = value.HueColor;
 					Value = new CommonSolidBrush (value, Value.ColorSpace, Value.Opacity);
 					OnPropertyChanged ();
 					if (!newHue.Equals(oldHue)) {
@@ -68,20 +67,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		CommonColor? initialColor;
-		public CommonColor InitialColor {
-			get => initialColor.HasValue ? initialColor.Value : (initialColor = Color).Value;
-		}
+		public CommonColor InitialColor => initialColor ?? (initialColor = Color).Value;
 
 		CommonColor? lastColor;
-		public CommonColor LastColor {
-			get => lastColor.HasValue ? lastColor.Value : (lastColor = Color).Value;
-		}
+		public CommonColor LastColor => lastColor ?? (lastColor = Color).Value;
 
 		public void CommitLastColor()
 		{
 			lastColor = Color;
 			shade = Color;
-			hue = Color.Hue;
+			hue = Color.HueColor;
 			OnPropertyChanged (nameof (LastColor));
 			OnPropertyChanged (nameof (Shade));
 			OnPropertyChanged (nameof (Hue));

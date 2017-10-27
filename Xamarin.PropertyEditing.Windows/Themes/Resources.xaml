@@ -357,7 +357,7 @@
 							<local:CurrentColorEditorControl Color="{Binding Path=Shade, Mode=TwoWay}" InitialColor="{Binding InitialColor}" LastColor="{Binding LastColor}"
 															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,1,0" Panel.ZIndex="0"/>
 						</Grid>
-						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Shade, Mode=TwoWay}"
+						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Shade, Mode=TwoWay}" Margin="0,4,0,0"
 															Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 					</Grid>
 				</ControlTemplate>
@@ -447,44 +447,117 @@
 	</Style>
 
 	<Style TargetType="local:ColorComponentsEditorControl">
+		<Setter Property="ContextMenu">
+			<Setter.Value>
+				<ContextMenu Placement="Bottom">
+					<!--<MenuItem Header="HLS"/>
+					<MenuItem Header="HSB"/>-->
+					<MenuItem Header="RGB"/>
+					<MenuItem Header="CMYK"/>
+				</ContextMenu>
+			</Setter.Value>
+		</Setter>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:ColorComponentsEditorControl">
 					<Grid>
 						<Grid.RowDefinitions>
 							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
 							<RowDefinition Height="*"/>
 						</Grid.RowDefinitions>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="20"/>
-							<ColumnDefinition Width="80"/>
-						</Grid.ColumnDefinitions>
-						<Label Content="R" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" />
-						<local:ColorComponentBox x:Name="redEntry"
+						<Grid x:Name="rgbPane" Grid.Row="0" Grid.Column="0">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="23"/>
+								<ColumnDefinition Width="77"/>
+							</Grid.ColumnDefinitions>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">R</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="redEntry"
 								 AutomationProperties.HelpText="Red" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=R, Mode=TwoWay}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToRedBrushConverter}}"/>
-						<Label Content="G" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" />
-						<local:ColorComponentBox x:Name="greenEntry"
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">G</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="greenEntry"
 								 AutomationProperties.HelpText="Green" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=G, Mode=TwoWay}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToGreenBrushConverter}}"/>
-						<Label Content="B" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" />
-						<local:ColorComponentBox x:Name="blueEntry"
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">B</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="blueEntry"
 								 AutomationProperties.HelpText="Blue" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=B, Mode=TwoWay}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlueBrushConverter}}"/>
-						<Label Content="A" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" />
-						<local:ColorComponentBox x:Name="alphaEntry"
+							<Label Content="A" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" />
+							<local:ColorComponentBox x:Name="alphaEntry"
 								 AutomationProperties.HelpText="Alpha" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+						</Grid>
+						<Grid x:Name="cmykPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="23"/>
+								<ColumnDefinition Width="77"/>
+							</Grid.ColumnDefinitions>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">C</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="cyanEntry"
+								 AutomationProperties.HelpText="Cyan" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=C, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToCyanBrushConverter}}"/>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">M</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="magentaEntry"
+								 AutomationProperties.HelpText="Magenta" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=M, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToMagentaBrushConverter}}"/>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">Y</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="yellowEntry"
+								 AutomationProperties.HelpText="Yellow" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Y, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToYellowBrushConverter}}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">K</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="blackEntry"
+								 AutomationProperties.HelpText="Black" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=K, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlackBrushConverter}}"/>
+							<Label Content="A" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4" />
+							<local:ColorComponentBox x:Name="alphaEntryCMYK"
+								 AutomationProperties.HelpText="Alpha" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="4"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
+								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+						</Grid>
 						<TextBox Name="hexEntry" Margin="2,0,2,0"
-								 AutomationProperties.HelpText="Hex value" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
-								 Grid.Column="1" Grid.Row="4"
+								 AutomationProperties.HelpText="Hex value" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+								 Grid.Column="0" Grid.Row="2"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
 					</Grid>
 				</ControlTemplate>

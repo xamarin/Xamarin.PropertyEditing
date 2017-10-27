@@ -30,8 +30,6 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public override object Convert (object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (!(value is CommonColor))
-				return new SolidColorBrush (Color.FromArgb (0, 0, 0, 0));
 			var color = (CommonColor)value;
 			return ConvertImplementation (
 				Color.FromArgb (0, color.R, color.G, color.B),
@@ -43,8 +41,6 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public override object Convert (object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (!(value is CommonColor))
-				return new SolidColorBrush (Color.FromArgb (0, 0, 0, 0));
 			var color = (CommonColor)value;
 			return ConvertImplementation (
 				Color.FromArgb (color.A, 0, color.G, color.B),
@@ -56,8 +52,6 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public override object Convert (object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (!(value is CommonColor))
-				return new SolidColorBrush (Color.FromArgb (0, 0, 0, 0));
 			var color = (CommonColor)value;
 			return ConvertImplementation (
 				Color.FromArgb (color.A, color.R, 0, color.B),
@@ -69,12 +63,58 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public override object Convert (object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (!(value is CommonColor))
-				return new SolidColorBrush (Color.FromArgb (0, 0, 0, 0));
 			var color = (CommonColor)value;
 			return ConvertImplementation (
 				Color.FromArgb (color.A, color.R, color.G, 0),
 				Color.FromArgb (color.A, color.R, color.G, 255));
+		}
+	}
+
+	internal class ColorComponentToCyanBrushConverter : ColorComponentToBrushConverterBase
+	{
+		public override object Convert (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var color = (CommonColor)value;
+			var colorStart = CommonColor.FromCMYK (0, color.M, color.Y, color.K, color.A).ToColor ();
+			var colorEnd = CommonColor.FromCMYK (1, color.M, color.Y, color.K, color.A).ToColor ();
+
+			return ConvertImplementation (colorStart, colorEnd);
+		}
+	}
+
+	internal class ColorComponentToMagentaBrushConverter : ColorComponentToBrushConverterBase
+	{
+		public override object Convert (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var color = (CommonColor)value;
+			var colorStart = CommonColor.FromCMYK (color.C, 0, color.Y, color.K, color.A).ToColor ();
+			var colorEnd = CommonColor.FromCMYK (color.C, 1, color.Y, color.K, color.A).ToColor ();
+
+			return ConvertImplementation (colorStart, colorEnd);
+		}
+	}
+
+	internal class ColorComponentToYellowBrushConverter : ColorComponentToBrushConverterBase
+	{
+		public override object Convert (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var color = (CommonColor)value;
+			var colorStart = CommonColor.FromCMYK (color.C, color.M, 0, color.K, color.A).ToColor ();
+			var colorEnd = CommonColor.FromCMYK (color.C, color.M, 1, color.K, color.A).ToColor ();
+
+			return ConvertImplementation (colorStart, colorEnd);
+		}
+	}
+
+	internal class ColorComponentToBlackBrushConverter : ColorComponentToBrushConverterBase
+	{
+		public override object Convert (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var color = (CommonColor)value;
+			var colorStart = CommonColor.FromCMYK (color.C, color.M, color.Y, 0, color.A).ToColor ();
+			var colorEnd = CommonColor.FromCMYK (color.C, color.M, color.Y, 1, color.A).ToColor ();
+
+			return ConvertImplementation (colorStart, colorEnd);
 		}
 	}
 }

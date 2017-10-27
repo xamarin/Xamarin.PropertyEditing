@@ -52,8 +52,11 @@
     </Compile>
     <Compile Include="BoolEditorControl.cs" />
     <Compile Include="BrushBoxControl.cs" />
+    <Compile Include="DoubleToPercentageConverter.cs" />
+    <Compile Include="ByteToPercentageConverter.cs" />
     <Compile Include="ChoiceControl.cs" />
     <Compile Include="ColorComponentBox.cs" />
+    <Compile Include="ColorComponentModel.cs" />
     <Compile Include="ColorComponentsEditorControl.cs" />
     <Compile Include="ColorComponentToBrushConverter.cs" />
     <Compile Include="ColorEditorControlBase.cs" />
@@ -62,6 +65,7 @@
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="EditorPropertySelector.cs" />
     <Compile Include="EnumEditorControl.cs" />
+    <Compile Include="HexColorConverter.cs" />
     <Compile Include="HostEnvironment.cs" />
     <Compile Include="MenuButton.cs" />
     <Compile Include="NumericEditorControl.cs" />

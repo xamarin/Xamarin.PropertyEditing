@@ -6,10 +6,10 @@ namespace Xamarin.PropertyEditing.Tests
 {
 	public class CommonColorTests
 	{
-		[Test, TestCaseSource (typeof(CommonColorTests), "HuesFromColors")]
-		public CommonColor HueFromColor (CommonColor color) => color.Hue;
+		[Test, TestCaseSource (typeof(CommonColorTests), "HueFromColorCases")]
+		public CommonColor HueFromColorTests (CommonColor color) => color.HueColor;
 
-		private static IEnumerable HuesFromColors() {
+		private static IEnumerable HueFromColorCases() {
 			// Shades of grey all map to red
 			yield return new TestCaseData (new CommonColor (0, 0, 0)).Returns (new CommonColor (255, 0, 0))
 				.SetName ("HueFromColorBlackHasRedHue");
@@ -66,9 +66,72 @@ namespace Xamarin.PropertyEditing.Tests
 			yield return new TestCaseData (new CommonColor (42, 194, 142)).Returns (new CommonColor (0, 255, 167))
 				.SetName ("HueFromColorDullGreenHasSaturatedGreenHue");
 			yield return new TestCaseData (new CommonColor (194, 42, 142)).Returns (new CommonColor (255, 0, 167))
-				.SetName ("HueFromColorPetroleumBlueHasSaturatedBlueHue");
+				.SetName ("HueFromColorPurpleHasSaturatedPurpleHue");
 			yield return new TestCaseData (new CommonColor (194, 142, 42)).Returns (new CommonColor (255, 167, 0))
 				.SetName ("HueFromDullBrownHasOrangeHue");
+		}
+
+		[Test, TestCaseSource (typeof (CommonColorTests), "CMYKCases")]
+		public CMYK CMYKTests (CommonColor color) => new CMYK(color.C, color.M, color.Y, color.K);
+
+		private static IEnumerable CMYKCases() {
+			yield return new TestCaseData (new CommonColor (0, 0, 0)).Returns (new CMYK(0, 0, 0, 1))
+				.SetName ("CMYKBlack");
+			yield return new TestCaseData (new CommonColor (255, 255, 255)).Returns (new CMYK (0, 0, 0, 0))
+				.SetName ("CMYKWhite");
+			yield return new TestCaseData (new CommonColor (255, 0, 0)).Returns (new CMYK (0, 1, 1, 0))
+				.SetName ("CMYKRed");
+			yield return new TestCaseData (new CommonColor (0, 255, 0)).Returns (new CMYK (1, 0, 1, 0))
+				.SetName ("CMYKGreen");
+			yield return new TestCaseData (new CommonColor (0, 0, 255)).Returns (new CMYK (1, 1, 0, 0))
+				.SetName ("CMYKBlue");
+			yield return new TestCaseData (new CommonColor (255, 255, 0)).Returns (new CMYK (0, 0, 1, 0))
+				.SetName ("CMYKYellow");
+			yield return new TestCaseData (new CommonColor (0, 255, 255)).Returns (new CMYK (1, 0, 0, 0))
+				.SetName ("CMYKCyan");
+			yield return new TestCaseData (new CommonColor (255, 0, 255)).Returns (new CMYK (0, 1, 0, 0))
+				.SetName ("CMYKMagenta");
+		}
+
+		[Test, TestCaseSource (typeof (CommonColorTests), "ColorFromCMYKCases")]
+		public CommonColor ColorFromCMYKTests (CMYK cmyk) => CommonColor.FromCMYK (cmyk.C, cmyk.M, cmyk.Y, cmyk.K);
+
+		private static IEnumerable ColorFromCMYKCases ()
+		{
+			yield return new TestCaseData (new CMYK (0, 0, 0, 1)).Returns (new CommonColor (0, 0, 0))
+				.SetName ("ColorFromCMYKBlack");
+			yield return new TestCaseData (new CMYK (0, 0, 0, 0)).Returns (new CommonColor (255, 255, 255))
+				.SetName ("ColorFromCMYKWhite");
+			yield return new TestCaseData (new CMYK (0, 1, 1, 0)).Returns (new CommonColor (255, 0, 0))
+				.SetName ("ColorFromCMYKRed");
+			yield return new TestCaseData (new CMYK (1, 0, 1, 0)).Returns (new CommonColor (0, 255, 0))
+				.SetName ("ColorFromCMYKGreen");
+			yield return new TestCaseData (new CMYK (1, 1, 0, 0)).Returns (new CommonColor (0, 0, 255))
+				.SetName ("ColorFromCMYKBlue");
+			yield return new TestCaseData (new CMYK (0, 0, 1, 0)).Returns (new CommonColor (255, 255, 0))
+				.SetName ("ColorFromCMYKYellow");
+			yield return new TestCaseData (new CMYK (1, 0, 0, 0)).Returns (new CommonColor (0, 255, 255))
+				.SetName ("ColorFromCMYKCyan");
+			yield return new TestCaseData (new CMYK (0, 1, 0, 0)).Returns (new CommonColor (255, 0, 255))
+				.SetName ("ColorFromCMYKMagenta");
+		}
+
+		public struct CMYK
+		{
+			public CMYK(double c, double m, double y, double k)
+			{
+				C = c;
+				M = m;
+				Y = y;
+				K = k;
+			}
+
+			public double C { get; }
+			public double M { get; }
+			public double Y { get; }
+			public double K { get; }
+
+			public override string ToString () => $"{{ {C:F2}, {M:F2}, {Y:F2}, {K:F2} }}";
 		}
 	}
 }
