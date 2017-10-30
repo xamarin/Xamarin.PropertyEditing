@@ -20,7 +20,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:EnumEditorControl}">
-					<ComboBox x:Name="ComboBox" ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding ValueName}" VerticalContentAlignment="Center" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
+					<ComboBox x:Name="ComboBox" ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding ValueName}" VerticalContentAlignment="Center" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -111,12 +111,12 @@
 	<local:NumericTemplateSelector x:Key="NumericTemplateSelector">
 		<local:NumericTemplateSelector.FloatingTemplate>
 			<DataTemplate DataType="vm:FloatingPropertyViewModel">
-				<local:DoubleUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
+				<local:DoubleUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.FloatingTemplate>
 		<local:NumericTemplateSelector.IntegerTemplate>
 			<DataTemplate DataType="vm:IntegerPropertyViewModel">
-				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
+				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.IntegerTemplate>
 	</local:NumericTemplateSelector>
@@ -126,7 +126,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:NumericEditorControl">
-					<ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource NumericTemplateSelector}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
+					<ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource NumericTemplateSelector}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -145,7 +145,7 @@
 							<ColumnDefinition Width="Auto" />
 						</Grid.ColumnDefinitions>
 
-						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" Grid.Column="0" VerticalContentAlignment="Center" />
+						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Grid.Column="0" VerticalContentAlignment="Center" />
 
 						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
 							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
@@ -170,7 +170,7 @@
 							<ColumnDefinition Width="Auto" />
 						</Grid.ColumnDefinitions>
 
-						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" Grid.Column="0" VerticalContentAlignment="Center" />
+						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Grid.Column="0" VerticalContentAlignment="Center" />
 
 						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
 							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
@@ -187,7 +187,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:StringEditorControl">
-					<TextBox Name="TextBox" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}"  Text="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalContentAlignment="Center" />
+					<TextBox Name="TextBox" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Text="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalContentAlignment="Center" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -198,7 +198,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BoolEditorControl">
-					<CheckBox Name="CheckBox" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalAlignment="Center" />
+					<CheckBox Name="CheckBox" Height="{TemplateBinding Height}" VerticalContentAlignment="Center" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalAlignment="Center" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -310,7 +310,7 @@
 							</Grid.ColumnDefinitions>
 
 							<TextBlock Name="Label" Grid.Column="0" Text="{TemplateBinding Label}" ToolTip="{TemplateBinding Label}" Height="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-							<ContentPresenter Grid.Column="1" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" AutomationProperties.LabeledBy="{Binding ElementName=Label, Mode=OneTime}" />
+							<ContentPresenter Grid.Column="1" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" />
 						</Grid>
 					</Border>
 				</ControlTemplate>
@@ -647,5 +647,28 @@
 				</Setter>
 			</Trigger>
 		</Style.Triggers>
+	</Style>
+
+	<Style x:Key="GenericVisualFocusStyle" TargetType="Control">
+		<Setter Property="Foreground" Value="{DynamicResource FocusVisualBorderBrush}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<Rectangle Margin="2" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="EmptyCheckBoxFocusVisualSquare" TargetType="Control" BasedOn="{StaticResource GenericVisualFocusStyle}">
+		<Setter Property="Margin" Value="-3,0,0,0" />
+		<Setter Property="Width" Value="22" />
+		<Setter Property="Height" Value="21" />
+		<Setter Property="HorizontalAlignment" Value="Left" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+	</Style>
+
+	<Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+		<Setter Property="FocusVisualStyle" Value="{StaticResource EmptyCheckBoxFocusVisualSquare}" />
 	</Style>
 </ResourceDictionary>
