@@ -21,7 +21,9 @@ namespace Xamarin.PropertyEditing.Drawing
 			hueR = null;
 			hueG = 0;
 			hueB = 0;
-			luminosity = null;
+			hue = null;
+			lightness = null;
+			brightness = null;
 			saturation = null;
 		}
 
@@ -97,6 +99,7 @@ namespace Xamarin.PropertyEditing.Drawing
 					hueR = 255;
 					hueG = 0;
 					hueB = 0;
+					hue = 0;
 					return Red;
 				}
 
@@ -134,19 +137,71 @@ namespace Xamarin.PropertyEditing.Drawing
 			}
 		}
 
-		double? luminosity;
+		double? hue;
 		/// <summary>
-		/// A luminosity between 0 and 1, 1 being the measure for the hue of the color
+		/// The hue for this color, as an angle between 0 and 360 degrees.
+		/// </summary>
+		public double Hue {
+			get {
+				if (hue.HasValue) return hue.Value;
+
+				// Map grey to 0 degrees
+				if (IsGrey) {
+					hueR = 255;
+					hueG = 0;
+					hueB = 0;
+					hue = 0;
+					return 0;
+				}
+
+				var isRedMax = R >= G && R >= B;
+				var isGreenMax = G >= R && G >= B;
+				var isRedMin = R <= G && R <= B;
+				var isGreenMin = G <= R && G < B;
+				var d = ((double)(isRedMax ? R : isGreenMax ? G : B) - (isRedMin ? R : isGreenMin ? G : B));
+
+				hue =
+					isRedMax ? (Mod((G - B) / d, 6)) * 60 :
+					isGreenMax ? (((B - R)/ d) + 2) * 60 :
+					(((R - G) / d) + 4) * 60;
+
+				return hue.Value;
+			}
+		}
+
+		double? lightness;
+		/// <summary>
+		/// The lightness of the color, where white is 1, black is 0, and primary colors are 0.5.
+		/// </summary>
+		public double Lightness {
+			get {
+				if (lightness.HasValue) return lightness.Value;
+
+				var isRedMax = R >= G && R >= B;
+				var isGreenMax = G >= R && G >= B;
+				var isRedMin = R <= G && R <= B;
+				var isGreenMin = G <= R && G <= B;
+
+				lightness = ((double)(isRedMax ? R : isGreenMax ? G : B) + (isRedMin ? R : isGreenMin ? G : B)) / 510;
+
+				return lightness.Value;
+			}
+		}
+
+		double? brightness;
+		/// <summary>
+		/// A brightness between 0 and 1, 1 being the measure for the hue of the color
 		/// (the hue being a fully-saturated version of the same color), and 0 being
 		/// the measure for black.
 		/// </summary>
-		public double Luminosity {
+		public double Brightness {
 			get {
-				if (luminosity.HasValue) return luminosity.Value;
+				if (brightness.HasValue) return brightness.Value;
+
 				CommonColor hue = HueColor;
 				var isRedMaxed = hue.R == 255;
 				var isGreenMaxed = hue.G == 255;
-				return (luminosity =
+				return (brightness =
 					isRedMaxed ? (double)R / 255 :
 					isGreenMaxed ? (double)G / 255 :
 					(double)B / 255
@@ -163,56 +218,117 @@ namespace Xamarin.PropertyEditing.Drawing
 		public double Saturation {
 			get {
 				if (saturation.HasValue) return saturation.Value;
-				CommonColor hue = HueColor;
-				var luminosity = Luminosity;
-				var isRedMin = hue.R == 0;
-				var isGreenMin = hue.G == 0;
 
-				return (saturation =
-					isRedMin ? (R / luminosity - 255) / (hue.R - 255)
-					: isGreenMin ? (G / luminosity - 255) / (hue.G - 255)
-					: (B / luminosity - 255) / (hue.B - 255)
-					).Value;
+				if (IsGrey) return (saturation = 0).Value;
+
+				var isRedMax = R >= G && R >= B;
+				var isGreenMax = G >= R && G >= B;
+				var isRedMin = R <= G && R <= B;
+				var isGreenMin = G <= R && G <= B;
+
+				var max = (double)(isRedMax ? R : isGreenMax ? G : B);
+				var d = (max - (isRedMin ? R : isGreenMin ? G : B));
+
+				saturation = d / max;
+
+				return saturation.Value;
 			}
+		}
+
+		static readonly int[][] redRanges = new[] { new[] { 0, 60 }, new[] { 300, 360 } };
+		static readonly int[][] greenRanges = new[] { new[] { 60, 180 } };
+		static readonly int[][] blueRanges = new[] { new[] { 180, 300 } };
+
+		/// <summary>
+		/// Finds the hue color from a hue angle between 0 and 360 degrees.
+		/// 
+		/// The hue dial is a gradient going through red, yellow, lime, cyan, blue, magenta, red.
+		/// This means the following variations for red, green, and blue components:
+		/// Hue: 0 |  60 | 120 | 180 | 240 | 300 | 360
+		/// -------|-----|-----|-----|-----|-----|-----
+		/// R: 255 | 255 |   0 |   0 |   0 | 255 | 255
+		/// G:   0 | 255 | 255 | 255 |   0 |   0 |   0
+		/// B:   0 |   0 |   0 | 255 | 255 | 255 |   0
+		/// </summary>
+		/// <param name="hue">The horizontal position on the hue picker, between 0 and 1</param>
+		/// <returns>The hue</returns>
+		public static CommonColor GetHueColorFromHue (double hue)
+		{
+			hue = Math.Min (Math.Max (0, hue), 360);
+			return new CommonColor (
+				GetHueComponent (hue, redRanges),
+				GetHueComponent (hue, greenRanges),
+				GetHueComponent (hue, blueRanges)
+			);
+		}
+
+		/// <summary>
+		/// Gets a color component between 0 and 255 based on a position
+		/// between 0 and 360, and a set of ranges where the component is maxed out.
+		/// The component varies from 0 to 255 over the position range 1 unit to the
+		/// left of each interval, and from 255 to 0 over the position range 1 unit to
+		/// the right of each interval
+		/// </summary>
+		/// <param name="hue">The hue, between 0 and 360</param>
+		/// <param name="intervals">A set of intervals where the component is 255.</param>
+		/// <returns>The value of the component.</returns>
+		static byte GetHueComponent (double hue, int[][] intervals)
+		{
+			if (hue < 0 || hue > 360)
+				throw new ArgumentOutOfRangeException (nameof (hue), "Position must be between 0 and 6.");
+			foreach (int[] interval in intervals) {
+				// Component is 255 inside the interval
+				if (hue >= interval[0] && hue <= interval[1])
+					return 255;
+				// Component linearly grows from 0 to 255 60 degrees left of the interval
+				if (hue >= interval[0] - 60 && hue < interval[0])
+					return (byte)((hue - interval[0] + 60) * 255 / 60);
+				// Component linearly falls from 255 to 0 60 degrees right of the interval
+				if (hue > interval[1] && hue <= interval[1] + 60)
+					return (byte)(255 - (hue - interval[1]) * 255 / 60);
+			}
+			// Otherwise, it's zero
+			return 0;
+		}
+
+		/// <summary>
+		/// Finds a hue between 0 and 360 degrees from a hue color.
+		/// </summary>
+		/// <param name="hueColor">The hue color</param>
+		/// <returns>The hue between 0 and 360 degrees</returns>
+		public static double GetHueFromHueColor (CommonColor hueColor)
+		{
+			if (hueColor.B == 0) {
+				// We're between 0 and 120
+				if (hueColor.R == 255) {
+					// We're between 0 and 60, and green is on the rising phase
+					return (double)hueColor.G * 60 / 255;
+				}
+				// We're between 60 and 120, and red is on the declining phase
+				return ((double)(255 - hueColor.R) * 60 / 255 + 60);
+			}
+			else if (hueColor.R == 0) {
+				// We're between 120 and 240
+				if (hueColor.G == 255) {
+					// We're between 120 and 180, and blue is on the rise
+					return ((double)hueColor.B * 60 / 255 + 120);
+				}
+				// We're between 180 and 240, and green is declining
+				return ((double)(255 - hueColor.G) * 60 / 255 + 180);
+			}
+			// We're between 240 and 360
+			if (hueColor.B == 255) {
+				// We're between 240 and 300, and red is on the rise
+				return ((double)hueColor.R * 60 / 255 + 240);
+			}
+			// We're between 300 and 360, and blue is declining
+			return ((double)(255 - hueColor.B) * 60 / 255 + 300);
 		}
 
 		/// <summary>
 		/// True if the color is a shade of grey.
 		/// </summary>
 		public bool IsGrey => R == G && G == B;
-
-		/// <summary>
-		/// Creates a color from hue, saturation, and luminosity.
-		/// </summary>
-		/// <param name="hue">The hue</param>
-		/// <param name="luminosity">The luminosity between 0 and 1</param>
-		/// <param name="saturation">The saturation between 0 and 1</param>
-		/// <param name="alpha">The alpha channel value</param>
-		/// <returns>The color</returns>
-		public static CommonColor From (CommonColor hue, double luminosity, double saturation, byte alpha = 255)
-		{
-			hue = hue.HueColor; // Coerce the hue to be a real hue
-			if (luminosity < 0 || luminosity > 1) {
-				throw new ArgumentOutOfRangeException (nameof (luminosity));
-			}
-			if (saturation < 0 || saturation > 1) {
-				throw new ArgumentOutOfRangeException (nameof (saturation));
-			}
-			var color = new CommonColor (
-						   (byte)((255 + (hue.R - 255) * saturation) * luminosity),
-						   (byte)((255 + (hue.G - 255) * saturation) * luminosity),
-						   (byte)((255 + (hue.B - 255) * saturation) * luminosity),
-						   alpha
-					   ) {
-				// Pre-cache HLS components, since we know them, and it will improve round-tripping
-				hueR = hue.R,
-				hueG = hue.G,
-				hueB = hue.B,
-				luminosity = luminosity,
-				saturation = saturation
-			};
-			return color;
-		}
 
 		/// <summary>
 		/// Computes where the third component should be if the top is mapped
@@ -265,6 +381,100 @@ namespace Xamarin.PropertyEditing.Drawing
 			};
 			return color;
 		}
+
+		/// <summary>
+		/// Creates a color from hue, lightness, and saturation.
+		/// </summary>
+		/// <param name="hue">The hue between 0 and 360</param>
+		/// <param name="lightness">The lightness between 0 and 1</param>
+		/// <param name="saturation">The saturation between 0 and 1</param>
+		/// <param name="alpha">The alpha channel value</param>
+		/// <returns>The color</returns>
+		public static CommonColor FromHLS (double hue, double lightness, double saturation, byte alpha = 255)
+		{
+			if (hue < 0 || hue > 360) {
+				throw new ArgumentOutOfRangeException (nameof (hue));
+			}
+			if (lightness < 0 || lightness > 1) {
+				throw new ArgumentOutOfRangeException (nameof (lightness));
+			}
+			if (saturation < 0 || saturation > 1) {
+				throw new ArgumentOutOfRangeException (nameof (saturation));
+			}
+
+			var c = (1 - Math.Abs (2 * lightness - 1)) * saturation;
+			var x = c * (1 - Math.Abs (Mod(hue / 60, 2) - 1));
+			var m = lightness - c / 2;
+
+			var r =
+				hue < 60 || hue >= 300 ? c :
+				hue < 120 || hue >= 240 ? x :
+				0;
+			var g =
+				hue >= 240 ? 0 :
+				hue < 60 || hue >= 180 ? x :
+				c;
+			var b =
+				hue < 120 ? 0 :
+				hue < 180 || hue >= 300 ? x :
+				c;
+
+			var color = new CommonColor ((byte)(255 * (r + m)), (byte)(255 * (g + m)), (byte)(255 * (b + m)), alpha) {
+				// Pre-cache HLS components, since we know them, and it will improve round-tripping
+				hue = hue,
+				lightness = lightness,
+				saturation = saturation
+			};
+			return color;
+		}
+
+		/// <summary>
+		/// Creates a color from hue, saturation, and brightness.
+		/// </summary>
+		/// <param name="hue">The hue between 0 and 360</param>
+		/// <param name="saturation">The saturation between 0 and 1</param>
+		/// <param name="brightness">The brightness between 0 and 1</param>
+		/// <param name="alpha">The alpha channel value</param>
+		/// <returns>The color</returns>
+		public static CommonColor FromHSB (double hue, double saturation, double brightness, byte alpha = 255)
+		{
+			if (hue < 0 || hue > 360) {
+				throw new ArgumentOutOfRangeException (nameof (hue));
+			}
+			if (saturation < 0 || saturation > 1) {
+				throw new ArgumentOutOfRangeException (nameof (saturation));
+			}
+			if (brightness < 0 || brightness > 1) {
+				throw new ArgumentOutOfRangeException (nameof (lightness));
+			}
+
+			var c = brightness * saturation;
+			var x = c * (1 - Math.Abs (Mod(hue / 60, 2) - 1));
+			var m = brightness - c;
+
+			var r =
+				hue < 60 || hue >= 300 ? c :
+				hue < 120 || hue >= 240 ? x :
+				0;
+			var g =
+				hue >= 240 ? 0 :
+				hue < 60 || hue >= 180 ? x :
+				c;
+			var b =
+				hue < 120 ? 0 :
+				hue < 180 || hue >= 300 ? x :
+				c;
+
+			var color = new CommonColor ((byte)(255 * (r + m)), (byte)(255 * (g + m)), (byte)(255 * (b + m)), alpha) {
+				// Pre-cache HLS components, since we know them, and it will improve round-tripping
+				hue = hue,
+				brightness = brightness,
+				saturation = saturation
+			};
+			return color;
+		}
+
+		static double Mod (double a, double b)	=> a - b * Math.Floor (a / b);
 
 		public override bool Equals (object obj)
 		{

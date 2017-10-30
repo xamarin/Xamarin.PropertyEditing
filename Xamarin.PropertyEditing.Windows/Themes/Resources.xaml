@@ -350,9 +350,9 @@
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
-							<local:ShadeEditorControl x:Name="shadeChooser" Color="{Binding Path=Shade, Mode=TwoWay}" Hue="{Binding Path=Hue, Mode=OneWay}"
+							<local:ShadeEditorControl x:Name="shadeChooser" Color="{Binding Path=Shade, Mode=TwoWay}" HueColor="{Binding Path=HueColor, Mode=OneWay}"
 													  Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,0,1" Panel.ZIndex="1"/>
-							<local:HueEditorControl x:Name="hueChooser" Hue="{Binding Path=Hue, Mode=TwoWay}"
+							<local:HueEditorControl x:Name="hueChooser" HueColor="{Binding Path=HueColor, Mode=TwoWay}"
 													Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,3,1" Panel.ZIndex="0" Focusable="False"/>
 							<local:CurrentColorEditorControl Color="{Binding Path=Shade, Mode=TwoWay}" InitialColor="{Binding InitialColor}" LastColor="{Binding LastColor}"
 															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,1,0" Panel.ZIndex="0" Focusable="False"/>
@@ -412,7 +412,7 @@
 								</LinearGradientBrush>
 							</Rectangle.Fill>
 						</Rectangle>
-						<Rectangle Name="luminosityLayer" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Stroke="Transparent" StrokeThickness="0" VerticalAlignment="Stretch" Panel.ZIndex="1">
+						<Rectangle Name="brightnessLayer" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Stroke="Transparent" StrokeThickness="0" VerticalAlignment="Stretch" Panel.ZIndex="1">
 							<Rectangle.Fill>
 								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 									<GradientStop Color="#00000000" Offset="0"/>
@@ -453,8 +453,8 @@
 		<Setter Property="ContextMenu">
 			<Setter.Value>
 				<ContextMenu Placement="Bottom">
-					<!--<MenuItem Header="HLS"/>
-					<MenuItem Header="HSB"/>-->
+					<MenuItem Header="HLS"/>
+					<MenuItem Header="HSB"/>
 					<MenuItem Header="RGB"/>
 					<MenuItem Header="CMYK"/>
 				</ContextMenu>
@@ -468,6 +468,110 @@
 							<RowDefinition Height="Auto"/>
 							<RowDefinition Height="*"/>
 						</Grid.RowDefinitions>
+						<Grid x:Name="hlsPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="23"/>
+								<ColumnDefinition Width="77"/>
+							</Grid.ColumnDefinitions>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">H</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="hueEntry"
+								 AutomationProperties.HelpText="Hue" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Mode=TwoWay, Converter={local:DoubleToDegreesConverter}}">
+								<local:ColorComponentBox.GradientBrush>
+									<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+										<GradientStop Color="Red" Offset="0"/>
+										<GradientStop Color="Yellow" Offset="0.167"/>
+										<GradientStop Color="Lime" Offset="0.333"/>
+										<GradientStop Color="Cyan" Offset="0.500"/>
+										<GradientStop Color="Blue" Offset="0.667"/>
+										<GradientStop Color="Magenta" Offset="0.833"/>
+										<GradientStop Color="Red" Offset="1"/>
+									</LinearGradientBrush>
+								</local:ColorComponentBox.GradientBrush>
+							</local:ColorComponentBox>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">L</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="lightnessEntry"
+								 AutomationProperties.HelpText="Lightness" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Lightness, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToLightnessBrushConverter}}"/>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">S</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="saturationEntryHLS"
+								 AutomationProperties.HelpText="Saturation" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Saturation, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
+							<Label Content="A" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" />
+							<local:ColorComponentBox x:Name="alphaEntryHLS"
+								 AutomationProperties.HelpText="Alpha" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
+								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+						</Grid>
+						<Grid x:Name="hsbPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="23"/>
+								<ColumnDefinition Width="77"/>
+							</Grid.ColumnDefinitions>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">H</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="hsbHueEntry"
+								 AutomationProperties.HelpText="Hue" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Mode=TwoWay, Converter={local:DoubleToDegreesConverter}}">
+								<local:ColorComponentBox.GradientBrush>
+									<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+										<GradientStop Color="Red" Offset="0"/>
+										<GradientStop Color="Yellow" Offset="0.167"/>
+										<GradientStop Color="Lime" Offset="0.333"/>
+										<GradientStop Color="Cyan" Offset="0.500"/>
+										<GradientStop Color="Blue" Offset="0.667"/>
+										<GradientStop Color="Magenta" Offset="0.833"/>
+										<GradientStop Color="Red" Offset="1"/>
+									</LinearGradientBrush>
+								</local:ColorComponentBox.GradientBrush>
+							</local:ColorComponentBox>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">S</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="saturationEntryHSB"
+								 AutomationProperties.HelpText="Saturation" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Saturation, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline">B</TextBlock>
+							</Label>
+							<local:ColorComponentBox x:Name="brightnessEntry"
+								 AutomationProperties.HelpText="Brightness" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brightness, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBrightnessBrushConverter}}"/>
+							<Label Content="A" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" />
+							<local:ColorComponentBox x:Name="alphaEntryHSB"
+								 AutomationProperties.HelpText="Alpha" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
+								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+						</Grid>
 						<Grid x:Name="rgbPane" Grid.Row="0" Grid.Column="0">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto" MinHeight="22"/>
@@ -504,7 +608,7 @@
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=B, Mode=TwoWay}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlueBrushConverter}}"/>
 							<Label Content="A" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" />
-							<local:ColorComponentBox x:Name="alphaEntry"
+							<local:ColorComponentBox x:Name="alphaEntryRGB"
 								 AutomationProperties.HelpText="Alpha" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
 								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>

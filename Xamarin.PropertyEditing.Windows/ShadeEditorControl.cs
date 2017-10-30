@@ -14,7 +14,7 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		Rectangle saturationLayer;
-		Rectangle luminosityLayer;
+		Rectangle brightnessLayer;
 
 		public static readonly DependencyProperty CursorPositionProperty =
 			DependencyProperty.Register (
@@ -28,10 +28,10 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty HueProperty =
 			DependencyProperty.Register (
-				nameof(Hue), typeof (CommonColor), typeof (ShadeEditorControl),
+				nameof(HueColor), typeof (CommonColor), typeof (ShadeEditorControl),
 				new PropertyMetadata (new CommonColor (255, 0, 0), OnHuePropertyChanged));
 
-		public CommonColor Hue {
+		public CommonColor HueColor {
 			get => (CommonColor)GetValue (HueProperty);
 			set => SetValue (HueProperty, value);
 		}
@@ -41,23 +41,23 @@ namespace Xamarin.PropertyEditing.Windows
 			base.OnApplyTemplate ();
 
 			saturationLayer = (Rectangle)GetTemplateChild ("saturationLayer");
-			luminosityLayer = (Rectangle)GetTemplateChild ("luminosityLayer");
+			brightnessLayer = (Rectangle)GetTemplateChild ("brightnessLayer");
 
-			OnHueChanged (Hue);
+			OnHueChanged (HueColor);
 
-			luminosityLayer.MouseLeftButtonDown += (s, e) => {
-				if (!luminosityLayer.IsMouseCaptured)
-					luminosityLayer.CaptureMouse ();
+			brightnessLayer.MouseLeftButtonDown += (s, e) => {
+				if (!brightnessLayer.IsMouseCaptured)
+					brightnessLayer.CaptureMouse ();
 			};
-			luminosityLayer.MouseMove += (s, e) => {
-				if (luminosityLayer.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed && saturationLayer != null) {
-					var cursorPosition = e.GetPosition ((IInputElement)s);
+			brightnessLayer.MouseMove += (s, e) => {
+				if (brightnessLayer.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed && saturationLayer != null) {
+					Point cursorPosition = e.GetPosition ((IInputElement)s);
 					SetColorFromMousePosition (cursorPosition);
 				}
 			};
-			luminosityLayer.MouseLeftButtonUp += (s, e) => {
-				if (luminosityLayer.IsMouseCaptured) luminosityLayer.ReleaseMouseCapture ();
-				var cursorPosition = e.GetPosition ((IInputElement)s);
+			brightnessLayer.MouseLeftButtonUp += (s, e) => {
+				if (brightnessLayer.IsMouseCaptured) brightnessLayer.ReleaseMouseCapture ();
+				Point cursorPosition = e.GetPosition ((IInputElement)s);
 				SetColorFromMousePosition (cursorPosition);
 				RaiseEvent (new RoutedEventArgs (CommitShadeEvent));
 			};
@@ -67,14 +67,15 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			if (cursorPosition.X < 0)
 				cursorPosition.X = 0;
-			if (cursorPosition.X > luminosityLayer.ActualWidth)
-				cursorPosition.X = luminosityLayer.ActualWidth;
+			if (cursorPosition.X > brightnessLayer.ActualWidth)
+				cursorPosition.X = brightnessLayer.ActualWidth;
 			if (cursorPosition.Y < 0)
 				cursorPosition.Y = 0;
-			if (cursorPosition.Y > luminosityLayer.ActualHeight)
-				cursorPosition.Y = luminosityLayer.ActualHeight;
+			if (cursorPosition.Y > brightnessLayer.ActualHeight)
+				cursorPosition.Y = brightnessLayer.ActualHeight;
+
 			CursorPosition = cursorPosition;
-			var newColor = GetColorFromPosition (cursorPosition);
+			CommonColor newColor = GetColorFromPosition (cursorPosition);
 			Color = new CommonColor (newColor.R, newColor.G, newColor.B, Color.A);
 		}
 
@@ -89,14 +90,13 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnColorChanged (oldColor, newColor);
 
-			if (luminosityLayer == null || !luminosityLayer.IsMouseCaptured)
+			if (brightnessLayer == null || !brightnessLayer.IsMouseCaptured)
 				CursorPosition = GetPositionFromColor (newColor);
 		}
 
 		static void OnHuePropertyChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
 		{
-			var shadeEditor = source as ShadeEditorControl;
-			if (shadeEditor != null) {
+			if (source is ShadeEditorControl shadeEditor) {
 				shadeEditor.OnHueChanged ((CommonColor)e.NewValue);
 			}
 		}
@@ -105,7 +105,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			if (saturationLayer == null) return;
 			var newBrush = (LinearGradientBrush)saturationLayer.Fill.Clone ();
-			var gradientStops = newBrush.GradientStops;
+			GradientStopCollection gradientStops = newBrush.GradientStops;
 			gradientStops.RemoveAt (1);
 			gradientStops.Add (new GradientStop (System.Windows.Media.Color.FromRgb (newHue.R, newHue.G, newHue.B), 1));
 			saturationLayer.Fill = newBrush;
@@ -132,9 +132,9 @@ namespace Xamarin.PropertyEditing.Windows
 		CommonColor GetColorFromPosition (Point position)
 		{
 			var saturation = position.X / saturationLayer.ActualWidth;
-			var luminosity = 1 - position.Y / luminosityLayer.ActualHeight;
+			var brightness = 1 - position.Y / brightnessLayer.ActualHeight;
 
-			return CommonColor.From (Hue, luminosity, saturation);
+			return CommonColor.FromHSB (HueColor.Hue, saturation, brightness);
 		}
 
 		/// <summary>
@@ -145,13 +145,13 @@ namespace Xamarin.PropertyEditing.Windows
 		/// <returns>The coordinates of the shade in the shade chooser</returns>
 		Point GetPositionFromColor (CommonColor color)
 		{
-			var luminosity = color.Luminosity;
+			var brightness = color.Brightness;
 			var saturation = color.Saturation;
 
-			if (saturationLayer == null || luminosityLayer == null) return new Point (0, 0);
+			if (saturationLayer == null || brightnessLayer == null) return new Point (0, 0);
 			return new Point (
 				saturation * saturationLayer.ActualWidth + saturationLayer.Margin.Left ,
-				(1 - luminosity) * luminosityLayer.ActualHeight + luminosityLayer.Margin.Top);
+				(1 - brightness) * brightnessLayer.ActualHeight + brightnessLayer.Margin.Top);
 		}
 	}
 }

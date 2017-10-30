@@ -117,4 +117,50 @@ namespace Xamarin.PropertyEditing.Windows
 			return ConvertImplementation (colorStart, colorEnd);
 		}
 	}
+
+	internal class ColorComponentToSaturationBrushConverter : ColorComponentToBrushConverterBase
+	{
+		public override object Convert (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var color = (CommonColor)value;
+			var hue = color.Hue;
+			var lightness = color.Lightness;
+			var colorStart = CommonColor.FromHLS (hue, lightness, 0).ToColor ();
+			var colorEnd = CommonColor.FromHLS (hue, lightness, 1).ToColor ();
+
+			return ConvertImplementation (colorStart, colorEnd);
+		}
+	}
+
+	internal class ColorComponentToLightnessBrushConverter : ColorComponentToBrushConverterBase
+	{
+		public override object Convert (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var color = (CommonColor)value;
+			var hue = color.Hue;
+			var saturation = color.Saturation;
+			var colorStart = CommonColor.FromHLS(hue, 0, saturation).ToColor ();
+			var colorEnd = CommonColor.FromHLS(hue, 1, saturation).ToColor ();
+
+			return new LinearGradientBrush(new GradientStopCollection {
+				new GradientStop(colorStart, 0),
+				new GradientStop(color.ToColor(), color.Lightness),
+				new GradientStop(colorEnd, 1)
+			}, 0);
+		}
+	}
+
+	internal class ColorComponentToBrightnessBrushConverter : ColorComponentToBrushConverterBase
+	{
+		public override object Convert (object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var color = (CommonColor)value;
+			var hue = color.Hue;
+			var saturation = color.Saturation;
+			var colorStart = CommonColor.FromHSB (hue, saturation, 0).ToColor ();
+			var colorEnd = CommonColor.FromHSB (hue, saturation, 1).ToColor ();
+
+			return ConvertImplementation (colorStart, colorEnd);
+		}
+	}
 }

@@ -15,16 +15,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public IReadOnlyList<string> ColorSpaces { get; }
 
-		CommonColor? hue;
-		public CommonColor Hue {
-			get => (hue.HasValue ? hue : (hue = LastColor.HueColor)).Value;
+		CommonColor? hueColor;
+		public CommonColor HueColor {
+			get => (hueColor.HasValue ? hueColor.Value : (hueColor = LastColor.HueColor)).Value;
 			set {
-				if (!hue.Equals(value)) {
-					var luminosity = Color.Luminosity;
+				if (!hueColor.Equals(value)) {
 					var saturation = Color.Saturation;
-					Color = CommonColor.From (value, luminosity, saturation, Color.A);
+					var brightness = Color.Brightness;
+					Color = CommonColor.FromHSB (value.Hue, saturation, brightness, Color.A);
 					OnPropertyChanged (nameof (Color));
-					hue = value;
+					hueColor = value;
 					OnPropertyChanged ();
 					Value = new CommonSolidBrush(Color, Value.ColorSpace, Value.Opacity);
 				}
@@ -47,13 +47,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get => Value.Color;
 			set {
 				if (!Value.Color.Equals(value)) {
-					CommonColor oldHue = Hue;
+					CommonColor oldHue = HueColor;
 					CommonColor newHue = value.HueColor;
 					Value = new CommonSolidBrush (value, Value.ColorSpace, Value.Opacity);
 					OnPropertyChanged ();
 					if (!newHue.Equals(oldHue)) {
-						hue = newHue;
-						OnPropertyChanged (nameof (Hue));
+						hueColor = newHue;
+						OnPropertyChanged (nameof (HueColor));
 					}
 					if (!value.Equals(shade)) {
 						shade = value;
@@ -76,10 +76,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			lastColor = Color;
 			shade = Color;
-			hue = Color.HueColor;
+			hueColor = Color.HueColor;
 			OnPropertyChanged (nameof (LastColor));
 			OnPropertyChanged (nameof (Shade));
-			OnPropertyChanged (nameof (Hue));
+			OnPropertyChanged (nameof (HueColor));
 			Value = new CommonSolidBrush (Color, Value.ColorSpace, Value.Opacity);
 		}
 

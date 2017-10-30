@@ -94,6 +94,46 @@ namespace Xamarin.PropertyEditing.Windows
 			set => SetValue (BlackProperty, value);
 		}
 
+		public static readonly DependencyProperty HueProperty =
+			DependencyProperty.Register (
+				nameof (Hue), typeof (double), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata (0d));
+
+		public double Hue {
+			get => (double)GetValue (HueProperty);
+			set => SetValue (HueProperty, value);
+		}
+
+		public static readonly DependencyProperty SaturationProperty =
+			DependencyProperty.Register (
+				nameof (Saturation), typeof (double), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata (0d));
+
+		public double Saturation {
+			get => (double)GetValue (SaturationProperty);
+			set => SetValue (SaturationProperty, value);
+		}
+
+		public static readonly DependencyProperty LightnessProperty =
+			DependencyProperty.Register (
+				nameof (Lightness), typeof (double), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata (0d));
+
+		public double Lightness {
+			get => (double)GetValue (LightnessProperty);
+			set => SetValue (LightnessProperty, value);
+		}
+
+		public static readonly DependencyProperty BrightnessProperty =
+			DependencyProperty.Register (
+				nameof (Brightness), typeof (double), typeof (ColorComponentsEditorControl),
+				new PropertyMetadata (0d));
+
+		public double Brightness {
+			get => (double)GetValue (BrightnessProperty);
+			set => SetValue (BrightnessProperty, value);
+		}
+
 		public static readonly DependencyProperty ColorComponentModelProperty =
 			DependencyProperty.Register (
 				nameof (ColorComponentModel), typeof (ColorComponentModel), typeof (ColorComponentsEditorControl),
@@ -106,6 +146,8 @@ namespace Xamarin.PropertyEditing.Windows
 
 		UIElement rgbPane;
 		UIElement cmykPane;
+		UIElement hlsPane;
+		UIElement hsbPane;
 
 		public override void OnApplyTemplate ()
 		{
@@ -113,6 +155,8 @@ namespace Xamarin.PropertyEditing.Windows
 
 			rgbPane = GetTemplateChild ("rgbPane") as UIElement;
 			cmykPane = GetTemplateChild ("cmykPane") as UIElement;
+			hlsPane = GetTemplateChild ("hlsPane") as UIElement;
+			hsbPane = GetTemplateChild ("hsbPane") as UIElement;
 
 			if (ContextMenu != null) {
 				foreach (MenuItem item in ContextMenu.Items) {
@@ -128,6 +172,12 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 			foreach (UIElement focusable in GetFocusableDescendants (cmykPane)) {
 				focusable.LostFocus += OnCMYKComponentBoxBlur;
+			}
+			foreach (UIElement focusable in GetFocusableDescendants (hlsPane)) {
+				focusable.LostFocus += OnHLSComponentBoxBlur;
+			}
+			foreach (UIElement focusable in GetFocusableDescendants (hsbPane)) {
+				focusable.LostFocus += OnHSBComponentBoxBlur;
 			}
 			foreach (Button button in GetButtonDescendants (this)) {
 				button.Click += OnComponentLabelClick;
@@ -178,6 +228,26 @@ namespace Xamarin.PropertyEditing.Windows
 			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 		}
 
+		void OnHLSComponentBoxBlur (object sender, RoutedEventArgs e)
+		{
+			var newColor = CommonColor.FromHLS(Hue, Lightness, Saturation, A);
+			if (!newColor.Equals (Color)) {
+				Color = newColor;
+			}
+
+			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+		}
+
+		void OnHSBComponentBoxBlur (object sender, RoutedEventArgs e)
+		{
+			var newColor = CommonColor.FromHSB(Hue, Saturation, Brightness, A);
+			if (!newColor.Equals (Color)) {
+				Color = newColor;
+			}
+
+			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+		}
+
 		void OnComponentLabelClick (object sender, RoutedEventArgs e)
 		{
 			if (ContextMenu != null) {
@@ -200,8 +270,10 @@ namespace Xamarin.PropertyEditing.Windows
 				if (el != null) el.Visibility = model == elModel ? Visibility.Visible : Visibility.Hidden;
 			}
 
-			UpdateVisibility(that.rgbPane, ColorComponentModel.RGB);
-			UpdateVisibility(that.cmykPane, ColorComponentModel.CMYK);
+			UpdateVisibility (that.rgbPane, ColorComponentModel.RGB);
+			UpdateVisibility (that.cmykPane, ColorComponentModel.CMYK);
+			UpdateVisibility (that.hlsPane, ColorComponentModel.HLS);
+			UpdateVisibility (that.hsbPane, ColorComponentModel.HSB);
 		}
 
 		private void CheckIfCurrentModel (MenuItem item)
@@ -221,6 +293,10 @@ namespace Xamarin.PropertyEditing.Windows
 			if (M != newColor.M) M = newColor.M;
 			if (Y != newColor.Y) Y = newColor.Y;
 			if (K != newColor.K) K = newColor.K;
+			if (Hue != newColor.Hue) Hue = newColor.Hue;
+			if (Saturation != newColor.Saturation) Saturation = newColor.Saturation;
+			if (Lightness != newColor.Lightness) Lightness = newColor.Lightness;
+			if (Brightness != newColor.Brightness) Brightness = newColor.Brightness;
 		}
 	}
 }
