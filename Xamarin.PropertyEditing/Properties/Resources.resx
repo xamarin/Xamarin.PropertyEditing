@@ -117,11 +117,127 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Alpha" xml:space="preserve">
+    <value>Alpha</value>
+    <comment>Alpha textbox help text</comment>
+  </data>
+  <data name="AlphaInitial" xml:space="preserve">
+    <value>A</value>
+    <comment>Alpha initial used as alpha textbox label</comment>
+  </data>
+  <data name="Black" xml:space="preserve">
+    <value>Black</value>
+    <comment>Black textbox help text</comment>
+  </data>
+  <data name="BlackInitial" xml:space="preserve">
+    <value>K</value>
+    <comment>Black initial used as black textbox label</comment>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>Blue</value>
+    <comment>Blue textbox help text</comment>
+  </data>
+  <data name="BlueInitial" xml:space="preserve">
+    <value>B</value>
+    <comment>Blue initial used as blue textbox label</comment>
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>Brightness</value>
+    <comment>Brightness textbox help text</comment>
+  </data>
+  <data name="BrightnessInitial" xml:space="preserve">
+    <value>B</value>
+    <comment>Brightness initial used as brightness textbox label</comment>
+  </data>
+  <data name="CMYK" xml:space="preserve">
+    <value>CMYK</value>
+    <comment>Cyan magenta yellow black menu entry</comment>
+  </data>
+  <data name="ColorSpace" xml:space="preserve">
+    <value>Color space</value>
+    <comment>Color space dropdown help text</comment>
+  </data>
+  <data name="CurrentColor" xml:space="preserve">
+    <value>Current color</value>
+    <comment>Current color help text</comment>
+  </data>
+  <data name="Cyan" xml:space="preserve">
+    <value>Cyan</value>
+    <comment>Cyan textbox help text</comment>
+  </data>
+  <data name="CyanInitial" xml:space="preserve">
+    <value>C</value>
+    <comment>Cyan initial used as cyan textbox label</comment>
+  </data>
+  <data name="CyanMagentaYellowBlack" xml:space="preserve">
+    <value>Cyan / Magenta / Yellow / Black</value>
+    <comment>CMYK help text</comment>
+  </data>
   <data name="EventHandlersSelectedElement" xml:space="preserve">
     <value>Event handlers for the selected element</value>
   </data>
   <data name="Events" xml:space="preserve">
     <value>Events</value>
+  </data>
+  <data name="Green" xml:space="preserve">
+    <value>Green</value>
+    <comment>Green textbox help text</comment>
+  </data>
+  <data name="GreenInitial" xml:space="preserve">
+    <value>G</value>
+    <comment>Green initial used as green textbox label</comment>
+  </data>
+  <data name="HexValue" xml:space="preserve">
+    <value>Hex value</value>
+    <comment>Hex value textbox help text</comment>
+  </data>
+  <data name="HLS" xml:space="preserve">
+    <value>HLS</value>
+    <comment>Hue lightness saturation menu entry</comment>
+  </data>
+  <data name="HSB" xml:space="preserve">
+    <value>HSB</value>
+    <comment>Hue saturation brightness menu entry</comment>
+  </data>
+  <data name="Hue" xml:space="preserve">
+    <value>Hue</value>
+    <comment>Hue textbox help text</comment>
+  </data>
+  <data name="HueInitial" xml:space="preserve">
+    <value>H</value>
+    <comment>Hue initial used as hue textbox label</comment>
+  </data>
+  <data name="HueLightnessSaturation" xml:space="preserve">
+    <value>Hue / Lightness / Saturation</value>
+    <comment>HLS help text</comment>
+  </data>
+  <data name="HueSaturationBrightness" xml:space="preserve">
+    <value>Hue / Saturation / Brightness</value>
+    <comment>HSB help text</comment>
+  </data>
+  <data name="InitialColor" xml:space="preserve">
+    <value>Initial color</value>
+    <comment>Initial color button help text</comment>
+  </data>
+  <data name="LastColor" xml:space="preserve">
+    <value>Last color</value>
+    <comment>Last color help text</comment>
+  </data>
+  <data name="Lightness" xml:space="preserve">
+    <value>Lightness</value>
+    <comment>Lightness textbox help text</comment>
+  </data>
+  <data name="LightnessInitial" xml:space="preserve">
+    <value>L</value>
+    <comment>Lightness initial used as lightness textbox label</comment>
+  </data>
+  <data name="Magenta" xml:space="preserve">
+    <value>Magenta</value>
+    <comment>Magenta textbox help text</comment>
+  </data>
+  <data name="MagentaInitial" xml:space="preserve">
+    <value>M</value>
+    <comment>Magenta initial used as magenta textbox label</comment>
   </data>
   <data name="MultipleObjectsSelected" xml:space="preserve">
     <value>{0} objects selected</value>
@@ -141,11 +257,43 @@
   <data name="PropertiesSelectedElement" xml:space="preserve">
     <value>Properties for the selected element</value>
   </data>
+  <data name="Red" xml:space="preserve">
+    <value>Red</value>
+    <comment>Red textbox help text</comment>
+  </data>
+  <data name="RedGreenBlue" xml:space="preserve">
+    <value>Red / Green/ Blue</value>
+    <comment>RGB help text</comment>
+  </data>
+  <data name="RedInitial" xml:space="preserve">
+    <value>R</value>
+    <comment>Red initial used as red textbox label</comment>
+  </data>
+  <data name="RGB" xml:space="preserve">
+    <value>RGB</value>
+    <comment>Red green blue menu entry</comment>
+  </data>
+  <data name="Saturation" xml:space="preserve">
+    <value>Saturation</value>
+    <comment>Saturation textbox help text</comment>
+  </data>
+  <data name="SaturationInitial" xml:space="preserve">
+    <value>S</value>
+    <comment>Saturation initial used as saturation textbox label</comment>
+  </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
   </data>
   <data name="ViewPropertiesOrEvents" xml:space="preserve">
     <value>View properties or events</value>
     <comment>Properties/Events narrator help text</comment>
+  </data>
+  <data name="Yellow" xml:space="preserve">
+    <value>Yellow</value>
+    <comment>Yellow textbox help text</comment>
+  </data>
+  <data name="YellowInitial" xml:space="preserve">
+    <value>Y</value>
+    <comment>Yellow initial used as yellow textbox label</comment>
   </data>
 </root>

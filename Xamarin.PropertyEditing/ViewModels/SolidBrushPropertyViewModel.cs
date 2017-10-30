@@ -17,7 +17,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		CommonColor? hueColor;
 		public CommonColor HueColor {
-			get => (hueColor.HasValue ? hueColor.Value : (hueColor = LastColor.HueColor)).Value;
+			get => (hueColor ?? (hueColor = LastColor.HueColor)).Value;
 			set {
 				if (!hueColor.Equals(value)) {
 					var saturation = Color.Saturation;

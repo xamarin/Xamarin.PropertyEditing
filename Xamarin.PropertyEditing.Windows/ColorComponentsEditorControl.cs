@@ -161,7 +161,10 @@ namespace Xamarin.PropertyEditing.Windows
 			if (ContextMenu != null) {
 				foreach (MenuItem item in ContextMenu.Items) {
 					item.Click += (s, e) => {
-						ColorComponentModel = (ColorComponentModel)Enum.Parse (typeof (ColorComponentModel), item.Header.ToString ());
+						ColorComponentModel = (ColorComponentModel)Enum.Parse (
+							typeof (ColorComponentModel),
+							item.Name.Substring(0, item.Name.Length - "MenuItem".Length),
+							true);
 					};
 					CheckIfCurrentModel (item);
 				}
@@ -259,7 +262,7 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 		}
 
-		private static void OnColorModelChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
+		static void OnColorModelChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			var that = d as ColorComponentsEditorControl;
 
@@ -276,7 +279,7 @@ namespace Xamarin.PropertyEditing.Windows
 			UpdateVisibility (that.hsbPane, ColorComponentModel.HSB);
 		}
 
-		private void CheckIfCurrentModel (MenuItem item)
+		void CheckIfCurrentModel (MenuItem item)
 		{
 			item.IsChecked = item.Header.ToString () == Enum.GetName (typeof (ColorComponentModel), ColorComponentModel);
 		}
