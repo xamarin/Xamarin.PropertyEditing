@@ -367,6 +367,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No brush.
+        /// </summary>
+        public static string NoBrush {
+            get {
+                return ResourceManager.GetString("NoBrush", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;No Name&gt;.
         /// </summary>
         public static string NoName {
@@ -444,6 +453,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string SaturationInitial {
             get {
                 return ResourceManager.GetString("SaturationInitial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solid color brush.
+        /// </summary>
+        public static string SolidBrush {
+            get {
+                return ResourceManager.GetString("SolidBrush", resourceCulture);
             }
         }
         

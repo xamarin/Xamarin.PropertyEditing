@@ -6,7 +6,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// Paints an area with a solid color.
 	/// </summary>
 	[Serializable]
-	public class CommonSolidBrush : CommonBrush, IEquatable<CommonSolidBrush>
+	public sealed class CommonSolidBrush : CommonBrush, IEquatable<CommonSolidBrush>
 	{
 		public CommonSolidBrush(CommonColor color, string colorSpace = null, double opacity = 1.0)
 			: base(opacity)

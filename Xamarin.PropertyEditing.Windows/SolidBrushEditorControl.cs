@@ -15,11 +15,13 @@ namespace Xamarin.PropertyEditing.Windows
 
 		ComboBox colorSpacePicker;
 
-		SolidBrushPropertyViewModel ViewModel => DataContext as SolidBrushPropertyViewModel;
+		BrushPropertyViewModel ViewModel => DataContext as BrushPropertyViewModel;
 
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
+
+			if (ViewModel == null) return;
 
 			colorSpacePicker = (ComboBox)GetTemplateChild ("colorSpacePicker");
 			if (ViewModel.ColorSpaces == null || ViewModel.ColorSpaces.Count == 0) {
@@ -30,7 +32,7 @@ namespace Xamarin.PropertyEditing.Windows
 				// Handle color space changes
 				colorSpacePicker.SelectionChanged += (s, e) => {
 					if (ViewModel != null && ViewModel.Value != null) {
-						ViewModel.Value = new CommonSolidBrush (ViewModel.Value.Color, (string)e.AddedItems[0]);
+						ViewModel.Value = new CommonSolidBrush (ViewModel.Color, (string)e.AddedItems[0]);
 					}
 				};
 			}

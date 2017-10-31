@@ -7,7 +7,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// A linear gradient.
 	/// </summary>
 	[Serializable]
-	public class CommonLinearGradientBrush : CommonGradientBrush, IEquatable<CommonLinearGradientBrush>
+	public sealed class CommonLinearGradientBrush : CommonGradientBrush, IEquatable<CommonLinearGradientBrush>
 	{
 		public CommonLinearGradientBrush (
 			CommonPoint startPoint, CommonPoint endPoint,

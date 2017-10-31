@@ -296,4 +296,12 @@
     <value>Y</value>
     <comment>Yellow initial used as yellow textbox label</comment>
   </data>
+  <data name="NoBrush" xml:space="preserve">
+    <value>No brush</value>
+    <comment>No brush tab help text</comment>
+  </data>
+  <data name="SolidBrush" xml:space="preserve">
+    <value>Solid color brush</value>
+    <comment>Solid color brush help text</comment>
+  </data>
 </root>

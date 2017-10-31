@@ -59,6 +59,8 @@
 	<SolidColorBrush x:Key="BrushBoxCheckerBoardLight">#FFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="BrushBoxCheckerBoardDark">#D3D3D3</SolidColorBrush>
 
+	<SolidColorBrush x:Key="VectorGlyphBrush">#C5C5C5</SolidColorBrush>
+
 	<SolidColorBrush x:Key="CategoryExpanderBorderBrush" Color="#333333" />
 	
 	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Fill" Color="Transparent"/>

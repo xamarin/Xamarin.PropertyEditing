@@ -6,7 +6,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// Describes a way to paint a region by using one or more tiles.
 	/// </summary>
 	[Serializable]
-	public abstract class CommonTileBrush : CommonBrush, IEquatable<CommonTileBrush>
+	public abstract class CommonTileBrush : CommonBrush
 	{
 		public CommonTileBrush(
 			CommonAlignmentX alignmentX,
@@ -73,7 +73,7 @@ namespace Xamarin.PropertyEditing.Drawing
 			return Equals (brush);
 		}
 
-		public bool Equals (CommonTileBrush other)
+		protected bool Equals (CommonTileBrush other)
 		{
 			return other != null &&
 				   base.Equals (other) &&
@@ -86,9 +86,6 @@ namespace Xamarin.PropertyEditing.Drawing
 				   ViewPort.Equals (other.ViewPort) &&
 				   ViewPortUnits == other.ViewPortUnits;
 		}
-
-		public static bool operator == (CommonTileBrush left, CommonTileBrush right) => Equals (left, right);
-		public static bool operator != (CommonTileBrush left, CommonTileBrush right) => !Equals (left, right);
 
 		public override int GetHashCode ()
 		{

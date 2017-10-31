@@ -424,7 +424,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(double), (p,e) => new FloatingPropertyViewModel (p, e) },
 			{ typeof(int), (p,e) => new IntegerPropertyViewModel (p, e) },
 			{ typeof(long), (p,e) => new IntegerPropertyViewModel (p, e) },
-			{ typeof(CommonSolidBrush), (p, e) => new SolidBrushPropertyViewModel(p, e) },
+			{ typeof(CommonSolidBrush), (p, e) => new BrushPropertyViewModel(p, e) },
 			{ typeof(CommonBrush), (p, e) => new BrushPropertyViewModel(p, e) },
 			{ typeof(CommonPoint), (p,e) => new PointPropertyViewModel (p, e) },
 			{ typeof(CommonSize), (p,e) => new SizePropertyViewModel (p, e) },

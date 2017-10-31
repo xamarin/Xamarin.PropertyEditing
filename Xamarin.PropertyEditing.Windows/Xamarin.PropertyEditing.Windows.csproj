@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="BoolEditorControl.cs" />
     <Compile Include="BrushBoxControl.cs" />
+    <Compile Include="BrushEditorControl.cs" />
     <Compile Include="DoubleToDegreesConverter.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />
     <Compile Include="ByteToPercentageConverter.cs" />

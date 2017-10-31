@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// An abstract description of a gradient brush, composed of gradient stops.
 	/// </summary>
 	[Serializable]
-	public abstract class CommonGradientBrush : CommonBrush, IEquatable<CommonGradientBrush>
+	public abstract class CommonGradientBrush : CommonBrush
 	{
 		protected CommonGradientBrush (
 			IEnumerable<CommonGradientStop> stops,
@@ -54,7 +54,7 @@ namespace Xamarin.PropertyEditing.Drawing
 			return Equals (brush);
 		}
 
-		public bool Equals (CommonGradientBrush other)
+		protected bool Equals (CommonGradientBrush other)
 		{
 			if (other == null) return false;
 			if (GradientStops.Count != other.GradientStops.Count) return false;
@@ -66,9 +66,6 @@ namespace Xamarin.PropertyEditing.Drawing
 				   MappingMode == other.MappingMode &&
 				   SpreadMethod == other.SpreadMethod;
 		}
-
-		public static bool operator == (CommonGradientBrush left, CommonGradientBrush right) => Equals (left, right);
-		public static bool operator != (CommonGradientBrush left, CommonGradientBrush right) => !Equals (left, right);
 
 		public override int GetHashCode ()
 		{

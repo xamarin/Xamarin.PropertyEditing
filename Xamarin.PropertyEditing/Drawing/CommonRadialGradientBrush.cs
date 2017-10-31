@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// A focal point defines the beginning of the gradient, and a circle defines the end point of the gradient.
 	/// </summary>
 	[Serializable]
-	public class CommonRadialGradientBrush : CommonGradientBrush, IEquatable<CommonRadialGradientBrush>
+	public sealed class CommonRadialGradientBrush : CommonGradientBrush, IEquatable<CommonRadialGradientBrush>
 	{
 		public CommonRadialGradientBrush(
 			CommonPoint center,

@@ -4,9 +4,9 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing
 {
-	public class SolidBrushPropertyInfo : IPropertyInfo, IColorSpaced
+	public class BrushPropertyInfo : IPropertyInfo, IColorSpaced
 	{
-		public SolidBrushPropertyInfo (string name, string category, bool canWrite,
+		public BrushPropertyInfo (string name, string category, bool canWrite,
 			IReadOnlyList<string> colorSpaces, ValueSources valueSources = ValueSources.Local,
 			IReadOnlyList<PropertyVariation> variations = null,
 			IReadOnlyList<IAvailabilityConstraint> availabilityConstraints = null)
@@ -24,7 +24,7 @@ namespace Xamarin.PropertyEditing
 
 		public string Name { get; }
 
-		public Type Type => typeof(CommonSolidBrush);
+		public Type Type => typeof(CommonBrush);
 
 		public string Category { get; }
 

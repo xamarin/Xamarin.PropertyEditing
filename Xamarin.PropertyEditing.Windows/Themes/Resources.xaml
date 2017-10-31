@@ -326,6 +326,34 @@
 		</Setter>
 	</Style>
 
+	<Style TargetType="local:BrushEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<TabControl x:Name="brushTabs" MinHeight="20">
+						<TabItem Name="noBrushTab" ToolTip="{x:Static prop:Resources.NoBrush}" AutomationProperties.HelpText="{x:Static prop:Resources.NoBrush}" MinWidth="40" MinHeight="25">
+							<TabItem.Header>
+								<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
+									<Polygon Points="0,0 24,0 0,14" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+									<Polygon Points="25,1 25,15 1,15" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+								</Canvas>
+							</TabItem.Header>
+						</TabItem>
+						<TabItem Name="solidColorTab" ToolTip="{x:Static prop:Resources.SolidBrush}" AutomationProperties.HelpText="{x:Static prop:Resources.SolidBrush}" MinWidth="40" MinHeight="25">
+							<TabItem.Header>
+								<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
+									<Rectangle Canvas.Left="0" Canvas.Top="0" Width="25" Height="15" Stroke="{DynamicResource VectorGlyphBrush}" StrokeThickness="1"/>
+									<Rectangle Canvas.Left="2" Canvas.Top="2" Width="21" Height="11" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+								</Canvas>
+							</TabItem.Header>
+							<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
+						</TabItem>
+					</TabControl>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
 	<Style TargetType="local:SolidBrushEditorControl">
 		<Setter Property="Template">
 			<Setter.Value>

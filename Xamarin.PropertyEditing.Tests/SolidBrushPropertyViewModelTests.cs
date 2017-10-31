@@ -12,7 +12,7 @@ namespace Xamarin.PropertyEditing.Tests
 	{
 		protected override CommonBrush GetRandomTestValue (Random rand)
 		{
-			var color = rand.NextColor();
+			CommonColor color = rand.NextColor();
 			var colorSpace = rand.NextString ();
 			var opacity = rand.NextDouble ();
 
@@ -31,7 +31,7 @@ namespace Xamarin.PropertyEditing.Tests
 			mockProperty.As<IColorSpaced>().SetupGet (pi => pi.ColorSpaces).Returns (SampleColorSpaces);
 			var mockEditor = new Mock<IObjectEditor> ();
 
-			var vm = new SolidBrushPropertyViewModel(mockProperty.Object, new[] { mockEditor.Object });
+			var vm = new BrushPropertyViewModel(mockProperty.Object, new[] { mockEditor.Object });
 			Assert.That (vm.ColorSpaces, new CollectionEquivalentConstraint (SampleColorSpaces));
 		}
 	}
