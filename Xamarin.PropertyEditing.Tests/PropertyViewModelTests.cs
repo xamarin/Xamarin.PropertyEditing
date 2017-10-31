@@ -491,10 +491,43 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public async Task ConstrainingPropertyChangeRequeriesAvailability ()
+		{
+			var otherProp = GetPropertyMock ();
+
+			var prop = GetPropertyMock ();
+
+			var constraint = new Mock<IAvailabilityConstraint> ();
+			constraint.SetupGet (c => c.ConstrainingProperties).Returns (new[] { otherProp.Object });
+			prop.SetupGet (p => p.AvailabilityConstraints).Returns (new List<IAvailabilityConstraint> { constraint.Object });
+
+			bool isAvailable = true;
+			IObjectEditor editor = new MockObjectEditor (prop.Object, otherProp.Object);
+			constraint.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (() => isAvailable);
+
+			var vm = GetViewModel (prop.Object, new[] { editor });
+			Assume.That (vm.IsAvailable, Is.True);
+
+			bool changed = false;
+			vm.PropertyChanged += (o, e) => {
+				if (e.PropertyName == nameof(PropertyViewModel.IsAvailable))
+					changed = true;
+			};
+
+			isAvailable = false;
+			await editor.SetValueAsync (otherProp.Object, new ValueInfo<TValue> {
+				Value = GetRandomTestValue(),
+				Source = ValueSource.Local
+			});
+
+			Assert.That (vm.IsAvailable, Is.False);
+			Assert.That (changed, Is.True);
+		}
+
+		[Test]
 		public async Task PropertyChangeRequeriesAvailability ()
 		{
 			var prop = GetPropertyMock ();
-
 
 			var constraint = new Mock<IAvailabilityConstraint> ();
 			constraint.SetupGet (c => c.ConstrainingProperties).Returns (new[] { prop.Object });

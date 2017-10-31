@@ -302,9 +302,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected virtual async void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
 		{
-			if (e.Property != null && !Equals (e.Property, Property))
-				return;
-
 			IDisposable work = null;
 			if (this.constraintProperties != null && this.constraintProperties.Contains (e.Property)) {
 				work = await AsyncWork.RequestAsyncWork (this);
@@ -312,6 +309,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			try {
+				if (e.Property != null && !Equals (e.Property, Property))
+					return;
+		
 				// TODO: Smarter querying, can query the single editor and check against MultipleValues
 				UpdateCurrentValue ();
 			} finally {
