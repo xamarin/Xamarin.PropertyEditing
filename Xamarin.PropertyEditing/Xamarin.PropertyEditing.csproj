@@ -105,6 +105,7 @@
     <Compile Include="ViewModels\PointPropertyViewModel.cs" />
     <Compile Include="ViewModels\PredefinedValuesViewModel.cs" />
     <Compile Include="ViewModels\PropertiesViewModel.cs" />
+    <Compile Include="ViewModels\PropertyGroupViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\SizePropertyViewModel.cs" />

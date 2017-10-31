@@ -73,6 +73,7 @@
     <Compile Include="MockPropertyProviderTests.cs" />
     <Compile Include="MultiAvailabilityConstraintTests.cs" />
     <Compile Include="PointViewModelTests.cs" />
+    <Compile Include="PropertyGroupViewModelTests.cs" />
     <Compile Include="RadialGradientBrushPropertyViewModelTests.cs" />
     <Compile Include="LinearGradientBrushPropertyViewModelTests.cs" />
     <Compile Include="ImageBrushPropertyViewModelTests.cs" />
