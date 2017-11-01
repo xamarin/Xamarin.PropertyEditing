@@ -87,7 +87,7 @@ namespace Xamarin.PropertyEditing
 			if (key == null) {
 				grouping = nullGrouping;
 				if (grouping.Count == 0)
-					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, grouping, this.groupings.Count));
+					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, (object)grouping, this.groupings.Count));
 			} else if (!this.groupings.TryGetValue (key, out grouping)) {
 				if (!ReuseGroups || !this.oldGroups.TryRemove (key, out grouping))
 					grouping = new ObservableGrouping<TKey, TElement> (key);
@@ -110,7 +110,7 @@ namespace Xamarin.PropertyEditing
 				grouping = nullGrouping;
 				grouping.AddRange (elements);
 				if (wasEmpty)
-					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, grouping, this.groupings.Count));
+					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, (object)grouping, this.groupings.Count));
 			} else if (!this.groupings.TryGetValue (key, out grouping)) {
 				if (!ReuseGroups || !this.oldGroups.TryRemove (key, out grouping))
 					grouping = new ObservableGrouping<TKey, TElement> (key);
@@ -128,7 +128,7 @@ namespace Xamarin.PropertyEditing
 				bool wasEmpty = this.nullGrouping.Count == 0;
 				this.nullGrouping.AddRange (grouping);
 				if (wasEmpty)
-					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, grouping, this.groupings.Count));
+					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, (object)grouping, this.groupings.Count));
 
 				return;
 			}
@@ -174,7 +174,8 @@ namespace Xamarin.PropertyEditing
 
 			if (group.Remove (element)) {
 				if (group.Count == 0) {
-					Remove (key);
+					if (!Remove (key) && key == null)
+						OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, (object)this.nullGrouping, this.groupings.Count));
 				}
 
 				return true;
@@ -195,7 +196,7 @@ namespace Xamarin.PropertyEditing
 				bool removed = (this.nullGrouping.Count > 0);
 				this.nullGrouping.Clear();
 				if (removed)
-					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, this.nullGrouping, this.groupings.Count));
+					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, (object)this.nullGrouping, this.groupings.Count));
 
 				return removed;
 			}
@@ -209,7 +210,7 @@ namespace Xamarin.PropertyEditing
 					this.oldGroups.Add (key, g);
 				}
 				
-				OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, g, index));
+				OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, (object)g, index));
 				return true;
 			}
 
