@@ -108,10 +108,5 @@ namespace Xamarin.PropertyEditing.Tests
 
 		protected abstract T GetConstrainedRandomValueAboveBounds (Random rand, out T max, out T min);
 		protected abstract T GetConstrainedRandomValueBelowBounds (Random rand, out T max, out T min);
-
-		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
-		{
-			return GetViewModel (property, new[] { editor });
-		}
 	}
 }

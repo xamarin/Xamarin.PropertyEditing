@@ -429,7 +429,7 @@ namespace Xamarin.PropertyEditing.Tests
 			resourcesMock.Setup (rp => rp.GetResourcesAsync (editor.Target, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			editor.ValueEvaluator = (info, val, source) => {
-				if (source == resource)
+				if ((Resource)source == resource)
 					return value;
 
 				return default(TValue);

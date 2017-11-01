@@ -105,6 +105,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<VerticalAlignment> ("VerticalContentAlignment", Layout);
 			AddProperty<Visibility> ("Visibility");
 			AddProperty<double> ("Width");
+			AddProperty<CommonRatio> ("Ratio");
 			#endregion
 			#region Events
 			AddEvents (

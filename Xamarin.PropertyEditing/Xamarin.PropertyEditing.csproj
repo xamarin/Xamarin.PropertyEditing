@@ -156,12 +156,13 @@
     <Compile Include="IMutableLookup.cs" />
     <Compile Include="OrderedDictionary.cs" />
     <Compile Include="Controls\ValidationType.cs" />
-    <Compile Include="Controls\FieldValidation.cs" />
     <Compile Include="Controls\StringConversionExtensions.cs" />
     <Compile Include="ViewModels\RectanglePropertyViewModel.cs" />
     <Compile Include="ViewModels\ThicknessPropertyViewModel.cs" />
     <Compile Include="ViewModels\ObjectTreeElement.cs" />
     <Compile Include="ViewModels\TypeSelectorViewModel.cs" />
+    <Compile Include="ViewModels\RatioViewModel.cs" />
+    <Compile Include="Drawing\CommonRatio.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Themes\BaseThemeManager.cs" />

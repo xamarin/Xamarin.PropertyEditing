@@ -21,7 +21,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected NumericSpinEditor<T> HeightEditor { get; set; }
 
 		public override NSView FirstKeyView => XEditor;
-		public override NSView LastKeyView => HeightEditor;
+		public override NSView LastKeyView => HeightEditor.DecrementButton;
 
 		public BaseRectangleEditorControl ()
 		{

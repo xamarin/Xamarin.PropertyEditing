@@ -109,7 +109,7 @@ namespace Xamarin.PropertyEditing.Windows
 			{ typeof(PropertyGroupViewModel), typeof(GroupEditorControl) },
 			{ typeof(ObjectPropertyViewModel), typeof(ObjectEditorControl) },
 			{ typeof(CollectionPropertyViewModel), typeof(CollectionEditor) },
-
+			{ typeof(RatioViewModel), typeof(RatioEditorControl) },
 		};
 	}
 }
