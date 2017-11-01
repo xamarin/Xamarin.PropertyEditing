@@ -193,7 +193,7 @@ namespace Xamarin.PropertyEditing
 		{
 			if (key == null) {
 				bool removed = (this.nullGrouping.Count > 0);
-				this.nullGrouping.QuietClear();
+				this.nullGrouping.Clear();
 				if (removed)
 					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, this.nullGrouping, this.groupings.Count));
 
@@ -205,7 +205,7 @@ namespace Xamarin.PropertyEditing
 				var g = this.groupings[index];
 				this.groupings.Remove (key);
 				if (ReuseGroups) {
-					g.QuietClear ();
+					g.Clear ();
 					this.oldGroups.Add (key, g);
 				}
 				
@@ -218,12 +218,12 @@ namespace Xamarin.PropertyEditing
 
 		public void Clear ()
 		{
-			this.nullGrouping?.QuietClear();
+			this.nullGrouping?.Clear();
 
 			if (ReuseGroups) {
 				foreach (var g in this.groupings.Values) {
 					this.oldGroups.Add (g.Key, g);
-					g.QuietClear ();
+					g.Clear ();
 				}
 			}
 
