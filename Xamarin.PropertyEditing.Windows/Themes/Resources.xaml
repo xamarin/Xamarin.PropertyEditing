@@ -357,7 +357,8 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BrushTabbedEditorControl">
 					<TabControl x:Name="brushTabs" MinHeight="20">
-						<TabItem Name="noBrushTab" ToolTip="{x:Static prop:Resources.NoBrush}" AutomationProperties.HelpText="{x:Static prop:Resources.NoBrush}" MinWidth="40" MinHeight="25">
+						<TabItem Name="noBrushTab" MinWidth="40" MinHeight="25"
+								 ToolTip="{x:Static prop:Resources.NoBrush}" AutomationProperties.Name="{x:Static prop:Resources.NoBrush}" AutomationProperties.HelpText="{x:Static prop:Resources.NoBrush}">
 							<TabItem.Header>
 								<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
 									<Polygon Points="0,0 24,0 0,14" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
@@ -365,7 +366,8 @@
 								</Canvas>
 							</TabItem.Header>
 						</TabItem>
-						<TabItem Name="solidColorTab" ToolTip="{x:Static prop:Resources.SolidBrush}" AutomationProperties.HelpText="{x:Static prop:Resources.SolidBrush}" MinWidth="40" MinHeight="25">
+						<TabItem Name="solidColorTab" MinWidth="40" MinHeight="25"
+								 ToolTip="{x:Static prop:Resources.SolidBrush}" AutomationProperties.Name="{x:Static prop:Resources.SolidBrush}" AutomationProperties.HelpText="{x:Static prop:Resources.SolidBrush}">
 							<TabItem.Header>
 								<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
 									<Rectangle Canvas.Left="0" Canvas.Top="0" Width="25" Height="15" Stroke="{DynamicResource VectorGlyphBrush}" StrokeThickness="1"/>
@@ -394,7 +396,8 @@
 							<ColumnDefinition Width="Auto"/>
 						</Grid.ColumnDefinitions>
 						<ComboBox Name="colorSpacePicker" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding ColorSpaces}"
-								  SelectedItem="{Binding Value.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center" AutomationProperties.HelpText="{x:Static prop:Resources.ColorSpace}" ToolTip="{x:Static prop:Resources.ColorSpace}"/>
+								  SelectedItem="{Binding Value.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center"
+								  AutomationProperties.Name="{x:Static prop:Resources.ColorSpace}" AutomationProperties.HelpText="{x:Static prop:Resources.ColorSpace}" ToolTip="{x:Static prop:Resources.ColorSpace}"/>
 						<Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="*"/>
@@ -536,12 +539,12 @@
 							</Grid.ColumnDefinitions>
 							
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-									ToolTip="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}"/>
+									ToolTip="{x:Static prop:Resources.Hue}" AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.HueInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="hueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"
+								AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Mode=TwoWay, Converter={local:DoubleToDegreesConverter}}">
 								<local:ColorComponentBox.GradientBrush>
 									<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
@@ -557,32 +560,32 @@
 							</local:ColorComponentBox>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-									ToolTip="{x:Static prop:Resources.Lightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Lightness}"/>
+									ToolTip="{x:Static prop:Resources.Lightness}" AutomationProperties.Name="{x:Static prop:Resources.Lightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Lightness}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.LightnessInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="lightnessEntry"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Lightness}" ToolTip="{x:Static prop:Resources.Lightness}"
+								AutomationProperties.Name="{x:Static prop:Resources.Lightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Lightness}" ToolTip="{x:Static prop:Resources.Lightness}"
 								HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Lightness, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
 								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToLightnessBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.SaturationInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="saturationEntryHLS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Saturation, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Saturation, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
 
 							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
 							<local:ColorComponentBox x:Name="alphaEntryHLS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
 						
 						<Grid x:Name="hsbPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
@@ -598,12 +601,12 @@
 							</Grid.ColumnDefinitions>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.HueInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="hsbHueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"
+								 AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Mode=TwoWay, Converter={local:DoubleToDegreesConverter}}">
 								<local:ColorComponentBox.GradientBrush>
 									<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
@@ -619,31 +622,31 @@
 							</local:ColorComponentBox>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.SaturationInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="saturationEntryHSB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Saturation, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Saturation, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Brightness}" ToolTip="{x:Static prop:Resources.Brightness}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Brightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Brightness}" ToolTip="{x:Static prop:Resources.Brightness}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.BrightnessInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="brightnessEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Brightness}" ToolTip="{x:Static prop:Resources.Brightness}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brightness, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBrightnessBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Brightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Brightness}" ToolTip="{x:Static prop:Resources.Brightness}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brightness, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBrightnessBrushConverter}}"/>
 
 							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
 							<local:ColorComponentBox x:Name="alphaEntryHSB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
 						
 						<Grid x:Name="rgbPane" Grid.Row="0" Grid.Column="0">
@@ -659,41 +662,41 @@
 							</Grid.ColumnDefinitions>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Red}" ToolTip="{x:Static prop:Resources.Red}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Red}" AutomationProperties.HelpText="{x:Static prop:Resources.Red}" ToolTip="{x:Static prop:Resources.Red}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.RedInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="redEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Red}" ToolTip="{x:Static prop:Resources.Red}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=R, Mode=TwoWay}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToRedBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Red}" AutomationProperties.HelpText="{x:Static prop:Resources.Red}" ToolTip="{x:Static prop:Resources.Red}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=R, Mode=TwoWay}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToRedBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Green}" ToolTip="{x:Static prop:Resources.Green}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Green}" AutomationProperties.HelpText="{x:Static prop:Resources.Green}" ToolTip="{x:Static prop:Resources.Green}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.GreenInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="greenEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Green}" ToolTip="{x:Static prop:Resources.Green}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=G, Mode=TwoWay}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToGreenBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Green}" AutomationProperties.HelpText="{x:Static prop:Resources.Green}" ToolTip="{x:Static prop:Resources.Green}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=G, Mode=TwoWay}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToGreenBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Blue}" ToolTip="{x:Static prop:Resources.Blue}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Blue}" AutomationProperties.HelpText="{x:Static prop:Resources.Blue}" ToolTip="{x:Static prop:Resources.Blue}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.BlueInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="blueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Blue}" ToolTip="{x:Static prop:Resources.Blue}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=B, Mode=TwoWay}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlueBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Blue}" AutomationProperties.HelpText="{x:Static prop:Resources.Blue}" ToolTip="{x:Static prop:Resources.Blue}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=B, Mode=TwoWay}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlueBrushConverter}}"/>
 
 							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
 							<local:ColorComponentBox x:Name="alphaEntryRGB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
 						
 						<Grid x:Name="cmykPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
@@ -710,56 +713,56 @@
 							</Grid.ColumnDefinitions>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Cyan}" ToolTip="{x:Static prop:Resources.Cyan}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Cyan}" AutomationProperties.HelpText="{x:Static prop:Resources.Cyan}" ToolTip="{x:Static prop:Resources.Cyan}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.CyanInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="cyanEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Cyan}" ToolTip="{x:Static prop:Resources.Cyan}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=C, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToCyanBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Cyan}" AutomationProperties.HelpText="{x:Static prop:Resources.Cyan}" ToolTip="{x:Static prop:Resources.Cyan}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=C, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToCyanBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Magenta}" ToolTip="{x:Static prop:Resources.Magenta}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Magenta}" AutomationProperties.HelpText="{x:Static prop:Resources.Magenta}" ToolTip="{x:Static prop:Resources.Magenta}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.MagentaInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="magentaEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Magenta}" ToolTip="{x:Static prop:Resources.Magenta}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=M, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToMagentaBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Magenta}" AutomationProperties.HelpText="{x:Static prop:Resources.Magenta}" ToolTip="{x:Static prop:Resources.Magenta}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=M, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToMagentaBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Yellow}" ToolTip="{x:Static prop:Resources.Yellow}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Yellow}" AutomationProperties.HelpText="{x:Static prop:Resources.Yellow}" ToolTip="{x:Static prop:Resources.Yellow}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.YellowInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="yellowEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Yellow}" ToolTip="{x:Static prop:Resources.Yellow}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Y, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToYellowBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Yellow}" AutomationProperties.HelpText="{x:Static prop:Resources.Yellow}" ToolTip="{x:Static prop:Resources.Yellow}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Y, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToYellowBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="3" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Black}" ToolTip="{x:Static prop:Resources.Black}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Black}" AutomationProperties.HelpText="{x:Static prop:Resources.Black}" ToolTip="{x:Static prop:Resources.Black}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.BlackInitial}"/>
 							</Label>
 							<local:ColorComponentBox x:Name="blackEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Black}" ToolTip="{x:Static prop:Resources.Black}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=K, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlackBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Black}" AutomationProperties.HelpText="{x:Static prop:Resources.Black}" ToolTip="{x:Static prop:Resources.Black}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=K, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlackBrushConverter}}"/>
 
 							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4"
-								AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
 							<local:ColorComponentBox x:Name="alphaEntryCMYK" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="4"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
-								 GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
+								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
 						
 						<TextBox Name="hexEntry" Margin="2,0,2,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="0" Grid.Row="2"
-								 AutomationProperties.HelpText="{x:Static prop:Resources.HexValue}" ToolTip="{x:Static prop:Resources.HexValue}"
-								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
+							AutomationProperties.Name="{x:Static prop:Resources.HexValue}" AutomationProperties.HelpText="{x:Static prop:Resources.HexValue}" ToolTip="{x:Static prop:Resources.HexValue}"
+							Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -798,7 +801,8 @@
 								 Tag="{TemplateBinding Tag}" TextAlignment="{TemplateBinding TextAlignment}" UndoLimit="{TemplateBinding UndoLimit}"
 								 UseLayoutRounding="{TemplateBinding UseLayoutRounding}" Uid="{TemplateBinding Uid}"
 								 Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-								 Grid.Row="0" Grid.Column="0" Panel.ZIndex="0"/>
+								 Grid.Row="0" Grid.Column="0" Panel.ZIndex="0"
+								 AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}" AutomationProperties.HelpText="{TemplateBinding AutomationProperties.Name}"/>
 						<local:BrushBoxControl Brush="{Binding Path=GradientBrush, RelativeSource={RelativeSource TemplatedParent}}"
 											   Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Row="0" Grid.Column="0" Panel.ZIndex="1"/>
 					</Grid>
@@ -823,16 +827,16 @@
 								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=InitialColor, Converter={local:CommonColorToColorConverter}}"/>
 							</local:BrushBoxControl.Brush>
 						</local:BrushBoxControl>
-						<Button x:Name="initialColorButton" HorizontalAlignment="Stretch" Grid.Column="0" Panel.ZIndex="1" Opacity="0" FocusVisualStyle="{x:Null}"
-								AutomationProperties.HelpText="{x:Static prop:Resources.InitialColor}" ToolTip="{x:Static prop:Resources.InitialColor}" IsTabStop="False"/>
+						<Button x:Name="initialColorButton" HorizontalAlignment="Stretch" Grid.Column="0" Panel.ZIndex="1" Opacity="0" FocusVisualStyle="{x:Null}" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.InitialColor}" AutomationProperties.HelpText="{x:Static prop:Resources.InitialColor}" ToolTip="{x:Static prop:Resources.InitialColor}"/>
 						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="1" IsTabStop="False"
-											   AutomationProperties.HelpText="{x:Static prop:Resources.CurrentColor}" ToolTip="{x:Static prop:Resources.CurrentColor}">
+											   AutomationProperties.Name="{x:Static prop:Resources.CurrentColor}" AutomationProperties.HelpText="{x:Static prop:Resources.CurrentColor}" ToolTip="{x:Static prop:Resources.CurrentColor}">
 							<local:BrushBoxControl.Brush>
 								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:CommonColorToColorConverter}}"/>
 							</local:BrushBoxControl.Brush>
 						</local:BrushBoxControl>
 						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="2" Margin="1,0,0,0" IsTabStop="False"
-											   AutomationProperties.HelpText="{x:Static prop:Resources.LastColor}" ToolTip="{x:Static prop:Resources.LastColor}">
+											   AutomationProperties.Name="{x:Static prop:Resources.LastColor}" AutomationProperties.HelpText="{x:Static prop:Resources.LastColor}" ToolTip="{x:Static prop:Resources.LastColor}">
 							<local:BrushBoxControl.Brush>
 								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=LastColor, Converter={local:CommonColorToColorConverter}}"/>
 							</local:BrushBoxControl.Brush>
