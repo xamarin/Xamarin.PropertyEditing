@@ -81,17 +81,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 			lastColor = Color;
 			shade = Color;
 			hueColor = Color.HueColor;
+			var opacity = Value != null ? Value.Opacity : 1.0;
 			OnPropertyChanged (nameof (LastColor));
 			OnPropertyChanged (nameof (Shade));
 			OnPropertyChanged (nameof (HueColor));
-			Value = new CommonSolidBrush (Color, ColorSpace, Value.Opacity);
+			Value = new CommonSolidBrush (Color, ColorSpace, opacity);
 		}
 
 		public void CommitShade ()
 		{
 			lastColor = Shade;
+			var opacity = Value != null ? Value.Opacity : 1.0;
 			OnPropertyChanged (nameof (LastColor));
-			Value = new CommonSolidBrush (Shade, ColorSpace, Value.Opacity);
+			Value = new CommonSolidBrush (Shade, ColorSpace, opacity);
 		}
 	}
 }

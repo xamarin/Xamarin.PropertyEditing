@@ -1,5 +1,7 @@
+using System.Linq;
 using System.Windows.Controls;
-using Xamarin.PropertyEditing.Drawing;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -13,44 +15,30 @@ namespace Xamarin.PropertyEditing.Windows
 
 		BrushPropertyViewModel ViewModel => DataContext as BrushPropertyViewModel;
 
-		TabControl tabs;
-		TabItem noBrushTab;
-		TabItem solidColorTab;
+		ButtonBase brushBoxButton;
+		Popup brushBoxPopup;
 
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
 
-			tabs = GetTemplateChild ("brushTabs") as TabControl;
-			noBrushTab = GetTemplateChild ("noBrushTab") as TabItem;
-			solidColorTab = GetTemplateChild ("solidColorTab") as TabItem;
+			brushBoxButton = GetTemplateChild ("brushBoxButton") as ButtonBase;
+			brushBoxPopup = GetTemplateChild ("brushBoxPopup") as Popup;
 
-			if (ViewModel.Value == null) {
-				tabs.SelectedItem = noBrushTab;
-			}
-			else if (ViewModel.Value is CommonSolidBrush solidBrush) {
-				tabs.SelectedItem = solidColorTab;
-			}
-
-			tabs.SelectionChanged += (s, e) => {
-				if (ViewModel == null) return;
-				if (tabs.Items[tabs.SelectedIndex] is TabItem tab) {
-					StorePreviousBrush ();
-					if (tab == noBrushTab) {
-						ViewModel.Value = null;
+			if (IsEnabled && brushBoxButton != null && brushBoxPopup != null) {
+				brushBoxPopup.PlacementTarget = brushBoxButton;
+				brushBoxPopup.Opened += (s, e) => {
+					TabControl brushTabs = brushBoxPopup.Child?.GetDescendants<TabControl> ().FirstOrDefault ();
+					(brushTabs?.SelectedItem as TabItem)?.Focus ();
+				};
+				brushBoxPopup.Closed += (s, e) => {
+					brushBoxButton.Focus ();
+				};
+				brushBoxPopup.KeyUp += (s, e) => {
+					if (e.Key == Key.Escape) {
+						brushBoxPopup.IsOpen = false;
 					}
-					else if (tab == solidColorTab) {
-						ViewModel.Value = ViewModel.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
-					}
-				}
-			};
-		}
-
-		void StorePreviousBrush()
-		{
-			if (ViewModel == null) return;
-			if (ViewModel.Value is CommonSolidBrush solidBrush) {
-				ViewModel.PreviousSolidBrush = solidBrush;
+				};
 			}
 		}
 	}

@@ -329,7 +329,33 @@
 	<Style TargetType="local:BrushEditorControl">
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate>
+				<ControlTemplate TargetType="local:BrushEditorControl">
+					<Grid>
+						<local:BrushBoxControl Brush="{Binding Value, Converter={local:CommonBrushToBrushConverter}}"
+											   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0"
+											   MinHeight="20" BorderThickness="1" BorderBrush="{DynamicResource InputBorderBrush}"/>
+						<ToggleButton x:Name="brushBoxButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0" BorderThickness="0" Background="Transparent" Opacity="0"
+									  IsEnabled="{TemplateBinding IsEnabled}"
+									  IsHitTestVisible="{Binding ElementName=brushBoxPopup, Path=IsOpen, Mode=OneWay, Converter={StaticResource OppositeBoolConverter}}"
+									  AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}"/>
+						<Popup x:Name="brushBoxPopup" StaysOpen="False" MinWidth="350" Width="{TemplateBinding ActualWidth}" Placement="Bottom" PopupAnimation="Slide" AllowsTransparency="True"
+							   IsOpen="{Binding ElementName=brushBoxButton, Path=IsChecked}">
+							<Grid>
+								<Rectangle VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0"
+										   Fill="{DynamicResource MenuPopupBackgroundBrush}" Stroke="{DynamicResource MenuPopupBorderBrush}"/>
+								<local:BrushTabbedEditorControl Grid.Column="0" Grid.Row="0"/>
+							</Grid>
+						</Popup>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:BrushTabbedEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:BrushTabbedEditorControl">
 					<TabControl x:Name="brushTabs" MinHeight="20">
 						<TabItem Name="noBrushTab" ToolTip="{x:Static prop:Resources.NoBrush}" AutomationProperties.HelpText="{x:Static prop:Resources.NoBrush}" MinWidth="40" MinHeight="25">
 							<TabItem.Header>
@@ -823,7 +849,12 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BrushBoxControl">
 					<Grid>
-						<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Panel.ZIndex="0">
+						<Label HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Center"
+							   Content="{x:Static prop:Resources.NoBrush}" Visibility="{TemplateBinding NoBrushVisible}"
+							   BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Grid.Column="0" Grid.Row="0"/>
+						<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+								   Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"
+								   Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" Visibility="{TemplateBinding BrushVisible}">
 							<Rectangle.Fill>
 								<DrawingBrush Stretch="None" TileMode="Tile" Viewport="0,0,20,20" ViewportUnits="Absolute">
 									<DrawingBrush.Drawing>
@@ -835,7 +866,9 @@
 								</DrawingBrush>
 							</Rectangle.Fill>
 						</Rectangle>
-						<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Fill="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brush}" Panel.ZIndex="1"/>
+						<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Panel.ZIndex="1"
+								   Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"
+								   Fill="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brush}" Visibility="{TemplateBinding BrushVisible}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

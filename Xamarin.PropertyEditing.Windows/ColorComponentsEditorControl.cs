@@ -170,44 +170,20 @@ namespace Xamarin.PropertyEditing.Windows
 				}
 			}
 
-			foreach (UIElement focusable in GetFocusableDescendants (rgbPane)) {
+			foreach (UIElement focusable in rgbPane.GetFocusableDescendants ()) {
 				focusable.LostFocus += OnRGBComponentBoxBlur;
 			}
-			foreach (UIElement focusable in GetFocusableDescendants (cmykPane)) {
+			foreach (UIElement focusable in cmykPane.GetFocusableDescendants ()) {
 				focusable.LostFocus += OnCMYKComponentBoxBlur;
 			}
-			foreach (UIElement focusable in GetFocusableDescendants (hlsPane)) {
+			foreach (UIElement focusable in hlsPane.GetFocusableDescendants ()) {
 				focusable.LostFocus += OnHLSComponentBoxBlur;
 			}
-			foreach (UIElement focusable in GetFocusableDescendants (hsbPane)) {
+			foreach (UIElement focusable in hsbPane.GetFocusableDescendants ()) {
 				focusable.LostFocus += OnHSBComponentBoxBlur;
 			}
-			foreach (Button button in GetButtonDescendants (this)) {
+			foreach (Button button in this.GetDescendants<Button> ()) {
 				button.Click += OnComponentLabelClick;
-			}
-		}
-
-		IEnumerable<UIElement> GetFocusableDescendants (UIElement parent)
-		{
-			var childCount = VisualTreeHelper.GetChildrenCount (parent);
-			for (var i = 0; i < childCount; i++) {
-				if (VisualTreeHelper.GetChild (parent, i) is UIElement child) {
-					if (child.Focusable) yield return child;
-					IEnumerable<UIElement> grandChildren = GetFocusableDescendants (child);
-					foreach (UIElement grandChild in grandChildren) yield return grandChild;
-				}
-			}
-		}
-
-		IEnumerable<Button> GetButtonDescendants (UIElement parent)
-		{
-			var childCount = VisualTreeHelper.GetChildrenCount (parent);
-			for (var i = 0; i < childCount; i++) {
-				if (VisualTreeHelper.GetChild (parent, i) is UIElement child) {
-					if (child is Button button) yield return button;
-					IEnumerable<Button> grandChildren = GetButtonDescendants (child);
-					foreach (Button grandChild in grandChildren) yield return grandChild;
-				}
 			}
 		}
 
