@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Diagnostics;
 using AppKit;
@@ -48,6 +48,8 @@ namespace Xamarin.PropertyEditing.Mac
 				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 50),
 				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 50),
 			});
+
+			UpdateTheme ();
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
@@ -58,15 +60,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
 			if (ViewModel.HasErrors) {
-				XEditor.BackgroundColor = NSColor.Red;
-				YEditor.BackgroundColor = NSColor.Red;
-				Debug.WriteLine ("Your input triggered 1 or more errors:");
-				foreach (var error in errors) {
-					Debug.WriteLine (error.ToString () + "\n");
-				}
+				SetErrors (errors);
 			} else {
-				XEditor.BackgroundColor = NSColor.Clear;
-				YEditor.BackgroundColor = NSColor.Clear;
+				SetErrors (null);
 				SetEnabled ();
 			}
 		}

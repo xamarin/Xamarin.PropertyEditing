@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Diagnostics;
 using AppKit;
@@ -24,9 +24,12 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (StringEditor);
 
-            this.DoConstraints (new[] {
-				StringEditor.ConstraintTo (this, (s, c) => s.Width == c.Width),
+			this.DoConstraints (new[] {
+				StringEditor.ConstraintTo (this, (s, c) => s.Width == c.Width - 30),
+				StringEditor.ConstraintTo (this, (s, c) => s.Left == s.Left + 3),
 			});
+
+			UpdateTheme ();
 		}
 
 		internal NSTextField StringEditor { get; set; }
@@ -52,13 +55,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
 			if (ViewModel.HasErrors) {
-				StringEditor.BackgroundColor = NSColor.Red;
-				Debug.WriteLine ("Your input triggered an error:");
-				foreach (var error in errors) {
-					Debug.WriteLine (error.ToString () + "\n");
-				}
+				SetErrors (errors);
 			} else {
-				StringEditor.BackgroundColor = NSColor.Clear;
+				SetErrors (null);
 				SetEnabled ();
 			}
 		}

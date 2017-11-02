@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using AppKit;
 using CoreGraphics;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -9,25 +10,26 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public RectangleEditorControl ()
 		{
-			XLabel.Frame = new CGRect (26, 23, 25, 24);
+			// TODO localize
+			XLabel.Frame = new CGRect (29, 23, 25, 24);
 			XLabel.StringValue = "X:";
 
-			XEditor.Frame = new CGRect (45, 23, 50, 20);
+			XEditor.Frame = new CGRect (48, 23, 50, 20);
 
-			YLabel.Frame = new CGRect (135, 23, 25, 24);
+			YLabel.Frame = new CGRect (155, 23, 25, 24);
 			YLabel.StringValue = "Y:";
 
-			YEditor.Frame = new CGRect (150, 23, 50, 20);
+			YEditor.Frame = new CGRect (175, 23, 50, 20);
 
-			WidthLabel.Frame = new CGRect (0, 0, 45, 24);
+			WidthLabel.Frame = new CGRect (5, 0, 45, 24);
 			WidthLabel.StringValue = "Width:";
 
-			WidthEditor.Frame = new CGRect (45, 0, 50, 20);
+			WidthEditor.Frame = new CGRect (50, 0, 50, 20);
 
-			HeightLabel.Frame = new CGRect (105, 0, 45, 24);
+			HeightLabel.Frame = new CGRect (125, 0, 45, 24);
 			HeightLabel.StringValue = "Height:";
 
-			HeightEditor.Frame = new CGRect (150, 0, 50, 20);
+			HeightEditor.Frame = new CGRect (175, 0, 50, 20);
 
 			RowHeight = 48;
 		}

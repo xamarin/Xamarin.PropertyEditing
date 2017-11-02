@@ -11,15 +11,15 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public PointEditorControl ()
 		{
-			XLabel.Frame = new CGRect (0, 0, 25, 24);
-			XLabel.StringValue = "X:";
+			XLabel.Frame = new CGRect (29, 0, 25, 24);
+			XLabel.StringValue = "X:"; // TODO Localise
 
-			XEditor.Frame = new CGRect (25, 0, 50, 20);
+			XEditor.Frame = new CGRect (48, 0, 50, 20);
 
-			YLabel.Frame = new CGRect (85, 0, 25, 24);
-			YLabel.StringValue = "Y:";
+			YLabel.Frame = new CGRect (155, 0, 25, 24);
+			YLabel.StringValue = "Y:"; // TODO Localise
 
-			YEditor.Frame = new CGRect (110, 0, 50, 20);
+			YEditor.Frame = new CGRect (175, 0, 50, 20);
 		}
 
 		protected override void UpdateAccessibilityValues ()

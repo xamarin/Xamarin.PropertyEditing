@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Diagnostics;
 using AppKit;
@@ -29,8 +29,10 @@ namespace Xamarin.PropertyEditing.Mac
 
             this.DoConstraints (new[] {
 				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
-				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Left == c.Left)
+				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Left == c.Left + 3)
 			});
+
+			UpdateTheme ();
 		}
 
 		internal NSButton BooleanEditor { get; set; }
@@ -57,18 +59,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
 			if (ViewModel.HasErrors) {
-				if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector))) {
-					BooleanEditor.BezelColor = NSColor.Red;
-				}
-				Debug.WriteLine ("Your input triggered an error:");
-				foreach (var error in errors) {
-					Debug.WriteLine (error.ToString () + "\n");
-				}
-			}
-			else {
-				if (this.BooleanEditor.RespondsToSelector (new Selector (setBezelColorSelector)) && BooleanEditor.Enabled) {
-					BooleanEditor.BezelColor = NSColor.Clear;
-				}
+				SetErrors (errors);
+			} else {
+				SetErrors (null);
 				SetEnabled ();
 			}
 		}

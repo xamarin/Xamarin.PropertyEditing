@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Diagnostics;
 using System.ComponentModel;
@@ -24,8 +24,9 @@ namespace Xamarin.PropertyEditing.Mac
 				BackgroundColor = NSColor.Clear,
 				StringValue = String.Empty,
 				Cell = {
-					ControlSize = NSControlSize.Regular	
-				}
+					ControlSize = NSControlSize.Regular
+				},
+				Editable = false,
 			};
 
 			this.comboBox.SelectionChanged += (sender, e) => {
@@ -35,9 +36,11 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.comboBox);
 
 			this.DoConstraints (new[] {
-				comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
-				comboBox.ConstraintTo (this, (cb, c) => cb.Left == c.Left),
+				comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 28),
+				comboBox.ConstraintTo (this, (cb, c) => cb.Left == c.Left + 3),
 			});
+
+			UpdateTheme ();
 		}
 
 		public override NSView FirstKeyView => this.comboBox;
@@ -58,13 +61,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
 			if (ViewModel.HasErrors) {
-				this.comboBox.BackgroundColor = NSColor.Red;
-				Debug.WriteLine ("Your input triggered an error:");
-				foreach (var error in errors) {
-					Debug.WriteLine (error.ToString () + "\n");
-				}
+				SetErrors (errors);
 			} else {
-				comboBox.BackgroundColor = NSColor.Clear;
+				SetErrors (null);
 				SetEnabled ();
 			}
 		}

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections;
-
 using AppKit;
+using CoreGraphics;
 using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal abstract class PropertyEditorControl : NSView
+	internal abstract class PropertyEditorControl : BaseEditorControl
 	{
 		public string Label { get; set; }
 

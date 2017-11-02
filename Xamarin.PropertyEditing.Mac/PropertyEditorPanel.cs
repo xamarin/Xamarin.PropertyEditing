@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using CoreGraphics;
@@ -79,6 +79,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public ICollection<object> SelectedItems => this.viewModel.SelectedObjects;
 
+		public static Themes.MacThemeManager ThemeManager = new Themes.MacThemeManager ();
+
 		private bool isArrangeEnabled = true;
 		// when this property changes, need to create new datasource
 		private IEditorProvider editorProvider;
@@ -116,7 +118,6 @@ namespace Xamarin.PropertyEditing.Mac
 				Editable = false,
 				ControlSize = NSControlSize.Regular,
 			};
-			AddSubview (propertyFilter);
 
 			var enumValues = Enum.GetValues (typeof (PropertyArrangeMode));
 
@@ -143,6 +144,7 @@ namespace Xamarin.PropertyEditing.Mac
 				RefusesFirstResponder = true,
 				AutoresizingMask = NSViewResizingMask.WidthSizable,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
+				HeaderView = null,
 			};
 
 			NSTableColumn propertiesList = new NSTableColumn (PropertyListColId) { Title = LocalizationResources.PropertyColumnTitle };
@@ -174,6 +176,22 @@ namespace Xamarin.PropertyEditing.Mac
 				tableContainer.ConstraintTo(this, (t, c) => t.Width == c.Width - 20),
 				tableContainer.ConstraintTo(this, (t, c) => t.Height == c.Height - 40),
 			});
+
+			ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
+
+			UpdateTheme ();
+		}
+
+		protected override void Dispose (bool disposing)
+		{
+			if (disposing) {
+				PropertyEditorPanel.ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
+			}
+		}
+
+		void ThemeManager_ThemeChanged (object sender, EventArgs e)
+		{
+			UpdateTheme ();
 		}
 
 		private void OnPropertiesChanged (object sender, EventArgs e)
@@ -195,6 +213,11 @@ namespace Xamarin.PropertyEditing.Mac
 			viewModel.FilterText = propertyFilter.Cell.Title;
 
 			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
+		}
+
+		void UpdateTheme ()
+		{
+			this.Appearance = ThemeManager.CurrentAppearance;
 		}
 
 		class FirstResponderOutlineView : NSOutlineView

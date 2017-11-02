@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.Mac
 						};
 					}
 
-					view.StringValue = ((group == null) ? vm.Property.Name : group.Key) ?? String.Empty;
+					view.StringValue = ((group == null) ? vm.Property.Name  + ": " : group.Key) ?? String.Empty;
 					return view;
 
 				case PropertyEditorPanel.PropertyEditorColId:

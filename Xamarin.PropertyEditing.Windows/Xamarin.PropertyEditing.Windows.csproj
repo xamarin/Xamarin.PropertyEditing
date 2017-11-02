@@ -35,6 +35,7 @@
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Presentation" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -68,6 +69,7 @@
     <Compile Include="SubmitTextBox.cs" />
     <Compile Include="ThicknessEditorControl.cs" />
     <Compile Include="StringEditorControl.cs" />
+    <Compile Include="Themes\WinThemeManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Themes\Resources.xaml">

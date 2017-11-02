@@ -8,25 +8,26 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public CGRectEditorControl ()
 		{
-			XLabel.Frame = new CGRect (26, 23, 25, 24);
+			// TODO localize
+			XLabel.Frame = new CGRect (19, 23, 25, 24);
 			XLabel.StringValue = "X:";
 
-			XEditor.Frame = new CGRect (45, 23, 50, 20);
+			XEditor.Frame = new CGRect (38, 23, 50, 20);
 
-			YLabel.Frame = new CGRect (135, 23, 25, 24);
+			YLabel.Frame = new CGRect (130, 23, 25, 24);
 			YLabel.StringValue = "Y:";
 
-			YEditor.Frame = new CGRect (150, 23, 50, 20);
+			YEditor.Frame = new CGRect (145, 23, 50, 20);
 
-			WidthLabel.Frame = new CGRect (0, 0, 45, 24);
+			WidthLabel.Frame = new CGRect (5, 0, 45, 24);
 			WidthLabel.StringValue = "Width:";
 
-			WidthEditor.Frame = new CGRect (45, 0, 50, 20);
+			WidthEditor.Frame = new CGRect (40, 0, 50, 20);
 
-			HeightLabel.Frame = new CGRect (105, 0, 45, 24);
+			HeightLabel.Frame = new CGRect (125, 0, 45, 24);
 			HeightLabel.StringValue = "Height:";
 
-			HeightEditor.Frame = new CGRect (150, 0, 50, 20);
+			HeightEditor.Frame = new CGRect (175, 0, 50, 20);
 
 			this.DoConstraints (new[] {
 				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 50),
