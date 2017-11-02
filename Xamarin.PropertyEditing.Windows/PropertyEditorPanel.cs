@@ -168,9 +168,9 @@ namespace Xamarin.PropertyEditing.Windows
 
 			Binding itemsSource;
 			if (newMode == PropertyArrangeMode.Name)
-				itemsSource = new Binding ("ArrangedProperties[0]");
+				itemsSource = new Binding ("ArrangedEditors[0]");
 			else
-				itemsSource = new Binding ("ArrangedProperties");
+				itemsSource = new Binding ("ArrangedEditors");
 
 			this.items.SetBinding (ItemsControl.ItemsSourceProperty, itemsSource);
 		}

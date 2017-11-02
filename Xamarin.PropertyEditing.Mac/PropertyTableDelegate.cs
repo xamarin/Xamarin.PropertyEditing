@@ -24,7 +24,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (!String.IsNullOrWhiteSpace (this.dataSource.DataContext.FilterText)) {
 				outlineView.ExpandItem (null, true);
 			} else {
-				foreach (IGrouping<string, PropertyViewModel> g in this.dataSource.DataContext.ArrangedProperties) {
+				foreach (IGrouping<string, EditorViewModel> g in this.dataSource.DataContext.ArrangedEditors) {
 					NSObject item;
 					if (!this.dataSource.TryGetFacade (g, out item))
 						continue;
@@ -43,7 +43,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			var facade = (NSObjectFacade)item;
 			var vm = facade.Target as PropertyViewModel;
-			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
+			var group = facade.Target as IGroupingList<string, EditorViewModel>;
 			string cellIdentifier = (group == null) ? vm.GetType ().Name : group.Key;
 
 			// Setup view based on the column
@@ -78,7 +78,7 @@ namespace Xamarin.PropertyEditing.Mac
 			throw new Exception ("Unknown column identifier: " + tableColumn.Identifier);
 		}
 
-		PropertyEditorControl GetEditor (PropertyViewModel vm, NSOutlineView outlineView)
+		PropertyEditorControl GetEditor (EditorViewModel vm, NSOutlineView outlineView)
 		{
 			Type[] genericArgs = null;
 			Type controlType;
@@ -103,7 +103,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override bool ShouldSelectItem (NSOutlineView outlineView, NSObject item)
 		{
-			return (!(item is NSObjectFacade) || !(((NSObjectFacade)item).Target is IGroupingList<string, PropertyViewModel>));
+			return (!(item is NSObjectFacade) || !(((NSObjectFacade)item).Target is IGroupingList<string, EditorViewModel>));
 		}
 
 		public override void ItemDidExpand (NSNotification notification)
@@ -112,7 +112,7 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 
 			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
-			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
+			var group = facade.Target as IGroupingList<string, EditorViewModel>;
 			if (group != null)
 				this.dataSource.DataContext.SetIsExpanded (group.Key, isExpanded: true);
 		}
@@ -123,7 +123,7 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 
 			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
-			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
+			var group = facade.Target as IGroupingList<string, EditorViewModel>;
 			if (group != null)
 				this.dataSource.DataContext.SetIsExpanded (group.Key, isExpanded: false);
 		}
@@ -131,12 +131,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
 		{
 			var facade = (NSObjectFacade)item;
-			var group = facade.Target as IGroupingList<string, PropertyViewModel>;
+			var group = facade.Target as IGroupingList<string, EditorViewModel>;
 			if (group != null) {
 				return 30;
 			}
 
-			var vm = (PropertyViewModel)facade.Target;
+			var vm = (EditorViewModel)facade.Target;
 			var editor = (PropertyEditorControl)outlineView.MakeView (vm.GetType ().Name + "edits", this);
 			if (editor == null) {
 				editor = GetEditor (vm, outlineView);
@@ -148,7 +148,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private bool isExpanding;
 
 		// set up the editor based on the type of view model
-		private PropertyEditorControl SetUpEditor (Type controlType, PropertyViewModel property, NSOutlineView outline)
+		private PropertyEditorControl SetUpEditor (Type controlType, EditorViewModel property, NSOutlineView outline)
 		{
 			var view = (PropertyEditorControl)Activator.CreateInstance (controlType);
 			view.Identifier = property.GetType ().Name;

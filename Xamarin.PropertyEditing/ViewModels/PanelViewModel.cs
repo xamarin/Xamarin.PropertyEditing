@@ -18,7 +18,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public event EventHandler ArrangedPropertiesChanged;
 
-		public IReadOnlyList<IGroupingList<string, PropertyViewModel>> ArrangedProperties => this.arranged;
+		public IReadOnlyList<IGroupingList<string, EditorViewModel>> ArrangedEditors => this.arranged;
+
+		public bool HasChildElements => (this.arranged.Count > 0);
 
 		public string FilterText
 		{
@@ -79,13 +81,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 				groups.Remove (group);
 		}
 
-		protected override void OnAddProperties (IEnumerable<PropertyViewModel> properties)
+		protected override void OnAddEditors (IEnumerable<EditorViewModel> editors)
 		{
-			IEnumerable<PropertyViewModel> props = Properties;
+			IEnumerable<EditorViewModel> props = Properties;
 			if (!String.IsNullOrWhiteSpace (FilterText))
 				props = props.Where (MatchesFilter);
 
-			props = props.OrderBy (vm => vm.Property.Name);
+			props = props.OrderBy (vm => vm.Name);
 
 			this.arranged.Clear ();
 			foreach (var grouping in props.GroupBy (GetGroup).OrderBy (g => g.Key)) {
@@ -95,11 +97,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			ArrangedPropertiesChanged?.Invoke (this, EventArgs.Empty);
 		}
 
-		protected override void OnRemoveProperties (IEnumerable<PropertyViewModel> properties)
+		protected override void OnRemoveEditors (IEnumerable<EditorViewModel> editors)
 		{
-			foreach (PropertyViewModel vm in properties) {
+			foreach (EditorViewModel vm in editors) {
 				string g = GetGroup (vm);
-				var grouping = this.arranged[g] as ObservableGrouping<string, PropertyViewModel>;
+				var grouping = this.arranged[g] as ObservableGrouping<string, EditorViewModel>;
 				if (grouping != null) {
 					this.arranged.Remove (g, vm);
 				}
@@ -116,7 +118,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private readonly Dictionary<PropertyArrangeMode, HashSet<string>> expandedGroups = new Dictionary<PropertyArrangeMode, HashSet<string>> ();
-		private readonly ObservableLookup<string, PropertyViewModel> arranged = new ObservableLookup<string, PropertyViewModel> {
+		private readonly ObservableLookup<string, EditorViewModel> arranged = new ObservableLookup<string, EditorViewModel> {
 			ReuseGroups = true
 		};
 
@@ -127,26 +129,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			this.arranged.Clear ();
 
-			OnAddProperties (Properties);
-		}
-
-		private enum FilterState
-		{
-			Unknown,
-			Shorter,
-			Longer
+			OnAddEditors (Properties);
 		}
 
 		private void Filter (string oldFilter)
 		{
-			FilterState state = FilterState.Unknown;
-			if (String.IsNullOrWhiteSpace (oldFilter) || FilterText.StartsWith (oldFilter, StringComparison.OrdinalIgnoreCase))
-				state = FilterState.Longer;
-			else if (oldFilter.StartsWith (FilterText, StringComparison.OrdinalIgnoreCase))
-				state = FilterState.Shorter;
-
-			if (state != FilterState.Shorter) {
-				var toRemove = new List<PropertyViewModel> ();
+			bool longer = String.IsNullOrWhiteSpace (oldFilter) || FilterText.StartsWith (oldFilter, StringComparison.OrdinalIgnoreCase);
+			if (longer) {
+				var toRemove = new List<EditorViewModel> ();
 				foreach (var g in this.arranged) {
 					foreach (var vm in g) {
 						if (!MatchesFilter (vm))
@@ -154,29 +144,29 @@ namespace Xamarin.PropertyEditing.ViewModels
 					}
 				}
 
-				OnRemoveProperties (toRemove);
+				OnRemoveEditors (toRemove);
+			} else {
+				OnAddEditors (Properties);
 			}
 
-			if (state != FilterState.Longer) {
-				OnAddProperties (Properties);
-			}
+			OnPropertyChanged (nameof(HasChildElements));
 		}
 
-		private string GetGroup (PropertyViewModel vm)
+		private string GetGroup (EditorViewModel vm)
 		{
-			return (ArrangeMode == PropertyArrangeMode.Name) ? "0" : vm.Property.Category;
+			return (ArrangeMode == PropertyArrangeMode.Name) ? "0" : vm.Category;
 		}
 
-		private bool MatchesFilter (PropertyViewModel vm)
+		private bool MatchesFilter (EditorViewModel vm)
 		{
 			if (String.IsNullOrWhiteSpace (FilterText))
 				return true;
 
-			if (ArrangeMode == PropertyArrangeMode.Category && vm.Property.Category != null && vm.Property.Category.Contains (FilterText, StringComparison.OrdinalIgnoreCase)) {
+			if (ArrangeMode == PropertyArrangeMode.Category && vm.Category != null && vm.Category.Contains (FilterText, StringComparison.OrdinalIgnoreCase)) {
 				return true;
 			}
 
-			return vm.Property.Name.Contains (FilterText, StringComparison.OrdinalIgnoreCase);
+			return vm.Name.Contains (FilterText, StringComparison.OrdinalIgnoreCase);
 		}
 	}
 }

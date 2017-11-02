@@ -241,6 +241,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
+		public override string Name => Property.Name;
+		public override string Category => Property.Category;
+
 		public bool IsAvailable
 		{
 			get { return this.isAvailable?.Result ?? true; }
