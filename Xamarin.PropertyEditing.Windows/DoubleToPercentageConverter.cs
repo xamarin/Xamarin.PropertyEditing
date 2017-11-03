@@ -6,33 +6,27 @@ using System.Windows.Markup;
 
 namespace Xamarin.PropertyEditing.Windows
 {
-	[ValueConversion (typeof (double), typeof (string))]
+	[ValueConversion (typeof (double), typeof (double))]
 	internal class DoubleToPercentageConverter : MarkupExtension, IValueConverter
 	{
 		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (!(value is double)) return "100%";
+			if (!(value is double)) return DependencyProperty.UnsetValue;
 
 			var doubleValue = (double)value;
-			return doubleValue.ToString ("P1");
+			if (doubleValue < 0 || doubleValue > 1) return DependencyProperty.UnsetValue;
+			return doubleValue * 100;
 		}
 
 		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var stringValue = value as string;
-			if (string.IsNullOrWhiteSpace (stringValue)) return DependencyProperty.UnsetValue;
-			stringValue = stringValue.TrimEnd (' ', '%');
-			if (double.TryParse (stringValue, out double doubleValue)) {
-				if (doubleValue < 0) return 0;
-				if (doubleValue > 100) return 1;
-				return doubleValue / 100;
-			}
-			return DependencyProperty.UnsetValue;
+			if (!(value is double)) return DependencyProperty.UnsetValue;
+
+			var doubleValue = (double)value;
+			if ((doubleValue < 0) || (doubleValue > 100)) return DependencyProperty.UnsetValue;
+			return doubleValue / 100;
 		}
 
-		public override object ProvideValue (IServiceProvider serviceProvider)
-		{
-			return this;
-		}
+		public override object ProvideValue (IServiceProvider serviceProvider) => this;
 	}
 }

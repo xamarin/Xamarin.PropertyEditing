@@ -6,25 +6,21 @@ using System.Windows.Markup;
 
 namespace Xamarin.PropertyEditing.Windows
 {
-	[ValueConversion (typeof (byte), typeof (string))]
+	[ValueConversion (typeof (byte), typeof (double))]
 	internal class ByteToPercentageConverter : MarkupExtension, IValueConverter
 	{
 		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (!(value is byte)) return "100%";
+			if (!(value is byte)) return DependencyProperty.UnsetValue;
 
 			var alpha = (byte)value;
-			return (alpha / 255d).ToString ("P0");
+			return (alpha / 2.55d);
 		}
 
 		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var stringValue = value as string;
-			if (string.IsNullOrWhiteSpace (stringValue)) return DependencyProperty.UnsetValue;
-			stringValue = stringValue.TrimEnd (' ', '%');
-			if (double.TryParse (stringValue, out double doubleValue)) {
-				if (doubleValue < 0) return (byte)0;
-				if (doubleValue > 100) return (byte)255;
+			if (value is double doubleValue) {
+				if ((doubleValue < 0) || (doubleValue > 100)) return DependencyProperty.UnsetValue;
 				return (byte)(doubleValue * 2.55);
 			}
 			return DependencyProperty.UnsetValue;
