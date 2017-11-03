@@ -108,6 +108,7 @@
     <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\SizePropertyViewModel.cs" />
+    <Compile Include="ViewModels\SolidBrushViewModel.cs" />
     <Compile Include="ViewModels\StringPropertyViewModel.cs" />
     <Compile Include="PropertyArrangeMode.cs" />
     <Compile Include="IGroupingList.cs" />

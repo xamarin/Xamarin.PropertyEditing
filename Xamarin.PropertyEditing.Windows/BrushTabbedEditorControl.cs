@@ -40,7 +40,7 @@ namespace Xamarin.PropertyEditing.Windows
 						ViewModel.Value = null;
 					}
 					else if (tab == solidColorTab) {
-						ViewModel.Value = ViewModel.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
+						ViewModel.Value = ViewModel.Solid.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
 					}
 				}
 			};
@@ -50,7 +50,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			if (ViewModel == null) return;
 			if (ViewModel.Value is CommonSolidBrush solidBrush) {
-				ViewModel.PreviousSolidBrush = solidBrush;
+				ViewModel.Solid.PreviousSolidBrush = solidBrush;
 			}
 		}
 	}

@@ -24,7 +24,7 @@ namespace Xamarin.PropertyEditing.Windows
 			if (ViewModel == null) return;
 
 			colorSpacePicker = (ComboBox)GetTemplateChild ("colorSpacePicker");
-			if (ViewModel.ColorSpaces == null || ViewModel.ColorSpaces.Count == 0) {
+			if (ViewModel.Solid.ColorSpaces == null || ViewModel.Solid.ColorSpaces.Count == 0) {
 				colorSpacePicker.Visibility = Visibility.Collapsed;
 			}
 
@@ -32,17 +32,17 @@ namespace Xamarin.PropertyEditing.Windows
 				// Handle color space changes
 				colorSpacePicker.SelectionChanged += (s, e) => {
 					if (ViewModel != null && ViewModel.Value != null) {
-						ViewModel.Value = new CommonSolidBrush (ViewModel.Color, (string)e.AddedItems[0]);
+						ViewModel.Value = new CommonSolidBrush (ViewModel.Solid.Color, (string)e.AddedItems[0]);
 					}
 				};
 			}
 
 			AddHandler (CurrentColorCommitterControlBase.CommitCurrentColorEvent, new RoutedEventHandler((s, e) => {
-				ViewModel.CommitLastColor ();
+				ViewModel.Solid.CommitLastColor ();
 			}));
 
 			AddHandler (CurrentColorCommitterControlBase.CommitShadeEvent, new RoutedEventHandler ((s, e) => {
-				ViewModel.CommitShade ();
+				ViewModel.Solid.CommitShade ();
 			}));
 		}
 	}

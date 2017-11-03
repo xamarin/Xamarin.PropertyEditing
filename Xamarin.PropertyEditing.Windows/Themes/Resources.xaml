@@ -395,7 +395,7 @@
 							<ColumnDefinition Width="*" MinWidth="200"/>
 							<ColumnDefinition Width="Auto"/>
 						</Grid.ColumnDefinitions>
-						<ComboBox Name="colorSpacePicker" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding ColorSpaces}"
+						<ComboBox Name="colorSpacePicker" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Solid.ColorSpaces}"
 								  SelectedItem="{Binding Value.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center"
 								  AutomationProperties.Name="{x:Static prop:Resources.ColorSpace}" AutomationProperties.HelpText="{x:Static prop:Resources.ColorSpace}" ToolTip="{x:Static prop:Resources.ColorSpace}"/>
 						<Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -407,14 +407,14 @@
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
-							<local:ShadeEditorControl x:Name="shadeChooser" Color="{Binding Path=Shade, Mode=TwoWay}" HueColor="{Binding Path=HueColor, Mode=OneWay}"
+							<local:ShadeEditorControl x:Name="shadeChooser" Color="{Binding Path=Solid.Shade, Mode=TwoWay}" HueColor="{Binding Path=Solid.HueColor, Mode=OneWay}"
 													  Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,0,1" Panel.ZIndex="1"/>
-							<local:HueEditorControl x:Name="hueChooser" HueColor="{Binding Path=HueColor, Mode=TwoWay}"
+							<local:HueEditorControl x:Name="hueChooser" HueColor="{Binding Path=Solid.HueColor, Mode=TwoWay}"
 													Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,3,1" Panel.ZIndex="0" Focusable="False"/>
-							<local:CurrentColorEditorControl Color="{Binding Path=Shade, Mode=TwoWay}" InitialColor="{Binding InitialColor}" LastColor="{Binding LastColor}"
+							<local:CurrentColorEditorControl Color="{Binding Path=Solid.Shade, Mode=TwoWay}" InitialColor="{Binding Solid.InitialColor}" LastColor="{Binding Solid.LastColor}"
 															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,1,0" Panel.ZIndex="0" Focusable="False"/>
 						</Grid>
-						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Shade, Mode=TwoWay}" Margin="0,4,0,0"
+						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Solid.Shade, Mode=TwoWay}" Margin="0,4,0,0"
 															Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Focusable="False"/>
 					</Grid>
 				</ControlTemplate>
