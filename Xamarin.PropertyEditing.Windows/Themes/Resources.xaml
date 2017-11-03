@@ -505,6 +505,16 @@
 		</Setter>
 	</Style>
 
+	<Style TargetType="local:GradientBrushPreview" xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase">
+		<Setter Property="Template">
+			<Setter.Value>
+				<DataTemplate>
+					<local:BrushBoxControl Brush="{Binding}" Height="3" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style TargetType="local:ColorComponentsEditorControl">
 		<Setter Property="Focusable" Value="False"/>
 		<Setter Property="ContextMenu">
@@ -543,10 +553,10 @@
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.HueInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="hueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+							<TextBox x:Name="hueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Mode=TwoWay, Converter={local:DoubleToDegreesConverter}}">
-								<local:ColorComponentBox.GradientBrush>
+								<local:GradientBrushPreview.GradientBrush>
 									<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
 										<GradientStop Color="Red" Offset="0"/>
 										<GradientStop Color="Yellow" Offset="0.167"/>
@@ -556,36 +566,36 @@
 										<GradientStop Color="Magenta" Offset="0.833"/>
 										<GradientStop Color="Red" Offset="1"/>
 									</LinearGradientBrush>
-								</local:ColorComponentBox.GradientBrush>
-							</local:ColorComponentBox>
+								</local:GradientBrushPreview.GradientBrush>
+							</TextBox>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
 									ToolTip="{x:Static prop:Resources.Lightness}" AutomationProperties.Name="{x:Static prop:Resources.Lightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Lightness}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.LightnessInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="lightnessEntry"
+							<TextBox x:Name="lightnessEntry"
 								AutomationProperties.Name="{x:Static prop:Resources.Lightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Lightness}" ToolTip="{x:Static prop:Resources.Lightness}"
 								HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Lightness, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToLightnessBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToLightnessBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
 								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.SaturationInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="saturationEntryHLS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+							<TextBox x:Name="saturationEntryHLS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
 								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Saturation, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
 
 							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3"
 								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
-							<local:ColorComponentBox x:Name="alphaEntryHLS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+							<TextBox x:Name="alphaEntryHLS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
 								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
 						
 						<Grid x:Name="hsbPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
@@ -605,10 +615,10 @@
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.HueInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="hsbHueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+							<TextBox x:Name="hsbHueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								 AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"
 								 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Mode=TwoWay, Converter={local:DoubleToDegreesConverter}}">
-								<local:ColorComponentBox.GradientBrush>
+								<local:GradientBrushPreview.GradientBrush>
 									<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
 										<GradientStop Color="Red" Offset="0"/>
 										<GradientStop Color="Yellow" Offset="0.167"/>
@@ -618,35 +628,35 @@
 										<GradientStop Color="Magenta" Offset="0.833"/>
 										<GradientStop Color="Red" Offset="1"/>
 									</LinearGradientBrush>
-								</local:ColorComponentBox.GradientBrush>
-							</local:ColorComponentBox>
+								</local:GradientBrushPreview.GradientBrush>
+							</TextBox>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
 								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.SaturationInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="saturationEntryHSB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+							<TextBox x:Name="saturationEntryHSB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
 								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Saturation, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
 								AutomationProperties.Name="{x:Static prop:Resources.Brightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Brightness}" ToolTip="{x:Static prop:Resources.Brightness}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.BrightnessInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="brightnessEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+							<TextBox x:Name="brightnessEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
 								AutomationProperties.Name="{x:Static prop:Resources.Brightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Brightness}" ToolTip="{x:Static prop:Resources.Brightness}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brightness, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBrightnessBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBrightnessBrushConverter}}"/>
 
 							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3"
 								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
-							<local:ColorComponentBox x:Name="alphaEntryHSB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+							<TextBox x:Name="alphaEntryHSB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
 								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
 						
 						<Grid x:Name="rgbPane" Grid.Row="0" Grid.Column="0">
@@ -666,37 +676,37 @@
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.RedInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="redEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+							<TextBox x:Name="redEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								AutomationProperties.Name="{x:Static prop:Resources.Red}" AutomationProperties.HelpText="{x:Static prop:Resources.Red}" ToolTip="{x:Static prop:Resources.Red}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=R, Mode=TwoWay}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToRedBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToRedBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
 								AutomationProperties.Name="{x:Static prop:Resources.Green}" AutomationProperties.HelpText="{x:Static prop:Resources.Green}" ToolTip="{x:Static prop:Resources.Green}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.GreenInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="greenEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+							<TextBox x:Name="greenEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
 								AutomationProperties.Name="{x:Static prop:Resources.Green}" AutomationProperties.HelpText="{x:Static prop:Resources.Green}" ToolTip="{x:Static prop:Resources.Green}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=G, Mode=TwoWay}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToGreenBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToGreenBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
 								AutomationProperties.Name="{x:Static prop:Resources.Blue}" AutomationProperties.HelpText="{x:Static prop:Resources.Blue}" ToolTip="{x:Static prop:Resources.Blue}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.BlueInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="blueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+							<TextBox x:Name="blueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
 								AutomationProperties.Name="{x:Static prop:Resources.Blue}" AutomationProperties.HelpText="{x:Static prop:Resources.Blue}" ToolTip="{x:Static prop:Resources.Blue}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=B, Mode=TwoWay}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlueBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlueBrushConverter}}"/>
 
 							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3"
 								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
-							<local:ColorComponentBox x:Name="alphaEntryRGB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+							<TextBox x:Name="alphaEntryRGB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
 								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
 						
 						<Grid x:Name="cmykPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
@@ -717,94 +727,52 @@
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.CyanInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="cyanEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+							<TextBox x:Name="cyanEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								AutomationProperties.Name="{x:Static prop:Resources.Cyan}" AutomationProperties.HelpText="{x:Static prop:Resources.Cyan}" ToolTip="{x:Static prop:Resources.Cyan}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=C, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToCyanBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToCyanBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
 								AutomationProperties.Name="{x:Static prop:Resources.Magenta}" AutomationProperties.HelpText="{x:Static prop:Resources.Magenta}" ToolTip="{x:Static prop:Resources.Magenta}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.MagentaInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="magentaEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+							<TextBox x:Name="magentaEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
 								AutomationProperties.Name="{x:Static prop:Resources.Magenta}" AutomationProperties.HelpText="{x:Static prop:Resources.Magenta}" ToolTip="{x:Static prop:Resources.Magenta}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=M, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToMagentaBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToMagentaBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
 								AutomationProperties.Name="{x:Static prop:Resources.Yellow}" AutomationProperties.HelpText="{x:Static prop:Resources.Yellow}" ToolTip="{x:Static prop:Resources.Yellow}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.YellowInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="yellowEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+							<TextBox x:Name="yellowEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
 								AutomationProperties.Name="{x:Static prop:Resources.Yellow}" AutomationProperties.HelpText="{x:Static prop:Resources.Yellow}" ToolTip="{x:Static prop:Resources.Yellow}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Y, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToYellowBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToYellowBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="3" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
 								AutomationProperties.Name="{x:Static prop:Resources.Black}" AutomationProperties.HelpText="{x:Static prop:Resources.Black}" ToolTip="{x:Static prop:Resources.Black}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.BlackInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="blackEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+							<TextBox x:Name="blackEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
 								AutomationProperties.Name="{x:Static prop:Resources.Black}" AutomationProperties.HelpText="{x:Static prop:Resources.Black}" ToolTip="{x:Static prop:Resources.Black}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=K, Mode=TwoWay, Converter={local:DoubleToPercentageConverter}}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlackBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlackBrushConverter}}"/>
 
 							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4"
 								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
-							<local:ColorComponentBox x:Name="alphaEntryCMYK" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="4"
+							<TextBox x:Name="alphaEntryCMYK" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="4"
 								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
 								Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}"
-								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+								local:GradientBrushPreview.GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
 						
 						<TextBox Name="hexEntry" Margin="2,0,2,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="0" Grid.Row="2"
 							AutomationProperties.Name="{x:Static prop:Resources.HexValue}" AutomationProperties.HelpText="{x:Static prop:Resources.HexValue}" ToolTip="{x:Static prop:Resources.HexValue}"
 							Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
-					</Grid>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
-
-	<Style TargetType="local:ColorComponentBox" BasedOn="{StaticResource {x:Type TextBox}}">
-		<Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
-		<Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
-		<Setter Property="Foreground" Value="{DynamicResource InputForegroundBrush}" />
-		<Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
-		<Setter Property="IsTabStop" Value="False"/>
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="local:ColorComponentBox">
-					<Grid>
-						<TextBox AcceptsReturn="{TemplateBinding AcceptsReturn}" AcceptsTab="{TemplateBinding AcceptsTab}" AllowDrop="{TemplateBinding AllowDrop}"
-								 AutoWordSelection="{TemplateBinding AutoWordSelection}" Background="{TemplateBinding Background}" BitmapEffect="{TemplateBinding BitmapEffect}"
-								 BitmapEffectInput="{TemplateBinding BitmapEffectInput}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
-								 CacheMode="{TemplateBinding CacheMode}" CaretBrush="{TemplateBinding CaretBrush}" CharacterCasing="{TemplateBinding CharacterCasing}"
-								 Clip="{TemplateBinding Clip}" ClipToBounds="{TemplateBinding ClipToBounds}" ContextMenu="{TemplateBinding ContextMenu}"
-								 Cursor="{TemplateBinding Cursor}" DataContext="{TemplateBinding DataContext}" FlowDirection="{TemplateBinding FlowDirection}"
-								 Focusable="True" FocusVisualStyle="{TemplateBinding FocusVisualStyle}" FontFamily="{TemplateBinding FontFamily}"
-								 FontSize="{TemplateBinding FontSize}" FontStretch="{TemplateBinding FontStretch}" FontStyle="{TemplateBinding FontStyle}"
-								 FontWeight="{TemplateBinding FontWeight}" ForceCursor="{TemplateBinding ForceCursor}" Foreground="{TemplateBinding Foreground}"
-								 Height="{TemplateBinding Height}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-								 HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}" IsHitTestVisible="{TemplateBinding IsHitTestVisible}"
-								 IsEnabled="{TemplateBinding IsEnabled}" IsInactiveSelectionHighlightEnabled="{TemplateBinding IsInactiveSelectionHighlightEnabled}"
-								 IsManipulationEnabled="{TemplateBinding IsManipulationEnabled}" IsReadOnly="{TemplateBinding IsReadOnly}" IsReadOnlyCaretVisible="{TemplateBinding IsReadOnlyCaretVisible}"
-								 IsTabStop="True" IsUndoEnabled="{TemplateBinding IsUndoEnabled}" Margin="{TemplateBinding Margin}"
-								 MaxHeight="{TemplateBinding MaxHeight}" MaxLength="{TemplateBinding MaxLength}" MaxLines="{TemplateBinding MaxLines}"
-								 MaxWidth="{TemplateBinding MaxWidth}" MinHeight="{TemplateBinding MinHeight}" MinLines="{TemplateBinding MinLines}"
-								 MinWidth="{TemplateBinding MinWidth}" Padding="{TemplateBinding Padding}" SelectionOpacity="{TemplateBinding SelectionOpacity}"
-								 SelectionBrush="{TemplateBinding SelectionBrush}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" TextDecorations="{TemplateBinding TextDecorations}"
-								 TextWrapping="{TemplateBinding TextWrapping}" ToolTip="{TemplateBinding ToolTip}" TabIndex="{TemplateBinding TabIndex}"
-								 Tag="{TemplateBinding Tag}" TextAlignment="{TemplateBinding TextAlignment}" UndoLimit="{TemplateBinding UndoLimit}"
-								 UseLayoutRounding="{TemplateBinding UseLayoutRounding}" Uid="{TemplateBinding Uid}"
-								 Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-								 Grid.Row="0" Grid.Column="0" Panel.ZIndex="0"
-								 AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}" AutomationProperties.HelpText="{TemplateBinding AutomationProperties.Name}"/>
-						<local:BrushBoxControl Brush="{Binding Path=GradientBrush, RelativeSource={RelativeSource TemplatedParent}}"
-											   Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Row="0" Grid.Column="0" Panel.ZIndex="1"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -852,7 +820,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BrushBoxControl">
-					<Grid>
+					<Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
 						<Label HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Center"
 							   Content="{x:Static prop:Resources.NoBrush}" Visibility="{TemplateBinding NoBrushVisible}"
 							   BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Grid.Column="0" Grid.Row="0"/>
