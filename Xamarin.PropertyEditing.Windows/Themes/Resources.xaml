@@ -779,7 +779,7 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="local:ColorComponentBox">
 					<Grid>
-						<TextBox AcceptsReturn="{TemplateBinding AcceptsReturn}" AcceptsTab="{TemplateBinding AcceptsTab}" AllowDrop="{TemplateBinding AllowDrop}"
+						<TextBox x:Name="innerTextBox" AcceptsReturn="{TemplateBinding AcceptsReturn}" AcceptsTab="{TemplateBinding AcceptsTab}" AllowDrop="{TemplateBinding AllowDrop}"
 								 AutoWordSelection="{TemplateBinding AutoWordSelection}" Background="{TemplateBinding Background}" BitmapEffect="{TemplateBinding BitmapEffect}"
 								 BitmapEffectInput="{TemplateBinding BitmapEffectInput}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
 								 CacheMode="{TemplateBinding CacheMode}" CaretBrush="{TemplateBinding CaretBrush}" CharacterCasing="{TemplateBinding CharacterCasing}"

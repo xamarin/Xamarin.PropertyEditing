@@ -6,7 +6,7 @@ namespace Xamarin.PropertyEditing.Windows
 {
 	internal class ColorComponentBox : TextBox
 	{
-		static ColorComponentBox()
+		static ColorComponentBox ()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata (
 				typeof (ColorComponentBox),
@@ -15,12 +15,30 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public static readonly DependencyProperty GradientBrushProperty =
 			DependencyProperty.Register (
-				nameof(GradientBrush), typeof (Brush), typeof (ColorComponentBox),
-				new PropertyMetadata (new SolidColorBrush()));
+				nameof (GradientBrush), typeof (Brush), typeof (ColorComponentBox),
+				new PropertyMetadata (new SolidColorBrush ()));
 
 		public Brush GradientBrush {
 			get => (Brush)GetValue (GradientBrushProperty);
 			set => SetValue (GradientBrushProperty, value);
+		}
+
+		TextBox innerTextBox;
+
+		public override void OnApplyTemplate ()
+		{
+			base.OnApplyTemplate ();
+
+			innerTextBox = GetTemplateChild ("innerTextBox") as TextBox;
+			if (innerTextBox != null) {
+				innerTextBox.GotKeyboardFocus += (s, e) => {
+					innerTextBox.SelectAll ();
+				};
+				innerTextBox.PreviewMouseLeftButtonDown += (s, e) => {
+					innerTextBox.Focus ();
+					e.Handled = true;
+				};
+			}
 		}
 	}
 }

@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -163,7 +161,7 @@ namespace Xamarin.PropertyEditing.Windows
 					item.Click += (s, e) => {
 						ColorComponentModel = (ColorComponentModel)Enum.Parse (
 							typeof (ColorComponentModel),
-							item.Name.Substring(0, item.Name.Length - "MenuItem".Length),
+							item.Name.Substring (0, item.Name.Length - "MenuItem".Length),
 							true);
 					};
 					CheckIfCurrentModel (item);
@@ -185,6 +183,19 @@ namespace Xamarin.PropertyEditing.Windows
 			foreach (Button button in this.GetDescendants<Button> ()) {
 				button.Click += OnComponentLabelClick;
 			}
+			foreach (TextBox textbox in this.GetDescendants<TextBox> ()) {
+				// This will not get TextBoxes buried inside templates of derived TextBox types, such as ColorComponentBox,
+				// those will have to do their own focus management.
+				if (!textbox.GetType ().IsSubclassOf (typeof (TextBox))) {
+					textbox.GotKeyboardFocus += (s, e) => {
+						textbox.SelectAll ();
+					};
+					textbox.PreviewMouseLeftButtonDown += (s, e) => {
+						textbox.Focus ();
+						e.Handled = true;
+					};
+				}
+			}
 		}
 
 		void OnRGBComponentBoxBlur (object sender, RoutedEventArgs e)
@@ -199,7 +210,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		void OnCMYKComponentBoxBlur (object sender, RoutedEventArgs e)
 		{
-			var newColor = CommonColor.FromCMYK(C, M, Y, K, A);
+			var newColor = CommonColor.FromCMYK (C, M, Y, K, A);
 			if (!newColor.Equals (Color)) {
 				Color = newColor;
 			}
@@ -209,7 +220,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		void OnHLSComponentBoxBlur (object sender, RoutedEventArgs e)
 		{
-			var newColor = CommonColor.FromHLS(Hue, Lightness, Saturation, A);
+			var newColor = CommonColor.FromHLS (Hue, Lightness, Saturation, A);
 			if (!newColor.Equals (Color)) {
 				Color = newColor;
 			}
@@ -219,7 +230,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		void OnHSBComponentBoxBlur (object sender, RoutedEventArgs e)
 		{
-			var newColor = CommonColor.FromHSB(Hue, Saturation, Brightness, A);
+			var newColor = CommonColor.FromHSB (Hue, Saturation, Brightness, A);
 			if (!newColor.Equals (Color)) {
 				Color = newColor;
 			}
@@ -232,7 +243,7 @@ namespace Xamarin.PropertyEditing.Windows
 			if (ContextMenu != null) {
 				ContextMenu.PlacementTarget = sender as UIElement;
 				ContextMenu.IsOpen = true;
-				foreach(MenuItem item in ContextMenu.Items) {
+				foreach (MenuItem item in ContextMenu.Items) {
 					CheckIfCurrentModel (item);
 				}
 			}
@@ -244,7 +255,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 			var model = (ColorComponentModel)e.NewValue;
 
-			void UpdateVisibility(UIElement el, ColorComponentModel elModel)
+			void UpdateVisibility (UIElement el, ColorComponentModel elModel)
 			{
 				if (el != null) el.Visibility = model == elModel ? Visibility.Visible : Visibility.Hidden;
 			}
