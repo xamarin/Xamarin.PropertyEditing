@@ -876,6 +876,14 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
+		<Setter Property="NoBrushVisible" Value="Hidden"/>
+		<Setter Property="BrushVisible" Value="Visible"/>
+		<Style.Triggers>
+			<Trigger Property="Brush" Value="{x:Null}">
+				<Setter Property="NoBrushVisible" Value="Visible"/>
+				<Setter Property="BrushVisible" Value="Hidden"/>
+			</Trigger>
+		</Style.Triggers>
 	</Style>
 
 	<Style TargetType="local:PropertyPresenter">
@@ -899,11 +907,25 @@
 		</Setter>
 	</Style>
 
+	<Style TargetType="TabControl">
+		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}"/>
+		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}"/>
+	</Style>
+
+	<Style TargetType="TabItem">
+		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}"/>
+		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}"/>
+	</Style>
+
+	<Style TargetType="Label">
+		<Setter Property="Foreground" Value="{DynamicResource LabelForegroundBrush}"/>
+	</Style>
+	
 	<Style TargetType="MenuItem">
 		<Setter Property="OverridesDefaultStyle" Value="True" />
 		<Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
 		<Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
-		<Setter Property="Foreground" Value="{DynamicResource ListItemForegroundBrush}" />
+		<Setter Property="Foreground" Value="{DynamicResource MenuItemForegroundBrush}" />
 		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="BorderBrush" Value="Transparent" />
@@ -955,6 +977,7 @@
 		<Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.MessageFontFamilyKey}}" />
 		<Setter Property="FontSize" Value="{DynamicResource {x:Static SystemFonts.MessageFontSizeKey}}" />
 		<Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.MessageFontWeightKey}}" />
+		<Setter Property="Foreground" Value="{DynamicResource MenuItemForegroundBrush}"/>
 		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="Background" Value="{DynamicResource MenuPopupBackgroundBrush}" />
 		<Setter Property="Grid.IsSharedSizeScope" Value="true" />

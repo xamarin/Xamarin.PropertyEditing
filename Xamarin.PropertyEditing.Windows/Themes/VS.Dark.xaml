@@ -48,6 +48,10 @@
 	<SolidColorBrush x:Key="InputBorderBrush">#434346</SolidColorBrush>
 	<SolidColorBrush x:Key="InputForegroundBrush">#F1F1F1</SolidColorBrush>
 
+	<SolidColorBrush x:Key="LabelForegroundBrush">#F1F1F1</SolidColorBrush>
+
+	<SolidColorBrush x:Key="MenuItemForegroundBrush">#F1F1F1</SolidColorBrush>
+
 	<SolidColorBrush x:Key="ThicknessIconBackgroundBrush">#292929</SolidColorBrush>
 	<SolidColorBrush x:Key="ThicknessIconBorderBrush">#292929</SolidColorBrush>
 

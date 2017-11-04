@@ -35,13 +35,5 @@ namespace Xamarin.PropertyEditing.Windows
 			get => (Visibility)GetValue (NoBrushVisibleProperty);
 			set => SetValue (NoBrushVisibleProperty, value);
 		}
-
-		public override void OnApplyTemplate ()
-		{
-			base.OnApplyTemplate ();
-
-			NoBrushVisible = Brush == null ? Visibility.Visible : Visibility.Hidden;
-			BrushVisible = Brush != null ? Visibility.Visible : Visibility.Hidden;
-		}
 	}
 }
