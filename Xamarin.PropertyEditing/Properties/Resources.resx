@@ -304,4 +304,10 @@
     <value>Solid color brush</value>
     <comment>Solid color brush help text</comment>
   </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="ShowAdvancedProperties" xml:space="preserve">
+    <value>Show advanced properties</value>
+  </data>
 </root>

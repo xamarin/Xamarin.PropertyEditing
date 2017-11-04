@@ -16,7 +16,7 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly DependencyProperty GradientBrushProperty =
 			DependencyProperty.Register (
 				nameof (GradientBrush), typeof (Brush), typeof (ColorComponentBox),
-				new PropertyMetadata (new SolidColorBrush ()));
+				new PropertyMetadata (null));
 
 		public Brush GradientBrush {
 			get => (Brush)GetValue (GradientBrushProperty);

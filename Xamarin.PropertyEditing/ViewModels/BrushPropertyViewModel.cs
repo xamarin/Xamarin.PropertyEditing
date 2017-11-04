@@ -15,5 +15,32 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		public SolidBrushViewModel Solid { get; }
+
+		public double Opacity {
+			get => Value.Opacity;
+			set {
+				if (Value is null) return;
+				OnPropertyChanged ();
+				if (Value is CommonSolidBrush solid) {
+					Value = new CommonSolidBrush (solid.Color, solid.ColorSpace, value);
+				}
+				else if (Value is CommonImageBrush img) {
+					Value = new CommonImageBrush (
+						img.ImageSource, img.AlignmentX, img.AlignmentY, img.Stretch, img.TileMode,
+						img.ViewBox, img.ViewBoxUnits, img.ViewPort, img.ViewPortUnits, value);
+				}
+				else if (Value is CommonLinearGradientBrush linear) {
+					Value = new CommonLinearGradientBrush (
+						linear.StartPoint, linear.EndPoint, linear.GradientStops,
+						linear.ColorInterpolationMode, linear.MappingMode, linear.SpreadMethod, value);
+				}
+				else if (Value is CommonRadialGradientBrush radial) {
+					Value = new CommonRadialGradientBrush (
+						radial.Center, radial.GradientOrigin, radial.RadiusX, radial.RadiusY,
+						radial.GradientStops, radial.ColorInterpolationMode, radial.MappingMode,
+						radial.SpreadMethod, value);
+				}
+			}
+		}
 	}
 }

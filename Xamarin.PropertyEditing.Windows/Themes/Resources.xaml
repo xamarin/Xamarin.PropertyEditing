@@ -356,27 +356,84 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BrushTabbedEditorControl">
-					<TabControl x:Name="brushTabs" MinHeight="20">
-						<TabItem Name="noBrushTab" MinWidth="40" MinHeight="25"
+					<StackPanel>
+						<TabControl x:Name="brushTabs" MinHeight="20">
+							<TabItem Name="noBrushTab" MinWidth="40" MinHeight="25"
 								 ToolTip="{x:Static prop:Resources.NoBrush}" AutomationProperties.Name="{x:Static prop:Resources.NoBrush}" AutomationProperties.HelpText="{x:Static prop:Resources.NoBrush}">
-							<TabItem.Header>
-								<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
-									<Polygon Points="0,0 24,0 0,14" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
-									<Polygon Points="25,1 25,15 1,15" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
-								</Canvas>
-							</TabItem.Header>
-						</TabItem>
-						<TabItem Name="solidColorTab" MinWidth="40" MinHeight="25"
+								<TabItem.Header>
+									<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
+										<Polygon Points="0,0 24,0 0,14" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+										<Polygon Points="25,1 25,15 1,15" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+									</Canvas>
+								</TabItem.Header>
+							</TabItem>
+							<TabItem Name="solidColorTab" MinWidth="40" MinHeight="25"
 								 ToolTip="{x:Static prop:Resources.SolidBrush}" AutomationProperties.Name="{x:Static prop:Resources.SolidBrush}" AutomationProperties.HelpText="{x:Static prop:Resources.SolidBrush}">
-							<TabItem.Header>
-								<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
-									<Rectangle Canvas.Left="0" Canvas.Top="0" Width="25" Height="15" Stroke="{DynamicResource VectorGlyphBrush}" StrokeThickness="1"/>
-									<Rectangle Canvas.Left="2" Canvas.Top="2" Width="21" Height="11" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
-								</Canvas>
-							</TabItem.Header>
-							<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
-						</TabItem>
-					</TabControl>
+								<TabItem.Header>
+									<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
+										<Rectangle Canvas.Left="0" Canvas.Top="0" Width="25" Height="15" Stroke="{DynamicResource VectorGlyphBrush}" StrokeThickness="1"/>
+										<Rectangle Canvas.Left="2" Canvas.Top="2" Width="21" Height="11" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+									</Canvas>
+								</TabItem.Header>
+								<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
+							</TabItem>
+						</TabControl>
+						<ToggleButton Name="advancedPropertyToggle" Background="{DynamicResource ToggleItemBackgroundBrush}" Margin="0,2,0,2" BorderThickness="0"
+									  ToolTip="{x:Static prop:Resources.ShowAdvancedProperties}" AutomationProperties.Name="{x:Static prop:Resources.ShowAdvancedProperties}" AutomationProperties.HelpText="{x:Static prop:Resources.ShowAdvancedProperties}">
+							<ToggleButton.Style>
+								<Style TargetType="ToggleButton">
+									<Setter Property="Content">
+										<Setter.Value>
+											<Canvas Width="10" Height="7">
+												<Polyline Points="0,1 5,6 10,1"
+														  Stroke="{DynamicResource ToggleItemForegroundBrush}"
+														  StrokeThickness="2" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
+											</Canvas>
+										</Setter.Value>
+									</Setter>
+									<Style.Triggers>
+										<Trigger Property="IsChecked" Value="True">
+											<Setter Property="Content">
+												<Setter.Value>
+													<Canvas Width="10" Height="7">
+														<Polyline Points="0,6 5,1 10,6"
+																  Stroke="{DynamicResource ToggleItemForegroundBrush}"
+																  StrokeThickness="2" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
+													</Canvas>
+												</Setter.Value>
+											</Setter>
+										</Trigger>
+									</Style.Triggers>
+								</Style>
+							</ToggleButton.Style>
+						</ToggleButton>
+						<Grid Name="advancedPropertyPanel">
+							<Grid.Style>
+								<Style TargetType="Grid">
+									<Setter Property="Visibility" Value="Collapsed"/>
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding IsChecked, ElementName=advancedPropertyToggle}" Value="True">
+											<Setter Property="Visibility" Value="Visible"/>
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</Grid.Style>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+							<Label Grid.Column="0" Content="{x:Static prop:Resources.Opacity}"/>
+							<local:ColorComponentBox
+								Grid.Column="1" Value="{Binding Path=Opacity, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								ToolTip="{x:Static prop:Resources.Opacity}" AutomationProperties.Name="{x:Static prop:Resources.Opacity}" AutomationProperties.HelpText="{x:Static prop:Resources.Opacity}"/>
+						</Grid>
+					</StackPanel>
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding Path=Value}" Value="{x:Null}">
+							<Setter Property="Visibility" TargetName="advancedPropertyToggle" Value="Collapsed"/>
+							<Setter Property="Visibility" TargetName="advancedPropertyPanel" Value="Collapsed"/>
+						</DataTrigger>
+					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -776,7 +833,8 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="local:ColorComponentBox">
 					<Grid>
-						<TextBox Name="innerTextBox" BitmapEffect="{TemplateBinding BitmapEffect}" BitmapEffectInput="{TemplateBinding BitmapEffectInput}"
+						<TextBox Name="innerTextBox" VerticalContentAlignment="Center"
+								 BitmapEffect="{TemplateBinding BitmapEffect}" BitmapEffectInput="{TemplateBinding BitmapEffectInput}"
 								 CacheMode="{TemplateBinding CacheMode}" Clip="{TemplateBinding Clip}" ClipToBounds="{TemplateBinding ClipToBounds}" ContextMenu="{TemplateBinding ContextMenu}"
 								 Cursor="{TemplateBinding Cursor}" DataContext="{TemplateBinding DataContext}" FlowDirection="{TemplateBinding FlowDirection}"
 								 Focusable="True" FocusVisualStyle="{TemplateBinding FocusVisualStyle}" FontFamily="{TemplateBinding FontFamily}"
@@ -794,8 +852,10 @@
 								</MultiBinding>
 							</TextBox.Text>
 						</TextBox>
-						<local:BrushBoxControl Brush="{Binding Path=GradientBrush, RelativeSource={RelativeSource TemplatedParent}}"
-											   Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Row="0" Grid.Column="0" Panel.ZIndex="1"/>
+						<local:BrushBoxControl x:Name="brushBoxControl" Visibility="Visible"
+							Brush="{Binding Path=GradientBrush, RelativeSource={RelativeSource TemplatedParent}}"
+							Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+							Grid.Row="0" Grid.Column="0" Panel.ZIndex="1"/>
 					</Grid>
 					<ControlTemplate.Triggers>
 						<DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=innerTextBox}" Value="True">
@@ -804,6 +864,9 @@
 						<DataTrigger Binding="{Binding IsFocused, ElementName=innerTextBox}" Value="True">
 							<Setter TargetName="innerTextBox" Property="Text" Value="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, StringFormat={}{0:##0.#}}"/>
 						</DataTrigger>
+						<Trigger Property="GradientBrush" Value="{x:Null}">
+							<Setter Property="Visibility" TargetName="brushBoxControl" Value="Hidden"/>
+						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>

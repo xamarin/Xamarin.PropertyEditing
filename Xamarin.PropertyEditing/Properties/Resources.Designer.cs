@@ -385,6 +385,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Opacity.
+        /// </summary>
+        public static string Opacity {
+            get {
+                return ResourceManager.GetString("Opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Properties.
         /// </summary>
         public static string Properties {
@@ -453,6 +462,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string SaturationInitial {
             get {
                 return ResourceManager.GetString("SaturationInitial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show advanced properties.
+        /// </summary>
+        public static string ShowAdvancedProperties {
+            get {
+                return ResourceManager.GetString("ShowAdvancedProperties", resourceCulture);
             }
         }
         
