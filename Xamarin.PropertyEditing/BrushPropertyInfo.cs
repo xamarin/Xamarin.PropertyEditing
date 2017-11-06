@@ -7,7 +7,7 @@ namespace Xamarin.PropertyEditing
 	public class BrushPropertyInfo : IPropertyInfo, IColorSpaced
 	{
 		public BrushPropertyInfo (string name, string category, bool canWrite,
-			IReadOnlyList<string> colorSpaces, ValueSources valueSources = ValueSources.Local,
+			IReadOnlyList<string> colorSpaces = null, ValueSources valueSources = ValueSources.Local,
 			IReadOnlyList<PropertyVariation> variations = null,
 			IReadOnlyList<IAvailabilityConstraint> availabilityConstraints = null)
 		{
