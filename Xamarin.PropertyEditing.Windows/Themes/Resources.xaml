@@ -378,59 +378,77 @@
 								<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
 							</TabItem>
 						</TabControl>
-						<ToggleButton Name="advancedPropertyToggle" Background="{DynamicResource ToggleItemBackgroundBrush}" Margin="0,2,0,2" BorderThickness="0"
-									  ToolTip="{x:Static prop:Resources.ShowAdvancedProperties}" AutomationProperties.Name="{x:Static prop:Resources.ShowAdvancedProperties}" AutomationProperties.HelpText="{x:Static prop:Resources.ShowAdvancedProperties}">
-							<ToggleButton.Style>
-								<Style TargetType="ToggleButton">
-									<Setter Property="Content">
-										<Setter.Value>
-											<Canvas Width="10" Height="7">
-												<Polyline Points="0,1 5,6 10,1"
-														  Stroke="{DynamicResource ToggleItemForegroundBrush}"
-														  StrokeThickness="2" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
-											</Canvas>
-										</Setter.Value>
-									</Setter>
-									<Style.Triggers>
-										<Trigger Property="IsChecked" Value="True">
-											<Setter Property="Content">
-												<Setter.Value>
-													<Canvas Width="10" Height="7">
-														<Polyline Points="0,6 5,1 10,6"
+						<Grid Name="advancedPropertyPanel">
+							<Grid.RowDefinitions>
+								<RowDefinition/>
+								<RowDefinition/>
+							</Grid.RowDefinitions>
+							<Canvas Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" HorizontalAlignment="Center" Width="10" Height="7">
+								<Polyline Stroke="{DynamicResource ToggleItemForegroundBrush}" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round">
+									<Polyline.Style>
+										<Style TargetType="Polyline">
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding Path=IsChecked, ElementName=advancedPropertyToggle, Mode=OneWay}" Value="False">
+													<Setter Property="Points" Value="0,1 5,6 10,1"/>
+												</DataTrigger>
+												<DataTrigger Binding="{Binding Path=IsChecked, ElementName=advancedPropertyToggle, Mode=OneWay}" Value="True">
+													<Setter Property="Points" Value="0,6 5,1 10,6"/>
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</Polyline.Style>
+								</Polyline>
+							</Canvas>
+							<ToggleButton
+								Name="advancedPropertyToggle" Grid.Row="0" Grid.Column="0" Panel.ZIndex="1" FocusVisualStyle="{x:Null}"  Margin="0,2,0,6"
+								HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="7" BorderThickness="0" Opacity="0"
+								ToolTip="{x:Static prop:Resources.ShowAdvancedProperties}" AutomationProperties.Name="{x:Static prop:Resources.ShowAdvancedProperties}" AutomationProperties.HelpText="{x:Static prop:Resources.ShowAdvancedProperties}">
+								<ToggleButton.Style>
+									<Style TargetType="ToggleButton">
+										<Setter Property="Content">
+											<Setter.Value>
+												<Canvas Width="10" Height="7">
+												</Canvas>
+											</Setter.Value>
+										</Setter>
+										<Style.Triggers>
+											<Trigger Property="IsChecked" Value="True">
+												<Setter Property="Content">
+													<Setter.Value>
+														<Canvas Width="10" Height="7">
+															<Polyline Points="0,6 5,1 10,6"
 																  Stroke="{DynamicResource ToggleItemForegroundBrush}"
 																  StrokeThickness="2" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
-													</Canvas>
-												</Setter.Value>
-											</Setter>
-										</Trigger>
-									</Style.Triggers>
-								</Style>
-							</ToggleButton.Style>
-						</ToggleButton>
-						<Grid Name="advancedPropertyPanel">
-							<Grid.Style>
-								<Style TargetType="Grid">
-									<Setter Property="Visibility" Value="Collapsed"/>
-									<Style.Triggers>
-										<DataTrigger Binding="{Binding IsChecked, ElementName=advancedPropertyToggle}" Value="True">
-											<Setter Property="Visibility" Value="Visible"/>
-										</DataTrigger>
-									</Style.Triggers>
-								</Style>
-							</Grid.Style>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="Auto"/>
-								<ColumnDefinition Width="*"/>
-							</Grid.ColumnDefinitions>
-							<Label Grid.Column="0" Content="{x:Static prop:Resources.Opacity}"/>
-							<local:ColorComponentBox
-								Grid.Column="1" Value="{Binding Path=Opacity, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
-								ToolTip="{x:Static prop:Resources.Opacity}" AutomationProperties.Name="{x:Static prop:Resources.Opacity}" AutomationProperties.HelpText="{x:Static prop:Resources.Opacity}"/>
+														</Canvas>
+													</Setter.Value>
+												</Setter>
+											</Trigger>
+										</Style.Triggers>
+									</Style>
+								</ToggleButton.Style>
+							</ToggleButton>
+							<StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,2,0,6">
+								<StackPanel.Style>
+									<Style TargetType="StackPanel">
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding Path=IsChecked, ElementName=advancedPropertyToggle, Mode=OneWay}" Value="False">
+												<Setter Property="Visibility" Value="Collapsed"/>
+											</DataTrigger>
+											<DataTrigger Binding="{Binding Path=IsChecked, ElementName=advancedPropertyToggle, Mode=OneWay}" Value="True">
+												<Setter Property="Visibility" Value="Visible"/>
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</StackPanel.Style>
+								<Label Content="{x:Static prop:Resources.Opacity}"/>
+								<local:ColorComponentBox
+									Value="{Binding Path=Opacity, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+									ToolTip="{x:Static prop:Resources.Opacity}" AutomationProperties.Name="{x:Static prop:Resources.Opacity}" AutomationProperties.HelpText="{x:Static prop:Resources.Opacity}"/>
+							</StackPanel>
 						</Grid>
 					</StackPanel>
 					<ControlTemplate.Triggers>
 						<DataTrigger Binding="{Binding Path=Value}" Value="{x:Null}">
-							<Setter Property="Visibility" TargetName="advancedPropertyToggle" Value="Collapsed"/>
 							<Setter Property="Visibility" TargetName="advancedPropertyPanel" Value="Collapsed"/>
 						</DataTrigger>
 					</ControlTemplate.Triggers>
