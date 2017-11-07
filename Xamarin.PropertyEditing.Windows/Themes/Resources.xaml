@@ -378,74 +378,16 @@
 								<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
 							</TabItem>
 						</TabControl>
-						<Grid Name="advancedPropertyPanel">
-							<Grid.RowDefinitions>
-								<RowDefinition/>
-								<RowDefinition/>
-							</Grid.RowDefinitions>
-							<Canvas Grid.Row="0" Grid.Column="0" Panel.ZIndex="0" HorizontalAlignment="Center" Width="10" Height="7">
-								<Polyline Stroke="{DynamicResource ToggleItemForegroundBrush}" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round">
-									<Polyline.Style>
-										<Style TargetType="Polyline">
-											<Style.Triggers>
-												<DataTrigger Binding="{Binding Path=IsChecked, ElementName=advancedPropertyToggle, Mode=OneWay}" Value="False">
-													<Setter Property="Points" Value="0,1 5,6 10,1"/>
-												</DataTrigger>
-												<DataTrigger Binding="{Binding Path=IsChecked, ElementName=advancedPropertyToggle, Mode=OneWay}" Value="True">
-													<Setter Property="Points" Value="0,6 5,1 10,6"/>
-												</DataTrigger>
-											</Style.Triggers>
-										</Style>
-									</Polyline.Style>
-								</Polyline>
-							</Canvas>
-							<ToggleButton
-								Name="advancedPropertyToggle" Grid.Row="0" Grid.Column="0" Panel.ZIndex="1" FocusVisualStyle="{x:Null}"  Margin="0,2,0,6"
-								HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="7" BorderThickness="0" Opacity="0"
-								ToolTip="{x:Static prop:Resources.ShowAdvancedProperties}" AutomationProperties.Name="{x:Static prop:Resources.ShowAdvancedProperties}" AutomationProperties.HelpText="{x:Static prop:Resources.ShowAdvancedProperties}">
-								<ToggleButton.Style>
-									<Style TargetType="ToggleButton">
-										<Setter Property="Content">
-											<Setter.Value>
-												<Canvas Width="10" Height="7">
-												</Canvas>
-											</Setter.Value>
-										</Setter>
-										<Style.Triggers>
-											<Trigger Property="IsChecked" Value="True">
-												<Setter Property="Content">
-													<Setter.Value>
-														<Canvas Width="10" Height="7">
-															<Polyline Points="0,6 5,1 10,6"
-																  Stroke="{DynamicResource ToggleItemForegroundBrush}"
-																  StrokeThickness="2" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
-														</Canvas>
-													</Setter.Value>
-												</Setter>
-											</Trigger>
-										</Style.Triggers>
-									</Style>
-								</ToggleButton.Style>
-							</ToggleButton>
-							<StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,2,0,6">
-								<StackPanel.Style>
-									<Style TargetType="StackPanel">
-										<Style.Triggers>
-											<DataTrigger Binding="{Binding Path=IsChecked, ElementName=advancedPropertyToggle, Mode=OneWay}" Value="False">
-												<Setter Property="Visibility" Value="Collapsed"/>
-											</DataTrigger>
-											<DataTrigger Binding="{Binding Path=IsChecked, ElementName=advancedPropertyToggle, Mode=OneWay}" Value="True">
-												<Setter Property="Visibility" Value="Visible"/>
-											</DataTrigger>
-										</Style.Triggers>
-									</Style>
-								</StackPanel.Style>
-								<Label Content="{x:Static prop:Resources.Opacity}"/>
-								<local:ColorComponentBox
+						<Expander Name="advancedPropertyPanel" Template="{DynamicResource AdvancedPropertiesExpander}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+							<Expander.Content>
+								<StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,2,0,6">
+									<Label Content="{x:Static prop:Resources.Opacity}"/>
+									<local:ColorComponentBox
 									Value="{Binding Path=Opacity, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
 									ToolTip="{x:Static prop:Resources.Opacity}" AutomationProperties.Name="{x:Static prop:Resources.Opacity}" AutomationProperties.HelpText="{x:Static prop:Resources.Opacity}"/>
-							</StackPanel>
-						</Grid>
+								</StackPanel>
+							</Expander.Content>
+						</Expander>
 					</StackPanel>
 					<ControlTemplate.Triggers>
 						<DataTrigger Binding="{Binding Path=Value}" Value="{x:Null}">
@@ -987,6 +929,38 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+
+	<ControlTemplate TargetType="Expander" x:Key="AdvancedPropertiesExpander">
+		<DockPanel>
+			<ToggleButton
+				x:Name="ExpanderButton" DockPanel.Dock="Top" Template="{DynamicResource AdvancedPropertiesToggleButton}" Content="{TemplateBinding Header}"
+				IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" OverridesDefaultStyle="True" Padding="1.5,0">
+			</ToggleButton>
+			<ContentPresenter x:Name="ExpanderContent" Grid.Row="1" Visibility="Collapsed" DockPanel.Dock="Bottom"/>
+		</DockPanel>
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsExpanded" Value="True">
+				<Setter TargetName="ExpanderContent" Property="Visibility" Value="Visible"/>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+	<ControlTemplate x:Key="AdvancedPropertiesToggleButton" TargetType="{x:Type ToggleButton}">
+		<Border x:Name="ExpanderButtonBorder" Height="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource ToggleItemBackgroundBrush}" DockPanel.Dock="Top">
+			<Path x:Name="Chevron" Data="M 0,3 L 5,8 L 10,3" Stroke="{DynamicResource ToggleItemForegroundBrush}" Width="10" Height="10" StrokeThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"/>
+		</Border>
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsChecked" Value="True">
+				<Setter Property="Data" TargetName="Chevron" Value="M 0,8 L 5,3 L 10,8"/>
+			</Trigger>
+			<Trigger Property="IsMouseOver" Value="true">
+				<Setter Property="Stroke" Value="{DynamicResource ToggleItemMouseOverForegroundBrush}" TargetName="Chevron"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="true">
+				<Setter Property="Stroke" Value="{DynamicResource ToggleItemSelectedForegroundBrush}" TargetName="Chevron"/>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
 
 	<Style TargetType="TabControl">
 		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}"/>
