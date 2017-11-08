@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -23,8 +23,12 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			var stringValue = value as string;
 			if (string.IsNullOrWhiteSpace (stringValue)) return DependencyProperty.UnsetValue;
-			var color = (Color)ColorConverter.ConvertFromString (stringValue);
-			return new CommonColor (color.R, color.G, color.B, color.A);
+			try {
+				var color = (Color)ColorConverter.ConvertFromString (stringValue);
+				return new CommonColor (color.R, color.G, color.B, color.A);
+			} catch(FormatException) {
+				return DependencyProperty.UnsetValue;
+			}
 		}
 
 		public override object ProvideValue (IServiceProvider serviceProvider)

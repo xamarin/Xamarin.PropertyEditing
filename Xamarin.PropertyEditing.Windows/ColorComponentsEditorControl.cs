@@ -142,19 +142,14 @@ namespace Xamarin.PropertyEditing.Windows
 			set => SetValue (ColorComponentModelProperty, value);
 		}
 
-		UIElement rgbPane;
-		UIElement cmykPane;
-		UIElement hlsPane;
-		UIElement hsbPane;
-
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
 
-			rgbPane = GetTemplateChild ("rgbPane") as UIElement;
-			cmykPane = GetTemplateChild ("cmykPane") as UIElement;
-			hlsPane = GetTemplateChild ("hlsPane") as UIElement;
-			hsbPane = GetTemplateChild ("hsbPane") as UIElement;
+			this.rgbPane = GetTemplateChild ("rgbPane") as UIElement;
+			this.cmykPane = GetTemplateChild ("cmykPane") as UIElement;
+			this.hlsPane = GetTemplateChild ("hlsPane") as UIElement;
+			this.hsbPane = GetTemplateChild ("hsbPane") as UIElement;
 
 			if (ContextMenu != null) {
 				foreach (MenuItem item in ContextMenu.Items) {
@@ -168,17 +163,17 @@ namespace Xamarin.PropertyEditing.Windows
 				}
 			}
 
-			foreach (UIElement focusable in rgbPane.GetFocusableDescendants ()) {
-				focusable.LostFocus += OnRGBComponentBoxBlur;
+			foreach (ColorComponentBox componentBox in this.rgbPane.GetDescendants<ColorComponentBox> ()) {
+				componentBox.ValueChanged += OnRGBComponentBoxChanged;
 			}
-			foreach (UIElement focusable in cmykPane.GetFocusableDescendants ()) {
-				focusable.LostFocus += OnCMYKComponentBoxBlur;
+			foreach (ColorComponentBox componentBox in this.cmykPane.GetDescendants<ColorComponentBox> ()) {
+				componentBox.ValueChanged += OnCMYKComponentBoxChanged;
 			}
-			foreach (UIElement focusable in hlsPane.GetFocusableDescendants ()) {
-				focusable.LostFocus += OnHLSComponentBoxBlur;
+			foreach (ColorComponentBox componentBox in this.hlsPane.GetDescendants<ColorComponentBox> ()) {
+				componentBox.ValueChanged += OnHLSComponentBoxChanged;
 			}
-			foreach (UIElement focusable in hsbPane.GetFocusableDescendants ()) {
-				focusable.LostFocus += OnHSBComponentBoxBlur;
+			foreach (ColorComponentBox componentBox in this.hsbPane.GetDescendants<ColorComponentBox> ()) {
+				componentBox.ValueChanged += OnHSBComponentBoxChanged;
 			}
 			foreach (Button button in this.GetDescendants<Button> ()) {
 				button.Click += OnComponentLabelClick;
@@ -198,79 +193,6 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 		}
 
-		void OnRGBComponentBoxBlur (object sender, RoutedEventArgs e)
-		{
-			var newColor = new CommonColor (R, G, B, A);
-			if (!newColor.Equals (Color)) {
-				Color = newColor;
-			}
-
-			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
-		}
-
-		void OnCMYKComponentBoxBlur (object sender, RoutedEventArgs e)
-		{
-			var newColor = CommonColor.FromCMYK (C, M, Y, K, A);
-			if (!newColor.Equals (Color)) {
-				Color = newColor;
-			}
-
-			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
-		}
-
-		void OnHLSComponentBoxBlur (object sender, RoutedEventArgs e)
-		{
-			var newColor = CommonColor.FromHLS (Hue, Lightness, Saturation, A);
-			if (!newColor.Equals (Color)) {
-				Color = newColor;
-			}
-
-			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
-		}
-
-		void OnHSBComponentBoxBlur (object sender, RoutedEventArgs e)
-		{
-			var newColor = CommonColor.FromHSB (Hue, Saturation, Brightness, A);
-			if (!newColor.Equals (Color)) {
-				Color = newColor;
-			}
-
-			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
-		}
-
-		void OnComponentLabelClick (object sender, RoutedEventArgs e)
-		{
-			if (ContextMenu != null) {
-				ContextMenu.PlacementTarget = sender as UIElement;
-				ContextMenu.IsOpen = true;
-				foreach (MenuItem item in ContextMenu.Items) {
-					CheckIfCurrentModel (item);
-				}
-			}
-		}
-
-		static void OnColorModelChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var that = d as ColorComponentsEditorControl;
-
-			var model = (ColorComponentModel)e.NewValue;
-
-			void UpdateVisibility (UIElement el, ColorComponentModel elModel)
-			{
-				if (el != null) el.Visibility = model == elModel ? Visibility.Visible : Visibility.Hidden;
-			}
-
-			UpdateVisibility (that.rgbPane, ColorComponentModel.RGB);
-			UpdateVisibility (that.cmykPane, ColorComponentModel.CMYK);
-			UpdateVisibility (that.hlsPane, ColorComponentModel.HLS);
-			UpdateVisibility (that.hsbPane, ColorComponentModel.HSB);
-		}
-
-		void CheckIfCurrentModel (MenuItem item)
-		{
-			item.IsChecked = item.Header.ToString () == Enum.GetName (typeof (ColorComponentModel), ColorComponentModel);
-		}
-
 		protected override void OnColorChanged (CommonColor oldColor, CommonColor newColor)
 		{
 			base.OnColorChanged (oldColor, newColor);
@@ -287,6 +209,84 @@ namespace Xamarin.PropertyEditing.Windows
 			if (Saturation != newColor.Saturation) Saturation = newColor.Saturation;
 			if (Lightness != newColor.Lightness) Lightness = newColor.Lightness;
 			if (Brightness != newColor.Brightness) Brightness = newColor.Brightness;
+		}
+
+		private UIElement rgbPane;
+		private UIElement cmykPane;
+		private UIElement hlsPane;
+		private UIElement hsbPane;
+
+		private void OnRGBComponentBoxChanged (object sender, RoutedEventArgs e)
+		{
+			var newColor = new CommonColor (R, G, B, A);
+			if (!newColor.Equals (Color)) {
+				Color = newColor;
+			}
+
+			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+		}
+
+		private void OnCMYKComponentBoxChanged (object sender, RoutedEventArgs e)
+		{
+			var newColor = CommonColor.FromCMYK (C, M, Y, K, A);
+			if (!newColor.Equals (Color)) {
+				Color = newColor;
+			}
+
+			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+		}
+
+		private void OnHLSComponentBoxChanged (object sender, RoutedEventArgs e)
+		{
+			var newColor = CommonColor.FromHLS (Hue, Lightness, Saturation, A);
+			if (!newColor.Equals (Color)) {
+				Color = newColor;
+			}
+
+			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+		}
+
+		private void OnHSBComponentBoxChanged (object sender, RoutedEventArgs e)
+		{
+			var newColor = CommonColor.FromHSB (Hue, Saturation, Brightness, A);
+			if (!newColor.Equals (Color)) {
+				Color = newColor;
+			}
+
+			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+		}
+
+		private void OnComponentLabelClick (object sender, RoutedEventArgs e)
+		{
+			if (ContextMenu != null) {
+				ContextMenu.PlacementTarget = sender as UIElement;
+				ContextMenu.IsOpen = true;
+				foreach (MenuItem item in ContextMenu.Items) {
+					CheckIfCurrentModel (item);
+				}
+			}
+		}
+
+		private static void OnColorModelChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var that = d as ColorComponentsEditorControl;
+
+			var model = (ColorComponentModel)e.NewValue;
+
+			void UpdateVisibility (UIElement el, ColorComponentModel elModel)
+			{
+				if (el != null) el.Visibility = model == elModel ? Visibility.Visible : Visibility.Hidden;
+			}
+
+			UpdateVisibility (that.rgbPane, ColorComponentModel.RGB);
+			UpdateVisibility (that.cmykPane, ColorComponentModel.CMYK);
+			UpdateVisibility (that.hlsPane, ColorComponentModel.HLS);
+			UpdateVisibility (that.hsbPane, ColorComponentModel.HSB);
+		}
+
+		private void CheckIfCurrentModel (MenuItem item)
+		{
+			item.IsChecked = item.Header.ToString () == Enum.GetName (typeof (ColorComponentModel), ColorComponentModel);
 		}
 	}
 }

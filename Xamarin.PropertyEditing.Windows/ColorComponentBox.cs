@@ -43,22 +43,38 @@ namespace Xamarin.PropertyEditing.Windows
 			set => SetValue (ValueProperty, value);
 		}
 
-		TextBox innerTextBox;
+		public static readonly RoutedEvent ValueChangedEvent =
+			EventManager.RegisterRoutedEvent (
+				nameof (ValueChanged), RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (ColorComponentBox));
+
+		public event RoutedEventHandler ValueChanged {
+			add { AddHandler (ValueChangedEvent, value); }
+			remove { RemoveHandler (ValueChangedEvent, value); }
+		}
 
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
 
-			innerTextBox = GetTemplateChild ("innerTextBox") as TextBox;
-			if (innerTextBox != null) {
-				innerTextBox.GotKeyboardFocus += (s, e) => {
-					innerTextBox.SelectAll ();
+			this.innerTextBox = GetTemplateChild ("innerTextBox") as TextBox;
+			if (this.innerTextBox != null) {
+				this.innerTextBox.GotKeyboardFocus += (s, e) => {
+					this.innerTextBox.SelectAll ();
+					previousValue = Value;
 				};
-				innerTextBox.PreviewMouseLeftButtonDown += (s, e) => {
-					innerTextBox.Focus ();
+				this.innerTextBox.PreviewMouseLeftButtonDown += (s, e) => {
+					this.innerTextBox.Focus ();
 					e.Handled = true;
+				};
+				this.innerTextBox.LostFocus += (s, e) => {
+					if (Value != previousValue) {
+						RaiseEvent (new RoutedEventArgs (ValueChangedEvent));
+					}
 				};
 			}
 		}
+
+		private TextBox innerTextBox;
+		private double previousValue;
 	}
 }
