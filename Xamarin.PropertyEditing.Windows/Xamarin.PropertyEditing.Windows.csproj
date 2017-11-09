@@ -55,6 +55,7 @@
     <Compile Include="EditorPropertySelector.cs" />
     <Compile Include="EnumEditorControl.cs" />
     <Compile Include="HeaderedContextMenu.cs" />
+    <Compile Include="GroupEditorControl.cs" />
     <Compile Include="HostEnvironment.cs" />
     <Compile Include="MenuButton.cs" />
     <Compile Include="NumericEditorControl.cs" />

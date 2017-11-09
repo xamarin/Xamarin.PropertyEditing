@@ -26,6 +26,85 @@
 		</Setter>
 	</Style>
 
+	<Style x:Key="GroupSelectionItem" TargetType="RadioButton">
+		<Setter Property="OverridesDefaultStyle" Value="True" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="Padding" Value="20,2,4,2" />
+		<Setter Property="MinHeight" Value="20" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="RadioButton">
+					<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+						<ContentPresenter />
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="Background" Value="{DynamicResource ListItemMouseOverBackgroundBrush}" />
+							<Setter Property="BorderBrush" Value="{DynamicResource ListItemMouseOverBorderBrush}" />
+							<Setter Property="Foreground" Value="{DynamicResource ListItemMouseOverForegroundBrush}"/>
+						</Trigger>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter Property="Background" Value="{DynamicResource ListItemSelectedBackgroundBrush}" />
+							<Setter Property="BorderBrush" Value="{DynamicResource ListItemSelectedBorderBrush}" />
+							<Setter Property="Foreground" Value="{DynamicResource ListItemSelectedForegroundBrush}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style TargetType="{x:Type local:GroupEditorControl}">
+		<Setter Property="Margin" Value="-19,0,0,0" />
+		<Setter Property="SelectorStyle">
+			<Setter.Value>
+				<Style TargetType="Border">
+					<Setter Property="BorderBrush" Value="{DynamicResource ListBackgroundBrush}" />
+					<Setter Property="Background" Value="{DynamicResource ListBackgroundBrush}" />
+				</Style>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="ItemsSource" Value="{Binding Properties}" />
+		<Setter Property="ItemTemplate">
+			<Setter.Value>
+				<DataTemplate DataType="vm:PropertyViewModel">
+					<RadioButton GroupName="GroupSelection" Style="{StaticResource GroupSelectionItem}" Content="{Binding}">
+						<RadioButton.ContentTemplate>
+							<DataTemplate>
+								<local:PropertyPresenter Label="{Binding Name,Mode=OneTime}" Content="{Binding Mode=OneTime}" ContentTemplateSelector="{StaticResource PropertyEditorSelector}" />
+							</DataTemplate>
+						</RadioButton.ContentTemplate>
+					</RadioButton>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="ContentTemplateSelector" Value="{StaticResource PropertyEditorSelector}" />
+		<Setter Property="ItemContainerStyle">
+			<Setter.Value>
+				<Style TargetType="ContentPresenter">
+					<Setter Property="Width" Value="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=ItemsPresenter}}" />
+				</Style>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:GroupEditorControl">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="*" />
+						</Grid.RowDefinitions>
+
+						<Border Style="{TemplateBinding SelectorStyle}" Grid.Row="0">
+							<ItemsPresenter Grid.IsSharedSizeScope="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+						</Border>
+						<ContentPresenter Grid.Row="1" Name="EditorPresenter" Content="{TemplateBinding SelectedItem}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style x:Key="ChoiceControlItem" BasedOn="{StaticResource {x:Type RadioButton}}" TargetType="RadioButton">
 		<Setter Property="Background" Value="{DynamicResource ToggleItemBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemBorderBrush}" />
