@@ -4,53 +4,67 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
 {
-	public class BrushTabbedEditorControl : PropertyEditorControl
+	public class BrushTabbedEditorControl
+		: Control
 	{
 		public BrushTabbedEditorControl()
 		{
 			DefaultStyleKey = typeof (BrushTabbedEditorControl);
 		}
 
-		BrushPropertyViewModel ViewModel => DataContext as BrushPropertyViewModel;
-
-		TabControl tabs;
-		TabItem noBrushTab;
-		TabItem solidColorTab;
-
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
 
-			tabs = GetTemplateChild ("brushTabs") as TabControl;
-			noBrushTab = GetTemplateChild ("noBrushTab") as TabItem;
-			solidColorTab = GetTemplateChild ("solidColorTab") as TabItem;
+			brushChoice = GetTemplateChild ("brushChoice") as ChoiceControl;
 
-			if (ViewModel.Value == null) {
-				tabs.SelectedItem = noBrushTab;
-			}
-			else if (ViewModel.Value is CommonSolidBrush solidBrush) {
-				tabs.SelectedItem = solidColorTab;
-			}
+			if (brushChoice != null) {
+				StorePreviousBrush ();
+				SelectTabFromBrush ();
 
-			tabs.SelectionChanged += (s, e) => {
-				if (ViewModel == null) return;
-				if (tabs.Items[tabs.SelectedIndex] is TabItem tab) {
+				brushChoice.SelectedItemChanged += (s, e) => {
+					if (ViewModel == null) return;
 					StorePreviousBrush ();
-					if (tab == noBrushTab) {
+					switch ((string)brushChoice.SelectedValue) {
+					case none:
 						ViewModel.Value = null;
-					}
-					else if (tab == solidColorTab) {
+						break;
+					case solid:
 						ViewModel.Value = ViewModel.Solid.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
+						break;
 					}
-				}
-			};
+				};
+			}
 		}
 
-		void StorePreviousBrush()
+		public static readonly string None = none;
+		public static readonly string Solid = solid;
+
+		private const string none = nameof (none);
+		private const string solid = nameof (solid);
+
+		private ChoiceControl brushChoice;
+
+		private BrushPropertyViewModel ViewModel => DataContext as BrushPropertyViewModel;
+
+		private void StorePreviousBrush ()
 		{
 			if (ViewModel == null) return;
 			if (ViewModel.Value is CommonSolidBrush solidBrush) {
 				ViewModel.Solid.PreviousSolidBrush = solidBrush;
+			}
+		}
+
+		private void SelectTabFromBrush ()
+		{
+			if (brushChoice == null) return;
+			switch (ViewModel?.Value) {
+			case null:
+				brushChoice.SelectedValue = none;
+				break;
+			case CommonSolidBrush _:
+				brushChoice.SelectedValue = solid;
+				break;
 			}
 		}
 	}

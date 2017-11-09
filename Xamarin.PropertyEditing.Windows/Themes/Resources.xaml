@@ -270,9 +270,9 @@
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
 						<Label Grid.Column="0" Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="Width" />
-						<local:DoubleUpDownControl Grid.Column="1" Value="{Binding Width}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}"/>
+						<local:DoubleUpDownControl x:Name="WidthTextBox" Grid.Column="1" Value="{Binding Width}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}"/>
 						<Label Name="HeightLabel" Grid.Column="2" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="Height" />
-						<local:DoubleUpDownControl Grid.Column="3" Value="{Binding Height}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}"/>
+						<local:DoubleUpDownControl x:Name="HeightTextBox" Grid.Column="3" Value="{Binding Height}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -361,32 +361,39 @@
 		</Setter>
 	</Style>
 
+	<local:BrushChoiceTemplateSelector x:Key="BrushChoiceTemplateSelector">
+		<local:BrushChoiceTemplateSelector.NoBrushTemplate>
+			<DataTemplate>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
+						<Polygon Points="0,0 24,0 0,14" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+						<Polygon Points="25,1 25,15 1,15" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+					</Canvas>
+				</RadioButton>
+			</DataTemplate>
+		</local:BrushChoiceTemplateSelector.NoBrushTemplate>
+		<local:BrushChoiceTemplateSelector.SolidBrushTemplate>
+			<DataTemplate>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
+						<Rectangle Canvas.Left="0" Canvas.Top="0" Width="25" Height="15" Stroke="{DynamicResource VectorGlyphBrush}" StrokeThickness="1"/>
+						<Rectangle Canvas.Left="2" Canvas.Top="2" Width="21" Height="11" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+					</Canvas>
+				</RadioButton>
+			</DataTemplate>
+		</local:BrushChoiceTemplateSelector.SolidBrushTemplate>
+	</local:BrushChoiceTemplateSelector>
+
 	<Style TargetType="local:BrushTabbedEditorControl">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BrushTabbedEditorControl">
 					<StackPanel>
-						<TabControl x:Name="brushTabs" MinHeight="20">
-							<TabItem Name="noBrushTab" MinWidth="40" MinHeight="25"
-								 ToolTip="{x:Static prop:Resources.NoBrush}" AutomationProperties.Name="{x:Static prop:Resources.NoBrush}" AutomationProperties.HelpText="{x:Static prop:Resources.NoBrush}">
-								<TabItem.Header>
-									<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
-										<Polygon Points="0,0 24,0 0,14" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
-										<Polygon Points="25,1 25,15 1,15" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
-									</Canvas>
-								</TabItem.Header>
-							</TabItem>
-							<TabItem Name="solidColorTab" MinWidth="40" MinHeight="25"
-								 ToolTip="{x:Static prop:Resources.SolidBrush}" AutomationProperties.Name="{x:Static prop:Resources.SolidBrush}" AutomationProperties.HelpText="{x:Static prop:Resources.SolidBrush}">
-								<TabItem.Header>
-									<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
-										<Rectangle Canvas.Left="0" Canvas.Top="0" Width="25" Height="15" Stroke="{DynamicResource VectorGlyphBrush}" StrokeThickness="1"/>
-										<Rectangle Canvas.Left="2" Canvas.Top="2" Width="21" Height="11" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
-									</Canvas>
-								</TabItem.Header>
-								<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
-							</TabItem>
-						</TabControl>
+						<local:ChoiceControl x:Name="brushChoice" ItemTemplateSelector="{StaticResource BrushChoiceTemplateSelector}" ItemTemplate="{x:Null}">
+							<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.None}" Name="noBrushTab" Tooltip="{x:Static prop:Resources.NoBrush}"/>
+							<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.Solid}" Name="solidColorTab" Tooltip="{x:Static prop:Resources.SolidBrush}"/>
+						</local:ChoiceControl>
+						<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
 						<Expander Name="advancedPropertyPanel" Template="{DynamicResource AdvancedPropertiesExpander}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
 							<Expander.Content>
 								<StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,2,0,6">
@@ -401,6 +408,11 @@
 					<ControlTemplate.Triggers>
 						<DataTrigger Binding="{Binding Path=Value}" Value="{x:Null}">
 							<Setter Property="Visibility" TargetName="advancedPropertyPanel" Value="Collapsed"/>
+							<Setter Property="Visibility" TargetName="solidBrushEditor" Value="Collapsed"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=Value, Converter={local:ObjectToTypeNameConverter}}" Value="CommonSolidBrush">
+							<Setter Property="Visibility" TargetName="advancedPropertyPanel" Value="Visible"/>
+							<Setter Property="Visibility" TargetName="solidBrushEditor" Value="Visible"/>
 						</DataTrigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
@@ -786,7 +798,7 @@
 								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
 						
-						<TextBox Name="hexEntry" Margin="2,0,2,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="0" Grid.Row="2"
+						<TextBox Name="hexEntry" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="77" Grid.Column="0" Grid.Row="2"
 							AutomationProperties.Name="{x:Static prop:Resources.HexValue}" AutomationProperties.HelpText="{x:Static prop:Resources.HexValue}" ToolTip="{x:Static prop:Resources.HexValue}"
 							Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
 					</Grid>

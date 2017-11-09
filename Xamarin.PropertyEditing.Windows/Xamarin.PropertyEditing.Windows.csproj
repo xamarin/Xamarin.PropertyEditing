@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="BoolEditorControl.cs" />
     <Compile Include="BrushBoxControl.cs" />
+    <Compile Include="BrushChoiceTemplateSelector.cs" />
     <Compile Include="BrushEditorControl.cs" />
     <Compile Include="BrushTabbedEditorControl.cs" />
     <Compile Include="CommonBrushToBrushConverter.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="NumericEditorControl.cs" />
     <Compile Include="NumericTemplateSelector.cs" />
     <Compile Include="NumericUpDownControl.cs" />
+    <Compile Include="ObjectToTypeNameConverter.cs" />
     <Compile Include="OppositeBoolConverter.cs" />
     <Compile Include="PointEditorControl.cs" />
     <Compile Include="PointHelper.cs" />
