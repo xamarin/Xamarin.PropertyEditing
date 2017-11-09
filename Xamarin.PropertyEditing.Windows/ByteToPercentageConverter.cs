@@ -21,14 +21,11 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			if (value is double doubleValue) {
 				if ((doubleValue < 0) || (doubleValue > 100)) return DependencyProperty.UnsetValue;
-				return (byte)(doubleValue * 2.55);
+				return System.Convert.ToByte (doubleValue * 2.55d);
 			}
 			return DependencyProperty.UnsetValue;
 		}
 
-		public override object ProvideValue (IServiceProvider serviceProvider)
-		{
-			return this;
-		}
+		public override object ProvideValue (IServiceProvider serviceProvider) => this;
 	}
 }
