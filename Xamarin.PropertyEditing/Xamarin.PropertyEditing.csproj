@@ -99,6 +99,7 @@
     <Compile Include="ViewModels\EnumPropertyViewModel.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ViewModels\EventViewModel.cs" />
+    <Compile Include="ViewModels\IFilterable.cs" />
     <Compile Include="ViewModels\NumericPropertyViewModel.cs" />
     <Compile Include="ViewModels\ObjectViewModel.cs" />
     <Compile Include="ViewModels\PanelViewModel.cs" />

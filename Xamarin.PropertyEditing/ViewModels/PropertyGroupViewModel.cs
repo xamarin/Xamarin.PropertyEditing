@@ -8,12 +8,17 @@ using System.Threading.Tasks;
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class PropertyGroupViewModel
-		: NotifyingObject
+		: EditorViewModel, IFilterable
 	{
-		public PropertyGroupViewModel (IEnumerable<PropertyViewModel> properties)
+		public PropertyGroupViewModel (string category, IEnumerable<PropertyViewModel> properties, IEnumerable<IObjectEditor> objEditors)
+			: base (objEditors)
 		{
+			if (category == null)
+				throw new ArgumentNullException (nameof(category));
 			if (properties == null)
 				throw new ArgumentNullException (nameof (properties));
+
+			Category = category;
 
 			this.properties = properties.ToArray ();
 			foreach (var vm in this.properties) {
@@ -24,10 +29,64 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		public IEnumerable<PropertyViewModel> Properties => this.propertiesView;
+		public IReadOnlyList<PropertyViewModel> Properties => this.propertiesView;
+
+		public override string Name
+		{
+			get;
+		}
+
+		public override string Category
+		{
+			get;
+		}
+
+		public bool HasChildElements => (this.propertiesView.Count > 0);
+
+		public string FilterText
+		{
+			get { return this.filterText; }
+			set
+			{
+				if (this.filterText == value)
+					return;
+
+				string oldFilter = this.filterText;
+				this.filterText = value;
+				Filter (oldFilter);
+				OnPropertyChanged();
+			}
+		}
 
 		private readonly PropertyViewModel[] properties;
 		private readonly ObservableCollectionEx<PropertyViewModel> propertiesView = new ObservableCollectionEx<PropertyViewModel> ();
+		private string filterText;
+
+		private void Filter (string oldFilter)
+		{
+			if (FilterText != null && (String.IsNullOrWhiteSpace (oldFilter) || FilterText.StartsWith (oldFilter, StringComparison.OrdinalIgnoreCase))) {
+				var current = new List<PropertyViewModel> (this.propertiesView);
+				for (int i = 0; i < current.Count; i++) {
+					var vm = current[i];
+					if (!MatchesFilter (vm))
+						this.propertiesView.Remove (vm);
+				}
+			} else {
+				this.propertiesView.Reset (this.properties.Where (MatchesFilter).OrderBy (p => p.Property.Name));
+			}
+
+			OnPropertyChanged (nameof(HasChildElements));
+		}
+
+		private bool MatchesFilter (PropertyViewModel vm)
+		{
+			if (!vm.IsAvailable)
+				return false;
+			if (String.IsNullOrWhiteSpace (FilterText))
+				return true;
+
+			return (vm.Property.Name.Contains (FilterText, StringComparison.OrdinalIgnoreCase));
+		}
 
 		private void OnChildPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
@@ -35,7 +94,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return;
 
 			var vm = (PropertyViewModel) sender;
-			if (vm.IsAvailable)
+			if (MatchesFilter (vm))
 				this.propertiesView.Add (vm);
 			else
 				this.propertiesView.Remove (vm);

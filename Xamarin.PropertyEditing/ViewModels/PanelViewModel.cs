@@ -5,7 +5,7 @@ using System.Linq;
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class PanelViewModel
-		: PropertiesViewModel
+		: PropertiesViewModel, IFilterable
 	{
 		public PanelViewModel (IEditorProvider provider)
 			: base (provider)
@@ -134,13 +134,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void Filter (string oldFilter)
 		{
-			bool longer = String.IsNullOrWhiteSpace (oldFilter) || FilterText.StartsWith (oldFilter, StringComparison.OrdinalIgnoreCase);
-			if (longer) {
+			if (FilterText != null && (String.IsNullOrWhiteSpace (oldFilter) || FilterText.StartsWith (oldFilter, StringComparison.OrdinalIgnoreCase))) {
 				var toRemove = new List<EditorViewModel> ();
 				foreach (var g in this.arranged) {
 					foreach (var vm in g) {
 						if (!MatchesFilter (vm))
 							toRemove.Add (vm);
+						else if (vm is IFilterable) {
+							var filterable = (IFilterable) vm;
+							filterable.FilterText = FilterText;
+							if (!filterable.HasChildElements)
+								toRemove.Add (vm);
+						}
 					}
 				}
 
