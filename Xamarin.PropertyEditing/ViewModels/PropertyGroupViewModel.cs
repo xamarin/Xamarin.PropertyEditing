@@ -31,10 +31,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public IReadOnlyList<PropertyViewModel> Properties => this.propertiesView;
 
-		public override string Name
-		{
-			get;
-		}
+		public override string Name => null;
 
 		public override string Category
 		{
@@ -64,6 +61,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void Filter (string oldFilter)
 		{
+			bool hadChildren = HasChildElements;
+
 			if (FilterText != null && (String.IsNullOrWhiteSpace (oldFilter) || FilterText.StartsWith (oldFilter, StringComparison.OrdinalIgnoreCase))) {
 				var current = new List<PropertyViewModel> (this.propertiesView);
 				for (int i = 0; i < current.Count; i++) {
@@ -75,7 +74,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.propertiesView.Reset (this.properties.Where (MatchesFilter).OrderBy (p => p.Property.Name));
 			}
 
-			OnPropertyChanged (nameof(HasChildElements));
+			if (hadChildren != HasChildElements)
+				OnPropertyChanged (nameof(HasChildElements));
 		}
 
 		private bool MatchesFilter (PropertyViewModel vm)

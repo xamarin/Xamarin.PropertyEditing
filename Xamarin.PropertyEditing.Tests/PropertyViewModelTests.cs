@@ -650,10 +650,12 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 		}
 
-		protected Mock<IPropertyInfo> GetPropertyMock ()
+		protected internal Mock<IPropertyInfo> GetPropertyMock (string name = null, string category = null)
 		{
 			var mock = new Mock<IPropertyInfo> ();
 			mock.SetupGet (pi => pi.Type).Returns (typeof(TValue));
+			mock.SetupGet (pi => pi.Name).Returns (name);
+			mock.SetupGet (pi => pi.Category).Returns (category);
 
 			AugmentPropertyMock (mock);
 
@@ -662,12 +664,12 @@ namespace Xamarin.PropertyEditing.Tests
 
 		protected Random Random => this.rand;
 
-		protected TValue GetRandomTestValue ()
+		protected internal TValue GetRandomTestValue ()
 		{
 			return GetRandomTestValue (this.rand);
 		}
 
-		protected TValue GetRandomTestValue (TValue notValue)
+		protected internal TValue GetRandomTestValue (TValue notValue)
 		{
 			TValue value = GetRandomTestValue ();
 			while (Equals (value, notValue)) {
@@ -677,7 +679,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return value;
 		}
 
-		protected MockObjectEditor GetBasicEditor (IPropertyInfo property = null)
+		protected internal MockObjectEditor GetBasicEditor (IPropertyInfo property = null)
 		{
 			if (property == null) {
 				var propertyMock = GetPropertyMock ();
@@ -693,21 +695,21 @@ namespace Xamarin.PropertyEditing.Tests
 			return editor;
 		}
 
-		protected MockObjectEditor GetBasicEditor (TValue value, IPropertyInfo property = null)
+		protected internal MockObjectEditor GetBasicEditor (TValue value, IPropertyInfo property = null)
 		{
 			var editor = GetBasicEditor (property);
 			editor.values[editor.Properties.First ()] = value;
 			return editor;
 		}
 
-		protected TViewModel GetBasicTestModel ()
+		protected internal TViewModel GetBasicTestModel ()
 		{
 			var editor = GetBasicEditor ();
 
 			return GetViewModel (editor.Properties.First(), new[] { editor });
 		}
 
-		protected TViewModel GetBasicTestModel (TValue value)
+		protected internal TViewModel GetBasicTestModel (TValue value)
 		{
 			var editor = GetBasicEditor (value);
 

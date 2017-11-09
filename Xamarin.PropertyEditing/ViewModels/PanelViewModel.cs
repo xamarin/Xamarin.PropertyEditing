@@ -89,9 +89,51 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			props = props.OrderBy (vm => vm.Name);
 
+			Dictionary<string, List<PropertyViewModel>> groupedTypeProperties = null;
+
 			this.arranged.Clear ();
 			foreach (var grouping in props.GroupBy (GetGroup).OrderBy (g => g.Key)) {
-				this.arranged.Add (grouping);
+				HashSet<EditorViewModel> remainingItems = null;
+
+				if (ArrangeMode == PropertyArrangeMode.Category) {
+					foreach (EditorViewModel editorVm in grouping) {
+						var vm = editorVm as PropertyViewModel;
+						if (vm != null && TargetPlatform.GroupedTypes.TryGetValue (vm.Property.Type, out string category)) {
+							if (remainingItems == null)
+								remainingItems = new HashSet<EditorViewModel> (grouping);
+
+							remainingItems.Remove (vm);
+
+							if (groupedTypeProperties == null)
+								groupedTypeProperties = new Dictionary<string, List<PropertyViewModel>> ();
+							if (!groupedTypeProperties.TryGetValue (category, out List<PropertyViewModel> group))
+								groupedTypeProperties[category] = group = new List<PropertyViewModel> ();
+
+							group.Add (vm);
+						}
+					}
+				}
+
+				if (remainingItems != null)
+					this.arranged.Add (grouping.Key, remainingItems);
+				else
+					this.arranged.Add (grouping);
+			}
+
+			if (groupedTypeProperties != null) { // Insert type-grouped properties back in sorted.
+				int i = 0;
+				foreach (var kvp in groupedTypeProperties.OrderBy (kvp => kvp.Key)) {
+					for (; i < this.arranged.Count; i++) {
+						var g = (IGrouping<string, EditorViewModel>) this.arranged[i];
+						// TODO: Are we translating categories? If so this needs to lookup the resource and be culture specific
+						if (String.Compare (g.Key, kvp.Key, StringComparison.Ordinal) > 0) {
+							this.arranged.Insert (i++, new ObservableGrouping<string, EditorViewModel> (kvp.Key) {
+								new PropertyGroupViewModel (kvp.Key, kvp.Value, ObjectEditors)
+							});
+							break;
+						}
+					}
+				}
 			}
 
 			ArrangedPropertiesChanged?.Invoke (this, EventArgs.Empty);
@@ -134,6 +176,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void Filter (string oldFilter)
 		{
+			bool hadChildren = HasChildElements;
+
 			if (FilterText != null && (String.IsNullOrWhiteSpace (oldFilter) || FilterText.StartsWith (oldFilter, StringComparison.OrdinalIgnoreCase))) {
 				var toRemove = new List<EditorViewModel> ();
 				foreach (var g in this.arranged) {
@@ -154,7 +198,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				OnAddEditors (Properties);
 			}
 
-			OnPropertyChanged (nameof(HasChildElements));
+			if (hadChildren != HasChildElements)
+				OnPropertyChanged (nameof(HasChildElements));
 		}
 
 		private string GetGroup (EditorViewModel vm)

@@ -460,6 +460,39 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public void GroupedPropertiesArrange ()
+		{
+			var intProvider = new IntegerPropertyViewModelTests ();
+			var stringProvider = new StringViewModelTests ();
+			var brushProvider = new SolidBrushPropertyViewModelTests();
+
+			var intProperty = intProvider.GetPropertyMock ("int", "A");
+			var stringProperty1 = stringProvider.GetPropertyMock ("string1");
+			var stringProperty2 = stringProvider.GetPropertyMock ("string2");
+			var brushProperty = brushProvider.GetPropertyMock ("brush", "C");
+
+			var editor = new MockObjectEditor (intProperty.Object, stringProperty1.Object, stringProperty2.Object, brushProperty.Object);
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (editor.Target)).ReturnsAsync (editor);
+
+			var platform = new TargetPlatform {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(string), "B" }
+				}
+			};
+
+			var vm = new PanelViewModel (provider.Object, platform);
+			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
+
+			vm.ArrangeMode = PropertyArrangeMode.Category;
+			vm.SelectedObjects.Add (editor.Target);
+			Assert.That (vm.ArrangedEditors[0].Key, Is.EqualTo ("A"));
+			Assert.That (vm.ArrangedEditors[1].Key, Is.EqualTo ("B"));
+			Assert.That (vm.ArrangedEditors[2].Key, Is.EqualTo ("C"));
+		}
+
+		[Test]
 		public async Task PropertyListCategoryFiltered ()
 		{
 			var provider = new ReflectionEditorProvider ();

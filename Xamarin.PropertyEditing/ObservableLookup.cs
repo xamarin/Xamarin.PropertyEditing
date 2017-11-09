@@ -261,7 +261,16 @@ namespace Xamarin.PropertyEditing
 			get { return this.groupings.Count + ((this.nullGrouping != null && this.nullGrouping.Count > 0) ? 1 : 0); }
 		}
 
-		IGroupingList<TKey, TElement> IReadOnlyList<IGroupingList<TKey, TElement>>.this[int index] => (IGroupingList<TKey, TElement>)this[index];
+		IGroupingList<TKey, TElement> IReadOnlyList<IGroupingList<TKey, TElement>>.this [int index]
+		{
+			get
+			{
+				if (index < 0 || index >= Count)
+					throw new ArgumentOutOfRangeException (nameof(index));
+
+				return (IGroupingList<TKey, TElement>)this[index];
+			}
+		}
 
 		/// <summary>
 		/// Gets the elements for <paramref name="key"/>.
