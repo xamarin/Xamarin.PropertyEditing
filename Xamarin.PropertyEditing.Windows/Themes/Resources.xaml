@@ -536,6 +536,20 @@
 		<Setter Property="Foreground" Value="{DynamicResource InputForegroundBrush}" />
 	</Style>
 
+	<Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
+		<Setter Property="OverridesDefaultStyle" Value="True" />
+		<Setter Property="IsTabStop" Value="False" />
+		<Setter Property="Focusable" Value="False" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="RepeatButton">
+					<Rectangle Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" Fill="{TemplateBinding Background}" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style x:Key="FocusVisual">
 		<Setter Property="Control.Template">
 			<Setter.Value>
