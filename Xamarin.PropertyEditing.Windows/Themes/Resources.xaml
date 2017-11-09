@@ -355,9 +355,9 @@
 					<Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
 						<Grid>
 							<Grid.ColumnDefinitions>
-								<ColumnDefinition MinWidth="100" MaxWidth="180" Width="0.4*" />
+								<ColumnDefinition Name="labelColumn" MinWidth="100" MaxWidth="180" Width="0.4*" />
 								<ColumnDefinition MinWidth="134" Width="0.6*" />
-								<ColumnDefinition Width="12" />
+								<ColumnDefinition Name="propertyButtonColumn" Width="12" />
 							</Grid.ColumnDefinitions>
 
 							<TextBlock Name="Label" Grid.Column="0" Text="{TemplateBinding Label}" ToolTip="{TemplateBinding Label}" Height="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
@@ -365,6 +365,13 @@
 							<local:PropertyButton Grid.Column="2" ValueSource="{Binding ValueSource}" />
 						</Grid>
 					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="Label" Value="{x:Null}">
+							<Setter TargetName="labelColumn" Property="MinWidth" Value="0" />
+							<Setter TargetName="labelColumn" Property="Width" Value="0" />
+							<Setter TargetName="propertyButtonColumn" Property="Width" Value="0" />
+						</Trigger>
+					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
