@@ -342,7 +342,7 @@
 					<Grid>
 						<local:BrushBoxControl Brush="{Binding Value, Converter={local:CommonBrushToBrushConverter}}"
 											   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0"
-											   MinHeight="20" BorderThickness="1" BorderBrush="{DynamicResource InputBorderBrush}"/>
+											   Height="24" BorderThickness="1" BorderBrush="{DynamicResource InputBorderBrush}"/>
 						<ToggleButton x:Name="brushBoxButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0" BorderThickness="0" Background="Transparent" Opacity="0"
 									  IsEnabled="{TemplateBinding IsEnabled}"
 									  IsHitTestVisible="{Binding ElementName=brushBoxPopup, Path=IsOpen, Mode=OneWay, Converter={StaticResource OppositeBoolConverter}}"
@@ -389,21 +389,30 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BrushTabbedEditorControl">
 					<StackPanel>
-						<local:ChoiceControl x:Name="brushChoice" ItemTemplateSelector="{StaticResource BrushChoiceTemplateSelector}" ItemTemplate="{x:Null}">
-							<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.None}" Name="noBrushTab" Tooltip="{x:Static prop:Resources.NoBrush}"/>
-							<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.Solid}" Name="solidColorTab" Tooltip="{x:Static prop:Resources.SolidBrush}"/>
-						</local:ChoiceControl>
-						<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
-						<Expander Name="advancedPropertyPanel" Template="{DynamicResource AdvancedPropertiesExpander}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-							<Expander.Content>
-								<StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,2,0,6">
-									<Label Content="{x:Static prop:Resources.Opacity}"/>
-									<local:ColorComponentBox
-									Value="{Binding Path=Opacity, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
-									ToolTip="{x:Static prop:Resources.Opacity}" AutomationProperties.Name="{x:Static prop:Resources.Opacity}" AutomationProperties.HelpText="{x:Static prop:Resources.Opacity}"/>
-								</StackPanel>
-							</Expander.Content>
-						</Expander>
+						<Border Padding="8,10">
+							<StackPanel>
+								<local:ChoiceControl x:Name="brushChoice" ItemTemplateSelector="{StaticResource BrushChoiceTemplateSelector}" ItemTemplate="{x:Null}" HorizontalAlignment="Stretch">
+									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.None}" Name="noBrushTab" Tooltip="{x:Static prop:Resources.NoBrush}"/>
+									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.Solid}" Name="solidColorTab" Tooltip="{x:Static prop:Resources.SolidBrush}"/>
+								</local:ChoiceControl>
+								<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
+							</StackPanel>
+						</Border>
+						<Border Padding="1">
+							<Expander Name="advancedPropertyPanel" Template="{DynamicResource AdvancedPropertiesExpander}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+								  Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}">
+								<Expander.Content>
+									<Border Padding="0,2,0,6" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Grid.Row="1">
+										<StackPanel Orientation="Horizontal">
+											<Label Content="{x:Static prop:Resources.Opacity}"/>
+											<local:ColorComponentBox
+										Value="{Binding Path=Opacity, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+										ToolTip="{x:Static prop:Resources.Opacity}" AutomationProperties.Name="{x:Static prop:Resources.Opacity}" AutomationProperties.HelpText="{x:Static prop:Resources.Opacity}"/>
+										</StackPanel>
+									</Border>
+								</Expander.Content>
+							</Expander>
+						</Border>
 					</StackPanel>
 					<ControlTemplate.Triggers>
 						<DataTrigger Binding="{Binding Path=Value}" Value="{x:Null}">
@@ -448,9 +457,9 @@
 							<local:ShadeEditorControl x:Name="shadeChooser" Color="{Binding Path=Solid.Shade, Mode=TwoWay}" HueColor="{Binding Path=Solid.HueColor, Mode=OneWay}"
 													  Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,0,1" Panel.ZIndex="1"/>
 							<local:HueEditorControl x:Name="hueChooser" HueColor="{Binding Path=Solid.HueColor, Mode=TwoWay}"
-													Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,3,1" Panel.ZIndex="0" Focusable="False"/>
+													Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="1,6,3,1" Panel.ZIndex="0" Focusable="False"/>
 							<local:CurrentColorEditorControl Color="{Binding Path=Solid.Shade, Mode=TwoWay}" InitialColor="{Binding Solid.InitialColor}" LastColor="{Binding Solid.LastColor}"
-															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,1,0" Panel.ZIndex="0" Focusable="False"/>
+															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,0,0" Panel.ZIndex="0" Focusable="False"/>
 						</Grid>
 						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Solid.Shade, Mode=TwoWay}" Margin="0,4,0,0"
 															Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Focusable="False"/>
@@ -896,15 +905,18 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BrushBoxControl">
 					<Grid>
-						<Label HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Center"
+						<Label HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
 							   Content="{x:Static prop:Resources.NoBrush}" Visibility="{TemplateBinding NoBrushVisible}"
-							   BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Grid.Column="0" Grid.Row="0"/>
+							   BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}}" BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}"
+							   Grid.Column="0" Grid.Row="0" Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}" Padding="0"/>
 						<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-								   Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"
-								   Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" Visibility="{TemplateBinding BrushVisible}" Fill="{StaticResource CheckerBoard}"/>
+								   Stroke="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" StrokeThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}}"
+								   Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" Visibility="{Binding BrushVisible, RelativeSource={RelativeSource TemplatedParent}}"
+								   Fill="{StaticResource CheckerBoard}" Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"/>
 						<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Panel.ZIndex="1"
-								   Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}"
-								   Fill="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brush}" Visibility="{TemplateBinding BrushVisible}"/>
+								   Stroke="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" StrokeThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}}"
+								   Fill="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brush}" Visibility="{TemplateBinding BrushVisible}"
+								   Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -941,13 +953,13 @@
 	</Style>
 
 	<ControlTemplate TargetType="Expander" x:Key="AdvancedPropertiesExpander">
-		<DockPanel>
+		<StackPanel Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}">
 			<ToggleButton
-				x:Name="ExpanderButton" DockPanel.Dock="Top" Template="{DynamicResource AdvancedPropertiesToggleButton}" Content="{TemplateBinding Header}"
-				IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" OverridesDefaultStyle="True" Padding="1.5,0">
+				x:Name="ExpanderButton" DockPanel.Dock="Top" Template="{DynamicResource AdvancedPropertiesToggleButton}" Content="{TemplateBinding Header}" VerticalAlignment="Stretch"
+				IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" OverridesDefaultStyle="True" Height="14" Padding="1.5,1,1.5,1">
 			</ToggleButton>
-			<ContentPresenter x:Name="ExpanderContent" Grid.Row="1" Visibility="Collapsed" DockPanel.Dock="Bottom"/>
-		</DockPanel>
+			<ContentPresenter x:Name="ExpanderContent" Grid.Row="1" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+		</StackPanel>
 		<ControlTemplate.Triggers>
 			<Trigger Property="IsExpanded" Value="True">
 				<Setter TargetName="ExpanderContent" Property="Visibility" Value="Visible"/>
@@ -956,8 +968,9 @@
 	</ControlTemplate>
 
 	<ControlTemplate x:Key="AdvancedPropertiesToggleButton" TargetType="{x:Type ToggleButton}">
-		<Border x:Name="ExpanderButtonBorder" Height="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource ToggleItemBackgroundBrush}" DockPanel.Dock="Top">
-			<Path x:Name="Chevron" Data="M 0,3 L 5,8 L 10,3" Stroke="{DynamicResource ToggleItemForegroundBrush}" Width="10" Height="10" StrokeThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"/>
+		<Border x:Name="ExpanderButtonBorder" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" DockPanel.Dock="Top">
+			<Path x:Name="Chevron" Data="M 0,3 L 5,8 L 10,3" Stroke="{DynamicResource ToggleItemForegroundBrush}" Width="10" Height="10" StrokeThickness="2"
+				  HorizontalAlignment="Stretch" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"/>
 		</Border>
 		<ControlTemplate.Triggers>
 			<Trigger Property="IsChecked" Value="True">
