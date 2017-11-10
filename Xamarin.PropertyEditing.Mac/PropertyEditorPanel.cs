@@ -67,7 +67,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				// Populate the Property Table
 				editorProvider = value;
-				viewModel = new PanelViewModel (editorProvider);
+				viewModel = new PanelViewModel (editorProvider, TargetPlatform.Default);
 				dataSource = new PropertyTableDataSource (viewModel);
 				propertyTable.Delegate = new PropertyTableDelegate (dataSource);
 				propertyTable.DataSource = dataSource;

@@ -1,12 +1,12 @@
-﻿namespace Xamarin.PropertyEditing.ViewModels
+namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class ObjectViewModel
 		: PropertiesViewModel
 	{
 		private object value;
 
-		public ObjectViewModel (IEditorProvider provider)
-			: base (provider)
+		public ObjectViewModel (IEditorProvider provider, TargetPlatform targetPlatform)
+			: base (provider, targetPlatform)
 		{
 		}
 

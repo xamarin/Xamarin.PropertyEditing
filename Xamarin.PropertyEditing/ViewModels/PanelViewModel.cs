@@ -7,8 +7,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class PanelViewModel
 		: PropertiesViewModel, IFilterable
 	{
-		public PanelViewModel (IEditorProvider provider)
-			: base (provider)
+		public PanelViewModel (IEditorProvider provider, TargetPlatform targetPlatform)
+			: base (provider, targetPlatform)
 		{
 			ArrangeModes = new List<ArrangeModeViewModel> {
 				new ArrangeModeViewModel (PropertyArrangeMode.Name, this),

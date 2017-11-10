@@ -15,12 +15,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal abstract class PropertiesViewModel
 		: NotifyingObject, INotifyDataErrorInfo
 	{
-		public PropertiesViewModel (IEditorProvider provider)
+		public PropertiesViewModel (IEditorProvider provider, TargetPlatform targetPlatform)
 		{
 			if (provider == null)
 				throw new ArgumentNullException (nameof (provider));
+			if (targetPlatform == null)
+				throw new ArgumentNullException (nameof(targetPlatform));
 
 			EditorProvider = provider;
+			TargetPlatform = targetPlatform;
 
 			this.selectedObjects.CollectionChanged += OnSelectedObjectsChanged;
 		}
@@ -85,6 +88,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.eventsEnabled = value;
 				OnPropertyChanged ();
 			}
+		}
+
+		public TargetPlatform TargetPlatform
+		{
+			get;
 		}
 
 		public bool HasErrors => this.errors.IsValueCreated && this.errors.Value.Count > 0;
