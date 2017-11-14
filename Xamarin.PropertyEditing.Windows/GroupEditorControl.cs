@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -14,6 +15,8 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public GroupEditorControl ()
 		{
+			FocusableProperty.OverrideMetadata (typeof(GroupEditorControl), new FrameworkPropertyMetadata (false));
+
 			ItemContainerGenerator.StatusChanged += OnItemContainerGeneratorOnStatusChanged;
 		}
 
@@ -63,6 +66,16 @@ namespace Xamarin.PropertyEditing.Windows
 
 			if (SelectedItem == null && Items.Count > 0)
 				SelectedIndex = 0;
+		}
+
+		protected override void OnKeyDown (KeyEventArgs e)
+		{
+			base.OnKeyDown (e);
+
+			if (e.Key == Key.Down && SelectedIndex < Items.Count - 1)
+				SetCurrentValue (SelectedIndexProperty, SelectedIndex + 1);
+			else if (e.Key == Key.Up && SelectedIndex >= 1)
+				SetCurrentValue (SelectedIndexProperty, SelectedIndex - 1);
 		}
 
 		private void OnItemContainerGeneratorOnStatusChanged (object sender, EventArgs args)
