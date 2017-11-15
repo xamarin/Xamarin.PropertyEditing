@@ -40,6 +40,11 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly string None = none;
 		public static readonly string Solid = solid;
 
+		internal void FocusFirstChild()
+		{
+			brushChoice?.FocusSelectedItem();
+		}
+
 		private const string none = nameof (none);
 		private const string solid = nameof (solid);
 

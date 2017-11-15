@@ -13,33 +13,34 @@ namespace Xamarin.PropertyEditing.Windows
 			DefaultStyleKey = typeof (BrushEditorControl);
 		}
 
-		BrushPropertyViewModel ViewModel => DataContext as BrushPropertyViewModel;
-
-		ButtonBase brushBoxButton;
-		Popup brushBoxPopup;
-
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
 
-			brushBoxButton = GetTemplateChild ("brushBoxButton") as ButtonBase;
-			brushBoxPopup = GetTemplateChild ("brushBoxPopup") as Popup;
+			this.brushBoxButton = GetTemplateChild ("brushBoxButton") as ButtonBase;
+			this.brushBoxPopup = GetTemplateChild ("brushBoxPopup") as Popup;
+			this.brushTabs = this.brushBoxPopup?.Child?.GetDescendants<BrushTabbedEditorControl>().FirstOrDefault();
 
-			if (IsEnabled && brushBoxButton != null && brushBoxPopup != null) {
-				brushBoxPopup.PlacementTarget = brushBoxButton;
-				brushBoxPopup.Opened += (s, e) => {
-					TabControl brushTabs = brushBoxPopup.Child?.GetDescendants<TabControl> ().FirstOrDefault ();
-					(brushTabs?.SelectedItem as TabItem)?.Focus ();
+			if (IsEnabled && this.brushBoxButton != null && this.brushBoxPopup != null) {
+				this.brushBoxPopup.PlacementTarget = this.brushBoxButton;
+				this.brushBoxPopup.Opened += (s, e) => {
+					this.brushTabs?.FocusFirstChild ();
 				};
-				brushBoxPopup.Closed += (s, e) => {
-					brushBoxButton.Focus ();
+				this.brushBoxPopup.Closed += (s, e) => {
+					this.brushBoxButton.Focus ();
 				};
-				brushBoxPopup.KeyUp += (s, e) => {
+				this.brushBoxPopup.KeyUp += (s, e) => {
 					if (e.Key == Key.Escape) {
-						brushBoxPopup.IsOpen = false;
+						this.brushBoxPopup.IsOpen = false;
 					}
 				};
 			}
 		}
+
+		private ButtonBase brushBoxButton;
+		private Popup brushBoxPopup;
+		private BrushTabbedEditorControl brushTabs;
+
+		private BrushPropertyViewModel ViewModel => DataContext as BrushPropertyViewModel;
 	}
 }
