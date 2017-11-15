@@ -400,15 +400,15 @@
 						</Border>
 						<Border Padding="1">
 							<Expander Name="advancedPropertyPanel" Template="{DynamicResource AdvancedPropertiesExpander}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
-								  Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}">
+								  Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Foreground="{DynamicResource PanelForegroundBrush}">
 								<Expander.Content>
-									<Border Padding="0,2,0,6" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Grid.Row="1">
-										<StackPanel Orientation="Horizontal">
-											<Label Content="{x:Static prop:Resources.Opacity}"/>
+									<Border Padding="19,6,0,6" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}">
+										<local:PropertyPresenter Label="{x:Static prop:Resources.Opacity}">
 											<local:ColorComponentBox
-										Value="{Binding Path=Opacity, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
-										ToolTip="{x:Static prop:Resources.Opacity}" AutomationProperties.Name="{x:Static prop:Resources.Opacity}" AutomationProperties.HelpText="{x:Static prop:Resources.Opacity}"/>
-										</StackPanel>
+												Value="{Binding Path=Opacity, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+												ToolTip="{x:Static prop:Resources.Opacity}" AutomationProperties.Name="{x:Static prop:Resources.Opacity}" AutomationProperties.HelpText="{x:Static prop:Resources.Opacity}"
+												HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"/>
+										</local:PropertyPresenter>
 									</Border>
 								</Expander.Content>
 							</Expander>
