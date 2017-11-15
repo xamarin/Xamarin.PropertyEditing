@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -6,6 +7,8 @@ using System.Windows.Shapes;
 
 namespace Xamarin.PropertyEditing.Windows
 {
+	[TemplatePart (Name = "Border", Type = typeof(UIElement))]
+	[TemplatePart (Name = "Indicator", Type = typeof(Rectangle))]
 	internal class PropertyButton
 		: Control
 	{
@@ -64,15 +67,19 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnApplyTemplate ();
 
-			this.border = (Border)GetTemplateChild ("Border");
 			this.indicator = (Rectangle)GetTemplateChild ("Indicator");
+			if (this.indicator == null)
+				throw new InvalidOperationException ("PropertyButton template Missing part Indicator");
 
-			this.border.MouseDown += OnBorderMouseDown;
+			var border = GetTemplateChild ("Border") as UIElement;
+			if (border == null)
+				throw new InvalidOperationException ("PropertyButton template Missing part Border");
+
+			border.MouseDown += OnBorderMouseDown;
 
 			OnValueSourceChanged (ValueSource);
 		}
 
-		private Border border;
 		private Rectangle indicator;
 		private ContextMenu menu;
 
