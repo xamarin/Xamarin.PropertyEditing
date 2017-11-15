@@ -807,7 +807,7 @@
 								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
 						
-						<TextBox Name="hexEntry" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="77" Grid.Column="0" Grid.Row="2"
+						<TextBox Name="hexEntry" HorizontalContentAlignment="Left" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="77" Grid.Column="0" Grid.Row="2"
 							AutomationProperties.Name="{x:Static prop:Resources.HexValue}" AutomationProperties.HelpText="{x:Static prop:Resources.HexValue}" ToolTip="{x:Static prop:Resources.HexValue}"
 							Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
 					</Grid>
