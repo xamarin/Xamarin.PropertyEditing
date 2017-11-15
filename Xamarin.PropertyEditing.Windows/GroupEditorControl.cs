@@ -17,7 +17,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			FocusableProperty.OverrideMetadata (typeof(GroupEditorControl), new FrameworkPropertyMetadata (false));
 
-			ItemContainerGenerator.StatusChanged += OnItemContainerGeneratorOnStatusChanged;
+			ItemContainerGenerator.StatusChanged += OnItemContainerGeneratorStatusChanged;
 		}
 
 		public static readonly DependencyProperty ContentTemplateProperty = DependencyProperty.Register (
@@ -52,11 +52,18 @@ namespace Xamarin.PropertyEditing.Windows
 			if (e.AddedItems.Count == 0)
 				return;
 
-			var presenter = (ContentPresenter) ItemContainerGenerator.ContainerFromItem (e.AddedItems[0]);
-			if (presenter == null || VisualTreeHelper.GetChildrenCount (presenter) == 0)
+			DependencyObject container = ItemContainerGenerator.ContainerFromItem (e.AddedItems[0]);
+			if (container == null || VisualTreeHelper.GetChildrenCount (container) == 0)
 				return;
 
-			var toggle = (ToggleButton) VisualTreeHelper.GetChild (presenter, 0);
+			var presenter = container as ContentPresenter;
+			if (presenter == null)
+				throw new InvalidOperationException ("Unexpected visual tree");
+
+			var toggle = VisualTreeHelper.GetChild (presenter, 0) as ToggleButton;
+			if (toggle == null)
+				throw new InvalidOperationException ("Children must be ToggleButton's");
+
 			toggle.IsChecked = true;
 		}
 
@@ -78,7 +85,7 @@ namespace Xamarin.PropertyEditing.Windows
 				SetCurrentValue (SelectedIndexProperty, SelectedIndex - 1);
 		}
 
-		private void OnItemContainerGeneratorOnStatusChanged (object sender, EventArgs args)
+		private void OnItemContainerGeneratorStatusChanged (object sender, EventArgs args)
 		{
 			if (ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
 				return;
