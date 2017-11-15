@@ -60,7 +60,7 @@
     <Compile Include="BoolViewModelTests.cs" />
     <Compile Include="BrushPropertyViewModelTests.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="IGetAndSet.cs" />
+    <Compile Include="IPropertyConverter.cs" />
     <Compile Include="MockControls\MockControl.cs" />
     <Compile Include="MockControls\MockSampleControl.cs" />
     <Compile Include="MockControls\MockWpfButton.cs" />

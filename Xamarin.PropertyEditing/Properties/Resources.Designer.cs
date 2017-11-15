@@ -61,6 +61,24 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Convert to Local Value.
+        /// </summary>
+        public static string ConvertToLocalValue {
+            get {
+                return ResourceManager.GetString("ConvertToLocalValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Expression….
+        /// </summary>
+        public static string CustomExpressionEllipsis {
+            get {
+                return ResourceManager.GetString("CustomExpressionEllipsis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Event handlers for the selected element.
         /// </summary>
         public static string EventHandlersSelectedElement {
@@ -129,6 +147,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string PropertiesSelectedElement {
             get {
                 return ResourceManager.GetString("PropertiesSelectedElement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        public static string Reset {
+            get {
+                return ResourceManager.GetString("Reset", resourceCulture);
             }
         }
         

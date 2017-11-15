@@ -12,7 +12,7 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			var mockControl = item as MockControl;
 			if (mockControl != null)
-				return Task.FromResult<IObjectEditor> (new MockObjectEditor (mockControl));
+				return Task.FromResult<IObjectEditor> (new MockObjectEditor (mockControl) { SupportsDefault = true });
 			return Task.FromResult<IObjectEditor> (new ReflectionObjectEditor (item));
 		}
 	}

@@ -37,6 +37,14 @@
 	<SolidColorBrush x:Key="ListItemDisabledForegroundBrush">#656565</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuSeparatorBrush">#333337</SolidColorBrush>
 
+	<SolidColorBrush x:Key="LiteralMarkerBrush">#55000000</SolidColorBrush>
+	<SolidColorBrush x:Key="PropertyMenuDotIconBorderBrush">#FF999999</SolidColorBrush>
+	<SolidColorBrush x:Key="PropertyButtonBackgroundBrush">#F2F2F6</SolidColorBrush>
+	<SolidColorBrush x:Key="PropertyButtonBorderBrush">#717171</SolidColorBrush>
+	<SolidColorBrush x:Key="PropertyLocalValueBrush">#F1F1F1</SolidColorBrush>
+	<SolidColorBrush x:Key="PropertyBoundValueBrush">#FFCF00</SolidColorBrush>
+	<SolidColorBrush x:Key="PropertyResourceBrush">#00FF00</SolidColorBrush>
+
 	<SolidColorBrush x:Key="SearchControlBackgroundBrush">#333337</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlBorderBrush">#3F3F46</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlForegroundBrush">#D0D2D3</SolidColorBrush>

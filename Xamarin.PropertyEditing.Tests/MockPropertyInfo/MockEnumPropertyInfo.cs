@@ -44,19 +44,9 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 		public IReadOnlyDictionary<string, TUnderlying> PredefinedValues { get; }
 
-		private TUnderlying[] Values;
-		private ulong[] LongValues;
-
-		/// <summary>
-		/// Gets the value or list of values of the described property on the target, as an `TUnderlying`
-		/// or as a `IEnumerable` of `TUnderlying`.
-		/// </summary>
-		/// <typeparam name="TValue">The result type desired, should be `TUnderlying` or an `IEnumerable` of `TUnderlying`.</typeparam>
-		/// <param name="target">The control from which to get the value.</param>
-		/// <returns>The value or list of values.</returns>
-		public override TValue GetValue<TValue> (MockControl target)
+		public override bool TryConvert<TFrom> (TFrom fromValue, Type toType, out object toValue)
 		{
-			var enumerationType = typeof (TValue)
+			var enumerationType = toType
 				.GetInterfaces ()
 				.FirstOrDefault (i => i.IsGenericType && i.GetGenericTypeDefinition () == typeof (IEnumerable<>));
 			if (enumerationType != null) {
@@ -65,48 +55,38 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 				var listOfEnumeratedType = typeof (List<>).MakeGenericType (enumeratedType);
 				// Build the list of values through a trip to uint64
 				unchecked {
-					var realValue = Convert.ToUInt64 (target.GetValue<TEnum> (this));
+					var realValue = Convert.ToUInt64 (fromValue);
 					var values = (IList)Activator.CreateInstance (listOfEnumeratedType);
 					for (var i = 0; i < Values.Length; i++) {
 						if ((LongValues[i] & realValue) != 0)
 							values.Add (Convert.ChangeType(Values[i], enumeratedType));
 					}
 
-					return (TValue)values;
+					toValue = values;
+					return true;
 				}
-			}
-			else {
-				// Get a single value.
-				var value = target.GetValue<TEnum> (this);
-				return (TValue)Convert.ChangeType (value, typeof (TValue));
-			}
-		}
-
-		/// <summary>
-		/// Sets a value or a list of values for the represented property on the target control.
-		/// </summary>
-		/// <typeparam name="TValue">An `IEnumerable` of the values to set, or the value to set.</typeparam>
-		/// <param name="target">The object on which the value must be set.</param>
-		/// <param name="value">The value to set.</param>
-		public override void SetValue<TValue> (MockControl target, TValue value)
-		{
-			var values = value as IEnumerable;
-			if (values != null) {
+			} else if (fromValue is IEnumerable) {
 				if (!IsValueCombinable)
-					throw new ArgumentException ("Can't set a combined value on a non-combinable type", nameof (value));
+					throw new ArgumentException ("Can't set a combined value on a non-combinable type", nameof(TFrom));
 
 				unchecked {
-					var realValue = Convert.ToUInt64 (default (TUnderlying));
-					foreach (var val in values) {
+					var realValue = Convert.ToUInt64 (default(TUnderlying));
+					foreach (var val in (IEnumerable) fromValue) {
 						realValue |= Convert.ToUInt64 (val);
 					}
 
-					target.SetValue (this, (TEnum)Enum.ToObject (typeof (TEnum), realValue));
+					toValue = realValue;
+					return true;
 				}
+			} else if (toType.IsEnum) {
+				toValue = Enum.ToObject (toType, fromValue);
+				return true;
 			}
-			else {
-				target.SetValue (this, (TEnum)Enum.ToObject (typeof (TEnum), value));
-			}
+
+			return base.TryConvert (fromValue, toType, out toValue);
 		}
+
+		private TUnderlying[] Values;
+		private ulong[] LongValues;
 	}
 }
