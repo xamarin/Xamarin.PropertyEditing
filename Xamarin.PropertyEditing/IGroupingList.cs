@@ -28,10 +28,5 @@ namespace Xamarin.PropertyEditing
 		{
 			get;
 		}
-
-		public void QuietClear()
-		{
-			Items.Clear ();
-		}
 	}
 }

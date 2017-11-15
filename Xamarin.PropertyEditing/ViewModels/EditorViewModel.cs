@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -23,6 +19,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 			observableEditors.AddItems (editors); // Purposefully after the event hookup
 
 			//TODO: Property is being set after the editors added trickle down since its in the subclass
+		}
+
+		public abstract string Category
+		{
+			get;
+		}
+
+		public abstract string Name
+		{
+			get;
 		}
 
 		/// <summary>
@@ -44,7 +50,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public ICollection<IObjectEditor> Editors
 		{
 			get;
-			private set;
 		}
 
 		protected static AsyncWorkQueue AsyncWork

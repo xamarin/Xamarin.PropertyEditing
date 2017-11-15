@@ -15,12 +15,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal abstract class PropertiesViewModel
 		: NotifyingObject, INotifyDataErrorInfo
 	{
-		public PropertiesViewModel (IEditorProvider provider)
+		public PropertiesViewModel (IEditorProvider provider, TargetPlatform targetPlatform)
 		{
 			if (provider == null)
 				throw new ArgumentNullException (nameof (provider));
+			if (targetPlatform == null)
+				throw new ArgumentNullException (nameof(targetPlatform));
 
 			EditorProvider = provider;
+			TargetPlatform = targetPlatform;
 
 			this.selectedObjects.CollectionChanged += OnSelectedObjectsChanged;
 		}
@@ -28,7 +31,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
 		/// <remarks>Consumers should check for <see cref="INotifyCollectionChanged"/> and hook appropriately.</remarks>
-		public IReadOnlyList<PropertyViewModel> Properties => this.properties;
+		public IReadOnlyList<EditorViewModel> Properties => this.editors;
 
 		public IReadOnlyList<EventViewModel> Events => this.events;
 
@@ -87,12 +90,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public TargetPlatform TargetPlatform
+		{
+			get;
+		}
+
 		public bool HasErrors => this.errors.IsValueCreated && this.errors.Value.Count > 0;
 
 		protected IEditorProvider EditorProvider
 		{
 			get;
 		}
+
+		protected IReadOnlyList<IObjectEditor> ObjectEditors => this.objEditors;
 
 		public IEnumerable GetErrors (string propertyName)
 		{
@@ -148,28 +158,28 @@ namespace Xamarin.PropertyEditing.ViewModels
 				case NotifyCollectionChangedAction.Remove:
 					removedEditors = new IObjectEditor[e.OldItems.Count];
 					for (int i = 0; i < e.OldItems.Count; i++) {
-						IObjectEditor editor = this.editors.First (oe => oe.Target == e.OldItems[i]);
+						IObjectEditor editor = this.objEditors.First (oe => oe.Target == e.OldItems[i]);
 						INotifyCollectionChanged notifier = editor.Properties as INotifyCollectionChanged;
 						if (notifier != null)
 							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
 
 						removedEditors[i] = editor;
-						this.editors.Remove (editor);
+						this.objEditors.Remove (editor);
 					}
 					break;
 
 				case NotifyCollectionChangedAction.Replace:
 				case NotifyCollectionChangedAction.Move:
 				case NotifyCollectionChangedAction.Reset: {
-					removedEditors = new IObjectEditor[this.editors.Count];
+					removedEditors = new IObjectEditor[this.objEditors.Count];
 					for (int i = 0; i < removedEditors.Length; i++) {
-						removedEditors[i] = this.editors[i];
+						removedEditors[i] = this.objEditors[i];
 						INotifyCollectionChanged notifier = removedEditors[i].Properties as INotifyCollectionChanged;
 						if (notifier != null)
 							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
 					}
 
-					this.editors.Clear ();
+					this.objEditors.Clear ();
 
 					newEditors = await AddEditorsAsync (this.selectedObjects);
 					break;
@@ -180,11 +190,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			tcs.SetResult (true);
 		}
 
-		protected virtual void OnAddProperties (IEnumerable<PropertyViewModel> properties)
+		protected virtual void OnAddEditors (IEnumerable<EditorViewModel> editors)
 		{
 		}
 
-		protected virtual void OnRemoveProperties (IEnumerable<PropertyViewModel> properties)
+		protected virtual void OnRemoveEditors (IEnumerable<EditorViewModel> editors)
 		{
 		}
 
@@ -196,8 +206,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private bool nameReadOnly;
 		private bool eventsEnabled;
 		private string typeName, objectName;
-		private readonly List<IObjectEditor> editors = new List<IObjectEditor> ();
-		private readonly ObservableCollectionEx<PropertyViewModel> properties = new ObservableCollectionEx<PropertyViewModel> ();
+		private readonly List<IObjectEditor> objEditors = new List<IObjectEditor> ();
+		private readonly ObservableCollectionEx<EditorViewModel> editors = new ObservableCollectionEx<EditorViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
 		private readonly ObservableCollectionEx<EventViewModel> events = new ObservableCollectionEx<EventViewModel> (); 
 		private readonly Lazy<Dictionary<string, string>> errors = new Lazy<Dictionary<string, string>>();
@@ -207,16 +217,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 			ErrorsChanged?.Invoke (this, e);
 		}
 
-		private void AddProperties (IEnumerable<PropertyViewModel> properties)
+		private void AddProperties (IEnumerable<EditorViewModel> newEditors)
 		{
-			this.properties.AddRange (properties);
-			OnAddProperties (properties);
+			this.editors.AddRange (newEditors);
+			OnAddEditors (newEditors);
 		}
 
-		private void RemoveProperties (IEnumerable<PropertyViewModel> properties)
+		private void RemoveProperties (IEnumerable<EditorViewModel> oldEditors)
 		{
-			this.properties.RemoveRange (properties);
-			OnRemoveProperties (properties);
+			this.editors.RemoveRange (oldEditors);
+			OnRemoveEditors (oldEditors);
 		}
 
 		private async void SetObjectName (string value)
@@ -257,31 +267,31 @@ namespace Xamarin.PropertyEditing.ViewModels
 			TypeName = null;
 			SetNameable (null);
 			SetCurrentObjectName (null, isReadonly: true);
-			this.properties.Clear ();
+			this.editors.Clear ();
 			this.events.Clear ();
 			OnClearProperties ();
 		}
 
 		private void UpdateMembers (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
 		{
-			if (this.editors.Count == 0) {
+			if (this.objEditors.Count == 0) {
 				ClearMembers ();
 				return;
 			}
 
 			Task<string> nameQuery = null;
-			INameableObject firstNameable = this.editors[0] as INameableObject;
-			if (this.editors.Count == 1) {
+			INameableObject firstNameable = this.objEditors[0] as INameableObject;
+			if (this.objEditors.Count == 1) {
 				nameQuery = firstNameable?.GetNameAsync ();
 			}
 
-			IObjectEventEditor events = this.editors[0] as IObjectEventEditor;
+			IObjectEventEditor events = this.objEditors[0] as IObjectEventEditor;
 			var newEventSet = new HashSet<IEventInfo> (events?.Events ?? Enumerable.Empty<IEventInfo> ());
 
-			string newTypeName = this.editors[0].TypeName;
-			var newPropertySet = new HashSet<IPropertyInfo> (this.editors[0].Properties);
-			for (int i = 1; i < this.editors.Count; i++) {
-				IObjectEditor editor = this.editors[i];
+			string newTypeName = this.objEditors[0].TypeName;
+			var newPropertySet = new HashSet<IPropertyInfo> (this.objEditors[0].Properties);
+			for (int i = 1; i < this.objEditors.Count; i++) {
+				IObjectEditor editor = this.objEditors[i];
 				newPropertySet.IntersectWith (editor.Properties);
 
 				if (editor is IObjectEventEditor) {
@@ -293,7 +303,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					firstNameable = editor as INameableObject;
 
 				if (newTypeName != editor.TypeName)
-					newTypeName = String.Format (PropertyEditing.Properties.Resources.MultipleTypesSelected, this.editors.Count);
+					newTypeName = String.Format (PropertyEditing.Properties.Resources.MultipleTypesSelected, this.objEditors.Count);
 			}
 
 			TypeName = newTypeName;
@@ -303,20 +313,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 			EventsEnabled = events != null;
 			UpdateEvents (newEventSet, removedEditors, newEditors);
 
-			string name = (this.editors.Count > 1) ? String.Format (PropertyEditing.Properties.Resources.MultipleObjectsSelected, this.editors.Count) : PropertyEditing.Properties.Resources.NoName;
-			if (this.editors.Count == 1) {
+			string name = (this.objEditors.Count > 1) ? String.Format (PropertyEditing.Properties.Resources.MultipleObjectsSelected, this.objEditors.Count) : PropertyEditing.Properties.Resources.NoName;
+			if (this.objEditors.Count == 1) {
 				string tname = nameQuery?.Result;
 				if (tname != null)
 					name = tname;
 			}
 
 			SetNameable (firstNameable);
-			SetCurrentObjectName (name, this.editors.Count > 1);
+			SetCurrentObjectName (name, this.objEditors.Count > 1);
 		}
 
 		private void UpdateEvents (HashSet<IEventInfo> newSet, IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
 		{
-			if (this.editors.Count > 1) {
+			if (this.objEditors.Count > 1) {
 				this.events.Clear ();
 				return;
 			}
@@ -343,14 +353,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (toRemove.Count > 0)
 				this.events.RemoveRange (toRemove);
 			if (newSet.Count > 0) {
-				this.events.Reset (this.events.Concat (newSet.Select (i => new EventViewModel (i, this.editors))).OrderBy (e => e.Event.Name).ToArray());
+				this.events.Reset (this.events.Concat (newSet.Select (i => new EventViewModel (i, this.objEditors))).OrderBy (e => e.Event.Name).ToArray());
 			}
 		}
 
 		private void UpdateProperties (HashSet<IPropertyInfo> newSet, IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
 		{
 			List<PropertyViewModel> toRemove = new List<PropertyViewModel> ();
-			foreach (PropertyViewModel vm in this.properties.ToArray ()) {
+			foreach (PropertyViewModel vm in this.editors.ToArray ()) {
 				if (!newSet.Remove (vm.Property)) {
 					toRemove.Add (vm);
 					vm.Editors.Clear ();
@@ -388,7 +398,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					notifier.CollectionChanged += OnObjectEditorPropertiesChanged;
 			}
 
-			this.editors.AddRange (newEditors);
+			this.objEditors.AddRange (newEditors);
 			return newEditors;
 		}
 
@@ -404,17 +414,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 			Type hasPredefinedValues = interfaces.FirstOrDefault (t => t.IsGenericType && t.GetGenericTypeDefinition () == typeof(IHavePredefinedValues<>));
 			if (hasPredefinedValues != null) {
 				Type type = typeof(PredefinedValuesViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0]);
-				return (PropertyViewModel) Activator.CreateInstance (type, property, this.editors);
+				return (PropertyViewModel) Activator.CreateInstance (type, property, this.objEditors);
 			} else if (property.Type.IsEnum) {
 				Type type = typeof(EnumPropertyViewModel<>).MakeGenericType (property.Type);
-				return (PropertyViewModel) Activator.CreateInstance (type, property, this.editors);
+				return (PropertyViewModel) Activator.CreateInstance (type, property, this.objEditors);
 			}
 
 			Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel> vmFactory;
 			if (ViewModelMap.TryGetValue (property.Type, out vmFactory))
-				return vmFactory (property, this.editors);
+				return vmFactory (property, this.objEditors);
 			
-			return new StringPropertyViewModel (property, this.editors);
+			return new StringPropertyViewModel (property, this.objEditors);
 		}
 
 		private Task busyTask;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -41,6 +41,15 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			get { return (IEditorProvider) GetValue (EditorProviderProperty); }
 			set { SetValue (EditorProviderProperty, value); }
+		}
+
+		public static readonly DependencyProperty TargetPlatformProperty = DependencyProperty.Register (
+			"TargetPlatform", typeof(TargetPlatform), typeof(PropertyEditorPanel), new PropertyMetadata (TargetPlatform.Default));
+
+		public TargetPlatform TargetPlatform
+		{
+			get { return (TargetPlatform) GetValue (TargetPlatformProperty); }
+			set { SetValue (TargetPlatformProperty, value); }
 		}
 
 		private static readonly DependencyPropertyKey SelectedItemsPropertyKey = DependencyProperty.RegisterReadOnly (
@@ -149,7 +158,7 @@ namespace Xamarin.PropertyEditing.Windows
 			if (this.vm != null)
 				this.vm.PropertyChanged -= OnVmPropertyChanged;
 
-			this.root.DataContext = this.vm = (EditorProvider != null) ? new PanelViewModel (EditorProvider) : null;
+			this.root.DataContext = this.vm = (EditorProvider != null) ? new PanelViewModel (EditorProvider, TargetPlatform) : null;
 			
 			if (this.vm != null)
 				this.vm.PropertyChanged += OnVmPropertyChanged;
@@ -168,9 +177,9 @@ namespace Xamarin.PropertyEditing.Windows
 
 			Binding itemsSource;
 			if (newMode == PropertyArrangeMode.Name)
-				itemsSource = new Binding ("ArrangedProperties[0]");
+				itemsSource = new Binding ("ArrangedEditors[0]");
 			else
-				itemsSource = new Binding ("ArrangedProperties");
+				itemsSource = new Binding ("ArrangedEditors");
 
 			this.items.SetBinding (ItemsControl.ItemsSourceProperty, itemsSource);
 		}

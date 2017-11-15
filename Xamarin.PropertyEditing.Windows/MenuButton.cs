@@ -26,17 +26,30 @@ namespace Xamarin.PropertyEditing.Windows
 			set { SetValue (HeaderTemplateProperty, value); }
 		}
 
+		protected override void OnClick ()
+		{
+			base.OnClick ();
+
+			if (ContextMenu != null)
+				OpenMenu();
+		}
+
 		protected override void OnMouseDown (MouseButtonEventArgs e)
 		{
 			if (ContextMenu == null)
 				return;
 
-			ContextMenu.PlacementTarget = this;
-			ContextMenu.Placement = PlacementMode.Bottom;
-			ContextMenu.IsOpen = true;
+			OpenMenu ();
 			e.Handled = true;
 
 			base.OnMouseDown (e);
+		}
+
+		private void OpenMenu ()
+		{
+			ContextMenu.PlacementTarget = this;
+			ContextMenu.Placement = PlacementMode.Bottom;
+			ContextMenu.IsOpen = true;
 		}
 	}
 }

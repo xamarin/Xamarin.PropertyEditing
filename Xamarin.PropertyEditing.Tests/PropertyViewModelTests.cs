@@ -491,10 +491,43 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public async Task ConstrainingPropertyChangeRequeriesAvailability ()
+		{
+			var otherProp = GetPropertyMock ();
+
+			var prop = GetPropertyMock ();
+
+			var constraint = new Mock<IAvailabilityConstraint> ();
+			constraint.SetupGet (c => c.ConstrainingProperties).Returns (new[] { otherProp.Object });
+			prop.SetupGet (p => p.AvailabilityConstraints).Returns (new List<IAvailabilityConstraint> { constraint.Object });
+
+			bool isAvailable = true;
+			IObjectEditor editor = new MockObjectEditor (prop.Object, otherProp.Object);
+			constraint.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (() => isAvailable);
+
+			var vm = GetViewModel (prop.Object, new[] { editor });
+			Assume.That (vm.IsAvailable, Is.True);
+
+			bool changed = false;
+			vm.PropertyChanged += (o, e) => {
+				if (e.PropertyName == nameof(PropertyViewModel.IsAvailable))
+					changed = true;
+			};
+
+			isAvailable = false;
+			await editor.SetValueAsync (otherProp.Object, new ValueInfo<TValue> {
+				Value = GetRandomTestValue(),
+				Source = ValueSource.Local
+			});
+
+			Assert.That (vm.IsAvailable, Is.False);
+			Assert.That (changed, Is.True);
+		}
+
+		[Test]
 		public async Task PropertyChangeRequeriesAvailability ()
 		{
 			var prop = GetPropertyMock ();
-
 
 			var constraint = new Mock<IAvailabilityConstraint> ();
 			constraint.SetupGet (c => c.ConstrainingProperties).Returns (new[] { prop.Object });
@@ -617,10 +650,12 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 		}
 
-		protected Mock<IPropertyInfo> GetPropertyMock ()
+		protected internal Mock<IPropertyInfo> GetPropertyMock (string name = null, string category = null)
 		{
 			var mock = new Mock<IPropertyInfo> ();
 			mock.SetupGet (pi => pi.Type).Returns (typeof(TValue));
+			mock.SetupGet (pi => pi.Name).Returns (name);
+			mock.SetupGet (pi => pi.Category).Returns (category);
 
 			AugmentPropertyMock (mock);
 
@@ -629,12 +664,12 @@ namespace Xamarin.PropertyEditing.Tests
 
 		protected Random Random => this.rand;
 
-		protected TValue GetRandomTestValue ()
+		protected internal TValue GetRandomTestValue ()
 		{
 			return GetRandomTestValue (this.rand);
 		}
 
-		protected TValue GetRandomTestValue (TValue notValue)
+		protected internal TValue GetRandomTestValue (TValue notValue)
 		{
 			TValue value = GetRandomTestValue ();
 			while (Equals (value, notValue)) {
@@ -644,7 +679,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return value;
 		}
 
-		protected MockObjectEditor GetBasicEditor (IPropertyInfo property = null)
+		protected internal MockObjectEditor GetBasicEditor (IPropertyInfo property = null)
 		{
 			if (property == null) {
 				var propertyMock = GetPropertyMock ();
@@ -660,21 +695,21 @@ namespace Xamarin.PropertyEditing.Tests
 			return editor;
 		}
 
-		protected MockObjectEditor GetBasicEditor (TValue value, IPropertyInfo property = null)
+		protected internal MockObjectEditor GetBasicEditor (TValue value, IPropertyInfo property = null)
 		{
 			var editor = GetBasicEditor (property);
 			editor.values[editor.Properties.First ()] = value;
 			return editor;
 		}
 
-		protected TViewModel GetBasicTestModel ()
+		protected internal TViewModel GetBasicTestModel ()
 		{
 			var editor = GetBasicEditor ();
 
 			return GetViewModel (editor.Properties.First(), new[] { editor });
 		}
 
-		protected TViewModel GetBasicTestModel (TValue value)
+		protected internal TViewModel GetBasicTestModel (TValue value)
 		{
 			var editor = GetBasicEditor (value);
 

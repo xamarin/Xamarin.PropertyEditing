@@ -21,7 +21,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<NotImplemented> ("BindingGroup");
 			AddProperty<NotImplemented> ("BitmapEffect");
 			AddProperty<NotImplemented> ("BitmapEffectInput");
-			AddProperty<NotImplemented> ("BorderBrush", Appearance);
+			AddProperty<CommonBrush> ("BorderBrush", Appearance);
 			AddProperty<CommonThickness> ("BorderThickness", Appearance);
 			AddProperty<NotImplemented> ("CacheMode");
 			AddProperty<NotImplemented> ("Clip");

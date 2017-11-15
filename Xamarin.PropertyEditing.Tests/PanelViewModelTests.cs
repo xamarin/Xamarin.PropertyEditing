@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -30,11 +31,11 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (1));
 
-			var vm = new PanelViewModel (provider);
+			var vm = new PanelViewModel (provider, TargetPlatform.Default);
 			vm.SelectedObjects.Add (obj);
 
 			Assert.That (vm.Properties, Is.Not.Empty);
-			Assert.That (vm.Properties[0].Property, Is.EqualTo (editor.Properties.Single ()));
+			Assert.That (((PropertyViewModel)vm.Properties[0]).Property, Is.EqualTo (editor.Properties.Single ()));
 		}
 
 		[Test]
@@ -58,16 +59,16 @@ namespace Xamarin.PropertyEditing.Tests
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj1)).ReturnsAsync (editor1Mock.Object);
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj2)).ReturnsAsync (editor2Mock.Object);
 
-			var vm = new PanelViewModel (providerMock.Object);
+			var vm = new PanelViewModel (providerMock.Object, TargetPlatform.Default);
 			vm.SelectedObjects.Add (obj1);
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
-			Assume.That (vm.Properties[0].Property, Is.EqualTo (sharedPropertyMock.Object));
+			Assume.That (((PropertyViewModel)vm.Properties[0]).Property, Is.EqualTo (sharedPropertyMock.Object));
 
 			// Reflection property info equate actually fails on the same property across class/subclass
 			vm.SelectedObjects.Add (obj2);
 			Assert.That (vm.Properties.Count, Is.EqualTo (1));
-			Assert.That (vm.Properties.Single ().Property, Is.EqualTo (sharedPropertyMock.Object));
+			Assert.That (((PropertyViewModel)vm.Properties.Single()).Property, Is.EqualTo (sharedPropertyMock.Object));
 		}
 
 		[Test]
@@ -91,17 +92,17 @@ namespace Xamarin.PropertyEditing.Tests
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj1)).ReturnsAsync (editor1Mock.Object);
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj2)).ReturnsAsync (editor2Mock.Object);
 
-			var vm = new PanelViewModel (providerMock.Object);
+			var vm = new PanelViewModel (providerMock.Object, TargetPlatform.Default);
 			vm.SelectedObjects.Add (obj2);
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (2));
-			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (sharedPropertyMock.Object));
-			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (subPropertyMock.Object));
+			Assume.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (sharedPropertyMock.Object));
+			Assume.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (subPropertyMock.Object));
 
 			// Reflection property info equate actually fails on the same property across class/subclass
 			vm.SelectedObjects.Add (obj1);
 			Assert.That (vm.Properties.Count, Is.EqualTo (1));
-			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (sharedPropertyMock.Object));
+			Assert.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (sharedPropertyMock.Object));
 		}
 
 		[Test]
@@ -113,7 +114,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var obj1 = new TestClass ();
 			var obj2 = new TestClass ();
 
-			var vm = new PanelViewModel (provider);
+			var vm = new PanelViewModel (provider, TargetPlatform.Default);
 			vm.SelectedObjects.Add (obj1);
 
 			var property = vm.Properties[0];
@@ -136,7 +137,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var obj1 = new TestClass ();
 			var obj2 = new TestClass ();
 
-			var vm = new PanelViewModel (provider);
+			var vm = new PanelViewModel (provider, TargetPlatform.Default);
 			vm.SelectedObjects.Add (obj1);
 			vm.SelectedObjects.Add (obj2);
 
@@ -168,16 +169,16 @@ namespace Xamarin.PropertyEditing.Tests
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
 
-			var vm = new PanelViewModel (provider.Object);
+			var vm = new PanelViewModel (provider.Object, TargetPlatform.Default);
 			vm.SelectedObjects.Add (obj);
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (2));
-			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
-			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty2.Object));
+			Assume.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (mockProperty1.Object));
+			Assume.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (mockProperty2.Object));
 
 			properties.Remove (mockProperty2.Object);
 			Assert.That (vm.Properties.Count, Is.EqualTo (1));
-			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
+			Assert.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (mockProperty1.Object));
 		}
 
 		[Test]
@@ -198,17 +199,17 @@ namespace Xamarin.PropertyEditing.Tests
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
 
-			var vm = new PanelViewModel (provider.Object);
+			var vm = new PanelViewModel (provider.Object, TargetPlatform.Default);
 			vm.SelectedObjects.Add (obj);
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
-			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
+			Assume.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (mockProperty1.Object));
 
 			properties.Add (mockProperty2.Object);
 
 			Assert.That (vm.Properties.Count, Is.EqualTo (2));
-			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
-			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty2.Object));
+			Assert.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (mockProperty1.Object));
+			Assert.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (mockProperty2.Object));
 		}
 
 		[Test]
@@ -229,7 +230,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
 
-			var vm = new PanelViewModel (provider.Object);
+			var vm = new PanelViewModel (provider.Object, TargetPlatform.Default);
 
 			// We need access to the custom reset method here to ensure compliance
 			// It's a bit hacky but this is unlikely to change. If it does, this test
@@ -238,13 +239,13 @@ namespace Xamarin.PropertyEditing.Tests
 			((ObservableCollectionEx<object>)vm.SelectedObjects).Reset (new[] { obj });
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
-			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
+			Assume.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (mockProperty1.Object));
 
 			properties.Add (mockProperty2.Object);
 
 			Assert.That (vm.Properties.Count, Is.EqualTo (2));
-			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty1.Object));
-			Assert.That (vm.Properties.Select (v => v.Property), Contains.Item (mockProperty2.Object));
+			Assert.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (mockProperty1.Object));
+			Assert.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (mockProperty2.Object));
 		}
 
 		[Test]
@@ -271,11 +272,11 @@ namespace Xamarin.PropertyEditing.Tests
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (derivedObj)).ReturnsAsync (derivedEditorMock.Object);
 
-			var vm = new PanelViewModel (providerMock.Object);
+			var vm = new PanelViewModel (providerMock.Object, TargetPlatform.Default);
 			vm.SelectedObjects.AddItems (new[] { baseObj, derivedObj });
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
-			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (baseProperty.Object));
+			Assume.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (baseProperty.Object));
 
 			derivedProperties.Remove (baseProperty.Object);
 			Assert.That (vm.Properties, Is.Empty);
@@ -305,11 +306,11 @@ namespace Xamarin.PropertyEditing.Tests
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (derivedObj)).ReturnsAsync (derivedEditorMock.Object);
 
-			var vm = new PanelViewModel (providerMock.Object);
+			var vm = new PanelViewModel (providerMock.Object, TargetPlatform.Default);
 			vm.SelectedObjects.AddItems (new[] { baseObj, derivedObj });
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
-			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (baseProperty.Object));
+			Assume.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (baseProperty.Object));
 
 			vm.SelectedObjects.Remove (derivedObj);
 			Assume.That (vm.Properties, Is.Not.Empty);
@@ -343,11 +344,11 @@ namespace Xamarin.PropertyEditing.Tests
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (derivedObj)).ReturnsAsync (derivedEditorMock.Object);
 
-			var vm = new PanelViewModel (providerMock.Object);
+			var vm = new PanelViewModel (providerMock.Object, TargetPlatform.Default);
 			vm.SelectedObjects.AddItems (new[] { baseObj, derivedObj });
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
-			Assume.That (vm.Properties.Select (v => v.Property), Contains.Item (baseProperty.Object));
+			Assume.That (vm.Properties.Cast<PropertyViewModel>().Select (v => v.Property), Contains.Item (baseProperty.Object));
 
 			Assume.That (vm.SelectedObjects, Is.TypeOf<ObservableCollectionEx<object>> ());
 			((ObservableCollectionEx<object>)vm.SelectedObjects).Reset (new[] { baseObj });
@@ -385,7 +386,7 @@ namespace Xamarin.PropertyEditing.Tests
 			});
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj2)).ReturnsAsync (editor2.Object);
 
-			var vm = new PanelViewModel (provider.Object);
+			var vm = new PanelViewModel (provider.Object, TargetPlatform.Default);
 			vm.SelectedObjects.Add (obj1);
 
 			Assume.That (returnObject, Is.Not.Null);
@@ -409,15 +410,15 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 
-			var vm = new PanelViewModel (provider);
+			var vm = new PanelViewModel (provider, TargetPlatform.Default);
 			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
 			vm.SelectedObjects.Add (obj);
 
-			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
-			Assume.That (vm.ArrangedProperties[0].Count, Is.EqualTo (2));
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
+			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (2));
 
 			vm.FilterText = "sub";
-			Assert.That (vm.ArrangedProperties[0].Count, Is.EqualTo (1));
+			Assert.That (vm.ArrangedEditors[0].Count, Is.EqualTo (1));
 		}
 
 		[Test]
@@ -429,18 +430,18 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 			
-			var vm = new PanelViewModel (provider);
+			var vm = new PanelViewModel (provider, TargetPlatform.Default);
 			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
 			vm.SelectedObjects.Add (obj);
 
-			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
-			Assume.That (vm.ArrangedProperties[0].Count, Is.EqualTo (2));
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
+			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (2));
 
 			vm.FilterText = "sub";
-			Assume.That (vm.ArrangedProperties[0].Count, Is.EqualTo (1));
+			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (1));
 
 			vm.FilterText = String.Empty;
-			Assert.That (vm.ArrangedProperties[0].Count, Is.EqualTo (2));
+			Assert.That (vm.ArrangedEditors[0].Count, Is.EqualTo (2));
 		}
 
 		[Test]
@@ -451,11 +452,44 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 
-			var vm = new PanelViewModel (provider) { ArrangeMode = PropertyArrangeMode.Category };
+			var vm = new PanelViewModel (provider, TargetPlatform.Default) { ArrangeMode = PropertyArrangeMode.Category };
 			vm.SelectedObjects.Add (obj);
 
-			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
-			Assert.That (vm.ArrangedProperties.FirstOrDefault (g => g.Key == "Sub"), Is.Not.Null);
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
+			Assert.That (vm.ArrangedEditors.FirstOrDefault (g => g.Key == "Sub"), Is.Not.Null);
+		}
+
+		[Test]
+		public void GroupedPropertiesArrange ()
+		{
+			var intProvider = new IntegerPropertyViewModelTests ();
+			var stringProvider = new StringViewModelTests ();
+			var brushProvider = new SolidBrushPropertyViewModelTests();
+
+			var intProperty = intProvider.GetPropertyMock ("int", "A");
+			var stringProperty1 = stringProvider.GetPropertyMock ("string1");
+			var stringProperty2 = stringProvider.GetPropertyMock ("string2");
+			var brushProperty = brushProvider.GetPropertyMock ("brush", "C");
+
+			var editor = new MockObjectEditor (intProperty.Object, stringProperty1.Object, stringProperty2.Object, brushProperty.Object);
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (editor.Target)).ReturnsAsync (editor);
+
+			var platform = new TargetPlatform {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(string), "B" }
+				}
+			};
+
+			var vm = new PanelViewModel (provider.Object, platform);
+			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
+
+			vm.ArrangeMode = PropertyArrangeMode.Category;
+			vm.SelectedObjects.Add (editor.Target);
+			Assert.That (vm.ArrangedEditors[0].Key, Is.EqualTo ("A"));
+			Assert.That (vm.ArrangedEditors[1].Key, Is.EqualTo ("B"));
+			Assert.That (vm.ArrangedEditors[2].Key, Is.EqualTo ("C"));
 		}
 
 		[Test]
@@ -466,22 +500,22 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 
-			var vm = new PanelViewModel (provider) { ArrangeMode = PropertyArrangeMode.Category };
+			var vm = new PanelViewModel (provider, TargetPlatform.Default) { ArrangeMode = PropertyArrangeMode.Category };
 			vm.SelectedObjects.Add (obj);
 
-			Assume.That (vm.ArrangedProperties, Is.Not.Empty);
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
 
 			vm.FilterText = "sub";
-			Assert.That (vm.ArrangedProperties.Count, Is.EqualTo (1));
+			Assert.That (vm.ArrangedEditors.Count, Is.EqualTo (1));
 
-			var group = vm.ArrangedProperties.FirstOrDefault (g => g.Key == "Sub");
+			var group = vm.ArrangedEditors.FirstOrDefault (g => g.Key == "Sub");
 			Assert.That (group, Is.Not.Null);
 			Assert.That (group.Count, Is.EqualTo (1));
 		}
 
 		internal override PropertiesViewModel CreateVm (IEditorProvider provider)
 		{
-			return new PanelViewModel (provider);
+			return new PanelViewModel (provider, TargetPlatform.Default);
 		}
 
 		private TestContext context;
