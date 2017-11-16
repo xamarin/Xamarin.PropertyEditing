@@ -86,8 +86,10 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		{
 			var hashCode = 1861411795;
 			unchecked {
-				hashCode = hashCode * -1521134295 + Name.GetHashCode ();
-				hashCode = hashCode * -1521134295 + Category.GetHashCode ();
+				if (Name != null)
+					hashCode = hashCode * -1521134295 + Name.GetHashCode ();
+				if (Category != null)
+					hashCode = hashCode * -1521134295 + Category.GetHashCode ();
 				hashCode = hashCode * -1521134295 + CanWrite.GetHashCode ();
 			}
 			return hashCode;
