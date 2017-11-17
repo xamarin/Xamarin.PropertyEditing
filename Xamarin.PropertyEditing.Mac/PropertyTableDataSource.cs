@@ -30,8 +30,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 			if (item == null)
 				return this.vm.ArrangedEditors.Count;
-			else
-				return ((IGroupingList<string, PropertyViewModel>)((NSObjectFacade)item).Target).Count;
+			else {
+				return ((IGroupingList<string, EditorViewModel>)((NSObjectFacade)item).Target).Count;
+			}
 		}
 
 		public override NSObject GetChild (NSOutlineView outlineView, nint childIndex, NSObject item)
@@ -43,7 +44,7 @@ namespace Xamarin.PropertyEditing.Mac
 				if (item == null)
 					element = this.vm.ArrangedEditors[(int)childIndex];
 				else {
-					element = ((IGroupingList<string, PropertyViewModel>)((NSObjectFacade)item).Target)[(int)childIndex];
+					element = ((IGroupingList<string, EditorViewModel>)((NSObjectFacade)item).Target)[(int)childIndex];
 				}
 			}
 
@@ -55,7 +56,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
 				return false;
 
-			return ((NSObjectFacade)item).Target is IGroupingList<string, PropertyViewModel>;
+			return ((NSObjectFacade)item).Target is IGroupingList<string, EditorViewModel>;
 		}
 
 		public NSObject GetFacade (object element)
