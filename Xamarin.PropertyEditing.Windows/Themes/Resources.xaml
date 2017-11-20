@@ -1292,10 +1292,13 @@
 		<Setter Property="Foreground" Value="{DynamicResource InputForegroundBrush}" />
 	</Style>
 
-	<Style TargetType="local:SubmitTextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-		<Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
-		<Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
-		<Setter Property="Foreground" Value="{DynamicResource InputForegroundBrush}" />
+	<Style TargetType="local:SubmitTextBox" BasedOn="{StaticResource {x:Type TextBox}}" />
+
+	<Style x:Key="PropertySearchTextBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+		<Setter Property="Margin" Value="4,1,4,2" />
+		<Setter Property="Height" Value="18" />
+		<Setter Property="Background" Value="{DynamicResource SearchControlBackgroundBrush}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource SearchControlBorderBrush}" />
 	</Style>
 
 	<Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
