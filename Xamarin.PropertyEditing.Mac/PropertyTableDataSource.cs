@@ -22,28 +22,29 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override nint GetChildrenCount (NSOutlineView outlineView, NSObject item)
 		{
-			if (this.vm.ArrangedProperties.Count == 0)
+			if (this.vm.ArrangedEditors.Count == 0)
 				return 0;
 
 			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
-				return this.vm.ArrangedProperties[0].Count;
+				return this.vm.ArrangedEditors[0].Count;
 
 			if (item == null)
-				return this.vm.ArrangedProperties.Count;
-			else
-				return ((IGroupingList<string, PropertyViewModel>)((NSObjectFacade)item).Target).Count;
+				return this.vm.ArrangedEditors.Count;
+			else {
+				return ((IGroupingList<string, EditorViewModel>)((NSObjectFacade)item).Target).Count;
+			}
 		}
 
 		public override NSObject GetChild (NSOutlineView outlineView, nint childIndex, NSObject item)
 		{
 			object element;
 			if (this.vm.ArrangeMode == PropertyArrangeMode.Name) {
-				element = (this.vm.ArrangedProperties[0][(int)childIndex]);
+				element = (this.vm.ArrangedEditors[0][(int)childIndex]);
 			} else {
 				if (item == null)
-					element = this.vm.ArrangedProperties[(int)childIndex];
+					element = this.vm.ArrangedEditors[(int)childIndex];
 				else {
-					element = ((IGroupingList<string, PropertyViewModel>)((NSObjectFacade)item).Target)[(int)childIndex];
+					element = ((IGroupingList<string, EditorViewModel>)((NSObjectFacade)item).Target)[(int)childIndex];
 				}
 			}
 
@@ -55,7 +56,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
 				return false;
 
-			return ((NSObjectFacade)item).Target is IGroupingList<string, PropertyViewModel>;
+			return ((NSObjectFacade)item).Target is IGroupingList<string, EditorViewModel>;
 		}
 
 		public NSObject GetFacade (object element)

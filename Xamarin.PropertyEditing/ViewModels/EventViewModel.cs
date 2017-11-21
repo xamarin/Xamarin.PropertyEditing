@@ -25,6 +25,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
+		public override string Name => Event.Name;
+
+		public override string Category => null;
+
 		public string MethodName
 		{
 			get { return this.methodName; }

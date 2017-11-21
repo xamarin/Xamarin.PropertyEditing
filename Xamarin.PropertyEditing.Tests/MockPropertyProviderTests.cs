@@ -9,6 +9,7 @@ using Xamarin.PropertyEditing.Tests.MockControls;
 
 namespace Xamarin.PropertyEditing.Tests
 {
+	/*
 	[TestFixture]
 	public class MockPropertyProviderTests
 	{
@@ -25,39 +26,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (propertyInfo.Name, Is.EqualTo (TestClass.PropertyName));
 			Assert.That (propertyInfo.Type, Is.EqualTo (typeof (string)));
 		}
-
-		[Test]
-		public async Task MockSetValue ()
-		{
-			var obj = new TestClass ();
-
-			var provider = new MockEditorProvider ();
-			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
-
-			const string value = "value";
-
-			var propertyInfo = editor.Properties.Single ();
-			await editor.SetValueAsync (propertyInfo, new ValueInfo<string> {
-				Value = value
-			});
-
-			Assert.That (obj.GetValue<string>(propertyInfo), Is.EqualTo (value));
-		}
-
-		[Test]
-		public async Task MockGetValue ()
-		{
-			const string value = "value";
-			var obj = new TestClass (value);
-
-			var provider = new MockEditorProvider ();
-			IObjectEditor editor = await provider.GetObjectEditorAsync (obj);
-
-			ValueInfo<string> info = await editor.GetValueAsync<string> (editor.Properties.Single ());
-			Assert.That (info.Value, Is.EqualTo (value));
-			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
-		}
-
+		
 		[Test]
 		public async Task MockSetValueConvert ()
 		{
@@ -243,4 +212,5 @@ namespace Xamarin.PropertyEditing.Tests
 			}
 		}
 	}
+	*/
 }

@@ -90,6 +90,7 @@
     <Compile Include="Reflection\ReflectionEventInfo.cs" />
     <Compile Include="Reflection\ReflectionObjectEditor.cs" />
     <Compile Include="Reflection\ReflectionPropertyInfo.cs" />
+    <Compile Include="TargetPlatform.cs" />
     <Compile Include="ValueInfo.cs" />
     <Compile Include="ValueSource.cs" />
     <Compile Include="ViewModels\ArrangeModeViewModel.cs" />
@@ -99,12 +100,14 @@
     <Compile Include="ViewModels\EnumPropertyViewModel.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ViewModels\EventViewModel.cs" />
+    <Compile Include="ViewModels\IFilterable.cs" />
     <Compile Include="ViewModels\NumericPropertyViewModel.cs" />
     <Compile Include="ViewModels\ObjectViewModel.cs" />
     <Compile Include="ViewModels\PanelViewModel.cs" />
     <Compile Include="ViewModels\PointPropertyViewModel.cs" />
     <Compile Include="ViewModels\PredefinedValuesViewModel.cs" />
     <Compile Include="ViewModels\PropertiesViewModel.cs" />
+    <Compile Include="ViewModels\PropertyGroupViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\SizePropertyViewModel.cs" />

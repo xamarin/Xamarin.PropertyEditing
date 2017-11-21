@@ -41,9 +41,9 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public override DataTemplate SelectTemplate (object item, DependencyObject container)
 		{
-			var vm = item as PropertyViewModel;
+			var vm = item as EditorViewModel;
 			if (vm != null) {
-				if (!vm.CanDelve)
+				if (!(vm is PropertyViewModel) || !((PropertyViewModel)vm).CanDelve)
 					return Options.EditorTemplate;
 				else
 					return Options.ParentTemplate;
@@ -107,6 +107,7 @@ namespace Xamarin.PropertyEditing.Windows
 			{ typeof(PropertyViewModel<CommonThickness>), typeof(ThicknessEditorControl) },
 			{ typeof(PredefinedValuesViewModel<>), typeof(EnumEditorControl) },
 			{ typeof(BrushPropertyViewModel), typeof(BrushEditorControl) },
+			{ typeof(PropertyGroupViewModel), typeof(GroupEditorControl) }
 		};
 	}
 }

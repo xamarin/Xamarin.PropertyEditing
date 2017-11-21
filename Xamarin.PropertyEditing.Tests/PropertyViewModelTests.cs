@@ -491,10 +491,43 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public async Task ConstrainingPropertyChangeRequeriesAvailability ()
+		{
+			var otherProp = GetPropertyMock ();
+
+			var prop = GetPropertyMock ();
+
+			var constraint = new Mock<IAvailabilityConstraint> ();
+			constraint.SetupGet (c => c.ConstrainingProperties).Returns (new[] { otherProp.Object });
+			prop.SetupGet (p => p.AvailabilityConstraints).Returns (new List<IAvailabilityConstraint> { constraint.Object });
+
+			bool isAvailable = true;
+			IObjectEditor editor = new MockObjectEditor (prop.Object, otherProp.Object);
+			constraint.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (() => isAvailable);
+
+			var vm = GetViewModel (prop.Object, new[] { editor });
+			Assume.That (vm.IsAvailable, Is.True);
+
+			bool changed = false;
+			vm.PropertyChanged += (o, e) => {
+				if (e.PropertyName == nameof(PropertyViewModel.IsAvailable))
+					changed = true;
+			};
+
+			isAvailable = false;
+			await editor.SetValueAsync (otherProp.Object, new ValueInfo<TValue> {
+				Value = GetRandomTestValue(),
+				Source = ValueSource.Local
+			});
+
+			Assert.That (vm.IsAvailable, Is.False);
+			Assert.That (changed, Is.True);
+		}
+
+		[Test]
 		public async Task PropertyChangeRequeriesAvailability ()
 		{
 			var prop = GetPropertyMock ();
-
 
 			var constraint = new Mock<IAvailabilityConstraint> ();
 			constraint.SetupGet (c => c.ConstrainingProperties).Returns (new[] { prop.Object });
@@ -523,6 +556,82 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (changed, Is.True);
 		}
 
+		[Test]
+		public void ClearLocalValue ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
+
+			var mockEditor = new MockObjectEditor {
+				SupportsDefault = true,
+				Properties = new [] {
+					mockProperty.Object
+				}
+			};
+
+			var vm = GetViewModel (mockProperty.Object, new[] { mockEditor });
+			Assume.That (vm.Value, Is.EqualTo (default(TValue)));
+
+			Assert.That (vm.ClearValueCommand.CanExecute (null), Is.False);
+
+			bool changed = false;
+			vm.ClearValueCommand.CanExecuteChanged += (sender, args) => {
+				changed = true;
+			};
+
+			vm.Value = value;
+			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
+
+			Assert.That (changed, Is.True);
+			Assert.That (vm.ClearValueCommand.CanExecute (null), Is.True);
+
+			vm.ClearValueCommand.Execute (null);
+
+			Assert.That (vm.Value, Is.EqualTo (default(TValue)));
+		}
+
+		[Test]
+		[Description ("If the target platform doesn't support distinguishing local/default, we can't clear the value")]
+		public void ClearValueDefaultNotSupported ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+
+			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.Setup (oe => oe.GetValueAsync<TValue> (mockProperty.Object, null)).ReturnsAsync (new ValueInfo<TValue> {
+				Value = value,
+				Source = ValueSource.Local
+			});
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Local);
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editorMock.Object });
+
+			Assert.That (vm.ClearValueCommand.CanExecute (null), Is.False);
+		}
+
+		[Test]
+		[Description ("We only allow clearing local values")]
+		public void ClearValueNotLocalValue ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local | ValueSources.Resource);
+
+			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.Setup (oe => oe.GetValueAsync<TValue> (mockProperty.Object, null)).ReturnsAsync (new ValueInfo<TValue> {
+				Value = value,
+				Source = ValueSource.Resource
+			});
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editorMock.Object });
+
+			Assert.That (vm.ClearValueCommand.CanExecute (null), Is.False);
+		}
+
 		protected TValue GetNonDefaultRandomTestValue ()
 		{
 			TValue value = default (TValue);
@@ -541,10 +650,12 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 		}
 
-		protected Mock<IPropertyInfo> GetPropertyMock ()
+		protected internal Mock<IPropertyInfo> GetPropertyMock (string name = null, string category = null)
 		{
 			var mock = new Mock<IPropertyInfo> ();
 			mock.SetupGet (pi => pi.Type).Returns (typeof(TValue));
+			mock.SetupGet (pi => pi.Name).Returns (name);
+			mock.SetupGet (pi => pi.Category).Returns (category);
 
 			AugmentPropertyMock (mock);
 
@@ -553,12 +664,12 @@ namespace Xamarin.PropertyEditing.Tests
 
 		protected Random Random => this.rand;
 
-		protected TValue GetRandomTestValue ()
+		protected internal TValue GetRandomTestValue ()
 		{
 			return GetRandomTestValue (this.rand);
 		}
 
-		protected TValue GetRandomTestValue (TValue notValue)
+		protected internal TValue GetRandomTestValue (TValue notValue)
 		{
 			TValue value = GetRandomTestValue ();
 			while (Equals (value, notValue)) {
@@ -568,7 +679,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return value;
 		}
 
-		protected MockObjectEditor GetBasicEditor (IPropertyInfo property = null)
+		protected internal MockObjectEditor GetBasicEditor (IPropertyInfo property = null)
 		{
 			if (property == null) {
 				var propertyMock = GetPropertyMock ();
@@ -584,21 +695,21 @@ namespace Xamarin.PropertyEditing.Tests
 			return editor;
 		}
 
-		protected MockObjectEditor GetBasicEditor (TValue value, IPropertyInfo property = null)
+		protected internal MockObjectEditor GetBasicEditor (TValue value, IPropertyInfo property = null)
 		{
 			var editor = GetBasicEditor (property);
 			editor.values[editor.Properties.First ()] = value;
 			return editor;
 		}
 
-		protected TViewModel GetBasicTestModel ()
+		protected internal TViewModel GetBasicTestModel ()
 		{
 			var editor = GetBasicEditor ();
 
 			return GetViewModel (editor.Properties.First(), new[] { editor });
 		}
 
-		protected TViewModel GetBasicTestModel (TValue value)
+		protected internal TViewModel GetBasicTestModel (TValue value)
 		{
 			var editor = GetBasicEditor (value);
 

@@ -62,7 +62,7 @@
     <Compile Include="BytePropertyViewModelTests.cs" />
     <Compile Include="CommonColorTests.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="IGetAndSet.cs" />
+    <Compile Include="IPropertyConverter.cs" />
     <Compile Include="MockControls\MockControl.cs" />
     <Compile Include="MockControls\MockSampleControl.cs" />
     <Compile Include="MockControls\MockWpfButton.cs" />
@@ -74,7 +74,9 @@
     <Compile Include="MockPropertyInfo\MockEnumPropertyInfo.cs" />
     <Compile Include="MockPropertyProviderTests.cs" />
     <Compile Include="MultiAvailabilityConstraintTests.cs" />
+    <Compile Include="ObservableLookupTests.cs" />
     <Compile Include="PointViewModelTests.cs" />
+    <Compile Include="PropertyGroupViewModelTests.cs" />
     <Compile Include="RadialGradientBrushPropertyViewModelTests.cs" />
     <Compile Include="LinearGradientBrushPropertyViewModelTests.cs" />
     <Compile Include="ImageBrushPropertyViewModelTests.cs" />

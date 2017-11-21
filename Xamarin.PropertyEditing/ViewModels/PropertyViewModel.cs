@@ -19,6 +19,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			: base (property, editors)
 		{
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
+			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
 			UpdateCurrentValue ();
 		}
 
@@ -54,6 +55,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		public ICommand SetValueResourceCommand
+		{
+			get;
+		}
+
+		public ICommand ClearValueCommand
 		{
 			get;
 		}
@@ -110,6 +116,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.value = newValue;
 			OnValueChanged ();
 			OnPropertyChanged (nameof (Value));
+			OnPropertyChanged (nameof (ValueSource));
+
+			((RelayCommand) ClearValueCommand)?.ChangeCanExecute ();
+
 			return true;
 		}
 
@@ -196,6 +206,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			((RelayCommand<Resource>)SetValueResourceCommand).ChangeCanExecute ();
 		}
+
+		private void OnClearValue ()
+		{
+			SetValue (new ValueInfo<TValue> {
+				Source = ValueSource.Default,
+				Value = default(TValue)
+			});
+		}
+
+		private bool CanClearValue ()
+		{
+			return (Property.ValueSources.HasFlag (ValueSources.Local) && Property.ValueSources.HasFlag (ValueSources.Default) && ValueSource == ValueSource.Local);
+		}
 	}
 
 	internal abstract class PropertyViewModel
@@ -218,9 +241,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
+		public override string Name => Property.Name;
+		public override string Category => Property.Category;
+
 		public bool IsAvailable
 		{
-			get { return this.isAvailable == null ? false : this.isAvailable.Result; }
+			get { return this.isAvailable?.Result ?? true; }
 			private set
 			{
 				if (this.isAvailable.Result == value)
@@ -279,9 +305,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected virtual async void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
 		{
-			if (e.Property != null && !Equals (e.Property, Property))
-				return;
-
 			IDisposable work = null;
 			if (this.constraintProperties != null && this.constraintProperties.Contains (e.Property)) {
 				work = await AsyncWork.RequestAsyncWork (this);
@@ -289,6 +312,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			try {
+				if (e.Property != null && !Equals (e.Property, Property))
+					return;
+		
 				// TODO: Smarter querying, can query the single editor and check against MultipleValues
 				UpdateCurrentValue ();
 			} finally {

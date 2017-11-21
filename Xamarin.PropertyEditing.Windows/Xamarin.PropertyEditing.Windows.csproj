@@ -71,6 +71,8 @@
     <Compile Include="EditorPropertySelector.cs" />
     <Compile Include="EnumEditorControl.cs" />
     <Compile Include="HexColorConverter.cs" />
+    <Compile Include="HeaderedContextMenu.cs" />
+    <Compile Include="GroupEditorControl.cs" />
     <Compile Include="HostEnvironment.cs" />
     <Compile Include="MenuButton.cs" />
     <Compile Include="NumericEditorControl.cs" />
@@ -81,8 +83,10 @@
     <Compile Include="PointEditorControl.cs" />
     <Compile Include="PointHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyButton.cs" />
     <Compile Include="PropertyEditorControl.cs" />
     <Compile Include="PropertyEditorPanel.cs" />
+    <Compile Include="PropertyMenuItemContainerStyleSelector.cs" />
     <Compile Include="PropertyPresenter.cs" />
     <Compile Include="ShadeEditorControl.cs" />
     <Compile Include="SizeEditorControl.cs" />

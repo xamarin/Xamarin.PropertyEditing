@@ -173,6 +173,12 @@
     <value>Cyan / Magenta / Yellow / Black</value>
     <comment>CMYK help text</comment>
   </data>
+  <data name="ConvertToLocalValue" xml:space="preserve">
+    <value>Convert to Local Value</value>
+  </data>
+  <data name="CustomExpressionEllipsis" xml:space="preserve">
+    <value>Custom Expression…</value>
+  </data>
   <data name="EventHandlersSelectedElement" xml:space="preserve">
     <value>Event handlers for the selected element</value>
   </data>
@@ -280,6 +286,9 @@
   <data name="SaturationInitial" xml:space="preserve">
     <value>S</value>
     <comment>Saturation initial used as saturation textbox label</comment>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
