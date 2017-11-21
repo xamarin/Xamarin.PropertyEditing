@@ -23,7 +23,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			UpdateCurrentValue ();
 		}
 
-		public ValueSource ValueSource => this.value.Source;
+		public ValueSource ValueSource => this.value != null ? this.value.Source : ValueSource.Default;
 
 		public TValue Value
 		{
@@ -98,7 +98,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				MultipleValues = disagree;
 
 				// The public setter for Value is a local set for binding
-				SetCurrentValue ((currentValue != null) ? currentValue : null);
+				SetCurrentValue (currentValue);
 			}
 		}
 
