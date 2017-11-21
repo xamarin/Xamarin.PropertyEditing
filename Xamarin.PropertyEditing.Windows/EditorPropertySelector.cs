@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Windows
 		: DependencyObject
 	{
 		public static readonly DependencyProperty ParentTemplateProperty = DependencyProperty.Register (
-			"ParentTemplate", typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
+			nameof(ParentTemplate), typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
 
 		public DataTemplate ParentTemplate
 		{
@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static readonly DependencyProperty EditorTemplateProperty = DependencyProperty.Register (
-			"EditorTemplate", typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
+			nameof(EditorTemplate), typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
 
 		public DataTemplate EditorTemplate
 		{
@@ -98,6 +98,7 @@ namespace Xamarin.PropertyEditing.Windows
 		private static readonly Dictionary<Type, Type> TypeMap = new Dictionary<Type, Type> {
 			{ typeof(StringPropertyViewModel), typeof(StringEditorControl) },
 			{ typeof(PropertyViewModel<bool>), typeof(BoolEditorControl) },
+			{ typeof(BytePropertyViewModel), typeof(NumericEditorControl) },
 			{ typeof(IntegerPropertyViewModel), typeof(NumericEditorControl) },
 			{ typeof(FloatingPropertyViewModel), typeof(NumericEditorControl) },
 			{ typeof(PointPropertyViewModel), typeof(PointEditorControl) },
@@ -105,6 +106,7 @@ namespace Xamarin.PropertyEditing.Windows
 			{ typeof(PropertyViewModel<Thickness>), typeof(ThicknessEditorControl) },
 			{ typeof(PropertyViewModel<CommonThickness>), typeof(ThicknessEditorControl) },
 			{ typeof(PredefinedValuesViewModel<>), typeof(EnumEditorControl) },
+			{ typeof(BrushPropertyViewModel), typeof(BrushEditorControl) },
 			{ typeof(PropertyGroupViewModel), typeof(GroupEditorControl) }
 		};
 	}

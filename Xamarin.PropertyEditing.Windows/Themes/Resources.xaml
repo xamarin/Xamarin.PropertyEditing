@@ -16,6 +16,15 @@
 
 	<Color x:Key="DropShadowBackgroundColor">#72000000</Color>
 
+	<DrawingBrush x:Key="CheckerBoard" Stretch="None" TileMode="Tile" Viewport="0,0,20,20" ViewportUnits="Absolute">
+		<DrawingBrush.Drawing>
+			<DrawingGroup>
+				<GeometryDrawing Geometry="M0,0 L20,0 20,20, 0,20Z" Brush="{DynamicResource BrushBoxCheckerBoardLight}"/>
+				<GeometryDrawing Geometry="M0,10 L20,10 20,20, 10,20 10,0 0,0Z" Brush="{DynamicResource BrushBoxCheckerBoardDark}"/>
+			</DrawingGroup>
+		</DrawingBrush.Drawing>
+	</DrawingBrush>
+
 	<Style TargetType="{x:Type local:EnumEditorControl}">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -198,6 +207,11 @@
 				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.IntegerTemplate>
+		<local:NumericTemplateSelector.ByteTemplate>
+			<DataTemplate DataType="vm:BytePropertyViewModel">
+				<local:ByteUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
+			</DataTemplate>
+		</local:NumericTemplateSelector.ByteTemplate>
 	</local:NumericTemplateSelector>
 
 	<Style TargetType="local:NumericEditorControl">
@@ -261,6 +275,31 @@
 		</Setter>
 	</Style>
 
+	<Style TargetType="local:ByteUpDownControl">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="ShowSpinner" Value="False" />
+		<Setter Property="MinHeight" Value="20" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:ByteUpDownControl}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" Grid.Column="0" VerticalContentAlignment="Center" />
+
+						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
+							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
+							<Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
+						</StackPanel>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style TargetType="local:StringEditorControl">
 		<Setter Property="Height" Value="24" />
 		<Setter Property="Template">
@@ -311,9 +350,9 @@
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
 						<Label Grid.Column="0" Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="Width" />
-						<local:DoubleUpDownControl Grid.Column="1" Value="{Binding Width}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}"/>
+						<local:DoubleUpDownControl x:Name="WidthTextBox" Grid.Column="1" Value="{Binding Width}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}"/>
 						<Label Name="HeightLabel" Grid.Column="2" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="Height" />
-						<local:DoubleUpDownControl Grid.Column="3" Value="{Binding Height}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}"/>
+						<local:DoubleUpDownControl x:Name="HeightTextBox" Grid.Column="3" Value="{Binding Height}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -427,6 +466,602 @@
 		</Style.Triggers>
 	</Style>
 
+	<Style TargetType="local:BrushEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:BrushEditorControl">
+					<Grid>
+						<local:BrushBoxControl Brush="{Binding Value, Converter={local:CommonBrushToBrushConverter}}"
+											   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0"
+											   Height="24" BorderThickness="1" BorderBrush="{DynamicResource InputBorderBrush}"/>
+						<ToggleButton x:Name="brushBoxButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0" BorderThickness="0" Background="Transparent" Opacity="0"
+									  IsEnabled="{TemplateBinding IsEnabled}"
+									  IsHitTestVisible="{Binding ElementName=brushBoxPopup, Path=IsOpen, Mode=OneWay, Converter={StaticResource OppositeBoolConverter}}"
+									  AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}"/>
+						<Popup x:Name="brushBoxPopup" StaysOpen="False" MinWidth="350" Width="{TemplateBinding ActualWidth}" Placement="Bottom" PopupAnimation="Slide" AllowsTransparency="True"
+							   IsOpen="{Binding ElementName=brushBoxButton, Path=IsChecked}">
+							<Grid>
+								<Rectangle VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0"
+										   Fill="{DynamicResource MenuPopupBackgroundBrush}" Stroke="{DynamicResource MenuPopupBorderBrush}"/>
+								<local:BrushTabbedEditorControl Grid.Column="0" Grid.Row="0"/>
+							</Grid>
+						</Popup>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<local:BrushChoiceTemplateSelector x:Key="BrushChoiceTemplateSelector">
+		<local:BrushChoiceTemplateSelector.NoBrushTemplate>
+			<DataTemplate>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
+						<Polygon Points="0,0 24,0 0,14" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+						<Polygon Points="25,1 25,15 1,15" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+					</Canvas>
+				</RadioButton>
+			</DataTemplate>
+		</local:BrushChoiceTemplateSelector.NoBrushTemplate>
+		<local:BrushChoiceTemplateSelector.SolidBrushTemplate>
+			<DataTemplate>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
+						<Rectangle Canvas.Left="0" Canvas.Top="0" Width="25" Height="15" Stroke="{DynamicResource VectorGlyphBrush}" StrokeThickness="1"/>
+						<Rectangle Canvas.Left="2" Canvas.Top="2" Width="21" Height="11" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+					</Canvas>
+				</RadioButton>
+			</DataTemplate>
+		</local:BrushChoiceTemplateSelector.SolidBrushTemplate>
+	</local:BrushChoiceTemplateSelector>
+
+	<Style TargetType="local:BrushTabbedEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:BrushTabbedEditorControl">
+					<StackPanel>
+						<Border Padding="8,10">
+							<StackPanel>
+								<local:ChoiceControl x:Name="brushChoice" ItemTemplateSelector="{StaticResource BrushChoiceTemplateSelector}" ItemTemplate="{x:Null}" HorizontalAlignment="Stretch">
+									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.None}" Name="noBrushTab" Tooltip="{x:Static prop:Resources.NoBrush}"/>
+									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.Solid}" Name="solidColorTab" Tooltip="{x:Static prop:Resources.SolidBrush}"/>
+								</local:ChoiceControl>
+								<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
+							</StackPanel>
+						</Border>
+						<Border Padding="1">
+							<Expander Name="advancedPropertyPanel" Template="{DynamicResource AdvancedPropertiesExpander}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+								  Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Foreground="{DynamicResource PanelForegroundBrush}">
+								<Expander.Content>
+									<Border Padding="19,6,0,6" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}">
+										<local:PropertyPresenter Label="{x:Static prop:Resources.Opacity}">
+											<local:ColorComponentBox
+												Value="{Binding Path=Opacity, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+												ToolTip="{x:Static prop:Resources.Opacity}" AutomationProperties.Name="{x:Static prop:Resources.Opacity}" AutomationProperties.HelpText="{x:Static prop:Resources.Opacity}"
+												HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"/>
+										</local:PropertyPresenter>
+									</Border>
+								</Expander.Content>
+							</Expander>
+						</Border>
+					</StackPanel>
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding Path=Value}" Value="{x:Null}">
+							<Setter Property="Visibility" TargetName="advancedPropertyPanel" Value="Collapsed"/>
+							<Setter Property="Visibility" TargetName="solidBrushEditor" Value="Collapsed"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Path=Value, Converter={local:ObjectToTypeNameConverter}}" Value="CommonSolidBrush">
+							<Setter Property="Visibility" TargetName="advancedPropertyPanel" Value="Visible"/>
+							<Setter Property="Visibility" TargetName="solidBrushEditor" Value="Visible"/>
+						</DataTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<Style TargetType="local:SolidBrushEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:SolidBrushEditorControl">
+					<Grid VerticalAlignment="Top" Margin="0,6,0,0" MinHeight="180">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="*"/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" MinWidth="200"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+						<ComboBox Name="colorSpacePicker" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Solid.ColorSpaces}"
+								  SelectedItem="{Binding Solid.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center"
+								  AutomationProperties.Name="{x:Static prop:Resources.ColorSpace}" AutomationProperties.HelpText="{x:Static prop:Resources.ColorSpace}" ToolTip="{x:Static prop:Resources.ColorSpace}"/>
+						<Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="*"/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<local:ShadeEditorControl x:Name="shadeChooser" Color="{Binding Path=Solid.Shade, Mode=TwoWay}" HueColor="{Binding Path=Solid.HueColor, Mode=OneWay}"
+													  Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,0,1" Panel.ZIndex="1"/>
+							<local:HueEditorControl x:Name="hueChooser" HueColor="{Binding Path=Solid.HueColor, Mode=TwoWay}"
+													Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="1,6,3,1" Panel.ZIndex="0" Focusable="False"/>
+							<local:CurrentColorEditorControl Color="{Binding Path=Solid.Shade, Mode=TwoWay}" InitialColor="{Binding Solid.InitialColor}" LastColor="{Binding Solid.LastColor}"
+															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,0,0" Panel.ZIndex="0" Focusable="False"/>
+						</Grid>
+						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Solid.Shade, Mode=TwoWay}" Margin="0,4,0,0"
+															Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Focusable="False"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:HueEditorControl">
+		<Setter Property="Focusable" Value="False"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:HueEditorControl">
+					<Grid>
+						<Rectangle Name="hueChooser" Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="20" Stroke="Transparent" StrokeThickness="0">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+									<GradientStop Color="Red" Offset="0"/>
+									<GradientStop Color="Yellow" Offset="0.167"/>
+									<GradientStop Color="Lime" Offset="0.333"/>
+									<GradientStop Color="Cyan" Offset="0.500"/>
+									<GradientStop Color="Blue" Offset="0.667"/>
+									<GradientStop Color="Magenta" Offset="0.833"/>
+									<GradientStop Color="Red" Offset="1"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Canvas Name="cursorCanvas" Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="20" Panel.ZIndex="1" ClipToBounds="True">
+							<Canvas Width="{Binding ActualWidth, ElementName=cursorCanvas}" Height="{Binding ActualHeight, ElementName=cursorCanvas}"
+									Canvas.Top="{TemplateBinding CursorPosition}">
+								<Canvas.RenderTransform><TranslateTransform X="0" Y="-4"/></Canvas.RenderTransform>
+								<Polygon Points="0,0 5,5 0,10" Stroke="{DynamicResource HuePickerCursorBrush}" Fill="{DynamicResource HuePickerCursorBrush}"/>
+								<Polygon Points="20,0 15,5 20,10" Stroke="{DynamicResource HuePickerCursorBrush}" Fill="{DynamicResource HuePickerCursorBrush}"/>
+							</Canvas>
+						</Canvas>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:ShadeEditorControl">
+		<Setter Property="Focusable" Value="False"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:ShadeEditorControl">
+					<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+						<Rectangle Name="saturationLayer" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Stroke="Transparent" StrokeThickness="0" VerticalAlignment="Stretch">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+									<GradientStop Color="White" Offset="0"/>
+									<GradientStop Color="Red" Offset="1"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Rectangle Name="brightnessLayer" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Stroke="Transparent" StrokeThickness="0" VerticalAlignment="Stretch" Panel.ZIndex="1">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#00000000" Offset="0"/>
+									<GradientStop Color="Black" Offset="1"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Canvas Name="cursor" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Panel.ZIndex="2" IsHitTestVisible="False">
+							<Canvas.RenderTransform><TranslateTransform X="-6" Y="-6"/></Canvas.RenderTransform>
+							<Rectangle IsHitTestVisible="False" Width="12" Height="12" StrokeThickness="0"
+									Canvas.Left="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition.X}"
+									Canvas.Top="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CursorPosition.Y}">
+								<Rectangle.Fill>
+									<RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5">
+										<RadialGradientBrush.GradientStops>
+											<GradientStop Offset="0" Color="Transparent"/>
+											<GradientStop Offset="0.5" Color="Transparent"/>
+											<GradientStop Offset="0.5" Color="{DynamicResource ShadePickerCursorOutlineColor}"/>
+											<GradientStop Offset="0.67" Color="{DynamicResource ShadePickerCursorOutlineColor}"/>
+											<GradientStop Offset="0.67" Color="{DynamicResource ShadePickerCursorStrokeColor}"/>
+											<GradientStop Offset="0.83" Color="{DynamicResource ShadePickerCursorStrokeColor}"/>
+											<GradientStop Offset="0.83" Color="{DynamicResource ShadePickerCursorOutlineColor}"/>
+											<GradientStop Offset="1" Color="{DynamicResource ShadePickerCursorOutlineColor}"/>
+											<GradientStop Offset="1" Color="Transparent"/>
+										</RadialGradientBrush.GradientStops>
+									</RadialGradientBrush>
+								</Rectangle.Fill>
+							</Rectangle>
+						</Canvas>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:ColorComponentsEditorControl">
+		<Setter Property="Focusable" Value="False"/>
+		<Setter Property="ContextMenu">
+			<Setter.Value>
+				<ContextMenu Placement="Bottom">
+					<MenuItem Name="hlsMenuItem" Header="{x:Static prop:Resources.HLS}" ToolTip="{x:Static prop:Resources.HueLightnessSaturation}" AutomationProperties.HelpText="{x:Static prop:Resources.HueLightnessSaturation}"/>
+					<MenuItem Name="hsbMenuItem" Header="{x:Static prop:Resources.HSB}" ToolTip="{x:Static prop:Resources.HueSaturationBrightness}" AutomationProperties.HelpText="{x:Static prop:Resources.HueSaturationBrightness}"/>
+					<MenuItem Name="rgbMenuItem" Header="{x:Static prop:Resources.RGB}" ToolTip="{x:Static prop:Resources.RedGreenBlue}" AutomationProperties.HelpText="{x:Static prop:Resources.RedGreenBlue}"/>
+					<MenuItem Name="cmykMenuItem" Header="{x:Static prop:Resources.CMYK}" ToolTip="{x:Static prop:Resources.CyanMagentaYellowBlack}" AutomationProperties.HelpText="{x:Static prop:Resources.CyanMagentaYellowBlack}"/>
+				</ContextMenu>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:ColorComponentsEditorControl">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="*"/>
+						</Grid.RowDefinitions>
+						
+						<Grid x:Name="hlsPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="23"/>
+								<ColumnDefinition Width="77"/>
+							</Grid.ColumnDefinitions>
+							
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+									ToolTip="{x:Static prop:Resources.Hue}" AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.HueInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="hueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+								AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Mode=TwoWay}" Unit="°">
+								<local:ColorComponentBox.GradientBrush>
+									<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+										<GradientStop Color="Red" Offset="0"/>
+										<GradientStop Color="Yellow" Offset="0.167"/>
+										<GradientStop Color="Lime" Offset="0.333"/>
+										<GradientStop Color="Cyan" Offset="0.500"/>
+										<GradientStop Color="Blue" Offset="0.667"/>
+										<GradientStop Color="Magenta" Offset="0.833"/>
+										<GradientStop Color="Red" Offset="1"/>
+									</LinearGradientBrush>
+								</local:ColorComponentBox.GradientBrush>
+							</local:ColorComponentBox>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+									ToolTip="{x:Static prop:Resources.Lightness}" AutomationProperties.Name="{x:Static prop:Resources.Lightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Lightness}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.LightnessInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="lightnessEntry"
+								AutomationProperties.Name="{x:Static prop:Resources.Lightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Lightness}" ToolTip="{x:Static prop:Resources.Lightness}"
+								HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Lightness, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToLightnessBrushConverter}}"/>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.SaturationInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="saturationEntryHLS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Saturation, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
+
+							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3"
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
+							<local:ColorComponentBox x:Name="alphaEntryHLS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+						</Grid>
+						
+						<Grid x:Name="hsbPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="23"/>
+								<ColumnDefinition Width="77"/>
+							</Grid.ColumnDefinitions>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.HueInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="hsbHueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+								AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Mode=TwoWay}" Unit="°">
+								<local:ColorComponentBox.GradientBrush>
+									<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+										<GradientStop Color="Red" Offset="0"/>
+										<GradientStop Color="Yellow" Offset="0.167"/>
+										<GradientStop Color="Lime" Offset="0.333"/>
+										<GradientStop Color="Cyan" Offset="0.500"/>
+										<GradientStop Color="Blue" Offset="0.667"/>
+										<GradientStop Color="Magenta" Offset="0.833"/>
+										<GradientStop Color="Red" Offset="1"/>
+									</LinearGradientBrush>
+								</local:ColorComponentBox.GradientBrush>
+							</local:ColorComponentBox>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.SaturationInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="saturationEntryHSB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+								AutomationProperties.Name="{x:Static prop:Resources.Saturation}" AutomationProperties.HelpText="{x:Static prop:Resources.Saturation}" ToolTip="{x:Static prop:Resources.Saturation}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Saturation, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToSaturationBrushConverter}}"/>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Brightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Brightness}" ToolTip="{x:Static prop:Resources.Brightness}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.BrightnessInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="brightnessEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+								AutomationProperties.Name="{x:Static prop:Resources.Brightness}" AutomationProperties.HelpText="{x:Static prop:Resources.Brightness}" ToolTip="{x:Static prop:Resources.Brightness}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brightness, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBrightnessBrushConverter}}"/>
+
+							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3"
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
+							<local:ColorComponentBox x:Name="alphaEntryHSB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+						</Grid>
+						
+						<Grid x:Name="rgbPane" Grid.Row="0" Grid.Column="0">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="23"/>
+								<ColumnDefinition Width="77"/>
+							</Grid.ColumnDefinitions>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Red}" AutomationProperties.HelpText="{x:Static prop:Resources.Red}" ToolTip="{x:Static prop:Resources.Red}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.RedInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="redEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+								AutomationProperties.Name="{x:Static prop:Resources.Red}" AutomationProperties.HelpText="{x:Static prop:Resources.Red}" ToolTip="{x:Static prop:Resources.Red}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=R, Mode=TwoWay}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToRedBrushConverter}}"/>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Green}" AutomationProperties.HelpText="{x:Static prop:Resources.Green}" ToolTip="{x:Static prop:Resources.Green}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.GreenInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="greenEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+								AutomationProperties.Name="{x:Static prop:Resources.Green}" AutomationProperties.HelpText="{x:Static prop:Resources.Green}" ToolTip="{x:Static prop:Resources.Green}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=G, Mode=TwoWay}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToGreenBrushConverter}}"/>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Blue}" AutomationProperties.HelpText="{x:Static prop:Resources.Blue}" ToolTip="{x:Static prop:Resources.Blue}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.BlueInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="blueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+								AutomationProperties.Name="{x:Static prop:Resources.Blue}" AutomationProperties.HelpText="{x:Static prop:Resources.Blue}" ToolTip="{x:Static prop:Resources.Blue}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=B, Mode=TwoWay}"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlueBrushConverter}}"/>
+
+							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3"
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
+							<local:ColorComponentBox x:Name="alphaEntryRGB" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+						</Grid>
+						
+						<Grid x:Name="cmykPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+								<RowDefinition Height="Auto" MinHeight="22"/>
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="23"/>
+								<ColumnDefinition Width="77"/>
+							</Grid.ColumnDefinitions>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Cyan}" AutomationProperties.HelpText="{x:Static prop:Resources.Cyan}" ToolTip="{x:Static prop:Resources.Cyan}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.CyanInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="cyanEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+								AutomationProperties.Name="{x:Static prop:Resources.Cyan}" AutomationProperties.HelpText="{x:Static prop:Resources.Cyan}" ToolTip="{x:Static prop:Resources.Cyan}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=C, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToCyanBrushConverter}}"/>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Magenta}" AutomationProperties.HelpText="{x:Static prop:Resources.Magenta}" ToolTip="{x:Static prop:Resources.Magenta}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.MagentaInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="magentaEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
+								AutomationProperties.Name="{x:Static prop:Resources.Magenta}" AutomationProperties.HelpText="{x:Static prop:Resources.Magenta}" ToolTip="{x:Static prop:Resources.Magenta}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=M, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToMagentaBrushConverter}}"/>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Yellow}" AutomationProperties.HelpText="{x:Static prop:Resources.Yellow}" ToolTip="{x:Static prop:Resources.Yellow}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.YellowInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="yellowEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
+								AutomationProperties.Name="{x:Static prop:Resources.Yellow}" AutomationProperties.HelpText="{x:Static prop:Resources.Yellow}" ToolTip="{x:Static prop:Resources.Yellow}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Y, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToYellowBrushConverter}}"/>
+
+							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="3" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Black}" AutomationProperties.HelpText="{x:Static prop:Resources.Black}" ToolTip="{x:Static prop:Resources.Black}"/>
+							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Margin="3,0,0,0">
+								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.BlackInitial}"/>
+							</Label>
+							<local:ColorComponentBox x:Name="blackEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3"
+								AutomationProperties.Name="{x:Static prop:Resources.Black}" AutomationProperties.HelpText="{x:Static prop:Resources.Black}" ToolTip="{x:Static prop:Resources.Black}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=K, Converter={local:DoubleToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlackBrushConverter}}"/>
+
+							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4"
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"/>
+							<local:ColorComponentBox x:Name="alphaEntryCMYK" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="4"
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}" Unit="%"
+								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
+						</Grid>
+						
+						<TextBox Name="hexEntry" HorizontalContentAlignment="Left" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="77" Grid.Column="0" Grid.Row="2"
+							AutomationProperties.Name="{x:Static prop:Resources.HexValue}" AutomationProperties.HelpText="{x:Static prop:Resources.HexValue}" ToolTip="{x:Static prop:Resources.HexValue}"
+							Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:ColorComponentBox">
+		<Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+		<Setter Property="IsTabStop" Value="False"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:ColorComponentBox">
+					<Grid>
+						<TextBox Name="innerTextBox" VerticalContentAlignment="Center"
+								 BitmapEffect="{TemplateBinding BitmapEffect}" BitmapEffectInput="{TemplateBinding BitmapEffectInput}"
+								 CacheMode="{TemplateBinding CacheMode}" Clip="{TemplateBinding Clip}" ClipToBounds="{TemplateBinding ClipToBounds}" ContextMenu="{TemplateBinding ContextMenu}"
+								 Cursor="{TemplateBinding Cursor}" DataContext="{TemplateBinding DataContext}" FlowDirection="{TemplateBinding FlowDirection}"
+								 Focusable="True" FocusVisualStyle="{TemplateBinding FocusVisualStyle}" FontFamily="{TemplateBinding FontFamily}"
+								 FontSize="{TemplateBinding FontSize}" FontStretch="{TemplateBinding FontStretch}" FontStyle="{TemplateBinding FontStyle}" FontWeight="{TemplateBinding FontWeight}" ForceCursor="{TemplateBinding ForceCursor}"
+								 Height="{TemplateBinding Height}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+								 IsHitTestVisible="{TemplateBinding IsHitTestVisible}" IsEnabled="{TemplateBinding IsEnabled}" IsManipulationEnabled="{TemplateBinding IsManipulationEnabled}"
+								 IsTabStop="True" IsUndoEnabled="True" Margin="{TemplateBinding Margin}" MaxHeight="{TemplateBinding MaxHeight}" MaxWidth="{TemplateBinding MaxWidth}" MinHeight="{TemplateBinding MinHeight}"
+								 MinWidth="{TemplateBinding MinWidth}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ToolTip="{TemplateBinding ToolTip}" TabIndex="{TemplateBinding TabIndex}"
+								 Tag="{TemplateBinding Tag}" UseLayoutRounding="{TemplateBinding UseLayoutRounding}" Uid="{TemplateBinding Uid}" Grid.Row="0" Grid.Column="0" Panel.ZIndex="0"
+								 AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}" AutomationProperties.HelpText="{TemplateBinding AutomationProperties.Name}">
+							<TextBox.Text>
+								<MultiBinding Converter="{local:DoubleToQuantityConverter}">
+									<Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}"/>
+									<Binding Path="Unit" RelativeSource="{RelativeSource TemplatedParent}"/>
+								</MultiBinding>
+							</TextBox.Text>
+						</TextBox>
+						<local:BrushBoxControl x:Name="brushBoxControl" Visibility="Visible"
+							Brush="{Binding Path=GradientBrush, RelativeSource={RelativeSource TemplatedParent}}"
+							Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+							Grid.Row="0" Grid.Column="0" Panel.ZIndex="1"/>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=innerTextBox}" Value="True">
+							<Setter TargetName="innerTextBox" Property="Text" Value="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, StringFormat={}{0:##0.#}}"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding IsFocused, ElementName=innerTextBox}" Value="True">
+							<Setter TargetName="innerTextBox" Property="Text" Value="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, StringFormat={}{0:##0.#}}"/>
+						</DataTrigger>
+						<Trigger Property="GradientBrush" Value="{x:Null}">
+							<Setter Property="Visibility" TargetName="brushBoxControl" Value="Hidden"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:CurrentColorEditorControl">
+		<Setter Property="IsTabStop" Value="False"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:CurrentColorEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="20"/>
+						</Grid.ColumnDefinitions>
+						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="0" Panel.ZIndex="0" IsTabStop="False">
+							<local:BrushBoxControl.Brush>
+								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=InitialColor, Converter={local:CommonColorToColorConverter}}"/>
+							</local:BrushBoxControl.Brush>
+						</local:BrushBoxControl>
+						<Button x:Name="initialColorButton" HorizontalAlignment="Stretch" Grid.Column="0" Panel.ZIndex="1" Opacity="0" FocusVisualStyle="{x:Null}" IsTabStop="False"
+								AutomationProperties.Name="{x:Static prop:Resources.InitialColor}" AutomationProperties.HelpText="{x:Static prop:Resources.InitialColor}" ToolTip="{x:Static prop:Resources.InitialColor}"/>
+						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="1" IsTabStop="False"
+											   AutomationProperties.Name="{x:Static prop:Resources.CurrentColor}" AutomationProperties.HelpText="{x:Static prop:Resources.CurrentColor}" ToolTip="{x:Static prop:Resources.CurrentColor}">
+							<local:BrushBoxControl.Brush>
+								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:CommonColorToColorConverter}}"/>
+							</local:BrushBoxControl.Brush>
+						</local:BrushBoxControl>
+						<local:BrushBoxControl HorizontalAlignment="Stretch" Grid.Column="2" Margin="1,0,0,0" IsTabStop="False"
+											   AutomationProperties.Name="{x:Static prop:Resources.LastColor}" AutomationProperties.HelpText="{x:Static prop:Resources.LastColor}" ToolTip="{x:Static prop:Resources.LastColor}">
+							<local:BrushBoxControl.Brush>
+								<SolidColorBrush Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=LastColor, Converter={local:CommonColorToColorConverter}}"/>
+							</local:BrushBoxControl.Brush>
+						</local:BrushBoxControl>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:BrushBoxControl">
+		<Setter Property="IsTabStop" Value="False"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:BrushBoxControl">
+					<Grid>
+						<Label HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+							   Content="{x:Static prop:Resources.NoBrush}" Visibility="{TemplateBinding NoBrushVisible}"
+							   BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}}" BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}"
+							   Grid.Column="0" Grid.Row="0" Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}" Padding="0"/>
+						<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+								   Stroke="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" StrokeThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}}"
+								   Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" Visibility="{Binding BrushVisible, RelativeSource={RelativeSource TemplatedParent}}"
+								   Fill="{StaticResource CheckerBoard}" Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"/>
+						<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Panel.ZIndex="1"
+								   Stroke="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" StrokeThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}}"
+								   Fill="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brush}" Visibility="{TemplateBinding BrushVisible}"
+								   Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="NoBrushVisible" Value="Hidden"/>
+		<Setter Property="BrushVisible" Value="Visible"/>
+		<Style.Triggers>
+			<Trigger Property="Brush" Value="{x:Null}">
+				<Setter Property="NoBrushVisible" Value="Visible"/>
+				<Setter Property="BrushVisible" Value="Hidden"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
 	<Style TargetType="local:PropertyPresenter">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -456,11 +1091,58 @@
 		</Setter>
 	</Style>
 
+	<ControlTemplate TargetType="Expander" x:Key="AdvancedPropertiesExpander">
+		<StackPanel Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}">
+			<ToggleButton
+				x:Name="ExpanderButton" DockPanel.Dock="Top" Template="{DynamicResource AdvancedPropertiesToggleButton}" Content="{TemplateBinding Header}" VerticalAlignment="Stretch"
+				IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" OverridesDefaultStyle="True" Height="14" Padding="1.5,1,1.5,1">
+			</ToggleButton>
+			<ContentPresenter x:Name="ExpanderContent" Grid.Row="1" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+		</StackPanel>
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsExpanded" Value="True">
+				<Setter TargetName="ExpanderContent" Property="Visibility" Value="Visible"/>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+	<ControlTemplate x:Key="AdvancedPropertiesToggleButton" TargetType="{x:Type ToggleButton}">
+		<Border x:Name="ExpanderButtonBorder" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" DockPanel.Dock="Top">
+			<Path x:Name="Chevron" Data="M 0,3 L 5,8 L 10,3" Stroke="{DynamicResource ToggleItemForegroundBrush}" Width="10" Height="10" StrokeThickness="2"
+				  HorizontalAlignment="Stretch" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"/>
+		</Border>
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsChecked" Value="True">
+				<Setter Property="Data" TargetName="Chevron" Value="M 0,8 L 5,3 L 10,8"/>
+			</Trigger>
+			<Trigger Property="IsMouseOver" Value="true">
+				<Setter Property="Stroke" Value="{DynamicResource ToggleItemMouseOverForegroundBrush}" TargetName="Chevron"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="true">
+				<Setter Property="Stroke" Value="{DynamicResource ToggleItemSelectedForegroundBrush}" TargetName="Chevron"/>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+	<Style TargetType="TabControl">
+		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}"/>
+		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}"/>
+	</Style>
+
+	<Style TargetType="TabItem">
+		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}"/>
+		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}"/>
+	</Style>
+
+	<Style TargetType="Label">
+		<Setter Property="Foreground" Value="{DynamicResource LabelForegroundBrush}"/>
+	</Style>
+	
 	<Style x:Key="HeaderedMenuItem" TargetType="MenuItem">
 		<Setter Property="OverridesDefaultStyle" Value="True" />
 		<Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
 		<Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
-		<Setter Property="Foreground" Value="{DynamicResource ListItemForegroundBrush}" />
+		<Setter Property="Foreground" Value="{DynamicResource MenuItemForegroundBrush}" />
 		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="BorderBrush" Value="Transparent" />
@@ -513,6 +1195,7 @@
 		<Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.MessageFontFamilyKey}}" />
 		<Setter Property="FontSize" Value="{DynamicResource {x:Static SystemFonts.MessageFontSizeKey}}" />
 		<Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.MessageFontWeightKey}}" />
+		<Setter Property="Foreground" Value="{DynamicResource MenuItemForegroundBrush}"/>
 		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="Background" Value="{DynamicResource MenuPopupBackgroundBrush}" />
 		<Setter Property="Grid.IsSharedSizeScope" Value="true" />

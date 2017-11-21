@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Cadenza.Collections;
 using Xamarin.PropertyEditing.Tests.MockPropertyInfo;
 
@@ -25,8 +24,13 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			} else {
 				propertyInfo = new MockPropertyInfo<T> (name, category, canWrite, converterTypes);
 			}
-			
-			this.properties.Add (name, propertyInfo);
+
+			AddProperty<T> (propertyInfo);
+		}
+
+		public void AddProperty<T> (IPropertyInfo propertyInfo)
+		{
+			this.properties.Add (propertyInfo.Name, propertyInfo);
 		}
 
 		public void AddReadOnlyProperty<T> (string name, string category = null)

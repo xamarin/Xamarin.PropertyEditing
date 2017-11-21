@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Reflection;
 using Xamarin.PropertyEditing.Tests.MockControls;
@@ -10,10 +10,16 @@ namespace Xamarin.PropertyEditing.Tests
 	{
 		public Task<IObjectEditor> GetObjectEditorAsync (object item)
 		{
-			var mockControl = item as MockControl;
-			if (mockControl != null)
-				return Task.FromResult<IObjectEditor> (new MockObjectEditor (mockControl) { SupportsDefault = true });
-			return Task.FromResult<IObjectEditor> (new ReflectionObjectEditor (item));
+			if (this.editorCache.TryGetValue (item, out IObjectEditor cachedEditor)) {
+				return Task.FromResult (cachedEditor);
+			}
+			IObjectEditor editor = (item is MockControl mockControl)
+				? (IObjectEditor)(new MockObjectEditor (mockControl) { SupportsDefault = true })
+				: new ReflectionObjectEditor (item);
+			this.editorCache.Add (item, editor);
+			return Task.FromResult (editor);
 		}
+
+		private Dictionary<object, IObjectEditor> editorCache = new Dictionary<object, IObjectEditor> ();
 	}
 }

@@ -59,6 +59,8 @@
     <Compile Include="AsyncWorkQueueTests.cs" />
     <Compile Include="BoolViewModelTests.cs" />
     <Compile Include="BrushPropertyViewModelTests.cs" />
+    <Compile Include="BytePropertyViewModelTests.cs" />
+    <Compile Include="CommonColorTests.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="IPropertyConverter.cs" />
     <Compile Include="MockControls\MockControl.cs" />

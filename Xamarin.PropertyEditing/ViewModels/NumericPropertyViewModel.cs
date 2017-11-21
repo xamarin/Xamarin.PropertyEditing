@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Xamarin.PropertyEditing.ViewModels
@@ -38,6 +38,25 @@ namespace Xamarin.PropertyEditing.ViewModels
 		protected override double DecrementValue (double value)
 		{
 			return value - 1;
+		}
+	}
+
+	internal class BytePropertyViewModel
+		: ConstrainedPropertyViewModel<byte>
+	{
+		public BytePropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (property, editors)
+		{
+		}
+
+		protected override byte IncrementValue (byte value)
+		{
+			return (byte)(value + 1);
+		}
+
+		protected override byte DecrementValue (byte value)
+		{
+			return (byte)(value - 1);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<SolidColorBrush x:Key="ListBackgroundBrush">#252526</SolidColorBrush>
 	<SolidColorBrush x:Key="PanelBackgroundBrush">#252526</SolidColorBrush>
@@ -62,8 +62,22 @@
 	<SolidColorBrush x:Key="InputBorderBrush">#434346</SolidColorBrush>
 	<SolidColorBrush x:Key="InputForegroundBrush">#F1F1F1</SolidColorBrush>
 
+	<SolidColorBrush x:Key="LabelForegroundBrush">#F1F1F1</SolidColorBrush>
+
+	<SolidColorBrush x:Key="MenuItemForegroundBrush">#F1F1F1</SolidColorBrush>
+
 	<SolidColorBrush x:Key="ThicknessIconBackgroundBrush">#292929</SolidColorBrush>
 	<SolidColorBrush x:Key="ThicknessIconBorderBrush">#292929</SolidColorBrush>
+
+	<Color x:Key="ShadePickerCursorStrokeColor">#000000</Color>
+	<Color x:Key="ShadePickerCursorOutlineColor">#FFFFFF</Color>
+
+	<SolidColorBrush x:Key="HuePickerCursorBrush">#000000</SolidColorBrush>
+
+	<SolidColorBrush x:Key="BrushBoxCheckerBoardLight">#FFFFFF</SolidColorBrush>
+	<SolidColorBrush x:Key="BrushBoxCheckerBoardDark">#D3D3D3</SolidColorBrush>
+
+	<SolidColorBrush x:Key="VectorGlyphBrush">#C5C5C5</SolidColorBrush>
 
 	<SolidColorBrush x:Key="CategoryExpanderBorderBrush" Color="#333333" />
 	

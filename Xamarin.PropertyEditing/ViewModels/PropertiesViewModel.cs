@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -436,10 +434,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(double), (p,e) => new FloatingPropertyViewModel (p, e) },
 			{ typeof(int), (p,e) => new IntegerPropertyViewModel (p, e) },
 			{ typeof(long), (p,e) => new IntegerPropertyViewModel (p, e) },
-			{ typeof(Point), (p,e) => new PropertyViewModel<Point> (p, e) },
-			{ typeof(Size), (p,e) => new PropertyViewModel<Size> (p, e) },
-			{ typeof(Rectangle), (p,e) => new PropertyViewModel<Rectangle> (p, e) },
-			{ typeof(CommonSolidBrush), (p, e) => new SolidBrushPropertyViewModel(p, e) },
+			{ typeof(CommonSolidBrush), (p, e) => new BrushPropertyViewModel(p, e) },
 			{ typeof(CommonBrush), (p, e) => new BrushPropertyViewModel(p, e) },
 			{ typeof(CommonPoint), (p,e) => new PointPropertyViewModel (p, e) },
 			{ typeof(CommonSize), (p,e) => new SizePropertyViewModel (p, e) },

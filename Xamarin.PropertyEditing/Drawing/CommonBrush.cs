@@ -6,7 +6,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// Base class for brush descriptions.
 	/// </summary>
 	[Serializable]
-	public abstract class CommonBrush : IEquatable<CommonBrush>
+	public abstract class CommonBrush
 	{
 		// TODO: add transforms
 
@@ -27,11 +27,12 @@ namespace Xamarin.PropertyEditing.Drawing
 			return Equals (brush);
 		}
 
-		public bool Equals (CommonBrush other)
+		protected bool Equals (CommonBrush other)
 		{
 			return other != null &&
 				   Opacity == other.Opacity;
 		}
+		// Note: not overriding equality operators on the base class on purpose because that won't be properly overridden on derived classes.
 
 		public override int GetHashCode ()
 		{

@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -9,7 +9,7 @@ namespace Xamarin.PropertyEditing.Windows
 		: Button
 	{
 		public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register (
-			"Header", typeof(object), typeof(MenuButton), new PropertyMetadata (default(object)));
+			nameof(Header), typeof(object), typeof(MenuButton), new PropertyMetadata (default(object)));
 
 		public object Header
 		{
@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static readonly DependencyProperty HeaderTemplateProperty = DependencyProperty.Register (
-			"HeaderTemplate", typeof(DataTemplate), typeof(MenuButton), new PropertyMetadata (default(DataTemplate)));
+			nameof(HeaderTemplate), typeof(DataTemplate), typeof(MenuButton), new PropertyMetadata (default(DataTemplate)));
 
 		public DataTemplate HeaderTemplate
 		{

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -72,6 +72,18 @@ namespace Xamarin.PropertyEditing.Windows
 
 			var toggle = (ToggleButton) VisualTreeHelper.GetChild (presenter, 0);
 			toggle.IsChecked = true;
+		}
+
+		internal void FocusSelectedItem ()
+		{
+			var container = ItemContainerGenerator.ContainerFromIndex (SelectedIndex) as ContentPresenter;
+			if (container == null)
+				throw new InvalidOperationException ("Unexpected visual tree");
+
+			var toggle = VisualTreeHelper.GetChild (container, 0) as ToggleButton;
+			if (toggle == null)
+				throw new InvalidOperationException ("Children must be of ToggleButton");
+			toggle.Focus ();
 		}
 
 		private void OnItemContainerGeneratorOnStatusChanged (object sender, EventArgs args)

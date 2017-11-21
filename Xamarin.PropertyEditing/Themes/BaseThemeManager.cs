@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
+using System;
 
 namespace Xamarin.PropertyEditing.Themes
 {

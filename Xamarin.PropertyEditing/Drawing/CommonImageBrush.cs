@@ -6,7 +6,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// Paints an area with an image.
 	/// </summary>
 	[Serializable]
-	public class CommonImageBrush : CommonTileBrush, IEquatable<CommonImageBrush>
+	public sealed class CommonImageBrush : CommonTileBrush, IEquatable<CommonImageBrush>
 	{
 		public CommonImageBrush(
 			string imageSource,
@@ -42,6 +42,9 @@ namespace Xamarin.PropertyEditing.Drawing
 				   base.Equals (other) &&
 				   ImageSource == other.ImageSource;
 		}
+
+		public static bool operator == (CommonImageBrush left, CommonImageBrush right) => Equals (left, right);
+		public static bool operator != (CommonImageBrush left, CommonImageBrush right) => !Equals (left, right);
 
 		public override int GetHashCode ()
 		{

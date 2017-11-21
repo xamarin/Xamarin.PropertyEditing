@@ -7,7 +7,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// A linear gradient.
 	/// </summary>
 	[Serializable]
-	public class CommonLinearGradientBrush : CommonGradientBrush, IEquatable<CommonLinearGradientBrush>
+	public sealed class CommonLinearGradientBrush : CommonGradientBrush, IEquatable<CommonLinearGradientBrush>
 	{
 		public CommonLinearGradientBrush (
 			CommonPoint startPoint, CommonPoint endPoint,
@@ -45,6 +45,9 @@ namespace Xamarin.PropertyEditing.Drawing
 				   StartPoint.Equals (other.StartPoint) &&
 				   EndPoint.Equals (other.EndPoint);
 		}
+
+		public static bool operator == (CommonLinearGradientBrush left, CommonLinearGradientBrush right) => Equals (left, right);
+		public static bool operator != (CommonLinearGradientBrush left, CommonLinearGradientBrush right) => !Equals (left, right);
 
 		public override int GetHashCode ()
 		{

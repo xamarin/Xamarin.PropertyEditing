@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -65,6 +65,32 @@ namespace Xamarin.PropertyEditing.Windows
 		protected override long GetDecrementedValue (long value)
 		{
 			return value - 1;
+		}
+	}
+
+	internal class ByteUpDownControl
+		: NumericUpDownControl<byte>
+	{
+		static ByteUpDownControl ()
+		{
+			MaximumValueProperty.OverrideMetadata (typeof (ByteUpDownControl), new PropertyMetadata (byte.MaxValue));
+			MinimumValueProperty.OverrideMetadata (typeof (ByteUpDownControl), new PropertyMetadata (byte.MinValue));
+			DefaultStyleKeyProperty.OverrideMetadata (typeof (ByteUpDownControl), new FrameworkPropertyMetadata (typeof (ByteUpDownControl)));
+		}
+
+		protected override bool TryParse (string text, out byte value)
+		{
+			return byte.TryParse (text, out value);
+		}
+
+		protected override byte GetIncrementedValue (byte value)
+		{
+			return (byte)(value + 1);
+		}
+
+		protected override byte GetDecrementedValue (byte value)
+		{
+			return (byte)(value - 1);
 		}
 	}
 

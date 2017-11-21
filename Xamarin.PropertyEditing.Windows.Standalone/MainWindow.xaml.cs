@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Tests;
 
 namespace Xamarin.PropertyEditing.Windows.Standalone
@@ -15,11 +16,21 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 			this.panel.EditorProvider = new MockEditorProvider ();
 		}
 
-		private void Button_Click (object sender, RoutedEventArgs e)
+		private async void Button_Click (object sender, RoutedEventArgs e)
 		{
-			var mockedButton = sender as IMockedControl;
-			var inspectedObject = (mockedButton == null || mockedButton.MockedControl == null)
-				? sender : mockedButton.MockedControl;
+			var mockedControl = sender as IMockedControl;
+			object inspectedObject;
+			if (mockedControl == null || mockedControl.MockedControl == null) {
+				inspectedObject = sender;
+			} else {
+				inspectedObject = mockedControl.MockedControl;
+				if (mockedControl is MockedSampleControlButton mockedButton) {
+					IObjectEditor editor = await this.panel.EditorProvider.GetObjectEditorAsync (inspectedObject);
+					await mockedButton.SetBrush (editor, new CommonSolidBrush (20, 120, 220, 240, "sRGB"));
+					await mockedButton.SetReadOnlyBrush (editor, new CommonSolidBrush (240, 220, 15, 190));
+				}
+			}
+
 			if (this.panel.SelectedItems.Contains (inspectedObject))
 				this.panel.SelectedItems.Remove (inspectedObject);
 			else

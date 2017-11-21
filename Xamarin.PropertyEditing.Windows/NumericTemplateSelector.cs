@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -19,6 +19,12 @@ namespace Xamarin.PropertyEditing.Windows
 			set;
 		}
 
+		public DataTemplate ByteTemplate
+		{
+			get;
+			set;
+		}
+
 		public override DataTemplate SelectTemplate (object item, DependencyObject container)
 		{
 			if (item == null)
@@ -28,6 +34,8 @@ namespace Xamarin.PropertyEditing.Windows
 				return FloatingTemplate;
 			else if (item is ConstrainedPropertyViewModel<long> || item is ConstrainedPropertyViewModel<int>)
 				return IntegerTemplate;
+			else if (item is ConstrainedPropertyViewModel<byte>)
+				return ByteTemplate;
 
 			return base.SelectTemplate (item, container);
 		}
