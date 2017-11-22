@@ -552,9 +552,11 @@
 							<ColumnDefinition Width="*" MinWidth="200"/>
 							<ColumnDefinition Width="Auto"/>
 						</Grid.ColumnDefinitions>
-						<ComboBox Name="colorSpacePicker" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Solid.ColorSpaces}"
+						<local:PropertyPresenter Label="{x:Static prop:Resources.ColorSpace}" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0">
+							<ComboBox Name="colorSpacePicker" ItemsSource="{Binding Solid.ColorSpaces}"
 								  SelectedItem="{Binding Solid.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center"
 								  AutomationProperties.Name="{x:Static prop:Resources.ColorSpace}" AutomationProperties.HelpText="{x:Static prop:Resources.ColorSpace}" ToolTip="{x:Static prop:Resources.ColorSpace}"/>
+						</local:PropertyPresenter>
 						<Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="*"/>
