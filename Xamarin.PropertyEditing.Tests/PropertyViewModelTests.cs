@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -158,6 +158,27 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (vm.Value, Is.EqualTo (default (TValue)));
 			Assume.That (vm.MultipleValues, Is.True);
 			Assert.That (changed, Is.True, "PropertyChanged was not raised for Value when values began to disagree");
+		}
+
+		[Test]
+		public void ValueSourceDefaultWhenValuesDisagree ()
+		{
+			TValue value = GetNonDefaultRandomTestValue ();
+			TValue otherValue = GetRandomTestValue ();
+			while (Equals (otherValue, value))
+				otherValue = GetRandomTestValue ();
+
+			var vm = GetBasicTestModel (value);
+			Assume.That (vm.Value, Is.EqualTo (value));
+
+			var editor = GetBasicEditor (otherValue);
+
+			vm.Editors.Add (editor);
+
+			Assume.That (vm.Value, Is.EqualTo (default (TValue)));
+			Assume.That (vm.MultipleValues, Is.True);
+
+			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Default));
 		}
 
 		[Test]
