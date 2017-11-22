@@ -166,11 +166,11 @@ namespace Xamarin.PropertyEditing.Mac
 				propertyFilter.ConstraintTo(this, (pf, c) => pf.Left == c.Left + 12),
 
 				propertyArrangeModeLabel.ConstraintTo(this, (pl, c) => pl.Top == c.Top + 5),
-				propertyArrangeModeLabel.ConstraintTo(propertyArrangeMode, (pl, pa) => pl.Left == pa.Left - 73),
+				propertyArrangeModeLabel.ConstraintTo(propertyArrangeMode, (pl, pa) => pl.Left == pa.Left - 71),
 
 				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Top == c.Top + 3),
-				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Left == c.Left + 312),
-				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Width == 154),
+				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Left == c.Left + 310),
+				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Width == c.Width - 320),
 
 				tableContainer.ConstraintTo(this, (t, c) => t.Top == c.Top + 30),
 				tableContainer.ConstraintTo(this, (t, c) => t.Width == c.Width - 20),

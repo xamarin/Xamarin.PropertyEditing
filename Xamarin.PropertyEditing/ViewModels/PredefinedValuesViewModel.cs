@@ -48,6 +48,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public bool IsConstrainedToPredefined => this.predefinedValues.IsConstrainedToPredefined;
+
 		// TODO: Combination (flags) values
 
 		protected override TValue ValidateValue (TValue validationValue)
