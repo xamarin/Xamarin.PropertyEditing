@@ -18,6 +18,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public SolidBrushViewModel Solid { get; }
 
+		// TODO: make this its own property view model so we can edit bindings, set to resources, etc.
 		public double Opacity {
 			get => Value == null ? 1.0 : Value.Opacity;
 			set {

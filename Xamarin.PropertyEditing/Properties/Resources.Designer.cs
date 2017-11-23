@@ -151,6 +151,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Editor.
+        /// </summary>
+        public static string ColorEditorTabLabel {
+            get {
+                return ResourceManager.GetString("ColorEditorTabLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Color space.
         /// </summary>
         public static string ColorSpace {

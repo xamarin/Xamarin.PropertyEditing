@@ -18,6 +18,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public CommonSolidBrush PreviousSolidBrush { get; set; }
 
+		// TODO: make this its own property view model so we can edit bindings, set to resources, etc.
 		public string ColorSpace => Parent.Value is CommonSolidBrush solidBrush ? solidBrush.ColorSpace : null;
 
 		public CommonColor HueColor {
@@ -45,6 +46,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		// TODO: make this its own property view model so we can edit bindings, set to resources, etc.
 		public CommonColor Color {
 			get => Parent.Value is CommonSolidBrush solidBrush ? solidBrush.Color : new CommonColor (0, 0, 0);
 			set {
