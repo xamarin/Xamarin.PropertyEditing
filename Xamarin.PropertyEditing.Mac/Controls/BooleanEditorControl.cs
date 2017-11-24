@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using AppKit;
 using Xamarin.PropertyEditing.Mac.Resources;
@@ -11,10 +12,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public BooleanEditorControl ()
 		{
-			BooleanEditor = new NSButton () { TranslatesAutoresizingMaskIntoConstraints = false };
+			BooleanEditor = new NSButton { 
+				TranslatesAutoresizingMaskIntoConstraints = false,
+				Title = string.Empty,
+				ControlSize = NSControlSize.Small,
+				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+			};
 			BooleanEditor.SetButtonType (NSButtonType.Switch);
-
-			BooleanEditor.Title = string.Empty;
 
 			// update the value on 'enter'
 			BooleanEditor.Activated += (sender, e) => {
@@ -25,7 +29,8 @@ namespace Xamarin.PropertyEditing.Mac
 
             this.DoConstraints (new[] {
 				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
-				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Left == c.Left + 3)
+				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Top == c.Top + 5),
+				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Left == c.Left + 4),
 			});
 
 			UpdateTheme ();

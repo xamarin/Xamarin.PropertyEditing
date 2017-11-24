@@ -97,10 +97,13 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
 
+			NSControlSize controlSize = NSControlSize.Small;
+
 			propertyFilter = new NSSearchField (new CGRect (10, Frame.Height - 25, 170, 24)) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				PlaceholderString = LocalizationResources.PropertyFilterLabel,
-				ControlSize = NSControlSize.Regular,
+				ControlSize = controlSize,
+				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
 			};
 			AddSubview (propertyFilter);
 
@@ -111,12 +114,14 @@ namespace Xamarin.PropertyEditing.Mac
 				Editable = false,
 				Bezeled = false,
 				StringValue = LocalizationResources.ArrangeByLabel,
+				ControlSize = controlSize,
 			};
 
 			propertyArrangeMode = new NSComboBox (new CGRect (320, Frame.Height - 25, 153, 24)) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				Editable = false,
-				ControlSize = NSControlSize.Regular,
+				ControlSize =controlSize,
+				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
 			};
 
 			var enumValues = Enum.GetValues (typeof (PropertyArrangeMode));
@@ -135,21 +140,19 @@ namespace Xamarin.PropertyEditing.Mac
 			propertyArrangeMode.SelectionChanged += OnArrageModeChanged;
 			propertyFilter.Changed += OnPropertyFilterChanged;
 
-			// create a table view and a scroll view
-			var tableContainer = new NSScrollView (new CGRect (10, Frame.Height - 210, Frame.Width - 20, Frame.Height - 55)) {
-				TranslatesAutoresizingMaskIntoConstraints = false,
-			};
-
-			propertyTable = new FirstResponderOutlineView () {
+			propertyTable = new FirstResponderOutlineView {
 				RefusesFirstResponder = true,
 				AutoresizingMask = NSViewResizingMask.WidthSizable,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 				HeaderView = null,
+#if DEBUG
+				GridStyleMask = NSTableViewGridStyle.SolidHorizontalLine | NSTableViewGridStyle.SolidVerticalLine,
+#endif
 			};
 
 			NSTableColumn propertiesList = new NSTableColumn (PropertyListColId) { Title = LocalizationResources.PropertyColumnTitle };
 			NSTableColumn propertyEditors = new NSTableColumn (PropertyEditorColId) { Title = LocalizationResources.ValueColumnTitle };
-			propertiesList.Width = 200;
+			propertiesList.Width = 158;
 			propertyEditors.Width = 250;
 			propertyTable.AddColumn (propertiesList);
 			propertyTable.AddColumn (propertyEditors);
@@ -157,20 +160,25 @@ namespace Xamarin.PropertyEditing.Mac
 			// Set OutlineTableColumn or the arrows showing children/expansion will not be drawn
 			propertyTable.OutlineTableColumn = propertiesList;
 
+			// create a table view and a scroll view
+			var tableContainer = new NSScrollView (new CGRect (10, Frame.Height - 210, propertiesList.Width + propertyEditors.Width, Frame.Height - 55)) {
+				TranslatesAutoresizingMaskIntoConstraints = false,
+			};
+
 			// add the panel to the window
 			tableContainer.DocumentView = propertyTable;
 			AddSubview (tableContainer);
 
 			this.DoConstraints (new NSLayoutConstraint[] { 
 				propertyFilter.ConstraintTo(this, (pf, c) => pf.Top == c.Top + 3),
-				propertyFilter.ConstraintTo(this, (pf, c) => pf.Left == c.Left + 12),
+				propertyFilter.ConstraintTo(this, (pf, c) => pf.Left == c.Left + 10),
 
 				propertyArrangeModeLabel.ConstraintTo(this, (pl, c) => pl.Top == c.Top + 5),
 				propertyArrangeModeLabel.ConstraintTo(propertyArrangeMode, (pl, pa) => pl.Left == pa.Left - 71),
 
-				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Top == c.Top + 3),
+				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Top == c.Top + 4),
 				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Left == c.Left + 310),
-				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Width == c.Width - 320),
+				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Width == c.Width - 321),
 
 				tableContainer.ConstraintTo(this, (t, c) => t.Top == c.Top + 30),
 				tableContainer.ConstraintTo(this, (t, c) => t.Width == c.Width - 20),

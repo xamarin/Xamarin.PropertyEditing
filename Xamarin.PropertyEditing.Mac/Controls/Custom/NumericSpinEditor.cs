@@ -154,8 +154,8 @@ namespace Xamarin.PropertyEditing.Mac
 			stepper = new NSStepper {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				ValueWraps = false,
+				ControlSize = controlSize,
 			};
-			stepper.Cell.ControlSize = controlSize;
 
 			formatter = new NSNumberFormatter {
 				FormatterBehavior = NSNumberFormatterBehavior.Version_10_4,
@@ -169,10 +169,9 @@ namespace Xamarin.PropertyEditing.Mac
 				Alignment = NSTextAlignment.Right,
 				Formatter = formatter,
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
+				ControlSize = controlSize,
 			};
-
-			numericEditor.Cell.ControlSize = controlSize;
-			numericEditor.Cell.Font = NSFont.ControlContentFontOfSize (NSFont.SystemFontSizeForControlSize (controlSize));
 
 			stepper.Activated += (s, e) => {
 				OnStepperActivated (s, e);
@@ -189,8 +188,9 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (numericEditor);
 
 			this.DoConstraints (new[] {
-				numericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - 17),
-				stepper.ConstraintTo (numericEditor, (s, n) => s.Left == n.Right + 5),
+				numericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - 16),
+				numericEditor.ConstraintTo (this, (n, c) => n.Height == 19),
+				stepper.ConstraintTo (numericEditor, (s, n) => s.Left == n.Right + 4),
 				stepper.ConstraintTo (numericEditor, (s, n) => s.Top == n.Top),
 			});
 		}

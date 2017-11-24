@@ -19,10 +19,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 			XEditor.Frame = new CGRect (48, 0, 50, 20);
 
-			YLabel.Frame = new CGRect (155, 0, 25, 24);
+			YLabel.Frame = new CGRect (150, 0, 25, 24);
 			YLabel.StringValue = "Y:"; // TODO Localise
 
-			YEditor.Frame = new CGRect (175, 0, 50, 20);
+			YEditor.Frame = new CGRect (170, 0, 50, 20);
 		}
 
 		protected override void UpdateValue ()
