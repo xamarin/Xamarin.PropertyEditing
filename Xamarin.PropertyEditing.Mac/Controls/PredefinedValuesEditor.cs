@@ -146,10 +146,10 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (EditorViewModel.IsConstrainedToPredefined) {
 				popUpButton.AccessibilityEnabled = popUpButton.Enabled;
-				popUpButton.AccessibilityTitle = Strings.AccessibilityCombobox (ViewModel.Property.Name);
+				popUpButton.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);
 			} else {
 				comboBox.AccessibilityEnabled = comboBox.Enabled;
-				comboBox.AccessibilityTitle = Strings.AccessibilityCombobox (ViewModel.Property.Name);
+				comboBox.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);
 			}
 		}
 	}

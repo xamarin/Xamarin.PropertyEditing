@@ -109,5 +109,4 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <Import Project="..\packages\netfx-System.StringResources.3.0.14\build\netfx-System.StringResources.targets" Condition="Exists('..\packages\netfx-System.StringResources.3.0.14\build\netfx-System.StringResources.targets')" />
 </Project>

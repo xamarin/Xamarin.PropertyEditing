@@ -35,7 +35,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				TValue realValue;
 				if (!this.predefinedValues.PredefinedValues.TryGetValue (value, out realValue)) {
 					if (this.predefinedValues.IsConstrainedToPredefined) {
-						SetError (Strings.InvalidValue (value)); 
+						SetError (string.Format (LocalizationResources.InvalidValue, value)); 
 						return;
 					}
 

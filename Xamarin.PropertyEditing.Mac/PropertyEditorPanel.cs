@@ -99,7 +99,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			propertyFilter = new NSSearchField (new CGRect (10, Frame.Height - 25, 170, 24)) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
-				PlaceholderString = Strings.PropertyFilterLabel,
+				PlaceholderString = LocalizationResources.PropertyFilterLabel,
 				ControlSize = NSControlSize.Regular,
 			};
 			AddSubview (propertyFilter);
@@ -110,7 +110,7 @@ namespace Xamarin.PropertyEditing.Mac
 				TextColor = NSColor.Black,
 				Editable = false,
 				Bezeled = false,
-				StringValue = Strings.ArrangeByLabel,
+				StringValue = LocalizationResources.ArrangeByLabel,
 			};
 
 			propertyArrangeMode = new NSComboBox (new CGRect (320, Frame.Height - 25, 153, 24)) {

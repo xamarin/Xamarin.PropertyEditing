@@ -39,10 +39,10 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			XEditor.AccessibilityEnabled = XEditor.Enabled;
-			XEditor.AccessibilityTitle = Strings.AccessibilityWidthEditor (ViewModel.Property.Name);
+			XEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityWidthEditor, ViewModel.Property.Name);
 
 			YEditor.AccessibilityEnabled = YEditor.Enabled;
-			YEditor.AccessibilityTitle = Strings.AccessibilityHeightEditor (ViewModel.Property.Name);
+			YEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityHeightEditor, ViewModel.Property.Name);
 		}
 	}
 }
