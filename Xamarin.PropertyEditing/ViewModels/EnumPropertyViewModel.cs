@@ -33,7 +33,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{
 				TValue realValue;
 				if (!Enum.TryParse (value, out realValue)) {
-					SetError (Strings.UnableToParseValue (value));
+					SetError (string.Format (LocalizationResources.UnableToParseValue, value));
 					return;
 				}
 

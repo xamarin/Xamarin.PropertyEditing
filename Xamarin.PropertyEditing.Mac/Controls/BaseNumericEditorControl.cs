@@ -69,7 +69,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			NumericEditor.AccessibilityEnabled = NumericEditor.Enabled;
-			NumericEditor.AccessibilityTitle = Strings.AccessibilityNumeric (ViewModel.Property.Name);
+			NumericEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityNumeric, ViewModel.Property.Name);
 		}
 	}
 }
