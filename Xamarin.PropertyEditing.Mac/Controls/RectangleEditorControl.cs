@@ -2,11 +2,12 @@
 using System.Drawing;
 using AppKit;
 using CoreGraphics;
+using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class RectangleEditorControl
-		: BaseRectangleEditorControl<Rectangle>
+	internal abstract class RectangleEditorControl<T>: BaseRectangleEditorControl<T>
+		where T : struct
 	{
 		public RectangleEditorControl ()
 		{
@@ -21,10 +22,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 			YEditor.Frame = new CGRect (175, 23, 50, 20);
 
-			WidthLabel.Frame = new CGRect (5, 0, 45, 24);
+			WidthLabel.Frame = new CGRect (3, 0, 45, 24);
 			WidthLabel.StringValue = "Width:";
 
-			WidthEditor.Frame = new CGRect (50, 0, 50, 20);
+			WidthEditor.Frame = new CGRect (48, 0, 50, 20);
 
 			HeightLabel.Frame = new CGRect (125, 0, 45, 24);
 			HeightLabel.StringValue = "Height:";
@@ -33,12 +34,21 @@ namespace Xamarin.PropertyEditing.Mac
 
 			RowHeight = 48;
 		}
+	}
 
-		protected override void OnInputUpdated (object sender, EventArgs e)
+	internal class SystemRectangleEditorControl : RectangleEditorControl<Rectangle>
+	{
+		protected override void UpdateValue ()
 		{
-			ViewModel.Value = new Rectangle ((int)XEditor.Value, (int)YEditor.Value, (int)WidthEditor.Value, (int)HeightEditor.Value);
+			XEditor.Value = ViewModel.Value.X;
+			YEditor.Value = ViewModel.Value.Y;
+			WidthEditor.Value = ViewModel.Value.Width;
+			HeightEditor.Value = ViewModel.Value.Height;
 		}
+	}
 
+	internal class CommonRectangleEditorControl : RectangleEditorControl<CommonRectangle>
+	{
 		protected override void UpdateValue ()
 		{
 			XEditor.Value = ViewModel.Value.X;

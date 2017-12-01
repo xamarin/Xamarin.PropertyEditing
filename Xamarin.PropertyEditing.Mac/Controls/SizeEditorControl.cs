@@ -36,11 +36,6 @@ namespace Xamarin.PropertyEditing.Mac
 			XEditor.Value = ViewModel.Value.Width;
 			YEditor.Value = ViewModel.Value.Height;
 		}
-
-		protected override void OnInputUpdated (object sender, EventArgs e)
-		{
-			ViewModel.Value = new Size ((int)XEditor.Value, (int)YEditor.Value);
-		}
 	}
 
 	internal class CommonSizeEditorControl : SizeEditorControl<CommonSize>
@@ -49,11 +44,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			XEditor.Value = ViewModel.Value.Width;
 			YEditor.Value = ViewModel.Value.Height;
-		}
-
-		protected override void OnInputUpdated (object sender, EventArgs e)
-		{
-			ViewModel.Value = new CommonSize (XEditor.Value, YEditor.Value);
 		}
 	}
 }

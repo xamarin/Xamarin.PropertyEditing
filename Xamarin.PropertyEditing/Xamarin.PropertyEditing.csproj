@@ -124,6 +124,7 @@
     <Compile Include="Resources\LocalizationResources.Designer.cs">
       <DependentUpon>LocalizationResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\RectanglePropertyViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
