@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.Mac
 						};
 					}
 
-					view.StringValue = ((group == null) ? vm.Property.Name  + ": " : group.Key) ?? String.Empty;
+					view.StringValue = ((group == null) ? vm.Property.Name : group.Key) ?? String.Empty;
 					return view;
 
 				case PropertyEditorPanel.PropertyEditorColId:
@@ -170,7 +170,8 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (PointPropertyViewModel), typeof (CommonPointEditorControl) },
 			{typeof (PropertyViewModel<Size>), typeof (SystemSizeEditorControl)},
 			{typeof (SizePropertyViewModel), typeof (CommonSizeEditorControl) },
-			{typeof (PropertyViewModel<Rectangle>), typeof (RectangleEditorControl)}
+			{typeof (RectanglePropertyViewModel), typeof (CommonRectangleEditorControl) },
+			{typeof (PropertyViewModel<Rectangle>), typeof (SystemRectangleEditorControl)}
 		};
 	}
 }

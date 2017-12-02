@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using AppKit;
+using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -73,6 +74,18 @@ namespace Xamarin.PropertyEditing.Mac
 			YEditor.Editable = ViewModel.Property.CanWrite;
 		}
 
-		protected abstract void OnInputUpdated (object sender, EventArgs e);
+		protected override void UpdateAccessibilityValues ()
+		{
+			XEditor.AccessibilityEnabled = XEditor.Enabled;
+			XEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityXEditor, ViewModel.Property.Name);
+
+			YEditor.AccessibilityEnabled = YEditor.Enabled;
+			YEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityYEditor, ViewModel.Property.Name);
+		}
+
+		protected virtual void OnInputUpdated (object sender, EventArgs e)
+		{
+			ViewModel.Value = (T)Activator.CreateInstance (typeof (T), XEditor.Value, YEditor.Value);
+		}
 	}
 }

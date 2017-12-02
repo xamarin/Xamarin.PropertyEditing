@@ -64,6 +64,13 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (HeightLabel);
 			AddSubview (HeightEditor);
 
+			this.DoConstraints (new[] {
+				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 50),
+				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 50),
+				WidthEditor.ConstraintTo (this, (we, c) => we.Width == 50),
+				HeightEditor.ConstraintTo (this, (he, c) => he.Width == 50),
+			});
+
 			UpdateTheme ();
 		}
 
