@@ -80,6 +80,23 @@
 	<SolidColorBrush x:Key="VectorGlyphBrush">#C5C5C5</SolidColorBrush>
 
 	<SolidColorBrush x:Key="CategoryExpanderBorderBrush" Color="#333333" />
+
+	<SolidColorBrush x:Key="ComboBoxBackgroundBrush">#FF333337</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxBorderBrush">#FF434346</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxForegroundBrush">#FFF1F1F1</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxSeparatorBrush">#FF333337</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxButtonBackgroundBrush">#FF333337</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxButtonSeparatorBrush">#FF333337</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxMouseOverBackgroundBrush">#FF3F3F46</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxMouseOverBorderBrush">#FF434346</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxPressedBackgroundBrush">#FF3F3F46</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxPressedBorderBrush">#FF434346</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxButtonMouseOverBackgroundBrush">#FF1F1F20</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxButtonMouseOverSeparatorBrush">#FF007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxButtonPressedBackgroundBrush">#FF007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxButtonPressedSeparatorBrush">#FF007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxPopupBackgroundBrush">#FF1B1B1C</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxPopupBorderBrush">#FF333337</SolidColorBrush>
 	
 	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Fill" Color="Transparent"/>
 	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Stroke" Color="#F1F1F1"/>

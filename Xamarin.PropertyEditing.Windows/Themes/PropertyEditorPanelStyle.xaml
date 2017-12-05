@@ -113,13 +113,6 @@
 		</Expander>
 	</DataTemplate>
 
-	<Style x:Key="PropertySearchTextBox" TargetType="TextBox">
-		<Setter Property="Margin" Value="4,1,4,2" />
-		<Setter Property="Height" Value="18" />
-		<Setter Property="Background" Value="{DynamicResource SearchControlBackgroundBrush}" />
-		<Setter Property="BorderBrush" Value="{DynamicResource SearchControlBorderBrush}" />
-	</Style>
-
 	<Style TargetType="local:PropertyEditorPanel">
 		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
 		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}" />
@@ -174,7 +167,7 @@
 									<RowDefinition Height="*" />
 								</Grid.RowDefinitions>
 
-								<TextBox Name="search" Grid.Row="0" Style="{StaticResource PropertySearchTextBox}" AutomationProperties.Name="Search" Text="{Binding FilterText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+								<TextBox Name="search" Grid.Row="0" Style="{DynamicResource PropertySearchTextBox}" AutomationProperties.Name="Search" Text="{Binding FilterText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
 
 								<local:MenuButton Grid.Row="1" x:Name="arrangeBy" Header="Arrange by:" Margin="0,0,18,0" Content="{Binding ArrangeMode}">
 									<local:MenuButton.Visibility>
