@@ -1292,6 +1292,36 @@
 		<Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
 		<Setter Property="Foreground" Value="{DynamicResource InputForegroundBrush}" />
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="AllowDrop" Value="true"/>
+		<Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+		<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type TextBox}">
+					<Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+						<ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEnabled" Value="false">
+							<Setter Property="Opacity" TargetName="border" Value="0.56"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+					<Condition Property="IsSelectionActive" Value="false"/>
+				</MultiTrigger.Conditions>
+				<Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+			</MultiTrigger>
+		</Style.Triggers>
 	</Style>
 
 	<Style TargetType="local:SubmitTextBox" BasedOn="{StaticResource {x:Type TextBox}}" />
@@ -1301,6 +1331,19 @@
 		<Setter Property="Height" Value="18" />
 		<Setter Property="Background" Value="{DynamicResource SearchControlBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource SearchControlBorderBrush}" />
+
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Background" Value="{DynamicResource SearchControlActiveBackgroundBrush}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource SearchControlActiveBorderBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource SearchControlActiveForegroundBrush}" />
+			</Trigger>
+			<Trigger Property="IsFocused" Value="True">
+				<Setter Property="Background" Value="{DynamicResource SearchControlActiveBackgroundBrush}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource SearchControlActiveBorderBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource SearchControlActiveForegroundBrush}" />
+			</Trigger>
+		</Style.Triggers>
 	</Style>
 
 	<Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">

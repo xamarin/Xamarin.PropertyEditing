@@ -58,9 +58,9 @@
 
 	<SolidColorBrush x:Key="SearchControlBackgroundBrush">#FFFFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlBorderBrush">#FFCCCEDB</SolidColorBrush>
-	<SolidColorBrush x:Key="SearchControlForegroundBrush">#1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlForegroundBrush">#FF1E1E1E</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlActiveBackgroundBrush">#FFFFFFFF</SolidColorBrush>
-	<SolidColorBrush x:Key="SearchControlActiveBorderBrush">#0007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlActiveBorderBrush">#FF007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlActiveForegroundBrush">#1E1E1E</SolidColorBrush>
 
 	<SolidColorBrush x:Key="InputBackgroundBrush">#FFFFFFFF</SolidColorBrush>
