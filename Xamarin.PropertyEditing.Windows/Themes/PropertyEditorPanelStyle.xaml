@@ -108,9 +108,9 @@
 	</Style>
 
 	<DataTemplate x:Key="PropertyGroupTemplate">
-		<Expander Header="{Binding Key,Mode=OneTime}" Style="{StaticResource TreeExpanderStyle}">
+		<local:CategoryExpander Header="{Binding Key,Mode=OneTime}" Style="{StaticResource TreeExpanderStyle}">
 			<ItemsControl Style="{StaticResource PropertyListStyle}" ItemsSource="{Binding}" />
-		</Expander>
+		</local:CategoryExpander>
 	</DataTemplate>
 
 	<Style TargetType="local:PropertyEditorPanel">

@@ -55,6 +55,7 @@
     <Compile Include="BrushChoiceTemplateSelector.cs" />
     <Compile Include="BrushEditorControl.cs" />
     <Compile Include="BrushTabbedEditorControl.cs" />
+    <Compile Include="CategoryExpander.cs" />
     <Compile Include="CommonBrushToBrushConverter.cs" />
     <Compile Include="ByteToPercentageConverter.cs" />
     <Compile Include="ChoiceControl.cs" />
