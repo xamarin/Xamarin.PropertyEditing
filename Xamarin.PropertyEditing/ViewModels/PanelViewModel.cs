@@ -123,13 +123,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (groupedTypeProperties != null) { // Insert type-grouped properties back in sorted.
 				int i = 0;
 				foreach (var kvp in groupedTypeProperties.OrderBy (kvp => kvp.Key)) {
+					var group = new ObservableGrouping<string, EditorViewModel> (kvp.Key) {
+						new PropertyGroupViewModel (kvp.Key, kvp.Value, ObjectEditors)
+					};
+
 					for (; i < this.arranged.Count; i++) {
 						var g = (IGrouping<string, EditorViewModel>) this.arranged[i];
+
 						// TODO: Are we translating categories? If so this needs to lookup the resource and be culture specific
-						if (String.Compare (g.Key, kvp.Key, StringComparison.Ordinal) > 0) {
-							this.arranged.Insert (i++, new ObservableGrouping<string, EditorViewModel> (kvp.Key) {
-								new PropertyGroupViewModel (kvp.Key, kvp.Value, ObjectEditors)
-							});
+						if (g.Key == null) { // nulls go on the bottom.
+							this.arranged.Insert (i, group);
+							break;
+						} else if (String.Compare (g.Key, kvp.Key, StringComparison.Ordinal) > 0) {
+							this.arranged.Insert (i++, group);
 							break;
 						}
 					}
@@ -211,10 +217,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			if (String.IsNullOrWhiteSpace (FilterText))
 				return true;
-
-			if (ArrangeMode == PropertyArrangeMode.Category && vm.Category != null && vm.Category.Contains (FilterText, StringComparison.OrdinalIgnoreCase)) {
+			if (ArrangeMode == PropertyArrangeMode.Category && vm.Category != null && vm.Category.Contains (FilterText, StringComparison.OrdinalIgnoreCase))
 				return true;
-			}
+			if (String.IsNullOrWhiteSpace (vm.Name))
+				return false;
 
 			return vm.Name.Contains (FilterText, StringComparison.OrdinalIgnoreCase);
 		}
