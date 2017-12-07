@@ -13,10 +13,13 @@ namespace Xamarin.PropertyEditing.Windows
 	internal class GroupEditorControl
 		: Selector
 	{
-		public GroupEditorControl ()
+		static GroupEditorControl ()
 		{
 			FocusableProperty.OverrideMetadata (typeof(GroupEditorControl), new FrameworkPropertyMetadata (false));
+		}
 
+		public GroupEditorControl ()
+		{
 			ItemContainerGenerator.StatusChanged += OnItemContainerGeneratorStatusChanged;
 		}
 
