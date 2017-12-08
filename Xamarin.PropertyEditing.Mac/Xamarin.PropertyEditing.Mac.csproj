@@ -163,6 +163,8 @@
     <BundleResource Include="Resources\property-button-local-mac-active-10%402x.png" />
     <BundleResource Include="Resources\property-button-local-mac-active-10~dark.png" />
     <BundleResource Include="Resources\property-button-local-mac-active-10~dark%402x.png" />
+    <BundleResource Include="Themes\PropertyEditorAppearance.Dark.car" />
+    <BundleResource Include="Themes\PropertyEditorAppearance.Light.car" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

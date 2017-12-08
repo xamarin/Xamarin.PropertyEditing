@@ -8,8 +8,8 @@ namespace Xamarin.PropertyEditing.Themes
 	{
 		public NSAppearance CurrentAppearance { get; private set; }
 
-		NSAppearance DarkAppearance = NSAppearance.GetAppearance (NSAppearance.NameVibrantDark);
-		NSAppearance LightAppearance = NSAppearance.GetAppearance (NSAppearance.NameVibrantLight);
+		NSAppearance DarkAppearance = new NSAppearance ("Themes/PropertyEditorAppearance.Dark", null);
+		NSAppearance LightAppearance = new NSAppearance ("Themes/PropertyEditorAppearance.Light", null);
 
 		protected override void SetTheme ()
 		{

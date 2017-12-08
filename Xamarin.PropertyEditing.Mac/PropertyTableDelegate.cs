@@ -65,8 +65,15 @@ namespace Xamarin.PropertyEditing.Mac
 					if (view == null) {
 						view = new UnfocusableTextField {
 							Identifier = "label",
-							Alignment = NSTextAlignment.Right,
 						};
+					}
+
+					// Depending on if we are drawing a grouping label or property label, we align differently.
+					if (group == null) {
+						view.Alignment = NSTextAlignment.Right;
+					} else {
+						view.Alignment = NSTextAlignment.Left;
+						view.Bounds = new CoreGraphics.CGRect (view.Bounds.X - 8, view.Bounds.Y - 4, view.Bounds.Width, view.Bounds.Height);
 					}
 
 					view.StringValue = ((group == null) ? vm.Property.Name + ":" : group.Key) ?? String.Empty;
