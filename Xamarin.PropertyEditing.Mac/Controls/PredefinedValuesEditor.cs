@@ -23,22 +23,20 @@ namespace Xamarin.PropertyEditing.Mac
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				BackgroundColor = NSColor.Clear,
 				StringValue = String.Empty,
-				Cell = {
-					ControlSize = NSControlSize.Small
-				},
+				ControlSize = NSControlSize.Small,
 				Editable = false,
+				Font = NSFont.FromFontName(DefaultFontName, DefaultFontSize),
+			};
+
+			this.comboBox.SelectionChanged += (sender, e) => {
+				EditorViewModel.ValueName = comboBox.SelectedValue.ToString ();
 			};
 
 			this.popUpButton = new NSPopUpButton {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				StringValue = String.Empty,
-				Cell = {
-					ControlSize = NSControlSize.Small
-				},
-			};
-
-			this.comboBox.SelectionChanged += (sender, e) => {
-				EditorViewModel.ValueName = comboBox.SelectedValue.ToString ();
+				ControlSize = NSControlSize.Small,
+				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
 			};
 
 			popupButtonList = new NSMenu ();
@@ -100,9 +98,10 @@ namespace Xamarin.PropertyEditing.Mac
 					AddSubview (this.popUpButton);
 
 					this.DoConstraints (new[] {
-						popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 26),
-						popUpButton.ConstraintTo (this, (pub, c) => pub.Left == c.Left + 3),
-						popUpButton.ConstraintTo (this, (pub, c) => pub.Top == c.Top + 6),
+						popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 34),
+						popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
+						popUpButton.ConstraintTo (this, (pub, c) => pub.Left == pub.Left + 4),
+						popUpButton.ConstraintTo (this, (pub, c) => pub.Top == pub.Top + 0),
 					});
 
 					firstKeyView = this.popUpButton;
@@ -118,9 +117,10 @@ namespace Xamarin.PropertyEditing.Mac
 					AddSubview (this.comboBox);
 
 					this.DoConstraints (new[] {
-						comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 28),
-						comboBox.ConstraintTo (this, (cb, c) => cb.Left == c.Left + 3),
-						comboBox.ConstraintTo (this, (cb, c) => cb.Top == c.Top + 4),
+						comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 35),
+						comboBox.ConstraintTo (this, (cb, c) => cb.Height == DefaultControlHeight),
+						comboBox.ConstraintTo (this, (cb, c) => cb.Left == cb.Left + 4),
+						comboBox.ConstraintTo (this, (cb, c) => cb.Top == cb.Top + 0),
 					});
 
 					firstKeyView = this.comboBox;

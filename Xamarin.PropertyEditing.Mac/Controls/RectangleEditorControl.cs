@@ -12,27 +12,31 @@ namespace Xamarin.PropertyEditing.Mac
 		public RectangleEditorControl ()
 		{
 			// TODO localize
-			XLabel.Frame = new CGRect (29, 23, 25, 24);
-			XLabel.StringValue = "X:";
+			XLabel.Frame = new CGRect (38, 27, 25, 22);
+			XLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
+			XLabel.StringValue = "X";
 
-			XEditor.Frame = new CGRect (48, 23, 50, 20);
+			XEditor.Frame = new CGRect (4, 46, 90, 20);
 
-			YLabel.Frame = new CGRect (155, 23, 25, 24);
-			YLabel.StringValue = "Y:";
+			YLabel.Frame = new CGRect (166, 27, 25, 22);
+			YLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
+			YLabel.StringValue = "Y";
 
-			YEditor.Frame = new CGRect (175, 23, 50, 20);
+			YEditor.Frame = new CGRect (132, 46, 90, 20);
 
-			WidthLabel.Frame = new CGRect (3, 0, 45, 24);
-			WidthLabel.StringValue = "Width:";
+			WidthLabel.Frame = new CGRect (24, -6, 50, 22);
+			WidthLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
+			WidthLabel.StringValue = "WIDTH";
 
-			WidthEditor.Frame = new CGRect (48, 0, 50, 20);
+			WidthEditor.Frame = new CGRect (4, 13, 90, 20);
 
-			HeightLabel.Frame = new CGRect (125, 0, 45, 24);
-			HeightLabel.StringValue = "Height:";
+			HeightLabel.Frame = new CGRect (150, -6, 50, 22);
+			HeightLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
+			HeightLabel.StringValue = "HEIGHT";
 
-			HeightEditor.Frame = new CGRect (175, 0, 50, 20);
+			HeightEditor.Frame = new CGRect (132, 13, 90, 20);
 
-			RowHeight = 48;
+			RowHeight = 66;
 		}
 	}
 

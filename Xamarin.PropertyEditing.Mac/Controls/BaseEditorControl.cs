@@ -6,41 +6,83 @@ using CoreGraphics;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class BaseEditorControl : NSView
+	internal abstract class BaseEditorControl : NSView
 	{
-		NSButton errorButton;
 		IEnumerable errorList;
+		const int DefaultPropertyButtonSize = 10;
+		const int DefaultActioButtonSize = 16;
+
+		public event EventHandler ActionButtonClicked;
+		NSButton actionButton;
+		public NSButton ActionButton {
+			get { return actionButton; }
+		}
+
+		public event EventHandler PropertyButtonClicked;
+		NSButton propertyButton;
+		public NSButton PropertyButton {
+			get { return propertyButton; }
+		}
 
 		public BaseEditorControl ()
 		{
-			errorButton = new NSButton () {
+			propertyButton = new NSButton {
 				Bordered = false,
-				Enabled = false,
+				AlternateImage = NSImage.ImageNamed ("property-button-default-mac-active-10"),
+				Cell = {
+					HighlightsBy = 1,
+				},
+				Image = NSImage.ImageNamed ("property-button-default-mac-10"),
 				ImageScaling = NSImageScale.AxesIndependently,
 				Title = string.Empty,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
-			errorButton.Activated += (object sender, EventArgs e) => {
-				var Container = new ErrorMessageView (errorList) {
-					Frame = new CGRect (CGPoint.Empty, new CGSize (320, 200))
-				};
-
-				var errorMessagePopUp = new NSPopover {
-					Behavior = NSPopoverBehavior.Semitransient,
-					ContentViewController = new NSViewController (null, null) { View = Container },
-				};
-
-				errorMessagePopUp.Show (default (CGRect), errorButton, NSRectEdge.MinYEdge);
+			propertyButton.Activated += (object sender, EventArgs e) => {
+				NotifyPropertyButtonClicked ();
 			};
 
-			AddSubview (errorButton);
+			AddSubview (propertyButton);
+
+			actionButton = new NSButton {
+				Bordered = false,
+				Enabled = false,
+#if DEBUG
+				Image = NSImage.ImageNamed ("action-warning-16"),
+#endif
+				ImageScaling = NSImageScale.AxesIndependently,
+				Title = string.Empty,
+				TranslatesAutoresizingMaskIntoConstraints = false,
+			};
+
+			actionButton.Activated += (object sender, EventArgs e) => {
+				if (errorList != null) {
+					var Container = new ErrorMessageView (errorList) {
+						Frame = new CGRect (CGPoint.Empty, new CGSize (320, 200))
+					};
+
+					var errorMessagePopUp = new NSPopover {
+						Behavior = NSPopoverBehavior.Semitransient,
+						ContentViewController = new NSViewController (null, null) { View = Container },
+					};
+
+					errorMessagePopUp.Show (default (CGRect), actionButton, NSRectEdge.MinYEdge);
+				}
+
+				NotifyActioButtonClicked ();
+			};
+
+			AddSubview (actionButton);
 
 			this.DoConstraints (new[] {
-				errorButton.ConstraintTo (this, (cb, c) => cb.Width == 20),
-				errorButton.ConstraintTo (this, (cb, c) => cb.Height == 20),
-				errorButton.ConstraintTo (this, (cb, c) => cb.Left == c.Right - 22),
-				errorButton.ConstraintTo (this, (cb, c) => cb.Top == c.Top + 4),
+				propertyButton.ConstraintTo (this, (ab, c) => ab.Width == DefaultPropertyButtonSize),
+				propertyButton.ConstraintTo (this, (ab, c) => ab.Height == DefaultPropertyButtonSize),
+				propertyButton.ConstraintTo (this, (ab, c) => ab.Top == c.Top + 6), // TODO: Better centering based on the icon height
+				propertyButton.ConstraintTo (this, (ab, c) => ab.Left == c.Right - 28),
+				actionButton.ConstraintTo (this, (eb, c) => eb.Width == DefaultActioButtonSize),
+				actionButton.ConstraintTo (this, (eb, c) => eb.Height == DefaultActioButtonSize),
+				actionButton.ConstraintTo (propertyButton, (eb, ab) => eb.Left == ab.Left + 10),
+				actionButton.ConstraintTo (this, (eb, c) => eb.Top == c.Top + 3), // TODO: Better centering based on the icon height
 			});
 
 			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
@@ -67,9 +109,20 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			errorList = errors;
 
-			errorButton.Enabled = errors != null;
+			actionButton.Enabled = errors != null;
+
 			// Using NSImageName.Caution for now, we can change this later at the designers behest
-			errorButton.Image = errorButton.Enabled ? NSImage.ImageNamed (NSImageName.Caution) : null;
+			actionButton.Image = actionButton.Enabled ? NSImage.ImageNamed ("action-warning-16") : null;
+		}
+
+		void NotifyPropertyButtonClicked ()
+		{
+			PropertyButtonClicked?.Invoke (this, EventArgs.Empty);
+		}
+
+		void NotifyActioButtonClicked ()
+		{
+			ActionButtonClicked?.Invoke (this, EventArgs.Empty);
 		}
 	}
 }

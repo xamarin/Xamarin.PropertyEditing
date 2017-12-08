@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.Mac
 						};
 					}
 
-					view.StringValue = ((group == null) ? vm.Property.Name : group.Key) ?? String.Empty;
+					view.StringValue = ((group == null) ? vm.Property.Name + ":" : group.Key) ?? String.Empty;
 					return view;
 
 				case PropertyEditorPanel.PropertyEditorColId:
@@ -72,6 +72,11 @@ namespace Xamarin.PropertyEditing.Mac
 					// we must reset these every time, as the view may have been reused
 					editor.ViewModel = vm;
 					editor.TableRow = outlineView.RowForItem (item);
+
+					// Force a row update due to new height, but only when we are non-default
+					if (editor.TriggerRowChange)
+						outlineView.NoteHeightOfRowsWithIndexesChanged (new NSIndexSet (editor.TableRow));
+
 					return editor;
 			}
 

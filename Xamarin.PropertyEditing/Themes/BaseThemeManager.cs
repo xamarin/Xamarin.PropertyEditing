@@ -30,8 +30,7 @@ namespace Xamarin.PropertyEditing.Themes
 		void NotifyThemeChanged ()
 		{
 			SetTheme ();
-			if (ThemeChanged != null)
-				ThemeChanged (null, EventArgs.Empty);
+			ThemeChanged?.Invoke (null, EventArgs.Empty);
 		}
 
 		public event EventHandler ThemeChanged;
