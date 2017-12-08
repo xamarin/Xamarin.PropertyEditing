@@ -92,6 +92,21 @@ namespace Xamarin.PropertyEditing.Reflection
 			return Task.FromResult (info.GetHandlers (this.target));
 		}
 
+		public Task<IReadOnlyList<ITypeInfo>> GetAssignableTypesAsync (IPropertyInfo property)
+		{
+			return Task.Run (() => {
+				ReflectionPropertyInfo realInfo = (ReflectionPropertyInfo) property;
+				var assemblies = AppDomain.CurrentDomain.GetAssemblies ();
+
+				return (IReadOnlyList<ITypeInfo>)assemblies.Select (a => new { Assembly = a, Info = new AssemblyInfo (a.FullName)})
+					.SelectMany (a =>
+						a.Assembly.DefinedTypes.Select (t => new { Type = t, Assembly = a }))
+					.AsParallel ()
+					.Where (t => realInfo.Type.IsAssignableFrom (t.Type))
+					.Select (t => new TypeInfo (t.Assembly.Info, t.Type.Namespace, t.Type.Name)).ToList();
+			});
+		}
+
 		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
 		{
 			if (property == null)

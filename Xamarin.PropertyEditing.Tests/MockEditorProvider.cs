@@ -20,6 +20,11 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult (editor);
 		}
 
+		public Task<object> CreateObjectAsync (ITypeInfo type)
+		{
+			throw new System.NotImplementedException ();
+		}
+
 		private Dictionary<object, IObjectEditor> editorCache = new Dictionary<object, IObjectEditor> ();
 	}
 }

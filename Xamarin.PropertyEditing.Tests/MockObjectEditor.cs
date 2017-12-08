@@ -106,6 +106,11 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult<IReadOnlyList<string>> (new string[0]);
 		}
 
+		public Task<IReadOnlyList<ITypeInfo>> GetAssignableTypesAsync (IPropertyInfo property)
+		{
+			throw new NotImplementedException();
+		}
+
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
 		{

@@ -58,6 +58,8 @@ namespace Xamarin.PropertyEditing
 		/// </summary>
 		event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
 
+		Task<IReadOnlyList<ITypeInfo>> GetAssignableTypesAsync (IPropertyInfo property);
+
 		/*
 		 * Dealing with async values in the context of what's possible across all target platforms is a bit complex.
 		 * While implicit safety may be able to be ensured, it would be exhaustive to reason it out and could change
