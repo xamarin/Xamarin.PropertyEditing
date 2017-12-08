@@ -96,7 +96,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			Dictionary<string, List<PropertyViewModel>> groupedTypeProperties = null;
 
 			this.arranged.Clear ();
-			foreach (var grouping in props.GroupBy (GetGroup).OrderBy (g => g.Key)) {
+			foreach (var grouping in props.GroupBy (GetGroup).OrderBy (g => g.Key, CategoryComparer.Instance)) {
 				HashSet<EditorViewModel> remainingItems = null;
 
 				if (ArrangeMode == PropertyArrangeMode.Category) {
@@ -126,7 +126,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			if (groupedTypeProperties != null) { // Insert type-grouped properties back in sorted.
 				int i = 0;
-				foreach (var kvp in groupedTypeProperties.OrderBy (kvp => kvp.Key)) {
+				foreach (var kvp in groupedTypeProperties.OrderBy (kvp => kvp.Key, CategoryComparer.Instance)) {
 					var group = new ObservableGrouping<string, EditorViewModel> (kvp.Key) {
 						new PropertyGroupViewModel (kvp.Key, kvp.Value, ObjectEditors)
 					};
