@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+using System;
+using System.Collections.Specialized;
 using System.Linq;
 using NUnit.Framework;
 
@@ -66,6 +67,54 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (groupRemoved, Is.True);
 			Assert.That (grouping, Does.Not.Contains (value));
 			Assert.That (lookup, Does.Not.Contain (grouping));
+		}
+
+		[TestCase ("group")]
+		[TestCase (null)]
+		[Description ("If removing the last item from a group removes the group, adding a group with no items shouldn't add it")]
+		public void AddingEmptyElementsIsIgnored (string groupName)
+		{
+			var lookup = new ObservableLookup<string, string> ();
+			bool changed = false;
+			lookup.CollectionChanged += (sender, args) => {
+				changed = true;
+			};
+			lookup.Add (groupName, Enumerable.Empty<string> ());
+
+			Assert.That (lookup, Is.Empty);
+			Assert.That (changed, Is.False);
+		}
+
+		[TestCase ("group")]
+		[TestCase (null)]
+		[Description ("If removing the last item from a group removes the group, adding a group with no items shouldn't add it")]
+		public void AddingEmptyGroupingIsIgnored (string groupName)
+		{
+			var lookup = new ObservableLookup<string, string> ();
+			bool changed = false;
+			lookup.CollectionChanged += (sender, args) => {
+				changed = true;
+			};
+			lookup.Add (new ObservableGrouping<string, string> (groupName));
+
+			Assert.That (lookup, Is.Empty);
+			Assert.That (changed, Is.False);
+		}
+
+		[TestCase ("group")]
+		[TestCase (null)]
+		[Description ("If removing the last item from a group removes the group, adding a group with no items shouldn't add it")]
+		public void InsertingEmptyIsIgnored (string groupName)
+		{
+			var lookup = new ObservableLookup<string, string> ();
+			bool changed = false;
+			lookup.CollectionChanged += (sender, args) => {
+				changed = true;
+			};
+			lookup.Insert (0, new ObservableGrouping<string, string> (groupName));
+
+			Assert.That (lookup, Is.Empty);
+			Assert.That (changed, Is.False);
 		}
 	}
 }
