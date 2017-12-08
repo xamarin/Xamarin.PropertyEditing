@@ -422,6 +422,40 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public async Task PropertyListIsFiltered ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+
+			var vm = new PanelViewModel (provider, TargetPlatform.Default);
+			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
+			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (2));
+
+			Assume.That (vm.IsFiltering, Is.False);
+			bool changed = false;
+			vm.PropertyChanged += (sender, args) => {
+				if (args.PropertyName == nameof(PanelViewModel.IsFiltering)) {
+					changed = true;
+				}
+			};
+
+			vm.FilterText = "sub";
+			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (1));
+			Assert.That (vm.IsFiltering, Is.True);
+			Assert.That (changed, Is.True);
+			changed = false;
+
+			vm.FilterText = null;
+			Assert.That (vm.IsFiltering, Is.False);
+			Assert.That (changed, Is.True);
+		}
+
+		[Test]
 		[Description ("When filtered Text is cleared then list is restored back to its original.")]
 		public async Task PropertyListFilteredTextClearedRestoresList ()
 		{

@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -12,6 +13,15 @@ namespace Xamarin.PropertyEditing.Windows
 		public CategoryExpander ()
 		{
 			DataContextChanged += OnDataContextChanged;
+		}
+
+		public static readonly DependencyProperty IsFilteredProperty = DependencyProperty.Register (
+			"IsFiltered", typeof(bool), typeof(CategoryExpander), new PropertyMetadata (false, (o, args) => ((CategoryExpander)o).OnIsFilteredChanged()));
+
+		public bool IsFiltered
+		{
+			get { return (bool) GetValue (IsFilteredProperty); }
+			set { SetValue (IsFilteredProperty, value); }
 		}
 
 		public override void OnApplyTemplate ()
@@ -32,43 +42,58 @@ namespace Xamarin.PropertyEditing.Windows
 			SetExpanded (false);
 		}
 
-		private FrameworkElement parent;
+		private bool fromFilter;
+		private PanelViewModel panelVm;
 
 		private void UpdateValue ()
 		{
-			var vm = GetViewModel ();
-			if (vm == null)
+			if (this.panelVm == null)
 				return;
 
-			SetCurrentValue (IsExpandedProperty, vm.GetIsExpanded ((string) Header));
+			SetCurrentValue (IsExpandedProperty, IsFiltered || this.panelVm.GetIsExpanded (Header as string));
 		}
 
-		private PanelViewModel GetViewModel ()
+		private void OnIsFilteredChanged ()
 		{
-			FrameworkElement element = (this.parent as ItemsControl) ?? (FrameworkElement)this;
-			while (!(element is ItemsControl)) {
+			this.fromFilter = true;
+			UpdateValue ();
+			this.fromFilter = false;
+		}
+
+		private void UpdateViewModel ()
+		{
+			FrameworkElement element = this;
+			while (element != null && !(element is ItemsControl)) {
 				element = VisualTreeHelper.GetParent (element) as FrameworkElement;
 			}
-			this.parent = element;
 
-			if (this.parent == null)
+			if (element == null) {
+				ClearValue (IsFilteredProperty);
+				this.panelVm = null;
+				return;
+			}
+
+			this.panelVm = element.DataContext as PanelViewModel;
+			if (this.panelVm == null)
 				throw new InvalidOperationException ("Couldn't find valid parent");
 
-			return this.parent.DataContext as PanelViewModel;
+			SetBinding (IsFilteredProperty, new Binding (nameof(PanelViewModel.IsFiltering)) {
+				Source = this.panelVm
+			});
 		}
 
 		private void SetExpanded (bool isExpanded)
 		{
-			var vm = GetViewModel ();
-			if (vm == null)
-				throw new InvalidOperationException ("Couldn't find valid parent");
+			if (this.fromFilter)
+				return;
 
-			vm.SetIsExpanded ((string) Header, isExpanded);
+			this.panelVm.SetIsExpanded ((string) Header, isExpanded);
 		}
 
 		private void OnDataContextChanged (object sender, DependencyPropertyChangedEventArgs e)
 		{
-			UpdateValue ();
+			UpdateViewModel();
+			UpdateValue();
 		}
     }
 }

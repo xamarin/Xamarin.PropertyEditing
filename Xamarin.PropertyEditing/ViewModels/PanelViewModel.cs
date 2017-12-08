@@ -22,6 +22,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool HasChildElements => (this.arranged.Count > 0);
 
+		public bool IsFiltering => !String.IsNullOrWhiteSpace (FilterText);
+
 		public string FilterText
 		{
 			get { return this.filterText; }
@@ -34,6 +36,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.filterText = value;
 				Filter (oldFilter);
 				OnPropertyChanged ();
+				if (String.IsNullOrWhiteSpace (oldFilter) != String.IsNullOrWhiteSpace (value))
+					OnPropertyChanged (nameof(IsFiltering));
 			}
 		}
 
