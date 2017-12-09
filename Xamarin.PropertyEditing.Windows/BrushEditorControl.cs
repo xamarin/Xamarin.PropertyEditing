@@ -1,5 +1,5 @@
 using System.Linq;
-using System.Windows.Controls;
+using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Xamarin.PropertyEditing.ViewModels;
@@ -22,7 +22,8 @@ namespace Xamarin.PropertyEditing.Windows
 			this.brushTabs = this.brushBoxPopup?.Child?.GetDescendants<BrushTabbedEditorControl>().FirstOrDefault();
 
 			if (IsEnabled && this.brushBoxButton != null && this.brushBoxPopup != null) {
-				this.brushBoxPopup.PlacementTarget = this.brushBoxButton;
+				this.brushBoxPopup.PlacementTarget = this.brushBoxButton.FindParent<PropertyPresenter>();
+				this.brushBoxPopup.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(PlacePopup);
 				this.brushBoxPopup.Opened += (s, e) => {
 					this.brushTabs?.FocusFirstChild ();
 				};
@@ -35,6 +36,14 @@ namespace Xamarin.PropertyEditing.Windows
 					}
 				};
 			}
+		}
+
+		public static CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset) {
+			return new[] {
+				new CustomPopupPlacement (new Point(offset.X, offset.Y + targetSize.Height), PopupPrimaryAxis.Horizontal),
+				new CustomPopupPlacement (new Point(offset.X, offset.Y - popupSize.Height), PopupPrimaryAxis.Horizontal),
+				new CustomPopupPlacement (new Point(offset.X - popupSize.Width, offset.Y + targetSize.Height), PopupPrimaryAxis.Horizontal),
+			};
 		}
 
 		private ButtonBase brushBoxButton;

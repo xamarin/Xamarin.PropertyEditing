@@ -445,6 +445,16 @@
 		</StackPanel>
 	</DataTemplate>
 
+	<Style x:Key="BrushBoxFocusVisual">
+		<Setter Property="Control.Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<Rectangle StrokeThickness="1" Margin="0" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeDashArray="1 2" SnapsToDevicePixels="true"/>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style TargetType="local:BrushEditorControl">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -454,16 +464,21 @@
 											   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0"
 											   Height="24" BorderThickness="1" BorderBrush="{DynamicResource InputBorderBrush}"/>
 						<ToggleButton x:Name="brushBoxButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0" BorderThickness="0" Background="Transparent" Opacity="0"
-									  IsEnabled="{TemplateBinding IsEnabled}"
+									  IsEnabled="{TemplateBinding IsEnabled}" FocusVisualStyle="{StaticResource BrushBoxFocusVisual}"
 									  IsHitTestVisible="{Binding ElementName=brushBoxPopup, Path=IsOpen, Mode=OneWay, Converter={StaticResource OppositeBoolConverter}}"
 									  AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}"/>
-						<Popup x:Name="brushBoxPopup" StaysOpen="False" MinWidth="350" Width="{TemplateBinding ActualWidth}" Placement="Bottom" PopupAnimation="Slide" AllowsTransparency="True"
+						<Popup x:Name="brushBoxPopup" StaysOpen="False" MaxWidth="300" Width="300" PopupAnimation="Slide" AllowsTransparency="True" Placement="Custom"
 							   IsOpen="{Binding ElementName=brushBoxButton, Path=IsChecked}">
-							<Grid>
-								<Rectangle VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0"
-										   Fill="{DynamicResource MenuPopupBackgroundBrush}" Stroke="{DynamicResource MenuPopupBorderBrush}"/>
-								<local:BrushTabbedEditorControl Grid.Column="0" Grid.Row="0"/>
-							</Grid>
+								<Border Margin="0,0,5,5" Background="{DynamicResource PopupDropShadowColor}" BorderThickness="1">
+									<Border.Effect>
+										<DropShadowEffect BlurRadius="5" ShadowDepth="2" Opacity="0.6"/>
+									</Border.Effect>
+									<Grid>
+										<Rectangle VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0"
+											   Fill="{DynamicResource MenuPopupBackgroundBrush}" Stroke="{DynamicResource MenuPopupBorderBrush}"/>
+										<local:BrushTabbedEditorControl Grid.Column="0" Grid.Row="0"/>
+									</Grid>
+							</Border>
 						</Popup>
 					</Grid>
 				</ControlTemplate>
@@ -499,7 +514,7 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BrushTabbedEditorControl">
 					<StackPanel>
-						<Border Padding="8,10">
+						<Border Padding="8,10,8,4">
 							<StackPanel>
 								<local:ChoiceControl x:Name="brushChoice" ItemTemplateSelector="{StaticResource BrushChoiceTemplateSelector}" ItemTemplate="{x:Null}" HorizontalAlignment="Stretch">
 									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.None}" Name="noBrushTab" Tooltip="{x:Static prop:Resources.NoBrush}"/>
@@ -554,7 +569,7 @@
 									<RowDefinition Height="*"/>
 								</Grid.RowDefinitions>
 								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="*" MinWidth="200"/>
+									<ColumnDefinition Width="*" MinWidth="150"/>
 									<ColumnDefinition Width="Auto"/>
 								</Grid.ColumnDefinitions>
 								<local:PropertyPresenter Label="{x:Static prop:Resources.ColorSpace}" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0">
@@ -1148,15 +1163,15 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TabItem}">
-					<Border x:Name="grid" Background="{DynamicResource PanelBackgroundBrush}" BorderThickness="0" Padding="0,0,4,0">
+					<Border x:Name="grid" Background="{DynamicResource PanelBackgroundBrush}" BorderThickness="0" Padding="4">
 						<ContentPresenter x:Name="tabContent" ContentSource="Header"/>
 					</Border>
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsSelected" Value="True">
-							<Setter TargetName="grid" Property="Background" Value="Transparent"/>
+							<Setter TargetName="grid" Property="Background" Value="{DynamicResource SelectedTabBackgroundBrush}"/>
 						</Trigger>
 						<Trigger Property="IsSelected" Value="False">
-							<Setter TargetName="grid" Property="Background" Value="{DynamicResource PanelGroupSecondaryBackgroundBrush}"/>
+							<Setter TargetName="grid" Property="Background" Value="{DynamicResource TabBackgroundBrush}"/>
 						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
@@ -1176,7 +1191,7 @@
 							<RowDefinition Height="*" />
 						</Grid.RowDefinitions>
 						<TabPanel IsItemsHost="True" Grid.Row="0" Panel.ZIndex="1" />
-						<Border Grid.Row="1" Panel.ZIndex="0" BorderThickness="0" Background="Transparent">
+						<Border Grid.Row="1" Panel.ZIndex="0" BorderThickness="0" Background="{DynamicResource SelectedTabBackgroundBrush}" Padding="4">
 							<ContentPresenter ContentSource="SelectedContent" />
 						</Border>
 					</Grid>

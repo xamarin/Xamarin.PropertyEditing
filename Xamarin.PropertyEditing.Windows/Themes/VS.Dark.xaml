@@ -10,12 +10,15 @@
 	<SolidColorBrush x:Key="PanelGroupSecondaryDimmedForegroundBrush">#F1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="PanelHeaderBackgroundBrush">#252526</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertiesPanelIconBackgroundBrush">#252526</SolidColorBrush>
+	<SolidColorBrush x:Key="PopupDropShadowColor">#FFFFFFFF</SolidColorBrush>
 
 	<SolidColorBrush x:Key="AdvancedExpanderCollapsedForegroundBrush">#F1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverForegroundBrush">#007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBorderBrush">#3E3E40</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBackgroundBrush">#3E3E40</SolidColorBrush>
 
+	<SolidColorBrush x:Key="TabBackgroundBrush">#252526</SolidColorBrush>
+	<SolidColorBrush x:Key="SelectedTabBackgroundBrush">#1B1B1C</SolidColorBrush>
 	<SolidColorBrush x:Key="ToggleItemOuterBorderBrush" Color="#3F3F46" />
 	<SolidColorBrush x:Key="ToggleItemMouseOverBackgroundBrush" Color="#3E3E40"/>
 	<SolidColorBrush x:Key="ToggleItemMouseOverBorderBrush" Color="#3E3E40"/>
