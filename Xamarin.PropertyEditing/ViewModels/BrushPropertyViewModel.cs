@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.ViewModels
@@ -43,9 +44,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		protected override void UpdateCurrentValue ()
+		protected override async Task UpdateCurrentValueAsync ()
 		{
-			base.UpdateCurrentValue ();
+			await base.UpdateCurrentValueAsync ();
 			OnPropertyChanged (nameof (Opacity));
 		}
 	}

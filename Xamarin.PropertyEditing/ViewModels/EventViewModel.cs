@@ -17,7 +17,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				throw new ArgumentNullException (nameof (ev));
 
 			Event = ev;
-			UpdateCurrentValue ();
+			RequestCurrentValueUpdate();
 		}
 
 		public IEventInfo Event
@@ -41,7 +41,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		protected override async void UpdateCurrentValue ()
+		protected override async Task UpdateCurrentValueAsync ()
 		{
 			if (Event == null)
 				return;
@@ -103,7 +103,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (!String.IsNullOrWhiteSpace (name))
 				await editor.AttachHandlerAsync (Event, name);
 
-			UpdateCurrentValue ();
+			await UpdateCurrentValueAsync ();
 		}
 	}
 }

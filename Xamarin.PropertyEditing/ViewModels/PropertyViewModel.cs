@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
@@ -20,7 +18,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
-			UpdateCurrentValue ();
+			RequestCurrentValueUpdate();
 		}
 
 		public ValueSource ValueSource => this.value != null ? this.value.Source : ValueSource.Default;
@@ -69,11 +67,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return validationValue;
 		}
 
+		/// <remarks>
+		/// For updating property-type-specific value properties, override this. <see cref="PropertyViewModel.MultipleValues"/> <see cref="Value"/> is up to date
+		/// </remarks>
 		protected virtual void OnValueChanged ()
 		{
 		}
 
-		protected override async void UpdateCurrentValue ()
+		/// <summary>
+		/// Obtains the current value from the editors and updates the value properties.
+		/// </summary>
+		protected override async Task UpdateCurrentValueAsync ()
 		{
 			if (Property == null)
 				return;
@@ -139,7 +143,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					}
 
 					await Task.WhenAll (setValues);
-					UpdateCurrentValue ();
+					await UpdateCurrentValueAsync ();
 				} catch (Exception ex) {
 					AggregateException aggregate = ex as AggregateException;
 					if (aggregate != null) {
@@ -316,7 +320,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					return;
 		
 				// TODO: Smarter querying, can query the single editor and check against MultipleValues
-				UpdateCurrentValue ();
+				await UpdateCurrentValueAsync ();
 			} finally {
 				work?.Dispose ();
 			}
