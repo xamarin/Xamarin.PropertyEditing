@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<NSViewResizingMask> ("AutoResizingMask", None, true, true);
 			AddProperty<NotImplemented> ("BackgroundFilters");
 			AddReadOnlyProperty<double> ("BaselineOffsetFromBottom"); //TODO: make that float
-			AddProperty<NotImplemented> ("Bounds"); // TODO: disentangle the rectangle editor from System.Drawing.Rectangle (or use that type for the mac mocks).
+			AddProperty<CommonRectangle> ("Bounds"); // TODO: disentangle the rectangle editor from System.Drawing.Rectangle (or use that type for the mac mocks).
 			AddProperty<double> ("BoundsRotation");
 			AddReadOnlyProperty<bool> ("CanBecomeKeyView");
 			AddProperty<bool> ("CanDrawConcurrently");
@@ -26,10 +26,10 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddReadOnlyProperty<NotImplemented> ("Constraints");
 			AddProperty<NotImplemented> ("ContentFilters");
 			AddReadOnlyProperty<NotImplemented> ("EnclosingScrollView");
-			AddReadOnlyProperty<NotImplemented> ("FittingSize"); // TODO: disentangle the size editor from System.Drawing.Size
-			AddReadOnlyProperty<NotImplemented> ("FocusRingMaskBounds");
+			AddReadOnlyProperty<CommonSize> ("FittingSize"); // TODO: disentangle the size editor from System.Drawing.Size
+			AddReadOnlyProperty<CommonRectangle> ("FocusRingMaskBounds");
 			AddProperty<NSFocusRingType> ("FocusRingType");
-			AddProperty<NotImplemented> ("Frame");
+			AddProperty<CommonRectangle> ("Frame");
 			AddProperty<double> ("FrameCenterRotation"); // TODO: float
 			AddProperty<double> ("FrameRotation"); // TODO: float
 			AddReadOnlyProperty<bool> ("HasAmbiguousLayout");
@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<string> ("Identifier");
 			AddReadOnlyProperty<bool> ("InLiveResize");
 			AddReadOnlyProperty<NotImplemented> ("InputContext");
-			AddReadOnlyProperty<NotImplemented> ("IntrinsicContentSize");
+			AddReadOnlyProperty<CommonSize> ("IntrinsicContentSize");
 			AddReadOnlyProperty<bool> ("IsFlipped");
 			AddReadOnlyProperty<bool> ("IsHiddenOrHasHiddenAncestor");
 			AddReadOnlyProperty<bool> ("IsInFullScreenMode");

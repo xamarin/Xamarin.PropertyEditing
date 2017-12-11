@@ -14,13 +14,15 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public event EventHandler ActionButtonClicked;
 		NSButton actionButton;
-		public NSButton ActionButton {
+		public NSButton ActionButton
+		{
 			get { return actionButton; }
 		}
 
 		public event EventHandler PropertyButtonClicked;
 		NSButton propertyButton;
-		public NSButton PropertyButton {
+		public NSButton PropertyButton
+		{
 			get { return propertyButton; }
 		}
 
@@ -28,15 +30,19 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			propertyButton = new NSButton {
 				Bordered = false,
+				Enabled = false,
 				AlternateImage = NSImage.ImageNamed ("property-button-default-mac-active-10"),
 				Cell = {
 					HighlightsBy = 1,
 				},
-				Image = NSImage.ImageNamed ("property-button-default-mac-10"),
 				ImageScaling = NSImageScale.AxesIndependently,
 				Title = string.Empty,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
+
+#if DESIGNER_DEBUG
+			propertyButton.Image = NSImage.ImageNamed ("property-button-default-mac-10");
+#endif
 
 			propertyButton.Activated += (object sender, EventArgs e) => {
 				NotifyPropertyButtonClicked ();
@@ -47,13 +53,14 @@ namespace Xamarin.PropertyEditing.Mac
 			actionButton = new NSButton {
 				Bordered = false,
 				Enabled = false,
-#if DEBUG
-				Image = NSImage.ImageNamed ("action-warning-16"),
-#endif
 				ImageScaling = NSImageScale.AxesIndependently,
 				Title = string.Empty,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
+
+#if DESIGNER_DEBUG
+			actionButton.Image = NSImage.ImageNamed ("action-warning-16");
+#endif
 
 			actionButton.Activated += (object sender, EventArgs e) => {
 				if (errorList != null) {

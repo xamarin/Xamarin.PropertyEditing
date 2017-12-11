@@ -12,6 +12,8 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class PropertyTableDelegate
 		: NSOutlineViewDelegate
 	{
+		bool goldenRatioApplied = false;
+
 		public PropertyTableDelegate (PropertyTableDataSource datasource)
 		{
 			this.dataSource = datasource;
@@ -46,6 +48,16 @@ namespace Xamarin.PropertyEditing.Mac
 			var group = facade.Target as IGroupingList<string, EditorViewModel>;
 			string cellIdentifier = (group == null) ? vm.GetType ().Name : group.Key;
 
+			// Let's make the columns look pretty
+			if (!goldenRatioApplied) {
+				int middleColumnWidth = 5;
+				nfloat rightColumnWidth = (outlineView.Frame.Width - middleColumnWidth) / 1.618f;
+				nfloat leftColumnWidth = outlineView.Frame.Width - rightColumnWidth - middleColumnWidth;
+				outlineView.TableColumns ()[0].Width = leftColumnWidth;
+				outlineView.TableColumns ()[1].Width = rightColumnWidth;
+				goldenRatioApplied = true;
+			}
+
 			// Setup view based on the column
 			switch (tableColumn.Identifier) {
 				case PropertyEditorPanel.PropertyListColId:
@@ -58,6 +70,13 @@ namespace Xamarin.PropertyEditing.Mac
 					}
 
 					view.StringValue = ((group == null) ? vm.Property.Name + ":" : group.Key) ?? String.Empty;
+
+					// Set tooltips only for truncated strings
+					var stringWidth = view.AttributedStringValue.Size.Width + 30;
+					if (stringWidth > tableColumn.Width) {
+						view.ToolTip = vm.Property.Name;
+					}
+
 					return view;
 
 				case PropertyEditorPanel.PropertyEditorColId:
