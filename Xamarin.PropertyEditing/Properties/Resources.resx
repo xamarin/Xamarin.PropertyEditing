@@ -319,4 +319,20 @@
   <data name="ShowAdvancedProperties" xml:space="preserve">
     <value>Show advanced properties</value>
   </data>
+  <data name="Height" xml:space="preserve">
+    <value>Height</value>
+    <comment>Height label</comment>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Width</value>
+    <comment>Width label</comment>
+  </data>
+  <data name="X" xml:space="preserve">
+    <value>X</value>
+    <comment>X coordinate label</comment>
+  </data>
+  <data name="Y" xml:space="preserve">
+    <value>Y</value>
+    <comment>Y coordinate label</comment>
+  </data>
 </root>

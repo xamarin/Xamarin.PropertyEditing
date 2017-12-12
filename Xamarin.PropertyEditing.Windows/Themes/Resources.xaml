@@ -328,9 +328,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:PointEditorControl">
                     <StackPanel Name="StackPanel" Orientation="Horizontal">
-                        <Label Name="XLabel" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="X" />
+						<Label Name="XLabel" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.X}" />
                         <local:DoubleUpDownControl x:Name="XTextBox" Value="{Binding X}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=XLabel,Mode=OneTime}"/>
-                        <Label Name="YLabel" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="Y" />
+						<Label Name="YLabel" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.Y}" />
                         <local:DoubleUpDownControl x:Name="YTextBox" Value="{Binding Y}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=YLabel,Mode=OneTime}" />
                     </StackPanel>
                 </ControlTemplate>
@@ -349,10 +349,41 @@
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
-						<Label Grid.Column="0" Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="Width" />
+						<Label Grid.Column="0" Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.Width}" />
 						<local:DoubleUpDownControl x:Name="WidthTextBox" Grid.Column="1" Value="{Binding Width}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}"/>
-						<Label Name="HeightLabel" Grid.Column="2" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="Height" />
+						<Label Name="HeightLabel" Grid.Column="2" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.Height}" />
 						<local:DoubleUpDownControl x:Name="HeightTextBox" Grid.Column="3" Value="{Binding Height}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:RectangleEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:RectangleEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+
+						<Label Name="XLabel" Grid.Column="0" Grid.Row="0" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.X}" />
+						<local:DoubleUpDownControl x:Name="XTextBox" Grid.Column="1" Grid.Row="0" Value="{Binding X}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=XLabel,Mode=OneTime}"/>
+						<Label Name="YLabel" Grid.Column="2" Grid.Row="0" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.Y}" />
+						<local:DoubleUpDownControl x:Name="YTextBox" Grid.Column="3" Grid.Row="0" Value="{Binding Y}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=YLabel,Mode=OneTime}"/>
+
+						<Label Grid.Column="0" Grid.Row="1" Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.Width}" />
+						<local:DoubleUpDownControl x:Name="WidthTextBox" Grid.Column="1" Grid.Row="1" Value="{Binding Width}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}"/>
+						<Label Name="HeightLabel" Grid.Column="2" Grid.Row="1" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.Height}" />
+						<local:DoubleUpDownControl x:Name="HeightTextBox" Grid.Column="3" Grid.Row="1" Value="{Binding Height}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

@@ -151,11 +151,29 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Convert to Local Value.
+        /// </summary>
+        public static string ConvertToLocalValue {
+            get {
+                return ResourceManager.GetString("ConvertToLocalValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current color.
         /// </summary>
         public static string CurrentColor {
             get {
                 return ResourceManager.GetString("CurrentColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Expression….
+        /// </summary>
+        public static string CustomExpressionEllipsis {
+            get {
+                return ResourceManager.GetString("CustomExpressionEllipsis", resourceCulture);
             }
         }
         
@@ -183,24 +201,6 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string CyanMagentaYellowBlack {
             get {
                 return ResourceManager.GetString("CyanMagentaYellowBlack", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Convert to Local Value.
-        /// </summary>
-        public static string ConvertToLocalValue {
-            get {
-                return ResourceManager.GetString("ConvertToLocalValue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Custom Expression….
-        /// </summary>
-        public static string CustomExpressionEllipsis {
-            get {
-                return ResourceManager.GetString("CustomExpressionEllipsis", resourceCulture);
             }
         }
         
@@ -237,6 +237,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string GreenInitial {
             get {
                 return ResourceManager.GetString("GreenInitial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Height.
+        /// </summary>
+        public static string Height {
+            get {
+                return ResourceManager.GetString("Height", resourceCulture);
             }
         }
         
@@ -457,6 +466,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        public static string Reset {
+            get {
+                return ResourceManager.GetString("Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to RGB.
         /// </summary>
         public static string RGB {
@@ -500,14 +518,6 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("SolidBrush", resourceCulture);
             }
         }
-        /// <summary>
-        ///   Looks up a localized string similar to Reset.
-        /// </summary>
-        public static string Reset {
-            get {
-                return ResourceManager.GetString("Reset", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   Looks up a localized string similar to Type.
@@ -524,6 +534,33 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string ViewPropertiesOrEvents {
             get {
                 return ResourceManager.GetString("ViewPropertiesOrEvents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Width.
+        /// </summary>
+        public static string Width {
+            get {
+                return ResourceManager.GetString("Width", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X.
+        /// </summary>
+        public static string X {
+            get {
+                return ResourceManager.GetString("X", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y.
+        /// </summary>
+        public static string Y {
+            get {
+                return ResourceManager.GetString("Y", resourceCulture);
             }
         }
         
