@@ -1,4 +1,6 @@
-﻿using System.Linq;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Xamarin.PropertyEditing.Reflection;
@@ -26,6 +28,30 @@ namespace Xamarin.PropertyEditing.Tests
 				get;
 				set;
 			}
+		}
+
+		private Exception unhandled;
+		[SetUp]
+		public void Setup ()
+		{
+			AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+		}
+
+		[TearDown]
+		public void TearDown ()
+		{
+			AppDomain.CurrentDomain.UnhandledException -= CurrentDomainOnUnhandledException;
+
+			if (this.unhandled != null) {
+				var ex = this.unhandled;
+				this.unhandled = null;
+				Assert.Fail ("Unhandled exception: {0}", ex);
+			}
+		}
+
+		private void CurrentDomainOnUnhandledException (object sender, UnhandledExceptionEventArgs e)
+		{
+			this.unhandled = e.ExceptionObject as Exception;
 		}
 
 		[Test]
@@ -457,6 +483,16 @@ namespace Xamarin.PropertyEditing.Tests
 
 			vm.SelectedObjects.Add (obj2);
 			Assert.That (vm.Events.Count, Is.EqualTo (0));
+		}
+
+		[Test]
+		[Description ("The IEditorProvider should be able to return null editors")]
+		public void NullEditorAdded ()
+		{
+			var providerMock = new Mock<IEditorProvider> ();
+
+			var vm = CreateVm (providerMock.Object);
+			vm.SelectedObjects.Add (null);
 		}
 
 		internal abstract PropertiesViewModel CreateVm (IEditorProvider provider);

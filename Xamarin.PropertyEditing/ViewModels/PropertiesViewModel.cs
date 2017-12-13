@@ -156,7 +156,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				case NotifyCollectionChangedAction.Remove:
 					removedEditors = new IObjectEditor[e.OldItems.Count];
 					for (int i = 0; i < e.OldItems.Count; i++) {
-						IObjectEditor editor = this.objEditors.First (oe => oe.Target == e.OldItems[i]);
+						IObjectEditor editor = this.objEditors.First (oe => oe?.Target == e.OldItems[i]);
 						INotifyCollectionChanged notifier = editor.Properties as INotifyCollectionChanged;
 						if (notifier != null)
 							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
@@ -172,7 +172,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					removedEditors = new IObjectEditor[this.objEditors.Count];
 					for (int i = 0; i < removedEditors.Length; i++) {
 						removedEditors[i] = this.objEditors[i];
-						INotifyCollectionChanged notifier = removedEditors[i].Properties as INotifyCollectionChanged;
+						INotifyCollectionChanged notifier = removedEditors[i]?.Properties as INotifyCollectionChanged;
 						if (notifier != null)
 							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
 					}
@@ -286,8 +286,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			IObjectEventEditor events = this.objEditors[0] as IObjectEventEditor;
 			var newEventSet = new HashSet<IEventInfo> (events?.Events ?? Enumerable.Empty<IEventInfo> ());
 
-			string newTypeName = this.objEditors[0].TypeName;
-			var newPropertySet = new HashSet<IPropertyInfo> (this.objEditors[0].Properties);
+			string newTypeName = this.objEditors[0]?.TypeName;
+			var newPropertySet = new HashSet<IPropertyInfo> (this.objEditors[0]?.Properties ?? Enumerable.Empty<IPropertyInfo>());
 			for (int i = 1; i < this.objEditors.Count; i++) {
 				IObjectEditor editor = this.objEditors[i];
 				newPropertySet.IntersectWith (editor.Properties);
@@ -391,7 +391,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			IObjectEditor[] newEditors = await Task.WhenAll (newEditorTasks);
 			for (int i = 0; i < newEditors.Length; i++) {
-				var notifier = newEditors[i].Properties as INotifyCollectionChanged;
+				IObjectEditor editor = newEditors[i];
+				if (editor == null)
+					continue;
+
+				var notifier = editor.Properties as INotifyCollectionChanged;
 				if (notifier != null)
 					notifier.CollectionChanged += OnObjectEditorPropertiesChanged;
 			}
