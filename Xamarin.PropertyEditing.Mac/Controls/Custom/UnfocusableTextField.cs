@@ -26,6 +26,8 @@ namespace Xamarin.PropertyEditing.Mac
 			Selectable = false;
 			ControlSize = NSControlSize.Small;
 			Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultPropertyLabelFontSize);
+			Cell.LineBreakMode = NSLineBreakMode.TruncatingTail;
+			Cell.UsesSingleLineMode = true;
 		}
 
 		public override void DrawRect (CGRect dirtyRect)

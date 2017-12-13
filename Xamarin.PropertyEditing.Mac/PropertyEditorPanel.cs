@@ -42,7 +42,8 @@ namespace Xamarin.PropertyEditing.Mac
 		public bool IsArrangeEnabled
 		{
 			get { return this.isArrangeEnabled; }
-			set {
+			set
+			{
 				if (this.isArrangeEnabled == value)
 					return;
 
@@ -120,7 +121,7 @@ namespace Xamarin.PropertyEditing.Mac
 			propertyArrangeMode = new NSComboBox (new CGRect (320, Frame.Height - 25, 153, 24)) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				Editable = false,
-				ControlSize =controlSize,
+				ControlSize = controlSize,
 				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
 			};
 
@@ -145,10 +146,11 @@ namespace Xamarin.PropertyEditing.Mac
 				AutoresizingMask = NSViewResizingMask.WidthSizable,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 				HeaderView = null,
-#if DEBUG
-				GridStyleMask = NSTableViewGridStyle.SolidHorizontalLine | NSTableViewGridStyle.SolidVerticalLine,
-#endif
 			};
+
+#if DESIGNER_DEBUG
+			propertyTable.GridStyleMask = NSTableViewGridStyle.SolidHorizontalLine | NSTableViewGridStyle.SolidVerticalLine;
+#endif
 
 			NSTableColumn propertiesList = new NSTableColumn (PropertyListColId) { Title = LocalizationResources.PropertyColumnTitle };
 			NSTableColumn propertyEditors = new NSTableColumn (PropertyEditorColId) { Title = LocalizationResources.ValueColumnTitle };
@@ -177,8 +179,8 @@ namespace Xamarin.PropertyEditing.Mac
 				propertyArrangeModeLabel.ConstraintTo(propertyArrangeMode, (pl, pa) => pl.Left == pa.Left - 71),
 
 				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Top == c.Top + 4),
-				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Left == c.Left + 310),
-				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Width == c.Width - 321),
+				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Left == c.Left + 280),
+				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Width == c.Width - 291),
 
 				tableContainer.ConstraintTo(this, (t, c) => t.Top == c.Top + 30),
 				tableContainer.ConstraintTo(this, (t, c) => t.Width == c.Width - 20),
