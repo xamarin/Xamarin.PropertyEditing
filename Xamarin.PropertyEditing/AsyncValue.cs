@@ -9,7 +9,7 @@ namespace Xamarin.PropertyEditing
 	internal sealed class AsyncValue<T>
 		: INotifyPropertyChanged
 	{
-		public AsyncValue (Task<T> task, T defaultValue = default(T))
+		public AsyncValue (Task<T> task, T defaultValue = default(T), TaskScheduler scheduler = null)
 		{
 			if (task == null)
 				throw new ArgumentNullException (nameof(task));
@@ -17,9 +17,11 @@ namespace Xamarin.PropertyEditing
 			this.task = task;
 			this.defaultValue = defaultValue;
 
-			TaskScheduler scheduler = TaskScheduler.Current;
-			if (SynchronizationContext.Current != null)
-				scheduler = TaskScheduler.FromCurrentSynchronizationContext ();
+			if (scheduler == null) {
+				scheduler = TaskScheduler.Current;
+				if (SynchronizationContext.Current != null)
+					scheduler = TaskScheduler.FromCurrentSynchronizationContext ();
+			}
 
 			this.task.ContinueWith (t => {
 				IsRunning = false;

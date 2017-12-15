@@ -10,11 +10,12 @@ namespace Xamarin.PropertyEditing.Tests
 	[TestFixture]
 	internal class AsyncValueTests
 	{
+
 		[Test]
 		public void ValueOnCompletion ()
 		{
 			var tcs = new TaskCompletionSource<string> ();
-			var asyncValue = new AsyncValue<string> (tcs.Task);
+			var asyncValue = new AsyncValue<string> (tcs.Task, scheduler: new SyncScheduler());
 
 			Assume.That (asyncValue.Value, Is.Null);
 
@@ -35,7 +36,7 @@ namespace Xamarin.PropertyEditing.Tests
 		public void DefaultValue ()
 		{
 			var tcs = new TaskCompletionSource<bool> ();
-			var value = new AsyncValue<bool> (tcs.Task, defaultValue: true);
+			var value = new AsyncValue<bool> (tcs.Task, defaultValue: true, scheduler: new SyncScheduler());
 
 			Assert.That (value.Value, Is.True);
 		}
@@ -45,7 +46,7 @@ namespace Xamarin.PropertyEditing.Tests
 		public void ValueReplacesDefaultValue (bool value)
 		{
 			var tcs = new TaskCompletionSource<bool> ();
-			var asyncValue = new AsyncValue<bool> (tcs.Task, defaultValue: !value);
+			var asyncValue = new AsyncValue<bool> (tcs.Task, defaultValue: !value, scheduler: new SyncScheduler());
 
 			Assume.That (asyncValue.Value, Is.EqualTo (!value));
 
@@ -58,7 +59,7 @@ namespace Xamarin.PropertyEditing.Tests
 		public void IsRunning ()
 		{
 			var tcs = new TaskCompletionSource<string> ();
-			var asyncValue = new AsyncValue<string> (tcs.Task);
+			var asyncValue = new AsyncValue<string> (tcs.Task, scheduler: new SyncScheduler());
 
 			Assume.That (asyncValue.Value, Is.Null);
 			Assert.That (asyncValue.IsRunning, Is.True);
@@ -81,7 +82,7 @@ namespace Xamarin.PropertyEditing.Tests
 		public void AsyncValueException ()
 		{
 			var tcs = new TaskCompletionSource<bool> ();
-			var asyncValue = new AsyncValue<bool> (tcs.Task, defaultValue: true);
+			var asyncValue = new AsyncValue<bool> (tcs.Task, defaultValue: true, scheduler: new SyncScheduler());
 
 			Assume.That (asyncValue.Value, Is.True);
 
@@ -98,7 +99,26 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (asyncValue.Value, Is.True);
 			Assert.That (valueChanged, Is.False, "Value should not signal change when there's an exception");
 			Assert.That (asyncValue.IsRunning, Is.False);
-			Assert.That (runningChanged, Is.False);
+			Assert.That (runningChanged, Is.True);
+		}
+	}
+
+	internal class SyncScheduler
+		: TaskScheduler
+	{
+		protected override void QueueTask (Task task)
+		{
+			TryExecuteTaskInline (task, false);
+		}
+
+		protected override bool TryExecuteTaskInline (Task task, bool taskWasPreviouslyQueued)
+		{
+			return TryExecuteTask (task);
+		}
+
+		protected override IEnumerable<Task> GetScheduledTasks ()
+		{
+			return Enumerable.Empty<Task> ();
 		}
 	}
 }
