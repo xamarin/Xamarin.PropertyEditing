@@ -82,6 +82,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			await UpdateCurrentValueAsync ();
 		}
 
+		/// <remarks>
+		/// If your sub-class needs extra setup in the ctor before the value can be executed,
+		/// safe guard your override of this method as it will be run when the editors are
+		/// added in the base ctor before your sub-class' ctor has run. After you've completed
+		/// setup, call <see cref="RequestCurrentValueUpdate"/>.
+		/// </remarks>
 		protected virtual Task UpdateCurrentValueAsync()
 		{
 			return Task.FromResult (true);

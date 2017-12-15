@@ -75,6 +75,7 @@
     <Compile Include="MockPropertyInfo\MockEnumPropertyInfo.cs" />
     <Compile Include="MockPropertyProviderTests.cs" />
     <Compile Include="MultiAvailabilityConstraintTests.cs" />
+    <Compile Include="ObjectPropertyViewModelTests.cs" />
     <Compile Include="ObservableLookupTests.cs" />
     <Compile Include="PointViewModelTests.cs" />
     <Compile Include="PropertyGroupViewModelTests.cs" />

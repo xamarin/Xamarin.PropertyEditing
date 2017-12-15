@@ -14,6 +14,7 @@ namespace Xamarin.PropertyEditing
 		Style = 4,
 		Inherited = 5,
 		DefaultStyle = 6,
+		Unknown = 7,
 	}
 
 	[Flags]

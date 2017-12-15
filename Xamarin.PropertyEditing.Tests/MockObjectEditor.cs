@@ -18,6 +18,13 @@ namespace Xamarin.PropertyEditing.Tests
 			Properties = properties.ToArray ();
 		}
 
+		public MockObjectEditor (IReadOnlyList<IPropertyInfo> properties,
+			IReadOnlyDictionary<IPropertyInfo, IReadOnlyList<ITypeInfo>> assignableTypes)
+		{
+			Properties = properties;
+			this.assignableTypes = assignableTypes;
+		}
+
 		public MockObjectEditor (MockControl control)
 		{
 			Properties = control.Properties.Values.ToArray();
@@ -108,7 +115,10 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public Task<IReadOnlyList<ITypeInfo>> GetAssignableTypesAsync (IPropertyInfo property)
 		{
-			throw new NotImplementedException();
+			if (this.assignableTypes == null || !this.assignableTypes.TryGetValue (property, out IReadOnlyList<ITypeInfo> types))
+				return Task.FromResult<IReadOnlyList<ITypeInfo>> (Enumerable.Empty<ITypeInfo>().ToArray());
+
+			return Task.FromResult (types);
 		}
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -182,5 +192,6 @@ namespace Xamarin.PropertyEditing.Tests
 
 		internal readonly IDictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
 		internal readonly IDictionary<IEventInfo, string> events = new Dictionary<IEventInfo, string> ();
+		internal readonly IReadOnlyDictionary<IPropertyInfo, IReadOnlyList<ITypeInfo>> assignableTypes;
 	}
 }

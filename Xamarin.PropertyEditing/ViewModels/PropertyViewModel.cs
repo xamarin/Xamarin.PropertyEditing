@@ -52,16 +52,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		public ICommand SetValueResourceCommand
-		{
-			get;
-		}
-
-		public ICommand ClearValueCommand
-		{
-			get;
-		}
-
 		protected virtual TValue ValidateValue (TValue validationValue)
 		{
 			return validationValue;
@@ -261,6 +251,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public ICommand SetValueResourceCommand
+		{
+			get;
+			protected set;
+		}
+
+		public ICommand ClearValueCommand
+		{
+			get;
+			protected set;
+		}
+
 		public bool HasErrors => this.error != null;
 
 		public IEnumerable GetErrors (string propertyName)
@@ -281,19 +283,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				this.variation = value;
 				OnPropertyChanged ();
-			}
-		}
-
-		public bool CanDelve => ValueModel != null;
-
-		public ObjectViewModel ValueModel
-		{
-			get { return this.valueModel; }
-			private set
-			{
-				this.valueModel = value;
-				OnPropertyChanged ();
-				OnPropertyChanged (nameof (CanDelve));
 			}
 		}
 
@@ -328,18 +317,23 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected override void SetupEditor (IObjectEditor editor)
 		{
+			if (editor == null)
+				return;
+
 			base.SetupEditor (editor);
 			editor.PropertyChanged += OnEditorPropertyChanged;
 		}
 
 		protected override void TeardownEditor (IObjectEditor editor)
 		{
+			if (editor == null)
+				return;
+
 			base.TeardownEditor (editor);
 			editor.PropertyChanged -= OnEditorPropertyChanged;
 		}
 
 		private HashSet<IPropertyInfo> constraintProperties;
-		private ObjectViewModel valueModel;
 		private PropertyVariation variation;
 		private string error;
 		private Task<bool> isAvailable;
