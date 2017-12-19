@@ -328,9 +328,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:PointEditorControl">
                     <StackPanel Name="StackPanel" Orientation="Horizontal">
-                        <Label Name="XLabel" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="X" />
+						<Label Name="XLabel" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.X}" />
                         <local:DoubleUpDownControl x:Name="XTextBox" Value="{Binding X}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=XLabel,Mode=OneTime}"/>
-                        <Label Name="YLabel" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="Y" />
+						<Label Name="YLabel" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.Y}" />
                         <local:DoubleUpDownControl x:Name="YTextBox" Value="{Binding Y}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=YLabel,Mode=OneTime}" />
                     </StackPanel>
                 </ControlTemplate>
@@ -349,10 +349,66 @@
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
-						<Label Grid.Column="0" Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="Width" />
+						<Label Grid.Column="0" Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.Width}" />
 						<local:DoubleUpDownControl x:Name="WidthTextBox" Grid.Column="1" Value="{Binding Width}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}"/>
-						<Label Name="HeightLabel" Grid.Column="2" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="Height" />
+						<Label Name="HeightLabel" Grid.Column="2" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="{x:Static prop:Resources.Height}" />
 						<local:DoubleUpDownControl x:Name="HeightTextBox" Grid.Column="3" Value="{Binding Height}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="EditorIconLabelHost" TargetType="Border">
+		<Setter Property="Background" Value="{DynamicResource ThicknessIconBackgroundBrush}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource ThicknessIconBorderBrush}" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="Width" Value="20" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="HorizontalAlignment" Value="Left" />
+	</Style>
+
+	<Style x:Key="EditorIconStyle" TargetType="Path">
+		<Setter Property="Stroke" Value="{DynamicResource InputForegroundBrush}" />
+		<Setter Property="Fill" Value="{DynamicResource InputForegroundBrush}" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+	</Style>
+
+	<PathGeometry x:Key="XRectangleGeometry" options:Freeze="True" Figures="M11,8 L7,8 7,5.5 3,9.5 7,13.5 7,11 11,11 z" />
+	<PathGeometry x:Key="YRectangleGeometry" options:Freeze="True" Figures="M7.5,5 L11.5,9 9,9 9,13 6,13 6,9 3.5,9 z" />
+	<PathGeometry x:Key="WidthRectangleGeometry" options:Freeze="True" Figures="M8,5.5 L4,5.5 4,3 0,7 4,11 4,8.5 8,8.5 8,11 12,7 8,3 z"/>
+	<PathGeometry x:Key="HeightRectangleGeometry" options:Freeze="True" Figures="M7.5,1 L11.5,5 9,5 9,9 11.5,9 7.5,13 3.5,9 6,9 6,5 3.5,5 z"/>
+
+	<Style TargetType="local:RectangleEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:RectangleEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+
+						<Border Grid.Column="0" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
+							<Path Style="{StaticResource EditorIconStyle}" Data="{StaticResource XRectangleGeometry}" />
+						</Border>
+						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="0" Margin="14,0,2,0" Value="{Binding X}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="{x:Static prop:Resources.X}" />
+						<Border Grid.Column="1" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
+							<Path Style="{StaticResource EditorIconStyle}" Data="{StaticResource YRectangleGeometry}" />
+						</Border>
+						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Y}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="{x:Static prop:Resources.Y}" />
+						<Border Grid.Column="0" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
+							<Path Style="{StaticResource EditorIconStyle}" Data="{StaticResource WidthRectangleGeometry}" />
+						</Border>
+						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Width}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="{x:Static prop:Resources.Width}" />
+						<Border Grid.Column="1" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
+							<Path Style="{StaticResource EditorIconStyle}" Data="{StaticResource HeightRectangleGeometry}" />
+						</Border>
+						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Height}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="{x:Static prop:Resources.Height}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -364,21 +420,6 @@
 	<PathGeometry x:Key="LeftThicknessGeometry" options:Freeze="True" Figures="M11,8 L7,8 7,5.5 3,9.5 7,13.5 7,11 11,11 z" />
 	<PathGeometry x:Key="BottomThicknessGeometry" options:Freeze="True" Figures="M7.5,13 L11.5,9 9,9 9,5 6,5 6,9 3.5,9 z" />
 
-	<Style x:Key="EditorIconLabelHost" TargetType="Border">
-		<Setter Property="Background" Value="{DynamicResource ThicknessIconBackgroundBrush}" />
-		<Setter Property="BorderBrush" Value="{DynamicResource ThicknessIconBorderBrush}" />
-		<Setter Property="BorderThickness" Value="1" />
-		<Setter Property="Width" Value="20" />
-		<Setter Property="VerticalAlignment" Value="Stretch" />
-		<Setter Property="HorizontalAlignment" Value="Left" />
-	</Style>
-
-	<Style x:Key="ThicknessIconStyle" TargetType="Path">
-		<Setter Property="Stroke" Value="{DynamicResource InputForegroundBrush}" />
-		<Setter Property="Fill" Value="{DynamicResource InputForegroundBrush}" />
-		<Setter Property="VerticalAlignment" Value="Center" />
-	</Style>
-	
 	<Style TargetType="local:ThicknessEditorControl">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -394,19 +435,19 @@
 						</Grid.RowDefinitions>
 
 						<Border Grid.Column="0" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource LeftThicknessGeometry}" />
+							<Path Style="{StaticResource EditorIconStyle}" Data="{StaticResource LeftThicknessGeometry}" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Value.Left}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Left" />
 						<Border Grid.Column="1" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource RightThicknessGeometry}" />
+							<Path Style="{StaticResource EditorIconStyle}" Data="{StaticResource RightThicknessGeometry}" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Value.Right}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Right" />
 						<Border Grid.Column="0" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource TopThicknessGeometry}" />
+							<Path Style="{StaticResource EditorIconStyle}" Data="{StaticResource TopThicknessGeometry}" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Value.Top}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Top" />
 						<Border Grid.Column="1" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource BottomThicknessGeometry}" />
+							<Path Style="{StaticResource EditorIconStyle}" Data="{StaticResource BottomThicknessGeometry}" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Value.Bottom}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Bottom" />
 					</Grid>

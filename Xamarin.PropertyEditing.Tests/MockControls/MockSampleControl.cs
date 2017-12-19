@@ -16,7 +16,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<CommonPoint> ("Point", ReadWrite);
 			AddProperty<CommonSize> ("Size", ReadWrite);
 			AddProperty<CommonRectangle> ("Rectangle", ReadWrite);
-			// AddProperty<CommonThickness> ("Thickness", ReadWrite); // Lacking support on the mac at this point in time.
+			AddProperty<CommonThickness> ("Thickness", ReadWrite); // Lacking support on the mac at this point in time.
 
 			AddReadOnlyProperty<bool> ("ReadOnlyBoolean", ReadOnly);
 			AddReadOnlyProperty<long> ("ReadOnlyInteger", ReadOnly);
@@ -27,7 +27,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddReadOnlyProperty<CommonPoint> ("ReadOnlyPoint", ReadOnly);
 			AddReadOnlyProperty<CommonSize> ("ReadOnlySize", ReadOnly);
 			AddReadOnlyProperty<CommonRectangle> ("ReadOnlyRectangle", ReadOnly);
-			// AddReadOnlyProperty<CommonThickness> ("ReadOnlyThickness", ReadOnly);
+			AddReadOnlyProperty<CommonThickness> ("ReadOnlyThickness", ReadOnly);
 
 			AddProperty<NotImplemented> ("Uncategorized", None);
 
