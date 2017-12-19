@@ -439,7 +439,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(CommonPoint), (p,e) => new PointPropertyViewModel (p, e) },
 			{ typeof(CommonSize), (p,e) => new SizePropertyViewModel (p, e) },
 			{ typeof(CommonRectangle), (p,e) => new RectanglePropertyViewModel (p, e) },
-			{ typeof(CommonThickness), (p, e) => new PropertyViewModel<CommonThickness>(p, e) },
+			{ typeof(CommonThickness), (p, e) => new ThicknessPropertyViewModel (p, e) },
 		};
 	}
 }
