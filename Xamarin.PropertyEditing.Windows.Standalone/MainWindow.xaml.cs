@@ -35,8 +35,8 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 				inspectedObject = mockedControl.MockedControl;
 				if (mockedControl is MockedSampleControlButton mockedButton) {
 					IObjectEditor editor = await this.panel.EditorProvider.GetObjectEditorAsync (inspectedObject);
-					await mockedButton.SetBrush (editor, new CommonSolidBrush (20, 120, 220, 240, "sRGB"));
-					await mockedButton.SetReadOnlyBrush (editor, new CommonSolidBrush (240, 220, 15, 190));
+					await mockedButton.SetBrushInitialValue (editor, new CommonSolidBrush (20, 120, 220, 240, "sRGB"));
+					await mockedButton.SetReadOnlyBrushInitialValue (editor, new CommonSolidBrush (240, 220, 15, 190));
 				}
 			}
 
