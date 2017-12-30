@@ -498,21 +498,19 @@
 	<local:BrushChoiceTemplateSelector x:Key="BrushChoiceTemplateSelector">
 		<local:BrushChoiceTemplateSelector.NoBrushTemplate>
 			<DataTemplate>
-				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
-					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
-						<Polygon Points="0,0 24,0 0,14" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
-						<Polygon Points="25,1 25,15 1,15" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
-					</Canvas>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" Width="32"
+					GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<local:IconThemeImage IconSize="16" IconName="property-brush-none"
+						IsSelected="{Binding IsChecked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RadioButton}}}"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.NoBrushTemplate>
 		<local:BrushChoiceTemplateSelector.SolidBrushTemplate>
 			<DataTemplate>
-				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
-					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
-						<Rectangle Canvas.Left="0" Canvas.Top="0" Width="25" Height="15" Stroke="{DynamicResource VectorGlyphBrush}" StrokeThickness="1"/>
-						<Rectangle Canvas.Left="2" Canvas.Top="2" Width="21" Height="11" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
-					</Canvas>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" Width="32"
+					GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<local:IconThemeImage IconSize="16" IconName="property-brush-solid"
+						IsSelected="{Binding IsChecked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RadioButton}}}"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.SolidBrushTemplate>

@@ -4,28 +4,33 @@ namespace Xamarin.PropertyEditing.Themes
 {
 	public abstract class BaseThemeManager
 	{
-		PropertyEditorTheme theme;
-
 		public BaseThemeManager ()
 		{
 			NotifyThemeChanged ();
 		}
 
-		protected abstract void SetTheme ();
-
 		public PropertyEditorTheme Theme
 		{
 			get {
-				return theme;
+				return this.theme;
 			}
 
 			set {
-				if (theme != value) {
-					theme = value;
+				if (this.theme != value) {
+					this.theme = value;
 					NotifyThemeChanged ();
 				}
 			}
 		}
+
+		public string GetIconName (string name, int size, bool selected = false)
+			=> $"{name}-{size}{IconModifier}{(selected ? "~sel" : "")}";
+
+		protected abstract void SetTheme ();
+
+		protected abstract string IconModifier { get; }
+
+		PropertyEditorTheme theme;
 
 		void NotifyThemeChanged ()
 		{

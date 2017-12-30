@@ -70,6 +70,8 @@
     <Compile Include="DoubleToPercentageConverter.cs" />
     <Compile Include="DoubleToQuantityConverter.cs" />
     <Compile Include="TextBoxEx.cs" />
+    <Compile Include="IconThemeImage.cs" />
+    <Compile Include="MultiSourceImage.cs" />
     <Compile Include="ToggleButtonEx.cs" />
     <Compile Include="EditorPropertySelector.cs" />
     <Compile Include="EnumEditorControl.cs" />
@@ -129,6 +131,24 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\property-brush-none-16%402x.png" />
+    <Resource Include="Icons\property-brush-none-16.png" />
+    <Resource Include="Icons\property-brush-none-16~dark%402x.png" />
+    <Resource Include="Icons\property-brush-none-16~dark.png" />
+    <Resource Include="Icons\property-brush-none-16~dark~sel%402x.png" />
+    <Resource Include="Icons\property-brush-none-16~dark~sel.png" />
+    <Resource Include="Icons\property-brush-none-16~sel%402x.png" />
+    <Resource Include="Icons\property-brush-none-16~sel.png" />
+    <Resource Include="Icons\property-brush-solid-16%402x.png" />
+    <Resource Include="Icons\property-brush-solid-16.png" />
+    <Resource Include="Icons\property-brush-solid-16~dark%402x.png" />
+    <Resource Include="Icons\property-brush-solid-16~dark.png" />
+    <Resource Include="Icons\property-brush-solid-16~dark~sel%402x.png" />
+    <Resource Include="Icons\property-brush-solid-16~dark~sel.png" />
+    <Resource Include="Icons\property-brush-solid-16~sel%402x.png" />
+    <Resource Include="Icons\property-brush-solid-16~sel.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

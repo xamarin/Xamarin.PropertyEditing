@@ -23,5 +23,7 @@ namespace Xamarin.PropertyEditing.Themes
 					break;
 			}
 		}
+	
+		protected override string IconModifier => Theme == PropertyEditorTheme.Dark ? "~dark" : "";
 	}
 }
