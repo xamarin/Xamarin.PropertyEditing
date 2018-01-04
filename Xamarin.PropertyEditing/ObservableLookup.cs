@@ -102,20 +102,26 @@ namespace Xamarin.PropertyEditing
 		public void Add (TKey key, IEnumerable<TElement> elements)
 		{
 			if (elements == null)
-				throw new ArgumentNullException ("elements");
+				throw new ArgumentNullException (nameof(elements));
 
 			ObservableGrouping<TKey, TElement> grouping;
 			if (key == null) {
 				bool wasEmpty = this.nullGrouping.Count == 0;
 				grouping = nullGrouping;
 				grouping.AddRange (elements);
-				if (wasEmpty)
+				if (wasEmpty && this.nullGrouping.Count > 0)
 					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, (object)grouping, this.groupings.Count));
 			} else if (!this.groupings.TryGetValue (key, out grouping)) {
 				if (!ReuseGroups || !this.oldGroups.TryRemove (key, out grouping))
 					grouping = new ObservableGrouping<TKey, TElement> (key);
 
 				grouping.AddRange (elements);
+				if (grouping.Count == 0) {
+					if (ReuseGroups)
+						this.oldGroups.Add (grouping.Key, grouping);
+
+					return;
+				}
 
 				this.groupings.Add (key, grouping);
 				OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, (object)grouping, this.groupings.Count - 1));
@@ -124,10 +130,13 @@ namespace Xamarin.PropertyEditing
 
 		public void Add (IGrouping<TKey, TElement> grouping)
 		{
+			if (grouping == null)
+				throw new ArgumentNullException (nameof(grouping));
+
 			if (grouping.Key == null) {
 				bool wasEmpty = this.nullGrouping.Count == 0;
 				this.nullGrouping.AddRange (grouping);
-				if (wasEmpty)
+				if (wasEmpty && this.nullGrouping.Count > 0)
 					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, (object)grouping, this.groupings.Count));
 
 				return;
@@ -139,6 +148,12 @@ namespace Xamarin.PropertyEditing
 			}
 
 			og.AddRange (grouping);
+			if (og.Count == 0) {
+				if (ReuseGroups)
+					this.oldGroups.Add (grouping.Key, og);
+
+				return;
+			}
 
 			this.groupings.Add (grouping.Key, og);
 			OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, (object)og, this.groupings.Count - 1));
@@ -152,6 +167,13 @@ namespace Xamarin.PropertyEditing
 			}
 
 			og.AddRange (grouping);
+			if (og.Count == 0) {
+				if (ReuseGroups)
+					this.oldGroups.Add (grouping.Key, og);
+
+				return;
+			}
+
 			this.groupings.Insert (index, og.Key, og);
 			OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Add, (object)og, index));
 		}

@@ -43,6 +43,7 @@
     <Compile Include="AsyncWorkQueue.cs" />
     <Compile Include="BidirectionalDictionary.cs" />
     <Compile Include="BrushPropertyInfo.cs" />
+    <Compile Include="CategoryComparer.cs" />
     <Compile Include="Drawing\CommonAlignment.cs" />
     <Compile Include="Drawing\CommonBrush.cs" />
     <Compile Include="Drawing\CommonBrushMappingMode.cs" />

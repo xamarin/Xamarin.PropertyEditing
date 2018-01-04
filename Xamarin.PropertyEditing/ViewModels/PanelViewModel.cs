@@ -22,6 +22,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool HasChildElements => (this.arranged.Count > 0);
 
+		public bool IsFiltering => !String.IsNullOrWhiteSpace (FilterText);
+
 		public string FilterText
 		{
 			get { return this.filterText; }
@@ -34,6 +36,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.filterText = value;
 				Filter (oldFilter);
 				OnPropertyChanged ();
+				if (String.IsNullOrWhiteSpace (oldFilter) != String.IsNullOrWhiteSpace (value))
+					OnPropertyChanged (nameof(IsFiltering));
 			}
 		}
 
@@ -92,7 +96,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			Dictionary<string, List<PropertyViewModel>> groupedTypeProperties = null;
 
 			this.arranged.Clear ();
-			foreach (var grouping in props.GroupBy (GetGroup).OrderBy (g => g.Key)) {
+			foreach (var grouping in props.GroupBy (GetGroup).OrderBy (g => g.Key, CategoryComparer.Instance)) {
 				HashSet<EditorViewModel> remainingItems = null;
 
 				if (ArrangeMode == PropertyArrangeMode.Category) {
@@ -122,14 +126,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			if (groupedTypeProperties != null) { // Insert type-grouped properties back in sorted.
 				int i = 0;
-				foreach (var kvp in groupedTypeProperties.OrderBy (kvp => kvp.Key)) {
+				foreach (var kvp in groupedTypeProperties.OrderBy (kvp => kvp.Key, CategoryComparer.Instance)) {
+					var group = new ObservableGrouping<string, EditorViewModel> (kvp.Key) {
+						new PropertyGroupViewModel (kvp.Key, kvp.Value, ObjectEditors)
+					};
+
 					for (; i < this.arranged.Count; i++) {
 						var g = (IGrouping<string, EditorViewModel>) this.arranged[i];
+
 						// TODO: Are we translating categories? If so this needs to lookup the resource and be culture specific
-						if (String.Compare (g.Key, kvp.Key, StringComparison.Ordinal) > 0) {
-							this.arranged.Insert (i++, new ObservableGrouping<string, EditorViewModel> (kvp.Key) {
-								new PropertyGroupViewModel (kvp.Key, kvp.Value, ObjectEditors)
-							});
+						if (g.Key == null) { // nulls go on the bottom.
+							this.arranged.Insert (i, group);
+							break;
+						} else if (String.Compare (g.Key, kvp.Key, StringComparison.Ordinal) > 0) {
+							this.arranged.Insert (i++, group);
 							break;
 						}
 					}
@@ -211,10 +221,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			if (String.IsNullOrWhiteSpace (FilterText))
 				return true;
-
-			if (ArrangeMode == PropertyArrangeMode.Category && vm.Category != null && vm.Category.Contains (FilterText, StringComparison.OrdinalIgnoreCase)) {
+			if (ArrangeMode == PropertyArrangeMode.Category && vm.Category != null && vm.Category.Contains (FilterText, StringComparison.OrdinalIgnoreCase))
 				return true;
-			}
+			if (String.IsNullOrWhiteSpace (vm.Name))
+				return false;
 
 			return vm.Name.Contains (FilterText, StringComparison.OrdinalIgnoreCase);
 		}

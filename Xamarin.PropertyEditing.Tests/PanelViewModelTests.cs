@@ -422,6 +422,40 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public async Task PropertyListIsFiltered ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+
+			var vm = new PanelViewModel (provider, TargetPlatform.Default);
+			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
+			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (2));
+
+			Assume.That (vm.IsFiltering, Is.False);
+			bool changed = false;
+			vm.PropertyChanged += (sender, args) => {
+				if (args.PropertyName == nameof(PanelViewModel.IsFiltering)) {
+					changed = true;
+				}
+			};
+
+			vm.FilterText = "sub";
+			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (1));
+			Assert.That (vm.IsFiltering, Is.True);
+			Assert.That (changed, Is.True);
+			changed = false;
+
+			vm.FilterText = null;
+			Assert.That (vm.IsFiltering, Is.False);
+			Assert.That (changed, Is.True);
+		}
+
+		[Test]
 		[Description ("When filtered Text is cleared then list is restored back to its original.")]
 		public async Task PropertyListFilteredTextClearedRestoresList ()
 		{
@@ -511,6 +545,77 @@ namespace Xamarin.PropertyEditing.Tests
 			var group = vm.ArrangedEditors.FirstOrDefault (g => g.Key == "Sub");
 			Assert.That (group, Is.Not.Null);
 			Assert.That (group.Count, Is.EqualTo (1));
+		}
+
+		[Test]
+		public async Task PropertyListCategoryGroupedWithNullCategory ()
+		{
+			// Purposefully a null catgory
+			var normalProp = new Mock<IPropertyInfo> ();
+			normalProp.SetupGet (p => p.Type).Returns (typeof(string));
+			normalProp.SetupGet (p => p.Name).Returns ("name");
+
+			var groupProp = new Mock<IPropertyInfo> ();
+			groupProp.SetupGet (p => p.Type).Returns (typeof(int));
+
+			var mockPlatform = new TargetPlatform {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(int), "ints" }
+				}
+			};
+
+			var target = new object ();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target))
+				.ReturnsAsync (new MockObjectEditor (normalProp.Object, groupProp.Object));
+
+			var editor = await provider.Object.GetObjectEditorAsync (target);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+
+			var vm = new PanelViewModel (provider.Object, mockPlatform) { ArrangeMode = PropertyArrangeMode.Category };
+			vm.SelectedObjects.Add (target);
+
+			Assert.That (vm.ArrangedEditors.Count, Is.EqualTo (2));
+			Assert.That (vm.ArrangedEditors[0].Key, Is.EqualTo ("ints"), "Grouped group not found or out of order");
+			Assert.That (vm.ArrangedEditors[1].Key, Is.Null);
+		}
+
+		[Test]
+		public async Task PropertyListCategoryWithoutNameFiltered ()
+		{
+			var normalProp = new Mock<IPropertyInfo> ();
+			normalProp.SetupGet (p => p.Type).Returns (typeof(string));
+			normalProp.SetupGet (p => p.Name).Returns ("name");
+
+			var groupProp = new Mock<IPropertyInfo> ();
+			groupProp.SetupGet (p => p.Type).Returns (typeof(int));
+
+			var mockPlatform = new TargetPlatform {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(int), "ints" }
+				}
+			};
+
+			var target = new object ();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target))
+				.ReturnsAsync (new MockObjectEditor (normalProp.Object, groupProp.Object));
+
+			var editor = await provider.Object.GetObjectEditorAsync (target);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+
+			var vm = new PanelViewModel (provider.Object, mockPlatform) { ArrangeMode = PropertyArrangeMode.Category };
+			vm.SelectedObjects.Add (target);
+
+			Assume.That (vm.ArrangedEditors.Count, Is.EqualTo (2));
+
+			vm.FilterText = "name";
+			Assert.That (vm.ArrangedEditors.Count, Is.EqualTo (1));
+
+			var group = vm.ArrangedEditors.FirstOrDefault (g => g.Key == "ints");
+			Assert.That (group, Is.Null);
 		}
 
 		internal override PropertiesViewModel CreateVm (IEditorProvider provider)
