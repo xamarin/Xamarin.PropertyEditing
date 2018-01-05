@@ -146,7 +146,7 @@
 									</Border>
 
 									<TextBlock Name="nameLabel" Grid.Row="0" Grid.Column="1" Margin="0,2,0,2" Text="{x:Static prop:Resources.Name}" />
-									<local:SubmitTextBox Grid.Row="0" Grid.Column="2" Margin="4,2,0,2" Text="{Binding ObjectName,Mode=TwoWay}" FocusSelectsAll="True" IsReadOnly="{Binding IsObjectNameReadOnly}" Focusable="{Binding IsObjectNameReadOnly,Converter={StaticResource OppositeBoolConverter}}" AutomationProperties.LabeledBy="{Binding ElementName=nameLabel,Mode=OneTime}" />
+									<local:TextBoxEx Grid.Row="0" Grid.Column="2" Margin="4,2,0,2" Text="{Binding ObjectName,Mode=TwoWay}" FocusSelectsAll="True" IsReadOnly="{Binding IsObjectNameReadOnly}" Focusable="{Binding IsObjectNameReadOnly,Converter={StaticResource OppositeBoolConverter}}" AutomationProperties.LabeledBy="{Binding ElementName=nameLabel,Mode=OneTime}" />
 
 									<TextBlock Name="typeLabel" Grid.Row="1" Grid.Column="1" Margin="0,4,0,4" Text="{x:Static prop:Resources.Type}" />
 									<TextBlock Grid.Row="1" Grid.Column="2" Margin="9,4,0,4" Text="{Binding TypeName}" />
@@ -167,7 +167,7 @@
 									<RowDefinition Height="*" />
 								</Grid.RowDefinitions>
 
-								<TextBox Name="search" Grid.Row="0" Style="{DynamicResource PropertySearchTextBox}" AutomationProperties.Name="Search" Text="{Binding FilterText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+								<local:TextBoxEx x:Name="search" Grid.Row="0" Style="{DynamicResource PropertySearchTextBox}" AutomationProperties.Name="{x:Static prop:Resources.SearchProperties}" Text="{Binding FilterText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
 
 								<local:MenuButton Grid.Row="1" x:Name="arrangeBy" Header="Arrange by:" Margin="0,0,18,0" Content="{Binding ArrangeMode}">
 									<local:MenuButton.Visibility>
@@ -197,7 +197,7 @@
 												</Grid.ColumnDefinitions>
 
 												<TextBlock Name="eventName" Grid.Column="0" Margin="16,0,0,0" Text="{Binding Event.Name,Mode=OneWay}" TextTrimming="CharacterEllipsis" />
-												<local:SubmitTextBox Grid.Column="1" Margin="4,2,4,2" Padding="2,0,0,0" Text="{Binding MethodName,Mode=TwoWay}" AutomationProperties.LabeledBy="{Binding ElementName=eventName,Mode=OneTime}" />
+												<local:TextBoxEx Grid.Column="1" Margin="4,2,4,2" Padding="2,0,0,0" Text="{Binding MethodName,Mode=TwoWay}" AutomationProperties.LabeledBy="{Binding ElementName=eventName,Mode=OneTime}" />
 											</Grid>
 										</DataTemplate>
 									</ItemsControl.ItemTemplate>

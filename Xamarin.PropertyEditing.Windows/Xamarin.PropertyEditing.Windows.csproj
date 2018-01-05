@@ -69,6 +69,7 @@
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />
     <Compile Include="DoubleToQuantityConverter.cs" />
+    <Compile Include="TextBoxEx.cs" />
     <Compile Include="ToggleButtonEx.cs" />
     <Compile Include="EditorPropertySelector.cs" />
     <Compile Include="EnumEditorControl.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="SizeEditorControl.cs" />
     <Compile Include="HueEditorControl.cs" />
     <Compile Include="SolidBrushEditorControl.cs" />
-    <Compile Include="SubmitTextBox.cs" />
     <Compile Include="ThicknessEditorControl.cs" />
     <Compile Include="StringEditorControl.cs" />
     <Compile Include="Themes\WinThemeManager.cs" />
