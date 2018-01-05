@@ -62,6 +62,10 @@
 	<SolidColorBrush x:Key="SearchControlActiveBackgroundBrush">#FFFFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlActiveBorderBrush">#FF007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlActiveForegroundBrush">#1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlButtonMouseOverBackgroundBrush">#C9DEF5</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlButtonMouseOverBorderBrush">#FF007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlButtonPressedBackgroundBrush">#FF007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlButtonPressedBorderBrush">#FF007ACC</SolidColorBrush>
 
 	<SolidColorBrush x:Key="InputBackgroundBrush">#FFFFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="InputBorderBrush">#FFCCCEDB</SolidColorBrush>
@@ -81,6 +85,15 @@
 
 	<SolidColorBrush x:Key="BrushBoxCheckerBoardLight">#FFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="BrushBoxCheckerBoardDark">#D3D3D3</SolidColorBrush>
+
+	<SolidColorBrush x:Key="DialogBackgroundBrush">#FFEEEEF2</SolidColorBrush>
+	<SolidColorBrush x:Key="DialogBorderBrush">#FF595959</SolidColorBrush>
+
+	<SolidColorBrush x:Key="IconButtonSimpleBackgroundBrush" Color="Transparent" />
+	<SolidColorBrush x:Key="IconButtonSimpleBorderBrush" Color="Transparent" />
+	<SolidColorBrush x:Key="IconButtonForegroundBrush">#FF1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="IconButtonMouseOverForegroundBrush">#FF1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="IconButtonPressedForegroundBrush">#FFFFFFFF</SolidColorBrush>
 
 	<SolidColorBrush x:Key="VectorGlyphBrush">#424242</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxBackgroundBrush">#FFFFFFFF</SolidColorBrush>

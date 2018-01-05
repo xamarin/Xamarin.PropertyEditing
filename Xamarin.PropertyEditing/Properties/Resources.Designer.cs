@@ -484,6 +484,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search properties.
+        /// </summary>
+        public static string SearchProperties {
+            get {
+                return ResourceManager.GetString("SearchProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show advanced properties.
         /// </summary>
         public static string ShowAdvancedProperties {

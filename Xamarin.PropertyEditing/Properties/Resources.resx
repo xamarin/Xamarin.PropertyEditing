@@ -319,4 +319,7 @@
   <data name="ShowAdvancedProperties" xml:space="preserve">
     <value>Show advanced properties</value>
   </data>
+  <data name="SearchProperties" xml:space="preserve">
+    <value>Search properties</value>
+  </data>
 </root>

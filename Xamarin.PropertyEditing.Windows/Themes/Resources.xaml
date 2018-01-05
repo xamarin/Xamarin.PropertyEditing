@@ -25,6 +25,9 @@
 		</DrawingBrush.Drawing>
 	</DrawingBrush>
 
+	<Geometry x:Key="SearchLoopIcon" options:Freeze="True">F1 M 8.499,7.000 C 7.118,7.000 5.999,5.881 5.999,4.500 C 5.999,3.119 7.118,2.000 8.499,2.000 C 9.880,2.000 10.999,3.119 10.999,4.500 C 10.999,5.881 9.880,7.000 8.499,7.000 Z M 8.499,0.000 C 6.015,0.000 3.999,2.015 3.999,4.500 C 3.999,5.225 4.187,5.901 4.492,6.507 L 0.000,11.000 L 1.999,13.000 L 6.492,8.508 C 7.099,8.813 7.773,9.000 8.499,9.000 C 10.985,9.000 12.999,6.985 12.999,4.500 C 12.999,2.015 10.985,0.000 8.499,0.000 Z</Geometry>
+	<Geometry x:Key="ClearSearchIcon" options:Freeze="True">F1 M 0.000,1.000 L 1.000,0.000 L 4.000,3.000 L 7.000,0.000 L 8.000,1.000 L 5.000,4.000 L 8.000,7.000 L 7.000,8.000 L 4.000,5.000 L 1.000,8.000 L 0.000,7.000 L 3.000,4.000 L 0.000,1.000 Z</Geometry>
+
 	<Style TargetType="{x:Type local:EnumEditorControl}">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -238,7 +241,7 @@
 							<ColumnDefinition Width="Auto" />
 						</Grid.ColumnDefinitions>
 
-						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Grid.Column="0" VerticalContentAlignment="Center" />
+						<local:TextBoxEx x:Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Grid.Column="0" VerticalContentAlignment="Center" />
 
 						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
 							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
@@ -263,7 +266,7 @@
 							<ColumnDefinition Width="Auto" />
 						</Grid.ColumnDefinitions>
 
-						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Grid.Column="0" VerticalContentAlignment="Center" />
+						<local:TextBoxEx x:Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Grid.Column="0" VerticalContentAlignment="Center" />
 
 						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
 							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
@@ -288,7 +291,7 @@
 							<ColumnDefinition Width="Auto" />
 						</Grid.ColumnDefinitions>
 
-						<TextBox Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" Grid.Column="0" VerticalContentAlignment="Center" />
+						<local:TextBoxEx x:Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" FocusSelectsAll="True" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" Grid.Column="0" VerticalContentAlignment="Center" />
 
 						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
 							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
@@ -305,7 +308,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:StringEditorControl">
-					<TextBox Name="TextBox" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Text="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalContentAlignment="Center" />
+					<local:TextBoxEx x:Name="TextBox" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Text="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalContentAlignment="Center" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -1287,7 +1290,69 @@
 		<Setter Property="IsChecked" Value="{Binding IsChecked,Mode=TwoWay}" />
 	</Style>
 
-	<Style TargetType="TextBox">
+	<Style x:Key="IconButton" TargetType="Button">
+		<Setter Property="Background" Value="{DynamicResource IconButtonSimpleBackgroundBrush}" />
+		<Setter Property="Foreground" Value="{DynamicResource IconButtonForegroundBrush}" />
+		<Setter Property="BorderBrush" Value="Transparent" />
+		<Setter Property="ContentTemplate">
+			<Setter.Value>
+				<DataTemplate>
+					<Rectangle Height="16" Width="16" VerticalAlignment="Center">
+						<Rectangle.Fill>
+							<DrawingBrush Stretch="None">
+								<DrawingBrush.Drawing>
+									<GeometryDrawing Brush="{Binding Foreground,RelativeSource={RelativeSource AncestorType=Button}}" Geometry="{Binding Content,RelativeSource={RelativeSource AncestorType=Button}}" />
+								</DrawingBrush.Drawing>
+							</DrawingBrush>
+						</Rectangle.Fill>
+					</Rectangle>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="SearchButtonBase" TargetType="Button" BasedOn="{StaticResource IconButton}">
+		<Setter Property="Margin" Value="-1" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+						<ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsDefaulted" Value="true">
+							<Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+						</Trigger>
+						<Trigger Property="IsMouseOver" Value="true">
+							<Setter Property="Foreground" Value="{DynamicResource IconButtonMouseOverForegroundBrush}" />
+							<Setter Property="Background" TargetName="border" Value="{DynamicResource SearchControlButtonMouseOverBackgroundBrush}" />
+							<Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource SearchControlButtonMouseOverBorderBrush}" />
+						</Trigger>
+						<Trigger Property="IsPressed" Value="true">
+							<Setter Property="Foreground" Value="{DynamicResource IconButtonPressedForegroundBrush}" />
+							<Setter Property="Background" TargetName="border" Value="{DynamicResource SearchControlButtonPressedBackgroundBrush}" />
+							<Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource SearchControlButtonPressedBorderBrush}" />
+						</Trigger>
+						<!--<Trigger Property="IsEnabled" Value="false">
+							<Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+							<Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+							<Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+						</Trigger>!-->
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="SearchButton" TargetType="Button" BasedOn="{StaticResource SearchButtonBase}">
+		<Setter Property="Content" Value="{StaticResource SearchLoopIcon}" />
+	</Style>
+
+	<Style x:Key="ClearButton" TargetType="Button" BasedOn="{StaticResource SearchButtonBase}">
+		<Setter Property="Content" Value="{StaticResource ClearSearchIcon}" />
+	</Style>
+
+	<Style TargetType="local:TextBoxEx">
 		<Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
 		<Setter Property="Foreground" Value="{DynamicResource InputForegroundBrush}" />
@@ -1298,15 +1363,52 @@
 		<Setter Property="AllowDrop" Value="true"/>
 		<Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
 		<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+		<Setter Property="ClearButtonStyle" Value="{StaticResource ClearButton}" />
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type TextBox}">
+				<ControlTemplate TargetType="{x:Type local:TextBoxEx}">
 					<Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-						<ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*" />
+								<ColumnDefinition Width="Auto" />
+							</Grid.ColumnDefinitions>
+
+							<ContentPresenter Grid.Column="0" Name="hintContent" Margin="2,0,2,0" Visibility="Collapsed" ContentSource="Hint" />
+							<ScrollViewer x:Name="PART_ContentHost" Grid.Column="0" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+
+							<Button Name="PART_Clear" Grid.Column="1" Style="{TemplateBinding ClearButtonStyle}" Visibility="{TemplateBinding ShowClearButton,Converter={StaticResource BoolToVisibilityConverter}}" />
+							<Button Name="PART_Submit" Grid.Column="1" Style="{TemplateBinding SubmitButtonStyle}" Visibility="Collapsed" />
+						</Grid>
 					</Border>
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsEnabled" Value="false">
 							<Setter Property="Opacity" TargetName="border" Value="0.56"/>
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="Text" Value="{x:Static system:String.Empty}" />
+								<Condition Property="ShowClearButton" Value="True" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="PART_Clear" Property="Visibility" Value="Collapsed" />
+							<Setter TargetName="PART_Submit" Property="Visibility" Value="Visible" />
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="Text" Value="{x:Null}" />
+								<Condition Property="ShowClearButton" Value="True" />
+							</MultiTrigger.Conditions>
+							<Setter TargetName="PART_Clear" Property="Visibility" Value="Collapsed" />
+							<Setter TargetName="PART_Submit" Property="Visibility" Value="Visible" />
+						</MultiTrigger>
+						<Trigger Property="Text" Value="{x:Static system:String.Empty}">
+							<Setter TargetName="hintContent" Property="Visibility" Value="Visible" />
+						</Trigger>
+						<Trigger Property="Text" Value="{x:Null}">
+							<Setter TargetName="hintContent" Property="Visibility" Value="Visible" />
+						</Trigger>
+						<Trigger Property="IsFocused" Value="True">
+							<Setter TargetName="hintContent" Property="Visibility" Value="Collapsed" />
 						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
@@ -1323,9 +1425,12 @@
 		</Style.Triggers>
 	</Style>
 
-	<Style TargetType="local:SubmitTextBox" BasedOn="{StaticResource {x:Type TextBox}}" />
+	<Style x:Key="SearchTextBox" TargetType="local:TextBoxEx" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
+		<Setter Property="ShowClearButton" Value="True" />
+		<Setter Property="SubmitButtonStyle" Value="{StaticResource SearchButton}" />
+	</Style>
 
-	<Style x:Key="PropertySearchTextBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+	<Style x:Key="PropertySearchTextBox" TargetType="local:TextBoxEx" BasedOn="{StaticResource SearchTextBox}">
 		<Setter Property="Margin" Value="4,1,4,2" />
 		<Setter Property="Height" Value="18" />
 		<Setter Property="Background" Value="{DynamicResource SearchControlBackgroundBrush}" />
