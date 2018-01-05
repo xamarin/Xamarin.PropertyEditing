@@ -137,6 +137,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.*.resx">
+      <Visible>false</Visible>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\LocalizationResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LocalizationResources.Designer.cs</LastGenOutput>
