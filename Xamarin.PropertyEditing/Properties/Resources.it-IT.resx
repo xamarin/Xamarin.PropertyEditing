@@ -117,6 +117,134 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Alpha" xml:space="preserve">
+    <value>Alpha</value>
+    
+  </data>
+  <data name="AlphaInitial" xml:space="preserve">
+    <value>A</value>
+    
+  </data>
+  <data name="Black" xml:space="preserve">
+    <value>Black</value>
+    
+  </data>
+  <data name="BlackInitial" xml:space="preserve">
+    <value>K</value>
+    
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>Blue</value>
+    
+  </data>
+  <data name="BlueInitial" xml:space="preserve">
+    <value>B</value>
+    
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>Brightness</value>
+    
+  </data>
+  <data name="BrightnessInitial" xml:space="preserve">
+    <value>B</value>
+    
+  </data>
+  <data name="CMYK" xml:space="preserve">
+    <value>CMYK</value>
+    
+  </data>
+  <data name="ColorSpace" xml:space="preserve">
+    <value>Color space</value>
+    
+  </data>
+  <data name="CurrentColor" xml:space="preserve">
+    <value>Current color</value>
+    
+  </data>
+  <data name="Cyan" xml:space="preserve">
+    <value>Cyan</value>
+    
+  </data>
+  <data name="CyanInitial" xml:space="preserve">
+    <value>C</value>
+    
+  </data>
+  <data name="CyanMagentaYellowBlack" xml:space="preserve">
+    <value>Cyan / Magenta / Yellow / Black</value>
+    
+  </data>
+  <data name="ConvertToLocalValue" xml:space="preserve">
+    <value>Convert to Local Value</value>
+  </data>
+  <data name="CustomExpressionEllipsis" xml:space="preserve">
+    <value>Custom Expression…</value>
+  </data>
+  <data name="EventHandlersSelectedElement" xml:space="preserve">
+    <value>Event handlers for the selected element</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="Green" xml:space="preserve">
+    <value>Green</value>
+    
+  </data>
+  <data name="GreenInitial" xml:space="preserve">
+    <value>G</value>
+    
+  </data>
+  <data name="HexValue" xml:space="preserve">
+    <value>Hex value</value>
+    
+  </data>
+  <data name="HLS" xml:space="preserve">
+    <value>HLS</value>
+    
+  </data>
+  <data name="HSB" xml:space="preserve">
+    <value>HSB</value>
+    
+  </data>
+  <data name="Hue" xml:space="preserve">
+    <value>Hue</value>
+    
+  </data>
+  <data name="HueInitial" xml:space="preserve">
+    <value>H</value>
+    
+  </data>
+  <data name="HueLightnessSaturation" xml:space="preserve">
+    <value>Hue / Lightness / Saturation</value>
+    
+  </data>
+  <data name="HueSaturationBrightness" xml:space="preserve">
+    <value>Hue / Saturation / Brightness</value>
+    
+  </data>
+  <data name="InitialColor" xml:space="preserve">
+    <value>Initial color</value>
+    
+  </data>
+  <data name="LastColor" xml:space="preserve">
+    <value>Last color</value>
+    
+  </data>
+  <data name="Lightness" xml:space="preserve">
+    <value>Lightness</value>
+    
+  </data>
+  <data name="LightnessInitial" xml:space="preserve">
+    <value>L</value>
+    
+  </data>
+  <data name="Magenta" xml:space="preserve">
+    <value>Magenta</value>
+    
+  </data>
+  <data name="MagentaInitial" xml:space="preserve">
+    <value>M</value>
+    
+  </data>
   <data name="MultipleObjectsSelected" xml:space="preserve">
     <value>{0} objects selected</value>
   </data>
@@ -129,7 +257,69 @@
   <data name="NoName" xml:space="preserve">
     <value>&lt;No Name&gt;</value>
   </data>
+  <data name="Properties" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="PropertiesSelectedElement" xml:space="preserve">
+    <value>Properties for the selected element</value>
+  </data>
+  <data name="Red" xml:space="preserve">
+    <value>Red</value>
+    
+  </data>
+  <data name="RedGreenBlue" xml:space="preserve">
+    <value>Red / Green/ Blue</value>
+    
+  </data>
+  <data name="RedInitial" xml:space="preserve">
+    <value>R</value>
+    
+  </data>
+  <data name="RGB" xml:space="preserve">
+    <value>RGB</value>
+    
+  </data>
+  <data name="Saturation" xml:space="preserve">
+    <value>Saturation</value>
+    
+  </data>
+  <data name="SaturationInitial" xml:space="preserve">
+    <value>S</value>
+    
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
+  </data>
+  <data name="ViewPropertiesOrEvents" xml:space="preserve">
+    <value>View properties or events</value>
+    
+  </data>
+  <data name="Yellow" xml:space="preserve">
+    <value>Yellow</value>
+    
+  </data>
+  <data name="YellowInitial" xml:space="preserve">
+    <value>Y</value>
+    
+  </data>
+  <data name="NoBrush" xml:space="preserve">
+    <value>No brush</value>
+    
+  </data>
+  <data name="SolidBrush" xml:space="preserve">
+    <value>Solid color brush</value>
+    
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="ShowAdvancedProperties" xml:space="preserve">
+    <value>Show advanced properties</value>
+  </data>
+  <data name="SearchProperties" xml:space="preserve">
+    <value>Search properties</value>
   </data>
 </root>
