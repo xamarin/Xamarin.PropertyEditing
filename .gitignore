@@ -2,6 +2,7 @@ packages
 bin
 obj
 *.DotSettings
+/build/.nuget/
 /Xamarin.PropertyEditing.userprefs
 /TestResult.xml
 /out
