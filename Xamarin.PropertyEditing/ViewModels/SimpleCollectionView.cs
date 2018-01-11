@@ -117,19 +117,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool HasChildElements => (this.arranged.Count > 0);
 
-		public bool IsFiltering => !String.IsNullOrWhiteSpace (FilterText);
-
-		public string FilterText
-		{
-			get { return this.filterText; }
-			set
-			{
-				if (this.filterText == value)
-					return;
-			
-				Filter (value);
-			}
-		}
+		public bool IsFiltering => this.filter != null;
 
 		public IEnumerator GetEnumerator ()
 		{
@@ -143,6 +131,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+
+		/// <param name="isSuperset">Whether or not the new <paramref name="predicate"/> is more inclusive.</param>
+		public void Filter (Predicate<object> predicate, bool isSuperset)
+		{
+			if (this.filter == predicate)
+				return;
+
+			this.filter = predicate;
+			OnPropertyChanged (nameof (IsFiltering));
+			FilterCore (isSuperset);
+		}
+
 		private struct Element
 		{
 			public object Item;
@@ -152,7 +152,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private readonly OrderedDictionary<string, Element> arranged = new OrderedDictionary<string, Element>();
 		private SimpleCollectionViewOptions options;
 		private IEnumerable source;
-		private string filterText;
+		private Predicate<object> filter;
 
 		private void OnSourceCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
@@ -173,25 +173,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (!IsFiltering)
 				return true;
 
-			string display = Options.DisplaySelector (element.Item);
-			if (String.IsNullOrWhiteSpace (display))
-				return false;
-			if (display.StartsWith (FilterText))
-				return true;
-
-			return false;
+			return this.filter (element.Item);
 		}
 
-		private void Filter (string oldFilter, string newFilter, bool notify = true)
+		private void FilterCore (bool isSuperset, bool notify = true)
 		{
 			bool hadChildren = HasChildElements;
 
-			if (IsFiltering && (String.IsNullOrWhiteSpace (oldFilter) || FilterText.StartsWith (oldFilter))) {
+			if (IsFiltering && !isSuperset) {
 				var toRemove = new List<string>();
 				foreach (var kvp in this.arranged) {
 					var childView = kvp.Value.ChildrenView;
 					if (childView != null) {
-						childView.Filter (newFilter);
+						childView.Filter (this.filter, isSuperset);
 						if (!childView.HasChildElements) {
 							toRemove.Add (kvp.Key);
 						}
@@ -251,22 +245,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			if (IsFiltering)
-				Filter (FilterText, FilterText, notify: false);
+				FilterCore (isSuperset: false, notify: false);
 
 			OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Reset));
-		}
-
-		private void Filter (string newFilter)
-		{
-			string oldFilter = this.filterText;
-			this.filterText = newFilter;
-
-			Filter (oldFilter, newFilter);
-			if (oldFilter != newFilter) {
-				OnPropertyChanged (nameof (FilterText));
-				if (String.IsNullOrWhiteSpace (oldFilter) != String.IsNullOrWhiteSpace (newFilter))
-					OnPropertyChanged (nameof(IsFiltering));
-			}
 		}
 
 		private void OnCollectionChanged (NotifyCollectionChangedEventArgs e)

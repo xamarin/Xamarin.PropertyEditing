@@ -23,7 +23,6 @@ namespace Xamarin.PropertyEditing.Tests
 				DisplaySelector = TestNodeDisplaySelector
 			});
 
-			Assume.That (view.FilterText, Is.Null.Or.Empty);
 			Assert.That (view, Contains.Item (nodes[0]));
 			Assert.That (view, Contains.Item (nodes[1]));
 		}
@@ -84,7 +83,6 @@ namespace Xamarin.PropertyEditing.Tests
 				DisplaySelector = TestNodeDisplaySelector
 			});
 
-			Assume.That (view.FilterText, Is.Null.Or.Empty);
 			Assume.That (view, Contains.Item (nodes[0]));
 			Assume.That (view, Contains.Item (nodes[1]));
 
@@ -95,12 +93,12 @@ namespace Xamarin.PropertyEditing.Tests
 				action = e.Action;
 			};
 
-			view.FilterText = "key";
+			view.Filter (o => ((TestNode)o).Key.StartsWith ("key"), isSuperset: false);
 			Assert.That (changed, Is.False);
 			Assert.That (view, Contains.Item (nodes[0]));
 			Assert.That (view, Contains.Item (nodes[1]));
 
-			view.FilterText = "key2";
+			view.Filter (o => ((TestNode)o).Key.StartsWith ("key2"), isSuperset: false);
 			Assert.That (changed, Is.True);
 			Assert.That (action, Is.EqualTo (NotifyCollectionChangedAction.Remove));
 			Assert.That (view, Does.Not.Contain (nodes[0]));
@@ -122,7 +120,6 @@ namespace Xamarin.PropertyEditing.Tests
 				DisplaySelector = TestNodeDisplaySelector
 			});
 
-			Assume.That (view.FilterText, Is.Null.Or.Empty);
 			Assume.That (view, Contains.Item (nodes[0]));
 			Assume.That (view, Contains.Item (nodes[1]));
 			Assume.That (view, Contains.Item (nodes[2]));
@@ -152,7 +149,6 @@ namespace Xamarin.PropertyEditing.Tests
 				DisplaySelector = TestNodeDisplaySelector
 			});
 
-			Assume.That (view.FilterText, Is.Null.Or.Empty);
 			Assume.That (view.Cast<object>().ElementAt (0), Is.EqualTo (nodes[4]));
 			Assume.That (view.Cast<object>().ElementAt (1), Is.EqualTo (nodes[3]));
 			Assume.That (view.Cast<object>().ElementAt (2), Is.EqualTo (nodes[1]));
@@ -226,7 +222,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			Assume.That (view, Is.Not.Empty);
 
-			view.FilterText = "Chi";
+			view.Filter (o => ((TestNode)o).Key.StartsWith ("Chi"), isSuperset: false);
 
 			Assert.That (view, Is.Not.Empty);
 		}
@@ -254,7 +250,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			Assume.That (view, Is.Not.Empty);
 
-			view.FilterText = "Group";
+			view.Filter (o => ((TestNode)o).Key.StartsWith ("Group"), isSuperset: false);
 
 			Assert.That (view, Is.Empty);
 		}
