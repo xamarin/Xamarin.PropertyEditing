@@ -69,6 +69,7 @@
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />
     <Compile Include="DoubleToQuantityConverter.cs" />
+    <Compile Include="ObjectEditorControl.cs" />
     <Compile Include="TextBoxEx.cs" />
     <Compile Include="ToggleButtonEx.cs" />
     <Compile Include="EditorPropertySelector.cs" />
