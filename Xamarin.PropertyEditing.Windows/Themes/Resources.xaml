@@ -567,37 +567,56 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:SolidBrushEditorControl">
-					<Grid VerticalAlignment="Top" Margin="0,6,0,0" MinHeight="180">
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="*"/>
-						</Grid.RowDefinitions>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="*" MinWidth="200"/>
-							<ColumnDefinition Width="Auto"/>
-						</Grid.ColumnDefinitions>
-						<ComboBox Name="colorSpacePicker" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Solid.ColorSpaces}"
-								  SelectedItem="{Binding Solid.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center"
-								  AutomationProperties.Name="{x:Static prop:Resources.ColorSpace}" AutomationProperties.HelpText="{x:Static prop:Resources.ColorSpace}" ToolTip="{x:Static prop:Resources.ColorSpace}"/>
-						<Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="*"/>
-								<RowDefinition Height="Auto"/>
-							</Grid.RowDefinitions>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="*"/>
-								<ColumnDefinition Width="Auto"/>
-							</Grid.ColumnDefinitions>
-							<local:ShadeEditorControl x:Name="shadeChooser" Color="{Binding Path=Solid.Shade, Mode=TwoWay}" HueColor="{Binding Path=Solid.HueColor, Mode=OneWay}"
-													  Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,0,1" Panel.ZIndex="1"/>
-							<local:HueEditorControl x:Name="hueChooser" HueColor="{Binding Path=Solid.HueColor, Mode=TwoWay}"
-													Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="1,6,3,1" Panel.ZIndex="0" Focusable="False"/>
-							<local:CurrentColorEditorControl Color="{Binding Path=Solid.Shade, Mode=TwoWay}" InitialColor="{Binding Solid.InitialColor}" LastColor="{Binding Solid.LastColor}"
-															 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,0,0" Panel.ZIndex="0" Focusable="False"/>
-						</Grid>
-						<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Solid.Shade, Mode=TwoWay}" Margin="0,4,0,0"
-															Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Focusable="False"/>
-					</Grid>
+					<TabControl Margin="0,4,0,0">
+						<TabItem>
+							<TabItem.Header>
+								<local:PropertyPresenter Label="{x:Static prop:Resources.ColorEditorTabLabel}"/>
+							</TabItem.Header>
+							<Grid VerticalAlignment="Top" Margin="0,6,0,0" MinHeight="180">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="*"/>
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" MinWidth="150"/>
+									<ColumnDefinition Width="Auto"/>
+								</Grid.ColumnDefinitions>
+								<local:PropertyPresenter Label="{x:Static prop:Resources.ColorSpace}" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0">
+									<ComboBox
+										Name="colorSpacePicker" ItemsSource="{Binding Solid.ColorSpaces}"
+										SelectedItem="{Binding Solid.ColorSpace, Mode=OneTime, Converter={local:StringValueInfoConverter}}" VerticalContentAlignment="Center"
+										AutomationProperties.Name="{x:Static prop:Resources.ColorSpace}" AutomationProperties.HelpText="{x:Static prop:Resources.ColorSpace}" ToolTip="{x:Static prop:Resources.ColorSpace}"/>
+								</local:PropertyPresenter>
+								<Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="*"/>
+										<RowDefinition Height="Auto"/>
+									</Grid.RowDefinitions>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="*"/>
+										<ColumnDefinition Width="Auto"/>
+									</Grid.ColumnDefinitions>
+									<local:ShadeEditorControl
+										x:Name="shadeChooser" Color="{Binding Path=Solid.Shade, Mode=TwoWay}" HueColor="{Binding Path=Solid.HueColor, Mode=OneWay}"
+										Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,0,1" Panel.ZIndex="1"/>
+									<local:HueEditorControl
+										x:Name="hueChooser" HueColor="{Binding Path=Solid.HueColor, Mode=TwoWay}"
+										Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="1,6,3,1" Panel.ZIndex="0" Focusable="False"/>
+									<local:CurrentColorEditorControl
+										Color="{Binding Path=Solid.Shade, Mode=TwoWay}" InitialColor="{Binding Solid.InitialColor}" LastColor="{Binding Solid.LastColor}"
+										Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,0,0" Panel.ZIndex="0" Focusable="False"/>
+								</Grid>
+								<local:ColorComponentsEditorControl x:Name="componentEditor"
+									Color="{Binding Path=Solid.Shade, Mode=TwoWay}" Margin="0,4,0,0"
+									Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Focusable="False"/>
+							</Grid>
+						</TabItem>
+						<!--<TabItem>
+							<TabItem.Header>
+								<Label>Color Resources</Label>
+							</TabItem.Header>
+						</TabItem>-->
+					</TabControl>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

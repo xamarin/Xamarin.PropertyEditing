@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Xamarin.PropertyEditing.Tests.MockControls;
 
 namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 {
 	public class MockPropertyInfo<T> : IPropertyInfo, IPropertyConverter, IEquatable<MockPropertyInfo<T>>
 	{
-		public MockPropertyInfo (string name, string category = "", bool canWrite = true, IEnumerable<Type> converterTypes = null)
+		public MockPropertyInfo (string name, string category = "",
+			bool canWrite = true, IEnumerable<Type> converterTypes = null)
 		{
 			Name = name;
 			Category = category;
@@ -17,7 +17,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 				this.typeConverters = converterTypes
 					.Where (type => type != null && typeof (TypeConverter).IsAssignableFrom (type))
 					.Select (type => (TypeConverter)Activator.CreateInstance (type))
-					.ToArray();
+					.ToArray ();
 			}
 		}
 
@@ -35,7 +35,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		{
 			toValue = null;
 			if (this.typeConverters != null) {
-				foreach (var converter in this.typeConverters) {
+				foreach (TypeConverter converter in this.typeConverters) {
 					if (converter.CanConvertTo (toType)) {
 						toValue = converter.ConvertTo (fromValue, toType);
 						return true;
@@ -43,7 +43,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 				}
 			}
 
-			if (toType == typeof(string)) {
+			if (toType == typeof (string)) {
 				toValue = fromValue?.ToString ();
 				return true;
 			}
@@ -52,15 +52,15 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 				toValue = Convert.ChangeType (fromValue, toType);
 				return true;
 			} catch {
-				
+
 			}
-			
+
 			return false;
 		}
 
 		public bool Equals (MockPropertyInfo<T> other)
 		{
-			if (ReferenceEquals (null, other))
+			if (other is null)
 				return false;
 			if (ReferenceEquals (this, other))
 				return true;
@@ -72,11 +72,11 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 		public override bool Equals (object obj)
 		{
-			if (ReferenceEquals (null, obj))
+			if (obj is null)
 				return false;
 			if (ReferenceEquals (this, obj))
 				return true;
-			if (GetType() != obj.GetType ())
+			if (GetType () != obj.GetType ())
 				return false;
 
 			return Equals ((MockPropertyInfo<T>)obj);
@@ -95,6 +95,37 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 			return hashCode;
 		}
 
-		private readonly IReadOnlyList<TypeConverter> typeConverters;
+		readonly IReadOnlyList<TypeConverter> typeConverters;
+	}
+
+	public class MockComplexPropertyInfo<T> : MockPropertyInfo<T>, IComplexPropertyInfo
+	{
+		public MockComplexPropertyInfo (string name, string category = "",
+			bool canWrite = true, IEnumerable<Type> converterTypes = null) : base (name, category, canWrite, converterTypes)
+		{
+			this.subProperties = new List<ISubPropertyInfo> ();
+		}
+
+		public IReadOnlyCollection<ISubPropertyInfo> Properties => this.subProperties.ToArray ();
+
+		public MockSubPropertyInfo<V> AddSubProperty<V> (string name, string category = "",
+			bool canWrite = true, IEnumerable<Type> converterTypes = null)
+		{
+			var subProperty = new MockSubPropertyInfo<V> (this, name, category, canWrite, converterTypes);
+			this.subProperties.Add (subProperty);
+			return subProperty;
+		}
+
+		readonly List<ISubPropertyInfo> subProperties;
+	}
+
+	public class MockSubPropertyInfo<T> : MockPropertyInfo<T>, ISubPropertyInfo
+	{
+		public MockSubPropertyInfo (IComplexPropertyInfo parentProperty, string name, string category = "", bool canWrite = true, IEnumerable<Type> converterTypes = null) : base (name, category, canWrite, converterTypes)
+		{
+			ParentProperty = parentProperty;
+		}
+
+		public IComplexPropertyInfo ParentProperty { get; }
 	}
 }

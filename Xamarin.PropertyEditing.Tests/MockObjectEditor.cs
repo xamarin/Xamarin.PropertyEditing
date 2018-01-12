@@ -15,7 +15,11 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public MockObjectEditor (params IPropertyInfo[] properties)
 		{
-			Properties = properties.ToArray ();
+			Properties = properties
+				.Union(properties
+					.OfType<IComplexPropertyInfo>()
+					.SelectMany(p => p.Properties)
+				).ToArray ();
 		}
 
 		public MockObjectEditor (MockControl control)
@@ -99,8 +103,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public Task<IReadOnlyList<string>> GetHandlersAsync (IEventInfo ev)
 		{
-			string handler;
-			if (this.events.TryGetValue (ev, out handler))
+			if (this.events.TryGetValue (ev, out string handler))
 				return Task.FromResult<IReadOnlyList<string>> (new[] { handler });
 
 			return Task.FromResult<IReadOnlyList<string>> (new string[0]);
@@ -119,11 +122,8 @@ namespace Xamarin.PropertyEditing.Tests
 			object softValue = value;
 
 			if (typeof(T) != property.Type) {
-				IPropertyConverter converter = property as IPropertyConverter;
-
-				object v;
-				if (converter != null && converter.TryConvert (value.Value, property.Type, out v)) {
-					var softType = typeof(ValueInfo<>).MakeGenericType (property.Type);
+				if (property is IPropertyConverter converter && converter.TryConvert (value.Value, property.Type, out object v)) {
+					Type softType = typeof (ValueInfo<>).MakeGenericType (property.Type);
 					softValue = Activator.CreateInstance (softType);
 					softType.GetProperty ("Value").SetValue (softValue, v);
 					softType.GetProperty ("Source").SetValue (softValue, value.Source);
@@ -139,8 +139,7 @@ namespace Xamarin.PropertyEditing.Tests
 			if (variation != null)
 				throw new NotSupportedException (); // TODO
 
-			object value;
-			if (this.values.TryGetValue (property, out value)) {
+			if (this.values.TryGetValue (property, out object value)) {
 				var info = value as ValueInfo<T>;
 				if (info != null)
 					return info;
@@ -152,14 +151,12 @@ namespace Xamarin.PropertyEditing.Tests
 				} else {
 					ValueSource source = ValueSource.Local;
 					Type valueType = value.GetType ();
-					if (valueType.IsConstructedGenericType && valueType.GetGenericTypeDefinition () == typeof(ValueInfo<>)) {
+					if (valueType.IsConstructedGenericType && valueType.GetGenericTypeDefinition () == typeof (ValueInfo<>)) {
 						source = (ValueSource)valueType.GetProperty ("Source").GetValue (value);
 						value = valueType.GetProperty ("Value").GetValue (value);
 					}
 
-					object newValue;
-					IPropertyConverter converter = property as IPropertyConverter;
-					if (converter != null && converter.TryConvert (value, typeof(T), out newValue)) {
+					if (property is IPropertyConverter converter && converter.TryConvert (value, typeof (T), out object newValue)) {
 						return new ValueInfo<T> {
 							Source = source,
 							Value = (T)newValue

@@ -61,6 +61,7 @@
     <Compile Include="BrushPropertyViewModelTests.cs" />
     <Compile Include="BytePropertyViewModelTests.cs" />
     <Compile Include="CommonColorTests.cs" />
+    <Compile Include="ComplexPropertyViewModelTests.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="IPropertyConverter.cs" />
     <Compile Include="MockControls\MockControl.cs" />
