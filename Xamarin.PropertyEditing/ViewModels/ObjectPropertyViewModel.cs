@@ -128,7 +128,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				ValueSource? source = null;
 				ITypeInfo type = null;
 
-				ValueInfo<object>[] values = await Task.WhenAll (Editors.Select (ed => ed.GetValueAsync<object> (Property)));
+				ValueInfo<object>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<object> (Property)));
 				for (int i = 0; i < values.Length; i++) {
 					ValueInfo<object> info = values[i];
 					ValueModel.SelectedObjects.Add (info.Value);
@@ -151,7 +151,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				else
 					ValueSource = source ?? ValueSource.Default;
 
-				CanDelve = Editors.Count > 0;
+				CanDelve = values.Length > 0;
 			}
 		}
 

@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Tests
@@ -12,6 +14,20 @@ namespace Xamarin.PropertyEditing.Tests
 	[TestFixture]
 	internal class ObjectPropertyViewModelTests
 	{
+		[SetUp]
+		public void Setup ()
+		{
+			this.syncContext = new AsyncSynchronizationContext();
+			SynchronizationContext.SetSynchronizationContext (this.syncContext);
+		}
+
+		[TearDown]
+		public void TearDown ()
+		{
+			this.syncContext.WaitForPendingOperationsToComplete ();
+			SynchronizationContext.SetSynchronizationContext (null);
+		}
+
 		[Test]
 		public void TypeAssumedWhenSingleAssignableType ()
 		{
@@ -238,6 +254,8 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
 			Assert.That (vm.ValueType, Is.Null);
 		}
+
+		private AsyncSynchronizationContext syncContext;
 
 		private Mock<IEditorProvider> CreateProviderMock (object value, IObjectEditor editor)
 		{
