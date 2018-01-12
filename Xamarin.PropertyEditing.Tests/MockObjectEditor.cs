@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Tests.MockControls;
 
@@ -115,10 +116,17 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public Task<IReadOnlyList<ITypeInfo>> GetAssignableTypesAsync (IPropertyInfo property)
 		{
-			if (this.assignableTypes == null || !this.assignableTypes.TryGetValue (property, out IReadOnlyList<ITypeInfo> types))
+			if (this.assignableTypes == null) {
+				return Task.Run<IReadOnlyList<ITypeInfo>> (() => {
+					return AppDomain.CurrentDomain.GetAssemblies().SelectMany (a => a.GetTypes()).AsParallel()
+						.Where (t => property.Type.IsAssignableFrom (t) && t.Namespace != null && !t.IsAbstract && !t.IsInterface && t.IsPublic)
+						.Select (t => new TypeInfo (new AssemblyInfo (t.Assembly.GetName().Name, true), t.Namespace, t.Name))
+						.ToList();
+				});
+			} else if (!this.assignableTypes.TryGetValue (property, out IReadOnlyList<ITypeInfo> types))
 				return Task.FromResult<IReadOnlyList<ITypeInfo>> (Enumerable.Empty<ITypeInfo>().ToArray());
-
-			return Task.FromResult (types);
+			else
+				return Task.FromResult (types);
 		}
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously

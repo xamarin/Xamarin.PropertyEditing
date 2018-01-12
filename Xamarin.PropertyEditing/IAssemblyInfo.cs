@@ -5,20 +5,31 @@ namespace Xamarin.PropertyEditing
 	public interface IAssemblyInfo
 	{
 		string Name { get; }
+
+		/// <summary>
+		/// Gets whether the assembly is directly relevant to the current project.
+		/// </summary>
+		bool IsRelevant { get; }
 	}
 
 	public class AssemblyInfo
 		: IAssemblyInfo, IEquatable<AssemblyInfo>
 	{
-		public AssemblyInfo (string name)
+		public AssemblyInfo (string name, bool isRelevant)
 		{
 			if (name == null)
 				throw new ArgumentNullException (nameof(name));
 
 			Name = name;
+			IsRelevant = isRelevant;
 		}
 
 		public string Name
+		{
+			get;
+		}
+
+		public bool IsRelevant
 		{
 			get;
 		}
@@ -30,7 +41,7 @@ namespace Xamarin.PropertyEditing
 			if (ReferenceEquals (this, other))
 				return true;
 
-			return string.Equals (Name, other.Name);
+			return String.Equals (Name, other.Name) && (IsRelevant == other.IsRelevant);
 		}
 
 		public override bool Equals (object obj)
@@ -47,7 +58,11 @@ namespace Xamarin.PropertyEditing
 
 		public override int GetHashCode ()
 		{
-			return Name.GetHashCode ();
+			unchecked {
+				int hashCode = Name.GetHashCode ();
+				hashCode = (hashCode * 397) ^ IsRelevant.GetHashCode ();
+				return hashCode;
+			}
 		}
 
 		public static bool operator == (AssemblyInfo left, AssemblyInfo right)

@@ -276,7 +276,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 		private ITypeInfo GetTypeInfo (Type type)
 		{
-			var asm = new AssemblyInfo (type.Assembly.FullName);
+			var asm = new AssemblyInfo (type.Assembly.FullName, true);
 			return new TypeInfo (asm, type.Namespace, type.Name);
 		}
 

@@ -97,8 +97,9 @@ namespace Xamarin.PropertyEditing.Reflection
 			return Task.Run (() => {
 				ReflectionPropertyInfo realInfo = (ReflectionPropertyInfo) property;
 				var assemblies = AppDomain.CurrentDomain.GetAssemblies ();
+				var entry = Assembly.GetEntryAssembly();
 
-				return (IReadOnlyList<ITypeInfo>)assemblies.Select (a => new { Assembly = a, Info = new AssemblyInfo (a.FullName)})
+				return (IReadOnlyList<ITypeInfo>)assemblies.Select (a => new { Assembly = a, Info = new AssemblyInfo (a.FullName, a == entry)})
 					.SelectMany (a =>
 						a.Assembly.DefinedTypes.Select (t => new { Type = t, Assembly = a }))
 					.AsParallel ()
