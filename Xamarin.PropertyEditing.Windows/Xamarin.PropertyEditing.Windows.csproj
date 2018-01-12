@@ -99,6 +99,7 @@
     <Compile Include="ThicknessEditorControl.cs" />
     <Compile Include="StringEditorControl.cs" />
     <Compile Include="Themes\WinThemeManager.cs" />
+    <Compile Include="WindowEx.cs" />
     <Compile Include="XamlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
