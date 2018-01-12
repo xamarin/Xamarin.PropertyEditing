@@ -87,10 +87,11 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (view, Contains.Item (nodes[1]));
 
 			bool changed = false;
-			NotifyCollectionChangedAction action = NotifyCollectionChangedAction.Reset;
 			view.CollectionChanged += (sender, e) => {
 				changed = true;
-				action = e.Action;
+				Assert.That (e.Action, Is.EqualTo (NotifyCollectionChangedAction.Remove));
+				Assert.That (e.OldItems, Contains.Item (nodes[0]));
+				Assert.That (e.OldStartingIndex, Is.EqualTo (0));
 			};
 
 			view.Filter (o => ((TestNode)o).Key.StartsWith ("key"), isSuperset: false);
@@ -100,9 +101,46 @@ namespace Xamarin.PropertyEditing.Tests
 
 			view.Filter (o => ((TestNode)o).Key.StartsWith ("key2"), isSuperset: false);
 			Assert.That (changed, Is.True);
-			Assert.That (action, Is.EqualTo (NotifyCollectionChangedAction.Remove));
 			Assert.That (view, Does.Not.Contain (nodes[0]));
 			Assert.That (view, Contains.Item (nodes[1]));
+		}
+
+		[Test]
+		public void FilterGroupedIndexes()
+		{
+			TestNode[] nodes = new TestNode[] {
+				new TestNode ("A"),
+				new TestNode ("Ab") { Flag = true },
+				new TestNode ("Ac") { Flag = true },
+				new TestNode ("Ad"),
+				new TestNode ("Ae") { Flag = true },
+				new TestNode ("Af") { Flag = true }
+			};
+
+			var view = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector
+			});
+
+			Assume.That (view.Cast<object>().Count(), Is.EqualTo (6));
+
+			List<NotifyCollectionChangedEventArgs> args = new List<NotifyCollectionChangedEventArgs>();
+			view.CollectionChanged += (sender, e) => {
+				args.Add (e);
+			};
+
+			view.Filter (o => !((TestNode)o).Flag, isSuperset: false);
+
+			Assert.That (view, Contains.Item (nodes[0]));
+			Assert.That (view, Contains.Item (nodes[3]));
+			Assert.That (view.Cast<object>().Count(), Is.EqualTo (2));
+
+			Assert.That (args.Count, Is.EqualTo (2));
+			Assert.That (args[0].OldItems, Contains.Item (nodes[1]));
+			Assert.That (args[0].OldItems, Contains.Item (nodes[2]));
+			Assert.That (args[0].OldStartingIndex, Is.EqualTo (1));
+			Assert.That (args[1].OldItems, Contains.Item (nodes[4]));
+			Assert.That (args[1].OldItems, Contains.Item (nodes[5]));
+			Assert.That (args[1].OldStartingIndex, Is.EqualTo (2));
 		}
 
 		[Test]
@@ -279,6 +317,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			public string Key;
 			public List<TestNode> Children;
+			public bool Flag;
 		}
 	}
 }

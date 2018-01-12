@@ -135,11 +135,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 		/// <param name="isSuperset">Whether or not the new <paramref name="predicate"/> is more inclusive.</param>
 		public void Filter (Predicate<object> predicate, bool isSuperset)
 		{
-			if (this.filter == predicate)
-				return;
+			bool wasFiltering = IsFiltering;
 
 			this.filter = predicate;
-			OnPropertyChanged (nameof (IsFiltering));
+			if (!wasFiltering)
+				OnPropertyChanged (nameof (IsFiltering));
+
 			FilterCore (isSuperset);
 		}
 
@@ -156,6 +157,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void OnSourceCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
+			// TODO: Fine grained handling
 			switch (e.Action) {
 				default:
 					Reset();
@@ -199,6 +201,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				Remove (toRemove, notify);
 			} else {
+				// TODO: Fine grained handling
 				Reset();
 			}
 
@@ -208,16 +211,39 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void Remove (IReadOnlyList<string> keys, bool notify)
 		{
-			List<object> oldItems = new List<object> (keys.Count);
+			int index = 0;
+			List<Tuple<object, int>> oldItems = new List<Tuple<object, int>> (keys.Count);
 			foreach (string key in keys) {
-				if (!this.arranged.TryRemove (key, out Element e))
+				int find = this.arranged.IndexOf (key, index);
+				if (find == -1)
 					continue;
 
-				oldItems.Add (Options.ChildOptions != null ? e.ChildrenView : e.Item);
+				Element e = this.arranged[find];
+				this.arranged.RemoveAt (find);
+
+				index = find;
+				object item = Options.ChildOptions != null ? new KeyValuePair<string, SimpleCollectionView> (key, e.ChildrenView) : e.Item;
+				oldItems.Add (new Tuple<object, int> (item, find));
 			}
 
 			if (oldItems.Count > 0) {
-				OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, oldItems));
+				List<object> currentSet = new List<object>();
+				int currentIndex = 0;
+				for (int i = 0; i < oldItems.Count; i++) {
+					var t = oldItems[i];
+					if (t.Item2 != currentIndex) {
+						if (notify && currentSet.Count > 0)
+							OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, currentSet.ToArray(), currentIndex));
+
+						currentSet.Clear();
+						currentIndex = t.Item2;
+					}
+
+					currentSet.Add (t.Item1);
+				}
+
+				if (notify && currentSet.Count > 0)
+					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, currentSet, currentIndex));
 			}
 		}
 
