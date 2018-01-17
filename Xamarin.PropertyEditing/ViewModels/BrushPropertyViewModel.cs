@@ -49,6 +49,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			await base.UpdateCurrentValueAsync ();
 			OnPropertyChanged (nameof (Opacity));
+			OnPropertyChanged (nameof (Solid));
 		}
 	}
 }

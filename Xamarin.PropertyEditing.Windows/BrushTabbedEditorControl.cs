@@ -77,7 +77,7 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 		}
 
-		private void SelectTabFromBrush ()
+		internal void SelectTabFromBrush ()
 		{
 			if (this.brushChoice == null) return;
 			switch (ViewModel?.Value) {

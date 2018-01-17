@@ -26,6 +26,8 @@ namespace Xamarin.PropertyEditing.Windows
 				this.brushBoxPopup.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(PlacePopup);
 				this.brushBoxPopup.Opened += (s, e) => {
 					this.brushTabs?.FocusFirstChild ();
+					// Need to refresh the tabs and their value manually
+					this.brushTabs?.SelectTabFromBrush ();
 				};
 				this.brushBoxPopup.Closed += (s, e) => {
 					this.brushBoxButton.Focus ();

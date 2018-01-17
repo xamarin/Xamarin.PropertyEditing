@@ -56,11 +56,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 					Parent.Value = new CommonSolidBrush (value, ColorSpace, Parent.Value.Opacity);
 					OnPropertyChanged ();
 					if (!newHue.Equals (oldHue)) {
-						hueColor = newHue;
+						this.hueColor = newHue;
 						OnPropertyChanged (nameof (HueColor));
 					}
-					if (!value.Equals (shade)) {
-						shade = value;
+					if (!value.Equals (this.shade)) {
+						this.shade = value;
 						OnPropertyChanged (nameof (Shade));
 					}
 					if (!this.initialColor.HasValue) {
