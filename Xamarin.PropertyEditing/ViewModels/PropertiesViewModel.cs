@@ -420,6 +420,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			} else if (property.Type.IsEnum) {
 				Type type = typeof(EnumPropertyViewModel<>).MakeGenericType (property.Type);
 				return (PropertyViewModel) Activator.CreateInstance (type, property, this.objEditors);
+			} else if (property.Type == typeof(object)) {
+				return new ObjectPropertyViewModel (EditorProvider, TargetPlatform, property, this.objEditors);
 			}
 
 			Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel> vmFactory;

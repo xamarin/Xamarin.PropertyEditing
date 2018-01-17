@@ -132,6 +132,7 @@
     </Compile>
     <Compile Include="ViewModels\RectanglePropertyViewModel.cs" />
     <Compile Include="ViewModels\ThicknessPropertyViewModel.cs" />
+    <Compile Include="ViewModels\TypeSelectorViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Themes\BaseThemeManager.cs" />
