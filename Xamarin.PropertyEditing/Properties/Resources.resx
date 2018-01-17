@@ -319,7 +319,25 @@
   <data name="ShowAdvancedProperties" xml:space="preserve">
     <value>Show advanced properties</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ShowAllAssemblies" xml:space="preserve">
+    <value>_Show all assemblies</value>
+  </data>
   <data name="SearchProperties" xml:space="preserve">
     <value>Search properties</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="SearchObjectsTitle" xml:space="preserve">
+    <value>Search Objects</value>
+  </data>
+  <data name="SelectObjectTitle" xml:space="preserve">
+    <value>Select Object</value>
   </data>
 </root>

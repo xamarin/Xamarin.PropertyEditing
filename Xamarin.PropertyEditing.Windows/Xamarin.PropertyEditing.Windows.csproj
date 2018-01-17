@@ -69,6 +69,7 @@
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />
     <Compile Include="DoubleToQuantityConverter.cs" />
+    <Compile Include="MultiplyMarginConverter.cs" />
     <Compile Include="ObjectEditorControl.cs" />
     <Compile Include="TextBoxEx.cs" />
     <Compile Include="ToggleButtonEx.cs" />
@@ -99,6 +100,10 @@
     <Compile Include="ThicknessEditorControl.cs" />
     <Compile Include="StringEditorControl.cs" />
     <Compile Include="Themes\WinThemeManager.cs" />
+    <Compile Include="TreeViewItemEx.cs" />
+    <Compile Include="TypeSelectorWindow.xaml.cs">
+      <DependentUpon>TypeSelectorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowEx.cs" />
     <Compile Include="XamlHelper.cs" />
   </ItemGroup>
@@ -116,6 +121,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\VS.Light.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TypeSelectorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
