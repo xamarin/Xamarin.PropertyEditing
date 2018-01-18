@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly DependencyProperty AlphaProperty =
 			DependencyProperty.Register (
 				nameof (A), typeof (byte), typeof (ColorComponentsEditorControl),
-				new PropertyMetadata ((byte)0));
+				new PropertyMetadata ((byte)255));
 
 		public byte A {
 			get => (byte)GetValue (AlphaProperty);
