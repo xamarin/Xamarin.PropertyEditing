@@ -16,15 +16,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 				throw new ArgumentNullException (nameof (assignableTypes));
 
 			assignableTypes.Task.ContinueWith (t => {
-				this.assemblyView = new SimpleCollectionView (t.Result, new SimpleCollectionViewOptions {
+				this.typeOptions = new SimpleCollectionViewOptions {
+					DisplaySelector = (o) => ((ITypeInfo)o).Name
+				};
+
+				this.assemblyView = new SimpleCollectionView (t.Result, this.assemblyOptions = new SimpleCollectionViewOptions {
+					Filter = AssemblyFilter,
 					DisplaySelector = (o) => ((KeyValuePair<IAssemblyInfo, ILookup<string, ITypeInfo>>)o).Key.Name,
 					ChildrenSelector = (o) => ((KeyValuePair<IAssemblyInfo, ILookup<string, ITypeInfo>>)o).Value,
 					ChildOptions = new SimpleCollectionViewOptions {
 						DisplaySelector = (o) => ((IGrouping<string, ITypeInfo>)o).Key,
 						ChildrenSelector = (o) => ((IGrouping<string, ITypeInfo>)o),
-						ChildOptions = new SimpleCollectionViewOptions {
-							DisplaySelector = (o) => ((ITypeInfo)o).Name
-						}
+						ChildOptions = this.typeOptions
 					}
 				});
 				OnPropertyChanged (nameof(Types));
@@ -61,7 +64,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				bool oldValue = this.showAllAssemblies;
 				this.showAllAssemblies = value;
 				OnPropertyChanged();
-				Filter (filterText, oldValue);
+				this.assemblyOptions.Filter = (!value) ? AssemblyFilter : (Predicate<object>)null;
 			}
 		}
 
@@ -76,31 +79,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 				string oldFilter = this.filterText;
 				this.filterText = value;
 				OnPropertyChanged();
-				Filter (oldFilter, ShowAllAssemblies);
+				this.typeOptions.Filter = (!String.IsNullOrWhiteSpace (FilterText))
+					? (o => ((ITypeInfo)o).Name.StartsWith (FilterText, StringComparison.OrdinalIgnoreCase))
+					: (Predicate<object>)null;
 			}
 		}
 
+		private SimpleCollectionViewOptions assemblyOptions, typeOptions;
 		private string filterText;
 		private bool isLoading;
 		private bool showAllAssemblies;
 		private SimpleCollectionView assemblyView;
 
-		private void Filter (string oldFilter, bool wasShowingAll)
+		private bool AssemblyFilter (object item)
 		{
-			bool isSuperset = (wasShowingAll == ShowAllAssemblies) || ShowAllAssemblies;
-			isSuperset &= !(String.IsNullOrWhiteSpace (oldFilter) || FilterText.StartsWith (oldFilter, StringComparison.OrdinalIgnoreCase));
-
-			this.assemblyView.Filter (o => {
-				if (o is KeyValuePair<IAssemblyInfo, ILookup<string, ITypeInfo>> kvp) {
-					return ShowAllAssemblies || kvp.Key.IsRelevant;
-				} else if (o is IGrouping<string, ITypeInfo> g) {
-					return g.Key.StartsWith (FilterText, StringComparison.OrdinalIgnoreCase);
-				} else if (o is ITypeInfo t) {
-					return t.Name.StartsWith (FilterText, StringComparison.OrdinalIgnoreCase);
-				}
-
-				return false;
-			}, isSuperset);
+			return ((KeyValuePair<IAssemblyInfo, ILookup<string, ITypeInfo>>)item).Key.IsRelevant;
 		}
 	}
 }

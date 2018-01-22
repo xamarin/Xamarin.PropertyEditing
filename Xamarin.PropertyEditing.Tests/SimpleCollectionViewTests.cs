@@ -89,17 +89,19 @@ namespace Xamarin.PropertyEditing.Tests
 			bool changed = false;
 			view.CollectionChanged += (sender, e) => {
 				changed = true;
-				Assert.That (e.Action, Is.EqualTo (NotifyCollectionChangedAction.Remove));
-				Assert.That (e.OldItems, Contains.Item (nodes[0]));
-				Assert.That (e.OldStartingIndex, Is.EqualTo (0));
+				Assert.That (e.Action, Is.EqualTo (NotifyCollectionChangedAction.Remove).Or.EqualTo (NotifyCollectionChangedAction.Reset));
+				if (e.Action == NotifyCollectionChangedAction.Remove) {
+					Assert.That (e.OldItems, Contains.Item (nodes[0]));
+					Assert.That (e.OldStartingIndex, Is.EqualTo (0));
+				}
 			};
 
-			view.Filter (o => ((TestNode)o).Key.StartsWith ("key"), isSuperset: false);
+			view.Options.Filter = o => ((TestNode)o).Key.StartsWith ("key");
 			Assert.That (changed, Is.False);
 			Assert.That (view, Contains.Item (nodes[0]));
 			Assert.That (view, Contains.Item (nodes[1]));
 
-			view.Filter (o => ((TestNode)o).Key.StartsWith ("key2"), isSuperset: false);
+			view.Options.Filter = o => ((TestNode)o).Key.StartsWith ("key2");
 			Assert.That (changed, Is.True);
 			Assert.That (view, Does.Not.Contain (nodes[0]));
 			Assert.That (view, Contains.Item (nodes[1]));
@@ -128,7 +130,7 @@ namespace Xamarin.PropertyEditing.Tests
 				args.Add (e);
 			};
 
-			view.Filter (o => !((TestNode)o).Flag, isSuperset: false);
+			view.Options.Filter = o => !((TestNode)o).Flag;
 
 			Assert.That (view, Contains.Item (nodes[0]));
 			Assert.That (view, Contains.Item (nodes[3]));
@@ -221,25 +223,34 @@ namespace Xamarin.PropertyEditing.Tests
 					Children = new List<TestNode> {
 						new TestNode ("Child")
 					}
+				},
+
+				new TestNode {
+					Key = "Group2",
+					Children = new List<TestNode> {
+						new TestNode ("ChildB"),
+						new TestNode ("ChildB2")
+					}
 				}
 			};
 
 			var view = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
-					DisplaySelector = TestNodeDisplaySelector,
-					ChildrenSelector = TestNodeChildrenSelector,
-					ChildOptions = new SimpleCollectionViewOptions {
-						DisplaySelector = TestNodeDisplaySelector
-					}
-				});
+				DisplaySelector = TestNodeDisplaySelector,
+				ChildrenSelector = TestNodeChildrenSelector,
+				ChildOptions = new SimpleCollectionViewOptions {
+					DisplaySelector = TestNodeDisplaySelector
+				}
+			});
 
 			Assert.That (view, Is.Not.Empty);
-			var kvp = (KeyValuePair<string, SimpleCollectionView>)view.Cast<object>().Single();
+			var kvp = (KeyValuePair<string, SimpleCollectionView>)view.Cast<object>().First();
 			Assert.That (kvp.Value, Is.Not.Empty);
 			Assert.That (kvp.Value, Contains.Item (nodes[0].Children[0]));
 		}
 
 		[Test]
-		public void FilterCategory()
+		[Description ("When a parent's children are filtered out, it should disappear")]
+		public void FilterEmptyCategory()
 		{
 			TestNode[] nodes = new TestNode[] {
 				new TestNode {
@@ -260,37 +271,355 @@ namespace Xamarin.PropertyEditing.Tests
 
 			Assume.That (view, Is.Not.Empty);
 
-			view.Filter (o => ((TestNode)o).Key.StartsWith ("Chi"), isSuperset: false);
+			view.Options.ChildOptions.Filter = o => ((TestNode)o).Key.StartsWith ("X");
 
+			Assert.That (view, Is.Empty);
+		}
+
+		[Test]
+		public void FilterEmptyCategoryChildChanges()
+		{
+			TestNode[] nodes = new TestNode[] {
+				new TestNode {
+					Key = "Group",
+					Children = new List<TestNode> {
+						new TestNode ("Child")
+					}
+				}
+			};
+
+			var view = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+					DisplaySelector = TestNodeDisplaySelector,
+					ChildrenSelector = TestNodeChildrenSelector,
+					ChildOptions = new SimpleCollectionViewOptions {
+						DisplaySelector = TestNodeDisplaySelector
+					}
+				});
+			Assume.That (view, Is.Not.Empty);
+
+			view.Options.ChildOptions.Filter = o => ((TestNode)o).Key.StartsWith ("X");
+			Assume.That (view, Is.Empty);
+
+			view.Options.ChildOptions.Filter = null;
 			Assert.That (view, Is.Not.Empty);
 		}
 
 		[Test]
-		[Description ("Even if a filter matches the group name, if it's empty it should not be displayed")]
-		public void FilterCategoryEmpty()
+		public void FilterEmptyCategoryChildAdded()
 		{
-			TestNode[] nodes = new TestNode[] {
+			var nodes = new ObservableCollection<TestNode> {
 				new TestNode {
 					Key = "Group",
-					Children = new List<TestNode> {
+					Children = new ObservableCollection<TestNode> {
 						new TestNode ("Child")
 					}
 				}
 			};
 
 			var view = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector,
+				ChildrenSelector = TestNodeChildrenSelector,
+				ChildOptions = new SimpleCollectionViewOptions {
+					DisplaySelector = TestNodeDisplaySelector
+				}
+			});
+			Assume.That (view, Is.Not.Empty);
+
+			view.Options.ChildOptions.Filter = o => ((TestNode)o).Key.StartsWith ("X");
+			Assume.That (view, Is.Empty);
+
+			nodes[0].Children.Add (new TestNode ("Xing"));
+			Assert.That (view, Is.Not.Empty);
+		}
+
+		[Test]
+		public void FilteredCategory()
+		{
+			var nodes = new ObservableCollection<TestNode> {
+				new TestNode {
+					Key = "Group",
+					Children = new ObservableCollection<TestNode> {
+						new TestNode ("Child")
+					}
+				}
+			};
+
+			var view = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector,
+				ChildrenSelector = TestNodeChildrenSelector,
+				ChildOptions = new SimpleCollectionViewOptions {
+					DisplaySelector = TestNodeDisplaySelector
+				}
+			});
+			Assume.That (view, Is.Not.Empty);
+
+			view.Options.Filter = o => ((TestNode)o).Key.StartsWith ("X");
+			Assert.That (view, Is.Empty);
+		}
+
+		[Test]
+		public void FilteredCategoryChildAdded()
+		{
+			var nodes = new ObservableCollection<TestNode> {
+				new TestNode {
+					Key = "Group",
+					Children = new ObservableCollection<TestNode> {
+						new TestNode ("Child")
+					}
+				}
+			};
+
+			var view = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector,
+				ChildrenSelector = TestNodeChildrenSelector,
+				ChildOptions = new SimpleCollectionViewOptions {
+					DisplaySelector = TestNodeDisplaySelector
+				}
+			});
+			Assume.That (view, Is.Not.Empty);
+
+			view.Options.Filter = o => ((TestNode)o).Key.StartsWith ("X");
+			Assume.That (view, Is.Empty);
+
+			nodes[0].Children.Add (new TestNode ("Xing"));
+			Assert.That (view, Is.Empty);
+		}
+
+		[Test]
+		public void FilterEmptyCategoryChildRemoved()
+		{
+			var nodes = new ObservableCollection<TestNode> {
+				new TestNode {
+					Key = "Group",
+					Children = new ObservableCollection<TestNode> {
+						new TestNode ("Child1"),
+					}
+				}
+			};
+
+			var view = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector,
+				ChildrenSelector = TestNodeChildrenSelector,
+				ChildOptions = new SimpleCollectionViewOptions {
+					DisplaySelector = TestNodeDisplaySelector
+				}
+			});
+			Assume.That (view, Is.Not.Empty);
+
+			view.Options.ChildOptions.Filter = o => ((TestNode)o).Key.StartsWith ("Child");
+			Assume.That (view, Is.Not.Empty);
+
+			NotifyCollectionChangedAction? action = null;
+			int index = -1;
+			IList items = null;
+			view.CollectionChanged += (o, e) => {
+				action = e.Action;
+				index = e.OldStartingIndex;
+				items = e.OldItems;
+			};
+
+			var kvp = view.Cast<KeyValuePair<string, SimpleCollectionView>>().First();
+
+			NotifyCollectionChangedAction? childAction = null;
+			int childIndex = -1;
+			IList childItems = null;
+			kvp.Value.CollectionChanged += (o, e) => {
+				childAction = e.Action;
+				childIndex = e.OldStartingIndex;
+				childItems = e.OldItems;
+			};
+
+			var childItem = nodes[0].Children[0];
+			nodes[0].Children.RemoveAt (0);
+
+			Assert.That (action, Is.EqualTo (NotifyCollectionChangedAction.Remove).Or.EqualTo (NotifyCollectionChangedAction.Reset));
+			if (action != NotifyCollectionChangedAction.Reset) {
+				Assert.That (index, Is.EqualTo (0));
+				Assert.That (items, Contains.Item (kvp));
+			}
+
+			Assert.That (childAction, Is.EqualTo (NotifyCollectionChangedAction.Remove).Or.EqualTo (NotifyCollectionChangedAction.Reset));
+			if (childAction != NotifyCollectionChangedAction.Reset) {
+				Assert.That (childIndex, Is.EqualTo (0));
+				Assert.That (childItems, Contains.Item (childItem));
+			}
+
+			Assert.That (view, Is.Empty);
+		}
+
+		[Test]
+		public void FilteredChild()
+		{
+			var nodes = new ObservableCollection<TestNode> {
+				new TestNode {
+					Key = "Group",
+					Children = new ObservableCollection<TestNode> {
+						new TestNode ("Child1"),
+						new TestNode ("Child2")
+					}
+				}
+			};
+
+			var view = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector,
+				ChildrenSelector = TestNodeChildrenSelector,
+				ChildOptions = new SimpleCollectionViewOptions {
+					DisplaySelector = TestNodeDisplaySelector
+				}
+			});
+			Assume.That (view, Is.Not.Empty);
+
+			view.Options.ChildOptions.Filter = o => ((TestNode)o).Key.StartsWith ("Child");
+			Assume.That (view, Is.Not.Empty);
+
+			NotifyCollectionChangedAction? action = null;
+			int index = -1;
+			IList items = null;
+			view.CollectionChanged += (o, e) => {
+				action = e.Action;
+				index = e.OldStartingIndex;
+				items = e.OldItems;
+			};
+
+			var kvp = view.Cast<KeyValuePair<string, SimpleCollectionView>>().First();
+
+			NotifyCollectionChangedAction? childAction = null;
+			int childIndex = -1;
+			IList childItems = null;
+			kvp.Value.CollectionChanged += (o, e) => {
+				childAction = e.Action;
+				childIndex = e.OldStartingIndex;
+				childItems = e.OldItems;
+			};
+
+			var childItem = nodes[0].Children[0];
+			var childItem2 = nodes[0].Children[1];
+			view.Options.ChildOptions.Filter = o => ((TestNode)o).Key.StartsWith ("X");
+
+			Assert.That (action, Is.EqualTo (NotifyCollectionChangedAction.Remove).Or.EqualTo (NotifyCollectionChangedAction.Reset));
+			if (action != NotifyCollectionChangedAction.Reset) {
+				Assert.That (index, Is.EqualTo (0));
+				Assert.That (items, Contains.Item (kvp));
+			}
+
+			Assert.That (childAction, Is.EqualTo (NotifyCollectionChangedAction.Remove).Or.EqualTo (NotifyCollectionChangedAction.Reset));
+			if (childAction != NotifyCollectionChangedAction.Reset) {
+				Assert.That (childIndex, Is.EqualTo (0));
+				Assert.That (childItems, Contains.Item (childItem));
+				Assert.That (childItems, Contains.Item (childItem2));
+			}
+
+			Assert.That (view, Is.Empty);
+		}
+
+		[Test]
+		public void FilteredChildTwoLevels()
+		{
+			var nodes = new ObservableCollection<TestNode> {
+				new TestNode {
+					Key = "Group",
+					Children = new ObservableCollection<TestNode> {
+						new TestNode ("Child1") {
+							Children = new[] {
+								new TestNode ("Leaf1")
+							}
+						},
+						new TestNode ("Child2") {
+							Children = new[] {
+								new TestNode ("Leaf2")
+							}
+						}
+					}
+				}
+			};
+
+			var view = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector,
+				ChildrenSelector = TestNodeChildrenSelector,
+				ChildOptions = new SimpleCollectionViewOptions {
 					DisplaySelector = TestNodeDisplaySelector,
 					ChildrenSelector = TestNodeChildrenSelector,
 					ChildOptions = new SimpleCollectionViewOptions {
 						DisplaySelector = TestNodeDisplaySelector
 					}
-				});
-
+				}
+			});
 			Assume.That (view, Is.Not.Empty);
 
-			view.Filter (o => ((TestNode)o).Key.StartsWith ("Group"), isSuperset: false);
+			
 
-			Assert.That (view, Is.Empty);
+			var topKvp = view.Cast<KeyValuePair<string, SimpleCollectionView>>().First();
+			var leafKvp = topKvp.Value.Cast<KeyValuePair<string, SimpleCollectionView>>().First();
+			var leafItem = leafKvp.Value.Cast<object>().First();
+
+			NotifyCollectionChangedAction? childAction = null;
+			int childIndex = -1;
+			IList childItems = null;
+			topKvp.Value.CollectionChanged += (o, e) => {
+				childAction = e.Action;
+				childIndex = e.OldStartingIndex;
+				childItems = e.OldItems;
+			};
+
+			NotifyCollectionChangedAction? leafAction = null;
+			int leafIndex = -1;
+			IList leafItems = null;
+			leafKvp.Value.CollectionChanged += (o, e) => {
+				leafAction = e.Action;
+				leafIndex = e.OldStartingIndex;
+				leafItems = e.OldItems;
+			};
+
+			view.Options.ChildOptions.ChildOptions.Filter = o => ((TestNode)o).Key.StartsWith ("Leaf2");
+
+			Assert.That (childAction, Is.EqualTo (NotifyCollectionChangedAction.Remove).Or.EqualTo (NotifyCollectionChangedAction.Reset));
+			if (childAction != NotifyCollectionChangedAction.Reset) {
+				Assert.That (childIndex, Is.EqualTo (0));
+				Assert.That (childItems, Contains.Item (leafKvp));
+				Assert.That (childItems.Count, Is.EqualTo (1));
+			}
+
+			Assert.That (leafAction, Is.EqualTo (NotifyCollectionChangedAction.Remove).Or.EqualTo (NotifyCollectionChangedAction.Reset));
+			if (leafAction != NotifyCollectionChangedAction.Reset) {
+				Assert.That (leafIndex, Is.EqualTo (0));
+				Assert.That (leafItems, Contains.Item (leafItem));
+				Assert.That (leafItems.Count, Is.EqualTo (1));
+			}
+
+			Assert.That (view, Is.Not.Empty);
+			var top = view.Cast<KeyValuePair<string, SimpleCollectionView>>().First();
+			Assert.That (top.Key, Is.EqualTo (nodes[0].Key));
+			var item = top.Value.Cast<KeyValuePair<string, SimpleCollectionView>>().First();
+			Assert.That (item.Key, Is.EqualTo (nodes[0].Children[1].Key));
+		}
+
+		[Test]
+		public void AddBackInUnordered()
+		{
+			var nodes = new ObservableCollection<TestNode> {
+				new TestNode ("B"),
+				new TestNode ("Xamarin"),
+				new TestNode ("A")
+			};
+
+			var view  = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector
+			});
+
+			Assume.That (view.Cast<TestNode>().ElementAt (0), Is.EqualTo (nodes[2]));
+			Assume.That (view.Cast<TestNode>().ElementAt (1), Is.EqualTo (nodes[0]));
+			Assume.That (view.Cast<TestNode>().ElementAt (2), Is.EqualTo (nodes[1]));
+
+			view.Options.Filter = o => ((TestNode)o).Key.StartsWith ("X");
+
+			Assume.That (view.Cast<TestNode>().Count(), Is.EqualTo (1));
+			Assume.That (view.Cast<TestNode>().ElementAt (0), Is.EqualTo (nodes[1]));
+
+			view.Options.Filter = null;
+
+			Assert.That (view.Cast<TestNode>().ElementAt (0), Is.EqualTo (nodes[2]));
+			Assert.That (view.Cast<TestNode>().ElementAt (1), Is.EqualTo (nodes[0]));
+			Assert.That (view.Cast<TestNode>().ElementAt (2), Is.EqualTo (nodes[1]));
 		}
 
 		private IEnumerable TestNodeChildrenSelector (object o)
@@ -316,7 +645,7 @@ namespace Xamarin.PropertyEditing.Tests
 			}
 
 			public string Key;
-			public List<TestNode> Children;
+			public IList<TestNode> Children;
 			public bool Flag;
 		}
 	}
