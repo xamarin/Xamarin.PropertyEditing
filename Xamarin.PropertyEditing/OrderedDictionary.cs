@@ -217,6 +217,21 @@ namespace Cadenza.Collections
 			return this.keyOrder.IndexOf (key, startIndex);
 		}
 
+		public TKey KeyAt (int index)
+		{
+			return this.keyOrder[index];
+		}
+
+		public int BinarySearch (TKey key)
+		{
+			return this.keyOrder.BinarySearch (key);
+		}
+
+		public int BinarySearch (TKey key, int startIndex, int count)
+		{
+			return this.keyOrder.BinarySearch (startIndex, count, key, null);
+		}
+
 		/// <summary>
 		///	Gets the index of <paramref name="key"/> between the range given by <paramref name="startIndex"/> and <paramref name="count"/>.
 		/// </summary>

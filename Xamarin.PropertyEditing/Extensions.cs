@@ -30,6 +30,40 @@ namespace Xamarin.PropertyEditing
 				self.Add (item);
 		}
 
+		public static object ElementAt (this IEnumerable self, int index)
+		{
+			if (self == null)
+				throw new ArgumentNullException (nameof (self));
+			if (index < 0)
+				throw new ArgumentOutOfRangeException (nameof(index));
+
+			if (self is IList list)
+				return list[index];
+
+			int i = 0;
+			foreach (object element in self) {
+				if (i++ == index)
+					return element;
+			}
+
+			throw new ArgumentOutOfRangeException (nameof(index));
+		}
+
+		public static int Count (this IEnumerable self)
+		{
+			if (self == null)
+				throw new ArgumentNullException (nameof (self));
+
+			if (self is ICollection collection)
+				return collection.Count;
+
+			int count = 0;
+			foreach (object element in self)
+				count++;
+
+			return count;
+		}
+
 		public static bool TryRemove<TKey, TElement> (this IDictionary<TKey, TElement> self, TKey key, out TElement element)
 		{
 			if (!self.TryGetValue (key, out element))
