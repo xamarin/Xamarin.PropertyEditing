@@ -31,6 +31,7 @@
 
 	<SolidColorBrush x:Key="MenuPopupBackgroundBrush">#1B1B1C</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuPopupBorderBrush">#333337</SolidColorBrush>
+	<SolidColorBrush x:Key="ListItemForegroundBrush">#FFF1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="ListItemHighlightForegroundBrush">#F1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="ListItemHighlightBorderBrush">#72555555</SolidColorBrush>
 	<SolidColorBrush x:Key="ListItemHighlightBackgroundBrush">#3E3E40</SolidColorBrush>
@@ -61,6 +62,7 @@
 	<SolidColorBrush x:Key="SearchControlButtonMouseOverBorderBrush">#FF007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlButtonPressedBackgroundBrush">#FF007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlButtonPressedBorderBrush">#FF007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlWatermarkBrush">#FF999999</SolidColorBrush>
 
 	<SolidColorBrush x:Key="InputBackgroundBrush">#333337</SolidColorBrush>
 	<SolidColorBrush x:Key="InputBorderBrush">#434346</SolidColorBrush>

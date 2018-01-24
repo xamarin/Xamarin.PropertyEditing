@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -18,6 +19,15 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			get { return (object)GetValue (LabelProperty); }
 			set { SetValue (LabelProperty, value); }
+		}
+
+		public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register (
+			nameof(ItemsSource), typeof(IEnumerable), typeof(PropertyPresenter), new PropertyMetadata ());
+
+		public IEnumerable ItemsSource
+		{
+			get { return (IEnumerable)GetValue (ItemsSourceProperty); }
+			set { SetValue (ItemsSourceProperty, value); }
 		}
 
 		protected override Size ArrangeOverride (Size arrangeBounds)

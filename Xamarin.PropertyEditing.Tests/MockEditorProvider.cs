@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Reflection;
@@ -18,6 +19,15 @@ namespace Xamarin.PropertyEditing.Tests
 				: new ReflectionObjectEditor (item);
 			this.editorCache.Add (item, editor);
 			return Task.FromResult (editor);
+		}
+
+		public Task<object> CreateObjectAsync (ITypeInfo type)
+		{
+			Type realType = Type.GetType ($"{type.NameSpace}.{type.Name}, {type.Assembly.Name}");
+			if (realType == null)
+				return Task.FromResult<object> (null);
+
+			return Task.FromResult (Activator.CreateInstance (realType));
 		}
 
 		private Dictionary<object, IObjectEditor> editorCache = new Dictionary<object, IObjectEditor> ();
