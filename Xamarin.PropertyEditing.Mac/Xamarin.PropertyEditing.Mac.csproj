@@ -87,6 +87,8 @@
     <Compile Include="Controls\CombinablePropertyEditor.cs" />
     <Compile Include="Controls\Custom\PropertyButton.cs" />
     <Compile Include="Controls\Custom\CommandMenuItem.cs" />
+    <Compile Include="Controls\Custom\BasePopOverControl.cs" />
+    <Compile Include="Controls\Custom\BasePopOverViewModelControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

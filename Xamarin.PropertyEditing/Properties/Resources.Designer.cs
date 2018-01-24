@@ -155,18 +155,6 @@ namespace Xamarin.PropertyEditing.Properties {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Go to Source.
-        /// </summary>
-        public static string GoToSource {
-            get {
-                return ResourceManager.GetString("GoToSource", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Green.
-        /// </summary>
         public static string Green {
             get {
                 return ResourceManager.GetString("Green", resourceCulture);
@@ -650,6 +638,12 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string Binding {
             get {
                 return ResourceManager.GetString("Binding", resourceCulture);
+            }
+        }
+        
+        public static string GoToSource {
+            get {
+                return ResourceManager.GetString("GoToSource", resourceCulture);
             }
         }
     }
