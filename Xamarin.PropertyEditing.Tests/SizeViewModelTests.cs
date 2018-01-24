@@ -86,9 +86,9 @@ namespace Xamarin.PropertyEditing.Tests
 			return new CommonSize (rand.Next (), rand.Next ());
 		}
 
-		protected override SizePropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override SizePropertyViewModel GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new SizePropertyViewModel (property, editors);
+			return new SizePropertyViewModel (platform, property, editors);
 		}
 	}
 }

@@ -10,8 +10,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		: PropertyViewModel<T>
 		where T : IComparable<T>
 	{
-		protected ConstrainedPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (property, editors)
+		protected ConstrainedPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (platform, property, editors)
 		{
 			this.selfConstraint = property as ISelfConstrainedPropertyInfo<T>;
 			this.clampProperties = property as IClampedPropertyInfo;

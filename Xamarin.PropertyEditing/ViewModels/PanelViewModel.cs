@@ -128,7 +128,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				int i = 0;
 				foreach (var kvp in groupedTypeProperties.OrderBy (kvp => kvp.Key, CategoryComparer.Instance)) {
 					var group = new ObservableGrouping<string, EditorViewModel> (kvp.Key) {
-						new PropertyGroupViewModel (kvp.Key, kvp.Value, ObjectEditors)
+						new PropertyGroupViewModel (TargetPlatform, kvp.Key, kvp.Value, ObjectEditors)
 					};
 
 					for (; i < this.arranged.Count; i++) {

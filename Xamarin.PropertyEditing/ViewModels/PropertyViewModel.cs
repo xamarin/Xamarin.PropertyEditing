@@ -13,8 +13,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class PropertyViewModel<TValue>
 		: PropertyViewModel
 	{
-		public PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (property, editors)
+		public PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (platform, property, editors)
 		{
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
@@ -218,8 +218,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal abstract class PropertyViewModel
 		: EditorViewModel, INotifyDataErrorInfo
 	{
-		protected PropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (editors)
+		protected PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (platform, editors)
 		{
 			if (property == null)
 				throw new ArgumentNullException (nameof (property));

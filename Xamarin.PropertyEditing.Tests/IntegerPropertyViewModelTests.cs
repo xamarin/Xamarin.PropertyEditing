@@ -42,9 +42,9 @@ namespace Xamarin.PropertyEditing.Tests
 			return value;
 		}
 
-		protected override IntegerPropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override IntegerPropertyViewModel GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new IntegerPropertyViewModel (property, editors);
+			return new IntegerPropertyViewModel (platform, property, editors);
 		}
 	}
 }

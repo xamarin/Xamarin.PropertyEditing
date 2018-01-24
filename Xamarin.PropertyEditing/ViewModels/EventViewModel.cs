@@ -10,8 +10,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		: EditorViewModel
 	{
 		// TODO: Break error handling out into reusable interface implementer
-		public EventViewModel (IEventInfo ev, IEnumerable<IObjectEditor> editors)
-			: base (editors)
+		public EventViewModel (TargetPlatform platform, IEventInfo ev, IEnumerable<IObjectEditor> editors)
+			: base (platform, editors)
 		{
 			if (ev == null)
 				throw new ArgumentNullException (nameof (ev));

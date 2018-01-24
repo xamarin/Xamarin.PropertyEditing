@@ -87,9 +87,9 @@ namespace Xamarin.PropertyEditing.Tests
 			return new CommonPoint (rand.Next (), rand.Next ());
 		}
 
-		protected override PointPropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override PointPropertyViewModel GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new PointPropertyViewModel (property, editors);
+			return new PointPropertyViewModel (platform, property, editors);
 		}
 	}
 }

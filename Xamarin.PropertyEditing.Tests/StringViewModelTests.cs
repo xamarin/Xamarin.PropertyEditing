@@ -9,9 +9,9 @@ namespace Xamarin.PropertyEditing.Tests
 	internal class StringViewModelTests
 		: PropertyViewModelTests<string, StringPropertyViewModel>
 	{
-		protected override StringPropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override StringPropertyViewModel GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new StringPropertyViewModel (property, editors);
+			return new StringPropertyViewModel (platform, property, editors);
 		}
 
 		protected override string GetRandomTestValue (Random rand)

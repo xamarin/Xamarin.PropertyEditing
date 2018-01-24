@@ -27,7 +27,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		: PropertyViewModel
 	{
 		public ObjectPropertyViewModel (IEditorProvider provider, TargetPlatform targetPlatform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (property, editors)
+			: base (targetPlatform, property, editors)
 		{
 			if (provider == null)
 				throw new ArgumentNullException (nameof(provider));
