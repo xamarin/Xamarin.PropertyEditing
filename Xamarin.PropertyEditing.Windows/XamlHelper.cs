@@ -46,5 +46,23 @@ namespace Xamarin.PropertyEditing.Windows
 
 			return (T)parent;
 		}
+
+		public static TParent FindParentUnless<TParent,TUnless> (this UIElement self)
+			where TParent : UIElement
+			where TUnless : UIElement
+		{
+			if (self == null)
+				throw new ArgumentNullException (nameof (self));
+
+			DependencyObject parent = VisualTreeHelper.GetParent (self);
+			while (!(parent is TParent) && parent != null) {
+				if (parent is TUnless)
+					return default(TParent);
+
+				parent = VisualTreeHelper.GetParent (parent);
+			}
+
+			return (TParent)parent;
+		}
 	}
 }

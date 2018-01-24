@@ -12,8 +12,6 @@
         <ResourceDictionary Source="PropertyEditorPanelStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-	<BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-
 	<Color x:Key="DropShadowBackgroundColor">#72000000</Color>
 
 	<Style x:Key="GenericVisualFocusStyle" TargetType="Control">
@@ -39,6 +37,8 @@
 
 	<Geometry x:Key="SearchLoopIcon" options:Freeze="True">F1 M 8.499,7.000 C 7.118,7.000 5.999,5.881 5.999,4.500 C 5.999,3.119 7.118,2.000 8.499,2.000 C 9.880,2.000 10.999,3.119 10.999,4.500 C 10.999,5.881 9.880,7.000 8.499,7.000 Z M 8.499,0.000 C 6.015,0.000 3.999,2.015 3.999,4.500 C 3.999,5.225 4.187,5.901 4.492,6.507 L 0.000,11.000 L 1.999,13.000 L 6.492,8.508 C 7.099,8.813 7.773,9.000 8.499,9.000 C 10.985,9.000 12.999,6.985 12.999,4.500 C 12.999,2.015 10.985,0.000 8.499,0.000 Z</Geometry>
 	<Geometry x:Key="ClearSearchIcon" options:Freeze="True">F1 M 0.000,1.000 L 1.000,0.000 L 4.000,3.000 L 7.000,0.000 L 8.000,1.000 L 5.000,4.000 L 8.000,7.000 L 7.000,8.000 L 4.000,5.000 L 1.000,8.000 L 0.000,7.000 L 3.000,4.000 L 0.000,1.000 Z</Geometry>
+
+	<local:BoolsToVisibilityConverter x:Key="BoolsToVisibilityConverter" />
 
 	<Style TargetType="{x:Type local:EnumEditorControl}">
 		<Setter Property="Template">
@@ -440,8 +440,8 @@
 							<ColumnDefinition Width="Auto" />
 						</Grid.ColumnDefinitions>
 
-						<TextBlock Text="{Binding ValueType.Name,StringFormat=({0})}" Grid.Column="0" />
-						<Button MinHeight="20" MinWidth="40" HorizontalAlignment="Right" Content="{x:Static prop:Resources.New}" Command="{Binding CreateInstanceCommand}" />
+						<TextBlock Text="{Binding ValueType.Name,StringFormat=({0})}" Grid.Column="0" VerticalAlignment="Center" />
+						<Button MinHeight="20" MinWidth="40" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Static prop:Resources.New}" Command="{Binding CreateInstanceCommand}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -1096,20 +1096,36 @@
 	</Style>
 
 	<Style TargetType="local:PropertyPresenter">
+		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyPresenter">
 					<Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
 						<Grid>
 							<Grid.ColumnDefinitions>
+								<ColumnDefinition Name="delveColumn" Width="Auto" />
 								<ColumnDefinition Name="labelColumn" MinWidth="100" MaxWidth="180" Width="0.4*" />
 								<ColumnDefinition MinWidth="134" Width="0.6*" />
 								<ColumnDefinition Name="propertyButtonColumn" Width="12" />
 							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="Auto" />
+							</Grid.RowDefinitions>
 
-							<TextBlock Name="Label" Grid.Column="0" Text="{TemplateBinding Label}" ToolTip="{TemplateBinding Label}" Height="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-							<ContentPresenter Grid.Column="1" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" />
-							<local:PropertyButton Grid.Column="2" ValueSource="{Binding ValueSource}" />
+							<ToggleButton Name="delveButton" Grid.Column="0" Style="{DynamicResource StandaloneToggleStyle}" Width="11" Height="11" Visibility="{Binding HasItems,ElementName=subProperties,Converter={StaticResource BoolToVisibilityConverter}}" />
+							<TextBlock Name="Label" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{TemplateBinding Label}" Height="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+							<ContentPresenter Grid.Column="2" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" />
+							<local:PropertyButton Grid.Column="3" ValueSource="{Binding ValueSource}" />
+
+							<ItemsControl Name="subProperties" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Margin="-19,0,0,0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{DynamicResource PropertyEditorTemplate}">
+								<ItemsControl.Visibility>
+									<MultiBinding Converter="{StaticResource BoolsToVisibilityConverter}">
+										<Binding ElementName="delveButton" Path="IsChecked" />
+										<Binding RelativeSource="{RelativeSource Self}" Path="HasItems" />
+									</MultiBinding>
+								</ItemsControl.Visibility>
+							</ItemsControl>
 						</Grid>
 					</Border>
 					<ControlTemplate.Triggers>
@@ -1122,6 +1138,11 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsSubProperty" Value="True">
+				<Setter Property="Background" Value="{DynamicResource PanelGroupSecondaryBackgroundBrush}" />
+			</Trigger>
+		</Style.Triggers>
 	</Style>
 
 	<ControlTemplate TargetType="Expander" x:Key="AdvancedPropertiesExpander">
@@ -1508,6 +1529,45 @@
 
 						<ContentPresenter Grid.Column="1" />
 					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter Property="RenderTransform" TargetName="ExpandPath">
+								<Setter.Value>
+									<RotateTransform Angle="180" CenterY="3" CenterX="3"/>
+								</Setter.Value>
+							</Setter>
+							<Setter Property="Fill" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.Static.Checked.Fill}"/>
+							<Setter Property="Stroke" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.Static.Checked.Stroke}"/>
+						</Trigger>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="Stroke" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.MouseOver.Stroke}"/>
+							<Setter Property="Fill" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.MouseOver.Fill}"/>
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsMouseOver" Value="True"/>
+								<Condition Property="IsChecked" Value="True"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="Stroke" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.MouseOver.Checked.Stroke}"/>
+							<Setter Property="Fill" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.MouseOver.Checked.Fill}"/>
+						</MultiTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="StandaloneToggleStyle" TargetType="ToggleButton">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="ToggleButton">
+					<Border Grid.Column="0" Background="Transparent">
+						<Path x:Name="ExpandPath" Data="{StaticResource TreeArrow}" Fill="{DynamicResource TreeViewItem.TreeArrow.Static.Fill}" Stroke="{DynamicResource TreeViewItem.TreeArrow.Static.Stroke}">
+							<Path.RenderTransform>
+								<RotateTransform Angle="135" CenterY="3" CenterX="3"/>
+							</Path.RenderTransform>
+						</Path>
+					</Border>
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsChecked" Value="True">
 							<Setter Property="RenderTransform" TargetName="ExpandPath">

@@ -64,6 +64,29 @@ namespace Xamarin.PropertyEditing
 			return count;
 		}
 
+		/// <summary>
+		/// Replaces the first instance of <paramref name="replace"/> with <paramref name="with"/>, or adds it if <paramref name="replace"/> isn't found.
+		/// </summary>
+		public static void ReplaceOrAdd<T> (this ICollection<T> self, T replace, T with)
+		{
+			if (self == null)
+				throw new ArgumentNullException (nameof (self));
+
+			IList<T> list = self as IList<T>;
+			if (list != null) {
+				int i = list.IndexOf (replace);
+				if (i != -1)
+					list[i] = with;
+				else
+					list.Add (with);
+
+				return;
+			}
+
+			self.Remove (replace);
+			self.Add (with);
+		}
+
 		public static bool TryRemove<TKey, TElement> (this IDictionary<TKey, TElement> self, TKey key, out TElement element)
 		{
 			if (!self.TryGetValue (key, out element))
