@@ -123,8 +123,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				ValueInfo<object>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<object> (Property)));
 				for (int i = 0; i < values.Length; i++) {
 					ValueInfo<object> info = values[i];
-					ValueModel.SelectedObjects.Add (info.Value);
-
 					if (source == null)
 						source = info.Source;
 					else if (source.Value != info.Source)
@@ -134,6 +132,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 						type = info.ValueDescriptor as ITypeInfo;
 					else if (!multipleTypes && !Equals (type, info.ValueDescriptor as ITypeInfo))
 						multipleTypes = true;
+
+					if (info.Value != null)
+						ValueModel.SelectedObjects.Add (info.Value);
 				}
 
 				MultipleValues = multipleTypes;
