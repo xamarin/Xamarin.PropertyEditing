@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.ComponentModel;
 using AppKit;
 using CoreGraphics;
+using System.Windows.Input;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -20,33 +21,15 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		public event EventHandler PropertyButtonClicked;
-		NSButton propertyButton;
-		public NSButton PropertyButton
+		PropertyButton propertyButton;
+		public PropertyButton PropertyButton
 		{
 			get { return propertyButton; }
 		}
 
 		public BaseEditorControl ()
 		{
-			propertyButton = new NSButton {
-				Bordered = false,
-				Enabled = false,
-				AlternateImage = NSImage.ImageNamed ("property-button-default-mac-active-10"),
-				Cell = {
-					HighlightsBy = 1,
-				},
-				ImageScaling = NSImageScale.AxesIndependently,
-				Title = string.Empty,
-				TranslatesAutoresizingMaskIntoConstraints = false,
-			};
-
-#if DESIGNER_DEBUG
-			propertyButton.Image = NSImage.ImageNamed ("property-button-default-mac-10");
-#endif
-
-			propertyButton.Activated += (object sender, EventArgs e) => {
-				NotifyPropertyButtonClicked ();
-			};
+			propertyButton = new PropertyButton ();
 
 			AddSubview (propertyButton);
 
@@ -64,9 +47,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			actionButton.Activated += (object sender, EventArgs e) => {
 				if (errorList != null) {
-					var Container = new ErrorMessageView (errorList) {
-						Frame = new CGRect (CGPoint.Empty, new CGSize (320, 200))
-					};
+					var Container = new ErrorMessageView (errorList);
 
 					var errorMessagePopUp = new NSPopover {
 						Behavior = NSPopoverBehavior.Semitransient,

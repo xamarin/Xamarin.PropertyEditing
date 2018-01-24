@@ -8,7 +8,6 @@ using Xamarin.PropertyEditing.Mac.Resources;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class PointEditorControl<T> : BasePointEditorControl<T>
-		where T : struct
 	{
 		public PointEditorControl ()
 		{

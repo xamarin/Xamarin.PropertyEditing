@@ -454,6 +454,9 @@
   <data name="ResourceWithName" xml:space="preserve">
     <value>Resource ({0})</value>
     <comment>Resource with the raw embedded resource name</comment>
+  </data> 
+  <data name="Binding" xml:space="preserve">
+    <value>Binding</value>
   </data>
   <data name="GoToSource" xml:space="preserve">
     <value>Go to Source</value>

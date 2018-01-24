@@ -12,8 +12,8 @@ using Xamarin.PropertyEditing.Mac.Resources;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class PredefinedValuesEditor<T>
-		: PropertyEditorControl
+	internal class PredefinedValuesEditor<T> : PropertyEditorControl<PredefinedValuesViewModel<T>>
+		where T : struct
 	{
 		public PredefinedValuesEditor ()
 		{
@@ -51,12 +51,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override NSView FirstKeyView => firstKeyView;
 		public override NSView LastKeyView => lastKeyView;
-
-		internal new PredefinedValuesViewModel<T> ViewModel
-		{
-			get { return (PredefinedValuesViewModel<T>)base.ViewModel; }
-			set { base.ViewModel = value; }
-		}
 
 		readonly NSComboBox comboBox;
 		readonly NSPopUpButton popUpButton;

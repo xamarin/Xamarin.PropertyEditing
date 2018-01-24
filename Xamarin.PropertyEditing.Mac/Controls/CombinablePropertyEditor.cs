@@ -15,7 +15,7 @@ using System.Linq;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class CombinablePropertyEditor<T>
-		: PropertyEditorControl
+		: PropertyEditorControl<CombinablePropertyViewModel<T>>
 	{
 		public CombinablePropertyEditor ()
 		{
@@ -26,12 +26,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override NSView FirstKeyView => firstKeyView;
 		public override NSView LastKeyView => lastKeyView;
-
-		internal new CombinablePropertyViewModel<T> ViewModel
-		{
-			get { return (CombinablePropertyViewModel<T>)base.ViewModel; }
-			set { base.ViewModel = value; }
-		}
 
 		Dictionary<NSButton, FlaggableChoiceViewModel<T>> combinableList = new Dictionary<NSButton, FlaggableChoiceViewModel<T>> ();
 		NSView firstKeyView;

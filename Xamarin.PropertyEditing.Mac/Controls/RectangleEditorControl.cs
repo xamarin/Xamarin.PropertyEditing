@@ -7,7 +7,6 @@ using Xamarin.PropertyEditing.Drawing;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class RectangleEditorControl<T>: BaseRectangleEditorControl<T>
-		where T : struct
 	{
 		public RectangleEditorControl ()
 		{

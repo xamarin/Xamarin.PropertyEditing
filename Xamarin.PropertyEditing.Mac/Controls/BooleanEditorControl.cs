@@ -6,7 +6,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class BooleanEditorControl : PropertyEditorControl
+	internal class BooleanEditorControl : PropertyEditorControl<PropertyViewModel<bool?>>
 	{
 		const string setBezelColorSelector = "setBezelColor:";
 
@@ -36,7 +36,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (BooleanEditor);
 
             this.DoConstraints (new[] {
-				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Width == c.Width),
+				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 50),
 				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Top == c.Top + 5),
 				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Left == c.Left + 4),
 			});
@@ -52,11 +52,6 @@ namespace Xamarin.PropertyEditing.Mac
 		public string Title { 
 			get { return BooleanEditor.Title; } 
 			set { BooleanEditor.Title = value; } 
-		}
-
-		internal new PropertyViewModel<bool?> ViewModel {
-			get { return (PropertyViewModel<bool?>)base.ViewModel; }
-			set { base.ViewModel = value; }
 		}
 
 		protected override void UpdateValue ()
