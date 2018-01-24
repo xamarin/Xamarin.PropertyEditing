@@ -25,7 +25,7 @@
 				<ControlTemplate TargetType="{x:Type Expander}">
 					<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
 						<DockPanel>
-							<ToggleButton x:Name="HeaderSite" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" Content="{TemplateBinding Header}" DockPanel.Dock="Top" Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontStretch="{TemplateBinding FontStretch}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" MinWidth="0" MinHeight="0" Padding="{TemplateBinding Padding}" Style="{StaticResource ExpandCollapseToggleStyle}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+							<ToggleButton x:Name="HeaderSite" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" Content="{TemplateBinding Header}" DockPanel.Dock="Top" Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontStretch="{TemplateBinding FontStretch}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" MinWidth="0" MinHeight="0" Padding="{TemplateBinding Padding}" Style="{DynamicResource ExpandCollapseToggleStyle}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
 							<ContentPresenter x:Name="ExpandSite" DockPanel.Dock="Bottom" Focusable="false" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" Visibility="Collapsed" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 						</DockPanel>
 					</Border>
@@ -43,7 +43,12 @@
 	</Style>
 
 	<DataTemplate x:Key="PropertyEditorTemplate">
-		<local:PropertyPresenter Padding="19,0,0,0" Background="{DynamicResource PanelBackgroundBrush}" Label="{Binding Property.Name,Mode=OneTime}" Content="{Binding Mode=OneTime}" ContentTemplateSelector="{StaticResource PropertyEditorSelector}" />
+		<local:PropertyPresenter x:Name="presenter" Padding="19,0,0,0" Label="{Binding Property.Name,Mode=OneTime}" Content="{Binding Mode=OneTime}" ContentTemplateSelector="{StaticResource PropertyEditorSelector}" />
+		<DataTemplate.Triggers>
+			<DataTrigger Binding="{Binding CanDelve}" Value="True">
+				<Setter TargetName="presenter" Property="ItemsSource" Value="{Binding ValueModel.Properties,FallbackValue={x:Null}}" />
+			</DataTrigger>
+		</DataTemplate.Triggers>
 	</DataTemplate>
 	
 	<Style x:Key="PropertyListStyle" TargetType="ItemsControl">
@@ -137,7 +142,7 @@
 							</Grid>
 
 							<ScrollViewer Name="eventsPane" Grid.Row="1" Visibility="Collapsed">
-								<ItemsControl ItemsSource="{Binding Events}">
+								<ItemsControl ItemsSource="{Binding Events}" Background="{TemplateBinding Background}">
 									<ItemsControl.ItemTemplate>
 										<DataTemplate DataType="{x:Type vms:EventViewModel}">
 											<Grid>

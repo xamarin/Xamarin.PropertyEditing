@@ -63,17 +63,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		public bool CanDelve
+		public override bool CanDelve
 		{
 			get { return this.canDelve; }
-			private set
-			{
-				if (this.canDelve == value)
-					return;
-
-				this.canDelve = value;
-				OnPropertyChanged();
-			}
 		}
 
 		public ObjectViewModel ValueModel
@@ -151,7 +143,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				else
 					ValueSource = source ?? ValueSource.Default;
 
-				CanDelve = values.Length > 0;
+				SetCanDelve (values.Length > 0);
 			}
 		}
 
@@ -175,12 +167,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		private void SetCanDelve (bool value)
+		{
+			if (this.canDelve == value)
+				return;
+
+			this.canDelve = value;
+			OnPropertyChanged (nameof(CanDelve));
+		}
+
 		private async void OnClearValue ()
 		{
-			await SetValueAsync (Enumerable.Repeat (new ValueInfo<object> {
+			await SetValueAsync (new ValueInfo<object> {
 				Source = ValueSource.Default,
 				Value = null
-			}, Editors.Count).ToArray ());
+			});
 		}
 
 		private bool CanClearValue ()
@@ -188,12 +189,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return (Property.ValueSources.HasFlag (ValueSources.Local) && Property.ValueSources.HasFlag (ValueSources.Default) && ValueSource == ValueSource.Local);
 		}
 
-		private Task SetValueAsync (ValueInfo<object>[] valueInfo)
+		private Task SetValueAsync (ValueInfo<object> valueInfo)
 		{
 			Task[] setValues = new Task[Editors.Count];
 			int i = 0;
 			foreach (IObjectEditor editors in Editors) {
-				setValues[i++] = editors.SetValueAsync (Property, valueInfo[i]);
+				setValues[i++] = editors.SetValueAsync (Property, valueInfo);
 			}
 
 			return Task.WhenAll (setValues);
@@ -250,13 +251,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 						selectedType = args.SelectedType;
 					}
 
-					var values = new ValueInfo<object>[Editors.Count];
-					for (int i = 0; i < values.Length; i++) {
-						values[i] = new ValueInfo<object> {
+					await SetValueAsync (new ValueInfo<object> {
 							Value = await this.provider.CreateObjectAsync (selectedType),
+							ValueDescriptor = selectedType,
 							Source = ValueSource.Local
-						};
-					}
+						});
 				}
 			} finally {
 				IsCreateInstancePending = false;

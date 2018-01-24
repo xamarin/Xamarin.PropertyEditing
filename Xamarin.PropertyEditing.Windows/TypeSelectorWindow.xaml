@@ -50,7 +50,7 @@
 			</local:TreeViewEx.ItemTemplate>
 		</local:TreeViewEx>
 
-		<CheckBox Grid.Row="2" HorizontalAlignment="Left" Margin="0,4,0,0" Foreground="{DynamicResource PanelGroupForegroundBrush}" Content="{x:Static prop:Resources.ShowAllAssemblies}" />
+		<CheckBox Grid.Row="2" HorizontalAlignment="Left" Margin="0,4,0,0" IsChecked="{Binding ShowAllAssemblies}" Foreground="{DynamicResource PanelGroupForegroundBrush}" Content="{x:Static prop:Resources.ShowAllAssemblies}" />
 
 		<StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button Name="ok" MinHeight="23" MinWidth="75" IsEnabled="False" Content="{x:Static prop:Resources.OK}" IsDefault="True" Click="OnOkClicked" />

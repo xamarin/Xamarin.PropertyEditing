@@ -251,6 +251,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public virtual bool CanDelve => false;
+
 		public ICommand SetValueResourceCommand
 		{
 			get;

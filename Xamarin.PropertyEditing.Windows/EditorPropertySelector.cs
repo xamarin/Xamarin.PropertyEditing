@@ -43,7 +43,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			var vm = item as EditorViewModel;
 			if (vm != null) {
-				if (!(vm is PropertyViewModel) || !((PropertyViewModel)vm).CanDelve)
+				if (vm is PropertyViewModel)
 					return Options.EditorTemplate;
 				else
 					return Options.ParentTemplate;
