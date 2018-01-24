@@ -119,9 +119,11 @@ namespace Xamarin.PropertyEditing.Tests
 			if (this.assignableTypes == null) {
 				return Task.Run<IReadOnlyList<ITypeInfo>> (() => {
 					return AppDomain.CurrentDomain.GetAssemblies().SelectMany (a => a.GetTypes()).AsParallel()
-						.Where (t => property.Type.IsAssignableFrom (t) && t.Namespace != null && !t.IsAbstract && !t.IsInterface && t.IsPublic)
-						.Select (t => new TypeInfo (new AssemblyInfo (t.Assembly.GetName().Name, true), t.Namespace, t.Name))
-						.ToList();
+						.Where (t => property.Type.IsAssignableFrom (t) && t.GetConstructor (Type.EmptyTypes) != null && t.Namespace != null && !t.IsAbstract && !t.IsInterface && t.IsPublic)
+						.Select (t => {
+							string asmName = t.Assembly.GetName().Name;
+							return new TypeInfo (new AssemblyInfo (asmName, isRelevant: asmName.StartsWith ("Xamarin")), t.Namespace, t.Name);
+						}).ToList();
 				});
 			} else if (!this.assignableTypes.TryGetValue (property, out IReadOnlyList<ITypeInfo> types))
 				return Task.FromResult<IReadOnlyList<ITypeInfo>> (Enumerable.Empty<ITypeInfo>().ToArray());
