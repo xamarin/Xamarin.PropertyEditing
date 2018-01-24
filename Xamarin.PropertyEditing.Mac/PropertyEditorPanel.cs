@@ -14,13 +14,6 @@ namespace Xamarin.PropertyEditing.Mac
 		internal const string PropertyListColId = "PropertiesList";
 		internal const string PropertyEditorColId = "PropertyEditors";
 
-		static PropertyEditorPanel ()
-		{
-			PropertiesViewModel.ViewModelMap.Add (typeof (CGPoint), (p, e) => new PropertyViewModel<CGPoint> (p, e));
-			PropertiesViewModel.ViewModelMap.Add (typeof (CGRect), (p, e) => new PropertyViewModel<CGRect> (p, e));
-			PropertiesViewModel.ViewModelMap.Add (typeof (CGSize), (p, e) => new PropertyViewModel<CGSize> (p, e));
-		}
-
 		public PropertyEditorPanel ()
 		{
 			Initialize ();

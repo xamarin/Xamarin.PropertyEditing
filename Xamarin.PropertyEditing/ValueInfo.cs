@@ -29,6 +29,12 @@ namespace Xamarin.PropertyEditing
 			set;
 		}
 
+		public string CustomExpression
+		{
+			get;
+			set;
+		}
+
 		public bool Equals (ValueInfo<T> other)
 		{
 			if (ReferenceEquals (null, other))
@@ -36,7 +42,7 @@ namespace Xamarin.PropertyEditing
 			if (ReferenceEquals (this, other))
 				return true;
 
-			return EqualityComparer<T>.Default.Equals (Value, other.Value) && Equals (ValueDescriptor, other.ValueDescriptor) && Source == other.Source;
+			return EqualityComparer<T>.Default.Equals (Value, other.Value) && Equals (ValueDescriptor, other.ValueDescriptor) && Source == other.Source && CustomExpression == other.CustomExpression;
 		}
 
 		public override bool Equals (object obj)
@@ -56,6 +62,7 @@ namespace Xamarin.PropertyEditing
 				var hashCode = EqualityComparer<T>.Default.GetHashCode (Value);
 				hashCode = (hashCode * 397) ^ (ValueDescriptor?.GetHashCode () ?? 0);
 				hashCode = (hashCode * 397) ^ (int) Source;
+				hashCode = (hashCode * 397) ^ (CustomExpression?.GetHashCode() ?? 0);
 				return hashCode;
 			}
 		}

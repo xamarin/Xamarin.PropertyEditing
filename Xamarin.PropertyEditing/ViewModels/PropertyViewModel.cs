@@ -36,6 +36,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public string CustomExpression
+		{
+			get { return this.value?.CustomExpression; }
+			set
+			{
+				SetValue (new ValueInfo<TValue> {
+					CustomExpression = value
+				});
+			}
+		}
+
 		public IReadOnlyList<Resource> Resources => this.resources;
 
 		public IResourceProvider ResourceProvider

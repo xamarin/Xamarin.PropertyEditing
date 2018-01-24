@@ -11,6 +11,15 @@ namespace Xamarin.PropertyEditing
 	public sealed class TargetPlatform
 	{
 		/// <summary>
+		/// Gets or sets whether the platform supports custom expressions (default false).
+		/// </summary>
+		public bool SupportsCustomExpressions
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets a dictionary defining the property types will be grouped into a single editor and their groups resource name.
 		/// </summary>
 		public IReadOnlyDictionary<Type, string> GroupedTypes
