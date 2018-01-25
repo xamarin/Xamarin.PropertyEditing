@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using Xamarin.PropertyEditing.Drawing;
@@ -13,6 +15,12 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 		public MainWindow ()
 		{
 			InitializeComponent ();
+			this.panel.TargetPlatform = new TargetPlatform {
+				SupportsCustomExpressions = true,
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(CommonBrush), "Brush" }
+				}
+			};
 			this.panel.EditorProvider = new MockEditorProvider ();
 		}
 
