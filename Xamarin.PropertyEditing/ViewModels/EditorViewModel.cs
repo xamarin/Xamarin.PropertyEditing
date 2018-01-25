@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -17,8 +18,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			Editors = observableEditors;
 			observableEditors.CollectionChanged += OnEditorsChanged;
 			observableEditors.AddItems (editors); // Purposefully after the event hookup
-
-			//TODO: Property is being set after the editors added trickle down since its in the subclass
 		}
 
 		public abstract string Category
@@ -72,11 +71,26 @@ namespace Xamarin.PropertyEditing.ViewModels
 					break;
 			}
 
-			UpdateCurrentValue ();
+			RequestCurrentValueUpdate();
 		}
 
-		protected virtual void UpdateCurrentValue()
+		/// <summary>
+		/// Requests that the current value be updated, not immediate.
+		/// </summary>
+		protected async void RequestCurrentValueUpdate ()
 		{
+			await UpdateCurrentValueAsync ();
+		}
+
+		/// <remarks>
+		/// If your sub-class needs extra setup in the ctor before the value can be executed,
+		/// safe guard your override of this method as it will be run when the editors are
+		/// added in the base ctor before your sub-class' ctor has run. After you've completed
+		/// setup, call <see cref="RequestCurrentValueUpdate"/>.
+		/// </remarks>
+		protected virtual Task UpdateCurrentValueAsync()
+		{
+			return Task.FromResult (true);
 		}
 
 		protected virtual void SetupEditor (IObjectEditor editor)

@@ -56,10 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncSynchronizationContext.cs" />
+    <Compile Include="AsyncValueTests.cs" />
     <Compile Include="AsyncWorkQueueTests.cs" />
     <Compile Include="BoolViewModelTests.cs" />
     <Compile Include="BrushPropertyViewModelTests.cs" />
     <Compile Include="BytePropertyViewModelTests.cs" />
+    <Compile Include="SimpleCollectionViewTests.cs" />
     <Compile Include="CommonColorTests.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="IPropertyConverter.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="MockPropertyInfo\MockEnumPropertyInfo.cs" />
     <Compile Include="MockPropertyProviderTests.cs" />
     <Compile Include="MultiAvailabilityConstraintTests.cs" />
+    <Compile Include="ObjectPropertyViewModelTests.cs" />
     <Compile Include="ObservableLookupTests.cs" />
     <Compile Include="PointViewModelTests.cs" />
     <Compile Include="PropertyGroupViewModelTests.cs" />

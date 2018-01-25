@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
@@ -20,7 +18,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
-			UpdateCurrentValue ();
+			RequestCurrentValueUpdate();
 		}
 
 		public ValueSource ValueSource => this.value != null ? this.value.Source : ValueSource.Default;
@@ -54,26 +52,22 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		public ICommand SetValueResourceCommand
-		{
-			get;
-		}
-
-		public ICommand ClearValueCommand
-		{
-			get;
-		}
-
 		protected virtual TValue ValidateValue (TValue validationValue)
 		{
 			return validationValue;
 		}
 
+		/// <remarks>
+		/// For updating property-type-specific value properties, override this. <see cref="PropertyViewModel.MultipleValues"/> <see cref="Value"/> is up to date
+		/// </remarks>
 		protected virtual void OnValueChanged ()
 		{
 		}
 
-		protected override async void UpdateCurrentValue ()
+		/// <summary>
+		/// Obtains the current value from the editors and updates the value properties.
+		/// </summary>
+		protected override async Task UpdateCurrentValueAsync ()
 		{
 			if (Property == null)
 				return;
@@ -139,7 +133,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					}
 
 					await Task.WhenAll (setValues);
-					UpdateCurrentValue ();
+					await UpdateCurrentValueAsync ();
 				} catch (Exception ex) {
 					AggregateException aggregate = ex as AggregateException;
 					if (aggregate != null) {
@@ -257,6 +251,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public virtual bool CanDelve => false;
+
+		public ICommand SetValueResourceCommand
+		{
+			get;
+			protected set;
+		}
+
+		public ICommand ClearValueCommand
+		{
+			get;
+			protected set;
+		}
+
 		public bool HasErrors => this.error != null;
 
 		public IEnumerable GetErrors (string propertyName)
@@ -277,19 +285,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				this.variation = value;
 				OnPropertyChanged ();
-			}
-		}
-
-		public bool CanDelve => ValueModel != null;
-
-		public ObjectViewModel ValueModel
-		{
-			get { return this.valueModel; }
-			private set
-			{
-				this.valueModel = value;
-				OnPropertyChanged ();
-				OnPropertyChanged (nameof (CanDelve));
 			}
 		}
 
@@ -316,7 +311,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					return;
 		
 				// TODO: Smarter querying, can query the single editor and check against MultipleValues
-				UpdateCurrentValue ();
+				await UpdateCurrentValueAsync ();
 			} finally {
 				work?.Dispose ();
 			}
@@ -324,18 +319,23 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected override void SetupEditor (IObjectEditor editor)
 		{
+			if (editor == null)
+				return;
+
 			base.SetupEditor (editor);
 			editor.PropertyChanged += OnEditorPropertyChanged;
 		}
 
 		protected override void TeardownEditor (IObjectEditor editor)
 		{
+			if (editor == null)
+				return;
+
 			base.TeardownEditor (editor);
 			editor.PropertyChanged -= OnEditorPropertyChanged;
 		}
 
 		private HashSet<IPropertyInfo> constraintProperties;
-		private ObjectViewModel valueModel;
 		private PropertyVariation variation;
 		private string error;
 		private Task<bool> isAvailable;

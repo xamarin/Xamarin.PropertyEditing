@@ -9,6 +9,15 @@ namespace Xamarin.PropertyEditing
 	internal class ObservableCollectionEx<T>
 		: ObservableCollection<T>
 	{
+		public ObservableCollectionEx()
+		{
+		}
+
+		public ObservableCollectionEx (IEnumerable<T> collection)
+			: base (collection)
+		{
+		}
+
 		public void AddRange (IEnumerable<T> range)
 		{
 			if (range == null)

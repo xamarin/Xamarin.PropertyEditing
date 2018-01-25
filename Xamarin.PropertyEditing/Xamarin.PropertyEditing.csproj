@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncValue.cs" />
     <Compile Include="AsyncWorkQueue.cs" />
     <Compile Include="BidirectionalDictionary.cs" />
     <Compile Include="BrushPropertyInfo.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Drawing\CommonTileBrush.cs" />
     <Compile Include="Drawing\CommonTileMode.cs" />
     <Compile Include="Drawing\CommonImageBrush.cs" />
+    <Compile Include="IAssemblyInfo.cs" />
     <Compile Include="IAvailabilityConstraint.cs" />
     <Compile Include="IClampedPropertyInfo.cs" />
     <Compile Include="IColorSpaced.cs" />
@@ -75,6 +77,7 @@
     <Compile Include="IPropertyInfo.cs" />
     <Compile Include="IResourceProvider.cs" />
     <Compile Include="ISelfConstrainedPropertyInfo.cs" />
+    <Compile Include="ITypeInfo.cs" />
     <Compile Include="MultiAvailabilityConstraint.cs" />
     <Compile Include="NotifyingObject.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
@@ -96,6 +99,7 @@
     <Compile Include="ValueSource.cs" />
     <Compile Include="ViewModels\ArrangeModeViewModel.cs" />
     <Compile Include="ViewModels\BrushPropertyViewModel.cs" />
+    <Compile Include="ViewModels\SimpleCollectionView.cs" />
     <Compile Include="ViewModels\ConstrainedPropertyViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\EnumPropertyViewModel.cs" />
@@ -103,6 +107,7 @@
     <Compile Include="ViewModels\EventViewModel.cs" />
     <Compile Include="ViewModels\IFilterable.cs" />
     <Compile Include="ViewModels\NumericPropertyViewModel.cs" />
+    <Compile Include="ViewModels\ObjectPropertyViewModel.cs" />
     <Compile Include="ViewModels\ObjectViewModel.cs" />
     <Compile Include="ViewModels\PanelViewModel.cs" />
     <Compile Include="ViewModels\PointPropertyViewModel.cs" />
@@ -127,6 +132,7 @@
     </Compile>
     <Compile Include="ViewModels\RectanglePropertyViewModel.cs" />
     <Compile Include="ViewModels\ThicknessPropertyViewModel.cs" />
+    <Compile Include="ViewModels\TypeSelectorViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Themes\BaseThemeManager.cs" />

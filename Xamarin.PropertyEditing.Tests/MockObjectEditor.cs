@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Tests.MockControls;
 
@@ -16,6 +17,13 @@ namespace Xamarin.PropertyEditing.Tests
 		public MockObjectEditor (params IPropertyInfo[] properties)
 		{
 			Properties = properties.ToArray ();
+		}
+
+		public MockObjectEditor (IReadOnlyList<IPropertyInfo> properties,
+			IReadOnlyDictionary<IPropertyInfo, IReadOnlyList<ITypeInfo>> assignableTypes)
+		{
+			Properties = properties;
+			this.assignableTypes = assignableTypes;
 		}
 
 		public MockObjectEditor (MockControl control)
@@ -106,6 +114,23 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult<IReadOnlyList<string>> (new string[0]);
 		}
 
+		public Task<IReadOnlyList<ITypeInfo>> GetAssignableTypesAsync (IPropertyInfo property)
+		{
+			if (this.assignableTypes == null) {
+				return Task.Run<IReadOnlyList<ITypeInfo>> (() => {
+					return AppDomain.CurrentDomain.GetAssemblies().SelectMany (a => a.GetTypes()).AsParallel()
+						.Where (t => property.Type.IsAssignableFrom (t) && t.GetConstructor (Type.EmptyTypes) != null && t.Namespace != null && !t.IsAbstract && !t.IsInterface && t.IsPublic)
+						.Select (t => {
+							string asmName = t.Assembly.GetName().Name;
+							return new TypeInfo (new AssemblyInfo (asmName, isRelevant: asmName.StartsWith ("Xamarin")), t.Namespace, t.Name);
+						}).ToList();
+				});
+			} else if (!this.assignableTypes.TryGetValue (property, out IReadOnlyList<ITypeInfo> types))
+				return Task.FromResult<IReadOnlyList<ITypeInfo>> (Enumerable.Empty<ITypeInfo>().ToArray());
+			else
+				return Task.FromResult (types);
+		}
+
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
 		{
@@ -177,5 +202,6 @@ namespace Xamarin.PropertyEditing.Tests
 
 		internal readonly IDictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
 		internal readonly IDictionary<IEventInfo, string> events = new Dictionary<IEventInfo, string> ();
+		internal readonly IReadOnlyDictionary<IPropertyInfo, IReadOnlyList<ITypeInfo>> assignableTypes;
 	}
 }

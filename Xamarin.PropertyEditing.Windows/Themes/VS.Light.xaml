@@ -66,6 +66,7 @@
 	<SolidColorBrush x:Key="SearchControlButtonMouseOverBorderBrush">#FF007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlButtonPressedBackgroundBrush">#FF007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlButtonPressedBorderBrush">#FF007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="SearchControlWatermarkBrush">#FF717171</SolidColorBrush>
 
 	<SolidColorBrush x:Key="InputBackgroundBrush">#FFFFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="InputBorderBrush">#FFCCCEDB</SolidColorBrush>
