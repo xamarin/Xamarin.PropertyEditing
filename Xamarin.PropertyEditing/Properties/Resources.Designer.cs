@@ -174,6 +174,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string CurrentColor {
             get {
                 return ResourceManager.GetString("CurrentColor", resourceCulture);
+	    }
+	}
+
+	/// <summary>
+        ///   Looks up a localized string similar to Custom expression.
+        /// </summary>
+        public static string CustomExpression {
+            get {
+                return ResourceManager.GetString("CustomExpression", resourceCulture);
             }
         }
         

@@ -68,6 +68,10 @@
 	<SolidColorBrush x:Key="InputBorderBrush">#434346</SolidColorBrush>
 	<SolidColorBrush x:Key="InputForegroundBrush">#F1F1F1</SolidColorBrush>
 
+	<SolidColorBrush x:Key="PopupBackgroundBrush">#FF1B1B1C</SolidColorBrush>
+	<SolidColorBrush x:Key="PopupForegroundBrush">#FFF1F1F1</SolidColorBrush>
+	<SolidColorBrush x:Key="PopupBorderBrush">#FF333337</SolidColorBrush>
+
 	<SolidColorBrush x:Key="LabelForegroundBrush">#F1F1F1</SolidColorBrush>
 
 	<SolidColorBrush x:Key="MenuItemForegroundBrush">#F1F1F1</SolidColorBrush>

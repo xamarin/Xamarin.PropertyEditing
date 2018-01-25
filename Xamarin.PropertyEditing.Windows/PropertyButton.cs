@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Shapes;
 
@@ -83,8 +85,6 @@ namespace Xamarin.PropertyEditing.Windows
 		private Rectangle indicator;
 		private ContextMenu menu;
 
-		private MenuItem systemResources;
-
 		private void OnBorderMouseDown (object sender, MouseButtonEventArgs e)
 		{
 			if (e.ChangedButton != MouseButton.Left)
@@ -97,6 +97,10 @@ namespace Xamarin.PropertyEditing.Windows
 
 				this.menu.PlacementTarget = this.indicator;
 				this.menu.DataContext = DataContext;
+
+				MenuItem customExpression = this.menu.Items.OfType<MenuItem>().FirstOrDefault (mi => mi.Name == "CustomExpressionItem");
+				if (customExpression != null)
+					customExpression.Click += OnCustomExpression;
 			}
 
 			this.menu.IsOpen = true;
@@ -130,6 +134,18 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 
 			this.indicator.SetResourceReference (Shape.FillProperty, brush);
+		}
+
+		private void OnCustomExpression (object sender, RoutedEventArgs e)
+		{
+			var popup = new EntryPopup {
+				Placement = PlacementMode.Bottom,
+				PlacementTarget = this.indicator,
+				DataContext = DataContext
+			};
+
+			popup.SetResourceReference (Popup.StyleProperty, "CustomExpressionPopup");
+			popup.IsOpen = true;
 		}
 	}
 }
