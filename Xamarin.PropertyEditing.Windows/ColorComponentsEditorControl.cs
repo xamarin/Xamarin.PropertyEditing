@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -177,19 +178,6 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 			foreach (Button button in this.GetDescendants<Button> ()) {
 				button.Click += OnComponentLabelClick;
-			}
-			foreach (TextBox textbox in this.GetDescendants<TextBox> ()) {
-				// This will not get TextBoxes buried inside templates of derived TextBox types, such as ColorComponentBox,
-				// those will have to do their own focus management.
-				if (!textbox.GetType ().IsSubclassOf (typeof (TextBox))) {
-					textbox.GotKeyboardFocus += (s, e) => {
-						textbox.SelectAll ();
-					};
-					textbox.PreviewMouseLeftButtonDown += (s, e) => {
-						textbox.Focus ();
-						e.Handled = true;
-					};
-				}
 			}
 		}
 

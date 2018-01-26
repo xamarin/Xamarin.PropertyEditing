@@ -950,7 +950,7 @@
 								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
 						
-						<TextBox Name="hexEntry" HorizontalContentAlignment="Left" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="77" Grid.Column="0" Grid.Row="2"
+						<local:TextBoxEx x:Name="hexEntry" HorizontalContentAlignment="Left" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="77" Grid.Column="0" Grid.Row="2"
 							AutomationProperties.Name="{x:Static prop:Resources.HexValue}" AutomationProperties.HelpText="{x:Static prop:Resources.HexValue}" ToolTip="{x:Static prop:Resources.HexValue}"
 							Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
 					</Grid>
@@ -966,7 +966,7 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="local:ColorComponentBox">
 					<Grid>
-						<TextBox Name="innerTextBox" VerticalContentAlignment="Center"
+						<local:TextBoxEx x:Name="innerTextBox" VerticalContentAlignment="Center"
 								 BitmapEffect="{TemplateBinding BitmapEffect}" BitmapEffectInput="{TemplateBinding BitmapEffectInput}"
 								 CacheMode="{TemplateBinding CacheMode}" Clip="{TemplateBinding Clip}" ClipToBounds="{TemplateBinding ClipToBounds}" ContextMenu="{TemplateBinding ContextMenu}"
 								 Cursor="{TemplateBinding Cursor}" DataContext="{TemplateBinding DataContext}" FlowDirection="{TemplateBinding FlowDirection}"
@@ -984,7 +984,7 @@
 									<Binding Path="Unit" RelativeSource="{RelativeSource TemplatedParent}"/>
 								</MultiBinding>
 							</TextBox.Text>
-						</TextBox>
+						</local:TextBoxEx>
 						<local:BrushBoxControl x:Name="brushBoxControl" Visibility="Visible"
 							Brush="{Binding Path=GradientBrush, RelativeSource={RelativeSource TemplatedParent}}"
 							Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
