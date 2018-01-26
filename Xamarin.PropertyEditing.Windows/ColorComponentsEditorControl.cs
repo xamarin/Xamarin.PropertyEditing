@@ -103,6 +103,17 @@ namespace Xamarin.PropertyEditing.Windows
 			set => SetValue (HueProperty, value);
 		}
 
+		public static readonly DependencyProperty HueColorProperty =
+			DependencyProperty.Register (
+				"HueColor", typeof (CommonColor), typeof (ColorEditorControlBase),
+				new PropertyMetadata (new CommonColor (255, 0, 0), OnHueColorChanged));
+
+		public CommonColor HueColor
+		{
+			get => (CommonColor)GetValue (HueColorProperty);
+			set => SetValue (HueColorProperty, value);
+		}
+
 		public static readonly DependencyProperty SaturationProperty =
 			DependencyProperty.Register (
 				nameof (Saturation), typeof (double), typeof (ColorComponentsEditorControl),
@@ -193,7 +204,6 @@ namespace Xamarin.PropertyEditing.Windows
 			if (M != newColor.M) M = newColor.M;
 			if (Y != newColor.Y) Y = newColor.Y;
 			if (K != newColor.K) K = newColor.K;
-			if (Hue != newColor.Hue) Hue = newColor.Hue;
 			if (Saturation != newColor.Saturation) Saturation = newColor.Saturation;
 			if (Lightness != newColor.Lightness) Lightness = newColor.Lightness;
 			if (Brightness != newColor.Brightness) Brightness = newColor.Brightness;
@@ -203,6 +213,20 @@ namespace Xamarin.PropertyEditing.Windows
 		private UIElement cmykPane;
 		private UIElement hlsPane;
 		private UIElement hsbPane;
+
+
+		static void OnHueColorChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
+		{
+			var control = (ColorComponentsEditorControl)source;
+			control.OnHueColorChanged ((CommonColor)e.OldValue, (CommonColor)e.NewValue);
+		}
+
+		void OnHueColorChanged (CommonColor oldColor, CommonColor newColor) {
+			var newHue = newColor.Hue;
+			if (newHue != Hue) {
+				Hue = newHue;
+			}
+		}
 
 		private void OnRGBComponentBoxChanged (object sender, RoutedEventArgs e)
 		{
@@ -226,6 +250,10 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnHLSComponentBoxChanged (object sender, RoutedEventArgs e)
 		{
+			var oldHue = HueColor.Hue;
+			if (oldHue != Hue) {
+				HueColor = CommonColor.GetHueColorFromHue (Hue);
+			}
 			var newColor = CommonColor.FromHLS (Hue, Lightness, Saturation, A);
 			if (!newColor.Equals (Color)) {
 				Color = newColor;
@@ -236,6 +264,10 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnHSBComponentBoxChanged (object sender, RoutedEventArgs e)
 		{
+			var oldHue = HueColor.Hue;
+			if (oldHue != Hue) {
+				HueColor = CommonColor.GetHueColorFromHue (Hue);
+			}
 			var newColor = CommonColor.FromHSB (Hue, Saturation, Brightness, A);
 			if (!newColor.Equals (Color)) {
 				Color = newColor;

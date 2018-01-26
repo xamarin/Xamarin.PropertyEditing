@@ -27,10 +27,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (!this.hueColor.Equals (value)) {
 					var saturation = Color.Saturation;
 					var brightness = Color.Brightness;
-					Color = CommonColor.FromHSB (value.Hue, saturation, brightness, Color.A);
+					// We should not update the color value on a hue change if the current color is unsaturated, as grey has no hue.
+					if (saturation != 0) {
+						Color = CommonColor.FromHSB (value.Hue, saturation, brightness, Color.A);
+					}
 					this.hueColor = value;
 					OnPropertyChanged ();
-					Parent.Value = new CommonSolidBrush (Color, ColorSpace, Parent.Value.Opacity);
+					if (saturation != 0) {
+						Parent.Value = new CommonSolidBrush (Color, ColorSpace, Parent.Value.Opacity);
+					}
 				}
 			}
 		}
@@ -76,6 +81,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public void CommitLastColor ()
 		{
+			if (this.lastColor == Color) return;
 			this.lastColor = Color;
 			this.shade = Color;
 			this.hueColor = Color.HueColor;

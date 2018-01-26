@@ -596,9 +596,12 @@
 									<local:CurrentColorEditorControl
 										Color="{Binding Path=Solid.Shade, Mode=TwoWay}" InitialColor="{Binding Solid.InitialColor}" LastColor="{Binding Solid.LastColor}"
 										 Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,0,0" Panel.ZIndex="0" Focusable="False"/>
+									<local:ColorComponentsEditorControl x:Name="componentEditor"
+										Color="{Binding Path=Solid.Shade, Mode=TwoWay}"
+										HueColor="{Binding Path=Solid.HueColor, Mode=TwoWay}"
+										Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"
+										VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,4,0,0" Focusable="False"/>
 								</Grid>
-								<local:ColorComponentsEditorControl x:Name="componentEditor" Color="{Binding Path=Solid.Shade, Mode=TwoWay}" Margin="0,4,0,0"
-															Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Focusable="False"/>
 							</Grid>
 						</TabItem>
 						<!--<TabItem>
