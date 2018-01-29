@@ -222,7 +222,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resource = new Resource ("name");
 
 			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (null, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
 			vm.ResourceProvider = resourcesMock.Object;
@@ -240,7 +240,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resource = new Resource ("name");
 
 			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (null, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
 			vm.ResourceProvider = resourcesMock.Object;
@@ -258,7 +258,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resource = new Resource ("name");
 
 			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (null, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
 			vm.ResourceProvider = resourcesMock.Object;
@@ -277,7 +277,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var value = GetNonDefaultRandomTestValue ();
 
 			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (null, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			var editor = new MockObjectEditor (mockProperty.Object);
 			editor.ValueEvaluator = (info, o) => {
@@ -303,7 +303,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resource = new Resource ("name");
 
 			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (null, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
 			Assume.That (vm.ResourceProvider, Is.Null);
@@ -323,7 +323,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resource = new Resource ("name");
 
 			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (null, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			var editor = new MockObjectEditor (mockProperty.Object);
 			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {

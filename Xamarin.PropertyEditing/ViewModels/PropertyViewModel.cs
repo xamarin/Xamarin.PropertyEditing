@@ -188,7 +188,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 					return;
 
 				try {
-					IReadOnlyList<Resource> gottenResources = await provider.GetResourcesAsync (Property, cancelToken);
+					var target = Editors?.FirstOrDefault ()?.Target;
+					IReadOnlyList<Resource> gottenResources = await provider.GetResourcesAsync (target, Property, cancelToken);
 					if (cancelToken.IsCancellationRequested)
 						return;
 

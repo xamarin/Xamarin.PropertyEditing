@@ -75,6 +75,7 @@
     <Compile Include="IObjectEditor.cs" />
     <Compile Include="IHavePredefinedValues.cs" />
     <Compile Include="IPropertyInfo.cs" />
+    <Compile Include="Resource.cs" />
     <Compile Include="IResourceProvider.cs" />
     <Compile Include="ISelfConstrainedPropertyInfo.cs" />
     <Compile Include="ITypeInfo.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Reflection\ReflectionEventInfo.cs" />
     <Compile Include="Reflection\ReflectionObjectEditor.cs" />
     <Compile Include="Reflection\ReflectionPropertyInfo.cs" />
+    <Compile Include="ResourceSource.cs" />
     <Compile Include="TargetPlatform.cs" />
     <Compile Include="ValueInfo.cs" />
     <Compile Include="ValueSource.cs" />

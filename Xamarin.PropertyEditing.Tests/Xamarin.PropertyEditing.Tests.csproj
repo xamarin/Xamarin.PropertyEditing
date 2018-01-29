@@ -61,6 +61,8 @@
     <Compile Include="BoolViewModelTests.cs" />
     <Compile Include="BrushPropertyViewModelTests.cs" />
     <Compile Include="BytePropertyViewModelTests.cs" />
+    <Compile Include="MockResourceProvider.cs" />
+    <Compile Include="MockResourceProviderTests.cs" />
     <Compile Include="SimpleCollectionViewTests.cs" />
     <Compile Include="CommonColorTests.cs" />
     <Compile Include="Helpers.cs" />
