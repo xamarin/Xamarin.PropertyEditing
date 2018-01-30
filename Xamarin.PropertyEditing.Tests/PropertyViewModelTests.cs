@@ -214,24 +214,6 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void CantSetValueToUnknownResource ()
-		{
-			var mockProperty = GetPropertyMock ();
-			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
-
-			var resource = new Resource ("name");
-
-			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (new object(), mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
-
-			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
-			vm.ResourceProvider = resourcesMock.Object;
-			Assume.That (vm.SetValueResourceCommand, Is.Not.Null);
-
-			Assert.That (vm.SetValueResourceCommand.CanExecute (new Resource ("unknown")), Is.False, "Could set value to resource unknown");
-		}
-
-		[Test]
 		public void CanSetValueToResource ()
 		{
 			var mockProperty = GetPropertyMock ();
