@@ -31,7 +31,7 @@ namespace Xamarin.PropertyEditing.Windows
 						if (ViewModel.Value != null) ViewModel.Value = null;
 						break;
 					case solid:
-						ViewModel.Value = ViewModel.Solid.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
+						ViewModel.Value = ViewModel.Solid?.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
 						break;
 					}
 				};
