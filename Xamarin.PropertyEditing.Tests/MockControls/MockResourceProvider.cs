@@ -26,7 +26,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult<IReadOnlyList<ResourceSource>> (new[] { SystemResourcesSource });
 		}
 
-		private static readonly ResourceSource SystemResourcesSource = new ResourceSource ("System Resources", isLocal: false);
+		internal static readonly ResourceSource SystemResourcesSource = new ResourceSource ("System Resources", isLocal: false);
 
 		private static readonly IReadOnlyList<Resource> SystemResources = new Resource[] {
 			new Resource<CommonSolidBrush> (SystemResourcesSource, "ControlTextBrush", new CommonSolidBrush (0, 0, 0)),
