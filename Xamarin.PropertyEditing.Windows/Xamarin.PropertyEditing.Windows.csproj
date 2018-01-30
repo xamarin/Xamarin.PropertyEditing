@@ -73,6 +73,9 @@
     <Compile Include="DoubleToQuantityConverter.cs" />
     <Compile Include="MultiplyMarginConverter.cs" />
     <Compile Include="ObjectEditorControl.cs" />
+    <Compile Include="ResourceSelectorWindow.xaml.cs">
+      <DependentUpon>ResourceSelectorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TextBoxEx.cs" />
     <Compile Include="ToggleButtonEx.cs" />
     <Compile Include="EditorPropertySelector.cs" />
@@ -110,6 +113,10 @@
     <Compile Include="XamlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="ResourceSelectorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Resources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

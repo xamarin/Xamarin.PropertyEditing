@@ -141,7 +141,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool CanSetValueToResource (Resource resource)
 		{
-			return (resource != null && SupportsResources);
+			return (ResourceProvider != null && resource != null && SupportsResources);
 		}
 
 		private void OnSetValueToResource (Resource resource)
@@ -157,15 +157,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void OnClearValue ()
 		{
+			ValueSource clearSource = (Property.ValueSources.HasFlag (ValueSources.Default)) ? ValueSource.Default : ValueSource.Unset;
+
 			SetValue (new ValueInfo<TValue> {
-				Source = ValueSource.Default,
+				Source = clearSource,
 				Value = default(TValue)
 			});
 		}
 
 		private bool CanClearValue ()
 		{
-			return (Property.ValueSources.HasFlag (ValueSources.Local) && Property.ValueSources.HasFlag (ValueSources.Default) && ValueSource == ValueSource.Local);
+			return (ValueSource != ValueSource.Default && ValueSource != ValueSource.Unknown);
 		}
 	}
 

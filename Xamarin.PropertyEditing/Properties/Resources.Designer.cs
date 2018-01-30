@@ -502,6 +502,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resource….
+        /// </summary>
+        public static string ResourceEllipsis {
+            get {
+                return ResourceManager.GetString("ResourceEllipsis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to RGB.
         /// </summary>
         public static string RGB {
@@ -547,11 +556,29 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search Resources.
+        /// </summary>
+        public static string SearchResourcesTitle {
+            get {
+                return ResourceManager.GetString("SearchResourcesTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Object.
         /// </summary>
         public static string SelectObjectTitle {
             get {
                 return ResourceManager.GetString("SelectObjectTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Resource.
+        /// </summary>
+        public static string SelectResourceTitle {
+            get {
+                return ResourceManager.GetString("SelectResourceTitle", resourceCulture);
             }
         }
         
@@ -570,6 +597,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string ShowAllAssemblies {
             get {
                 return ResourceManager.GetString("ShowAllAssemblies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Show system resources.
+        /// </summary>
+        public static string ShowSystemResources {
+            get {
+                return ResourceManager.GetString("ShowSystemResources", resourceCulture);
             }
         }
         
