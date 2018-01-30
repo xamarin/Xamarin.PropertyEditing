@@ -125,7 +125,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 					}
 
 					await Task.WhenAll (setValues);
-					await UpdateCurrentValueAsync ();
+					// Implementers should raise PropertyChanged during the set task
+					// which will bring the update under the async work request.
 				} catch (Exception ex) {
 					AggregateException aggregate = ex as AggregateException;
 					if (aggregate != null) {
