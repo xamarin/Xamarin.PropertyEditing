@@ -47,22 +47,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		public IReadOnlyList<Resource> Resources => this.resources;
-
-		public IResourceProvider ResourceProvider
-		{
-			get { return this.resourceProvider; }
-			set
-			{
-				if (this.resourceProvider == value)
-					return;
-
-				this.resourceProvider = value;
-				OnPropertyChanged ();
-				UpdateResources ();
-			}
-		}
-
 		protected virtual TValue ValidateValue (TValue validationValue)
 		{
 			return validationValue;
@@ -107,11 +91,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		private readonly ObservableCollection<Resource> resources = new ObservableCollection<Resource> ();
 		private ValueInfo<TValue> value;
-		private IResourceProvider resourceProvider;
-		private CancellationTokenSource cancelTokenSource;
-		private Task updateResourcesTask;
 
 		private bool SetCurrentValue (ValueInfo<TValue> newValue)
 		{
@@ -160,14 +140,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool CanSetValueToResource (Resource resource)
 		{
-			if (resource == null || !Property.CanWrite)
-				return false;
-
-			// We're just going to block wait on this. There shouldn't be a scenario in which it would deadlock
-			// and we simply can't work async into the ICommand system. Looks bad, but practically shouldn't be an issue.
-			// Famous last words.
-			this.updateResourcesTask?.Wait ();
-			return this.resources.Contains (resource);
+			return (resource != null && SupportsResources);
 		}
 
 		private void OnSetValueToResource (Resource resource)
@@ -179,38 +152,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				Source = ValueSource.Resource,
 				ValueDescriptor = resource
 			});
-		}
-
-		private void UpdateResources ()
-		{
-			var source = new CancellationTokenSource ();
-			var cancelSource = Interlocked.Exchange (ref this.cancelTokenSource, source);
-			cancelSource?.Cancel ();
-
-			this.updateResourcesTask = UpdateResourcesAsync (source.Token);
-		}
-
-		private async Task UpdateResourcesAsync (CancellationToken cancelToken)
-		{
-			this.resources.Clear();
-
-			var provider = this.resourceProvider;
-			if (provider != null) {
-				if (cancelToken.IsCancellationRequested)
-					return;
-
-				try {
-					IReadOnlyList<Resource> gottenResources = await provider.GetResourcesAsync (Property, cancelToken);
-					if (cancelToken.IsCancellationRequested)
-						return;
-
-					this.resources.AddItems (gottenResources);
-				} catch (OperationCanceledException) {
-					return;
-				}
-			}
-
-			((RelayCommand<Resource>)SetValueResourceCommand).ChangeCanExecute ();
 		}
 
 		private void OnClearValue ()
@@ -238,8 +179,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			Property = property;
 			SetupConstraints ();
+
+			this.requestResourceCommand = new RelayCommand (OnRequestResource, CanRequestResource);
 		}
 
+		public event EventHandler<ResourceRequestedEventArgs> ResourceRequested;
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
 		public IPropertyInfo Property
@@ -265,11 +209,44 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public virtual bool CanDelve => false;
 
+		public bool SupportsResources
+		{
+			get { return Property.CanWrite; }
+		}
+
+		public IResourceProvider ResourceProvider
+		{
+			get { return this.resourceProvider; }
+			set
+			{
+				if (this.resourceProvider == value)
+					return;
+
+				this.resourceProvider = value;
+				OnPropertyChanged ();
+			}
+		}
+
 		public ICommand SetValueResourceCommand
 		{
-			get;
-			protected set;
+			get { return this.setValueResourceCommand; }
+			protected set
+			{
+				if (this.setValueResourceCommand == value)
+					return;
+
+				if (this.setValueResourceCommand != null)
+					this.setValueResourceCommand.CanExecuteChanged -= OnSetValueResourceCommandCanExecuteChanged;
+
+				this.setValueResourceCommand = value;
+				if (this.setValueResourceCommand != null)
+					this.setValueResourceCommand.CanExecuteChanged += OnSetValueResourceCommandCanExecuteChanged;
+
+				((RelayCommand)RequestResourceCommand).ChangeCanExecute();
+			}
 		}
+
+		public ICommand RequestResourceCommand => this.requestResourceCommand;
 
 		public ICommand ClearValueCommand
 		{
@@ -347,6 +324,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			editor.PropertyChanged -= OnEditorPropertyChanged;
 		}
 
+		private IResourceProvider resourceProvider;
+		private ICommand setValueResourceCommand;
+		private RelayCommand requestResourceCommand;
 		private HashSet<IPropertyInfo> constraintProperties;
 		private PropertyVariation variation;
 		private string error;
@@ -402,6 +382,27 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				return true;
 			}
+		}
+
+		private bool CanRequestResource ()
+		{
+			return SupportsResources && SetValueResourceCommand != null;
+		}
+
+		private void OnRequestResource ()
+		{
+			var e = new ResourceRequestedEventArgs();
+			ResourceRequested?.Invoke (this, e);
+			if (e.Resource == null)
+				return;
+
+			if (SetValueResourceCommand.CanExecute (e.Resource))
+				SetValueResourceCommand.Execute (e.Resource);
+		}
+
+		private void OnSetValueResourceCommandCanExecuteChanged (object sender, EventArgs e)
+		{
+			this.requestResourceCommand.ChangeCanExecute();
 		}
 	}
 }
