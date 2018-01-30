@@ -21,7 +21,7 @@ namespace Xamarin.PropertyEditing.Windows
 			this.brushBoxPopup = GetTemplateChild ("brushBoxPopup") as Popup;
 			this.brushTabs = this.brushBoxPopup?.Child?.GetDescendants<BrushTabbedEditorControl>().FirstOrDefault();
 
-			if (IsEnabled && this.brushBoxButton != null && this.brushBoxPopup != null) {
+			if (this.brushBoxButton != null && this.brushBoxPopup != null) {
 				this.brushBoxPopup.PlacementTarget = this.brushBoxButton.FindParent<PropertyPresenter>();
 				this.brushBoxPopup.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(PlacePopup);
 				this.brushBoxPopup.Opened += (s, e) => {
