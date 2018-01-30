@@ -28,7 +28,7 @@ namespace Xamarin.PropertyEditing.Windows
 					StorePreviousBrush ();
 					switch ((string)((ChoiceItem)(this.brushChoice.SelectedItem)).Value) {
 					case none:
-						ViewModel.Value = null;
+						if (ViewModel.Value != null) ViewModel.Value = null;
 						break;
 					case solid:
 						ViewModel.Value = ViewModel.Solid.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
