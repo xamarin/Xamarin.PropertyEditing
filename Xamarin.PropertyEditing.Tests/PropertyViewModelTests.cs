@@ -639,46 +639,6 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.Value, Is.EqualTo (default(TValue)));
 		}
 
-		[Test]
-		[Description ("If the target platform doesn't support distinguishing local/default, we can't clear the value")]
-		public void ClearValueDefaultNotSupported ()
-		{
-			var value = GetNonDefaultRandomTestValue ();
-
-			var mockProperty = GetPropertyMock ();
-
-			var editorMock = new Mock<IObjectEditor> ();
-			editorMock.Setup (oe => oe.GetValueAsync<TValue> (mockProperty.Object, null)).ReturnsAsync (new ValueInfo<TValue> {
-				Value = value,
-				Source = ValueSource.Local
-			});
-			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Local);
-
-			var vm = GetViewModel (mockProperty.Object, new[] { editorMock.Object });
-
-			Assert.That (vm.ClearValueCommand.CanExecute (null), Is.False);
-		}
-
-		[Test]
-		[Description ("We only allow clearing local values")]
-		public void ClearValueNotLocalValue ()
-		{
-			var value = GetNonDefaultRandomTestValue ();
-
-			var mockProperty = GetPropertyMock ();
-			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local | ValueSources.Resource);
-
-			var editorMock = new Mock<IObjectEditor> ();
-			editorMock.Setup (oe => oe.GetValueAsync<TValue> (mockProperty.Object, null)).ReturnsAsync (new ValueInfo<TValue> {
-				Value = value,
-				Source = ValueSource.Resource
-			});
-
-			var vm = GetViewModel (mockProperty.Object, new[] { editorMock.Object });
-
-			Assert.That (vm.ClearValueCommand.CanExecute (null), Is.False);
-		}
-
 		protected TValue GetNonDefaultRandomTestValue ()
 		{
 			TValue value = default (TValue);
