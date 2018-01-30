@@ -20,6 +20,7 @@ namespace Xamarin.PropertyEditing
 	}
 
 	public class Resource
+		: IEquatable<Resource>
 	{
 		public Resource (string name)
 		{
@@ -53,6 +54,44 @@ namespace Xamarin.PropertyEditing
 		public string Name
 		{
 			get;
+		}
+
+		public override bool Equals (object other)
+		{
+			// This does mean that a Resource<T> will match a Resource as long as its source and name are
+			// the same, but for all intents and purposes this is correct. The identification of resources
+			// is its source and name, the value is simply a helper for previews.
+			var r = other as Resource;
+			if (ReferenceEquals (null, r))
+				return false;
+			if (ReferenceEquals (this, other))
+				return true;
+
+			return r.Source == Source && r.Name == Name;
+		}
+
+		public bool Equals (Resource other)
+		{
+			return Equals ((object)other);
+		}
+
+		public override int GetHashCode ()
+		{
+			unchecked {
+				int hashCode = Source.GetHashCode();
+				hashCode = (hashCode * 397) ^ Name.GetHashCode();
+				return hashCode;
+			}
+		}
+
+		public static bool operator == (Resource left, Resource right)
+		{
+			return Equals (left, right);
+		}
+
+		public static bool operator != (Resource left, Resource right)
+		{
+			return !Equals  (left, right);
 		}
 	}
 }
