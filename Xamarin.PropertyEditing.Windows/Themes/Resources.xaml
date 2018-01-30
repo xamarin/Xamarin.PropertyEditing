@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows"
+					xmlns:drawing="clr-namespace:Xamarin.PropertyEditing.Drawing;assembly=Xamarin.PropertyEditing"
 					xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
 					xmlns:vm="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing"
 					xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
@@ -521,6 +522,30 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+
+	<local:CommonBrushToBrushConverter x:Key="BrushConverter" />
+	<local:CommonColorToColorConverter x:Key="ColorConverter" />
+
+	<DataTemplate x:Key="SimpleResourcePreviewItem">
+		<DataTemplate.Resources>
+			<DataTemplate DataType="{x:Type drawing:CommonColor}">
+				<Rectangle>
+					<Rectangle.Fill>
+						<SolidColorBrush Color="{Binding Converter={StaticResource ColorConverter}}" />
+					</Rectangle.Fill>
+				</Rectangle>
+			</DataTemplate>
+			<DataTemplate DataType="{x:Type drawing:CommonBrush}">
+				<Rectangle Fill="{Binding Converter={StaticResource BrushConverter}}" />
+			</DataTemplate>
+		</DataTemplate.Resources>
+		<StackPanel Orientation="Horizontal" Margin="4,2,4,2">
+			<Border Margin="4,2,0,2" BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}">
+				<ContentPresenter MinWidth="40" Content="{Binding Value,Mode=OneTime}" />
+			</Border>
+			<TextBlock Text="{Binding Name,Mode=OneTime}" Margin="4,0,0,0" />
+		</StackPanel>
+	</DataTemplate>
 
 	<Style TargetType="local:BrushEditorControl">
 		<Setter Property="Template">

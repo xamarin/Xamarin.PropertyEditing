@@ -33,6 +33,8 @@
 	<SolidColorBrush x:Key="ToggleItemPressedBackgroundBrush" Color="#007ACC" />
 	<SolidColorBrush x:Key="ToggleItemPressedBorderBrush" Color="#00A7CC" />
 
+	<SolidColorBrush x:Key="ControlBorderBrush">#FFCCCEDB</SolidColorBrush>
+
 	<SolidColorBrush x:Key="MenuPopupBackgroundBrush">#F6F6F6</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuPopupBorderBrush">#CCCEDB</SolidColorBrush>
 	<SolidColorBrush x:Key="ListItemForegroundBrush">#1E1E1E</SolidColorBrush>
