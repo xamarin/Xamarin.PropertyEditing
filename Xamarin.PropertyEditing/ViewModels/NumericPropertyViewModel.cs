@@ -6,8 +6,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class IntegerPropertyViewModel
 		: ConstrainedPropertyViewModel<long>
 	{
-		public IntegerPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (property, editors)
+		public IntegerPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (platform, property, editors)
 		{
 		}
 
@@ -25,8 +25,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class FloatingPropertyViewModel
 		: ConstrainedPropertyViewModel<double>
 	{
-		public FloatingPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (property, editors)
+		public FloatingPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (platform, property, editors)
 		{
 		}
 
@@ -44,8 +44,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class BytePropertyViewModel
 		: ConstrainedPropertyViewModel<byte>
 	{
-		public BytePropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (property, editors)
+		public BytePropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (platform, property, editors)
 		{
 		}
 

@@ -351,7 +351,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (toRemove.Count > 0)
 				this.events.RemoveRange (toRemove);
 			if (newSet.Count > 0) {
-				this.events.Reset (this.events.Concat (newSet.Select (i => new EventViewModel (i, this.objEditors))).OrderBy (e => e.Event.Name).ToArray());
+				this.events.Reset (this.events.Concat (newSet.Select (i => new EventViewModel (TargetPlatform, i, this.objEditors))).OrderBy (e => e.Event.Name).ToArray());
 			}
 		}
 
@@ -416,36 +416,36 @@ namespace Xamarin.PropertyEditing.ViewModels
 			Type hasPredefinedValues = interfaces.FirstOrDefault (t => t.IsGenericType && t.GetGenericTypeDefinition () == typeof(IHavePredefinedValues<>));
 			if (hasPredefinedValues != null) {
 				Type type = typeof(PredefinedValuesViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0]);
-				return (PropertyViewModel) Activator.CreateInstance (type, property, this.objEditors);
+				return (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors);
 			} else if (property.Type.IsEnum) {
 				Type type = typeof(EnumPropertyViewModel<>).MakeGenericType (property.Type);
-				return (PropertyViewModel) Activator.CreateInstance (type, property, this.objEditors);
+				return (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors);
 			} else if (property.Type == typeof(object)) {
 				return new ObjectPropertyViewModel (EditorProvider, TargetPlatform, property, this.objEditors);
 			}
 
-			Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel> vmFactory;
+			Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel> vmFactory;
 			if (ViewModelMap.TryGetValue (property.Type, out vmFactory))
-				return vmFactory (property, this.objEditors);
+				return vmFactory (TargetPlatform, property, this.objEditors);
 			
-			return new StringPropertyViewModel (property, this.objEditors);
+			return new StringPropertyViewModel (TargetPlatform, property, this.objEditors);
 		}
 
 		private Task busyTask;
 
-		public static readonly Dictionary<Type,Func<IPropertyInfo,IEnumerable<IObjectEditor>,PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
-			{ typeof(string), (p,e) => new StringPropertyViewModel (p, e) },
-			{ typeof(bool), (p,e) => new PropertyViewModel<bool> (p, e) },
-			{ typeof(float), (p,e) => new FloatingPropertyViewModel (p, e) },
-			{ typeof(double), (p,e) => new FloatingPropertyViewModel (p, e) },
-			{ typeof(int), (p,e) => new IntegerPropertyViewModel (p, e) },
-			{ typeof(long), (p,e) => new IntegerPropertyViewModel (p, e) },
-			{ typeof(CommonSolidBrush), (p, e) => new BrushPropertyViewModel(p, e) },
-			{ typeof(CommonBrush), (p, e) => new BrushPropertyViewModel(p, e) },
-			{ typeof(CommonPoint), (p,e) => new PointPropertyViewModel (p, e) },
-			{ typeof(CommonSize), (p,e) => new SizePropertyViewModel (p, e) },
-			{ typeof(CommonRectangle), (p,e) => new RectanglePropertyViewModel (p, e) },
-			{ typeof(CommonThickness), (p, e) => new ThicknessPropertyViewModel (p, e) },
+		public static readonly Dictionary<Type,Func<TargetPlatform,IPropertyInfo,IEnumerable<IObjectEditor>,PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
+			{ typeof(string), (tp,p,e) => new StringPropertyViewModel (tp, p, e) },
+			{ typeof(bool), (tp,p,e) => new PropertyViewModel<bool> (tp, p, e) },
+			{ typeof(float), (tp,p,e) => new FloatingPropertyViewModel (tp, p, e) },
+			{ typeof(double), (tp,p,e) => new FloatingPropertyViewModel (tp, p, e) },
+			{ typeof(int), (tp,p,e) => new IntegerPropertyViewModel (tp, p, e) },
+			{ typeof(long), (tp,p,e) => new IntegerPropertyViewModel (tp, p, e) },
+			{ typeof(CommonSolidBrush), (tp,p,e) => new BrushPropertyViewModel(tp, p, e) },
+			{ typeof(CommonBrush), (tp,p,e) => new BrushPropertyViewModel(tp, p, e) },
+			{ typeof(CommonPoint), (tp,p,e) => new PointPropertyViewModel (tp, p, e) },
+			{ typeof(CommonSize), (tp,p,e) => new SizePropertyViewModel (tp, p, e) },
+			{ typeof(CommonRectangle), (tp,p,e) => new RectanglePropertyViewModel (tp, p, e) },
+			{ typeof(CommonThickness), (tp,p, e) => new ThicknessPropertyViewModel (tp, p, e) },
 		};
 	}
 }

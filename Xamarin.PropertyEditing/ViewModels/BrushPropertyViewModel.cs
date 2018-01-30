@@ -7,8 +7,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class BrushPropertyViewModel : PropertyViewModel<CommonBrush>
 	{
-		public BrushPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (property, editors)
+		public BrushPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (platform, property, editors)
 		{
 			if (property.Type.IsAssignableFrom (typeof (CommonSolidBrush))) {
 				Solid = new SolidBrushViewModel (this,

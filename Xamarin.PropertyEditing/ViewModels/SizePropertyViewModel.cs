@@ -6,8 +6,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class SizePropertyViewModel
 		: PropertyViewModel<CommonSize>
 	{
-		public SizePropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (property, editors)
+		public SizePropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (platform, property, editors)
 		{
 		}
 

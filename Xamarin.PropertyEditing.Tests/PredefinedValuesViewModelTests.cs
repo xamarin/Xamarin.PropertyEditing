@@ -238,9 +238,9 @@ namespace Xamarin.PropertyEditing.Tests
 			return this.values[index];
 		}
 
-		protected override PredefinedValuesViewModel<int> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override PredefinedValuesViewModel<int> GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new PredefinedValuesViewModel<int> (property, editors);
+			return new PredefinedValuesViewModel<int> (platform, property, editors);
 		}
 
 		private readonly IReadOnlyDictionary<string, int> predefinedValues;

@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.Tests
 			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (T));
 			var mockEditor = new Mock<IObjectEditor> ();
 
-			var vm = new EnumPropertyViewModel<T> (mockProperty.Object, new[] { mockEditor.Object });
+			var vm = new EnumPropertyViewModel<T> (TargetPlatform.Default, mockProperty.Object, new[] { mockEditor.Object });
 			Assert.That (vm.IsFlags, Is.EqualTo (typeof(T).GetCustomAttribute<FlagsAttribute> () != null), "IsFlags was incorrect");
 		}
 
@@ -31,7 +31,7 @@ namespace Xamarin.PropertyEditing.Tests
 			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (T));
 			var mockEditor = new Mock<IObjectEditor> ();
 
-			var vm = new EnumPropertyViewModel<T> (mockProperty.Object, new [] { mockEditor.Object });
+			var vm = new EnumPropertyViewModel<T> (TargetPlatform.Default, mockProperty.Object, new [] { mockEditor.Object });
 			Assert.That (vm.PossibleValues, new CollectionEquivalentConstraint (Enum.GetNames (typeof(T))));
 		}
 
@@ -47,7 +47,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			mockEditor.Setup (oe => oe.GetValueAsync<T> (mockProperty.Object, null)).Returns (Task.FromResult (new ValueInfo<T> { Source = ValueSource.Local, Value = value }));
 
-			var vm = new EnumPropertyViewModel<T> (mockProperty.Object, new[] { mockEditor.Object });
+			var vm = new EnumPropertyViewModel<T> (TargetPlatform.Default, mockProperty.Object, new[] { mockEditor.Object });
 			Assume.That (vm.Value, Is.EqualTo (value));
 			Assert.That (vm.ValueName, Is.EqualTo (value.ToString ()));
 		}
@@ -64,7 +64,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new MockObjectEditor (mockProperty.Object);
 			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<T> { Source = ValueSource.Local, Value = value });
 
-			var vm = new EnumPropertyViewModel<T> (mockProperty.Object, new[] { editor });
+			var vm = new EnumPropertyViewModel<T> (TargetPlatform.Default, mockProperty.Object, new[] { editor });
 			Assume.That (vm.Value, Is.EqualTo (value));
 			Assume.That (vm.ValueName, Is.EqualTo (value.ToString ()));
 
@@ -102,9 +102,9 @@ namespace Xamarin.PropertyEditing.Tests
 		protected override TestEnum GetRandomTestValue (Random rand)
 			=> rand.Next<TestEnum> ();
 
-		protected override EnumPropertyViewModel<TestEnum> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override EnumPropertyViewModel<TestEnum> GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new EnumPropertyViewModel<TestEnum> (property, editors);
+			return new EnumPropertyViewModel<TestEnum> (platform, property, editors);
 		}
 	}
 
@@ -143,9 +143,9 @@ namespace Xamarin.PropertyEditing.Tests
 			return value;
 		}
 
-		protected override EnumPropertyViewModel<FlagsTestEnum> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override EnumPropertyViewModel<FlagsTestEnum> GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new EnumPropertyViewModel<FlagsTestEnum> (property, editors);
+			return new EnumPropertyViewModel<FlagsTestEnum> (platform, property, editors);
 		}
 	}
 }

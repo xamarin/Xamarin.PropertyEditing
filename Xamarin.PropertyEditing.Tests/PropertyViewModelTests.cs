@@ -665,7 +665,12 @@ namespace Xamarin.PropertyEditing.Tests
 
 		protected abstract TValue GetRandomTestValue (Random rand);
 
-		protected abstract TViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors);
+		protected TViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		{
+			return GetViewModel (TargetPlatform.Default, property, editors);
+		}
+
+		protected abstract TViewModel GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors);
 
 		protected virtual void AugmentPropertyMock (Mock<IPropertyInfo> propertyMock)
 		{

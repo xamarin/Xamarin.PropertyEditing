@@ -27,7 +27,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		: PropertyViewModel
 	{
 		public ObjectPropertyViewModel (IEditorProvider provider, TargetPlatform targetPlatform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (property, editors)
+			: base (targetPlatform, property, editors)
 		{
 			if (provider == null)
 				throw new ArgumentNullException (nameof(provider));
@@ -73,6 +73,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
+		public string CustomExpression
+		{
+			get { return this.customExpression; }
+			set
+			{
+				if (this.customExpression == value)
+					return;
+
+				SetValue (new ValueInfo<object> {
+					CustomExpression = value
+				});
+			}
+		}
+
 		public ITypeInfo ValueType
 		{
 			get { return this.valueType; }
@@ -116,9 +130,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				ValueModel.SelectedObjects.Clear();
 
-				bool multipleTypes = false, multipleSources = false;
+				bool multipleValues = false, multipleSources = false;
 				ValueSource? source = null;
 				ITypeInfo type = null;
+				string expression = null;
 
 				ValueInfo<object>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<object> (Property)));
 				for (int i = 0; i < values.Length; i++) {
@@ -130,27 +145,37 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 					if (type == null)
 						type = info.ValueDescriptor as ITypeInfo;
-					else if (!multipleTypes && !Equals (type, info.ValueDescriptor as ITypeInfo))
-						multipleTypes = true;
+					else if (!multipleValues && !Equals (type, info.ValueDescriptor as ITypeInfo))
+						multipleValues = true;
+
+					if (i == 0)
+						expression = info.CustomExpression;
+					else if (info.CustomExpression != expression) {
+						expression = null;
+						multipleValues = true;
+					}
 
 					if (info.Value != null)
 						ValueModel.SelectedObjects.Add (info.Value);
 				}
 
-				MultipleValues = multipleTypes;
-				ValueType = (!multipleTypes) ? type : null;
+				this.customExpression = expression;
+				MultipleValues = multipleValues;
+				ValueType = (!multipleValues) ? type : null;
 				if (multipleSources)
 					ValueSource = ValueSource.Unknown;
 				else
 					ValueSource = source ?? ValueSource.Default;
 
 				SetCanDelve (values.Length > 0);
+				OnPropertyChanged (nameof(CustomExpression));
 			}
 		}
 
 		private readonly IEditorProvider provider;
 		private AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes;
 		private bool createInstancePending;
+		private string customExpression;
 		private ValueSource valueSource;
 		private ITypeInfo valueType;
 		private bool canDelve;
@@ -188,6 +213,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private bool CanClearValue ()
 		{
 			return (Property.ValueSources.HasFlag (ValueSources.Local) && Property.ValueSources.HasFlag (ValueSources.Default) && ValueSource == ValueSource.Local);
+		}
+
+		private async void SetValue (ValueInfo<object> valueInfo)
+		{
+			await SetValueAsync (valueInfo);
 		}
 
 		private Task SetValueAsync (ValueInfo<object> valueInfo)

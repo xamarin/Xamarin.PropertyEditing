@@ -144,9 +144,9 @@ namespace Xamarin.PropertyEditing.Tests
 			return new CommonThickness (rand.Next (), rand.Next (), rand.Next (), rand.Next ());
 		}
 
-		protected override ThicknessPropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override ThicknessPropertyViewModel GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new ThicknessPropertyViewModel (property, editors);
+			return new ThicknessPropertyViewModel (platform, property, editors);
 		}
 	}
 }

@@ -12,9 +12,9 @@ namespace Xamarin.PropertyEditing.Tests
 			return (rand.Next (0, 2) == 1);
 		}
 
-		protected override PropertyViewModel<bool> GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override PropertyViewModel<bool> GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new PropertyViewModel<bool> (property, editors);
+			return new PropertyViewModel<bool> (platform, property, editors);
 		}
 	}
 }

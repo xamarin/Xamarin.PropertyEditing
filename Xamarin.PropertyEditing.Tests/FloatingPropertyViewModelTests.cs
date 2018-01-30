@@ -14,9 +14,9 @@ namespace Xamarin.PropertyEditing.Tests
 			return rand.NextDouble ();
 		}
 
-		protected override FloatingPropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override FloatingPropertyViewModel GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new FloatingPropertyViewModel (property, editors);
+			return new FloatingPropertyViewModel (platform, property, editors);
 		}
 
 		protected override Tuple<double, double> MaxMin => new Tuple<double, double> (Double.MaxValue, Double.MinValue);

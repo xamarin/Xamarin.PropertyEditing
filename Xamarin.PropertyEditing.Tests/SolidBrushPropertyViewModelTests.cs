@@ -58,7 +58,7 @@ namespace Xamarin.PropertyEditing.Tests
 			mockProperty.As<IColorSpaced> ().SetupGet (pi => pi.ColorSpaces).Returns (SampleColorSpaces);
 			var mockEditor = new MockObjectEditor (mockProperty.Object);
 
-			return new BrushPropertyViewModel (mockProperty.Object, new[] { mockEditor });
+			return new BrushPropertyViewModel (TargetPlatform.Default, mockProperty.Object, new[] { mockEditor });
 		}
 	}
 }

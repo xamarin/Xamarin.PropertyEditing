@@ -6,8 +6,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class PointPropertyViewModel
 		: PropertyViewModel<CommonPoint>
 	{
-		public PointPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (property, editors)
+		public PointPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (platform, property, editors)
 		{
 		}
 

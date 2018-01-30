@@ -42,9 +42,9 @@ namespace Xamarin.PropertyEditing.Tests
 			return value;
 		}
 
-		protected override BytePropertyViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override BytePropertyViewModel GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new BytePropertyViewModel (property, editors);
+			return new BytePropertyViewModel (platform, property, editors);
 		}
 	}
 }

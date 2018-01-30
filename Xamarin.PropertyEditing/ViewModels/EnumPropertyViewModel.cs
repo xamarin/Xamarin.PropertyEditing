@@ -9,8 +9,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		: PropertyViewModel<TValue>
 		where TValue : struct
 	{
-		public EnumPropertyViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (property, editors)
+		public EnumPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+			: base (platform, property, editors)
 		{
 			PossibleValues = Enum.GetNames (property.Type);
 			IsFlags = property.Type.GetCustomAttribute<FlagsAttribute> () != null;

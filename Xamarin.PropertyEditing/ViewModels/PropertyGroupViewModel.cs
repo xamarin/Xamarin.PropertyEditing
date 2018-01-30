@@ -10,8 +10,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class PropertyGroupViewModel
 		: EditorViewModel, IFilterable
 	{
-		public PropertyGroupViewModel (string category, IEnumerable<PropertyViewModel> properties, IEnumerable<IObjectEditor> objEditors)
-			: base (objEditors)
+		public PropertyGroupViewModel (TargetPlatform platform, string category, IEnumerable<PropertyViewModel> properties, IEnumerable<IObjectEditor> objEditors)
+			: base (platform, objEditors)
 		{
 			if (category == null)
 				throw new ArgumentNullException (nameof(category));

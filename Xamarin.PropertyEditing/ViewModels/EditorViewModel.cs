@@ -9,10 +9,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal abstract class EditorViewModel
 		: NotifyingObject
 	{
-		public EditorViewModel (IEnumerable<IObjectEditor> editors)
+		public EditorViewModel (TargetPlatform platform, IEnumerable<IObjectEditor> editors)
 		{
+			if (platform == null)
+				throw new ArgumentNullException (nameof (platform));
 			if (editors == null)
 				throw new ArgumentNullException (nameof (editors));
+
+			TargetPlatform = platform;
 
 			var observableEditors = new ObservableCollectionEx<IObjectEditor> ();
 			Editors = observableEditors;
@@ -55,6 +59,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			get;
 		} = new AsyncWorkQueue ();
+
+		public TargetPlatform TargetPlatform
+		{
+			get;
+		}
 
 		protected virtual void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{

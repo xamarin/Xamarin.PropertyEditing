@@ -462,8 +462,8 @@
 			<Setter.Value>
 				<DataTemplate>
 					<local:HeaderedContextMenu Header="{Binding Property.Name,Mode=OneTime}" StaysOpen="True" Placement="Left" HorizontalOffset="{StaticResource MenuOffset}" VerticalOffset="{StaticResource MenuOffset}">
-						<!--<MenuItem x:Name="CustomExpressionItem" Header="{x:Static prop:Resources.CustomExpressionEllipsis}" Icon="{StaticResource LiteralMarker}" />
-						<Separator />!-->
+						<MenuItem x:Name="CustomExpressionItem" Header="{x:Static prop:Resources.CustomExpressionEllipsis}" Icon="{StaticResource LiteralMarker}" Visibility="{Binding TargetPlatform.SupportsCustomExpressions,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
+						<Separator Visibility="{Binding TargetPlatform.SupportsCustomExpressions,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<MenuItem Header="{x:Static prop:Resources.Reset}" Icon="{StaticResource LiteralMarker}" Command="{Binding ClearValueCommand,Mode=OneTime}" />
 						<!--<MenuItem Header="{x:Static prop:Resources.ConvertToLocalValue}" Icon="{StaticResource LiteralMarker}" Command="{Binding ConvertToLocalValueCommand,Mode=OneTime}" />
 						<Separator />
@@ -497,6 +497,29 @@
 				</Trigger.Setters>
 			</Trigger>
 		</Style.Triggers>
+	</Style>
+
+	<Style x:Key="CustomExpressionPopup" TargetType="local:EntryPopup">
+		<Setter Property="Placement" Value="Bottom" />
+		<Setter Property="Width" Value="400" />
+		<Setter Property="StaysOpen" Value="False" />
+		<Setter Property="ContentTemplate">
+			<Setter.Value>
+				<DataTemplate>
+					<Border BorderThickness="1" BorderBrush="{DynamicResource PopupBorderBrush}" Background="{DynamicResource PopupBackgroundBrush}" TextElement.Foreground="{DynamicResource PopupForegroundBrush}">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition />
+								<RowDefinition />
+							</Grid.RowDefinitions>
+
+							<TextBlock Name="label" Grid.Row="0" Margin="5,5,0,5" FontWeight="Bold" Text="{x:Static prop:Resources.CustomExpression}" />
+							<local:TextBoxEx x:Name="entry" Grid.Row="1" Margin="5,0,5,5" AutomationProperties.LabeledBy="{Binding Mode=OneTime,ElementName=label}" FocusSelectsAll="True" Text="{Binding CustomExpression,Mode=TwoWay,UpdateSourceTrigger=Explicit}" />
+						</Grid>
+					</Border>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 
 	<Style TargetType="local:BrushEditorControl">
