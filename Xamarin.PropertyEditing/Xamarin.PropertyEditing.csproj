@@ -94,11 +94,15 @@
     <Compile Include="Reflection\ReflectionEventInfo.cs" />
     <Compile Include="Reflection\ReflectionObjectEditor.cs" />
     <Compile Include="Reflection\ReflectionPropertyInfo.cs" />
+    <Compile Include="Resource.cs" />
+    <Compile Include="ResourceSource.cs" />
     <Compile Include="TargetPlatform.cs" />
     <Compile Include="ValueInfo.cs" />
     <Compile Include="ValueSource.cs" />
     <Compile Include="ViewModels\ArrangeModeViewModel.cs" />
     <Compile Include="ViewModels\BrushPropertyViewModel.cs" />
+    <Compile Include="ViewModels\ResourceRequestedEventArgs.cs" />
+    <Compile Include="ViewModels\ResourceSelectorViewModel.cs" />
     <Compile Include="ViewModels\SimpleCollectionView.cs" />
     <Compile Include="ViewModels\ConstrainedPropertyViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />

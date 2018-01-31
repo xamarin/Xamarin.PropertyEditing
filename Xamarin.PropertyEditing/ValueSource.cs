@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 
 namespace Xamarin.PropertyEditing
 {
 	public enum ValueSource
 	{
 		/// <summary>
-		/// Property is at its unset value, which is not the same as the default value of the property type.
+		/// Value is the property's default value, which is not the same as the default value of the property type.
 		/// </summary>
 		Default = 0,
 		Local = 1,
@@ -14,7 +14,16 @@ namespace Xamarin.PropertyEditing
 		Style = 4,
 		Inherited = 5,
 		DefaultStyle = 6,
+
+		/// <summary>
+		/// The property's value comes from multiple sources.
+		/// </summary>
 		Unknown = 7,
+
+		/// <summary>
+		/// The property's value is unset but its unset value isn't known.
+		/// </summary>
+		Unset = 8,
 	}
 
 	[Flags]

@@ -154,6 +154,15 @@ namespace Xamarin.PropertyEditing.Tests
 					softType.GetProperty ("Source").SetValue (softValue, value.Source);
 				}
 			}
+
+			// Set to resource won't pass values so we will store it on the info since we just pass it back in GetValue
+			if (value.Source == ValueSource.Resource && value.ValueDescriptor is Resource) {
+				var rt = value.ValueDescriptor.GetType();
+				if (rt.IsGenericType && typeof(T).IsAssignableFrom (rt.GetGenericArguments ()[0])) {
+					var pi = rt.GetProperty ("Value");
+					value.Value = (T)pi.GetValue (value.ValueDescriptor);
+				}
+			}
 			
 			this.values[property] = softValue;
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));

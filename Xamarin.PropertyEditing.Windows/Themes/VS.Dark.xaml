@@ -29,6 +29,8 @@
 	<SolidColorBrush x:Key="ToggleItemPressedBackgroundBrush" Color="#007ACC" />
 	<SolidColorBrush x:Key="ToggleItemPressedBorderBrush" Color="#00A7CC" />
 
+	<SolidColorBrush x:Key="ControlBorderBrush">#FF333337</SolidColorBrush>
+
 	<SolidColorBrush x:Key="MenuPopupBackgroundBrush">#1B1B1C</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuPopupBorderBrush">#333337</SolidColorBrush>
 	<SolidColorBrush x:Key="ListItemForegroundBrush">#FFF1F1F1</SolidColorBrush>
@@ -44,8 +46,10 @@
 	<SolidColorBrush x:Key="ListItemMouseOverForegroundBrush">#FFF1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="MenuSeparatorBrush">#333337</SolidColorBrush>
 
-	<SolidColorBrush x:Key="LiteralMarkerBrush">#55000000</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyMenuDotIconBorderBrush">#FF999999</SolidColorBrush>
+	<SolidColorBrush x:Key="LiteralMarkerBrush">#55000000</SolidColorBrush>
+	<SolidColorBrush x:Key="ResourceMarkerBrush">#FF8BD44A</SolidColorBrush>
+
 	<SolidColorBrush x:Key="PropertyButtonBackgroundBrush">#F2F2F6</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyButtonBorderBrush">#717171</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyLocalValueBrush">#F1F1F1</SolidColorBrush>

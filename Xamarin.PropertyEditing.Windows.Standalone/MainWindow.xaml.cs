@@ -22,6 +22,7 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 				}
 			};
 			this.panel.EditorProvider = new MockEditorProvider ();
+			this.panel.ResourceProvider = new MockResourceProvider ();
 		}
 
 		private async void Button_Click (object sender, RoutedEventArgs e)

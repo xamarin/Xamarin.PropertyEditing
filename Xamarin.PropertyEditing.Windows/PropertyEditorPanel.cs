@@ -27,12 +27,21 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static readonly DependencyProperty EditorProviderProperty = DependencyProperty.Register (
-			nameof(EditorProvider), typeof(IEditorProvider), typeof(PropertyEditorPanel), new PropertyMetadata (default(IEditorProvider), (o, args) => ((PropertyEditorPanel)o).OnEditorProviderChanged()));
+			nameof(EditorProvider), typeof(IEditorProvider), typeof(PropertyEditorPanel), new PropertyMetadata (default(IEditorProvider), (o, args) => ((PropertyEditorPanel)o).OnProviderChanged()));
 
 		public IEditorProvider EditorProvider
 		{
 			get { return (IEditorProvider) GetValue (EditorProviderProperty); }
 			set { SetValue (EditorProviderProperty, value); }
+		}
+
+		public static readonly DependencyProperty ResourceProviderProperty = DependencyProperty.Register (
+			nameof(ResourceProvider), typeof(IResourceProvider), typeof(PropertyEditorPanel), new PropertyMetadata (default(IResourceProvider), (o, args) => ((PropertyEditorPanel)o).OnProviderChanged()));
+
+		public IResourceProvider ResourceProvider
+		{
+			get { return (IResourceProvider) GetValue (ResourceProviderProperty); }
+			set { SetValue (ResourceProviderProperty, value); }
 		}
 
 		public static readonly DependencyProperty TargetPlatformProperty = DependencyProperty.Register (
@@ -86,7 +95,7 @@ namespace Xamarin.PropertyEditing.Windows
 			this.paneSelector = (ChoiceControl) GetTemplateChild ("paneSelector");
 			this.paneSelector.SelectedValue = EditingPane.Properties;
 			this.paneSelector.SelectedItemChanged += OnPaneChanged;
-			OnEditorProviderChanged();
+			OnProviderChanged();
 
 			if (this.vm.SelectedObjects.Count > 0)
 				OnArrangeModeChanged (ArrangeMode);
@@ -142,7 +151,7 @@ namespace Xamarin.PropertyEditing.Windows
 				OnArrangeModeChanged (ArrangeMode);
 		}
 
-		private void OnEditorProviderChanged ()
+		private void OnProviderChanged ()
 		{
 			if (this.root == null)
 				return;
@@ -150,7 +159,14 @@ namespace Xamarin.PropertyEditing.Windows
 			if (this.vm != null)
 				this.vm.PropertyChanged -= OnVmPropertyChanged;
 
-			this.root.DataContext = this.vm = (EditorProvider != null) ? new PanelViewModel (EditorProvider, TargetPlatform) : null;
+			PanelViewModel newVm = null;
+			if (EditorProvider != null) {
+				newVm = new PanelViewModel (EditorProvider, TargetPlatform) {
+					ResourceProvider = ResourceProvider
+				};
+			}
+
+			this.root.DataContext = this.vm = newVm;
 			
 			if (this.vm != null)
 				this.vm.PropertyChanged += OnVmPropertyChanged;

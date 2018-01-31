@@ -1,0 +1,51 @@
+using System.Threading;
+using Moq;
+using NUnit.Framework;
+using Xamarin.PropertyEditing.ViewModels;
+
+namespace Xamarin.PropertyEditing.Tests
+{
+	[TestFixture]
+	public class ResourceSelectorViewModelTests
+	{
+		[Test]
+		public void Resources()
+		{
+			var tests = new StringViewModelTests();
+			var mproperty = tests.GetPropertyMock ("Property");
+
+			object target = new object();
+
+			var resource = new Resource<string> (MockResourceProvider.SystemResourcesSource, "Resource", "value");
+			var mprovider = new Mock<IResourceProvider>();
+
+			mprovider.Setup (r => r.GetResourcesAsync (target, mproperty.Object, CancellationToken.None)).ReturnsAsync (new[] { resource });
+
+			var vm = new ResourceSelectorViewModel (mprovider.Object, new[] { target }, mproperty.Object);
+			Assert.That (vm.Resources, Contains.Item (resource));
+		}
+
+		[Test]
+		public void MultipleTargetResources()
+		{
+			var tests = new StringViewModelTests();
+			var mproperty = tests.GetPropertyMock ("Property");
+
+			object target = new object();
+			object target2 = new object();
+
+			var resource = new Resource<string> (MockResourceProvider.SystemResourcesSource, "Resource", "value");
+			var resource2 = new Resource<string> (MockResourceProvider.SystemResourcesSource, "Resource2", "value2");
+			var resource3 = new Resource<string> (MockResourceProvider.SystemResourcesSource, "Resource3", "value3");
+
+			var mprovider = new Mock<IResourceProvider>();
+			mprovider.Setup (r => r.GetResourcesAsync (target, mproperty.Object, CancellationToken.None)).ReturnsAsync (new[] { resource, resource3 });
+			mprovider.Setup (r => r.GetResourcesAsync (target2, mproperty.Object, CancellationToken.None)).ReturnsAsync (new[] { resource2, resource3 });
+
+			var vm = new ResourceSelectorViewModel (mprovider.Object, new[] { target, target2 }, mproperty.Object);
+			Assert.That (vm.Resources, Does.Not.Contain (resource));
+			Assert.That (vm.Resources, Does.Not.Contain (resource2));
+			Assert.That (vm.Resources, Contains.Item (resource3));
+		}
+	}
+}

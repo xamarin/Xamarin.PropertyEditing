@@ -78,8 +78,33 @@ namespace Xamarin.PropertyEditing
 		 * them or become invalid as a result of a prior pending change.
 		 */
 
+			
+		/// <remarks>
+		/// <para>For the <see cref="ValueSource.Default"/> or <see cref="ValueSource.Unset"/> sources, implementers should
+		/// ignore <paramref name="value"/>'s <see cref="ValueInfo{T}.Value"/> property and unset the value completely.
+		/// For XML based backings this usually means removing the attribute altogether. Implementers should not simply set
+		/// the value to its default value as this would still be a local value and override inheritance, styles, etc.</para>
+		/// <para>When <paramref name="value"/>'s <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Resource"/>,
+		/// the <see cref="ValueInfo{T}.ValueDescriptor"/> will be set to a <see cref="Resource"/> instance. Implementers
+		/// need not see whether the resource contains a value itself.</para>
+		/// <para>Before the returned task completes, in order:
+		/// 1. <see cref="GetValueAsync{T}(IPropertyInfo, PropertyVariation)"/> must be able to retrieve the new value.
+		/// 2. <see cref="PropertyChanged"/> should fire with the appropriate property.
+		/// For defensive purposes, consumers will not assume the <paramref name="value"/> they pass in will be the same
+		/// as the new value and as a result will re-query the value upon the assumed <see cref="PropertyChanged"/> firing.
+		/// There should not be a case where <see cref="PropertyChanged"/> is not fired when SetValueAsync is called, consumers
+		/// will do basic verification before calling. Even <see cref="ValueInfo{T}.Source"/> changes with the value staying the
+		/// same is a change in the property.
+		/// </para>
+		/// </remarks>
 		Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null);
 
+		/// <remarks>
+		/// <para>Implementers should strive to include the actual value of resources or bindings for <see cref="ValueInfo{T}.Value"/>
+		/// whereever possible.</para>
+		/// <para>If the platform can know the value of a property when unset, it should return that value and the <see cref="ValueSource.Default"/>
+		/// source. If the platform only knows that the value is unset, use <see cref="ValueSource.Unset"/> instead.</para>
+		/// </remarks>
 		/// <exception cref="ArgumentNullException"><paramref name="property"/> is <c>null</c>.</exception>
 		Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null);
 	}

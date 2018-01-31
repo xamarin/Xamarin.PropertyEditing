@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Shapes;
+using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
 {
@@ -18,6 +19,11 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			FocusableProperty.OverrideMetadata (typeof (PropertyButton), new FrameworkPropertyMetadata (false));
 			DefaultStyleKeyProperty.OverrideMetadata (typeof (PropertyButton), new FrameworkPropertyMetadata (typeof (PropertyButton)));
+		}
+
+		public PropertyButton()
+		{
+			DataContextChanged += OnDataContextChanged;
 		}
 
 		public static readonly DependencyProperty CanSetCustomExpressionProperty = DependencyProperty.Register (
@@ -107,6 +113,17 @@ namespace Xamarin.PropertyEditing.Windows
 			e.Handled = true;
 		}
 
+		private void OnDataContextChanged (object sender, DependencyPropertyChangedEventArgs e)
+		{
+			var pvm = e.OldValue as PropertyViewModel;
+			if (pvm != null)
+				pvm.ResourceRequested -= OnResourceRequested;
+
+			pvm = e.NewValue as PropertyViewModel;
+			if (pvm != null)
+				pvm.ResourceRequested += OnResourceRequested;
+		}
+
 		private void OnValueSourceChanged (ValueSource source)
 		{
 			if (this.indicator == null)
@@ -134,6 +151,12 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 
 			this.indicator.SetResourceReference (Shape.FillProperty, brush);
+		}
+
+		private void OnResourceRequested (object sender, ResourceRequestedEventArgs e)
+		{
+			var vm = ((PropertyViewModel)DataContext);
+			e.Resource = ResourceSelectorWindow.RequestResource (Window.GetWindow (this), vm.ResourceProvider, vm.Editors.Select (ed => ed.Target), vm.Property);
 		}
 
 		private void OnCustomExpression (object sender, RoutedEventArgs e)

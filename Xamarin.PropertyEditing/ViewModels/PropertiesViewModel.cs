@@ -28,6 +28,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
+		public IResourceProvider ResourceProvider
+		{
+			get { return this.resourceProvider; }
+			set
+			{
+				if (this.resourceProvider == value)
+					return;
+
+				this.resourceProvider = value;
+				UpdateResourceProvider();
+				OnPropertyChanged();
+			}
+		}
+
 		/// <remarks>Consumers should check for <see cref="INotifyCollectionChanged"/> and hook appropriately.</remarks>
 		public IReadOnlyList<EditorViewModel> Properties => this.editors;
 
@@ -200,6 +214,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 		}
 
+		private IResourceProvider resourceProvider;
 		private INameableObject nameable;
 		private bool nameReadOnly;
 		private bool eventsEnabled;
@@ -404,12 +419,26 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return newEditors;
 		}
 
+		private void UpdateResourceProvider()
+		{
+			foreach (PropertyViewModel vm in this.editors) {
+				vm.ResourceProvider = this.resourceProvider;
+			}
+		}
+
 		private void OnObjectEditorPropertiesChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
 			UpdateMembers();
 		}
 
 		private PropertyViewModel GetViewModel (IPropertyInfo property)
+		{
+			var vm = GetViewModelCore (property);
+			vm.ResourceProvider = ResourceProvider;
+			return vm;
+		}
+
+		private PropertyViewModel GetViewModelCore (IPropertyInfo property)
 		{
 			Type[] interfaces = property.GetType ().GetInterfaces ();
 

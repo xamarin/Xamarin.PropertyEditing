@@ -343,4 +343,16 @@
   <data name="CustomExpression" xml:space="preserve">
     <value>Custom expression</value>
   </data>
+  <data name="SearchResourcesTitle" xml:space="preserve">
+    <value>Search Resources</value>
+  </data>
+  <data name="SelectResourceTitle" xml:space="preserve">
+    <value>Select Resource</value>
+  </data>
+  <data name="ShowSystemResources" xml:space="preserve">
+    <value>_Show system resources</value>
+  </data>
+  <data name="ResourceEllipsis" xml:space="preserve">
+    <value>Resource…</value>
+  </data>
 </root>

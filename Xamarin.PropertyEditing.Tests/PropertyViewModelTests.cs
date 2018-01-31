@@ -214,24 +214,6 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void CantSetValueToUnknownResource ()
-		{
-			var mockProperty = GetPropertyMock ();
-			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
-
-			var resource = new Resource ("name");
-
-			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
-
-			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
-			vm.ResourceProvider = resourcesMock.Object;
-			Assume.That (vm.SetValueResourceCommand, Is.Not.Null);
-
-			Assert.That (vm.SetValueResourceCommand.CanExecute (new Resource ("unknown")), Is.False, "Could set value to resource unknown");
-		}
-
-		[Test]
 		public void CanSetValueToResource ()
 		{
 			var mockProperty = GetPropertyMock ();
@@ -240,12 +222,16 @@ namespace Xamarin.PropertyEditing.Tests
 			var resource = new Resource ("name");
 
 			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (new object(), mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
-			vm.ResourceProvider = resourcesMock.Object;
-			Assume.That (vm.SetValueResourceCommand, Is.Not.Null);
+			Assume.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False);
 
+			bool changed = false;
+			vm.SetValueResourceCommand.CanExecuteChanged += (o,e) => changed = true;
+			vm.ResourceProvider = resourcesMock.Object;
+			Assume.That (changed, Is.True);
+			Assume.That (vm.SetValueResourceCommand, Is.Not.Null);
 			Assert.That (vm.SetValueResourceCommand.CanExecute (resource), Is.True, "Could not set value to resource");
 		}
 
@@ -258,13 +244,53 @@ namespace Xamarin.PropertyEditing.Tests
 			var resource = new Resource ("name");
 
 			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (new object(), mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
 			vm.ResourceProvider = resourcesMock.Object;
 			Assume.That (vm.SetValueResourceCommand, Is.Not.Null);
 
 			Assert.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False, "Could set value to readonly resource");
+		}
+
+		[Test]
+		public void CanRequestResource()
+		{
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
+
+			var resourcesMock = new Mock<IResourceProvider>();
+
+			var vm = GetViewModel (mockProperty.Object, new[] {  new Mock<IObjectEditor>().Object });
+			vm.ResourceProvider = resourcesMock.Object;
+
+			Assert.That (vm.RequestResourceCommand.CanExecute (null), Is.True);
+		}
+
+		[Test]
+		[Description ("RequestResourceCommand's CanExecuteChanged should fire when SetValueResourceCommand's does")]
+		public void CanRequestResourceSetValueChanges()
+		{
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
+
+			var resource = new Resource ("name");
+
+			var resourcesMock = new Mock<IResourceProvider> ();
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (new object(), mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+
+			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
+			Assume.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False);
+
+			bool setChanged = false;
+			vm.SetValueResourceCommand.CanExecuteChanged += (o,e) => setChanged = true;
+			bool requestChanged = false;
+			vm.RequestResourceCommand.CanExecuteChanged += (o, e) => requestChanged = true;
+
+			vm.ResourceProvider = resourcesMock.Object;
+
+			Assume.That (setChanged, Is.True);
+			Assert.That (requestChanged, Is.True);
 		}
 
 		[Test]
@@ -277,7 +303,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var value = GetNonDefaultRandomTestValue ();
 
 			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (new object(), mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			var editor = new MockObjectEditor (mockProperty.Object);
 			editor.ValueEvaluator = (info, o) => {
@@ -296,24 +322,6 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void ResourcesListed ()
-		{
-			var mockProperty = GetPropertyMock ();
-
-			var resource = new Resource ("name");
-
-			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
-
-			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
-			Assume.That (vm.ResourceProvider, Is.Null);
-			Assume.That (vm.Resources, Is.Empty);
-			vm.ResourceProvider = resourcesMock.Object;
-
-			Assert.That (vm.Resources, Has.Member (resource));
-		}
-
-		[Test]
 		public async Task GetValueAlreadySetToResource ()
 		{
 			var value = GetNonDefaultRandomTestValue ();
@@ -323,7 +331,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resource = new Resource ("name");
 
 			var resourcesMock = new Mock<IResourceProvider> ();
-			resourcesMock.Setup (rp => rp.GetResourcesAsync (mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (new object(), mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
 			var editor = new MockObjectEditor (mockProperty.Object);
 			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
@@ -611,46 +619,6 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.ClearValueCommand.Execute (null);
 
 			Assert.That (vm.Value, Is.EqualTo (default(TValue)));
-		}
-
-		[Test]
-		[Description ("If the target platform doesn't support distinguishing local/default, we can't clear the value")]
-		public void ClearValueDefaultNotSupported ()
-		{
-			var value = GetNonDefaultRandomTestValue ();
-
-			var mockProperty = GetPropertyMock ();
-
-			var editorMock = new Mock<IObjectEditor> ();
-			editorMock.Setup (oe => oe.GetValueAsync<TValue> (mockProperty.Object, null)).ReturnsAsync (new ValueInfo<TValue> {
-				Value = value,
-				Source = ValueSource.Local
-			});
-			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Local);
-
-			var vm = GetViewModel (mockProperty.Object, new[] { editorMock.Object });
-
-			Assert.That (vm.ClearValueCommand.CanExecute (null), Is.False);
-		}
-
-		[Test]
-		[Description ("We only allow clearing local values")]
-		public void ClearValueNotLocalValue ()
-		{
-			var value = GetNonDefaultRandomTestValue ();
-
-			var mockProperty = GetPropertyMock ();
-			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local | ValueSources.Resource);
-
-			var editorMock = new Mock<IObjectEditor> ();
-			editorMock.Setup (oe => oe.GetValueAsync<TValue> (mockProperty.Object, null)).ReturnsAsync (new ValueInfo<TValue> {
-				Value = value,
-				Source = ValueSource.Resource
-			});
-
-			var vm = GetViewModel (mockProperty.Object, new[] { editorMock.Object });
-
-			Assert.That (vm.ClearValueCommand.CanExecute (null), Is.False);
 		}
 
 		protected TValue GetNonDefaultRandomTestValue ()
