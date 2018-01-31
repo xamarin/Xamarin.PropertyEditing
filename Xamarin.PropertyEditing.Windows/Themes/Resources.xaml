@@ -531,21 +531,21 @@
 	<DataTemplate x:Key="SimpleResourcePreviewItem">
 		<DataTemplate.Resources>
 			<DataTemplate DataType="{x:Type drawing:CommonColor}">
-				<Rectangle>
-					<Rectangle.Fill>
+				<local:BrushBoxControl>
+					<local:BrushBoxControl.Brush>
 						<SolidColorBrush Color="{Binding Converter={StaticResource ColorConverter}}" />
-					</Rectangle.Fill>
-				</Rectangle>
+					</local:BrushBoxControl.Brush>
+				</local:BrushBoxControl>
 			</DataTemplate>
 			<DataTemplate DataType="{x:Type drawing:CommonBrush}">
-				<Rectangle Fill="{Binding Converter={StaticResource BrushConverter}}" />
+				<local:BrushBoxControl Brush="{Binding Converter={StaticResource BrushConverter}}" />
 			</DataTemplate>
 		</DataTemplate.Resources>
 		<StackPanel Orientation="Horizontal" Margin="4,2,4,2">
 			<Border Margin="4,2,0,2" BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}">
 				<ContentPresenter MinWidth="40" Content="{Binding Value,Mode=OneTime}" />
 			</Border>
-			<TextBlock Text="{Binding Name,Mode=OneTime}" Margin="4,0,0,0" />
+			<TextBlock VerticalAlignment="Center" Text="{Binding Name,Mode=OneTime}" Margin="4,0,0,0" />
 		</StackPanel>
 	</DataTemplate>
 
