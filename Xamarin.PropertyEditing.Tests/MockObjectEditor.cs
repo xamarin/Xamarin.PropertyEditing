@@ -207,7 +207,7 @@ namespace Xamarin.PropertyEditing.Tests
 			}
 
 			return new ValueInfo<T> {
-				Source = (SupportsDefault) ? ValueSource.Default : ValueSource.Local,
+				Source = (SupportsDefault) ? ValueSource.Default : ValueSource.Unset,
 				Value = default(T)
 			};
 		}
