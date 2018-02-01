@@ -41,6 +41,7 @@ namespace Xamarin.PropertyEditing.Windows
 			initialColorButton.Click += (s, e) => {
 				Color = InitialColor;
 				RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+				RaiseEvent (new RoutedEventArgs (CommitHueEvent));
 			};
 		}
 	}

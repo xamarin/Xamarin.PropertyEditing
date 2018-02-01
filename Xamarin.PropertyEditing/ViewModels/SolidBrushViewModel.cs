@@ -81,6 +81,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			Parent.Value = new CommonSolidBrush (Color, ColorSpace, opacity);
 		}
 
+		public void CommitHue ()
+		{
+			this.hueColor = null;
+			OnPropertyChanged (nameof (HueColor));
+		}
+
 		private BrushPropertyViewModel Parent { get; }
 
 		private CommonColor? hueColor;

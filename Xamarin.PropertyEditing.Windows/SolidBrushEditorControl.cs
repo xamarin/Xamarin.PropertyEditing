@@ -42,9 +42,11 @@ namespace Xamarin.PropertyEditing.Windows
 				};
 			}
 
-			AddHandler (CurrentColorCommitterControlBase.CommitCurrentColorEvent, new RoutedEventHandler((s, e) => {
-				ViewModel.Solid.CommitLastColor ();
-			}));
+			AddHandler (CurrentColorCommitterControlBase.CommitCurrentColorEvent,
+				new RoutedEventHandler((s, e) => ViewModel.Solid.CommitLastColor ()));
+
+			AddHandler (CurrentColorCommitterControlBase.CommitHueEvent,
+				new RoutedEventHandler ((s, e) => ViewModel.Solid.CommitHue ()));
 		}
 	}
 }
