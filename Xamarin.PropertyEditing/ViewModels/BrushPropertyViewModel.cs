@@ -45,9 +45,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		protected override async Task UpdateCurrentValueAsync ()
+		protected override void OnValueChanged ()
 		{
-			await base.UpdateCurrentValueAsync ();
+			base.OnValueChanged ();
 			OnPropertyChanged (nameof (Opacity));
 		}
 	}
