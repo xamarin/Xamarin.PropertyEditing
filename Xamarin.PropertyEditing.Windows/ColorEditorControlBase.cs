@@ -14,15 +14,6 @@ namespace Xamarin.PropertyEditing.Windows
 			add { AddHandler (CommitCurrentColorEvent, value); }
 			remove { RemoveHandler (CommitCurrentColorEvent, value); }
 		}
-
-		public static readonly RoutedEvent CommitShadeEvent =
-			EventManager.RegisterRoutedEvent (
-				nameof(CommitShade), RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (CurrentColorCommitterControlBase));
-
-		public event RoutedEventHandler CommitShade {
-			add { AddHandler (CommitShadeEvent, value); }
-			remove { RemoveHandler (CommitShadeEvent, value); }
-		}
 	}
 
 	internal abstract class ColorEditorControlBase : CurrentColorCommitterControlBase

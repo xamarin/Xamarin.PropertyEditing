@@ -1,7 +1,6 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -225,10 +224,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 
 		static void OnHueColorChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
-		{
-			var control = (ColorComponentsEditorControl)source;
-			control.OnHueColorChanged ((CommonColor)e.OldValue, (CommonColor)e.NewValue);
-		}
+			=> (source as ColorComponentsEditorControl)?.OnHueColorChanged ((CommonColor)e.OldValue, (CommonColor)e.NewValue);
 
 		void OnHueColorChanged (CommonColor oldColor, CommonColor newColor) {
 			var newHue = newColor.Hue;
@@ -266,9 +262,8 @@ namespace Xamarin.PropertyEditing.Windows
 			var newColor = CommonColor.FromHLS (Hue, Lightness, Saturation, A);
 			if (!newColor.Equals (Color)) {
 				Color = newColor;
+				RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 			}
-
-			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 		}
 
 		private void OnHSBComponentBoxChanged (object sender, RoutedEventArgs e)

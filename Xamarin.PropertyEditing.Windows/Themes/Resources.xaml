@@ -584,18 +584,23 @@
 									<ColumnDefinition Width="*"/>
 									<ColumnDefinition Width="Auto"/>
 								</Grid.ColumnDefinitions>
-								<local:ShadeEditorControl
-									x:Name="shadeChooser" Color="{Binding Path=Solid.Shade, Mode=TwoWay}" HueColor="{Binding Path=Solid.HueColor, Mode=OneWay}"
-									Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,6,0,1" Panel.ZIndex="1"/>
+								<local:ShadeEditorControl x:Name="shadeChooser"
+									Shade="{Binding Path=Solid.Shade, Mode=TwoWay}"
+									HueColor="{Binding Path=Solid.HueColor, Mode=OneWay}"
+									Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+									Margin="0,6,0,1" Panel.ZIndex="1"/>
 								<local:HueEditorControl
 									x:Name="hueChooser" HueColor="{Binding Path=Solid.HueColor, Mode=TwoWay}"
 									Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="1,6,3,1" Panel.ZIndex="0" Focusable="False"/>
 								<local:CurrentColorEditorControl
-									Color="{Binding Path=Solid.Shade, Mode=TwoWay}" InitialColor="{Binding Solid.InitialColor}" LastColor="{Binding Solid.LastColor}"
-									Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20" Margin="0,0,0,0" Panel.ZIndex="0" Focusable="False"/>
+									Color="{Binding Path=Solid.Color, Mode=TwoWay}"
+									InitialColor="{Binding Solid.InitialColor}"
+									LastColor="{Binding Solid.LastColor}"
+									Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20"
+									Margin="0,0,0,0" Panel.ZIndex="0" Focusable="False"/>
 							</Grid>
 							<local:ColorComponentsEditorControl x:Name="componentEditor"
-								Color="{Binding Path=Solid.Shade, Mode=TwoWay}"
+								Color="{Binding Path=Solid.Color, Mode=TwoWay}"
 								HueColor="{Binding Path=Solid.HueColor, Mode=TwoWay}"
 								Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"
 								VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,4,0,0" Focusable="False"/>
@@ -739,7 +744,8 @@
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
 								<TextBlock TextDecorations="Underline" Text="{x:Static prop:Resources.HueInitial}"/>
 							</Label>
-							<local:ColorComponentBox x:Name="hueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
+							<local:ColorComponentBox x:Name="hueEntry"
+								HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"
 								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Mode=TwoWay}" Unit="°">
 								<local:ColorComponentBox.GradientBrush>

@@ -25,16 +25,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get => (this.hueColor ?? (this.hueColor = LastColor.HueColor)).Value;
 			set {
 				if (!this.hueColor.Equals (value)) {
-					var saturation = Color.Saturation;
-					var brightness = Color.Brightness;
-					// We should not update the color value on a hue change if the current color is unsaturated, as grey has no hue.
-					if (saturation != 0) {
-						Color = CommonColor.FromHSB (value.Hue, saturation, brightness, Color.A);
-					}
 					this.hueColor = value;
 					OnPropertyChanged ();
+
+					var saturation = Shade.Saturation;
+					// We should not update the color value on a hue change if the current color is unsaturated, as grey has no hue.
 					if (saturation != 0) {
-						Parent.Value = new CommonSolidBrush (Color, ColorSpace, Parent.Value.Opacity);
+						var brightness = Color.Brightness;
+						var newColor = CommonColor.FromHSB (value.Hue, saturation, brightness, Color.A);
+						Parent.Value = new CommonSolidBrush (newColor, ColorSpace, Parent.Value.Opacity);
 					}
 				}
 			}
@@ -46,7 +45,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (!this.shade.Equals (value)) {
 					this.shade = value;
 					OnPropertyChanged ();
-					Parent.Value = new CommonSolidBrush (value, ColorSpace, Parent.Value.Opacity);
+					Parent.Value = new CommonSolidBrush (
+						new CommonColor(value.R, value.G, value.B, Color.A),
+						ColorSpace, Parent.Value.Opacity);
 				}
 			}
 		}
@@ -56,18 +57,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get => Parent.Value is CommonSolidBrush solidBrush ? solidBrush.Color : new CommonColor (0, 0, 0);
 			set {
 				if (!Color.Equals (value)) {
-					CommonColor oldHue = HueColor;
-					CommonColor newHue = value.HueColor;
 					Parent.Value = new CommonSolidBrush (value, ColorSpace, Parent.Value.Opacity);
 					OnPropertyChanged ();
-					if (!newHue.Equals (oldHue)) {
-						this.hueColor = newHue;
-						OnPropertyChanged (nameof (HueColor));
-					}
-					if (!value.Equals (this.shade)) {
-						this.shade = value;
-						OnPropertyChanged (nameof (Shade));
-					}
 					if (!this.initialColor.HasValue) {
 						this.initialColor = value;
 					}
@@ -83,32 +74,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			if (this.lastColor == Color) return;
 			this.lastColor = Color;
-			this.shade = Color;
-			this.hueColor = Color.HueColor;
-			var opacity = Parent.Value != null ? Parent.Value.Opacity : 1.0;
 			OnPropertyChanged (nameof (LastColor));
-			OnPropertyChanged (nameof (Shade));
-			OnPropertyChanged (nameof (HueColor));
-			Parent.Value = new CommonSolidBrush (Color, ColorSpace, opacity);
-		}
-
-		public void CommitShade ()
-		{
-			this.lastColor = Shade;
-			var opacity = Parent.Value != null ? Parent.Value.Opacity : 1.0;
-			OnPropertyChanged (nameof (LastColor));
-			Parent.Value = new CommonSolidBrush (Shade, ColorSpace, opacity);
-		}
-
-		public void Reset()
-		{
-			this.hueColor = null;
 			this.shade = null;
-			this.lastColor = null;
-			OnPropertyChanged (nameof (Color));
-			OnPropertyChanged (nameof (LastColor));
-			OnPropertyChanged (nameof (HueColor));
 			OnPropertyChanged (nameof (Shade));
+			var opacity = Parent.Value != null ? Parent.Value.Opacity : 1.0;
+			Parent.Value = new CommonSolidBrush (Color, ColorSpace, opacity);
 		}
 
 		private BrushPropertyViewModel Parent { get; }
