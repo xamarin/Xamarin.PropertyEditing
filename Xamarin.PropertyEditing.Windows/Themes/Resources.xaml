@@ -964,7 +964,7 @@
 						
 						<local:TextBoxEx x:Name="hexEntry" HorizontalContentAlignment="Left" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="77" Grid.Column="0" Grid.Row="2"
 							AutomationProperties.Name="{x:Static prop:Resources.HexValue}" AutomationProperties.HelpText="{x:Static prop:Resources.HexValue}" ToolTip="{x:Static prop:Resources.HexValue}"
-							Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}"/>
+							Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}" FocusSelectsAll="True"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -974,11 +974,12 @@
 	<Style TargetType="local:ColorComponentBox">
 		<Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
 		<Setter Property="IsTabStop" Value="False"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:ColorComponentBox">
 					<Grid>
-						<local:TextBoxEx x:Name="innerTextBox" VerticalContentAlignment="Center"
+						<local:TextBoxEx x:Name="innerTextBox" FocusSelectsAll="True" VerticalContentAlignment="Center"
 								 BitmapEffect="{TemplateBinding BitmapEffect}" BitmapEffectInput="{TemplateBinding BitmapEffectInput}"
 								 CacheMode="{TemplateBinding CacheMode}" Clip="{TemplateBinding Clip}" ClipToBounds="{TemplateBinding ClipToBounds}" ContextMenu="{TemplateBinding ContextMenu}"
 								 Cursor="{TemplateBinding Cursor}" DataContext="{TemplateBinding DataContext}" FlowDirection="{TemplateBinding FlowDirection}"
@@ -1005,6 +1006,7 @@
 					<ControlTemplate.Triggers>
 						<DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=innerTextBox}" Value="True">
 							<Setter TargetName="innerTextBox" Property="Text" Value="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, StringFormat={}{0:##0.#}}"/>
+							<Setter TargetName="brushBoxControl" Property="Visibility" Value="Hidden"/>
 						</DataTrigger>
 						<DataTrigger Binding="{Binding IsFocused, ElementName=innerTextBox}" Value="True">
 							<Setter TargetName="innerTextBox" Property="Text" Value="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, StringFormat={}{0:##0.#}}"/>

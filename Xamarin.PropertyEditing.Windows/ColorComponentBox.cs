@@ -64,12 +64,7 @@ namespace Xamarin.PropertyEditing.Windows
 				throw new InvalidOperationException ($"{nameof (ColorComponentBox)} is missing a child TextBoxEx named \"innerTextBox\"");
 
 			this.innerTextBox.GotKeyboardFocus += (s, e) => {
-				this.innerTextBox.SelectAll ();
 				this.previousValue = Value;
-			};
-			this.innerTextBox.PreviewMouseLeftButtonDown += (s, e) => {
-				this.innerTextBox.Focus ();
-				e.Handled = true;
 			};
 			this.innerTextBox.LostFocus += (s, e) => {
 				if (Value != this.previousValue) {
