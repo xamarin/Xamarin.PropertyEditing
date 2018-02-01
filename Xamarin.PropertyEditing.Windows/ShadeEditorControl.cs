@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -40,10 +41,15 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnApplyTemplate ();
 
-			this.saturationLayer = (Rectangle)GetTemplateChild ("saturationLayer");
-			this.brightnessLayer = (Rectangle)GetTemplateChild ("brightnessLayer");
+			this.saturationLayer = GetTemplateChild ("saturationLayer") as Rectangle;
+			this.brightnessLayer = GetTemplateChild ("brightnessLayer") as Rectangle;
 
 			OnHueChanged (HueColor);
+
+			if (this.saturationLayer == null)
+				throw new InvalidOperationException ($"{nameof (ShadeEditorControl)} is missing a child Rectangle named \"saturationLayer\"");
+			if (this.brightnessLayer == null)
+				throw new InvalidOperationException ($"{nameof (ShadeEditorControl)} is missing a child Rectangle named \"brightnessLayer\"");
 
 			this.brightnessLayer.MouseLeftButtonDown += (s, e) => {
 				if (!this.brightnessLayer.IsMouseCaptured)
@@ -103,6 +109,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnHueChanged (CommonColor newHue)
 		{
+			// OnHueChanged may be called before the template is applied, so the layer may not yet be available.
 			if (this.saturationLayer == null) return;
 			var newBrush = (LinearGradientBrush)this.saturationLayer.Fill.Clone ();
 			GradientStopCollection gradientStops = newBrush.GradientStops;
@@ -148,7 +155,9 @@ namespace Xamarin.PropertyEditing.Windows
 			var brightness = color.Brightness;
 			var saturation = color.Saturation;
 
+			// OnHueChanged may be called before the template is applied, so the layer may not yet be available.
 			if (this.saturationLayer == null || this.brightnessLayer == null) return new Point (0, 0);
+
 			return new Point (
 				saturation * this.saturationLayer.ActualWidth + this.saturationLayer.Margin.Left ,
 				(1 - brightness) * this.brightnessLayer.ActualHeight + this.brightnessLayer.Margin.Top);

@@ -39,7 +39,10 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnApplyTemplate ();
 
-			this.hueChooser = (Rectangle)GetTemplateChild ("hueChooser");
+			this.hueChooser = GetTemplateChild ("hueChooser") as Rectangle;
+
+			if (this.hueChooser == null)
+				throw new InvalidOperationException ($"{nameof(HueEditorControl)} is missing a child Rectangle named \"hueChooser\"");
 
 			this.hueChooser.MouseLeftButtonDown += (s, e) => {
 				if (!this.hueChooser.IsMouseCaptured)

@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using Xamarin.PropertyEditing.Drawing;
@@ -23,7 +24,11 @@ namespace Xamarin.PropertyEditing.Windows
 
 			if (ViewModel == null) return;
 
-			this.colorSpacePicker = (ComboBox)GetTemplateChild ("colorSpacePicker");
+			this.colorSpacePicker = GetTemplateChild ("colorSpacePicker") as ComboBox;
+
+			if (this.colorSpacePicker == null)
+				throw new InvalidOperationException ($"{nameof (SolidBrushEditorControl)} is missing a child ComboBox named \"colorSpacePicker\"");
+
 			if (ViewModel.Solid.ColorSpaces == null || ViewModel.Solid.ColorSpaces.Count == 0) {
 				this.colorSpacePicker.Visibility = Visibility.Collapsed;
 			}

@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Xamarin.PropertyEditing.Drawing;
@@ -19,39 +20,40 @@ namespace Xamarin.PropertyEditing.Windows
 
 			this.brushChoice = GetTemplateChild ("brushChoice") as ChoiceControl;
 
-			if (this.brushChoice != null) {
+			if (this.brushChoice == null)
+				throw new InvalidOperationException ($"{nameof(BrushTabbedEditorControl)} is missing a child ChoiceControl named \"brushChoice\"");
+
+			StorePreviousBrush ();
+			SelectTabFromBrush ();
+
+			this.brushChoice.SelectedItemChanged += (s, e) => {
+				if (ViewModel == null) return;
 				StorePreviousBrush ();
-				SelectTabFromBrush ();
+				switch ((string)((ChoiceItem)(this.brushChoice.SelectedItem)).Value) {
+				case none:
+					if (ViewModel.Value != null) ViewModel.Value = null;
+					break;
+				case solid:
+					ViewModel.Value = ViewModel.Solid?.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
+					break;
+				}
+			};
 
-				this.brushChoice.SelectedItemChanged += (s, e) => {
-					if (ViewModel == null) return;
-					StorePreviousBrush ();
-					switch ((string)((ChoiceItem)(this.brushChoice.SelectedItem)).Value) {
-					case none:
-						if (ViewModel.Value != null) ViewModel.Value = null;
-						break;
-					case solid:
-						ViewModel.Value = ViewModel.Solid?.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
-						break;
-					}
-				};
-
-				this.brushChoice.KeyUp += (s, e) => {
-					if (ViewModel == null) return;
-					StorePreviousBrush ();
-					switch (e.Key) {
-					case Key.N:
-						e.Handled = true;
-						this.brushChoice.SelectedValue = none;
-						break;
-					case Key.S:
-						e.Handled = true;
-						this.brushChoice.SelectedValue = solid;
-						break;
-					// TODO: add G, T, R for the other brush types when they are available.
-					}
-				};
-			}
+			this.brushChoice.KeyUp += (s, e) => {
+				if (ViewModel == null) return;
+				StorePreviousBrush ();
+				switch (e.Key) {
+				case Key.N:
+					e.Handled = true;
+					this.brushChoice.SelectedValue = none;
+					break;
+				case Key.S:
+					e.Handled = true;
+					this.brushChoice.SelectedValue = solid;
+					break;
+				// TODO: add G, T, R for the other brush types when they are available.
+				}
+			};
 		}
 
 		public static readonly string None = none;
@@ -79,7 +81,6 @@ namespace Xamarin.PropertyEditing.Windows
 
 		internal void SelectTabFromBrush ()
 		{
-			if (this.brushChoice == null) return;
 			switch (ViewModel?.Value) {
 			case null:
 				this.brushChoice.SelectedValue = none;

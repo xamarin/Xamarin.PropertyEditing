@@ -163,6 +163,15 @@ namespace Xamarin.PropertyEditing.Windows
 			this.hlsPane = GetTemplateChild ("hlsPane") as UIElement;
 			this.hsbPane = GetTemplateChild ("hsbPane") as UIElement;
 
+			if (this.rgbPane == null)
+				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child UIElement named \"rgbPane\"");
+			if (this.cmykPane == null)
+				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child UIElement named \"cmykPane\"");
+			if (this.hlsPane == null)
+				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child UIElement named \"hlsPane\"");
+			if (this.hsbPane == null)
+				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child UIElement named \"hsbPane\"");
+
 			if (ContextMenu != null) {
 				foreach (MenuItem item in ContextMenu.Items) {
 					item.Click += (s, e) => {
