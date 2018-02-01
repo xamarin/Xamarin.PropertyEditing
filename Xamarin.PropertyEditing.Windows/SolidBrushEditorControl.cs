@@ -23,14 +23,14 @@ namespace Xamarin.PropertyEditing.Windows
 
 			if (ViewModel == null) return;
 
-			colorSpacePicker = (ComboBox)GetTemplateChild ("colorSpacePicker");
+			this.colorSpacePicker = (ComboBox)GetTemplateChild ("colorSpacePicker");
 			if (ViewModel.Solid.ColorSpaces == null || ViewModel.Solid.ColorSpaces.Count == 0) {
-				colorSpacePicker.Visibility = Visibility.Collapsed;
+				this.colorSpacePicker.Visibility = Visibility.Collapsed;
 			}
 
 			if (ViewModel.Property.CanWrite) {
 				// Handle color space changes
-				colorSpacePicker.SelectionChanged += (s, e) => {
+				this.colorSpacePicker.SelectionChanged += (s, e) => {
 					if (ViewModel != null && ViewModel.Value != null) {
 						ViewModel.Value = new CommonSolidBrush (ViewModel.Solid.Color, (string)e.AddedItems[0]);
 					}

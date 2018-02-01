@@ -39,20 +39,20 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnApplyTemplate ();
 
-			hueChooser = (Rectangle)GetTemplateChild ("hueChooser");
+			this.hueChooser = (Rectangle)GetTemplateChild ("hueChooser");
 
-			hueChooser.MouseLeftButtonDown += (s, e) => {
-				if (!hueChooser.IsMouseCaptured)
-					hueChooser.CaptureMouse ();
+			this.hueChooser.MouseLeftButtonDown += (s, e) => {
+				if (!this.hueChooser.IsMouseCaptured)
+					this.hueChooser.CaptureMouse ();
 			};
-			hueChooser.MouseMove += (s, e) => {
-				if (hueChooser.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed && hueChooser != null) {
+			this.hueChooser.MouseMove += (s, e) => {
+				if (this.hueChooser.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed && this.hueChooser != null) {
 					var cursorPosition = e.GetPosition ((IInputElement)s).Y;
 					SetHueFromPosition (cursorPosition);
 				}
 			};
-			hueChooser.MouseLeftButtonUp += (s, e) => {
-				if (hueChooser.IsMouseCaptured) hueChooser.ReleaseMouseCapture ();
+			this.hueChooser.MouseLeftButtonUp += (s, e) => {
+				if (this.hueChooser.IsMouseCaptured) this.hueChooser.ReleaseMouseCapture ();
 				var cursorPosition = e.GetPosition ((IInputElement)s).Y;
 				SetHueFromPosition (cursorPosition);
 				RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
@@ -69,9 +69,9 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			if (cursorPosition < 0)
 				cursorPosition = 0;
-			if (cursorPosition >= hueChooser.ActualHeight)
-				cursorPosition = hueChooser.ActualHeight - 1;
-			HueColor = CommonColor.GetHueColorFromHue (360 * cursorPosition / hueChooser.ActualHeight);
+			if (cursorPosition >= this.hueChooser.ActualHeight)
+				cursorPosition = this.hueChooser.ActualHeight - 1;
+			HueColor = CommonColor.GetHueColorFromHue (360 * cursorPosition / this.hueChooser.ActualHeight);
 		}
 
 		static void OnHueChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)

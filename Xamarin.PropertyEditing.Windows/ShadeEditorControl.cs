@@ -40,23 +40,23 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnApplyTemplate ();
 
-			saturationLayer = (Rectangle)GetTemplateChild ("saturationLayer");
-			brightnessLayer = (Rectangle)GetTemplateChild ("brightnessLayer");
+			this.saturationLayer = (Rectangle)GetTemplateChild ("saturationLayer");
+			this.brightnessLayer = (Rectangle)GetTemplateChild ("brightnessLayer");
 
 			OnHueChanged (HueColor);
 
-			brightnessLayer.MouseLeftButtonDown += (s, e) => {
-				if (!brightnessLayer.IsMouseCaptured)
-					brightnessLayer.CaptureMouse ();
+			this.brightnessLayer.MouseLeftButtonDown += (s, e) => {
+				if (!this.brightnessLayer.IsMouseCaptured)
+					this.brightnessLayer.CaptureMouse ();
 			};
-			brightnessLayer.MouseMove += (s, e) => {
-				if (brightnessLayer.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed && saturationLayer != null) {
+			this.brightnessLayer.MouseMove += (s, e) => {
+				if (this.brightnessLayer.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed && this.saturationLayer != null) {
 					Point cursorPosition = e.GetPosition ((IInputElement)s);
 					SetColorFromMousePosition (cursorPosition);
 				}
 			};
-			brightnessLayer.MouseLeftButtonUp += (s, e) => {
-				if (brightnessLayer.IsMouseCaptured) brightnessLayer.ReleaseMouseCapture ();
+			this.brightnessLayer.MouseLeftButtonUp += (s, e) => {
+				if (this.brightnessLayer.IsMouseCaptured) this.brightnessLayer.ReleaseMouseCapture ();
 				Point cursorPosition = e.GetPosition ((IInputElement)s);
 				SetColorFromMousePosition (cursorPosition);
 				RaiseEvent (new RoutedEventArgs (CommitShadeEvent));
@@ -67,12 +67,12 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			if (cursorPosition.X < 0)
 				cursorPosition.X = 0;
-			if (cursorPosition.X > brightnessLayer.ActualWidth)
-				cursorPosition.X = brightnessLayer.ActualWidth;
+			if (cursorPosition.X > this.brightnessLayer.ActualWidth)
+				cursorPosition.X = this.brightnessLayer.ActualWidth;
 			if (cursorPosition.Y < 0)
 				cursorPosition.Y = 0;
-			if (cursorPosition.Y > brightnessLayer.ActualHeight)
-				cursorPosition.Y = brightnessLayer.ActualHeight;
+			if (cursorPosition.Y > this.brightnessLayer.ActualHeight)
+				cursorPosition.Y = this.brightnessLayer.ActualHeight;
 
 			CursorPosition = cursorPosition;
 			CommonColor newColor = GetColorFromPosition (cursorPosition);
@@ -90,7 +90,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnColorChanged (oldColor, newColor);
 
-			if (brightnessLayer == null || !brightnessLayer.IsMouseCaptured)
+			if (this.brightnessLayer == null || !this.brightnessLayer.IsMouseCaptured)
 				CursorPosition = GetPositionFromColor (newColor);
 		}
 
@@ -103,12 +103,12 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnHueChanged (CommonColor newHue)
 		{
-			if (saturationLayer == null) return;
-			var newBrush = (LinearGradientBrush)saturationLayer.Fill.Clone ();
+			if (this.saturationLayer == null) return;
+			var newBrush = (LinearGradientBrush)this.saturationLayer.Fill.Clone ();
 			GradientStopCollection gradientStops = newBrush.GradientStops;
 			gradientStops.RemoveAt (1);
 			gradientStops.Add (new GradientStop (System.Windows.Media.Color.FromRgb (newHue.R, newHue.G, newHue.B), 1));
-			saturationLayer.Fill = newBrush;
+			this.saturationLayer.Fill = newBrush;
 		}
 
 		/// <summary>
@@ -131,8 +131,8 @@ namespace Xamarin.PropertyEditing.Windows
 		/// <returns>The shade</returns>
 		CommonColor GetColorFromPosition (Point position)
 		{
-			var saturation = position.X / saturationLayer.ActualWidth;
-			var brightness = 1 - position.Y / brightnessLayer.ActualHeight;
+			var saturation = position.X / this.saturationLayer.ActualWidth;
+			var brightness = 1 - position.Y / this.brightnessLayer.ActualHeight;
 
 			return CommonColor.FromHSB (HueColor.Hue, saturation, brightness);
 		}
@@ -148,10 +148,10 @@ namespace Xamarin.PropertyEditing.Windows
 			var brightness = color.Brightness;
 			var saturation = color.Saturation;
 
-			if (saturationLayer == null || brightnessLayer == null) return new Point (0, 0);
+			if (this.saturationLayer == null || this.brightnessLayer == null) return new Point (0, 0);
 			return new Point (
-				saturation * saturationLayer.ActualWidth + saturationLayer.Margin.Left ,
-				(1 - brightness) * brightnessLayer.ActualHeight + brightnessLayer.Margin.Top);
+				saturation * this.saturationLayer.ActualWidth + this.saturationLayer.Margin.Left ,
+				(1 - brightness) * this.brightnessLayer.ActualHeight + this.brightnessLayer.Margin.Top);
 		}
 	}
 }
