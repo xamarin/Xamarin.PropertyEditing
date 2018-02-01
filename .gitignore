@@ -1,3 +1,5 @@
+/bot-provisioning/_provisionator/
+/bot-provisioning/provisionator.msbuild.props
 packages
 bin
 obj
