@@ -139,6 +139,10 @@ namespace Xamarin.PropertyEditing.Tests
 
 			if (value.Source != ValueSource.Local && ValueEvaluator != null) {
 				value.Value = (T)ValueEvaluator (property, value.ValueDescriptor);
+			} else if (value.Source == ValueSource.Unset || (SupportsDefault && Equals (value.Value, default(T)))) {
+				this.values.Remove (property);
+				PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
+				return;
 			}
 
 			object softValue = value;
