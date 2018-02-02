@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Xamarin.PropertyEditing.Windows
 {
@@ -94,16 +95,13 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 	}
 
-	[TemplatePart (Name = "TextBox", Type = typeof(TextBox))]
-	[TemplatePart (Name = "Up", Type = typeof(Button))]
-	[TemplatePart (Name = "Down", Type = typeof(Button))]
 	internal abstract class NumericUpDownControl<T>
-		: Control
+		: TextBoxEx
 		where T : struct, IComparable<T>
 	{
-		static NumericUpDownControl ()
+		public NumericUpDownControl ()
 		{
-			FocusableProperty.OverrideMetadata (typeof (NumericUpDownControl<T>), new FrameworkPropertyMetadata (false));
+			SetCurrentValue (TextProperty, Value.ToString());
 		}
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register (
@@ -133,15 +131,6 @@ namespace Xamarin.PropertyEditing.Windows
 			set { SetValue (MaximumValueProperty, value); }
 		}
 
-		public static readonly DependencyProperty ShowSpinnerProperty = DependencyProperty.Register (
-			"ShowSpinner", typeof(bool), typeof(NumericUpDownControl<T>), new PropertyMetadata (default(bool)));
-
-		public bool ShowSpinner
-		{
-			get { return (bool) GetValue (ShowSpinnerProperty); }
-			set { SetValue (ShowSpinnerProperty, value); }
-		}
-
 		public static readonly DependencyProperty IsConstrainedProperty = DependencyProperty.Register (
 			"IsConstrained", typeof(bool), typeof(NumericUpDownControl<T>), new PropertyMetadata (default(bool)));
 
@@ -149,21 +138,6 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			get { return (bool) GetValue (IsConstrainedProperty); }
 			set { SetValue (IsConstrainedProperty, value); }
-		}
-
-		public override void OnApplyTemplate ()
-		{
-			base.OnApplyTemplate ();
-
-			this.textBox = (TextBox) GetTemplateChild ("TextBox");
-			this.textBox.Text = Value.ToString ();
-			this.textBox.TextChanged += OnTextChanged;
-
-			Button up = (Button) GetTemplateChild ("Up");
-			up.Click += (sender, args) => SetCurrentValue (ValueProperty, GetIncrementedValue (Value));
-
-			Button down = (Button) GetTemplateChild ("Down");
-			down.Click += (sender, args) => SetCurrentValue (ValueProperty, GetDecrementedValue (Value));
 		}
 
 		protected virtual object OnCoerceValue (object value)
@@ -177,8 +151,7 @@ namespace Xamarin.PropertyEditing.Windows
 			if (v.CompareTo (MaximumValue) > 0)
 				v = MaximumValue;
 
-			if (this.textBox != null)
-				this.textBox.Text = v.ToString ();
+			SetCurrentValue (TextProperty, v.ToString());
 
 			return v;
 		}
@@ -187,15 +160,30 @@ namespace Xamarin.PropertyEditing.Windows
 		protected abstract T GetDecrementedValue (T value);
 		protected abstract bool TryParse (string text, out T value);
 
-		private TextBox textBox;
-
-		private void OnTextChanged (object sender, TextChangedEventArgs e)
+		protected override void OnPreviewKeyDown (KeyEventArgs e)
 		{
+			if (e.Key == Key.Down) {
+				SetCurrentValue (ValueProperty, GetDecrementedValue (Value));
+				SelectAll();
+				e.Handled = true;
+			} else if (e.Key == Key.Up) {
+				SetCurrentValue (ValueProperty, GetIncrementedValue (Value));
+				SelectAll();
+				e.Handled = true;
+			}
+
+			base.OnPreviewKeyDown (e);
+		}
+
+		protected override void OnSubmit ()
+		{
+			base.OnSubmit ();
+
 			T value;
-			if (TryParse (this.textBox.Text, out value)) {
+			if (TryParse (Text, out value)) {
 				SetCurrentValue (ValueProperty, value);
 			} else {
-				// TODO ignore and reset value
+				SetCurrentValue (TextProperty, Value.ToString());
 			}
 		}
 
@@ -203,6 +191,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			CoerceValue (MaximumValueProperty);
 			CoerceValue (MinimumValueProperty);
+			SetCurrentValue (TextProperty, Value.ToString());
 		}
 	}
 }

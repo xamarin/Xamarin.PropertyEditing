@@ -107,6 +107,18 @@ namespace Xamarin.PropertyEditing.Windows
 			FocusSelect ();
 		}
 
+		protected override void OnLostKeyboardFocus (KeyboardFocusChangedEventArgs e)
+		{
+			base.OnLostKeyboardFocus (e);
+			OnSubmit();
+		}
+
+		protected virtual void OnSubmit()
+		{
+			var expression = GetBindingExpression (TextProperty);
+			expression?.UpdateSource ();
+		}
+
 		private void FocusSelect()
 		{
 			if (!FocusSelectsAll)
@@ -119,9 +131,7 @@ namespace Xamarin.PropertyEditing.Windows
 		private void OnPreviewKeyDown (object sender, System.Windows.Input.KeyEventArgs e)
 		{
 			if (e.Key == Key.Enter) {
-				var expression = GetBindingExpression (TextProperty);
-				expression?.UpdateSource ();
-				e.Handled = true;
+				OnSubmit();
 			} else if (e.Key == Key.Escape) {
 				Clear();
 			}

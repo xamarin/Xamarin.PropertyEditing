@@ -212,116 +212,12 @@
 		</Setter>
 	</Style>
 
-	<local:NumericTemplateSelector x:Key="NumericTemplateSelector">
-		<local:NumericTemplateSelector.FloatingTemplate>
-			<DataTemplate DataType="vm:FloatingPropertyViewModel">
-				<local:DoubleUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
-			</DataTemplate>
-		</local:NumericTemplateSelector.FloatingTemplate>
-		<local:NumericTemplateSelector.IntegerTemplate>
-			<DataTemplate DataType="vm:IntegerPropertyViewModel">
-				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
-			</DataTemplate>
-		</local:NumericTemplateSelector.IntegerTemplate>
-		<local:NumericTemplateSelector.ByteTemplate>
-			<DataTemplate DataType="vm:BytePropertyViewModel">
-				<local:ByteUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
-			</DataTemplate>
-		</local:NumericTemplateSelector.ByteTemplate>
-	</local:NumericTemplateSelector>
-
-	<Style TargetType="local:NumericEditorControl">
-		<Setter Property="Height" Value="24" />
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="local:NumericEditorControl">
-					<ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource NumericTemplateSelector}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
-
-	<Style TargetType="local:IntegerUpDownControl">
-		<Setter Property="Height" Value="24" />
-		<Setter Property="ShowSpinner" Value="False" />
-		<Setter Property="MinHeight" Value="20" />
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type local:IntegerUpDownControl}">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="*" />
-							<ColumnDefinition Width="Auto" />
-						</Grid.ColumnDefinitions>
-
-						<local:TextBoxEx x:Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Grid.Column="0" VerticalContentAlignment="Center" />
-
-						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
-							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
-							<Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
-						</StackPanel>
-					</Grid>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
-	
-	<Style TargetType="local:DoubleUpDownControl">
-		<Setter Property="Height" Value="24" />
-		<Setter Property="ShowSpinner" Value="False" />
-		<Setter Property="MinHeight" Value="20" />
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type local:DoubleUpDownControl}">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="*" />
-							<ColumnDefinition Width="Auto" />
-						</Grid.ColumnDefinitions>
-
-						<local:TextBoxEx x:Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Grid.Column="0" VerticalContentAlignment="Center" />
-
-						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
-							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
-							<Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
-						</StackPanel>
-					</Grid>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
-
-	<Style TargetType="local:ByteUpDownControl">
-		<Setter Property="Height" Value="24" />
-		<Setter Property="ShowSpinner" Value="False" />
-		<Setter Property="MinHeight" Value="20" />
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type local:ByteUpDownControl}">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="*" />
-							<ColumnDefinition Width="Auto" />
-						</Grid.ColumnDefinitions>
-
-						<local:TextBoxEx x:Name="TextBox" IsEnabled="{TemplateBinding IsEnabled}" FocusSelectsAll="True" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" Grid.Column="0" VerticalContentAlignment="Center" />
-
-						<StackPanel Grid.Column="1" Visibility="{TemplateBinding ShowSpinner,Converter={StaticResource BoolToVisibilityConverter}}">
-							<Button x:Name="Up" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋀" />
-							<Button x:Name="Down" IsEnabled="{TemplateBinding IsEnabled}" FontSize="8" FontFamily="Segoe UI Symbol" Content="⋁" />
-						</StackPanel>
-					</Grid>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
-
 	<Style TargetType="local:StringEditorControl">
 		<Setter Property="Height" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:StringEditorControl">
-					<local:TextBoxEx x:Name="TextBox" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Text="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalContentAlignment="Center" />
+					<local:TextBoxEx x:Name="TextBox" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Text="{Binding Value,UpdateSourceTrigger=Explicit}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalContentAlignment="Center" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -412,19 +308,19 @@
 						<Border Grid.Column="0" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource LeftThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Left}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Left" />
+						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Left}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Left" />
 						<Border Grid.Column="1" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource RightThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Right}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Right" />
+						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Right}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Right" />
 						<Border Grid.Column="0" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource TopThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Top}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Top" />
+						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Top}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Top" />
 						<Border Grid.Column="1" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource BottomThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Bottom}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.HelpText="Bottom" />
+						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Bottom}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Bottom" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -1507,6 +1403,7 @@
 		<Setter Property="BorderThickness" Value="1"/>
 		<Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
 		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="VerticalContentAlignment" Value="Center" />
 		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
 		<Setter Property="AllowDrop" Value="true"/>
 		<Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
@@ -1571,6 +1468,53 @@
 				<Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
 			</MultiTrigger>
 		</Style.Triggers>
+	</Style>
+
+	<local:NumericTemplateSelector x:Key="NumericTemplateSelector">
+		<local:NumericTemplateSelector.FloatingTemplate>
+			<DataTemplate DataType="vm:FloatingPropertyViewModel">
+				<local:DoubleUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+			</DataTemplate>
+		</local:NumericTemplateSelector.FloatingTemplate>
+		<local:NumericTemplateSelector.IntegerTemplate>
+			<DataTemplate DataType="vm:IntegerPropertyViewModel">
+				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+			</DataTemplate>
+		</local:NumericTemplateSelector.IntegerTemplate>
+		<local:NumericTemplateSelector.ByteTemplate>
+			<DataTemplate DataType="vm:BytePropertyViewModel">
+				<local:ByteUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
+			</DataTemplate>
+		</local:NumericTemplateSelector.ByteTemplate>
+	</local:NumericTemplateSelector>
+
+	<Style TargetType="local:NumericEditorControl">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:NumericEditorControl">
+					<ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource NumericTemplateSelector}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:IntegerUpDownControl" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="MinHeight" Value="20" />
+		<Setter Property="FocusSelectsAll" Value="True" />
+	</Style>
+
+	<Style TargetType="local:DoubleUpDownControl" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="MinHeight" Value="20" />
+		<Setter Property="FocusSelectsAll" Value="True" />
+	</Style>
+
+	<Style TargetType="local:ByteUpDownControl" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
+		<Setter Property="Height" Value="24" />
+		<Setter Property="MinHeight" Value="20" />
+		<Setter Property="FocusSelectsAll" Value="True" />
 	</Style>
 
 	<Style x:Key="SearchTextBox" TargetType="local:TextBoxEx" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
