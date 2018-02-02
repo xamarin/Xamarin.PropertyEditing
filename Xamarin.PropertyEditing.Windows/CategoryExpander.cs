@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -40,6 +41,25 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnCollapsed ();
 			SetExpanded (false);
+		}
+
+		protected override void OnKeyDown (KeyEventArgs e)
+		{
+			if (e.Key == Key.Down) {
+				SetExpanded (true);
+				UpdateValue();
+				e.Handled = true;
+			} else if (e.Key == Key.Up) {
+				SetExpanded (false);
+				UpdateValue();
+				e.Handled = true;
+			} else if (e.Key == Key.Space) { // Expander should have this built, not sure why it's not working
+				SetExpanded (!IsExpanded);
+				UpdateValue();
+				e.Handled = true;
+			}
+
+			base.OnKeyDown (e);
 		}
 
 		private bool fromFilter;
