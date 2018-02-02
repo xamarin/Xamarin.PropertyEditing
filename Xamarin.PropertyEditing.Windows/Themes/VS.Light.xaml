@@ -15,10 +15,8 @@
 
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverForegroundBrush">#007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBorderBrush">#C9DEF5</SolidColorBrush>
-	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBackgroundBruszh">#C9DEF5</SolidColorBrush>
+	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBackgroundBrush">#C9DEF5</SolidColorBrush>
 	
-	<SolidColorBrush x:Key="TabBackgroundBrush">#F5F5F5</SolidColorBrush>
-	<SolidColorBrush x:Key="SelectedTabBackgroundBrush">#E7E8EC</SolidColorBrush>
 	<SolidColorBrush x:Key="SelectorBackgroundBrush">#FFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="CategoryExpanderBorderBrush">#E9E9E9</SolidColorBrush>
 
@@ -82,20 +80,8 @@
 	<SolidColorBrush x:Key="PopupForegroundBrush">#FF1E1E1E</SolidColorBrush>
 	<SolidColorBrush x:Key="PopupBorderBrush">#FFCCCEDB</SolidColorBrush>
 
-	<SolidColorBrush x:Key="LabelForegroundBrush">#1E1E1E</SolidColorBrush>
-
-	<SolidColorBrush x:Key="MenuItemForegroundBrush">#1E1E1E</SolidColorBrush>
-
 	<SolidColorBrush x:Key="ThicknessIconBackgroundBrush">#EEEEF2</SolidColorBrush>
 	<SolidColorBrush x:Key="ThicknessIconBorderBrush">#EEEEF2</SolidColorBrush>
-
-	<Color x:Key="ShadePickerCursorStrokeColor">#000000</Color>
-	<Color x:Key="ShadePickerCursorOutlineColor">#FFFFFF</Color>
-
-	<SolidColorBrush x:Key="HuePickerCursorBrush">#000000</SolidColorBrush>
-
-	<SolidColorBrush x:Key="BrushBoxCheckerBoardLight">#FFFFFF</SolidColorBrush>
-	<SolidColorBrush x:Key="BrushBoxCheckerBoardDark">#D3D3D3</SolidColorBrush>
 
 	<SolidColorBrush x:Key="DialogBackgroundBrush">#FFEEEEF2</SolidColorBrush>
 	<SolidColorBrush x:Key="DialogBorderBrush">#FF595959</SolidColorBrush>
@@ -106,7 +92,6 @@
 	<SolidColorBrush x:Key="IconButtonMouseOverForegroundBrush">#FF1E1E1E</SolidColorBrush>
 	<SolidColorBrush x:Key="IconButtonPressedForegroundBrush">#FFFFFFFF</SolidColorBrush>
 
-	<SolidColorBrush x:Key="VectorGlyphBrush">#424242</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxBackgroundBrush">#FFFFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxBorderBrush">#FFCCCEDB</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxForegroundBrush">#FF1E1E1E</SolidColorBrush>

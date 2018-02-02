@@ -27,6 +27,9 @@
 		</Setter>
 	</Style>
 
+	<SolidColorBrush x:Key="BrushBoxCheckerBoardLight">#FFFFFF</SolidColorBrush>
+	<SolidColorBrush x:Key="BrushBoxCheckerBoardDark">#D3D3D3</SolidColorBrush>
+
 	<DrawingBrush x:Key="CheckerBoard" Stretch="None" TileMode="Tile" Viewport="0,0,20,20" ViewportUnits="Absolute">
 		<DrawingBrush.Drawing>
 			<DrawingGroup>
@@ -491,8 +494,8 @@
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
 					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
-						<Polygon Points="0,0 24,0 0,14" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
-						<Polygon Points="25,1 25,15 1,15" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+						<Polygon Points="0,0 24,0 0,14" Fill="{DynamicResource ToggleItemForegroundBrush}" StrokeThickness="0"/>
+						<Polygon Points="25,1 25,15 1,15" Fill="{DynamicResource ToggleItemForegroundBrush}" StrokeThickness="0"/>
 					</Canvas>
 				</RadioButton>
 			</DataTemplate>
@@ -501,8 +504,8 @@
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
 					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
-						<Rectangle Canvas.Left="0" Canvas.Top="0" Width="25" Height="15" Stroke="{DynamicResource VectorGlyphBrush}" StrokeThickness="1"/>
-						<Rectangle Canvas.Left="2" Canvas.Top="2" Width="21" Height="11" Fill="{DynamicResource VectorGlyphBrush}" StrokeThickness="0"/>
+						<Rectangle Canvas.Left="0" Canvas.Top="0" Width="25" Height="15" Stroke="{DynamicResource ToggleItemForegroundBrush}" StrokeThickness="1"/>
+						<Rectangle Canvas.Left="2" Canvas.Top="2" Width="21" Height="11" Fill="{DynamicResource ToggleItemForegroundBrush}" StrokeThickness="0"/>
 					</Canvas>
 				</RadioButton>
 			</DataTemplate>
@@ -623,6 +626,8 @@
 		</Setter>
 	</Style>
 
+	<SolidColorBrush x:Key="HueSelectionGlyphBrush">#000000</SolidColorBrush>
+
 	<Style TargetType="local:HueEditorControl">
 		<Setter Property="Focusable" Value="False"/>
 		<Setter Property="Template">
@@ -646,8 +651,8 @@
 							<Canvas Width="{Binding ActualWidth, ElementName=cursorCanvas}" Height="{Binding ActualHeight, ElementName=cursorCanvas}"
 									Canvas.Top="{TemplateBinding CursorPosition}">
 								<Canvas.RenderTransform><TranslateTransform X="0" Y="-4"/></Canvas.RenderTransform>
-								<Polygon Points="0,0 5,5 0,10" Stroke="{DynamicResource HuePickerCursorBrush}" Fill="{DynamicResource HuePickerCursorBrush}"/>
-								<Polygon Points="20,0 15,5 20,10" Stroke="{DynamicResource HuePickerCursorBrush}" Fill="{DynamicResource HuePickerCursorBrush}"/>
+								<Polygon Points="0,0 5,5 0,10" Stroke="{DynamicResource HueSelectionGlyphBrush}" Fill="{DynamicResource HueSelectionGlyphBrush}"/>
+								<Polygon Points="20,0 15,5 20,10" Stroke="{DynamicResource HueSelectionGlyphBrush}" Fill="{DynamicResource HueSelectionGlyphBrush}"/>
 							</Canvas>
 						</Canvas>
 					</Grid>
@@ -655,6 +660,9 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+
+	<Color x:Key="ShadePickerCursorStrokeColor">#000000</Color>
+	<Color x:Key="ShadePickerCursorOutlineColor">#FFFFFF</Color>
 
 	<Style TargetType="local:ShadeEditorControl">
 		<Setter Property="Focusable" Value="False"/>
@@ -1176,19 +1184,29 @@
 
 	<Style TargetType="{x:Type TabItem}">
 		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}"/>
-		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="TextElement.Foreground" Value="{DynamicResource ToggleItemForegroundBrush}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TabItem}">
-					<Border x:Name="grid" Background="{DynamicResource PanelBackgroundBrush}" BorderThickness="0" Padding="4">
+					<Border x:Name="grid" BorderThickness="1" Padding="4" BorderBrush="{DynamicResource ToggleItemBorderBrush}"
+							Background="{DynamicResource ToggleItemBackgroundBrush}" TextElement.Foreground="{DynamicResource ToggleItemForegroundBrush}">
 						<ContentPresenter x:Name="tabContent" ContentSource="Header"/>
 					</Border>
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsSelected" Value="True">
-							<Setter TargetName="grid" Property="Background" Value="{DynamicResource SelectedTabBackgroundBrush}"/>
+							<Setter TargetName="grid" Property="BorderBrush" Value="{DynamicResource ToggleItemSelectedBorderBrush}"/>
+							<Setter TargetName="grid" Property="Background" Value="{DynamicResource ToggleItemSelectedBackgroundBrush}"/>
+							<Setter TargetName="grid" Property="TextElement.Foreground" Value="{DynamicResource ToggleItemSelectedForegroundBrush}"/>
 						</Trigger>
-						<Trigger Property="IsSelected" Value="False">
-							<Setter TargetName="grid" Property="Background" Value="{DynamicResource TabBackgroundBrush}"/>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="grid" Property="BorderBrush" Value="{DynamicResource ToggleItemMouseOverBorderBrush}"/>
+							<Setter TargetName="grid" Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}"/>
+							<Setter TargetName="grid" Property="TextElement.Foreground" Value="{DynamicResource ToggleItemMouseOverForegroundBrush}"/>
+						</Trigger>
+						<Trigger Property="Button.IsPressed" Value="True">
+							<Setter TargetName="grid" Property="BorderBrush" Value="{DynamicResource ToggleItemPressedBorderBrush}"/>
+							<Setter TargetName="grid" Property="Background" Value="{DynamicResource ToggleItemPressedBackgroundBrush}"/>
 						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
@@ -1208,7 +1226,8 @@
 							<RowDefinition Height="*" />
 						</Grid.RowDefinitions>
 						<TabPanel IsItemsHost="True" Grid.Row="0" Panel.ZIndex="1" />
-						<Border Grid.Row="1" Panel.ZIndex="0" BorderThickness="0" Background="{DynamicResource SelectedTabBackgroundBrush}" Padding="4">
+						<Border Grid.Row="1" Panel.ZIndex="0" BorderThickness="0,1,1,1" Padding="4"
+							Background="{DynamicResource ToggleItemOuterBorderBrush}" BorderBrush="{DynamicResource ToggleItemOuterBorderBrush}">
 							<ContentPresenter ContentSource="SelectedContent" />
 						</Border>
 					</Grid>
@@ -1218,7 +1237,7 @@
 	</Style>
 
 	<Style TargetType="Label">
-		<Setter Property="Foreground" Value="{DynamicResource LabelForegroundBrush}"/>
+		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}"/>
 	</Style>
 
 	<Style TargetType="ListBox">
@@ -1271,7 +1290,7 @@
 	<Style TargetType="MenuItem">
 		<Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
 		<Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
-		<Setter Property="Foreground" Value="{DynamicResource MenuItemForegroundBrush}" />
+		<Setter Property="Foreground" Value="{DynamicResource ListItemForegroundBrush}" />
 		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="BorderBrush" Value="Transparent" />
 		<Setter Property="BorderThickness" Value="1" />
