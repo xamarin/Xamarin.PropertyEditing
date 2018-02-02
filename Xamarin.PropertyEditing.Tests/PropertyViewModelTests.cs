@@ -268,6 +268,46 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public void CanSetValueResourceUpdatesOnProviderSet()
+		{
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
+
+			var resource = new Resource ("name");
+
+			var resourcesMock = new Mock<IResourceProvider> ();
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (new object(), mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+
+			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
+			Assume.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False);
+
+			bool setChanged = false;
+			vm.SetValueResourceCommand.CanExecuteChanged += (o,e) => setChanged = true;
+
+			Assume.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False);
+
+			vm.ResourceProvider = resourcesMock.Object;
+
+			Assert.That (setChanged, Is.True);
+			Assert.That	(vm.SetValueResourceCommand.CanExecute (resource), Is.True);
+		}
+
+		[Test]
+		public void CanRequestResourceNoProvider()
+		{
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
+
+			var resource = new Resource ("name");
+
+			var resourcesMock = new Mock<IResourceProvider> ();
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (new object(), mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+
+			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
+			Assert.That (vm.RequestResourceCommand.CanExecute (null), Is.False);
+		}
+
+		[Test]
 		[Description ("RequestResourceCommand's CanExecuteChanged should fire when SetValueResourceCommand's does")]
 		public void CanRequestResourceSetValueChanges()
 		{
@@ -281,6 +321,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var vm = GetViewModel (mockProperty.Object, new[] { new Mock<IObjectEditor> ().Object });
 			Assume.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False);
+			Assume.That (vm.RequestResourceCommand.CanExecute (null), Is.False);
 
 			bool setChanged = false;
 			vm.SetValueResourceCommand.CanExecuteChanged += (o,e) => setChanged = true;

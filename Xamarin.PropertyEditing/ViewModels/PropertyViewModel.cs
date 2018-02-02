@@ -227,6 +227,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				this.resourceProvider = value;
 				OnPropertyChanged ();
+
+				if (SetValueResourceCommand is RelayCommand<Resource> r)
+					r.ChangeCanExecute();
 			}
 		}
 
@@ -389,7 +392,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool CanRequestResource ()
 		{
-			return SupportsResources && SetValueResourceCommand != null;
+			return SupportsResources && ResourceProvider != null && SetValueResourceCommand != null;
 		}
 
 		private void OnRequestResource ()
