@@ -159,16 +159,9 @@ namespace Xamarin.PropertyEditing.Tests
 			string originalValueName = vm.ValueName;
 			Assume.That (vm.Value, Is.Not.EqualTo (value));
 
-			bool changed = false;
-			vm.PropertyChanged += (sender, args) => {
-				if (args.PropertyName == nameof(vm.Value))
-					changed = true;
-			};
-
 			vm.Value = value;
 			Assert.That (vm.Value, Is.EqualTo (originalValue));
 			Assert.That (vm.ValueName, Is.EqualTo (originalValueName));
-			Assert.That (changed, Is.False);
 		}
 
 		[Test]
