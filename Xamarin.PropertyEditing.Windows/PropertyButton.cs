@@ -146,6 +146,7 @@ namespace Xamarin.PropertyEditing.Windows
 					break;
 
 				case ValueSource.Default:
+				case ValueSource.Unset:
 					this.indicator.ClearValue (Shape.FillProperty);
 					return;
 			}
