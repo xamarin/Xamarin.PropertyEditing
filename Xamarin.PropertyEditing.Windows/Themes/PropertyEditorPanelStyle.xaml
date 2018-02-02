@@ -20,6 +20,7 @@
 		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
 		<Setter Property="BorderThickness" Value="0,0,0,1" />
 		<Setter Property="BorderBrush" Value="{DynamicResource CategoryExpanderBorderBrush}" />
+		<Setter Property="IsTabStop" Value="True" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Expander}">
@@ -52,6 +53,7 @@
 	</DataTemplate>
 	
 	<Style x:Key="PropertyListStyle" TargetType="ItemsControl">
+		<Setter Property="Focusable" Value="False" />
 		<Setter Property="ItemTemplateSelector" Value="{StaticResource EditorTreeSelector}" />
 		<Setter Property="ItemsPanel">
 			<Setter.Value>
