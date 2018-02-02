@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -161,6 +162,7 @@ namespace Xamarin.PropertyEditing.Windows
 			this.cmykPane = GetTemplateChild ("cmykPane") as UIElement;
 			this.hlsPane = GetTemplateChild ("hlsPane") as UIElement;
 			this.hsbPane = GetTemplateChild ("hsbPane") as UIElement;
+			this.hexEntry = GetTemplateChild ("hexEntry") as TextBoxEx;
 
 			if (this.rgbPane == null)
 				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child UIElement named \"rgbPane\"");
@@ -170,6 +172,8 @@ namespace Xamarin.PropertyEditing.Windows
 				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child UIElement named \"hlsPane\"");
 			if (this.hsbPane == null)
 				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child UIElement named \"hsbPane\"");
+			if (this.hexEntry == null)
+				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child TextBoxEx named \"hexEntry\"");
 
 			if (ContextMenu != null) {
 				foreach (MenuItem item in ContextMenu.Items) {
@@ -198,6 +202,15 @@ namespace Xamarin.PropertyEditing.Windows
 			foreach (Button button in this.GetDescendants<Button> ()) {
 				button.Click += OnComponentLabelClick;
 			}
+
+			this.hexEntry.LostFocus += (s, e) => {
+				OnHexBoxChanged(s, e);
+			};
+			this.hexEntry.PreviewKeyDown += (s, e) => {
+				if (e.Key == Key.Enter) {
+					OnHexBoxChanged (s, e);
+				}
+			};
 		}
 
 		protected override void OnColorChanged (CommonColor oldColor, CommonColor newColor)
@@ -221,12 +234,12 @@ namespace Xamarin.PropertyEditing.Windows
 		private UIElement cmykPane;
 		private UIElement hlsPane;
 		private UIElement hsbPane;
+		private TextBoxEx hexEntry;
 
-
-		static void OnHueColorChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
+		private static void OnHueColorChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
 			=> (source as ColorComponentsEditorControl)?.OnHueColorChanged ((CommonColor)e.OldValue, (CommonColor)e.NewValue);
 
-		void OnHueColorChanged (CommonColor oldColor, CommonColor newColor) {
+		private void OnHueColorChanged (CommonColor oldColor, CommonColor newColor) {
 			var newHue = newColor.Hue;
 			if (newHue != Hue) {
 				Hue = newHue;
@@ -241,6 +254,7 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 
 			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+			RaiseEvent (new RoutedEventArgs (CommitHueEvent));
 		}
 
 		private void OnCMYKComponentBoxChanged (object sender, RoutedEventArgs e)
@@ -251,6 +265,7 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 
 			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+			RaiseEvent (new RoutedEventArgs (CommitHueEvent));
 		}
 
 		private void OnHLSComponentBoxChanged (object sender, RoutedEventArgs e)
@@ -275,9 +290,14 @@ namespace Xamarin.PropertyEditing.Windows
 			var newColor = CommonColor.FromHSB (Hue, Saturation, Brightness, A);
 			if (!newColor.Equals (Color)) {
 				Color = newColor;
+				RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 			}
+		}
 
+		private void OnHexBoxChanged (object sender, RoutedEventArgs e)
+		{
 			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+			RaiseEvent (new RoutedEventArgs (CommitHueEvent));
 		}
 
 		private void OnComponentLabelClick (object sender, RoutedEventArgs e)
