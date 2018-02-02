@@ -16,7 +16,7 @@
 	<Color x:Key="DropShadowBackgroundColor">#72000000</Color>
 
 	<Style x:Key="GenericVisualFocusStyle" TargetType="Control">
-		<Setter Property="Margin" Value="2" />
+		<Setter Property="Margin" Value="1" />
 		<Setter Property="Foreground" Value="{DynamicResource FocusVisualBorderBrush}" />
 		<Setter Property="Template">
 			<Setter.Value>
@@ -2034,7 +2034,7 @@
 		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="BorderBrush" Value="Transparent"/>
 		<Setter Property="BorderThickness" Value="1"/>
-		<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+		<Setter Property="FocusVisualStyle" Value="{StaticResource GenericVisualFocusStyle}"/>
 		<Setter Property="Foreground" Value="{DynamicResource ListItemForegroundBrush}" />
 		<Setter Property="Template">
 			<Setter.Value>
@@ -2256,7 +2256,7 @@
 	</ControlTemplate>
 	
 	<Style TargetType="{x:Type ComboBox}">
-		<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+		<Setter Property="FocusVisualStyle" Value="{StaticResource GenericVisualFocusStyle}"/>
 		<Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundBrush}"/>
 		<Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}"/>
 		<Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundBrush}"/>
