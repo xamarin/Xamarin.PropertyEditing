@@ -147,6 +147,13 @@ namespace Xamarin.PropertyEditing.Tests
 			}
 		}
 
+		[Test]
+		public void ColorToString()
+		{
+			var color = new CommonColor (0x34, 0x56, 0x78, 0x12);
+			Assert.AreEqual ("#12345678", color.ToString ());
+		}
+
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 		public struct CMYK
 		{
