@@ -1,5 +1,7 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -56,25 +58,27 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnApplyTemplate ();
 
-			this.innerTextBox = GetTemplateChild ("innerTextBox") as TextBox;
-			if (this.innerTextBox != null) {
-				this.innerTextBox.GotKeyboardFocus += (s, e) => {
-					this.innerTextBox.SelectAll ();
-					previousValue = Value;
-				};
-				this.innerTextBox.PreviewMouseLeftButtonDown += (s, e) => {
-					this.innerTextBox.Focus ();
-					e.Handled = true;
-				};
-				this.innerTextBox.LostFocus += (s, e) => {
-					if (Value != previousValue) {
-						RaiseEvent (new RoutedEventArgs (ValueChangedEvent));
-					}
-				};
-			}
+			this.innerTextBox = GetTemplateChild ("innerTextBox") as TextBoxEx;
+
+			if (this.innerTextBox == null)
+				throw new InvalidOperationException ($"{nameof (ColorComponentBox)} is missing a child TextBoxEx named \"innerTextBox\"");
+
+			this.innerTextBox.GotKeyboardFocus += (s, e) => {
+				this.previousValue = Value;
+			};
+			this.innerTextBox.LostFocus += (s, e) => {
+				if (Value != this.previousValue) {
+					RaiseEvent (new RoutedEventArgs (ValueChangedEvent));
+				}
+			};
+			this.innerTextBox.PreviewKeyDown += (s, e) => {
+				if (e.Key == Key.Return) {
+					RaiseEvent (new RoutedEventArgs (ValueChangedEvent));
+				}
+			};
 		}
 
-		private TextBox innerTextBox;
+		private TextBoxEx innerTextBox;
 		private double previousValue;
 	}
 }

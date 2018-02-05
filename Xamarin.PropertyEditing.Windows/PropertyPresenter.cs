@@ -47,6 +47,15 @@ namespace Xamarin.PropertyEditing.Windows
 			private set { SetValue (IsSubPropertyPropertyKey, value); }
 		}
 
+		public static readonly DependencyProperty ShowPropertyButtonProperty = DependencyProperty.Register (
+			nameof (ShowPropertyButton), typeof (bool), typeof (PropertyPresenter), new PropertyMetadata (true));
+
+		public bool ShowPropertyButton
+		{
+			get { return (bool)GetValue (ShowPropertyButtonProperty); }
+			set { SetValue (ShowPropertyButtonProperty, value); }
+		}
+
 		protected override Size ArrangeOverride (Size arrangeBounds)
 		{
 			return base.ArrangeOverride (arrangeBounds);

@@ -23,17 +23,23 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 			MockedControl.AddProperty<CommonBrush> (this.readOnlyBrushPropertyInfo);
 		}
 
-		public async Task SetBrush (IObjectEditor editor, CommonBrush brush)
+		public async Task SetBrushInitialValueAsync (IObjectEditor editor, CommonBrush brush)
 		{
+			if (this.brushSet) return;
 			await editor.SetValueAsync (this.brushPropertyInfo, new ValueInfo<CommonBrush> { Value = brush });
+			this.brushSet = true;
 		}
 
-		public async Task SetReadOnlyBrush (IObjectEditor editor, CommonBrush brush)
+		public async Task SetReadOnlyBrushInitialValueAsync (IObjectEditor editor, CommonBrush brush)
 		{
+			if (this.readOnlyBrushSet) return;
 			await editor.SetValueAsync (this.readOnlyBrushPropertyInfo, new ValueInfo<CommonBrush> { Value = brush });
+			this.readOnlyBrushSet = true;
 		}
 
 		private IPropertyInfo brushPropertyInfo;
 		private IPropertyInfo readOnlyBrushPropertyInfo;
+		private bool brushSet = false;
+		private bool readOnlyBrushSet = false;
 	}
 }

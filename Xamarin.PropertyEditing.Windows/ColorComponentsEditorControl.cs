@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -45,7 +46,7 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly DependencyProperty AlphaProperty =
 			DependencyProperty.Register (
 				nameof (A), typeof (byte), typeof (ColorComponentsEditorControl),
-				new PropertyMetadata ((byte)0));
+				new PropertyMetadata ((byte)255));
 
 		public byte A {
 			get => (byte)GetValue (AlphaProperty);
@@ -102,6 +103,17 @@ namespace Xamarin.PropertyEditing.Windows
 			set => SetValue (HueProperty, value);
 		}
 
+		public static readonly DependencyProperty HueColorProperty =
+			DependencyProperty.Register (
+				"HueColor", typeof (CommonColor), typeof (ColorEditorControlBase),
+				new PropertyMetadata (new CommonColor (255, 0, 0), OnHueColorChanged));
+
+		public CommonColor HueColor
+		{
+			get => (CommonColor)GetValue (HueColorProperty);
+			set => SetValue (HueColorProperty, value);
+		}
+
 		public static readonly DependencyProperty SaturationProperty =
 			DependencyProperty.Register (
 				nameof (Saturation), typeof (double), typeof (ColorComponentsEditorControl),
@@ -150,6 +162,18 @@ namespace Xamarin.PropertyEditing.Windows
 			this.cmykPane = GetTemplateChild ("cmykPane") as UIElement;
 			this.hlsPane = GetTemplateChild ("hlsPane") as UIElement;
 			this.hsbPane = GetTemplateChild ("hsbPane") as UIElement;
+			this.hexEntry = GetTemplateChild ("hexEntry") as TextBoxEx;
+
+			if (this.rgbPane == null)
+				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child UIElement named \"rgbPane\"");
+			if (this.cmykPane == null)
+				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child UIElement named \"cmykPane\"");
+			if (this.hlsPane == null)
+				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child UIElement named \"hlsPane\"");
+			if (this.hsbPane == null)
+				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child UIElement named \"hsbPane\"");
+			if (this.hexEntry == null)
+				throw new InvalidOperationException ($"{nameof (ColorComponentsEditorControl)} is missing a child TextBoxEx named \"hexEntry\"");
 
 			if (ContextMenu != null) {
 				foreach (MenuItem item in ContextMenu.Items) {
@@ -178,19 +202,15 @@ namespace Xamarin.PropertyEditing.Windows
 			foreach (Button button in this.GetDescendants<Button> ()) {
 				button.Click += OnComponentLabelClick;
 			}
-			foreach (TextBox textbox in this.GetDescendants<TextBox> ()) {
-				// This will not get TextBoxes buried inside templates of derived TextBox types, such as ColorComponentBox,
-				// those will have to do their own focus management.
-				if (!textbox.GetType ().IsSubclassOf (typeof (TextBox))) {
-					textbox.GotKeyboardFocus += (s, e) => {
-						textbox.SelectAll ();
-					};
-					textbox.PreviewMouseLeftButtonDown += (s, e) => {
-						textbox.Focus ();
-						e.Handled = true;
-					};
+
+			this.hexEntry.LostFocus += (s, e) => {
+				OnHexBoxChanged(s, e);
+			};
+			this.hexEntry.PreviewKeyDown += (s, e) => {
+				if (e.Key == Key.Enter) {
+					OnHexBoxChanged (s, e);
 				}
-			}
+			};
 		}
 
 		protected override void OnColorChanged (CommonColor oldColor, CommonColor newColor)
@@ -205,7 +225,6 @@ namespace Xamarin.PropertyEditing.Windows
 			if (M != newColor.M) M = newColor.M;
 			if (Y != newColor.Y) Y = newColor.Y;
 			if (K != newColor.K) K = newColor.K;
-			if (Hue != newColor.Hue) Hue = newColor.Hue;
 			if (Saturation != newColor.Saturation) Saturation = newColor.Saturation;
 			if (Lightness != newColor.Lightness) Lightness = newColor.Lightness;
 			if (Brightness != newColor.Brightness) Brightness = newColor.Brightness;
@@ -215,6 +234,17 @@ namespace Xamarin.PropertyEditing.Windows
 		private UIElement cmykPane;
 		private UIElement hlsPane;
 		private UIElement hsbPane;
+		private TextBoxEx hexEntry;
+
+		private static void OnHueColorChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
+			=> (source as ColorComponentsEditorControl)?.OnHueColorChanged ((CommonColor)e.OldValue, (CommonColor)e.NewValue);
+
+		private void OnHueColorChanged (CommonColor oldColor, CommonColor newColor) {
+			var newHue = newColor.Hue;
+			if (newHue != Hue) {
+				Hue = newHue;
+			}
+		}
 
 		private void OnRGBComponentBoxChanged (object sender, RoutedEventArgs e)
 		{
@@ -224,6 +254,7 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 
 			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+			RaiseEvent (new RoutedEventArgs (CommitHueEvent));
 		}
 
 		private void OnCMYKComponentBoxChanged (object sender, RoutedEventArgs e)
@@ -234,26 +265,39 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 
 			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+			RaiseEvent (new RoutedEventArgs (CommitHueEvent));
 		}
 
 		private void OnHLSComponentBoxChanged (object sender, RoutedEventArgs e)
 		{
+			var oldHue = HueColor.Hue;
+			if (oldHue != Hue) {
+				HueColor = CommonColor.GetHueColorFromHue (Hue);
+			}
 			var newColor = CommonColor.FromHLS (Hue, Lightness, Saturation, A);
 			if (!newColor.Equals (Color)) {
 				Color = newColor;
+				RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 			}
-
-			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 		}
 
 		private void OnHSBComponentBoxChanged (object sender, RoutedEventArgs e)
 		{
+			var oldHue = HueColor.Hue;
+			if (oldHue != Hue) {
+				HueColor = CommonColor.GetHueColorFromHue (Hue);
+			}
 			var newColor = CommonColor.FromHSB (Hue, Saturation, Brightness, A);
 			if (!newColor.Equals (Color)) {
 				Color = newColor;
+				RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 			}
+		}
 
+		private void OnHexBoxChanged (object sender, RoutedEventArgs e)
+		{
 			RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
+			RaiseEvent (new RoutedEventArgs (CommitHueEvent));
 		}
 
 		private void OnComponentLabelClick (object sender, RoutedEventArgs e)

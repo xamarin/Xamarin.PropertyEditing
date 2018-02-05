@@ -1,4 +1,6 @@
+using System;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -16,25 +18,44 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnApplyTemplate ();
 
-			brushChoice = GetTemplateChild ("brushChoice") as ChoiceControl;
+			this.brushChoice = GetTemplateChild ("brushChoice") as ChoiceControl;
 
-			if (brushChoice != null) {
+			if (this.brushChoice == null)
+				throw new InvalidOperationException ($"{nameof(BrushTabbedEditorControl)} is missing a child ChoiceControl named \"brushChoice\"");
+
+			StorePreviousBrush ();
+			SelectTabFromBrush ();
+
+			this.brushChoice.SelectedItemChanged += (s, e) => {
+				if (ViewModel == null) return;
 				StorePreviousBrush ();
-				SelectTabFromBrush ();
+				switch ((string)((ChoiceItem)(this.brushChoice.SelectedItem)).Value) {
+				case none:
+					if (ViewModel.Value != null) ViewModel.Value = null;
+					break;
+				case solid:
+					ViewModel.Value = ViewModel.Solid?.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
+					ViewModel.Solid.CommitLastColor ();
+					ViewModel.Solid.CommitHue ();
+					break;
+				}
+			};
 
-				brushChoice.SelectedItemChanged += (s, e) => {
-					if (ViewModel == null) return;
-					StorePreviousBrush ();
-					switch ((string)brushChoice.SelectedValue) {
-					case none:
-						ViewModel.Value = null;
-						break;
-					case solid:
-						ViewModel.Value = ViewModel.Solid.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
-						break;
-					}
-				};
-			}
+			this.brushChoice.KeyUp += (s, e) => {
+				if (ViewModel == null) return;
+				StorePreviousBrush ();
+				switch (e.Key) {
+				case Key.N:
+					e.Handled = true;
+					this.brushChoice.SelectedValue = none;
+					break;
+				case Key.S:
+					e.Handled = true;
+					this.brushChoice.SelectedValue = solid;
+					break;
+				// TODO: add G, T, R for the other brush types when they are available.
+				}
+			};
 		}
 
 		public static readonly string None = none;
@@ -42,7 +63,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		internal void FocusFirstChild()
 		{
-			brushChoice?.FocusSelectedItem();
+			this.brushChoice?.FocusSelectedItem();
 		}
 
 		private const string none = nameof (none);
@@ -60,15 +81,14 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 		}
 
-		private void SelectTabFromBrush ()
+		internal void SelectTabFromBrush ()
 		{
-			if (brushChoice == null) return;
 			switch (ViewModel?.Value) {
 			case null:
-				brushChoice.SelectedValue = none;
+				this.brushChoice.SelectedValue = none;
 				break;
 			case CommonSolidBrush _:
-				brushChoice.SelectedValue = solid;
+				this.brushChoice.SelectedValue = solid;
 				break;
 			}
 		}

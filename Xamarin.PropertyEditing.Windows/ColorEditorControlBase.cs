@@ -15,13 +15,14 @@ namespace Xamarin.PropertyEditing.Windows
 			remove { RemoveHandler (CommitCurrentColorEvent, value); }
 		}
 
-		public static readonly RoutedEvent CommitShadeEvent =
+		public static readonly RoutedEvent CommitHueEvent =
 			EventManager.RegisterRoutedEvent (
-				nameof(CommitShade), RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (CurrentColorCommitterControlBase));
+				nameof (CommitHueColor), RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (CurrentColorCommitterControlBase));
 
-		public event RoutedEventHandler CommitShade {
-			add { AddHandler (CommitShadeEvent, value); }
-			remove { RemoveHandler (CommitShadeEvent, value); }
+		public event RoutedEventHandler CommitHueColor
+		{
+			add { AddHandler (CommitHueEvent, value); }
+			remove { RemoveHandler (CommitHueEvent, value); }
 		}
 	}
 

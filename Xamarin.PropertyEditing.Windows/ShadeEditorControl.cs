@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -6,8 +7,9 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Windows
 {
-	internal class ShadeEditorControl : ColorEditorControlBase
+	internal class ShadeEditorControl : CurrentColorCommitterControlBase
 	{
+		// Note: the Color property of this control should be bound to the Shade of the solid brush view model, not its color.
 		public ShadeEditorControl()
 		{
 			DefaultStyleKey = typeof (ShadeEditorControl);
@@ -26,6 +28,20 @@ namespace Xamarin.PropertyEditing.Windows
 			set => SetValue (CursorPositionProperty, value);
 		}
 
+		public static readonly DependencyProperty ShadeProperty =
+			DependencyProperty.Register (
+				"Shade", typeof (CommonColor), typeof (ShadeEditorControl),
+				new PropertyMetadata (new CommonColor (0, 0, 0), OnShadeChanged));
+
+		public CommonColor Shade
+		{
+			get => (CommonColor)GetValue (ShadeProperty);
+			set => SetValue (ShadeProperty, value);
+		}
+
+		static void OnShadeChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
+			=> (source as ShadeEditorControl)?.OnShadeChanged ((CommonColor)e.OldValue, (CommonColor)e.NewValue);
+
 		public static readonly DependencyProperty HueProperty =
 			DependencyProperty.Register (
 				nameof(HueColor), typeof (CommonColor), typeof (ShadeEditorControl),
@@ -40,58 +56,61 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			base.OnApplyTemplate ();
 
-			saturationLayer = (Rectangle)GetTemplateChild ("saturationLayer");
-			brightnessLayer = (Rectangle)GetTemplateChild ("brightnessLayer");
+			this.saturationLayer = GetTemplateChild ("saturationLayer") as Rectangle;
+			this.brightnessLayer = GetTemplateChild ("brightnessLayer") as Rectangle;
 
 			OnHueChanged (HueColor);
 
-			brightnessLayer.MouseLeftButtonDown += (s, e) => {
-				if (!brightnessLayer.IsMouseCaptured)
-					brightnessLayer.CaptureMouse ();
+			if (this.saturationLayer == null)
+				throw new InvalidOperationException ($"{nameof (ShadeEditorControl)} is missing a child Rectangle named \"saturationLayer\"");
+			if (this.brightnessLayer == null)
+				throw new InvalidOperationException ($"{nameof (ShadeEditorControl)} is missing a child Rectangle named \"brightnessLayer\"");
+
+			this.brightnessLayer.MouseLeftButtonDown += (s, e) => {
+				if (!this.brightnessLayer.IsMouseCaptured)
+					this.brightnessLayer.CaptureMouse ();
 			};
-			brightnessLayer.MouseMove += (s, e) => {
-				if (brightnessLayer.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed && saturationLayer != null) {
+			this.brightnessLayer.MouseMove += (s, e) => {
+				if (this.brightnessLayer.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed && this.saturationLayer != null) {
 					Point cursorPosition = e.GetPosition ((IInputElement)s);
-					SetColorFromMousePosition (cursorPosition);
+					SetShadeFromMousePosition (cursorPosition);
 				}
 			};
-			brightnessLayer.MouseLeftButtonUp += (s, e) => {
-				if (brightnessLayer.IsMouseCaptured) brightnessLayer.ReleaseMouseCapture ();
+			this.brightnessLayer.MouseLeftButtonUp += (s, e) => {
+				if (this.brightnessLayer.IsMouseCaptured) this.brightnessLayer.ReleaseMouseCapture ();
 				Point cursorPosition = e.GetPosition ((IInputElement)s);
-				SetColorFromMousePosition (cursorPosition);
-				RaiseEvent (new RoutedEventArgs (CommitShadeEvent));
+				SetShadeFromMousePosition (cursorPosition);
+				RaiseEvent (new RoutedEventArgs (CommitCurrentColorEvent));
 			};
 		}
 
-		void SetColorFromMousePosition(Point cursorPosition)
+		void SetShadeFromMousePosition(Point cursorPosition)
 		{
 			if (cursorPosition.X < 0)
 				cursorPosition.X = 0;
-			if (cursorPosition.X > brightnessLayer.ActualWidth)
-				cursorPosition.X = brightnessLayer.ActualWidth;
+			if (cursorPosition.X > this.brightnessLayer.ActualWidth)
+				cursorPosition.X = this.brightnessLayer.ActualWidth;
 			if (cursorPosition.Y < 0)
 				cursorPosition.Y = 0;
-			if (cursorPosition.Y > brightnessLayer.ActualHeight)
-				cursorPosition.Y = brightnessLayer.ActualHeight;
+			if (cursorPosition.Y > this.brightnessLayer.ActualHeight)
+				cursorPosition.Y = this.brightnessLayer.ActualHeight;
 
 			CursorPosition = cursorPosition;
-			CommonColor newColor = GetColorFromPosition (cursorPosition);
-			Color = new CommonColor (newColor.R, newColor.G, newColor.B, Color.A);
+			CommonColor newShade = GetShadeFromPosition (cursorPosition);
+			Shade = new CommonColor (newShade.R, newShade.G, newShade.B);
 		}
 
 		protected override void OnRenderSizeChanged (SizeChangedInfo sizeInfo)
 		{
 			base.OnRenderSizeChanged (sizeInfo);
 
-			CursorPosition = GetPositionFromColor (Color);
+			CursorPosition = GetPositionFromShade (Shade);
 		}
 
-		protected override void OnColorChanged (CommonColor oldColor, CommonColor newColor)
+		protected void OnShadeChanged (CommonColor oldShade, CommonColor newShade)
 		{
-			base.OnColorChanged (oldColor, newColor);
-
-			if (brightnessLayer == null || !brightnessLayer.IsMouseCaptured)
-				CursorPosition = GetPositionFromColor (newColor);
+			if (this.brightnessLayer == null || !(this.brightnessLayer.IsMouseCaptured))
+				CursorPosition = GetPositionFromShade (newShade);
 		}
 
 		static void OnHuePropertyChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
@@ -103,12 +122,13 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnHueChanged (CommonColor newHue)
 		{
-			if (saturationLayer == null) return;
-			var newBrush = (LinearGradientBrush)saturationLayer.Fill.Clone ();
+			// OnHueChanged may be called before the template is applied, so the layer may not yet be available.
+			if (this.saturationLayer == null) return;
+			var newBrush = (LinearGradientBrush)this.saturationLayer.Fill.Clone ();
 			GradientStopCollection gradientStops = newBrush.GradientStops;
 			gradientStops.RemoveAt (1);
-			gradientStops.Add (new GradientStop (System.Windows.Media.Color.FromRgb (newHue.R, newHue.G, newHue.B), 1));
-			saturationLayer.Fill = newBrush;
+			gradientStops.Add (new GradientStop (Color.FromRgb (newHue.R, newHue.G, newHue.B), 1));
+			this.saturationLayer.Fill = newBrush;
 		}
 
 		/// <summary>
@@ -129,29 +149,31 @@ namespace Xamarin.PropertyEditing.Windows
 		/// </summary>
 		/// <param name="position">The position for which to infer the color</param>
 		/// <returns>The shade</returns>
-		CommonColor GetColorFromPosition (Point position)
+		CommonColor GetShadeFromPosition (Point position)
 		{
-			var saturation = position.X / saturationLayer.ActualWidth;
-			var brightness = 1 - position.Y / brightnessLayer.ActualHeight;
+			var saturation = position.X / this.saturationLayer.ActualWidth;
+			var brightness = 1 - position.Y / this.brightnessLayer.ActualHeight;
 
 			return CommonColor.FromHSB (HueColor.Hue, saturation, brightness);
 		}
 
 		/// <summary>
 		/// Finds a position on the shade chooser that corresponds to the passed-in
-		/// color.
+		/// shade.
 		/// </summary>
-		/// <param name="color">The color for which we want the coordinates</param>
+		/// <param name="shade">The shade for which we want the coordinates</param>
 		/// <returns>The coordinates of the shade in the shade chooser</returns>
-		Point GetPositionFromColor (CommonColor color)
+		Point GetPositionFromShade (CommonColor shade)
 		{
-			var brightness = color.Brightness;
-			var saturation = color.Saturation;
+			var brightness = shade.Brightness;
+			var saturation = shade.Saturation;
 
-			if (saturationLayer == null || brightnessLayer == null) return new Point (0, 0);
+			// OnHueChanged may be called before the template is applied, so the layer may not yet be available.
+			if (this.saturationLayer == null || this.brightnessLayer == null) return new Point (0, 0);
+
 			return new Point (
-				saturation * saturationLayer.ActualWidth + saturationLayer.Margin.Left ,
-				(1 - brightness) * brightnessLayer.ActualHeight + brightnessLayer.Margin.Top);
+				saturation * this.saturationLayer.ActualWidth + this.saturationLayer.Margin.Left ,
+				(1 - brightness) * this.brightnessLayer.ActualHeight + this.brightnessLayer.Margin.Top);
 		}
 	}
 }

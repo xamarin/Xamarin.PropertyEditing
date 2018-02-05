@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using Xamarin.PropertyEditing.Drawing;
@@ -23,27 +24,29 @@ namespace Xamarin.PropertyEditing.Windows
 
 			if (ViewModel == null) return;
 
-			colorSpacePicker = (ComboBox)GetTemplateChild ("colorSpacePicker");
+			this.colorSpacePicker = GetTemplateChild ("colorSpacePicker") as ComboBox;
+
+			if (this.colorSpacePicker == null)
+				throw new InvalidOperationException ($"{nameof (SolidBrushEditorControl)} is missing a child ComboBox named \"colorSpacePicker\"");
+
 			if (ViewModel.Solid.ColorSpaces == null || ViewModel.Solid.ColorSpaces.Count == 0) {
-				colorSpacePicker.Visibility = Visibility.Collapsed;
+				this.colorSpacePicker.Visibility = Visibility.Collapsed;
 			}
 
 			if (ViewModel.Property.CanWrite) {
 				// Handle color space changes
-				colorSpacePicker.SelectionChanged += (s, e) => {
+				this.colorSpacePicker.SelectionChanged += (s, e) => {
 					if (ViewModel != null && ViewModel.Value != null) {
 						ViewModel.Value = new CommonSolidBrush (ViewModel.Solid.Color, (string)e.AddedItems[0]);
 					}
 				};
 			}
 
-			AddHandler (CurrentColorCommitterControlBase.CommitCurrentColorEvent, new RoutedEventHandler((s, e) => {
-				ViewModel.Solid.CommitLastColor ();
-			}));
+			AddHandler (CurrentColorCommitterControlBase.CommitCurrentColorEvent,
+				new RoutedEventHandler((s, e) => ViewModel.Solid.CommitLastColor ()));
 
-			AddHandler (CurrentColorCommitterControlBase.CommitShadeEvent, new RoutedEventHandler ((s, e) => {
-				ViewModel.Solid.CommitShade ();
-			}));
+			AddHandler (CurrentColorCommitterControlBase.CommitHueEvent,
+				new RoutedEventHandler ((s, e) => ViewModel.Solid.CommitHue ()));
 		}
 	}
 }
