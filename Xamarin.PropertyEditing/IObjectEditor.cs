@@ -87,6 +87,11 @@ namespace Xamarin.PropertyEditing
 		/// <para>When <paramref name="value"/>'s <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Resource"/>,
 		/// the <see cref="ValueInfo{T}.ValueDescriptor"/> will be set to a <see cref="Resource"/> instance. Implementers
 		/// need not see whether the resource contains a value itself.</para>
+		/// <para>When the <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Local"/> and <see cref="ValueInfo{T}.Value"/>
+		/// is the same as the default value, implementers should consider unsetting the value such that the subsequent
+		/// <see cref="GetValueAsync{T}(IPropertyInfo, PropertyVariation)"/> would return <see cref="ValueSource.Default"/>
+		/// for <see cref="ValueInfo{T}.Source"/>. This allows users to clear the value for a property and have it remove
+		/// the attribute for XML backed platforms without having to issue an <see cref="ValueSource.Unset"/>.</para>
 		/// <para>Before the returned task completes, in order:
 		/// 1. <see cref="GetValueAsync{T}(IPropertyInfo, PropertyVariation)"/> must be able to retrieve the new value.
 		/// 2. <see cref="PropertyChanged"/> should fire with the appropriate property.

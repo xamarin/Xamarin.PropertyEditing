@@ -157,17 +157,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void OnClearValue ()
 		{
-			ValueSource clearSource = (Property.ValueSources.HasFlag (ValueSources.Default)) ? ValueSource.Default : ValueSource.Unset;
-
 			SetValue (new ValueInfo<TValue> {
-				Source = clearSource,
-				Value = default(TValue)
+				Source = ValueSource.Unset
 			});
 		}
 
 		private bool CanClearValue ()
 		{
-			return (ValueSource != ValueSource.Default && ValueSource != ValueSource.Unknown);
+			return (ValueSource != ValueSource.Default && ValueSource != ValueSource.Unset && ValueSource != ValueSource.Unknown);
 		}
 	}
 
