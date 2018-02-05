@@ -508,7 +508,7 @@ namespace Xamarin.PropertyEditing.Drawing
 
 		public override string ToString ()
 		{
-			return $"{{R: {R}, G: {G}, B: {B}, A: {A}}}";
+			return $"#{A:X2}{R:X2}{G:X2}{B:X2}";
 		}
 	}
 }
