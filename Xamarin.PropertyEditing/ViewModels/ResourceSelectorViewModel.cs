@@ -55,16 +55,44 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		public bool ShowSystemResources
+		public bool ShowOnlySystemResources
 		{
-			get {  return this.showSystemResources; }
+			get {  return this.showOnlySystemResources; }
 			set
 			{
-				if (this.showSystemResources == value)
+				if (!SetOnlySystemResources (value))
 					return;
 
-				this.showSystemResources = value;
-				OnPropertyChanged();
+				SetOnlyLocalResources (false);
+				SetBothResourceTypes (false);
+				UpdateResourceFilter();
+			}
+		}
+
+		public bool ShowBothResourceTypes
+		{
+			get {  return this.showBothResourceTypes; }
+			set
+			{
+				if (!SetBothResourceTypes (value))
+					return;
+
+				SetOnlyLocalResources (false);
+				SetOnlySystemResources (false);
+				UpdateResourceFilter();
+			}
+		}
+
+		public bool ShowOnlyLocalResources
+		{
+			get {  return this.showOnlyLocalResources; }
+			set
+			{
+				if (!SetOnlyLocalResources (value))
+					return;
+
+				SetOnlySystemResources (false);
+				SetBothResourceTypes (false);
 				UpdateResourceFilter();
 			}
 		}
@@ -85,18 +113,51 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private readonly ObservableCollectionEx<Resource> resources = new ObservableCollectionEx<Resource>();
 		private readonly SimpleCollectionView resourcesView;
-		private bool showSystemResources = true, isLoading;
+		private bool showOnlySystemResources = false, showOnlyLocalResources = false, showBothResourceTypes = true, isLoading;
 		private string filterText;
 		private readonly object[] targets;
 
+		private bool SetOnlyLocalResources (bool value)
+		{
+			if (this.showOnlyLocalResources == value)
+				return false;
+
+			this.showOnlyLocalResources = value;
+			OnPropertyChanged();
+			return true;
+		}
+
+		private bool SetOnlySystemResources (bool value)
+		{
+			if (this.showOnlySystemResources == value)
+				return false;
+
+			this.showOnlySystemResources = value;
+			OnPropertyChanged();
+			return true;
+		}
+
+		private bool SetBothResourceTypes (bool value)
+		{
+			if (this.showBothResourceTypes == value)
+				return false;
+
+			this.showBothResourceTypes = value;
+			OnPropertyChanged();
+			return true;
+		}
+
 		private void UpdateResourceFilter()
 		{
-			if (String.IsNullOrWhiteSpace (FilterText) && ShowSystemResources) {
+			if (String.IsNullOrWhiteSpace (FilterText) && ShowBothResourceTypes) {
 				this.resourcesView.Options.Filter = null;
 				return;
 			}
 
-			this.resourcesView.Options.Filter = ResourceFilter;
+			if (this.resourcesView.Options.Filter != ResourceFilter)
+				this.resourcesView.Options.Filter = ResourceFilter;
+			else
+				this.resourcesView.UpdateFilter();
 		}
 
 		private bool ResourceFilter (object item)
@@ -104,7 +165,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			var r = (Resource)item;
 			if (!String.IsNullOrWhiteSpace (FilterText) && !r.Name.StartsWith (FilterText, StringComparison.OrdinalIgnoreCase))
 				return false;
-			if (!ShowSystemResources && !r.Source.IsLocal)
+			if (ShowOnlySystemResources && r.Source.IsLocal)
+				return false;
+			if (ShowOnlyLocalResources && !r.Source.IsLocal)
 				return false;
 
 			return true;
