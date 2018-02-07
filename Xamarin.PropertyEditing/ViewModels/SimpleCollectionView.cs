@@ -112,6 +112,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool IsFiltering => Options?.Filter != null;
 
+		/// <summary>
+		/// Forces an update of the contens as if the filter has changed.
+		/// </summary>
+		/// <remarks>
+		/// Some filters may not change their delegate, but that delegate may act different based on outside forces.
+		/// In that scenario, call this to trigger the update.
+		/// </remarks>
+		public void UpdateFilter()
+		{
+			FilterCore (isPureSubset: this.wasFilterNull);
+			this.wasFilterNull = Options.Filter == null;
+		}
+
 		public IEnumerator GetEnumerator ()
 		{
 			bool haveChildren = (Options.ChildOptions != null);
@@ -202,8 +215,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private void OnOptionsPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == nameof(SimpleCollectionViewOptions.Filter)) {
-				FilterCore (isPureSubset: this.wasFilterNull);
-				this.wasFilterNull = Options.Filter == null;
+				UpdateFilter();
 			} else
 				Reset();
 		}

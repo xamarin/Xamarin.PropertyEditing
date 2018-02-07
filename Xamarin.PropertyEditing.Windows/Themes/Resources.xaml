@@ -427,6 +427,49 @@
 	<local:CommonBrushToBrushConverter x:Key="BrushConverter" />
 	<local:CommonColorToColorConverter x:Key="ColorConverter" />
 
+	<Style x:Key="LargeResourcePreview" TargetType="ContentPresenter">
+		<Style.Resources>
+			<DataTemplate DataType="{x:Type drawing:CommonColor}">
+				<local:BrushBoxControl BorderThickness="0">
+					<local:BrushBoxControl.Brush>
+						<SolidColorBrush Color="{Binding Converter={StaticResource ColorConverter}}" />
+					</local:BrushBoxControl.Brush>
+				</local:BrushBoxControl>
+			</DataTemplate>
+			<DataTemplate DataType="{x:Type drawing:CommonBrush}">
+				<local:BrushBoxControl BorderThickness="0" Brush="{Binding Converter={StaticResource BrushConverter}}" />
+			</DataTemplate>
+		</Style.Resources>
+	</Style>
+
+	<Style x:Key="ComplexResourcePreview" TargetType="ContentPresenter">
+		<Style.Resources>
+			<DataTemplate DataType="{x:Type drawing:CommonColor}">
+				<StackPanel Orientation="Horizontal">
+					<local:BrushBoxControl Margin="4" Height="14" Width="26" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1">
+						<local:BrushBoxControl.Brush>
+							<SolidColorBrush Color="{Binding Converter={StaticResource ColorConverter}}" />
+						</local:BrushBoxControl.Brush>
+					</local:BrushBoxControl>
+
+					<TextBlock Margin="4" VerticalAlignment="Center" Text="{Binding Mode=OneTime}" />
+				</StackPanel>
+			</DataTemplate>
+			<DataTemplate DataType="{x:Type drawing:CommonSolidBrush}">
+				<StackPanel Orientation="Horizontal">
+					<local:BrushBoxControl Margin="4" Height="14" Width="26" Brush="{Binding Converter={StaticResource BrushConverter}}"  BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1" />
+					<TextBlock Margin="4" Text="{Binding Color,Mode=OneTime}" VerticalAlignment="Center" />
+				</StackPanel>
+			</DataTemplate>
+			<DataTemplate DataType="{x:Type drawing:CommonImageBrush}">
+				<TextBlock Margin="4" Text="{Binding ImageSource,Mode=OneTime}" />
+			</DataTemplate>
+			<DataTemplate DataType="{x:Type system:String}">
+				<TextBlock Margin="4" Text="{Binding Mode=OneTime}" />
+			</DataTemplate>
+		</Style.Resources>
+	</Style>
+
 	<DataTemplate x:Key="SimpleResourcePreviewItem">
 		<DataTemplate.Resources>
 			<DataTemplate DataType="{x:Type drawing:CommonColor}">

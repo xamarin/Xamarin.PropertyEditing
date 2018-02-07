@@ -1,5 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<SolidColorBrush x:Key="FocusVisualBorderBrush">#FF999999</SolidColorBrush>
+
 	<SolidColorBrush x:Key="ListBackgroundBrush">#252526</SolidColorBrush>
 	<SolidColorBrush x:Key="PanelBackgroundBrush">#252526</SolidColorBrush>
 	<SolidColorBrush x:Key="PanelForegroundBrush">#F1F1F1</SolidColorBrush>
