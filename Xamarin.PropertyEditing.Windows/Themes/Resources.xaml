@@ -309,19 +309,19 @@
 						</Grid.RowDefinitions>
 
 						<Border Grid.Column="0" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource LeftThicknessGeometry}" />
+							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource LeftThicknessGeometry}" AutomationProperties.Name="Left" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Left}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Left" />
 						<Border Grid.Column="1" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource RightThicknessGeometry}" />
+							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource RightThicknessGeometry}" AutomationProperties.Name="Right" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Right}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Right" />
 						<Border Grid.Column="0" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource TopThicknessGeometry}" />
+							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource TopThicknessGeometry}" AutomationProperties.Name="Top"/>
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Top}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Top" />
 						<Border Grid.Column="1" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource BottomThicknessGeometry}" />
+							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource BottomThicknessGeometry}" AutomationProperties.Name="Bottom"/>
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Bottom}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Bottom" />
 					</Grid>
