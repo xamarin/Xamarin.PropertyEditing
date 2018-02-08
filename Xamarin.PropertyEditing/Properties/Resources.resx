@@ -339,7 +339,7 @@
   </data>
   <data name="SelectObjectTitle" xml:space="preserve">
     <value>Select Object</value>
-  </data>  
+  </data>
   <data name="CustomExpression" xml:space="preserve">
     <value>Custom expression</value>
   </data>
@@ -357,5 +357,17 @@
   </data>
   <data name="ResourceEllipsis" xml:space="preserve">
     <value>Resource…</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Inherited" xml:space="preserve">
+    <value>Inherited</value>
+  </data>
+  <data name="Local" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="Unset" xml:space="preserve">
+    <value>Unset</value>
   </data>
 </root>

@@ -134,19 +134,29 @@ namespace Xamarin.PropertyEditing.Windows
 			switch (source) {
 				case ValueSource.Local:
 					brush = "PropertyLocalValueBrush";
+					ToolTip = Properties.Resources.Local;
 					break;
 				case ValueSource.Binding:
 					brush = "PropertyBoundValueBrush";
 					break;
 				case ValueSource.Inherited:
+					brush = "PropertyResourceBrush";
+					ToolTip = Properties.Resources.Inherited;
+					break;
 				case ValueSource.DefaultStyle:
 				case ValueSource.Style:
 				case ValueSource.Resource:
+					ToolTip = null;
 					brush = "PropertyResourceBrush";
 					break;
 
 				case ValueSource.Default:
+					ToolTip = Properties.Resources.Default;
+					this.indicator.ClearValue (Shape.FillProperty);
+					return;
+
 				case ValueSource.Unset:
+					ToolTip = Properties.Resources.Unset;
 					this.indicator.ClearValue (Shape.FillProperty);
 					return;
 			}
