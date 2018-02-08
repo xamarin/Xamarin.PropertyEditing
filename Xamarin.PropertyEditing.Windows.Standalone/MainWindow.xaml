@@ -1,4 +1,4 @@
-﻿<Window x:Class="Xamarin.PropertyEditing.Windows.Standalone.MainWindow"
+<Window x:Class="Xamarin.PropertyEditing.Windows.Standalone.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -20,9 +20,12 @@
 			<RowDefinition />
 			<RowDefinition />
 		</Grid.RowDefinitions>
-        <RadioButton Grid.Row="0" Grid.Column="0" Click="Theme_Click" IsChecked="True">Dark Theme</RadioButton>
-        <RadioButton Grid.Row="0" Grid.Column="1" Click="Theme_Click">Light Theme</RadioButton>
-        <local:MockedSampleControlButton Grid.Row="1" Grid.Column="0" Click="Button_Click">Mocked Sample 1</local:MockedSampleControlButton>
+		<StackPanel  Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+			<RadioButton GroupName="theme" Padding="5, 0, 20, 0" Click="Theme_Click" IsChecked="True">Dark Theme</RadioButton>
+			<RadioButton GroupName="theme" Padding="5, 0, 20, 0" Click="Theme_Click">Light Theme</RadioButton>
+			<RadioButton GroupName="theme" Padding="5, 0, 20, 0" Click="Theme_Click">No Theme</RadioButton>
+		</StackPanel>
+		<local:MockedSampleControlButton Grid.Row="1" Grid.Column="0" Click="Button_Click">Mocked Sample 1</local:MockedSampleControlButton>
 		<local:MockedSampleControlButton Grid.Row="2" Grid.Column="0" Click="Button_Click">Mocked Sample 2</local:MockedSampleControlButton>
 		<local:MockedWpfButton Grid.Row="3" Grid.Column="0" Click="Button_Click">Mocked WPF button</local:MockedWpfButton>
 		<Button Grid.Row="4" Grid.Column="0" Click="Button_Click">Actual WPF button</Button>

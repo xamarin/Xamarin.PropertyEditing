@@ -50,10 +50,16 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 		{
 			var rb = e.Source as RadioButton;
 			if (rb != null) {
-				if (rb.Content.ToString ().Equals ("Dark Theme")) {
-					PropertyEditorPanel.ThemeManager.Theme = PropertyEditing.Themes.PropertyEditorTheme.Dark;
-				} else {
+				switch (rb.Content.ToString()) {
+				case "Dark Theme":
+				PropertyEditorPanel.ThemeManager.Theme = PropertyEditing.Themes.PropertyEditorTheme.Dark;
+					break;
+				case "Light Theme":
 					PropertyEditorPanel.ThemeManager.Theme = PropertyEditing.Themes.PropertyEditorTheme.Light;
+					break;
+				default:
+					PropertyEditorPanel.ThemeManager.Theme = PropertyEditing.Themes.PropertyEditorTheme.None;
+					break;
 				}
 			}
 		}

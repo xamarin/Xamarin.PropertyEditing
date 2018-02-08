@@ -4,5 +4,6 @@ namespace Xamarin.PropertyEditing.Themes
 	{
 		Dark,
 		Light,
+		None,
 	}
 }

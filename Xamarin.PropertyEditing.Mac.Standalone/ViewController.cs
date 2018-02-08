@@ -56,6 +56,9 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 				case 1:
 					PropertyEditorPanel.ThemeManager.Theme = Themes.PropertyEditorTheme.Light;
 					break;
+				case 2:
+					PropertyEditorPanel.ThemeManager.Theme = Themes.PropertyEditorTheme.None;
+					break;
 			}
 		}
 	}
