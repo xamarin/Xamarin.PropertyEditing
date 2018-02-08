@@ -137,6 +137,13 @@ namespace Xamarin.PropertyEditing.Tests
 			if (variation != null)
 				throw new NotSupportedException(); // TODO
 
+			value = new ValueInfo<T> {
+				CustomExpression = value.CustomExpression,
+				Source = value.Source,
+				ValueDescriptor = value.ValueDescriptor,
+				Value = value.Value
+			};
+
 			if (value.Source != ValueSource.Local && ValueEvaluator != null) {
 				value.Value = (T)ValueEvaluator (property, value.ValueDescriptor);
 			} else if (value.Source == ValueSource.Unset || (SupportsDefault && Equals (value.Value, default(T))) && value.ValueDescriptor == null) {
@@ -180,9 +187,14 @@ namespace Xamarin.PropertyEditing.Tests
 			object value;
 			if (this.values.TryGetValue (property, out value)) {
 				var info = value as ValueInfo<T>;
-				if (info != null)
-					return info;
-				else if (value == null || value is T) {
+				if (info != null) {
+					return new ValueInfo<T> {
+						CustomExpression = info.CustomExpression,
+						Source = info.Source,
+						ValueDescriptor = info.ValueDescriptor,
+						Value = info.Value
+					};
+				} else if (value == null || value is T) {
 					return new ValueInfo<T> {
 						Value = (T)value,
 						Source = ValueSource.Local
