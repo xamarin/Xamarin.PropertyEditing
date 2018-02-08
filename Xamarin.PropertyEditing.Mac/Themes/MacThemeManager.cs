@@ -9,7 +9,7 @@ namespace Xamarin.PropertyEditing.Themes
 		public NSAppearance CurrentAppearance { get; private set; }
 
 		NSAppearance DarkAppearance = NSAppearance.GetAppearance (NSAppearance.NameVibrantDark);
-		NSAppearance LightAppearance = NSAppearance.GetAppearance (NSAppearance.NameAqua);
+		NSAppearance LightAppearance = NSAppearance.GetAppearance (NSAppearance.NameVibrantLight);
 
 		protected override void SetTheme ()
 		{
@@ -20,6 +20,10 @@ namespace Xamarin.PropertyEditing.Themes
 
 				case PropertyEditorTheme.Light:
 					CurrentAppearance = LightAppearance;
+					break;
+
+				case PropertyEditorTheme.None:
+					CurrentAppearance = NSAppearance.CurrentAppearance;
 					break;
 			}
 		}

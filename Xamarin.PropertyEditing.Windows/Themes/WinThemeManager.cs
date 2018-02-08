@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -32,6 +32,11 @@ namespace Xamarin.PropertyEditing.Themes
 				case PropertyEditorTheme.Light:
 					Application.Current.Resources.MergedDictionaries.Remove (dark);
 					Application.Current.Resources.MergedDictionaries.Add (light);
+					break;
+
+				case PropertyEditorTheme.None:
+					Application.Current.Resources.MergedDictionaries.Remove (dark);
+					Application.Current.Resources.MergedDictionaries.Remove (light);
 					break;
 			}
 		}
