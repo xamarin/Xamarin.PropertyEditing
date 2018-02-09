@@ -33,12 +33,6 @@ namespace Xamarin.PropertyEditing.Tests
 			Target = control;
 		}
 
-		public bool SupportsDefault
-		{
-			get;
-			set;
-		}
-
 		public object Target
 		{
 			get;
@@ -146,7 +140,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			if (value.Source != ValueSource.Local && ValueEvaluator != null) {
 				value.Value = (T)ValueEvaluator (property, value.ValueDescriptor);
-			} else if (value.Source == ValueSource.Unset || (SupportsDefault && Equals (value.Value, default(T))) && value.ValueDescriptor == null) {
+			} else if (value.Source == ValueSource.Unset || (property.ValueSources.HasFlag (ValueSources.Default) && Equals (value.Value, default(T))) && value.ValueDescriptor == null) {
 				this.values.Remove (property);
 				PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
 				return;
@@ -219,7 +213,7 @@ namespace Xamarin.PropertyEditing.Tests
 			}
 
 			return new ValueInfo<T> {
-				Source = (SupportsDefault) ? ValueSource.Default : ValueSource.Unset,
+				Source = (property.ValueSources.HasFlag (ValueSources.Default)) ? ValueSource.Default : ValueSource.Unset,
 				Value = default(T)
 			};
 		}

@@ -655,7 +655,6 @@ namespace Xamarin.PropertyEditing.Tests
 			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
 
 			var mockEditor = new MockObjectEditor {
-				SupportsDefault = true,
 				Properties = new [] {
 					mockProperty.Object
 				}
