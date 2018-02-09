@@ -343,6 +343,18 @@ namespace Xamarin.PropertyEditing.Tests
 			}
 		}
 
+		
+		[Flags]
+
+		internal enum FlagsTestEnum
+		{
+			None = 0,
+			Flag1 = 1,
+			Flag2 = 2,
+			Flag3 = 4,
+			Flag4 = 8
+		}
+
 		private class EnumClass
 		{
 			public FlagsTestEnum Value

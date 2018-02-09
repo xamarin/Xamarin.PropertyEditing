@@ -364,6 +364,9 @@
   <data name="Inherited" xml:space="preserve">
     <value>Inherited</value>
   </data>
+  <data name="InvalidValue" xml:space="preserve">
+    <value>{0} is an Invalid Value</value>
+  </data>
   <data name="Local" xml:space="preserve">
     <value>Local</value>
   </data>

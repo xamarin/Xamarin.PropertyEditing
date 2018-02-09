@@ -48,7 +48,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:EnumEditorControl}">
-					<ComboBox x:Name="ComboBox" ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding ValueName}" VerticalContentAlignment="Center" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+					<ComboBox x:Name="ComboBox" ItemsSource="{Binding PossibleValues,Mode=OneTime}" SelectedItem="{Binding ValueName}" IsEditable="{Binding IsConstrainedToPredefined,Mode=OneTime,Converter={StaticResource OppositeBoolConverter}}" VerticalContentAlignment="Center" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

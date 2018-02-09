@@ -112,7 +112,6 @@
     <Compile Include="ViewModels\SimpleCollectionView.cs" />
     <Compile Include="ViewModels\ConstrainedPropertyViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
-    <Compile Include="ViewModels\EnumPropertyViewModel.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ViewModels\EventViewModel.cs" />
     <Compile Include="ViewModels\IFilterable.cs" />
@@ -137,9 +136,6 @@
     <Compile Include="Controls\ValidationType.cs" />
     <Compile Include="Controls\FieldValidation.cs" />
     <Compile Include="Controls\StringConversionExtensions.cs" />
-    <Compile Include="Resources\LocalizationResources.Designer.cs">
-      <DependentUpon>LocalizationResources.resx</DependentUpon>
-    </Compile>
     <Compile Include="ViewModels\RectanglePropertyViewModel.cs" />
     <Compile Include="ViewModels\ThicknessPropertyViewModel.cs" />
     <Compile Include="ViewModels\TypeSelectorViewModel.cs" />
@@ -155,10 +151,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.*.resx">
       <Visible>false</Visible>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\LocalizationResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>LocalizationResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

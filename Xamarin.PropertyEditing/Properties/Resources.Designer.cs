@@ -183,10 +183,10 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string CurrentColor {
             get {
                 return ResourceManager.GetString("CurrentColor", resourceCulture);
-	    }
-	}
-
-	/// <summary>
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom expression.
         /// </summary>
         public static string CustomExpression {
@@ -354,6 +354,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string InitialColor {
             get {
                 return ResourceManager.GetString("InitialColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is an Invalid Value.
+        /// </summary>
+        public static string InvalidValue {
+            get {
+                return ResourceManager.GetString("InvalidValue", resourceCulture);
             }
         }
         
