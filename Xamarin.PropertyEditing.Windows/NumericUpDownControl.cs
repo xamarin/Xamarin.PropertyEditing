@@ -31,16 +31,6 @@ namespace Xamarin.PropertyEditing.Windows
 
 			return Double.TryParse (text, out value);
 		}
-
-		protected override double GetIncrementedValue (double value)
-		{
-			return value + 1;
-		}
-
-		protected override double GetDecrementedValue (double value)
-		{
-			return value - 1;
-		}
 	}
 
 	internal class IntegerUpDownControl
@@ -57,16 +47,6 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			return Int64.TryParse (text, out value);
 		}
-
-		protected override long GetIncrementedValue (long value)
-		{
-			return value + 1;
-		}
-
-		protected override long GetDecrementedValue (long value)
-		{
-			return value - 1;
-		}
 	}
 
 	internal class ByteUpDownControl
@@ -82,16 +62,6 @@ namespace Xamarin.PropertyEditing.Windows
 		protected override bool TryParse (string text, out byte value)
 		{
 			return byte.TryParse (text, out value);
-		}
-
-		protected override byte GetIncrementedValue (byte value)
-		{
-			return (byte)(value + 1);
-		}
-
-		protected override byte GetDecrementedValue (byte value)
-		{
-			return (byte)(value - 1);
 		}
 	}
 
@@ -156,8 +126,16 @@ namespace Xamarin.PropertyEditing.Windows
 			return v;
 		}
 
-		protected abstract T GetIncrementedValue (T value);
-		protected abstract T GetDecrementedValue (T value);
+		protected T GetIncrementedValue (T value)
+		{
+			return Numeric<T>.Increment (value);
+		}
+
+		protected T GetDecrementedValue (T value)
+		{
+			return Numeric<T>.Decrement (value);
+		}
+
 		protected abstract bool TryParse (string text, out T value);
 
 		protected override void OnPreviewKeyDown (KeyEventArgs e)

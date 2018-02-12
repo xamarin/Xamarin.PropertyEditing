@@ -16,20 +16,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.selfConstraint = property as ISelfConstrainedPropertyInfo<T>;
 			this.clampProperties = property as IClampedPropertyInfo;
 
-			this.raiseValue = new RelayCommand (() => {
-				Value = IncrementValue (Value);
-			}, () => {
-				T value = IncrementValue (Value);
-				return value.CompareTo (ValidateValue (value)) == 0;
-			});
-
-			this.lowerValue = new RelayCommand(() => {
-				Value = DecrementValue (Value);
-			}, () => {
-				T value = DecrementValue (Value);
-				return value.CompareTo (ValidateValue (value)) == 0;
-			});
-
 		    UpdateMaxMin ();
 		}
 
@@ -45,7 +31,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				this.maximumValue = value;
 				OnPropertyChanged();
-				this.raiseValue.ChangeCanExecute ();
 			}
 		}
 
@@ -59,13 +44,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				this.minimumValue = value;
 				OnPropertyChanged();
-				this.lowerValue.ChangeCanExecute();
 			}
 		}
-
-		public ICommand RaiseValue => this.raiseValue;
-
-		public ICommand LowerValue => this.lowerValue;
 
 		protected override T ValidateValue (T validationValue)
 		{
@@ -79,19 +59,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			return validationValue;
 		}
-
-		protected override void OnValueChanged ()
-		{
-			base.OnValueChanged ();
-
-			if (this.lowerValue != null) {
-				this.lowerValue.ChangeCanExecute ();
-				this.raiseValue.ChangeCanExecute ();
-			}
-		}
-
-		protected abstract T IncrementValue (T value);
-		protected abstract T DecrementValue (T value);
 
 		protected override void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
 		{
@@ -137,7 +104,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 	        MinimumValue = min;
 	    }
 
-		private readonly RelayCommand raiseValue, lowerValue;
 	    private readonly IClampedPropertyInfo clampProperties;
 		private readonly ISelfConstrainedPropertyInfo<T> selfConstraint;
 		private T maximumValue;

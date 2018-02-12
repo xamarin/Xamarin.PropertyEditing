@@ -31,10 +31,6 @@ namespace Xamarin.PropertyEditing.Tests
 
 			vm.Value = value;
 			Assume.That (vm.Value, Is.EqualTo (value));
-
-			Assume.That (vm.RaiseValue, Is.Not.Null);
-			Assert.That (vm.RaiseValue.CanExecute (null), Is.True, "RaiseValue can not execute");
-			Assert.That (vm.LowerValue.CanExecute (null), Is.True, "LowerValue can not execute");
 		}
 
 		[Test]
@@ -55,10 +51,6 @@ namespace Xamarin.PropertyEditing.Tests
 
 			vm.Value = value;
 			Assert.That (vm.Value, Is.EqualTo (min));
-
-			Assume.That (vm.RaiseValue, Is.Not.Null);
-			Assert.That (vm.RaiseValue.CanExecute (null), Is.True, "Should be able to RaiseValue");
-			Assert.That (vm.LowerValue.CanExecute (null), Is.False, "Should not be able to LowerValue");
 		}
 
 		[Test]
@@ -79,10 +71,6 @@ namespace Xamarin.PropertyEditing.Tests
 
 			vm.Value = value;
 			Assert.That (vm.Value, Is.EqualTo (max));
-
-			Assume.That (vm.RaiseValue, Is.Not.Null);
-			Assert.That (vm.RaiseValue.CanExecute (null), Is.False, "Should not be able to RaiseValue");
-			Assert.That (vm.LowerValue.CanExecute (null), Is.True, "Should be able to LowerValue");
 		}
 
 		[Test]
@@ -121,7 +109,7 @@ namespace Xamarin.PropertyEditing.Tests
 		protected abstract T GetConstrainedRandomValueAboveBounds (Random rand, out T max, out T min);
 		protected abstract T GetConstrainedRandomValueBelowBounds (Random rand, out T max, out T min);
 
-		protected ConstrainedPropertyViewModel<T> GetViewModel (IPropertyInfo property, IObjectEditor editor)
+		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
 		{
 			return GetViewModel (property, new[] { editor });
 		}

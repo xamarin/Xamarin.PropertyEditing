@@ -7,7 +7,7 @@ namespace Xamarin.PropertyEditing.Tests
 {
 	[TestFixture]
 	internal class IntegerPropertyViewModelTests
-		: ConstrainedPropertyViewModelTests<long, IntegerPropertyViewModel>
+		: NumericViewModelTests<long>
 	{
 		protected override Tuple<long, long> MaxMin => new Tuple<long, long> (Int64.MaxValue, Int64.MinValue);
 
@@ -42,9 +42,9 @@ namespace Xamarin.PropertyEditing.Tests
 			return value;
 		}
 
-		protected override IntegerPropertyViewModel GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override NumericPropertyViewModel<long> GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new IntegerPropertyViewModel (platform, property, editors);
+			return new NumericPropertyViewModel<long> (platform, property, editors);
 		}
 	}
 }
