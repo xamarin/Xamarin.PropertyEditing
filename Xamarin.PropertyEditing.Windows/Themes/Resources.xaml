@@ -242,12 +242,18 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:PointEditorControl">
-                    <StackPanel Name="StackPanel" Orientation="Horizontal">
-                        <Label Name="XLabel" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="X" />
-                        <local:DoubleUpDownControl x:Name="XTextBox" Value="{Binding X}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=XLabel,Mode=OneTime}"/>
-                        <Label Name="YLabel" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="Y" />
-                        <local:DoubleUpDownControl x:Name="YTextBox" Value="{Binding Y}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=YLabel,Mode=OneTime}" />
-                    </StackPanel>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Label Grid.Column="0" Name="XLabel" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="X" />
+						<local:DoubleUpDownControl Grid.Column="1" x:Name="XTextBox" Value="{Binding X}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=XLabel,Mode=OneTime}"/>
+						<Label Grid.Column="2" Name="YLabel" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="Y" />
+						<local:DoubleUpDownControl Grid.Column="3" x:Name="YTextBox" Value="{Binding Y}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=YLabel,Mode=OneTime}" />
+					</Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
