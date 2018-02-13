@@ -127,11 +127,31 @@ namespace Xamarin.PropertyEditing.Tests
 			var vm = GetBasicTestModel (value);
 			Assume.That (vm.Value, Is.EqualTo (value));
 
-			var editor = GetBasicEditor (otherValue);
+			var editor = GetBasicEditor (otherValue, vm.Property);
 			vm.Editors.Add (editor);
 
 			Assert.That (vm.Value, Is.EqualTo (default(TValue)));
 			Assert.That (vm.MultipleValues, Is.True);
+		}
+
+		[Test]
+		public void MultipleValuesDontMatchButSourcesDo ()
+		{
+			TValue value = GetNonDefaultRandomTestValue ();
+			TValue otherValue = GetRandomTestValue ();
+			while (Equals (otherValue, value))
+				otherValue = GetRandomTestValue ();
+
+			var vm = GetBasicTestModel (value);
+			Assume.That (vm.Value, Is.EqualTo (value));
+
+			var editor = GetBasicEditor (otherValue, vm.Property);
+			vm.Editors.Add (editor);
+
+			Assume.That (vm.Value, Is.EqualTo (default(TValue)));
+			Assume.That (vm.MultipleValues, Is.True);
+
+			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
 		}
 
 		[Test]
@@ -635,7 +655,6 @@ namespace Xamarin.PropertyEditing.Tests
 			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
 
 			var mockEditor = new MockObjectEditor {
-				SupportsDefault = true,
 				Properties = new [] {
 					mockProperty.Object
 				}

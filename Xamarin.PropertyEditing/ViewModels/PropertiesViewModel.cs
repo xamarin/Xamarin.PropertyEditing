@@ -446,9 +446,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (hasPredefinedValues != null) {
 				Type type = typeof(PredefinedValuesViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0]);
 				return (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors);
-			} else if (property.Type.IsEnum) {
-				Type type = typeof(EnumPropertyViewModel<>).MakeGenericType (property.Type);
-				return (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors);
 			} else if (property.Type == typeof(object)) {
 				return new ObjectPropertyViewModel (EditorProvider, TargetPlatform, property, this.objEditors);
 			}

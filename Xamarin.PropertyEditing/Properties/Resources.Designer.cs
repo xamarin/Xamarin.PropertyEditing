@@ -183,10 +183,10 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string CurrentColor {
             get {
                 return ResourceManager.GetString("CurrentColor", resourceCulture);
-	    }
-	}
-
-	/// <summary>
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom expression.
         /// </summary>
         public static string CustomExpression {
@@ -228,6 +228,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string CyanMagentaYellowBlack {
             get {
                 return ResourceManager.GetString("CyanMagentaYellowBlack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        public static string Default {
+            get {
+                return ResourceManager.GetString("Default", resourceCulture);
             }
         }
         
@@ -331,11 +340,29 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inherited.
+        /// </summary>
+        public static string Inherited {
+            get {
+                return ResourceManager.GetString("Inherited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initial color.
         /// </summary>
         public static string InitialColor {
             get {
                 return ResourceManager.GetString("InitialColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is an Invalid Value.
+        /// </summary>
+        public static string InvalidValue {
+            get {
+                return ResourceManager.GetString("InvalidValue", resourceCulture);
             }
         }
         
@@ -363,6 +390,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string LightnessInitial {
             get {
                 return ResourceManager.GetString("LightnessInitial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local.
+        /// </summary>
+        public static string Local {
+            get {
+                return ResourceManager.GetString("Local", resourceCulture);
             }
         }
         
@@ -633,6 +669,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string Type {
             get {
                 return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unset.
+        /// </summary>
+        public static string Unset {
+            get {
+                return ResourceManager.GetString("Unset", resourceCulture);
             }
         }
         

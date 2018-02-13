@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cadenza.Collections;
-using Xamarin.PropertyEditing.Resources;
+using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -16,41 +15,33 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (this.predefinedValues == null)
 				throw new ArgumentException (nameof(property) + " did not have predefined values", nameof(property));
 
+			var list = new List<string> (this.predefinedValues.PredefinedValues.Keys);
+			// If we're constrained but can't use the default, we need a blank to represent default
+			if (this.predefinedValues.IsConstrainedToPredefined) {
+				if (!property.ValueSources.HasFlag (ValueSources.Default) || !TryGetValueName (default(TValue), out string defaultName)) {
+					if (!list.Contains (String.Empty)) {
+						this.supportUnset = true;
+						list.Insert (0, String.Empty);
+					}
+				}
+			}
+
+			PossibleValues = list;
 			UpdateValueName();
 		}
 
-		public IEnumerable<string> PossibleValues
+		public IReadOnlyList<string> PossibleValues
 		{
-			get { return this.predefinedValues.PredefinedValues.Keys; }
+			get;
 		}
 
 		public string ValueName
 		{
 			get { return this.valueName; }
-			set
-			{
-				if (value == this.valueName)
-					return;
-
-				TValue realValue;
-				if (!this.predefinedValues.PredefinedValues.TryGetValue (value, out realValue)) {
-					if (this.predefinedValues.IsConstrainedToPredefined) {
-						SetError (string.Format (LocalizationResources.InvalidValue, value)); 
-						return;
-					}
-
-					// TODO: Figure out where the conversion needs to happen
-				} else
-					Value = realValue;
-
-				this.valueName = value;
-				OnPropertyChanged ();
-			}
+			set { SetValue (value); }
 		}
 
 		public bool IsConstrainedToPredefined => this.predefinedValues.IsConstrainedToPredefined;
-
-		// TODO: Combination (flags) values
 
 		protected override TValue ValidateValue (TValue validationValue)
 		{
@@ -69,8 +60,34 @@ namespace Xamarin.PropertyEditing.ViewModels
 			UpdateValueName();
 		}
 
+		private bool supportUnset;
 		private string valueName;
 		private readonly IHavePredefinedValues<TValue> predefinedValues;
+
+		private async void SetValue (string value)
+		{
+			if (value == this.valueName)
+				return;
+
+			value = value ?? String.Empty;
+
+			TValue realValue;
+			if (!this.predefinedValues.PredefinedValues.TryGetValue (value, out realValue)) {
+				if (this.predefinedValues.IsConstrainedToPredefined && (!this.supportUnset || value != String.Empty)) {
+					SetError (String.Format (Properties.Resources.InvalidValue, value)); 
+					return;
+				}
+
+				await SetValueAsync (new ValueInfo<TValue> {
+					Source = ValueSource.Local,
+					ValueDescriptor = value
+				});
+			} else
+				Value = realValue;
+
+			this.valueName = value;
+			OnPropertyChanged ();
+		}
 
 		private bool IsValueDefined (TValue value)
 		{
@@ -93,8 +110,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void UpdateValueName ()
 		{
-			string newValueName;
-			if (TryGetValueName (Value, out newValueName)) {
+			if (ValueSource == ValueSource.Unset) {
+				this.valueName = String.Empty;
+				OnPropertyChanged (nameof(ValueName));
+			} else if (TryGetValueName (Value, out string newValueName)) {
 				this.valueName = newValueName;
 				OnPropertyChanged (nameof(ValueName));
 			}

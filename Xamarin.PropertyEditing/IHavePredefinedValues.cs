@@ -7,6 +7,10 @@ namespace Xamarin.PropertyEditing
 		/// <summary>
 		/// Gets whether the value should be constrained to those that are predefined.
 		/// </summary>
+		/// <remarks>
+		/// If this is <c>false</c>, <see cref="ValueInfo{T}.ValueDescriptor"/> should contain a string containing any
+		/// value that is not already handled or part of the <see cref="PredefinedValues"/> list.
+		/// </remarks>
 		bool IsConstrainedToPredefined { get; }
 
 		/// <summary>

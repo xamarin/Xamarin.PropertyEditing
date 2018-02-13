@@ -15,7 +15,7 @@ namespace Xamarin.PropertyEditing.Tests
 				return Task.FromResult (cachedEditor);
 			}
 			IObjectEditor editor = (item is MockControl mockControl)
-				? (IObjectEditor)(new MockObjectEditor (mockControl) { SupportsDefault = true })
+				? (IObjectEditor)(new MockObjectEditor (mockControl))
 				: new ReflectionObjectEditor (item);
 			this.editorCache.Add (item, editor);
 			return Task.FromResult (editor);

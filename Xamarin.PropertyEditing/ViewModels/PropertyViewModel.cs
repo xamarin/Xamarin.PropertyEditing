@@ -75,12 +75,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 				foreach (ValueInfo<TValue> valueInfo in values) {
 					if (currentValue == null)
 						currentValue = valueInfo;
-					else if (currentValue.Source != valueInfo.Source || !Equals (currentValue.Value, valueInfo.Value)) {
-						// Even if the value is the same, they are not equal if the source is not the same because
-						// it means the value is set differently at the source.
-						disagree = true;
-						currentValue = null;
-						break;
+					else {
+						if (currentValue.Source != valueInfo.Source) {
+							currentValue.Source = ValueSource.Default;
+							disagree = true;
+						}
+
+						if (!Equals (currentValue.Value, valueInfo.Value)) {
+							currentValue.Value = default(TValue);
+							disagree = true;
+						}
+
+						if (!Equals (currentValue.ValueDescriptor, valueInfo.ValueDescriptor)) {
+							currentValue.ValueDescriptor = null;
+							disagree = true;
+						}
 					}
 				}
 
@@ -91,25 +100,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		private ValueInfo<TValue> value;
-
-		private bool SetCurrentValue (ValueInfo<TValue> newValue)
-		{
-			if (this.value == newValue)
-				return false;
-
-			this.value = newValue;
-			OnValueChanged ();
-			OnPropertyChanged (nameof (Value));
-			OnPropertyChanged (nameof (ValueSource));
-			OnPropertyChanged (nameof (CustomExpression));
-
-			((RelayCommand) ClearValueCommand)?.ChangeCanExecute ();
-
-			return true;
-		}
-
-		private async void SetValue (ValueInfo<TValue> newValue)
+		protected async Task SetValueAsync (ValueInfo<TValue> newValue)
 		{
 			if (this.value == newValue)
 				return;
@@ -137,6 +128,29 @@ namespace Xamarin.PropertyEditing.ViewModels
 					SetError (ex.ToString ());
 				}
 			}
+		}
+
+		private ValueInfo<TValue> value;
+
+		private bool SetCurrentValue (ValueInfo<TValue> newValue)
+		{
+			if (this.value == newValue)
+				return false;
+
+			this.value = newValue;
+			OnValueChanged ();
+			OnPropertyChanged (nameof (Value));
+			OnPropertyChanged (nameof (ValueSource));
+			OnPropertyChanged (nameof (CustomExpression));
+
+			((RelayCommand) ClearValueCommand)?.ChangeCanExecute ();
+
+			return true;
+		}
+
+		private async void SetValue (ValueInfo<TValue> newValue)
+		{
+			await SetValueAsync (newValue);
 		}
 
 		private bool CanSetValueToResource (Resource resource)
