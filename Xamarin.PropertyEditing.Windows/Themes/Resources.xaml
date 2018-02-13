@@ -542,20 +542,14 @@
 		<local:BrushChoiceTemplateSelector.NoBrushTemplate>
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
-					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
-						<Polygon Points="0,0 24,0 0,14" Fill="{DynamicResource ToggleItemForegroundBrush}" StrokeThickness="0"/>
-						<Polygon Points="25,1 25,15 1,15" Fill="{DynamicResource ToggleItemForegroundBrush}" StrokeThickness="0"/>
-					</Canvas>
+					<ContentControl Content="{DynamicResource BrushChoiceNoBrushIcon}" MinHeight="10" MinWidth="15"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.NoBrushTemplate>
 		<local:BrushChoiceTemplateSelector.SolidBrushTemplate>
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
-					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20" Margin="4,4,0,0">
-						<Rectangle Canvas.Left="0" Canvas.Top="0" Width="25" Height="15" Stroke="{DynamicResource ToggleItemForegroundBrush}" StrokeThickness="1"/>
-						<Rectangle Canvas.Left="2" Canvas.Top="2" Width="21" Height="11" Fill="{DynamicResource ToggleItemForegroundBrush}" StrokeThickness="0"/>
-					</Canvas>
+					<ContentControl Content="{DynamicResource BrushChoiceSolidBrushIcon}" MinHeight="10" MinWidth="15"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.SolidBrushTemplate>
