@@ -16,6 +16,12 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 				colorSpaces: new[] { "RGB", "sRGB" });
 			MockedControl.AddProperty<CommonBrush> (this.brushPropertyInfo);
 
+			this.materialDesignBrushPropertyInfo = new BrushPropertyInfo (
+				name: "MaterialDesignBrush",
+				category: "Windows Only",
+				canWrite: true);
+			MockedControl.AddProperty<CommonBrush> (this.materialDesignBrushPropertyInfo);
+
 			this.readOnlyBrushPropertyInfo = new BrushPropertyInfo (
 				name: "ReadOnlySolidBrush",
 				category: "Windows Only",
@@ -30,6 +36,13 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 			this.brushSet = true;
 		}
 
+		public async Task SetMaterialDesignBrushInitialValueAsync (IObjectEditor editor, CommonBrush brush)
+		{
+			if (this.materialDesignBrushSet) return;
+			await editor.SetValueAsync (this.materialDesignBrushPropertyInfo, new ValueInfo<CommonBrush> { Value = brush });
+			this.materialDesignBrushSet = true;
+		}
+
 		public async Task SetReadOnlyBrushInitialValueAsync (IObjectEditor editor, CommonBrush brush)
 		{
 			if (this.readOnlyBrushSet) return;
@@ -38,8 +51,10 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 		}
 
 		private IPropertyInfo brushPropertyInfo;
+		private IPropertyInfo materialDesignBrushPropertyInfo;
 		private IPropertyInfo readOnlyBrushPropertyInfo;
 		private bool brushSet = false;
+		private bool materialDesignBrushSet = false;
 		private bool readOnlyBrushSet = false;
 	}
 }

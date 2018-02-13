@@ -16,6 +16,12 @@ namespace Xamarin.PropertyEditing.Windows
 			set;
 		}
 
+		public DataTemplate MaterialDesignBrushTemplate
+		{
+			get;
+			set;
+		}
+
 		public override DataTemplate SelectTemplate (object item, DependencyObject container)
 		{
 			if (item == null)
@@ -25,6 +31,7 @@ namespace Xamarin.PropertyEditing.Windows
 				var choice = choiceItem.Value as string;
 				if (choice == BrushTabbedEditorControl.None) return NoBrushTemplate;
 				if (choice == BrushTabbedEditorControl.Solid) return SolidBrushTemplate;
+				if (choice == BrushTabbedEditorControl.MaterialDesign) return MaterialDesignBrushTemplate;
 			}
 
 			return base.SelectTemplate (item, container);

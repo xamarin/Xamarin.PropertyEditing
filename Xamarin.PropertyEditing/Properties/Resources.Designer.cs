@@ -421,6 +421,186 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Amber.
+        /// </summary>
+        public static string MaterialColorAmber {
+            get {
+                return ResourceManager.GetString("MaterialColorAmber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blue.
+        /// </summary>
+        public static string MaterialColorBlue {
+            get {
+                return ResourceManager.GetString("MaterialColorBlue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blue Grey.
+        /// </summary>
+        public static string MaterialColorBlueGrey {
+            get {
+                return ResourceManager.GetString("MaterialColorBlueGrey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brown.
+        /// </summary>
+        public static string MaterialColorBrown {
+            get {
+                return ResourceManager.GetString("MaterialColorBrown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cyan.
+        /// </summary>
+        public static string MaterialColorCyan {
+            get {
+                return ResourceManager.GetString("MaterialColorCyan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deep Orange.
+        /// </summary>
+        public static string MaterialColorDeepOrange {
+            get {
+                return ResourceManager.GetString("MaterialColorDeepOrange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deep Purple.
+        /// </summary>
+        public static string MaterialColorDeepPurple {
+            get {
+                return ResourceManager.GetString("MaterialColorDeepPurple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Green.
+        /// </summary>
+        public static string MaterialColorGreen {
+            get {
+                return ResourceManager.GetString("MaterialColorGreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grey.
+        /// </summary>
+        public static string MaterialColorGrey {
+            get {
+                return ResourceManager.GetString("MaterialColorGrey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indigo.
+        /// </summary>
+        public static string MaterialColorIndigo {
+            get {
+                return ResourceManager.GetString("MaterialColorIndigo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Light Blue.
+        /// </summary>
+        public static string MaterialColorLightBlue {
+            get {
+                return ResourceManager.GetString("MaterialColorLightBlue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Light Green.
+        /// </summary>
+        public static string MaterialColorLightGreen {
+            get {
+                return ResourceManager.GetString("MaterialColorLightGreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lime.
+        /// </summary>
+        public static string MaterialColorLime {
+            get {
+                return ResourceManager.GetString("MaterialColorLime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orange.
+        /// </summary>
+        public static string MaterialColorOrange {
+            get {
+                return ResourceManager.GetString("MaterialColorOrange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pink.
+        /// </summary>
+        public static string MaterialColorPink {
+            get {
+                return ResourceManager.GetString("MaterialColorPink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Purple.
+        /// </summary>
+        public static string MaterialColorPurple {
+            get {
+                return ResourceManager.GetString("MaterialColorPurple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Red.
+        /// </summary>
+        public static string MaterialColorRed {
+            get {
+                return ResourceManager.GetString("MaterialColorRed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teal.
+        /// </summary>
+        public static string MaterialColorTeal {
+            get {
+                return ResourceManager.GetString("MaterialColorTeal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yellow.
+        /// </summary>
+        public static string MaterialColorYellow {
+            get {
+                return ResourceManager.GetString("MaterialColorYellow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Material Design Colors.
+        /// </summary>
+        public static string MaterialDesignColorBrush {
+            get {
+                return ResourceManager.GetString("MaterialDesignColorBrush", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} objects selected.
         /// </summary>
         public static string MultipleObjectsSelected {

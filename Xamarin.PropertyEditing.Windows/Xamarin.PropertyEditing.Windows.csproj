@@ -62,7 +62,9 @@
     <Compile Include="BrushChoiceTemplateSelector.cs" />
     <Compile Include="BrushEditorControl.cs" />
     <Compile Include="BrushTabbedEditorControl.cs" />
+    <Compile Include="BrushToDarknessConverter.cs" />
     <Compile Include="CategoryExpander.cs" />
+    <Compile Include="ColorToTransparentColorConverter.cs" />
     <Compile Include="CommonBrushToBrushConverter.cs" />
     <Compile Include="ByteToPercentageConverter.cs" />
     <Compile Include="ChoiceControl.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />
     <Compile Include="DoubleToQuantityConverter.cs" />
+    <Compile Include="MaterialDesignColorEditorControl.cs" />
     <Compile Include="MultiplyMarginConverter.cs" />
     <Compile Include="ObjectEditorControl.cs" />
     <Compile Include="ResourceSelectorWindow.xaml.cs">
@@ -94,7 +97,6 @@
     <Compile Include="NumericEditorControl.cs" />
     <Compile Include="NumericTemplateSelector.cs" />
     <Compile Include="NumericUpDownControl.cs" />
-    <Compile Include="ObjectToTypeNameConverter.cs" />
     <Compile Include="OppositeBoolConverter.cs" />
     <Compile Include="PointEditorControl.cs" />
     <Compile Include="PointHelper.cs" />

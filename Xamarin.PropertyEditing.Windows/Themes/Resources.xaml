@@ -530,6 +530,83 @@
 		</Setter>
 	</Style>
 
+	<Style x:Key="NoBrushIcon" TargetType="Image">
+		<Setter Property="Source">
+			<Setter.Value>
+				<DrawingImage>
+					<DrawingImage.Drawing>
+						<DrawingGroup/>
+					</DrawingImage.Drawing>
+				</DrawingImage>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="SolidBrushIcon" TargetType="Image">
+		<Setter Property="Source">
+			<Setter.Value>
+				<DrawingImage>
+					<DrawingImage.Drawing>
+						<DrawingGroup/>
+					</DrawingImage.Drawing>
+				</DrawingImage>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="MaterialDesignIcon" TargetType="Image">
+		<Setter Property="DataContext" Value="{DynamicResource ToggleItemForegroundBrush}"/>
+		<Setter Property="Source">
+			<Setter.Value>
+				<DrawingImage>
+					<DrawingImage.Drawing>
+						<DrawingGroup>
+							<DrawingGroup x:Name="DrawingLayer">
+								<DrawingGroup.ClipGeometry>
+									<RectangleGeometry Rect="0,0,32,32" />
+								</DrawingGroup.ClipGeometry>
+								<DrawingGroup x:Name="Canvas" Transform="1,0,0,1,-240,-928">
+									<DrawingGroup x:Name="property_brush_gradient_16">
+										<DrawingGroup.ClipGeometry>
+											<PathGeometry FillRule="Nonzero" Figures="M240,928L272,928 272,960 240,960 240,928z" />
+										</DrawingGroup.ClipGeometry>
+										<DrawingGroup x:Name="glyph">
+											<DrawingGroup Transform="1,0,0,1,242,935">
+												<GeometryDrawing x:Name="path0_fill">
+													<GeometryDrawing.Brush>
+														<SolidColorBrush Color="{Binding Color}"/>
+													</GeometryDrawing.Brush>
+													<GeometryDrawing.Geometry>
+														<PathGeometry FillRule="EvenOdd" Figures="M2.5,0C1.11929,0,0,1.11926,0,2.5L0,15.5C0,16.8807,1.11929,18,2.5,18L25.5,18C26.8807,18,28,16.8807,28,15.5L28,2.5C28,1.11926,26.8807,0,25.5,0L2.5,0z M2.5,2C2.22386,2,2,2.22388,2,2.5L2,15.5C2,15.7761,2.22386,16,2.5,16L25.5,16C25.7762,16,26,15.7761,26,15.5L26,2.5C26,2.22388,25.7762,2,25.5,2L2.5,2z" />
+													</GeometryDrawing.Geometry>
+												</GeometryDrawing>
+											</DrawingGroup>
+										</DrawingGroup>
+										<DrawingGroup x:Name="mask">
+											<DrawingGroup Transform="1,0,0,1,245,938">
+												<GeometryDrawing x:Name="path1_fill">
+													<GeometryDrawing.Brush>
+														<LinearGradientBrush StartPoint="0,0" EndPoint="1,0" MappingMode="Absolute" Opacity="1" Transform="22,3.00507E-07,-5.50929E-07,40.3333,2.75465E-07,-8.16667">
+															<GradientStop Color="{Binding Color}" Offset="0" />
+															<GradientStop Color="{Binding Color, Converter={local:ColorToTransparentColorConverter}}" Offset="1" />
+														</LinearGradientBrush>
+													</GeometryDrawing.Brush>
+													<GeometryDrawing.Geometry>
+														<PathGeometry FillRule="Nonzero" Figures="M0,0L22,0 22,12 0,12 0,0z" />
+													</GeometryDrawing.Geometry>
+												</GeometryDrawing>
+											</DrawingGroup>
+										</DrawingGroup>
+									</DrawingGroup>
+								</DrawingGroup>
+							</DrawingGroup>
+						</DrawingGroup>
+					</DrawingImage.Drawing>
+				</DrawingImage>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<local:BrushChoiceTemplateSelector x:Key="BrushChoiceTemplateSelector">
 		<local:BrushChoiceTemplateSelector.NoBrushTemplate>
 			<DataTemplate>
@@ -545,6 +622,14 @@
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.SolidBrushTemplate>
+		<local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
+			<DataTemplate>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<Image Style="{DynamicResource MaterialDesignIcon}"
+						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20"/>
+				</RadioButton>
+			</DataTemplate>
+		</local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
 	</local:BrushChoiceTemplateSelector>
 
 	<Style TargetType="local:BrushTabbedEditorControl">
@@ -557,8 +642,10 @@
 								<local:ChoiceControl x:Name="brushChoice" ItemTemplateSelector="{StaticResource BrushChoiceTemplateSelector}" ItemTemplate="{x:Null}" HorizontalAlignment="Stretch">
 									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.None}" Name="noBrushTab" Tooltip="{x:Static prop:Resources.NoBrush}"/>
 									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.Solid}" Name="solidColorTab" Tooltip="{x:Static prop:Resources.SolidBrush}"/>
+									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.MaterialDesign}" Name="materialDesignTab" Tooltip="{x:Static prop:Resources.MaterialDesignColorBrush}"/>
 								</local:ChoiceControl>
 								<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
+								<local:MaterialDesignColorEditorControl x:Name="materialDesignColorEditor" Visibility="Collapsed"/>
 							</StackPanel>
 						</Border>
 						<Border Padding="1">
@@ -577,16 +664,6 @@
 							</Expander>
 						</Border>
 					</StackPanel>
-					<ControlTemplate.Triggers>
-						<DataTrigger Binding="{Binding Path=Value}" Value="{x:Null}">
-							<Setter Property="Visibility" TargetName="advancedPropertyPanel" Value="Collapsed"/>
-							<Setter Property="Visibility" TargetName="solidBrushEditor" Value="Collapsed"/>
-						</DataTrigger>
-						<DataTrigger Binding="{Binding Path=Value, Converter={local:ObjectToTypeNameConverter}}" Value="CommonSolidBrush">
-							<Setter Property="Visibility" TargetName="advancedPropertyPanel" Value="Visible"/>
-							<Setter Property="Visibility" TargetName="solidBrushEditor" Value="Visible"/>
-						</DataTrigger>
-					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -1099,6 +1176,150 @@
 		</Setter>
 	</Style>
 
+	<Style x:Key="BrushChoiceControlItem" BasedOn="{StaticResource {x:Type RadioButton}}" TargetType="RadioButton">
+		<Setter Property="Background" Value="{DynamicResource ToggleItemBackgroundBrush}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemBorderBrush}" />
+		<Setter Property="ToolTip" Value="{Binding Name}" />
+		<Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+		<Setter Property="AutomationProperties.HelpText" Value="{Binding Name}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="RadioButton">
+					<Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}"
+							BorderBrush="{TemplateBinding BorderBrush}" Padding="{TemplateBinding Padding}">
+						<ContentPresenter />
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsChecked" Value="True">
+				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemSelectedBorderBrush}" />
+				<Setter Property="Background" Value="{DynamicResource ToggleItemSelectedBackgroundBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource ToggleItemSelectedForegroundBrush}" />
+				<Setter Property="Padding" Value="1"/>
+			</Trigger>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource ToggleItemMouseOverForegroundBrush}" />
+			</Trigger>
+			<Trigger Property="IsFocused" Value="True">
+				<Setter Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}" />
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemPressedBorderBrush}" />
+				<Setter Property="Background" Value="{DynamicResource ToggleItemPressedBackgroundBrush}" />
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
+	<SolidColorBrush x:Key="DarkeningBrush" Color="#40000000"/>
+
+	<Style TargetType="local:MaterialDesignColorEditorControl">
+		<Setter Property="DataContext" Value="{Binding MaterialDesign}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:MaterialDesignColorEditorControl">
+					<Border BorderThickness="0" Padding="2,0,2,0">
+						<StackPanel Orientation="Vertical">
+							<Grid Margin="0,2,0,2"  Background="Transparent">
+								<local:ChoiceControl x:Name="palettePicker" Background="Transparent"
+									Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" BorderThickness="0"
+									ItemsSource="{Binding Palettes}"
+									SelectedValue="{Binding ColorName, Mode=TwoWay}"
+									SelectedValuePath="Name">
+									<local:ChoiceControl.ItemTemplate>
+										<DataTemplate>
+											<RadioButton Style="{DynamicResource BrushChoiceControlItem}"
+												GroupName="{Binding Name, RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl}, Mode=OneTime}">
+												<Grid Margin="0">
+													<local:BrushBoxControl>
+														<local:BrushBoxControl.Brush>
+															<SolidColorBrush Color="{Binding MainColor, Converter={local:CommonColorToColorConverter}}"/>
+														</local:BrushBoxControl.Brush>
+													</local:BrushBoxControl>
+													<Border BorderBrush="{StaticResource DarkeningBrush}" BorderThickness="1" Grid.Column="0" Grid.Row="0" Panel.ZIndex="1"/>
+												</Grid>
+											</RadioButton>
+										</DataTemplate>
+									</local:ChoiceControl.ItemTemplate>
+									<local:ChoiceControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<UniformGrid Columns="10"/>
+										</ItemsPanelTemplate>
+									</local:ChoiceControl.ItemsPanel>
+								</local:ChoiceControl>
+							</Grid>
+							<TextBlock Name="colorLabel" Text="{Binding ColorName}" FontWeight="Bold"/>
+							<Grid Margin="0,2,0,2">
+								<local:ChoiceControl x:Name="normalColorPicker" Background="Transparent"
+									Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" BorderThickness="0"
+									ItemsSource="{Binding NormalColorScale}"
+									SelectedItem="{Binding NormalColor, Mode=TwoWay}">
+									<local:ChoiceControl.ItemTemplate>
+										<DataTemplate>
+											<RadioButton Style="{DynamicResource BrushChoiceControlItem}"
+												GroupName="MaterialDesignAccentOrNormal">
+												<RadioButton.BorderBrush>
+													<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
+												</RadioButton.BorderBrush>
+												<local:BrushBoxControl Label="{Binding Name}" FontSize="10">
+													<local:BrushBoxControl.Brush>
+														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
+													</local:BrushBoxControl.Brush>
+												</local:BrushBoxControl>
+											</RadioButton>
+										</DataTemplate>
+									</local:ChoiceControl.ItemTemplate>
+									<local:ChoiceControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<UniformGrid Columns="10" Height="26"/>
+										</ItemsPanelTemplate>
+									</local:ChoiceControl.ItemsPanel>
+								</local:ChoiceControl>
+								<Border BorderBrush="{StaticResource DarkeningBrush}" BorderThickness="1" Grid.Column="0" Grid.Row="0" Panel.ZIndex="1"/>
+							</Grid>
+							<Grid Margin="0,2,0,2">
+								<local:ChoiceControl x:Name="accentColorPicker" Background="Transparent"
+									Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" BorderThickness="0"
+									ItemsSource="{Binding AccentColorScale}"
+									SelectedItem="{Binding AccentColor, Mode=TwoWay}">
+									<local:ChoiceControl.ItemTemplate>
+										<DataTemplate>
+											<RadioButton Style="{DynamicResource BrushChoiceControlItem}"
+												GroupName="MaterialDesignAccentOrNormal">
+												<RadioButton.BorderBrush>
+													<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
+												</RadioButton.BorderBrush>
+												<local:BrushBoxControl Label="{Binding Name}" FontSize="10">
+													<local:BrushBoxControl.Brush>
+														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
+													</local:BrushBoxControl.Brush>
+												</local:BrushBoxControl>
+											</RadioButton>
+										</DataTemplate>
+									</local:ChoiceControl.ItemTemplate>
+									<local:ChoiceControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<UniformGrid Columns="4" Height="26"/>
+										</ItemsPanelTemplate>
+									</local:ChoiceControl.ItemsPanel>
+								</local:ChoiceControl>
+								<Border BorderBrush="{StaticResource DarkeningBrush}" BorderThickness="1" Grid.Column="0" Grid.Row="0" Panel.ZIndex="1"/>
+							</Grid>
+							<local:PropertyPresenter x:Name="alpha" Label="{x:Static prop:Resources.Alpha}" ShowPropertyButton="False"
+								AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}">
+								<local:ColorComponentBox x:Name="alphaEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+									AutomationProperties.Name="{x:Static prop:Resources.Alpha}" AutomationProperties.HelpText="{x:Static prop:Resources.Alpha}" ToolTip="{x:Static prop:Resources.Alpha}"
+									Value="{Binding Alpha, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}" Unit="%"/>
+							</local:PropertyPresenter>
+						</StackPanel>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style TargetType="local:BrushBoxControl">
 		<Setter Property="IsTabStop" Value="False"/>
 		<Setter Property="Template">
@@ -1117,7 +1338,37 @@
 								   Stroke="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" StrokeThickness="1"
 								   Fill="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Brush}" Visibility="{TemplateBinding BrushVisible}"
 								   Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"/>
+						<TextBlock Name="labelOutline" HorizontalAlignment="Center"  VerticalAlignment="Bottom"
+								   Text="{Binding Label, RelativeSource={RelativeSource TemplatedParent}}"
+								   Foreground="Transparent"
+								   Grid.Column="0" Grid.Row="0" Panel.ZIndex="2" Visibility="{Binding BrushVisible, RelativeSource={RelativeSource TemplatedParent}}"
+								   Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}">
+							<TextBlock.Effect>
+								<BlurEffect Radius="3"/>
+							</TextBlock.Effect>
+						</TextBlock>
+						<TextBlock Name="label" HorizontalAlignment="Center"  VerticalAlignment="Bottom"
+								   Text="{Binding Label, RelativeSource={RelativeSource TemplatedParent}}"
+								   Grid.Column="0" Grid.Row="0" Panel.ZIndex="3" Visibility="{Binding BrushVisible, RelativeSource={RelativeSource TemplatedParent}}"
+								   Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"/>
 					</Grid>
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding Brush, RelativeSource={RelativeSource Self}, Converter={local:BrushToDarknessConverter}}"
+									 Value="Dark">
+							<Setter TargetName="label" Property="Foreground" Value="#FFFFFFFF"/>
+							<Setter TargetName="labelOutline" Property="Foreground" Value="Transparent"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Brush, RelativeSource={RelativeSource Self}, Converter={local:BrushToDarknessConverter}}"
+									 Value="Light">
+							<Setter TargetName="label" Property="Foreground" Value="#FF000000"/>
+							<Setter TargetName="labelOutline" Property="Foreground" Value="Transparent"/>
+						</DataTrigger>
+						<DataTrigger Binding="{Binding Brush, RelativeSource={RelativeSource Self}, Converter={local:BrushToDarknessConverter}}"
+									 Value="Unknown">
+							<Setter TargetName="label" Property="Foreground" Value="#FF000000"/>
+							<Setter TargetName="labelOutline" Property="Foreground" Value="#FFFFFFFF"/>
+						</DataTrigger>
+					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

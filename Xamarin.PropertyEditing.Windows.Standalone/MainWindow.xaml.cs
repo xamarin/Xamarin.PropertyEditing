@@ -17,6 +17,7 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 			InitializeComponent ();
 			this.panel.TargetPlatform = new TargetPlatform {
 				SupportsCustomExpressions = true,
+				SupportsMaterialDesign = true,
 				GroupedTypes = new Dictionary<Type, string> {
 					{ typeof(CommonBrush), "Brush" }
 				}
@@ -36,6 +37,7 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 				if (mockedControl is MockedSampleControlButton mockedButton) {
 					IObjectEditor editor = await this.panel.EditorProvider.GetObjectEditorAsync (inspectedObject);
 					await mockedButton.SetBrushInitialValueAsync (editor, new CommonSolidBrush (20, 120, 220, 240, "sRGB"));
+					await mockedButton.SetMaterialDesignBrushInitialValueAsync (editor, new CommonSolidBrush (0x65, 0x1F, 0xFF, 200));
 					await mockedButton.SetReadOnlyBrushInitialValueAsync (editor, new CommonSolidBrush (240, 220, 15, 190));
 				}
 			}
@@ -48,8 +50,7 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 
 		private void Theme_Click (object sender, RoutedEventArgs e)
 		{
-			var rb = e.Source as RadioButton;
-			if (rb != null) {
+			if (e.Source is RadioButton rb) {
 				switch (rb.Content.ToString()) {
 				case "Dark Theme":
 				PropertyEditorPanel.ThemeManager.Theme = PropertyEditing.Themes.PropertyEditorTheme.Dark;

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -372,5 +372,66 @@
   </data>
   <data name="Unset" xml:space="preserve">
     <value>Unset</value>
+  </data>
+  <data name="MaterialColorRed" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="MaterialColorPink" xml:space="preserve">
+    <value>Pink</value>
+  </data>
+  <data name="MaterialColorPurple" xml:space="preserve">
+    <value>Purple</value>
+  </data>
+  <data name="MaterialColorDeepPurple" xml:space="preserve">
+    <value>Deep Purple</value>
+  </data>
+  <data name="MaterialColorIndigo" xml:space="preserve">
+    <value>Indigo</value>
+  </data>
+  <data name="MaterialColorBlue" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="MaterialColorLightBlue" xml:space="preserve">
+    <value>Light Blue</value>
+  </data>
+  <data name="MaterialColorCyan" xml:space="preserve">
+    <value>Cyan</value>
+  </data>
+  <data name="MaterialColorTeal" xml:space="preserve">
+    <value>Teal</value>
+  </data>
+  <data name="MaterialColorGreen" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="MaterialColorLightGreen" xml:space="preserve">
+    <value>Light Green</value>
+  </data>
+  <data name="MaterialColorLime" xml:space="preserve">
+    <value>Lime</value>
+  </data>
+  <data name="MaterialColorYellow" xml:space="preserve">
+    <value>Yellow</value>
+  </data>
+  <data name="MaterialColorAmber" xml:space="preserve">
+    <value>Amber</value>
+  </data>
+  <data name="MaterialColorOrange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
+  <data name="MaterialColorDeepOrange" xml:space="preserve">
+    <value>Deep Orange</value>
+  </data>
+  <data name="MaterialColorBrown" xml:space="preserve">
+    <value>Brown</value>
+  </data>
+  <data name="MaterialColorGrey" xml:space="preserve">
+    <value>Grey</value>
+  </data>
+  <data name="MaterialColorBlueGrey" xml:space="preserve">
+    <value>Blue Grey</value>
+  </data>
+  <data name="MaterialDesignColorBrush" xml:space="preserve">
+    <value>Material Design Colors</value>
+    <comment>Material design help text</comment>
   </data>
 </root>

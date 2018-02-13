@@ -13,10 +13,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (property.Type.IsAssignableFrom (typeof (CommonSolidBrush))) {
 				Solid = new SolidBrushViewModel (this,
 					property is IColorSpaced colorSpacedPropertyInfo ? colorSpacedPropertyInfo.ColorSpaces :  null);
+				if (platform.SupportsMaterialDesign) {
+					MaterialDesign = new MaterialDesignColorViewModel (this);
+				}
 			}
 		}
 
 		public SolidBrushViewModel Solid { get; }
+		public MaterialDesignColorViewModel MaterialDesign { get; }
 
 		// TODO: make this its own property view model so we can edit bindings, set to resources, etc.
 		public double Opacity {
