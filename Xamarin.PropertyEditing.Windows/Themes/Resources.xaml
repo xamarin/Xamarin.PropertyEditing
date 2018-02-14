@@ -39,9 +39,6 @@
 		</DrawingBrush.Drawing>
 	</DrawingBrush>
 
-	<Geometry x:Key="SearchLoopIcon" options:Freeze="True">F1 M 8.499,7.000 C 7.118,7.000 5.999,5.881 5.999,4.500 C 5.999,3.119 7.118,2.000 8.499,2.000 C 9.880,2.000 10.999,3.119 10.999,4.500 C 10.999,5.881 9.880,7.000 8.499,7.000 Z M 8.499,0.000 C 6.015,0.000 3.999,2.015 3.999,4.500 C 3.999,5.225 4.187,5.901 4.492,6.507 L 0.000,11.000 L 1.999,13.000 L 6.492,8.508 C 7.099,8.813 7.773,9.000 8.499,9.000 C 10.985,9.000 12.999,6.985 12.999,4.500 C 12.999,2.015 10.985,0.000 8.499,0.000 Z</Geometry>
-	<Geometry x:Key="ClearSearchIcon" options:Freeze="True">F1 M 0.000,1.000 L 1.000,0.000 L 4.000,3.000 L 7.000,0.000 L 8.000,1.000 L 5.000,4.000 L 8.000,7.000 L 7.000,8.000 L 4.000,5.000 L 1.000,8.000 L 0.000,7.000 L 3.000,4.000 L 0.000,1.000 Z</Geometry>
-
 	<local:BoolsToVisibilityConverter x:Key="BoolsToVisibilityConverter" />
 
 	<Style TargetType="{x:Type local:EnumEditorControl}">
@@ -280,11 +277,6 @@
 		</Setter>
 	</Style>
 
-	<PathGeometry x:Key="RightThicknessGeometry" options:Freeze="True" Figures="M3,8 L7,8 7,5.5 11,9.5 7,13.5 7,11 3,11 z" />
-	<PathGeometry x:Key="TopThicknessGeometry" options:Freeze="True" Figures="M7.5,5 L11.5,9 9,9 9,13 6,13 6,9 3.5,9 z" />
-	<PathGeometry x:Key="LeftThicknessGeometry" options:Freeze="True" Figures="M11,8 L7,8 7,5.5 3,9.5 7,13.5 7,11 11,11 z" />
-	<PathGeometry x:Key="BottomThicknessGeometry" options:Freeze="True" Figures="M7.5,13 L11.5,9 9,9 9,5 6,5 6,9 3.5,9 z" />
-
 	<Style x:Key="EditorIconLabelHost" TargetType="Border">
 		<Setter Property="Background" Value="{DynamicResource ThicknessIconBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ThicknessIconBorderBrush}" />
@@ -315,19 +307,19 @@
 						</Grid.RowDefinitions>
 
 						<Border Grid.Column="0" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource LeftThicknessGeometry}" />
+							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource LeftThicknessGeometry}" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Left}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Left" />
 						<Border Grid.Column="1" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource RightThicknessGeometry}" />
+							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource RightThicknessGeometry}" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Right}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Right" />
 						<Border Grid.Column="0" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource TopThicknessGeometry}" />
+							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource TopThicknessGeometry}" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Top}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Top" />
 						<Border Grid.Column="1" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
-							<Path Style="{StaticResource ThicknessIconStyle}" Data="{StaticResource BottomThicknessGeometry}" />
+							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource BottomThicknessGeometry}" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Bottom}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Bottom" />
 					</Grid>
