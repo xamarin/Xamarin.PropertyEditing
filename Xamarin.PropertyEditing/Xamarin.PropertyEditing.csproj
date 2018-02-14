@@ -108,6 +108,7 @@
     <Compile Include="ValueSource.cs" />
     <Compile Include="ViewModels\ArrangeModeViewModel.cs" />
     <Compile Include="ViewModels\BrushPropertyViewModel.cs" />
+    <Compile Include="ViewModels\CombinablePropertyViewModel.cs" />
     <Compile Include="ViewModels\ResourceRequestedEventArgs.cs" />
     <Compile Include="ViewModels\ResourceSelectorViewModel.cs" />
     <Compile Include="ViewModels\SimpleCollectionView.cs" />

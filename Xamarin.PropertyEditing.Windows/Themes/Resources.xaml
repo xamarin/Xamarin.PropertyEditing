@@ -44,6 +44,22 @@
 
 	<local:BoolsToVisibilityConverter x:Key="BoolsToVisibilityConverter" />
 
+	<Style TargetType="local:CombinablePredefinedValuesEditor">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:CombinablePredefinedValuesEditor">
+					<ItemsControl ItemsSource="{Binding Choices,Mode=OneTime}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<CheckBox Foreground="{DynamicResource ListItemForegroundBrush}" IsChecked="{Binding IsFlagged,Mode=TwoWay}" Margin="0,1,0,1" IsThreeState="True" Content="{Binding Name,Mode=OneTime}" />
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style TargetType="{x:Type local:EnumEditorControl}">
 		<Setter Property="Template">
 			<Setter.Value>

@@ -440,26 +440,29 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private PropertyViewModel GetViewModelCore (IPropertyInfo property)
 		{
+			if (ViewModelMap.TryGetValue (property.Type, out var vmFactory))
+				return vmFactory (TargetPlatform, property, this.objEditors);
+
 			Type[] interfaces = property.GetType ().GetInterfaces ();
 
 			Type hasPredefinedValues = interfaces.FirstOrDefault (t => t.IsGenericType && t.GetGenericTypeDefinition () == typeof(IHavePredefinedValues<>));
 			if (hasPredefinedValues != null) {
-				Type type = typeof(PredefinedValuesViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0]);
+				bool combinable = (bool) hasPredefinedValues.GetProperty (nameof(IHavePredefinedValues<bool>.IsValueCombinable)).GetValue (property);
+				Type type = combinable
+					? typeof(CombinablePropertyViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0])
+					: typeof(PredefinedValuesViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0]);
+
 				return (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors);
 			} else if (property.Type == typeof(object)) {
 				return new ObjectPropertyViewModel (EditorProvider, TargetPlatform, property, this.objEditors);
 			}
-
-			Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel> vmFactory;
-			if (ViewModelMap.TryGetValue (property.Type, out vmFactory))
-				return vmFactory (TargetPlatform, property, this.objEditors);
 			
 			return new StringPropertyViewModel (TargetPlatform, property, this.objEditors);
 		}
 
 		private Task busyTask;
 
-		public static readonly Dictionary<Type,Func<TargetPlatform,IPropertyInfo,IEnumerable<IObjectEditor>,PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
+		private static readonly Dictionary<Type,Func<TargetPlatform,IPropertyInfo,IEnumerable<IObjectEditor>,PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
 			{ typeof(string), (tp,p,e) => new StringPropertyViewModel (tp, p, e) },
 			{ typeof(bool), (tp,p,e) => new PropertyViewModel<bool> (tp, p, e) },
 			{ typeof(float), (tp,p,e) => new NumericPropertyViewModel<float> (tp, p, e) },

@@ -693,6 +693,11 @@ namespace Xamarin.PropertyEditing.Tests
 
 		protected abstract TValue GetRandomTestValue (Random rand);
 
+		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
+		{
+			return GetViewModel (property, new[] { editor });
+		}
+
 		protected TViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
 			return GetViewModel (TargetPlatform.Default, property, editors);
