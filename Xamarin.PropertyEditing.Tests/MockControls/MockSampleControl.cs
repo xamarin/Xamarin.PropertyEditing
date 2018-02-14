@@ -8,8 +8,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		public MockSampleControl()
 		{
 			AddProperty<bool> ("Boolean", ReadWrite);
-			AddProperty<long> ("Integer", ReadWrite);
-			AddProperty<double> ("FloatingPoint", ReadWrite);
+			AddProperty<int> ("Integer", ReadWrite);
+			AddProperty<float> ("FloatingPoint", ReadWrite);
 			AddProperty<string> ("String", ReadWrite);
 			AddProperty<Enumeration> ("Enumeration", ReadWrite);
 			AddProperty<Flags> ("Flags", ReadWrite, canWrite: true, flag: true);
@@ -19,8 +19,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			// AddProperty<CommonThickness> ("Thickness", ReadWrite); // Lacking support on the mac at this point in time.
 
 			AddReadOnlyProperty<bool> ("ReadOnlyBoolean", ReadOnly);
-			AddReadOnlyProperty<long> ("ReadOnlyInteger", ReadOnly);
-			AddReadOnlyProperty<double> ("ReadOnlyFloatingPoint", ReadOnly);
+			AddReadOnlyProperty<int> ("ReadOnlyInteger", ReadOnly);
+			AddReadOnlyProperty<float> ("ReadOnlyFloatingPoint", ReadOnly);
 			AddReadOnlyProperty<string> ("ReadOnlyString", ReadOnly);
 			AddReadOnlyProperty<Enumeration> ("ReadOnlyEnumeration", ReadOnly);
 			AddProperty<Flags> ("ReadOnlyFlags", ReadOnly, canWrite: false, flag: true);

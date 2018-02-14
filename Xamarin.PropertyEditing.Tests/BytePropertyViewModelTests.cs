@@ -7,7 +7,7 @@ namespace Xamarin.PropertyEditing.Tests
 {
 	[TestFixture]
 	internal class BytePropertyViewModelTests
-		: ConstrainedPropertyViewModelTests<byte, BytePropertyViewModel>
+		: NumericViewModelTests<byte>
 	{
 		protected override Tuple<byte, byte> MaxMin => new Tuple<byte, byte> (byte.MaxValue, byte.MinValue);
 
@@ -42,9 +42,9 @@ namespace Xamarin.PropertyEditing.Tests
 			return value;
 		}
 
-		protected override BytePropertyViewModel GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override NumericPropertyViewModel<byte> GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new BytePropertyViewModel (platform, property, editors);
+			return new NumericPropertyViewModel<byte> (platform, property, editors);
 		}
 	}
 }

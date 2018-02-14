@@ -1,62 +1,59 @@
 using System;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
-	internal class IntegerPropertyViewModel
-		: ConstrainedPropertyViewModel<long>
+	internal class NumericPropertyViewModel<T>
+		: ConstrainedPropertyViewModel<T>
+		where T : struct, IComparable<T>
 	{
-		public IntegerPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		public NumericPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (platform, property, editors)
 		{
+			this.raiseValue = new RelayCommand (() => {
+				Value = Numeric<T>.Increment (Value);
+			}, () => {
+				T value = Numeric<T>.Increment (Value);
+				return value.CompareTo (ValidateValue (value)) == 0;
+			});
+
+			this.lowerValue = new RelayCommand(() => {
+				Value = Numeric<T>.Decrement (Value);
+			}, () => {
+				T value = Numeric<T>.Decrement (Value);
+				return value.CompareTo (ValidateValue (value)) == 0;
+			});
 		}
 
-		protected override long IncrementValue (long value)
+		public ICommand RaiseValue => this.raiseValue;
+
+		public ICommand LowerValue => this.lowerValue;
+
+		protected override void OnPropertyChanged (string propertyName = null)
 		{
-			return value + 1;
+			base.OnPropertyChanged (propertyName);
+
+			switch (propertyName) {
+			case nameof(MinimumValue):
+				this.lowerValue?.ChangeCanExecute();
+				break;
+			case nameof(MaximumValue):
+				this.raiseValue?.ChangeCanExecute();
+				break;
+			}
 		}
 
-		protected override long DecrementValue (long value)
+		protected override void OnValueChanged ()
 		{
-			return value - 1;
-		}
-	}
+			base.OnValueChanged ();
 
-	internal class FloatingPropertyViewModel
-		: ConstrainedPropertyViewModel<double>
-	{
-		public FloatingPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (platform, property, editors)
-		{
+			if (this.lowerValue != null) {
+				this.lowerValue.ChangeCanExecute ();
+				this.raiseValue.ChangeCanExecute ();
+			}
 		}
 
-		protected override double IncrementValue (double value)
-		{
-			return value + 1;
-		}
-
-		protected override double DecrementValue (double value)
-		{
-			return value - 1;
-		}
-	}
-
-	internal class BytePropertyViewModel
-		: ConstrainedPropertyViewModel<byte>
-	{
-		public BytePropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (platform, property, editors)
-		{
-		}
-
-		protected override byte IncrementValue (byte value)
-		{
-			return (byte)(value + 1);
-		}
-
-		protected override byte DecrementValue (byte value)
-		{
-			return (byte)(value - 1);
-		}
+		private readonly RelayCommand raiseValue, lowerValue;
 	}
 }
