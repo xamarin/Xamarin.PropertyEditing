@@ -55,10 +55,19 @@
 	<Style x:Key="PropertyListStyle" TargetType="ItemsControl">
 		<Setter Property="Focusable" Value="False" />
 		<Setter Property="ItemTemplateSelector" Value="{StaticResource EditorTreeSelector}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="ItemsControl">
+					<ScrollViewer Focusable="False" CanContentScroll="True" HorizontalScrollBarVisibility="Disabled">
+						<ItemsPresenter />
+					</ScrollViewer>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 		<Setter Property="ItemsPanel">
 			<Setter.Value>
 				<ItemsPanelTemplate>
-					<VirtualizingStackPanel VirtualizationMode="Recycling" />
+					<VirtualizingStackPanel IsItemsHost="True" VirtualizationMode="Recycling" />
 				</ItemsPanelTemplate>
 			</Setter.Value>
 		</Setter>
@@ -138,9 +147,7 @@
 										<ContextMenu ItemsSource="{Binding ArrangeModes,Mode=OneTime}" StaysOpen="True" ItemContainerStyle="{DynamicResource ArrangeMenuItem}" />
 									</local:MenuButton.ContextMenu>
 								</local:MenuButton>
-								<ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Focusable="False">
-									<ItemsControl Name="propertyItems" Background="{DynamicResource ListBackgroundBrush}" Grid.IsSharedSizeScope="True" Style="{StaticResource PropertyListStyle}" />
-								</ScrollViewer>
+								<ItemsControl Name="propertyItems" Grid.Row="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  Background="{DynamicResource ListBackgroundBrush}" Grid.IsSharedSizeScope="True" Style="{StaticResource PropertyListStyle}" />
 							</Grid>
 
 							<ScrollViewer Name="eventsPane" Grid.Row="1" Visibility="Collapsed">
