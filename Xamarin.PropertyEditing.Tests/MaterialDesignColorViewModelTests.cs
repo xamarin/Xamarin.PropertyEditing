@@ -19,7 +19,6 @@ namespace Xamarin.PropertyEditing.Tests
 			var alphaChanged = false;
 			var accentChanged = false;
 			var normalChanged = false;
-			var scaleChanged = false;
 			var accentScaleChanged = false;
 			var normalScaleChanged = false;
 
@@ -40,9 +39,6 @@ namespace Xamarin.PropertyEditing.Tests
 				case nameof (MaterialDesignColorViewModel.NormalColor):
 					normalChanged = true;
 					break;
-				case nameof (MaterialDesignColorViewModel.Scale):
-					scaleChanged = true;
-					break;
 				case nameof (MaterialDesignColorViewModel.AccentColorScale):
 					accentScaleChanged = true;
 					break;
@@ -61,7 +57,6 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.IsTrue (alphaChanged);
 			Assert.IsTrue (accentChanged);
 			Assert.IsTrue (normalChanged);
-			Assert.IsTrue (scaleChanged);
 			Assert.IsTrue (accentScaleChanged);
 			Assert.IsTrue (normalScaleChanged);
 		}
@@ -76,7 +71,6 @@ namespace Xamarin.PropertyEditing.Tests
 			var alphaChanged = false;
 			var accentChanged = false;
 			var normalChanged = false;
-			var scaleChanged = false;
 			var accentScaleChanged = false;
 			var normalScaleChanged = false;
 
@@ -99,9 +93,6 @@ namespace Xamarin.PropertyEditing.Tests
 					break;
 				case nameof (MaterialDesignColorViewModel.NormalColor):
 					normalChanged = true;
-					break;
-				case nameof (MaterialDesignColorViewModel.Scale):
-					scaleChanged = true;
 					break;
 				case nameof (MaterialDesignColorViewModel.AccentColorScale):
 					accentScaleChanged = true;
@@ -128,12 +119,11 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.IsTrue (alphaChanged);
 			Assert.IsTrue (accentChanged);
 			Assert.IsTrue (normalChanged);
-			Assert.IsTrue (scaleChanged);
 			Assert.IsTrue (accentScaleChanged);
 			Assert.IsTrue (normalScaleChanged);
 
 			colorChanged = false; colorNameChanged = false; alphaChanged = false; accentChanged = false;
-			normalChanged = false; scaleChanged = false; accentScaleChanged = false; normalScaleChanged = false;
+			normalChanged = false; accentScaleChanged = false; normalScaleChanged = false;
 
 			// Then set an accent color
 			scale = GetRandomScale (Random, true);
@@ -151,7 +141,6 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.IsTrue (alphaChanged);
 			Assert.IsTrue (accentChanged);
 			Assert.IsTrue (normalChanged);
-			Assert.IsTrue (scaleChanged);
 			Assert.IsTrue (accentScaleChanged);
 			Assert.IsTrue (normalScaleChanged);
 		}

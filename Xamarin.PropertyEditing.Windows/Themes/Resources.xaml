@@ -1107,9 +1107,6 @@
 	<Style x:Key="MaterialDesignColorControlItem" BasedOn="{StaticResource {x:Type RadioButton}}" TargetType="RadioButton">
 		<Setter Property="Background" Value="{DynamicResource ToggleItemBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemBorderBrush}" />
-		<Setter Property="ToolTip" Value="{Binding Name}" />
-		<Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
-		<Setter Property="AutomationProperties.HelpText" Value="{Binding Name}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="RadioButton">
@@ -1123,20 +1120,13 @@
 		<Style.Triggers>
 			<Trigger Property="IsChecked" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemSelectedBorderBrush}" />
-				<Setter Property="Background" Value="{DynamicResource ToggleItemSelectedBackgroundBrush}" />
-				<Setter Property="Foreground" Value="{DynamicResource ToggleItemSelectedForegroundBrush}" />
 				<Setter Property="Padding" Value="1"/>
 			</Trigger>
 			<Trigger Property="IsMouseOver" Value="True">
-				<Setter Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}" />
-				<Setter Property="Foreground" Value="{DynamicResource ToggleItemMouseOverForegroundBrush}" />
-			</Trigger>
-			<Trigger Property="IsFocused" Value="True">
-				<Setter Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemPressedBorderBrush}" />
 			</Trigger>
 			<Trigger Property="IsPressed" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemPressedBorderBrush}" />
-				<Setter Property="Background" Value="{DynamicResource ToggleItemPressedBackgroundBrush}" />
 			</Trigger>
 		</Style.Triggers>
 	</Style>
@@ -1158,6 +1148,7 @@
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
 											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"
+												ToolTip="{Binding Name}" AutomationProperties.Name="{Binding Name}" AutomationProperties.HelpText="{Binding Name}"
 												GroupName="{Binding Name, RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl}, Mode=OneTime}">
 												<Grid Margin="0">
 													<local:BrushBoxControl>
@@ -1186,10 +1177,9 @@
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
 											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"
+												BorderThickness="0"
+												ToolTip="{Binding Label}" AutomationProperties.Name="{Binding Label}" AutomationProperties.HelpText="{Binding Label}"
 												GroupName="MaterialDesignAccentOrNormal">
-												<RadioButton.BorderBrush>
-													<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
-												</RadioButton.BorderBrush>
 												<local:BrushBoxControl Label="{Binding Label}" FontSize="10">
 													<local:BrushBoxControl.Brush>
 														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
@@ -1214,10 +1204,9 @@
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
 											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"
+												BorderThickness="0"
+												ToolTip="{Binding Label}" AutomationProperties.Name="{Binding Label}" AutomationProperties.HelpText="{Binding Label}"
 												GroupName="MaterialDesignAccentOrNormal">
-												<RadioButton.BorderBrush>
-													<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
-												</RadioButton.BorderBrush>
 												<local:BrushBoxControl Label="{Binding Label}" FontSize="10">
 													<local:BrushBoxControl.Brush>
 														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>

@@ -28,12 +28,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public IPropertyInfo Property => Parent.Property;
+		public ValueSource ValueSource => Parent.ValueSource;
+
 		public string ColorName
 		{
 			get {
 				if (this.colorName != null) return this.colorName;
 				if (Parent.Value is CommonSolidBrush solidBrush) {
-					return (this.colorName = Scale.Name);
+					return (this.colorName = Palette.Name);
 				}
 				return (this.colorName = Strings.MaterialColorGrey);
 			}
@@ -45,7 +48,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 					CommonColor?[] newScale = NormalColorScale.ToArray ();
 					if (normalColorIndex != -1 && newScale.Length > normalColorIndex) {
 						NormalColor = newScale[normalColorIndex];
-						ReplaceColor (NormalColor.Value);
 					} else {
 						NormalColor = null;
 					}
@@ -55,7 +57,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 					CommonColor?[] newScale = AccentColorScale.ToArray ();
 					if (accentColorIndex != -1 && newScale.Length > accentColorIndex) {
 						AccentColor = newScale[accentColorIndex];
-						ReplaceColor (AccentColor.Value);
 					} else {
 						AccentColor = null;
 					}
@@ -63,7 +64,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 					this.colorName = value;
 				}
 				OnPropertyChanged ();
-				OnPropertyChanged (nameof (Scale));
 				OnPropertyChanged (nameof (AccentColorScale));
 				OnPropertyChanged (nameof (NormalColorScale));
 			}
@@ -77,12 +77,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				Color = new CommonColor (oldColor.R, oldColor.G, oldColor.B, value);
 			}
 		}
-
-		public MaterialColorScale Scale
-			=> MaterialPalettes
-				.OrderBy (palette => palette.Colors.Min (
-					paletteColor => CommonColor.SquaredDistance (paletteColor, Color)))
-				.First ();
 
 		public CommonColor? NormalColor
 		{
@@ -148,6 +142,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private CommonColor? accentColor = null;
 		private BrushPropertyViewModel Parent { get; }
 
+		private MaterialColorScale Palette
+			=> MaterialPalettes
+				.OrderBy (palette => palette.Colors.Min (
+					paletteColor => CommonColor.SquaredDistance (paletteColor, Color)))
+				.First ();
+
 		private static IEnumerable<CommonColor?> GetScale (string colorName, bool isAccent)
 		{
 			var palette = FindPalette (colorName, isAccent);
@@ -169,7 +169,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				OnPropertyChanged (nameof (ColorName));
 				OnPropertyChanged (nameof (AccentColor));
 				OnPropertyChanged (nameof (NormalColor));
-				OnPropertyChanged (nameof (Scale));
 				OnPropertyChanged (nameof (AccentColorScale));
 				OnPropertyChanged (nameof (NormalColorScale));
 			}
