@@ -112,32 +112,11 @@ namespace Xamarin.PropertyEditing.Tests
 				}
 			};
 
-			MaterialColorScale scale = GetRandomScale (Random, true);
+			// First, set a normal color
+			MaterialColorScale scale = GetRandomScale (Random, false);
 			CommonColor newColor = GetNewRandomScaledColor (Random, scale, originalColor);
 			var newOpaqueColor = new CommonColor (newColor.R, newColor.G, newColor.B);
 			var newTransparentColor = new CommonColor (newColor.R, newColor.G, newColor.B, originalColor.A);
-			vm.MaterialDesign.AccentColor = newOpaqueColor;
-
-			Assert.AreEqual (newTransparentColor, vm.MaterialDesign.Color);
-			Assert.AreEqual (newOpaqueColor, vm.MaterialDesign.AccentColor);
-			Assert.AreEqual (scale.Name, vm.MaterialDesign.ColorName);
-			Assert.IsNull (vm.MaterialDesign.NormalColor);
-			Assert.IsTrue (colorChanged);
-			Assert.IsTrue (colorNameChanged);
-			Assert.IsTrue (alphaChanged);
-			Assert.IsTrue (accentChanged);
-			Assert.IsTrue (normalChanged);
-			Assert.IsTrue (scaleChanged);
-			Assert.IsTrue (accentScaleChanged);
-			Assert.IsTrue (normalScaleChanged);
-
-			colorChanged = false; colorNameChanged = false; alphaChanged = false; accentChanged = false;
-			normalChanged = false; scaleChanged = false; accentScaleChanged = false; normalScaleChanged = false;
-
-			scale = GetRandomScale (Random, false);
-			newColor = GetNewRandomScaledColor (Random, scale, originalColor);
-			newOpaqueColor = new CommonColor (newColor.R, newColor.G, newColor.B);
-			newTransparentColor = new CommonColor (newColor.R, newColor.G, newColor.B, originalColor.A);
 			vm.MaterialDesign.NormalColor = newOpaqueColor;
 
 			Assert.AreEqual (newTransparentColor, vm.MaterialDesign.Color);
@@ -152,14 +131,38 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.IsTrue (scaleChanged);
 			Assert.IsTrue (accentScaleChanged);
 			Assert.IsTrue (normalScaleChanged);
+
+			colorChanged = false; colorNameChanged = false; alphaChanged = false; accentChanged = false;
+			normalChanged = false; scaleChanged = false; accentScaleChanged = false; normalScaleChanged = false;
+
+			// Then set an accent color
+			scale = GetRandomScale (Random, true);
+			newColor = GetNewRandomScaledColor (Random, scale, originalColor);
+			newOpaqueColor = new CommonColor (newColor.R, newColor.G, newColor.B);
+			newTransparentColor = new CommonColor (newColor.R, newColor.G, newColor.B, originalColor.A);
+			vm.MaterialDesign.AccentColor = newOpaqueColor;
+
+			Assert.AreEqual (newTransparentColor, vm.MaterialDesign.Color);
+			Assert.AreEqual (newOpaqueColor, vm.MaterialDesign.AccentColor);
+			Assert.AreEqual (scale.Name, vm.MaterialDesign.ColorName);
+			Assert.IsNull (vm.MaterialDesign.NormalColor);
+			Assert.IsTrue (colorChanged);
+			Assert.IsTrue (colorNameChanged);
+			Assert.IsTrue (alphaChanged);
+			Assert.IsTrue (accentChanged);
+			Assert.IsTrue (normalChanged);
+			Assert.IsTrue (scaleChanged);
+			Assert.IsTrue (accentScaleChanged);
+			Assert.IsTrue (normalScaleChanged);
 		}
 
 		[Test]
 		public void ColorNameChangesScalesAndKeepsAlphaAndAccent ()
 		{
+			// Set the color to some accent color
 			BrushPropertyViewModel vm = PrepareMockViewModel ();
 			MaterialColorScale scale = GetRandomScale (Random, true); // Accent color
-			CommonColor scaledColor = GetNewRandomScaledColor (Random, scale, new CommonColor());
+			CommonColor scaledColor = GetNewRandomScaledColor (Random, scale, CommonColor.Black);
 			var color = new CommonColor (scaledColor.R, scaledColor.G, scaledColor.B, Random.NextByte ());
 			vm.Value = new CommonSolidBrush (color);
 
@@ -172,7 +175,8 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var accentIndex = Array.IndexOf (scale.Colors.ToArray(), scaledColor);
 
-			var newScale = GetRandomScale (Random, true);
+			// Then change to another scale that has accents too
+			MaterialColorScale newScale = GetRandomScale (Random, true);
 			var newColorName = newScale.Name;
 			while (newColorName == scale.Name) newColorName = GetRandomScale (Random, true).Name;
 			vm.MaterialDesign.ColorName = newColorName;
@@ -183,6 +187,19 @@ namespace Xamarin.PropertyEditing.Tests
 			expectedNormalScale = MaterialDesignColorViewModel.MaterialPalettes
 				.First (p => !p.IsAccent && p.Name == newScale.Name);
 			Assert.AreEqual (expectedNormalScale.Colors, vm.MaterialDesign.NormalColorScale);
+			Assert.AreEqual (color.A, vm.MaterialDesign.Alpha);
+
+			// Finally, change to grey, which has only normal nuances, but no accents,
+			// so both accent and normal should get reset.
+			var grey = Properties.Resources.MaterialColorGrey;
+			vm.MaterialDesign.ColorName = Properties.Resources.MaterialColorGrey;
+
+			Assert.AreEqual (grey, vm.MaterialDesign.ColorName);
+			Assert.AreEqual (MaterialDesignColorViewModel.EmptyColorScale, vm.MaterialDesign.AccentColorScale);
+			Assert.IsNull (vm.MaterialDesign.AccentColor);
+			Assert.AreEqual (MaterialDesignColorViewModel.MaterialPalettes.First(p => p.Name == grey).Colors,
+				vm.MaterialDesign.NormalColorScale);
+			Assert.IsNull (vm.MaterialDesign.NormalColor);
 			Assert.AreEqual (color.A, vm.MaterialDesign.Alpha);
 		}
 

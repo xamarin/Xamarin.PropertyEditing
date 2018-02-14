@@ -8,13 +8,13 @@ namespace Xamarin.PropertyEditing.Drawing
 	[Serializable]
 	public struct CommonColor : IEquatable<CommonColor>
 	{
-		public CommonColor (byte r, byte g, byte b, byte a = 255, string name = "")
+		public CommonColor (byte r, byte g, byte b, byte a = 255, string label = null)
 		{
 			A = a;
 			R = r;
 			G = g;
 			B = b;
-			Name = name;
+			Label = label;
 			c = null;
 			m = null;
 			y = null;
@@ -32,22 +32,26 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// Alpha channel
 		/// </summary>
 		public byte A { get; }
+
 		/// <summary>
 		/// Red component
 		/// </summary>
 		public byte R { get; }
+
 		/// <summary>
 		/// Green component
 		/// </summary>
 		public byte G { get; }
+
 		/// <summary>
 		/// Blue component
 		/// </summary>
 		public byte B { get; }
+
 		/// <summary>
 		/// An optional label for the color, that does not affect equality or anything else.
 		/// </summary>
-		public string Name { get; set; }
+		public string Label { get; set; }
 
 		double? k;
 		/// <summary>
@@ -478,6 +482,8 @@ namespace Xamarin.PropertyEditing.Drawing
 			};
 			return color;
 		}
+
+		public static CommonColor Black = new CommonColor ();
 
 		private static double Mod (double a, double b)	=> a - b * Math.Floor (a / b);
 

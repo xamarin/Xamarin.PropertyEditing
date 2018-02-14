@@ -42,19 +42,23 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (NormalColor != null) {
 					var normalColorIndex = Array.IndexOf (NormalColorScale.ToArray (), NormalColor);
 					this.colorName = value;
-					CommonColor?[] newScale = NormalColorScale.ToArray();
-					if (newScale.Length > normalColorIndex) {
+					CommonColor?[] newScale = NormalColorScale.ToArray ();
+					if (normalColorIndex != -1 && newScale.Length > normalColorIndex) {
 						NormalColor = newScale[normalColorIndex];
+						ReplaceColor (NormalColor.Value);
+					} else {
+						NormalColor = null;
 					}
-					ReplaceColor (NormalColor.Value);
 				} else if (AccentColor != null) {
 					var accentColorIndex = Array.IndexOf (AccentColorScale.ToArray (), AccentColor);
 					this.colorName = value;
 					CommonColor?[] newScale = AccentColorScale.ToArray ();
-					if (newScale.Length > accentColorIndex) {
+					if (accentColorIndex != -1 && newScale.Length > accentColorIndex) {
 						AccentColor = newScale[accentColorIndex];
+						ReplaceColor (AccentColor.Value);
+					} else {
+						AccentColor = null;
 					}
-					ReplaceColor (AccentColor.Value);
 				} else {
 					this.colorName = value;
 				}
@@ -85,6 +89,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get {
 				if (this.normalColor.HasValue) return this.normalColor.Value;
 				MaterialColorScale scale = FindPalette (ColorName, false);
+				if (scale == default (MaterialColorScale) || scale.Colors is null) return null;
 				foreach (CommonColor normalColor in scale.Colors) {
 					if (Color.Equals (normalColor, true)) return (this.normalColor = normalColor).Value;
 				}
@@ -110,13 +115,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get {
 				if (this.accentColor.HasValue) return this.accentColor.Value;
 				MaterialColorScale scale = FindPalette (ColorName, true);
+				if (scale == default (MaterialColorScale) || scale.Colors is null) return null;
 				foreach (CommonColor accent in scale.Colors) {
 					if (Color.Equals (accent, true)) return (this.accentColor = accent).Value;
 				}
 				return null;
 			}
 			set {
-				Debug.Assert (value?.A == 255, "AccentColor should never be set with a transparent color.");
+				Debug.Assert (value == null || value.Value.A == 255, "AccentColor should never be set with a transparent color.");
 				Debug.Assert (value == null || MaterialPalettes.Where (p => p.IsAccent).SelectMany (p => p.Colors).Contains (value.Value), "AccentColor values should exist in the Material Design palette.");
 				this.accentColor = value;
 				if (ColorName != null && value.HasValue) {
@@ -132,15 +138,25 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public IEnumerable<MaterialColorScale> Palettes => MaterialPalettes
 			.Where (palette => !palette.IsAccent);
-		public IEnumerable<CommonColor?> AccentColorScale => FindPalette(ColorName, true).Colors
-			.Select((color, index) => new CommonColor?(new CommonColor(color.R, color.G, color.B, 255, AccentNames[index])));
-		public IEnumerable<CommonColor?> NormalColorScale => FindPalette(ColorName, false).Colors
-			.Select ((color, index) => new CommonColor? (new CommonColor (color.R, color.G, color.B, 255, NormalNames[index])));
+
+		public IEnumerable<CommonColor?> AccentColorScale => GetScale (ColorName, true);
+
+		public IEnumerable<CommonColor?> NormalColorScale => GetScale (ColorName, false);
 
 		private string colorName;
 		private CommonColor? normalColor = null;
 		private CommonColor? accentColor = null;
 		private BrushPropertyViewModel Parent { get; }
+
+		private static IEnumerable<CommonColor?> GetScale (string colorName, bool isAccent)
+		{
+			var palette = FindPalette (colorName, isAccent);
+			if (palette == default (MaterialColorScale) || palette.Colors is null) return EmptyColorScale;
+
+			return palette.Colors.Select (
+				(color, index) => new CommonColor? (
+					new CommonColor (color.R, color.G, color.B, 255, isAccent ? AccentNames[index] : NormalNames[index])));
+		}
 
 		private void Parent_PropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
@@ -162,7 +178,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		/// <summary>
 		/// Replaces the current color with a new one, keeping the alpha channel intact.
 		/// </summary>
-		private void ReplaceColor(CommonColor newColor)
+		private void ReplaceColor (CommonColor newColor)
 		{
 			var alpha = Color.A;
 			Color = new CommonColor (newColor.R, newColor.G, newColor.B, alpha);
@@ -176,7 +192,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return MaterialPalettes.FirstOrDefault (palette => palette.IsAccent == isAccent && palette.Name == colorName);
 		}
 
-		internal static readonly MaterialColorScale[] MaterialPalettes = new [] {
+		internal static IEnumerable<CommonColor?> EmptyColorScale = new CommonColor?[0];
+
+		internal static readonly MaterialColorScale[] MaterialPalettes = new[] {
 			new MaterialColorScale (Strings.MaterialColorRed, false, 4, new CommonColor(0xFF, 0xEB, 0xEE), new CommonColor(0xFF, 0xCD, 0xD2), new CommonColor(0xEF, 0x9A, 0x9A), new CommonColor(0xE5, 0x73, 0x73), new CommonColor(0xEF, 0x53, 0x50), new CommonColor(0xF4, 0x43, 0x36), new CommonColor(0xE5, 0x39, 0x35), new CommonColor(0xD3, 0x2F, 0x2F), new CommonColor(0xC6, 0x28, 0x28), new CommonColor(0xB7, 0x1C, 0x1C)),
 
 			new MaterialColorScale (Strings.MaterialColorRed, true, 1, new CommonColor(0xFF, 0x8A, 0x80), new CommonColor(0xFF, 0x52, 0x52), new CommonColor(0xFF, 0x17, 0x44), new CommonColor(0xD5, 0x00, 0x00)),

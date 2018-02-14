@@ -1176,7 +1176,7 @@
 		</Setter>
 	</Style>
 
-	<Style x:Key="BrushChoiceControlItem" BasedOn="{StaticResource {x:Type RadioButton}}" TargetType="RadioButton">
+	<Style x:Key="MaterialDesignColorControlItem" BasedOn="{StaticResource {x:Type RadioButton}}" TargetType="RadioButton">
 		<Setter Property="Background" Value="{DynamicResource ToggleItemBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemBorderBrush}" />
 		<Setter Property="ToolTip" Value="{Binding Name}" />
@@ -1216,11 +1216,10 @@
 	<SolidColorBrush x:Key="DarkeningBrush" Color="#40000000"/>
 
 	<Style TargetType="local:MaterialDesignColorEditorControl">
-		<Setter Property="DataContext" Value="{Binding MaterialDesign}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:MaterialDesignColorEditorControl">
-					<Border BorderThickness="0" Padding="2,0,2,0">
+					<Border BorderThickness="0" Padding="2,0,2,0" DataContext="{Binding MaterialDesign}">
 						<StackPanel Orientation="Vertical">
 							<Grid Margin="0,2,0,2"  Background="Transparent">
 								<local:ChoiceControl x:Name="palettePicker" Background="Transparent"
@@ -1230,7 +1229,7 @@
 									SelectedValuePath="Name">
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
-											<RadioButton Style="{DynamicResource BrushChoiceControlItem}"
+											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"
 												GroupName="{Binding Name, RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl}, Mode=OneTime}">
 												<Grid Margin="0">
 													<local:BrushBoxControl>
@@ -1258,12 +1257,12 @@
 									SelectedItem="{Binding NormalColor, Mode=TwoWay}">
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
-											<RadioButton Style="{DynamicResource BrushChoiceControlItem}"
+											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"
 												GroupName="MaterialDesignAccentOrNormal">
 												<RadioButton.BorderBrush>
 													<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
 												</RadioButton.BorderBrush>
-												<local:BrushBoxControl Label="{Binding Name}" FontSize="10">
+												<local:BrushBoxControl Label="{Binding Label}" FontSize="10">
 													<local:BrushBoxControl.Brush>
 														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
 													</local:BrushBoxControl.Brush>
@@ -1286,12 +1285,12 @@
 									SelectedItem="{Binding AccentColor, Mode=TwoWay}">
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
-											<RadioButton Style="{DynamicResource BrushChoiceControlItem}"
+											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"
 												GroupName="MaterialDesignAccentOrNormal">
 												<RadioButton.BorderBrush>
 													<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
 												</RadioButton.BorderBrush>
-												<local:BrushBoxControl Label="{Binding Name}" FontSize="10">
+												<local:BrushBoxControl Label="{Binding Label}" FontSize="10">
 													<local:BrushBoxControl.Brush>
 														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
 													</local:BrushBoxControl.Brush>

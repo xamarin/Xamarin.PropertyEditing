@@ -1,11 +1,14 @@
+using System.Windows;
+
 namespace Xamarin.PropertyEditing.Windows
 {
 	internal class MaterialDesignColorEditorControl
 		: PropertyEditorControl
 	{
-		public MaterialDesignColorEditorControl ()
+		static MaterialDesignColorEditorControl ()
 		{
-			DefaultStyleKey = typeof (MaterialDesignColorEditorControl);
+			FocusableProperty.OverrideMetadata (typeof (MaterialDesignColorEditorControl), new FrameworkPropertyMetadata (false));
+			DefaultStyleKeyProperty.OverrideMetadata (typeof (MaterialDesignColorEditorControl), new FrameworkPropertyMetadata (typeof (MaterialDesignColorEditorControl)));
 		}
 	}
 }
