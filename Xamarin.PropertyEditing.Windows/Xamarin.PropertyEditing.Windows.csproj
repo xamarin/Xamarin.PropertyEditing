@@ -81,6 +81,7 @@
     <Compile Include="MaterialDesignColorEditorControl.cs" />
     <Compile Include="MultiplyMarginConverter.cs" />
     <Compile Include="ObjectEditorControl.cs" />
+    <Compile Include="ResourceBrushEditorControl.cs" />
     <Compile Include="ResourceSelectorWindow.xaml.cs">
       <DependentUpon>ResourceSelectorWindow.xaml</DependentUpon>
     </Compile>

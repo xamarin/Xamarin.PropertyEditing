@@ -313,6 +313,10 @@
     <value>Solid color brush</value>
     <comment>Solid color brush help text</comment>
   </data>
+  <data name="ResourceBrush" xml:space="preserve">
+    <value>Brush from resource</value>
+    <comment>Brush from resource help text</comment>
+  </data>
   <data name="Opacity" xml:space="preserve">
     <value>Opacity</value>
   </data>

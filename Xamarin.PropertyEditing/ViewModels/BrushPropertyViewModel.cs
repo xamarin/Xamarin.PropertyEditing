@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Drawing;
 
@@ -22,27 +24,43 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public SolidBrushViewModel Solid { get; }
 		public MaterialDesignColorViewModel MaterialDesign { get; }
 
+		private ResourceSelectorViewModel resourceSelector;
+		public ResourceSelectorViewModel ResourceSelector
+		{
+			get => resourceSelector;
+			private set {
+				resourceSelector = value;
+				OnPropertyChanged ();
+			}
+		}
+
 		// TODO: make this its own property view model so we can edit bindings, set to resources, etc.
 		public double Opacity {
 			get => Value == null ? 1.0 : Value.Opacity;
 			set {
-				if (Value is null) return;
-				if (Value is CommonSolidBrush solid) {
+				switch (Value) {
+				case CommonBrush brush when brush == null:
+					return;
+				case CommonSolidBrush solid:
 					Value = new CommonSolidBrush (solid.Color, solid.ColorSpace, value);
-				} else if (Value is CommonImageBrush img) {
+					break;
+				case CommonImageBrush img:
 					Value = new CommonImageBrush (
 						img.ImageSource, img.AlignmentX, img.AlignmentY, img.Stretch, img.TileMode,
 						img.ViewBox, img.ViewBoxUnits, img.ViewPort, img.ViewPortUnits, value);
-				} else if (Value is CommonLinearGradientBrush linear) {
+					break;
+				case CommonLinearGradientBrush linear:
 					Value = new CommonLinearGradientBrush (
 						linear.StartPoint, linear.EndPoint, linear.GradientStops,
 						linear.ColorInterpolationMode, linear.MappingMode, linear.SpreadMethod, value);
-				} else if (Value is CommonRadialGradientBrush radial) {
+					break;
+				case CommonRadialGradientBrush radial:
 					Value = new CommonRadialGradientBrush (
 						radial.Center, radial.GradientOrigin, radial.RadiusX, radial.RadiusY,
 						radial.GradientStops, radial.ColorInterpolationMode, radial.MappingMode,
 						radial.SpreadMethod, value);
-				} else {
+					break;
+				default:
 					throw new InvalidOperationException ("Value is an unsupported brush type.");
 				}
 				OnPropertyChanged ();
@@ -53,6 +71,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			base.OnValueChanged ();
 			OnPropertyChanged (nameof (Opacity));
+		}
+
+		protected override void OnPropertyChanged ([CallerMemberName] string propertyName = null)
+		{
+			base.OnPropertyChanged (propertyName);
+			if (propertyName == nameof (PropertyViewModel.ResourceProvider)) {
+				ResourceSelector = (ResourceProvider != null) ? new ResourceSelectorViewModel (ResourceProvider, Editors.Select (ed => ed.Target), Property) : null;
+			}
 		}
 	}
 }

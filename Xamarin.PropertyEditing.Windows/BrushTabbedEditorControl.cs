@@ -25,6 +25,7 @@ namespace Xamarin.PropertyEditing.Windows
 			this.advancedPropertyPanel = GetTemplateChild ("advancedPropertyPanel") as Expander;
 			this.solidBrushEditor = GetTemplateChild ("solidBrushEditor") as SolidBrushEditorControl;
 			this.materialDesignColorEditor = GetTemplateChild ("materialDesignColorEditor") as MaterialDesignColorEditorControl;
+			this.resourceBrushEditor = GetTemplateChild ("resourceBrushEditor") as ResourceBrushEditorControl;
 
 			if (this.brushChoice == null)
 				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child ChoiceControl named \"brushChoice\"");
@@ -34,6 +35,8 @@ namespace Xamarin.PropertyEditing.Windows
 				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child SolidBrushEditorControl named \"solidBrushEditor\"");
 			if (this.materialDesignColorEditor == null)
 				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child MaterialDesignColorEditorControl named \"materialDesignColorEditor\"");
+			if (this.resourceBrushEditor == null)
+				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child ResourceBrushEditorControl named \"resourceBrushEditor\"");
 
 			StorePreviousBrush ();
 			SelectTabFromBrush ();
@@ -54,6 +57,7 @@ namespace Xamarin.PropertyEditing.Windows
 					ViewModel.Solid.CommitLastColor ();
 					ViewModel.Solid.CommitHue ();
 					break;
+				case resource:
 				case materialDesign:
 					ViewModel.Value = ViewModel.Solid?.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
 					break;
@@ -75,18 +79,24 @@ namespace Xamarin.PropertyEditing.Windows
 					this.brushChoice.SelectedValue = solid;
 					ShowSelectedTab ();
 					break;
+				case Key.R:
+					e.Handled = true;
+					this.brushChoice.SelectedValue = resource;
+					ShowSelectedTab ();
+					break;
 				case Key.M:
 					e.Handled = true;
 					this.brushChoice.SelectedValue = materialDesign;
 					ShowSelectedTab ();
 					break;
-					// TODO: add G, T, R for the other brush types when they are available.
+					// TODO: add G, T, etc. for the other brush types when they are available.
 				}
 			};
 		}
 
 		public static readonly string None = none;
 		public static readonly string Solid = solid;
+		public static readonly string Resource = resource;
 		public static readonly string MaterialDesign = materialDesign;
 
 		internal void FocusFirstChild ()
@@ -96,11 +106,13 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private const string none = nameof (none);
 		private const string solid = nameof (solid);
+		private const string resource = nameof (resource);
 		private const string materialDesign = nameof (materialDesign);
 
 		private ChoiceControl brushChoice;
 		private Expander advancedPropertyPanel;
 		private SolidBrushEditorControl solidBrushEditor;
+		private ResourceBrushEditorControl resourceBrushEditor;
 		private MaterialDesignColorEditorControl materialDesignColorEditor;
 
 		private BrushPropertyViewModel ViewModel => DataContext as BrushPropertyViewModel;
@@ -127,7 +139,17 @@ namespace Xamarin.PropertyEditing.Windows
 				ShowSelectedTab ();
 				break;
 			case CommonSolidBrush _:
-				this.brushChoice.SelectedValue = solid;
+				switch (ViewModel.ValueSource) {
+				case ValueSource.Local:
+					this.brushChoice.SelectedValue = solid;
+					break;
+				case ValueSource.Resource:
+					this.brushChoice.SelectedValue = resource;
+					break;
+				default:
+					this.brushChoice.SelectedValue = solid;
+					break;
+				}
 				ShowSelectedTab ();
 				break;
 			}
@@ -140,16 +162,25 @@ namespace Xamarin.PropertyEditing.Windows
 				this.advancedPropertyPanel.Visibility = Visibility.Collapsed;
 				this.solidBrushEditor.Visibility = Visibility.Collapsed;
 				this.materialDesignColorEditor.Visibility = Visibility.Collapsed;
+				this.resourceBrushEditor.Visibility = Visibility.Collapsed;
 				break;
 			case solid:
 				this.advancedPropertyPanel.Visibility = Visibility.Visible;
 				this.solidBrushEditor.Visibility = Visibility.Visible;
 				this.materialDesignColorEditor.Visibility = Visibility.Collapsed;
+				this.resourceBrushEditor.Visibility = Visibility.Collapsed;
 				break;
 			case materialDesign:
 				this.advancedPropertyPanel.Visibility = Visibility.Visible;
 				this.solidBrushEditor.Visibility = Visibility.Collapsed;
 				this.materialDesignColorEditor.Visibility = Visibility.Visible;
+				this.resourceBrushEditor.Visibility = Visibility.Collapsed;
+				break;
+			case resource:
+				this.advancedPropertyPanel.Visibility = Visibility.Collapsed;
+				this.solidBrushEditor.Visibility = Visibility.Collapsed;
+				this.materialDesignColorEditor.Visibility = Visibility.Collapsed;
+				this.resourceBrushEditor.Visibility = Visibility.Visible;
 				break;
 			}
 		}

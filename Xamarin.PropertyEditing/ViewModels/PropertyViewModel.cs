@@ -36,6 +36,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public Resource Resource
+		{
+			get => this.value?.ValueDescriptor as Resource;
+			set {
+				if (Resource == value)
+					return;
+
+				if (value == null)
+					return;
+
+				if (SetValueResourceCommand.CanExecute (value))
+					SetValueResourceCommand.Execute (value);
+			}
+		}
+
 		public string CustomExpression
 		{
 			get { return this.value?.CustomExpression; }
@@ -142,6 +157,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof (Value));
 			OnPropertyChanged (nameof (ValueSource));
 			OnPropertyChanged (nameof (CustomExpression));
+			OnPropertyChanged (nameof (Resource));
 
 			((RelayCommand) ClearValueCommand)?.ChangeCanExecute ();
 
