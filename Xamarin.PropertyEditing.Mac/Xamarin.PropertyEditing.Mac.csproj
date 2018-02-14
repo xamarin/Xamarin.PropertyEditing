@@ -89,6 +89,7 @@
     <Compile Include="Controls\Custom\CommandMenuItem.cs" />
     <Compile Include="Controls\Custom\BasePopOverControl.cs" />
     <Compile Include="Controls\Custom\BasePopOverViewModelControl.cs" />
+    <Compile Include="Controls\CustomExpressionView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

@@ -51,6 +51,13 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+		TargetPlatform targetPlatform = TargetPlatform.Default;
+		public TargetPlatform TargetPlatform
+		{
+			get { return targetPlatform; }
+			set { targetPlatform = value; }
+		}
+
 		public IEditorProvider EditorProvider
 		{
 			get { return editorProvider; }
@@ -61,7 +68,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				// Populate the Property Table
 				editorProvider = value;
-				viewModel = new PanelViewModel (editorProvider, TargetPlatform.Default);
+				viewModel = new PanelViewModel (editorProvider, TargetPlatform);
 				dataSource = new PropertyTableDataSource (viewModel);
 				propertyTable.Delegate = new PropertyTableDelegate (dataSource);
 				propertyTable.DataSource = dataSource;

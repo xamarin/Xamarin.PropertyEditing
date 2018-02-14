@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AppKit;
 using CoreGraphics;
-using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -26,6 +25,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Editable = false,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
+			ErrorMessages.Cell.Wraps = true;
 
 			foreach (var error in errors) {
 				ErrorMessages.StringValue += error + "\n";
