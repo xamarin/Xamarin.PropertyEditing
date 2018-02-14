@@ -1,21 +1,37 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
 using AppKit;
-using CoreGraphics;
 using Foundation;
 using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal abstract class BaseNumericEditorControl : PropertyEditorControl
+	internal class NumericEditorControl<T>
+		: PropertyEditorControl
+		where T : struct
 	{
-		public BaseNumericEditorControl ()
+		public NumericEditorControl ()
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
 			NumericEditor = new NumericSpinEditor ();
+			NumericEditor.ValueChanged += OnValueChanged;
+
+			TypeCode code = Type.GetTypeCode (typeof (T));
+			switch (code) {
+				case TypeCode.Double:
+				case TypeCode.Single:
+				case TypeCode.Decimal:
+					NumberStyle = NSNumberFormatterStyle.Decimal;
+					Formatter.UsesGroupingSeparator = false;
+					Formatter.MaximumFractionDigits = 15;
+					break;
+				default:
+					NumberStyle = NSNumberFormatterStyle.None;
+					break;
+			}
+
 			AddSubview (NumericEditor);
 
 			this.DoConstraints ( new[] {
@@ -65,6 +81,16 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void SetEnabled ()
 		{
 			NumericEditor.Editable = ViewModel.Property.CanWrite;
+		}
+
+		protected virtual void OnValueChanged (object sender, EventArgs e)
+		{
+			((PropertyViewModel<T>)ViewModel).Value = (T)Convert.ChangeType (NumericEditor.Value, typeof(T));
+		}
+
+		protected override void UpdateValue()
+		{
+			NumericEditor.Value = (double)Convert.ChangeType (((PropertyViewModel<T>)ViewModel).Value, typeof(double));
 		}
 
 		protected override void UpdateAccessibilityValues ()

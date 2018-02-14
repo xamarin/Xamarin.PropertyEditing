@@ -119,6 +119,9 @@ namespace Xamarin.PropertyEditing.Mac
 				return null;
 
 			if (controlType.IsGenericTypeDefinition) {
+				if (genericArgs == null)
+					genericArgs = propertyType.GetGenericArguments ();
+
 				controlType = controlType.MakeGenericType (genericArgs);
 			}
 
@@ -183,8 +186,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private static readonly Dictionary<Type, Type> ViewModelTypes = new Dictionary<Type, Type> {
 			{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
-			{typeof (IntegerPropertyViewModel), typeof (IntegerNumericEditorControl)},
-			{typeof (FloatingPropertyViewModel), typeof (DecimalNumericEditorControl)},
+			{typeof (NumericPropertyViewModel<int>), typeof (NumericEditorControl<>)},
+			{typeof (NumericPropertyViewModel<long>), typeof (NumericEditorControl<>)},
+			{typeof (NumericPropertyViewModel<float>), typeof (NumericEditorControl<>)},
+			{typeof (NumericPropertyViewModel<double>), typeof (NumericEditorControl<>)},
 			{typeof (PropertyViewModel<bool>), typeof (BooleanEditorControl)},
 			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (CGPointEditorControl)},
 			{typeof (PropertyViewModel<CoreGraphics.CGRect>), typeof (CGRectEditorControl)},
