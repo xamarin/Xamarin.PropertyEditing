@@ -530,103 +530,31 @@
 		</Setter>
 	</Style>
 
-	<Style x:Key="NoBrushIcon" TargetType="Image">
-		<Setter Property="Source">
-			<Setter.Value>
-				<DrawingImage>
-					<DrawingImage.Drawing>
-						<DrawingGroup/>
-					</DrawingImage.Drawing>
-				</DrawingImage>
-			</Setter.Value>
-		</Setter>
-	</Style>
-
-	<Style x:Key="SolidBrushIcon" TargetType="Image">
-		<Setter Property="Source">
-			<Setter.Value>
-				<DrawingImage>
-					<DrawingImage.Drawing>
-						<DrawingGroup/>
-					</DrawingImage.Drawing>
-				</DrawingImage>
-			</Setter.Value>
-		</Setter>
-	</Style>
-
-	<Style x:Key="MaterialDesignIcon" TargetType="Image">
-		<Setter Property="DataContext" Value="{DynamicResource ToggleItemForegroundBrush}"/>
-		<Setter Property="Source">
-			<Setter.Value>
-				<DrawingImage>
-					<DrawingImage.Drawing>
-						<DrawingGroup>
-							<DrawingGroup x:Name="DrawingLayer">
-								<DrawingGroup.ClipGeometry>
-									<RectangleGeometry Rect="0,0,32,32" />
-								</DrawingGroup.ClipGeometry>
-								<DrawingGroup x:Name="Canvas" Transform="1,0,0,1,-240,-928">
-									<DrawingGroup x:Name="property_brush_gradient_16">
-										<DrawingGroup.ClipGeometry>
-											<PathGeometry FillRule="Nonzero" Figures="M240,928L272,928 272,960 240,960 240,928z" />
-										</DrawingGroup.ClipGeometry>
-										<DrawingGroup x:Name="glyph">
-											<DrawingGroup Transform="1,0,0,1,242,935">
-												<GeometryDrawing x:Name="path0_fill">
-													<GeometryDrawing.Brush>
-														<SolidColorBrush Color="{Binding Color}"/>
-													</GeometryDrawing.Brush>
-													<GeometryDrawing.Geometry>
-														<PathGeometry FillRule="EvenOdd" Figures="M2.5,0C1.11929,0,0,1.11926,0,2.5L0,15.5C0,16.8807,1.11929,18,2.5,18L25.5,18C26.8807,18,28,16.8807,28,15.5L28,2.5C28,1.11926,26.8807,0,25.5,0L2.5,0z M2.5,2C2.22386,2,2,2.22388,2,2.5L2,15.5C2,15.7761,2.22386,16,2.5,16L25.5,16C25.7762,16,26,15.7761,26,15.5L26,2.5C26,2.22388,25.7762,2,25.5,2L2.5,2z" />
-													</GeometryDrawing.Geometry>
-												</GeometryDrawing>
-											</DrawingGroup>
-										</DrawingGroup>
-										<DrawingGroup x:Name="mask">
-											<DrawingGroup Transform="1,0,0,1,245,938">
-												<GeometryDrawing x:Name="path1_fill">
-													<GeometryDrawing.Brush>
-														<LinearGradientBrush StartPoint="0,0" EndPoint="1,0" MappingMode="Absolute" Opacity="1" Transform="22,3.00507E-07,-5.50929E-07,40.3333,2.75465E-07,-8.16667">
-															<GradientStop Color="{Binding Color}" Offset="0" />
-															<GradientStop Color="{Binding Color, Converter={local:ColorToTransparentColorConverter}}" Offset="1" />
-														</LinearGradientBrush>
-													</GeometryDrawing.Brush>
-													<GeometryDrawing.Geometry>
-														<PathGeometry FillRule="Nonzero" Figures="M0,0L22,0 22,12 0,12 0,0z" />
-													</GeometryDrawing.Geometry>
-												</GeometryDrawing>
-											</DrawingGroup>
-										</DrawingGroup>
-									</DrawingGroup>
-								</DrawingGroup>
-							</DrawingGroup>
-						</DrawingGroup>
-					</DrawingImage.Drawing>
-				</DrawingImage>
-			</Setter.Value>
-		</Setter>
+	<Style x:Key="BrushChoiceIconStyle" TargetType="Path">
+		<Setter Property="Stroke" Value="{DynamicResource InputForegroundBrush}" />
+		<Setter Property="Fill" Value="{DynamicResource InputForegroundBrush}" />
+		<Setter Property="VerticalAlignment" Value="Center" />
 	</Style>
 
 	<local:BrushChoiceTemplateSelector x:Key="BrushChoiceTemplateSelector">
 		<local:BrushChoiceTemplateSelector.NoBrushTemplate>
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
-					<ContentControl Content="{DynamicResource BrushChoiceNoBrushIcon}" MinHeight="10" MinWidth="15"/>
+					<Path Style="{StaticResource BrushChoiceIconStyle}" Data="{DynamicResource BrushChoiceNoBrushGeometry}" MinHeight="10" MinWidth="15"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.NoBrushTemplate>
 		<local:BrushChoiceTemplateSelector.SolidBrushTemplate>
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
-					<ContentControl Content="{DynamicResource BrushChoiceSolidBrushIcon}" MinHeight="10" MinWidth="15"/>
+					<Path Style="{StaticResource BrushChoiceIconStyle}" Data="{DynamicResource BrushChoiceSolidBrushGeometry}" MinHeight="10" MinWidth="15"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.SolidBrushTemplate>
 		<local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
-					<Image Style="{DynamicResource MaterialDesignIcon}"
-						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="30" Height="20"/>
+					<Path Style="{StaticResource BrushChoiceIconStyle}" Data="{DynamicResource BrushChoiceMaterialDesignGeometry}" MinHeight="10" MinWidth="15"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
