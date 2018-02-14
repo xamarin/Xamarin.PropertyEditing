@@ -167,7 +167,7 @@ namespace Xamarin.PropertyEditing.Windows
 		private void OnResourceRequested (object sender, ResourceRequestedEventArgs e)
 		{
 			var vm = ((PropertyViewModel)DataContext);
-			e.Resource = ResourceSelectorWindow.RequestResource (Window.GetWindow (this), vm.ResourceProvider, vm.Editors.Select (ed => ed.Target), vm.Property);
+			e.Resource = ResourceSelectorWindow.RequestResource (Window.GetWindow (this), vm.ResourceProvider, vm.Editors.Select (ed => ed.Target), vm.Property, e.Resource);
 		}
 
 		private void OnCustomExpression (object sender, RoutedEventArgs e)

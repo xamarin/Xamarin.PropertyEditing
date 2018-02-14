@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -18,6 +16,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
+
 			RequestCurrentValueUpdate();
 		}
 
@@ -113,6 +112,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 				// The public setter for Value is a local set for binding
 				SetCurrentValue (currentValue);
 			}
+		}
+
+		protected override ResourceRequestedEventArgs CreateRequestResourceArgs ()
+		{
+			var args = base.CreateRequestResourceArgs ();
+			args.Resource = Resource;
+			return args;
 		}
 
 		protected async Task SetValueAsync (ValueInfo<TValue> newValue)
@@ -417,6 +423,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		protected virtual ResourceRequestedEventArgs CreateRequestResourceArgs ()
+		{
+			return new ResourceRequestedEventArgs ();
+		}
+
 		private bool CanRequestResource ()
 		{
 			return SupportsResources && ResourceProvider != null && SetValueResourceCommand != null;
@@ -424,7 +435,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void OnRequestResource ()
 		{
-			var e = new ResourceRequestedEventArgs();
+			var e = CreateRequestResourceArgs ();
 			ResourceRequested?.Invoke (this, e);
 			if (e.Resource == null)
 				return;
