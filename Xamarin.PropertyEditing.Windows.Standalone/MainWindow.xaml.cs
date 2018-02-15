@@ -25,6 +25,11 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 			};
 			this.panel.EditorProvider = new MockEditorProvider ();
 			this.panel.ResourceProvider = new MockResourceProvider ();
+#if USE_VS_ICONS
+			this.panel.Resources.MergedDictionaries.Add (new ResourceDictionary {
+				Source = new Uri ("pack://application:,,,/ProppyIcons.xaml", UriKind.RelativeOrAbsolute)
+			});
+#endif
 		}
 
 		private async void Button_Click (object sender, RoutedEventArgs e)
