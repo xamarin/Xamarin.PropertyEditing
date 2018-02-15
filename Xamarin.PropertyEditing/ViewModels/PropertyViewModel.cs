@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -13,9 +11,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class PropertyViewModel<TValue>
 		: PropertyViewModel
 	{
+		static PropertyViewModel ()
+		{
+			Type t = typeof(TValue);
+			if (t.Name == NullableName)
+				DefaultValue = (TValue) Activator.CreateInstance (Nullable.GetUnderlyingType (t));
+			else
+				DefaultValue = default(TValue);
+		}
+
 		public PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (platform, property, editors)
 		{
+			this.isNullable = (!property.ValueSources.HasFlag (ValueSources.Default) || property.Type.Name == NullableName);
+
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
 			RequestCurrentValueUpdate();
@@ -49,6 +58,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected virtual TValue ValidateValue (TValue validationValue)
 		{
+			if (!this.isNullable && validationValue == null) {
+				validationValue = DefaultValue;
+			}
+
 			return validationValue;
 		}
 
@@ -130,10 +143,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		private const string NullableName = "Nullable`1";
+		private bool isNullable;
 		private ValueInfo<TValue> value;
 
 		private bool SetCurrentValue (ValueInfo<TValue> newValue)
 		{
+			if (!this.isNullable && newValue.Value == null) {
+				newValue.Value = DefaultValue;
+			}
+
 			if (this.value == newValue)
 				return false;
 
@@ -180,6 +199,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			return (ValueSource != ValueSource.Default && ValueSource != ValueSource.Unset && ValueSource != ValueSource.Unknown);
 		}
+
+		private static TValue DefaultValue;
 	}
 
 	internal abstract class PropertyViewModel

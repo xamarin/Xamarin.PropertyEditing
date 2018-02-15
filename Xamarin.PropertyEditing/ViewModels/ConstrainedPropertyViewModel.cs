@@ -1,15 +1,25 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Windows.Input;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal abstract class ConstrainedPropertyViewModel<T>
 		: PropertyViewModel<T>
-		where T : IComparable<T>
 	{
+		static ConstrainedPropertyViewModel()
+		{
+			Type t = typeof(T);
+			if (t.Name != "Nullable`1")
+				return;
+
+			// We could do a dynamicmethod here for call speed, but it's probably not needed.
+			RawType = t.GetGenericArguments ()[0];
+			Comparer = RawType.GetMethod ("CompareTo", new[] { RawType });
+			NullableConverter = new NullableConverter (t);
+		}
+
 		protected ConstrainedPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (platform, property, editors)
 		{
@@ -52,12 +62,26 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (!IsConstrained)
 				return validationValue;
 
-			if (validationValue.CompareTo (MaximumValue) > 0)
+			if (Compare (validationValue, MaximumValue) > 0)
 				return MaximumValue;
-			else if (validationValue.CompareTo (MinimumValue) < 0)
+			else if (Compare (validationValue, MinimumValue) < 0)
 				return MinimumValue;
 
 			return validationValue;
+		}
+
+		protected int Compare (T left, T right)
+		{
+			if (left is IComparable<T> comparable)
+				return comparable.CompareTo (right);
+			if (Equals (left, right))
+				return 0;
+			if (ReferenceEquals (left, null))
+				return -1;
+			if (ReferenceEquals (right, null))
+				return 1;
+
+			return (int) Comparer.Invoke (NullableConverter.ConvertTo (left, RawType), new[] { NullableConverter.ConvertTo (right, RawType) });
 		}
 
 		protected override void OnEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
@@ -114,7 +138,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (left == null)
 				return right;
 
-			return (left.CompareTo (right) < 0) ? right : left;
+			return (Compare (left, right) < 0) ? right : left;
 		}
 
 		private T Min (T left, T right)
@@ -122,7 +146,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (left == null)
 				return right;
 
-			return (left.CompareTo (right) < 0) ? left : right;
+			return (Compare (left, right) < 0) ? left : right;
 		}
+
+		private static readonly Type RawType;
+		private static readonly MethodInfo Comparer;
+		private static readonly NullableConverter NullableConverter;
 	}
 }

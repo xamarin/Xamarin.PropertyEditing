@@ -19,6 +19,10 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 					.Select (type => (TypeConverter)Activator.CreateInstance (type))
 					.ToArray();
 			}
+
+			if (typeof(T).IsValueType) {
+				this.nullConverter = new NullableConverter (typeof(Nullable<>).MakeGenericType (typeof(T)));
+			}
 		}
 
 		public string Name { get; }
@@ -41,6 +45,11 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 						return true;
 					}
 				}
+			}
+
+			if (this.nullConverter != null && (fromValue != null  && this.nullConverter.CanConvertFrom (fromValue.GetType()) || this.nullConverter.CanConvertFrom (typeof(TFrom)))) {
+				toValue = this.nullConverter.ConvertFrom (fromValue);
+				return true;
 			}
 
 			if (toType == typeof(string)) {
@@ -96,5 +105,6 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		}
 
 		private readonly IReadOnlyList<TypeConverter> typeConverters;
+		private readonly NullableConverter nullConverter;
 	}
 }

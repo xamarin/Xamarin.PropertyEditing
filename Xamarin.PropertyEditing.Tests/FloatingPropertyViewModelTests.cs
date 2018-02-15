@@ -7,7 +7,7 @@ namespace Xamarin.PropertyEditing.Tests
 {
 	[TestFixture]
 	internal class FloatingPropertyViewModelTests
-		: NumericViewModelTests<double>
+		: NumericViewModelTests<double, double>
 	{
 		protected override double GetRandomTestValue (Random rand)
 		{

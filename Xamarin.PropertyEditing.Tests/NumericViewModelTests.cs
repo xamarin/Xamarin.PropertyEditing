@@ -9,9 +9,9 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Tests
 {
-	internal abstract class NumericViewModelTests<T>
-		: ConstrainedPropertyViewModelTests<T, NumericPropertyViewModel<T>>
-		where T : struct, IComparable<T>
+	internal abstract class NumericViewModelTests<T, TReal>
+		: ConstrainedPropertyViewModelTests<T, TReal, NumericPropertyViewModel<T>>
+		where TReal : struct, IComparable<TReal>
 	{
 		[Test]
 		public void SelfConstrainedValuesCommands ()
