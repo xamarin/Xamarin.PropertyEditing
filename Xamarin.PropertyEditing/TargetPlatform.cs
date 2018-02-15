@@ -20,6 +20,15 @@ namespace Xamarin.PropertyEditing
 		}
 
 		/// <summary>
+		/// Specifies whether Material Design is relevant to theplatform.
+		/// </summary>
+		public bool SupportsMaterialDesign
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets a dictionary defining the property types will be grouped into a single editor and their groups resource name.
 		/// </summary>
 		public IReadOnlyDictionary<Type, string> GroupedTypes

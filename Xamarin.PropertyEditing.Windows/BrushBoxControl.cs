@@ -35,5 +35,16 @@ namespace Xamarin.PropertyEditing.Windows
 			get => (Visibility)GetValue (NoBrushVisibleProperty);
 			set => SetValue (NoBrushVisibleProperty, value);
 		}
+
+		public static readonly DependencyProperty LabelProperty =
+			DependencyProperty.Register (
+				nameof (Label), typeof (string), typeof (BrushBoxControl),
+				new PropertyMetadata (""));
+
+		public string Label
+		{
+			get => (string)GetValue (LabelProperty);
+			set => SetValue (LabelProperty, value);
+		}
 	}
 }

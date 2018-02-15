@@ -66,6 +66,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		protected override void OnSelectionChanged (SelectionChangedEventArgs e)
 		{
+			if (e.AddedItems.Count == 0) return;
 			var presenter = (ContentPresenter) ItemContainerGenerator.ContainerFromItem (e.AddedItems[0]);
 			if (presenter == null)
 				return;

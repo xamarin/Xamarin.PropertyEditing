@@ -8,12 +8,13 @@ namespace Xamarin.PropertyEditing.Drawing
 	[Serializable]
 	public struct CommonColor : IEquatable<CommonColor>
 	{
-		public CommonColor (byte r, byte g, byte b, byte a = 255)
+		public CommonColor (byte r, byte g, byte b, byte a = 255, string label = null)
 		{
 			A = a;
 			R = r;
 			G = g;
 			B = b;
+			Label = label;
 			c = null;
 			m = null;
 			y = null;
@@ -31,18 +32,26 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// Alpha channel
 		/// </summary>
 		public byte A { get; }
+
 		/// <summary>
 		/// Red component
 		/// </summary>
 		public byte R { get; }
+
 		/// <summary>
 		/// Green component
 		/// </summary>
 		public byte G { get; }
+
 		/// <summary>
 		/// Blue component
 		/// </summary>
 		public byte B { get; }
+
+		/// <summary>
+		/// An optional label for the color, that does not affect equality or anything else.
+		/// </summary>
+		public string Label { get; set; }
 
 		double? k;
 		/// <summary>
@@ -474,7 +483,10 @@ namespace Xamarin.PropertyEditing.Drawing
 			return color;
 		}
 
-		static double Mod (double a, double b)	=> a - b * Math.Floor (a / b);
+		public static CommonColor Black = new CommonColor (0, 0, 0);
+		public static CommonColor White = new CommonColor (255, 255, 255);
+
+		private static double Mod (double a, double b)	=> a - b * Math.Floor (a / b);
 
 		public override bool Equals (object obj)
 		{
@@ -483,9 +495,11 @@ namespace Xamarin.PropertyEditing.Drawing
 			return base.Equals ((CommonColor)obj);
 		}
 
-		public bool Equals (CommonColor other)
+		public bool Equals (CommonColor other) => Equals (other, false);
+
+		public bool Equals (CommonColor other, bool ignoreAlpha)
 		{
-			return A == other.A &&
+			return (ignoreAlpha || A == other.A) &&
 				   R == other.R &&
 				   G == other.G &&
 				   B == other.B;
@@ -493,6 +507,11 @@ namespace Xamarin.PropertyEditing.Drawing
 
 		public static bool operator == (CommonColor left, CommonColor right) => Equals (left, right);
 		public static bool operator != (CommonColor left, CommonColor right) => !Equals (left, right);
+
+		public static double SquaredDistance (CommonColor left, CommonColor right)
+			=> (left.R - right.R) * (left.R - right.R)
+			+ (left.G - right.G) * (left.G - right.G)
+			+ (left.B - right.B) * (left.B - right.B);
 
 		public override int GetHashCode ()
 		{

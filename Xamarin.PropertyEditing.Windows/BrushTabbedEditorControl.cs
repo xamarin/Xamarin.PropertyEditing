@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Xamarin.PropertyEditing.Drawing;
@@ -9,7 +12,7 @@ namespace Xamarin.PropertyEditing.Windows
 	public class BrushTabbedEditorControl
 		: Control
 	{
-		public BrushTabbedEditorControl()
+		public BrushTabbedEditorControl ()
 		{
 			DefaultStyleKey = typeof (BrushTabbedEditorControl);
 		}
@@ -19,12 +22,25 @@ namespace Xamarin.PropertyEditing.Windows
 			base.OnApplyTemplate ();
 
 			this.brushChoice = GetTemplateChild ("brushChoice") as ChoiceControl;
+			this.advancedPropertyPanel = GetTemplateChild ("advancedPropertyPanel") as Expander;
+			this.solidBrushEditor = GetTemplateChild ("solidBrushEditor") as SolidBrushEditorControl;
+			this.materialDesignColorEditor = GetTemplateChild ("materialDesignColorEditor") as MaterialDesignColorEditorControl;
 
 			if (this.brushChoice == null)
-				throw new InvalidOperationException ($"{nameof(BrushTabbedEditorControl)} is missing a child ChoiceControl named \"brushChoice\"");
+				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child ChoiceControl named \"brushChoice\"");
+			if (this.advancedPropertyPanel == null)
+				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child Expander named \"advancedPropertyPanel\"");
+			if (this.solidBrushEditor == null)
+				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child SolidBrushEditorControl named \"solidBrushEditor\"");
+			if (this.materialDesignColorEditor == null)
+				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child MaterialDesignColorEditorControl named \"materialDesignColorEditor\"");
 
 			StorePreviousBrush ();
 			SelectTabFromBrush ();
+
+			if (ViewModel.MaterialDesign == null) {
+				this.brushChoice.Items.Filter = o => ((ChoiceItem)o).Name != "materialDesignTab";
+			}
 
 			this.brushChoice.SelectedItemChanged += (s, e) => {
 				if (ViewModel == null) return;
@@ -38,7 +54,11 @@ namespace Xamarin.PropertyEditing.Windows
 					ViewModel.Solid.CommitLastColor ();
 					ViewModel.Solid.CommitHue ();
 					break;
+				case materialDesign:
+					ViewModel.Value = ViewModel.Solid?.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
+					break;
 				}
+				ShowSelectedTab ();
 			};
 
 			this.brushChoice.KeyUp += (s, e) => {
@@ -48,28 +68,40 @@ namespace Xamarin.PropertyEditing.Windows
 				case Key.N:
 					e.Handled = true;
 					this.brushChoice.SelectedValue = none;
+					ShowSelectedTab ();
 					break;
 				case Key.S:
 					e.Handled = true;
 					this.brushChoice.SelectedValue = solid;
+					ShowSelectedTab ();
 					break;
-				// TODO: add G, T, R for the other brush types when they are available.
+				case Key.M:
+					e.Handled = true;
+					this.brushChoice.SelectedValue = materialDesign;
+					ShowSelectedTab ();
+					break;
+					// TODO: add G, T, R for the other brush types when they are available.
 				}
 			};
 		}
 
 		public static readonly string None = none;
 		public static readonly string Solid = solid;
+		public static readonly string MaterialDesign = materialDesign;
 
-		internal void FocusFirstChild()
+		internal void FocusFirstChild ()
 		{
-			this.brushChoice?.FocusSelectedItem();
+			this.brushChoice?.FocusSelectedItem ();
 		}
 
 		private const string none = nameof (none);
 		private const string solid = nameof (solid);
+		private const string materialDesign = nameof (materialDesign);
 
 		private ChoiceControl brushChoice;
+		private Expander advancedPropertyPanel;
+		private SolidBrushEditorControl solidBrushEditor;
+		private MaterialDesignColorEditorControl materialDesignColorEditor;
 
 		private BrushPropertyViewModel ViewModel => DataContext as BrushPropertyViewModel;
 
@@ -83,12 +115,41 @@ namespace Xamarin.PropertyEditing.Windows
 
 		internal void SelectTabFromBrush ()
 		{
+			if (ViewModel != null && ViewModel.MaterialDesign != null
+				&& (ViewModel.MaterialDesign.NormalColor.HasValue || ViewModel.MaterialDesign.AccentColor.HasValue)) {
+				this.brushChoice.SelectedValue = materialDesign;
+				ShowSelectedTab ();
+				return;
+			}
 			switch (ViewModel?.Value) {
 			case null:
 				this.brushChoice.SelectedValue = none;
+				ShowSelectedTab ();
 				break;
 			case CommonSolidBrush _:
 				this.brushChoice.SelectedValue = solid;
+				ShowSelectedTab ();
+				break;
+			}
+		}
+
+		private void ShowSelectedTab()
+		{
+			switch ((string)((ChoiceItem)(this.brushChoice.SelectedItem)).Value) {
+			case none:
+				this.advancedPropertyPanel.Visibility = Visibility.Collapsed;
+				this.solidBrushEditor.Visibility = Visibility.Collapsed;
+				this.materialDesignColorEditor.Visibility = Visibility.Collapsed;
+				break;
+			case solid:
+				this.advancedPropertyPanel.Visibility = Visibility.Visible;
+				this.solidBrushEditor.Visibility = Visibility.Visible;
+				this.materialDesignColorEditor.Visibility = Visibility.Collapsed;
+				break;
+			case materialDesign:
+				this.advancedPropertyPanel.Visibility = Visibility.Visible;
+				this.solidBrushEditor.Visibility = Visibility.Collapsed;
+				this.materialDesignColorEditor.Visibility = Visibility.Visible;
 				break;
 			}
 		}
