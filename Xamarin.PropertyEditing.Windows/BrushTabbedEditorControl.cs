@@ -58,6 +58,7 @@ namespace Xamarin.PropertyEditing.Windows
 					ViewModel.Solid.CommitHue ();
 					break;
 				case resource:
+					break;
 				case materialDesign:
 					ViewModel.Value = ViewModel.Solid?.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
 					break;
