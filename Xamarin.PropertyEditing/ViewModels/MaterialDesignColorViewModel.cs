@@ -153,9 +153,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 			var palette = FindPalette (colorName, isAccent);
 			if (palette == default (MaterialColorScale) || palette.Colors is null) return EmptyColorScale;
 
+			var isBlackAndWhite = palette.MainColor.Equals (CommonColor.Black);
+
 			return palette.Colors.Select (
 				(color, index) => new CommonColor? (
-					new CommonColor (color.R, color.G, color.B, 255, isAccent ? AccentNames[index] : NormalNames[index])));
+					new CommonColor (color.R, color.G, color.B, 255,
+					isBlackAndWhite ? BlackAndWhiteNames[index] :
+					isAccent ? AccentNames[index] : NormalNames[index])));
 		}
 
 		private void Parent_PropertyChanged (object sender, PropertyChangedEventArgs e)
@@ -185,6 +189,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private static string[] NormalNames = new[] { "50", "100", "200", "300", "400", "500", "600", "700", "800", "900" };
 		private static string[] AccentNames = new[] { "A100", "A200", "A400", "A700" };
+		private static string[] BlackAndWhiteNames = new[] { Strings.White, Strings.Black };
 
 		private static MaterialColorScale FindPalette (string colorName, bool isAccent = false)
 		{
@@ -263,6 +268,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			new MaterialColorScale (Strings.MaterialColorGrey, false, 6, new CommonColor(0xFA, 0xFA, 0xFA), new CommonColor(0xF5, 0xF5, 0xF5), new CommonColor(0xEE, 0xEE, 0xEE), new CommonColor(0xE0, 0xE0, 0xE0), new CommonColor(0xBD, 0xBD, 0xBD), new CommonColor(0x9E, 0x9E, 0x9E), new CommonColor(0x75, 0x75, 0x75), new CommonColor(0x61, 0x61, 0x61), new CommonColor(0x42, 0x42, 0x42), new CommonColor(0x21, 0x21, 0x21)),
 
 			new MaterialColorScale (Strings.MaterialColorBlueGrey, false, 4, new CommonColor(0xEC, 0xEF, 0xF1), new CommonColor(0xCF, 0xD8, 0xDC), new CommonColor(0xB0, 0xBE, 0xC5), new CommonColor(0x90, 0xA4, 0xAE), new CommonColor(0x78, 0x90, 0x9C), new CommonColor(0x60, 0x7D, 0x8B), new CommonColor(0x54, 0x6E, 0x7A), new CommonColor(0x45, 0x5A, 0x64), new CommonColor(0x37, 0x47, 0x4F), new CommonColor(0x26, 0x32, 0x38)),
+
+			new MaterialColorScale (Strings.MaterialColorBlackAndWhite, false, 1, CommonColor.White, CommonColor.Black)
 			};
 	}
 }

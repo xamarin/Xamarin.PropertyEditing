@@ -24,7 +24,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public CommonColor MainColor
 			=> IsAccent ?
 				(Colors != null && Colors.Count > 1 ? Colors[1] : CommonColor.Black) :
-				(Colors != null && Colors.Count > 5 ? Colors[5] : CommonColor.Black);
+				(Colors != null && Colors.Count > 5 ? Colors[5] : Colors.Count > 1 ? Colors[1] : CommonColor.Black);
 
 		public bool Equals (MaterialColorScale other)
 		{

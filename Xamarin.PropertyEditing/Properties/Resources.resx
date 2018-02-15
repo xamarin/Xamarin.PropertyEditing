@@ -434,4 +434,10 @@
     <value>Material Design Colors</value>
     <comment>Material design help text</comment>
   </data>
+  <data name="MaterialColorBlackAndWhite" xml:space="preserve">
+    <value>Black and White</value>
+  </data>
+  <data name="White" xml:space="preserve">
+    <value>White</value>
+  </data>
 </root>

@@ -483,7 +483,8 @@ namespace Xamarin.PropertyEditing.Drawing
 			return color;
 		}
 
-		public static CommonColor Black = new CommonColor ();
+		public static CommonColor Black = new CommonColor (0, 0, 0);
+		public static CommonColor White = new CommonColor (255, 255, 255);
 
 		private static double Mod (double a, double b)	=> a - b * Math.Floor (a / b);
 

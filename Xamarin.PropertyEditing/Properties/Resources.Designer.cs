@@ -430,6 +430,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Black and White.
+        /// </summary>
+        public static string MaterialColorBlackAndWhite {
+            get {
+                return ResourceManager.GetString("MaterialColorBlackAndWhite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blue.
         /// </summary>
         public static string MaterialColorBlue {
@@ -867,6 +876,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string ViewPropertiesOrEvents {
             get {
                 return ResourceManager.GetString("ViewPropertiesOrEvents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to White.
+        /// </summary>
+        public static string White {
+            get {
+                return ResourceManager.GetString("White", resourceCulture);
             }
         }
         

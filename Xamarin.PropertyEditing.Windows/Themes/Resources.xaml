@@ -1191,7 +1191,7 @@
 									</local:ChoiceControl.ItemTemplate>
 									<local:ChoiceControl.ItemsPanel>
 										<ItemsPanelTemplate>
-											<UniformGrid Columns="10" Height="26"/>
+											<UniformGrid Columns="{Binding NormalColorScale.Count}" Height="26"/>
 										</ItemsPanelTemplate>
 									</local:ChoiceControl.ItemsPanel>
 								</local:ChoiceControl>
@@ -1218,7 +1218,7 @@
 									</local:ChoiceControl.ItemTemplate>
 									<local:ChoiceControl.ItemsPanel>
 										<ItemsPanelTemplate>
-											<UniformGrid Columns="4" Height="26"/>
+											<UniformGrid Columns="{Binding AccentColorScale.Count}" Height="26"/>
 										</ItemsPanelTemplate>
 									</local:ChoiceControl.ItemsPanel>
 								</local:ChoiceControl>
