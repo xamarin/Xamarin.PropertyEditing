@@ -7,6 +7,25 @@ using Xamarin.PropertyEditing.Tests.MockControls;
 
 namespace Xamarin.PropertyEditing.Tests
 {
+	internal class MockNameableEditor :MockObjectEditor, INameableObject
+	{
+		public string ObjectName { get; set; } = "Nameable";
+
+		public Task<string> GetNameAsync ()
+		{
+			return Task.FromResult (ObjectName);
+		}
+
+		public Task SetNameAsync (string name)
+		{
+			ObjectName = name;
+			return Task.FromResult (false);
+		}
+
+		public MockNameableEditor (MockControl control) : base (control)
+		{ }
+	}
+
 	internal class MockObjectEditor
 		: IObjectEditor, IObjectEventEditor
 	{

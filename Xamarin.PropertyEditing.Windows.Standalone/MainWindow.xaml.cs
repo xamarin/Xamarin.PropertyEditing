@@ -24,6 +24,7 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 				}
 			};
 			this.panel.EditorProvider = new MockEditorProvider ();
+
 			this.panel.ResourceProvider = new MockResourceProvider ();
 		}
 

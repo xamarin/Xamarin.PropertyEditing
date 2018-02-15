@@ -14,11 +14,21 @@ namespace Xamarin.PropertyEditing.Tests
 			if (this.editorCache.TryGetValue (item, out IObjectEditor cachedEditor)) {
 				return Task.FromResult (cachedEditor);
 			}
-			IObjectEditor editor = (item is MockControl mockControl)
-				? (IObjectEditor)(new MockObjectEditor (mockControl))
-				: new ReflectionObjectEditor (item);
+			IObjectEditor editor = ChooseEditor (item);
 			this.editorCache.Add (item, editor);
 			return Task.FromResult (editor);
+		}
+
+		IObjectEditor ChooseEditor (object item)
+		{
+			switch (item) {
+			case MockWpfControl msc:
+				return new MockObjectEditor (msc);
+			case MockControl mc:
+				return new MockNameableEditor (mc);
+			default:
+				return new ReflectionObjectEditor (item);
+			}
 		}
 
 		public Task<object> CreateObjectAsync (ITypeInfo type)
