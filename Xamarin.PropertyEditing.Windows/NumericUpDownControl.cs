@@ -75,11 +75,11 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register (
-			"Value", typeof(T), typeof(NumericUpDownControl<T>), new FrameworkPropertyMetadata (default(T), (d,e) => ((NumericUpDownControl<T>)d).OnValueChanged (e), (d,e) => ((NumericUpDownControl<T>)d).OnCoerceValue(e)) { BindsTwoWayByDefault = true });
+			"Value", typeof(T?), typeof(NumericUpDownControl<T>), new FrameworkPropertyMetadata (default(T?), (d,e) => ((NumericUpDownControl<T>)d).OnValueChanged (e), (d,e) => ((NumericUpDownControl<T>)d).OnCoerceValue(e)) { BindsTwoWayByDefault = true });
 
-		public T Value
+		public T? Value
 		{
-			get { return (T) GetValue (ValueProperty); }
+			get { return (T?) GetValue (ValueProperty); }
 			set { SetValue (ValueProperty, value); }
 		}
 
@@ -126,26 +126,16 @@ namespace Xamarin.PropertyEditing.Windows
 			return v;
 		}
 
-		protected T GetIncrementedValue (T value)
-		{
-			return Numeric<T>.Increment (value);
-		}
-
-		protected T GetDecrementedValue (T value)
-		{
-			return Numeric<T>.Decrement (value);
-		}
-
 		protected abstract bool TryParse (string text, out T value);
 
 		protected override void OnPreviewKeyDown (KeyEventArgs e)
 		{
 			if (e.Key == Key.Down) {
-				SetCurrentValue (ValueProperty, GetDecrementedValue (Value));
+				SetCurrentValue (ValueProperty, Numeric<T?>.Decrement (Value));
 				SelectAll();
 				e.Handled = true;
 			} else if (e.Key == Key.Up) {
-				SetCurrentValue (ValueProperty, GetIncrementedValue (Value));
+				SetCurrentValue (ValueProperty, Numeric<T?>.Increment (Value));
 				SelectAll();
 				e.Handled = true;
 			}
