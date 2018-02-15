@@ -601,7 +601,7 @@
 								<local:MaterialDesignColorEditorControl x:Name="materialDesignColorEditor" Visibility="Collapsed"/>
 							</StackPanel>
 						</Border>
-						<Border Padding="1">
+						<Border Padding="1" Visibility="{Binding TargetPlatform.SupportsBrushOpacity, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
 							<Expander Name="advancedPropertyPanel" Template="{DynamicResource AdvancedPropertiesExpander}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
 								  Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Foreground="{DynamicResource PanelForegroundBrush}">
 								<Expander.Content>

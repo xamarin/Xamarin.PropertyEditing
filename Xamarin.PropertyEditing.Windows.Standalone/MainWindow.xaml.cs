@@ -18,6 +18,7 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 			this.panel.TargetPlatform = new TargetPlatform {
 				SupportsCustomExpressions = true,
 				SupportsMaterialDesign = true,
+				SupportsBrushOpacity = false,
 				GroupedTypes = new Dictionary<Type, string> {
 					{ typeof(CommonBrush), "Brush" }
 				}
