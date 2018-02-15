@@ -190,13 +190,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 						var task = await Task.WhenAny (tasks);
 						tasks.Remove (task);
 
+						if (task.Result == null || task.Result.Count == 0)
+							continue;
+
 						if (joinedResources == null)
 							joinedResources = new HashSet<Resource> (task.Result);
 						else
 							joinedResources.IntersectWith (task.Result);
 					} while (tasks.Count > 0);
 
-					this.resources.AddItems (joinedResources);
+					if (joinedResources != null)
+						this.resources.AddItems (joinedResources);
+
 					IsLoading = false;
 				} catch (OperationCanceledException) {
 					return;
