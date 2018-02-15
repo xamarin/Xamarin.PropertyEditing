@@ -30,11 +30,11 @@ namespace Xamarin.PropertyEditing.Windows
 			if (item == null)
 				return base.SelectTemplate (item, container);
 
-			if (item is ConstrainedPropertyViewModel<double> || item is ConstrainedPropertyViewModel<float>)
+			if (item is NumericPropertyViewModel<double?> || item is NumericPropertyViewModel<float?>)
 				return FloatingTemplate;
-			else if (item is ConstrainedPropertyViewModel<long> || item is ConstrainedPropertyViewModel<int>)
+			else if (item is NumericPropertyViewModel<long?> || item is NumericPropertyViewModel<int?>)
 				return IntegerTemplate;
-			else if (item is ConstrainedPropertyViewModel<byte>)
+			else if (item is NumericPropertyViewModel<byte?>)
 				return ByteTemplate;
 
 			return base.SelectTemplate (item, container);
