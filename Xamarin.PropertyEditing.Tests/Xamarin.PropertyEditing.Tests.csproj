@@ -68,6 +68,7 @@
     <Compile Include="BrushPropertyViewModelTests.cs" />
     <Compile Include="BytePropertyViewModelTests.cs" />
     <Compile Include="MaterialDesignColorViewModelTests.cs" />
+    <Compile Include="CombinablePredefinedViewModelTests.cs" />
     <Compile Include="MockControls\MockResourceProvider.cs" />
     <Compile Include="NumericTests.cs" />
     <Compile Include="NumericViewModelTests.cs" />

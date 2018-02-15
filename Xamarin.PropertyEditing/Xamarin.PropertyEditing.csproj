@@ -110,6 +110,7 @@
     <Compile Include="ViewModels\BrushPropertyViewModel.cs" />
     <Compile Include="ViewModels\MaterialColorScale.cs" />
     <Compile Include="ViewModels\MaterialDesignColorViewModel.cs" />
+    <Compile Include="ViewModels\CombinablePropertyViewModel.cs" />
     <Compile Include="ViewModels\ResourceRequestedEventArgs.cs" />
     <Compile Include="ViewModels\ResourceSelectorViewModel.cs" />
     <Compile Include="ViewModels\SimpleCollectionView.cs" />
