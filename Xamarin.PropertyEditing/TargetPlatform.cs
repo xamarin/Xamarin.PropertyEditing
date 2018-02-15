@@ -28,6 +28,12 @@ namespace Xamarin.PropertyEditing
 			set;
 		}
 
+		public bool SupportsBrushOpacity
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Gets a dictionary defining the property types will be grouped into a single editor and their groups resource name.
 		/// </summary>
