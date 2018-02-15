@@ -16,6 +16,12 @@ namespace Xamarin.PropertyEditing.Windows
 			set;
 		}
 
+		public DataTemplate ResourceBrushTemplate
+		{
+			get;
+			set;
+		}
+
 		public DataTemplate MaterialDesignBrushTemplate
 		{
 			get;
@@ -31,6 +37,7 @@ namespace Xamarin.PropertyEditing.Windows
 				var choice = choiceItem.Value as string;
 				if (choice == BrushTabbedEditorControl.None) return NoBrushTemplate;
 				if (choice == BrushTabbedEditorControl.Solid) return SolidBrushTemplate;
+				if (choice == BrushTabbedEditorControl.Resource) return ResourceBrushTemplate;
 				if (choice == BrushTabbedEditorControl.MaterialDesign) return MaterialDesignBrushTemplate;
 			}
 

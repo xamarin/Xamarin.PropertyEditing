@@ -551,6 +551,13 @@
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.SolidBrushTemplate>
+		<local:BrushChoiceTemplateSelector.ResourceBrushTemplate>
+			<DataTemplate>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<ContentControl Content="{DynamicResource BrushChoiceResourceBrushIcon}" MinHeight="10" MinWidth="15"/>
+				</RadioButton>
+			</DataTemplate>
+		</local:BrushChoiceTemplateSelector.ResourceBrushTemplate>
 		<local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
@@ -571,8 +578,10 @@
 									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.None}" Name="noBrushTab" Tooltip="{x:Static prop:Resources.NoBrush}"/>
 									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.Solid}" Name="solidColorTab" Tooltip="{x:Static prop:Resources.SolidBrush}"/>
 									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.MaterialDesign}" Name="materialDesignTab" Tooltip="{x:Static prop:Resources.MaterialDesignColorBrush}"/>
+									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.Resource}" Name="resourceColorTab" Tooltip="{x:Static prop:Resources.ResourceBrush}"/>
 								</local:ChoiceControl>
 								<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
+								<local:ResourceBrushEditorControl x:Name="resourceBrushEditor"/>
 								<local:MaterialDesignColorEditorControl x:Name="materialDesignColorEditor" Visibility="Collapsed"/>
 							</StackPanel>
 						</Border>
@@ -596,7 +605,32 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	
+	<Style TargetType="local:ResourceBrushEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:ResourceBrushEditorControl">
+					<StackPanel Orientation="Vertical">
+						<ListBox Height="100" Name="resourceList" Grid.Row="1" Margin="0,4,0,0" SelectedItem="{Binding Resource}" ItemsSource="{Binding ResourceSelector.Resources}" HorizontalContentAlignment="Stretch" BorderThickness="1" >
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<Grid Margin="12,0,12,0">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="Auto" />
+											<ColumnDefinition Width="*" />
+											<ColumnDefinition Width="100" />
+										</Grid.ColumnDefinitions>
+
+										<TextBlock Grid.Column="1" Text="{Binding Name,Mode=OneTime}" VerticalAlignment="Center" />
+										<ContentPresenter Grid.Column="2" Content="{Binding Value,Mode=OneTime}" Style="{DynamicResource ComplexResourcePreview}" />
+									</Grid>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+					</StackPanel>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 	<Style TargetType="local:SolidBrushEditorControl">
 		<Setter Property="Template">
 			<Setter.Value>

@@ -27,6 +27,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
+
 			RequestCurrentValueUpdate();
 		}
 
@@ -42,6 +43,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 					Source = ValueSource.Local,
 					Value = value
 				});
+			}
+		}
+
+		public Resource Resource
+		{
+			get => this.value?.ValueDescriptor as Resource;
+			set {
+				if (Resource == value)
+					return;
+
+				if (value == null)
+					return;
+
+				if (SetValueResourceCommand.CanExecute (value))
+					SetValueResourceCommand.Execute (value);
 			}
 		}
 
@@ -113,6 +129,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		protected override ResourceRequestedEventArgs CreateRequestResourceArgs ()
+		{
+			var args = base.CreateRequestResourceArgs ();
+			args.Resource = Resource;
+			return args;
+		}
+
 		protected async Task SetValueAsync (ValueInfo<TValue> newValue)
 		{
 			if (this.value == newValue)
@@ -161,6 +184,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof (Value));
 			OnPropertyChanged (nameof (ValueSource));
 			OnPropertyChanged (nameof (CustomExpression));
+			OnPropertyChanged (nameof (Resource));
 
 			((RelayCommand) ClearValueCommand)?.ChangeCanExecute ();
 
@@ -422,6 +446,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		protected virtual ResourceRequestedEventArgs CreateRequestResourceArgs ()
+		{
+			return new ResourceRequestedEventArgs ();
+		}
+
 		private bool CanRequestResource ()
 		{
 			return SupportsResources && ResourceProvider != null && SetValueResourceCommand != null;
@@ -429,7 +458,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void OnRequestResource ()
 		{
-			var e = new ResourceRequestedEventArgs();
+			var e = CreateRequestResourceArgs ();
 			ResourceRequested?.Invoke (this, e);
 			if (e.Resource == null)
 				return;

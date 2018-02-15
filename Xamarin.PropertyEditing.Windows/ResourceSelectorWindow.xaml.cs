@@ -17,9 +17,10 @@ namespace Xamarin.PropertyEditing.Windows
 			InitializeComponent ();
 		}
 
-		internal static Resource RequestResource (Window owner, IResourceProvider provider, IEnumerable<object> targets, IPropertyInfo property)
+		internal static Resource RequestResource (Window owner, IResourceProvider provider, IEnumerable<object> targets, IPropertyInfo property, Resource currentValue)
 		{
 			var w = new ResourceSelectorWindow (provider, targets, property);
+			w.list.SelectedItem = currentValue;
 			w.Owner = owner;
 			if (!w.ShowDialog () ?? false)
 				return null;

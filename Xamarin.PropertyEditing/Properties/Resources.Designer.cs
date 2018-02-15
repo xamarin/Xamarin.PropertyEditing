@@ -736,6 +736,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Brush from resource.
+        /// </summary>
+        public static string ResourceBrush {
+            get {
+                return ResourceManager.GetString("ResourceBrush", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resource….
         /// </summary>
         public static string ResourceEllipsis {
