@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
 
@@ -25,14 +26,21 @@ namespace Xamarin.PropertyEditing
 		}
 
 		private static Func<T, T> IncrementValue, DecrementValue;
+		private static NullableConverter NullConverter;
 
 		private static void SetupMath ()
 		{
 			if (IncrementValue != null)
 				return;
 
+			Type t = typeof(T);
+			bool isNullable = (t.Name == "Nullable`1");
+			if (isNullable) {
+				NullConverter = new NullableConverter (typeof(T));
+				t = Nullable.GetUnderlyingType (t);
+			}
+
 			Task<Func<T, T>> createIncrement = Task.Run (() => {
-				Type t = typeof(T);
 				var add = new DynamicMethod ("Add", t, new[] { t });
 				ILGenerator gen = add.GetILGenerator ();
 				gen.Emit (OpCodes.Ldarg_0);
@@ -71,11 +79,21 @@ namespace Xamarin.PropertyEditing
 				}
 
 				gen.Emit (OpCodes.Ret);
-				return (Func<T,T>)add.CreateDelegate (typeof(Func<T, T>));
+				if (!isNullable)
+					return (Func<T,T>)add.CreateDelegate (typeof(Func<T, T>));
+				else {
+					Delegate a = add.CreateDelegate (typeof(Func<,>).MakeGenericType (new[] { t, t }));
+					return (v) => {
+						if (v == null)
+							return (T)Activator.CreateInstance (t);
+						else {
+							return (T)a.DynamicInvoke (NullConverter.ConvertFrom (v));
+						}
+					};
+				}
 			});
 
 			Task<Func<T, T>> createDecrement = Task.Run (() => {
-				Type t = typeof(T);
 				var sub = new DynamicMethod ("Sub", t, new[] { t });
 				ILGenerator gen = sub.GetILGenerator ();
 				gen.Emit (OpCodes.Ldarg_0);
@@ -114,7 +132,18 @@ namespace Xamarin.PropertyEditing
 				}
 
 				gen.Emit (OpCodes.Ret);
-				return (Func<T,T>)sub.CreateDelegate (typeof(Func<T, T>));
+				if (!isNullable)
+					return (Func<T,T>)sub.CreateDelegate (typeof(Func<T, T>));
+				else {
+					Delegate s = sub.CreateDelegate (typeof(Func<,>).MakeGenericType (t, t));
+					return (v) => {
+						if (v == null)
+							return (T)Activator.CreateInstance (t);
+						else {
+							return (T)s.DynamicInvoke (NullConverter.ConvertFrom (v));
+						}
+					};
+				}
 			});
 
 			IncrementValue = createIncrement.Result;

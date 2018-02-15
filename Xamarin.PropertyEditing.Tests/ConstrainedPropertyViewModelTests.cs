@@ -6,9 +6,9 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Tests
 {
-	internal abstract class ConstrainedPropertyViewModelTests<T, TViewModel>
-		: PropertyViewModelTests<T, TViewModel>
-		where T : IComparable<T>
+	internal abstract class ConstrainedPropertyViewModelTests<T, TReal, TViewModel>
+		: PropertyViewModelTests<T, TReal, TViewModel>
+		where TReal : IComparable<TReal>
 		where TViewModel : ConstrainedPropertyViewModel<T>
 	{
 		[Test]

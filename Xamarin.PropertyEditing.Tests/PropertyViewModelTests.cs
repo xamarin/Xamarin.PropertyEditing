@@ -10,8 +10,14 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Tests
 {
-	[SingleThreaded]
 	internal abstract class PropertyViewModelTests<TValue, TViewModel>
+		: PropertyViewModelTests<TValue, TValue, TViewModel>
+		where TViewModel : PropertyViewModel<TValue>
+	{
+	}
+
+	[SingleThreaded]
+	internal abstract class PropertyViewModelTests<TValue, TValueReal, TViewModel>
 		where TViewModel : PropertyViewModel<TValue>
 	{
 
@@ -707,7 +713,7 @@ namespace Xamarin.PropertyEditing.Tests
 		protected internal Mock<IPropertyInfo> GetPropertyMock (string name = null, string category = null)
 		{
 			var mock = new Mock<IPropertyInfo> ();
-			mock.SetupGet (pi => pi.Type).Returns (typeof(TValue));
+			mock.SetupGet (pi => pi.Type).Returns (typeof(TValueReal));
 			mock.SetupGet (pi => pi.Name).Returns (name);
 			mock.SetupGet (pi => pi.Category).Returns (category);
 

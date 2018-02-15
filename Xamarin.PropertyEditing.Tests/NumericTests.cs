@@ -67,6 +67,23 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public void NullableInt32 ()
+		{
+			int? v = 0;
+			v = Numeric<int?>.Increment (v);
+			Assert.That (v, Is.EqualTo (1));
+			v = Numeric<int?>.Decrement (v);
+			Assert.That (v, Is.EqualTo (0));
+			v = Numeric<int?>.Decrement (v);
+			Assert.That (v, Is.EqualTo (-1));
+
+			v = Numeric<int?>.Increment (null);
+			Assert.That (v, Is.EqualTo (0));
+			v = Numeric<int?>.Decrement (null);
+			Assert.That (v, Is.EqualTo (0));
+		}
+
+		[Test]
 		public void UIn32 ()
 		{
 			uint v = 0;

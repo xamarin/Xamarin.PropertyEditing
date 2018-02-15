@@ -6,7 +6,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class NumericPropertyViewModel<T>
 		: ConstrainedPropertyViewModel<T>
-		where T : struct, IComparable<T>
 	{
 		public NumericPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (platform, property, editors)
@@ -15,14 +14,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 				Value = Numeric<T>.Increment (Value);
 			}, () => {
 				T value = Numeric<T>.Increment (Value);
-				return value.CompareTo (ValidateValue (value)) == 0;
+				return Compare (value, ValidateValue (value)) == 0;
 			});
 
 			this.lowerValue = new RelayCommand(() => {
 				Value = Numeric<T>.Decrement (Value);
 			}, () => {
 				T value = Numeric<T>.Decrement (Value);
-				return value.CompareTo (ValidateValue (value)) == 0;
+				return Compare (value, ValidateValue (value)) == 0;
 			});
 		}
 
