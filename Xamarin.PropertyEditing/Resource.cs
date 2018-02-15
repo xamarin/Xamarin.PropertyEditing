@@ -78,7 +78,7 @@ namespace Xamarin.PropertyEditing
 		public override int GetHashCode ()
 		{
 			unchecked {
-				int hashCode = Source.GetHashCode();
+				int hashCode = Source?.GetHashCode() ?? 0;
 				hashCode = (hashCode * 397) ^ Name.GetHashCode();
 				return hashCode;
 			}
