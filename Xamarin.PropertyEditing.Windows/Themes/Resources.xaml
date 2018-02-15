@@ -1120,6 +1120,7 @@
 		<Style.Triggers>
 			<Trigger Property="IsChecked" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemSelectedBorderBrush}" />
+				<Setter Property="BorderThickness" Value="1"/>
 				<Setter Property="Padding" Value="1"/>
 			</Trigger>
 			<Trigger Property="IsMouseOver" Value="True">
@@ -1173,7 +1174,7 @@
 								<local:ChoiceControl x:Name="normalColorPicker" Background="Transparent"
 									Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" BorderThickness="0"
 									ItemsSource="{Binding NormalColorScale}"
-									SelectedItem="{Binding NormalColor, Mode=TwoWay}">
+									SelectedValue="{Binding NormalColor, Mode=OneWay}" SelectedValuePath="">
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
 											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"
@@ -1200,7 +1201,7 @@
 								<local:ChoiceControl x:Name="accentColorPicker" Background="Transparent"
 									Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" BorderThickness="0"
 									ItemsSource="{Binding AccentColorScale}"
-									SelectedItem="{Binding AccentColor, Mode=TwoWay}">
+									SelectedValue="{Binding AccentColor, Mode=OneWay}" SelectedValuePath="">
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
 											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"
