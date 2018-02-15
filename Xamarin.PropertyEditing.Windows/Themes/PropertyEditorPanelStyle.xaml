@@ -9,11 +9,7 @@
 	<BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 	<local:OppositeBoolConverter x:Key="OppositeBoolConverter" />
 	<local:EditorPropertySelector x:Key="PropertyEditorSelector" />
-	<local:EditorTreeSelector x:Key="EditorTreeSelector">
-		<local:EditorTreeSelector.Options>
-			<local:EditorTreeSelectorOptions ParentTemplate="{DynamicResource PropertyGroupTemplate}" EditorTemplate="{DynamicResource PropertyEditorTemplate}" />
-		</local:EditorTreeSelector.Options>
-	</local:EditorTreeSelector>
+	<local:EditorTreeSelector x:Key="EditorTreeSelector" EditorTemplateKey="PropertyEditorTemplate" ParentTemplateKey="PropertyGroupTemplate" />
 
 	<Style x:Key="TreeExpanderStyle" TargetType="Expander">
 		<Setter Property="Foreground" Value="{DynamicResource PanelGroupForegroundBrush}" />
