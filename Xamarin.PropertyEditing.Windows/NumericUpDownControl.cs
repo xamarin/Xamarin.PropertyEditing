@@ -11,8 +11,6 @@ namespace Xamarin.PropertyEditing.Windows
 		// TODO decimal placement
 		static DoubleUpDownControl ()
 		{
-			MaximumValueProperty.OverrideMetadata (typeof (DoubleUpDownControl), new PropertyMetadata (Double.MaxValue));
-			MinimumValueProperty.OverrideMetadata (typeof (DoubleUpDownControl), new PropertyMetadata (Double.MinValue));
 			DefaultStyleKeyProperty.OverrideMetadata (typeof(DoubleUpDownControl), new FrameworkPropertyMetadata (typeof(DoubleUpDownControl)));
 		}
 
@@ -38,8 +36,6 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		static IntegerUpDownControl ()
 		{
-			MaximumValueProperty.OverrideMetadata (typeof(IntegerUpDownControl), new PropertyMetadata (Int64.MaxValue));
-			MinimumValueProperty.OverrideMetadata (typeof(IntegerUpDownControl), new PropertyMetadata (Int64.MinValue));
 			DefaultStyleKeyProperty.OverrideMetadata (typeof(IntegerUpDownControl), new FrameworkPropertyMetadata (typeof(IntegerUpDownControl)));
 		}
 
@@ -54,8 +50,6 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		static ByteUpDownControl ()
 		{
-			MaximumValueProperty.OverrideMetadata (typeof (ByteUpDownControl), new PropertyMetadata (byte.MaxValue));
-			MinimumValueProperty.OverrideMetadata (typeof (ByteUpDownControl), new PropertyMetadata (byte.MinValue));
 			DefaultStyleKeyProperty.OverrideMetadata (typeof (ByteUpDownControl), new FrameworkPropertyMetadata (typeof (ByteUpDownControl)));
 		}
 
@@ -75,55 +69,12 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register (
-			"Value", typeof(T?), typeof(NumericUpDownControl<T>), new FrameworkPropertyMetadata (default(T?), (d,e) => ((NumericUpDownControl<T>)d).OnValueChanged (e), (d,e) => ((NumericUpDownControl<T>)d).OnCoerceValue(e)) { BindsTwoWayByDefault = true });
+			"Value", typeof(T?), typeof(NumericUpDownControl<T>), new FrameworkPropertyMetadata (default(T?), (d,e) => ((NumericUpDownControl<T>)d).OnValueChanged (e)) { BindsTwoWayByDefault = true });
 
 		public T? Value
 		{
 			get { return (T?) GetValue (ValueProperty); }
 			set { SetValue (ValueProperty, value); }
-		}
-
-		public static readonly DependencyProperty MinimumValueProperty = DependencyProperty.Register (
-			"MinimumValue", typeof(T), typeof(NumericUpDownControl<T>), new PropertyMetadata (default(T)));
-
-		public T MinimumValue
-		{
-			get { return (T) GetValue (MinimumValueProperty); }
-			set { SetValue (MinimumValueProperty, value); }
-		}
-
-		public static readonly DependencyProperty MaximumValueProperty = DependencyProperty.Register (
-			"MaximumValue", typeof(T), typeof(NumericUpDownControl<T>), new PropertyMetadata (default(T)));
-
-		public T MaximumValue
-		{
-			get { return (T) GetValue (MaximumValueProperty); }
-			set { SetValue (MaximumValueProperty, value); }
-		}
-
-		public static readonly DependencyProperty IsConstrainedProperty = DependencyProperty.Register (
-			"IsConstrained", typeof(bool), typeof(NumericUpDownControl<T>), new PropertyMetadata (default(bool)));
-
-		public bool IsConstrained
-		{
-			get { return (bool) GetValue (IsConstrainedProperty); }
-			set { SetValue (IsConstrainedProperty, value); }
-		}
-
-		protected virtual object OnCoerceValue (object value)
-		{
-			if (!IsConstrained)
-				return value;
-
-			T v = (T)value;
-			if (v.CompareTo (MinimumValue) < 0)
-				v = MinimumValue;
-			if (v.CompareTo (MaximumValue) > 0)
-				v = MaximumValue;
-
-			SetCurrentValue (TextProperty, v.ToString());
-
-			return v;
 		}
 
 		protected abstract bool TryParse (string text, out T value);
@@ -157,8 +108,6 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnValueChanged (DependencyPropertyChangedEventArgs e)
 		{
-			CoerceValue (MaximumValueProperty);
-			CoerceValue (MinimumValueProperty);
 			SetCurrentValue (TextProperty, Value.ToString());
 		}
 	}

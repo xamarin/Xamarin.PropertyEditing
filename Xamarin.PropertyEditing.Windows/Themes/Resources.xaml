@@ -1828,17 +1828,17 @@
 	<local:NumericTemplateSelector x:Key="NumericTemplateSelector">
 		<local:NumericTemplateSelector.FloatingTemplate>
 			<DataTemplate DataType="vm:FloatingPropertyViewModel">
-				<local:DoubleUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+				<local:DoubleUpDownControl Value="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.FloatingTemplate>
 		<local:NumericTemplateSelector.IntegerTemplate>
 			<DataTemplate DataType="vm:IntegerPropertyViewModel">
-				<local:IntegerUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+				<local:IntegerUpDownControl Value="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.IntegerTemplate>
 		<local:NumericTemplateSelector.ByteTemplate>
 			<DataTemplate DataType="vm:BytePropertyViewModel">
-				<local:ByteUpDownControl Value="{Binding Value}" MaximumValue="{Binding MaximumValue}" MinimumValue="{Binding MinimumValue}" IsConstrained="{Binding IsConstrained,Mode=OneTime}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
+				<local:ByteUpDownControl Value="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.ByteTemplate>
 	</local:NumericTemplateSelector>
