@@ -7,50 +7,33 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
 {
-	internal class EditorTreeSelectorOptions
-		: DependencyObject
-	{
-		public static readonly DependencyProperty ParentTemplateProperty = DependencyProperty.Register (
-			nameof(ParentTemplate), typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
-
-		public DataTemplate ParentTemplate
-		{
-			get { return (DataTemplate) GetValue (ParentTemplateProperty); }
-			set { SetValue (ParentTemplateProperty, value); }
-		}
-
-		public static readonly DependencyProperty EditorTemplateProperty = DependencyProperty.Register (
-			nameof(EditorTemplate), typeof(DataTemplate), typeof(EditorTreeSelectorOptions), new PropertyMetadata (default(DataTemplate)));
-
-		public DataTemplate EditorTemplate
-		{
-			get { return (DataTemplate) GetValue (EditorTemplateProperty); }
-			set { SetValue (EditorTemplateProperty, value); }
-		}
-	}
-
-
+	/// <remarks>
+	/// While technically it might be reasonable for the template to be relative to the container, its not a scenario
+	/// we currently need so it's faster to cache the template in a global capacity. Container relative can be achieved
+	/// by putting a new instance of the selector 
+	/// </remarks>
 	internal class EditorTreeSelector
 		: DataTemplateSelector
 	{
-		public EditorTreeSelectorOptions Options
-		{
-			get;
-			set;
-		}
+		public object EditorTemplateKey { get; set; }
+		public object ParentTemplateKey { get; set; }
 
 		public override DataTemplate SelectTemplate (object item, DependencyObject container)
 		{
-			var vm = item as EditorViewModel;
-			if (vm != null) {
-				if (vm is PropertyViewModel)
-					return Options.EditorTemplate;
-				else
-					return Options.ParentTemplate;
+			if (item is PropertyViewModel) {
+				if (this.editorTemplate == null)
+					this.editorTemplate = (DataTemplate)((FrameworkElement)container).TryFindResource (EditorTemplateKey);
+
+				return this.editorTemplate;
 			}
 
-			return Options.ParentTemplate;
+			if (this.parentTemplate == null)
+				this.parentTemplate = (DataTemplate)((FrameworkElement)container).TryFindResource (ParentTemplateKey);
+
+			return this.parentTemplate;
 		}
+
+		private DataTemplate editorTemplate, parentTemplate;
 	}
 
 	internal class EditorPropertySelector
