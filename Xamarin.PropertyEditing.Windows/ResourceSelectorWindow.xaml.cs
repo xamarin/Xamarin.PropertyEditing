@@ -11,17 +11,24 @@ namespace Xamarin.PropertyEditing.Windows
 	internal partial class ResourceSelectorWindow
 		: WindowEx
 	{
-		public ResourceSelectorWindow (IResourceProvider resourceProvider, IEnumerable<object> targets, IPropertyInfo property)
+		public ResourceSelectorWindow (IEnumerable<ResourceDictionary> mergedResources, IResourceProvider resourceProvider, IEnumerable<object> targets, IPropertyInfo property)
 		{
+			Resources.MergedDictionaries.AddItems (mergedResources);
 			DataContext = new ResourceSelectorViewModel (resourceProvider, targets, property);
 			InitializeComponent ();
 		}
 
-		internal static Resource RequestResource (Window owner, IResourceProvider provider, IEnumerable<object> targets, IPropertyInfo property, Resource currentValue)
+		internal static Resource RequestResource (PropertyEditorPanel owner, IResourceProvider provider, IEnumerable<object> targets, IPropertyInfo property, Resource currentValue)
 		{
-			var w = new ResourceSelectorWindow (provider, targets, property);
-			w.list.SelectedItem = currentValue;
-			w.Owner = owner;
+			Window hostWindow = Window.GetWindow (owner);
+
+			var w = new ResourceSelectorWindow (owner.Resources.MergedDictionaries, provider, targets, property) {
+				Owner = hostWindow,
+				list = {
+					SelectedItem = currentValue
+				}
+			};
+
 			if (!w.ShowDialog () ?? false)
 				return null;
 

@@ -21,6 +21,8 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			DefaultStyleKey = typeof(PropertyEditorPanel);
 
+			Resources.MergedDictionaries.Add (new ResourceDictionary { Source = new Uri ("pack://application:,,,/Xamarin.PropertyEditing.Windows;component/Themes/Resources.xaml") });
+
 			var selectedItems = new ObservableCollection<object> ();
 			selectedItems.CollectionChanged += OnSelectedItemsChanged;
 			SelectedItems = selectedItems;
