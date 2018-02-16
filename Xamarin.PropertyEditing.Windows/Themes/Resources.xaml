@@ -546,41 +546,39 @@
 		</Setter>
 	</Style>
 
-	<Style x:Key="BrushChoiceIconStyle" TargetType="Path">
-		<Setter Property="Stroke" Value="{DynamicResource InputForegroundBrush}" />
-		<Setter Property="Fill" Value="{DynamicResource InputForegroundBrush}" />
-		<Setter Property="VerticalAlignment" Value="Center" />
-	</Style>
-
 	<local:BrushChoiceTemplateSelector x:Key="BrushChoiceTemplateSelector">
 		<local:BrushChoiceTemplateSelector.NoBrushTemplate>
 			<DataTemplate>
-				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
-					<Path Style="{StaticResource BrushChoiceIconStyle}" Data="{DynamicResource BrushChoiceNoBrushGeometry}" MinHeight="10" MinWidth="15"/>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" MinHeight="20" MinWidth="20"
+							 GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<ContentControl ContentTemplate="{DynamicResource BrushChoiceNoBrushIcon}"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.NoBrushTemplate>
 		<local:BrushChoiceTemplateSelector.SolidBrushTemplate>
 			<DataTemplate>
-				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
-					<Path Style="{StaticResource BrushChoiceIconStyle}" Data="{DynamicResource BrushChoiceSolidBrushGeometry}" MinHeight="10" MinWidth="15"/>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" MinHeight="20" MinWidth="20"
+							 GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<ContentControl ContentTemplate="{DynamicResource BrushChoiceSolidBrushIcon}"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.SolidBrushTemplate>
-		<local:BrushChoiceTemplateSelector.ResourceBrushTemplate>
-			<DataTemplate>
-				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
-					<ContentControl Content="{DynamicResource BrushChoiceResourceBrushIcon}" MinHeight="10" MinWidth="15"/>
-				</RadioButton>
-			</DataTemplate>
-		</local:BrushChoiceTemplateSelector.ResourceBrushTemplate>
 		<local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
 			<DataTemplate>
-				<RadioButton Style="{DynamicResource ChoiceControlItem}" GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
-					<Path Style="{StaticResource BrushChoiceIconStyle}" Data="{DynamicResource BrushChoiceMaterialDesignGeometry}" MinHeight="10" MinWidth="15"/>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" MinHeight="20" MinWidth="20"
+							 GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<ContentControl ContentTemplate="{DynamicResource BrushChoiceMaterialDesignIcon}"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
+		<local:BrushChoiceTemplateSelector.ResourceBrushTemplate>
+			<DataTemplate>
+				<RadioButton Style="{DynamicResource ChoiceControlItem}" MinHeight="20" MinWidth="20"
+							 GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+					<ContentControl ContentTemplate="{DynamicResource BrushChoiceResourceBrushIcon}"/>
+				</RadioButton>
+			</DataTemplate>
+		</local:BrushChoiceTemplateSelector.ResourceBrushTemplate>
 	</local:BrushChoiceTemplateSelector>
 
 	<Style TargetType="local:BrushTabbedEditorControl">
