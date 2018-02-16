@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.ViewModels
@@ -27,11 +27,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private ResourceSelectorViewModel resourceSelector;
 		public ResourceSelectorViewModel ResourceSelector
 		{
-			get => resourceSelector;
-			private set {
-				resourceSelector = value;
-				OnPropertyChanged ();
+			get {
+				if (resourceSelector != null)
+					return resourceSelector;
+
+				if (ResourceProvider == null || Editors == null)
+					return null;
+
+				return resourceSelector = new ResourceSelectorViewModel (ResourceProvider, Editors.Select (ed => ed.Target), Property);
 			}
+		}
+		public void ResetResourceSelector ()
+		{
+			resourceSelector = null;
+			OnPropertyChanged (nameof (ResourceSelector));
 		}
 
 		// TODO: make this its own property view model so we can edit bindings, set to resources, etc.
@@ -73,11 +82,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof (Opacity));
 		}
 
+		protected override void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			base.OnEditorsChanged (sender, e);
+			ResetResourceSelector ();
+		}
+
 		protected override void OnPropertyChanged ([CallerMemberName] string propertyName = null)
 		{
 			base.OnPropertyChanged (propertyName);
 			if (propertyName == nameof (PropertyViewModel.ResourceProvider)) {
-				ResourceSelector = (ResourceProvider != null) ? new ResourceSelectorViewModel (ResourceProvider, Editors.Select (ed => ed.Target), Property) : null;
+				ResetResourceSelector ();
 			}
 		}
 	}
