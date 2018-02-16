@@ -172,9 +172,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool SetCurrentValue (ValueInfo<TValue> newValue)
 		{
-			if (!this.isNullable && newValue.Value == null) {
+			if (!this.isNullable && newValue != null && newValue.Value == null)
 				newValue.Value = DefaultValue;
-			}
 
 			if (this.value == newValue)
 				return false;
