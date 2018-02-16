@@ -1229,7 +1229,8 @@
 												BorderThickness="0"
 												ToolTip="{Binding Label}" AutomationProperties.Name="{Binding Label}" AutomationProperties.HelpText="{Binding Label}"
 												GroupName="MaterialDesignAccentOrNormal">
-												<local:BrushBoxControl Label="{Binding Label}" FontSize="10">
+												<local:BrushBoxControl Label="{Binding Label}" FontSize="10"
+																	   LightForegroundThreshold="{Binding Path=DataContext.NormalColorScriptureLightnessThreshold, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChoiceControl}}}">
 													<local:BrushBoxControl.Brush>
 														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
 													</local:BrushBoxControl.Brush>
@@ -1256,7 +1257,8 @@
 												BorderThickness="0"
 												ToolTip="{Binding Label}" AutomationProperties.Name="{Binding Label}" AutomationProperties.HelpText="{Binding Label}"
 												GroupName="MaterialDesignAccentOrNormal">
-												<local:BrushBoxControl Label="{Binding Label}" FontSize="10">
+												<local:BrushBoxControl Label="{Binding Label}" FontSize="10"
+																	   LightForegroundThreshold="{Binding Path=DataContext.AccentColorScriptureLightnessThreshold, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChoiceControl}}}">
 													<local:BrushBoxControl.Brush>
 														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
 													</local:BrushBoxControl.Brush>
@@ -1318,18 +1320,33 @@
 								   Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"/>
 					</Grid>
 					<ControlTemplate.Triggers>
-						<DataTrigger Binding="{Binding Brush, RelativeSource={RelativeSource Self}, Converter={local:BrushToDarknessConverter}}"
-									 Value="Dark">
+						<DataTrigger Value="Dark">
+							<DataTrigger.Binding>
+								<MultiBinding Converter="{local:BrushToDarknessConverter}">
+									<Binding Path="Brush" RelativeSource="{RelativeSource Self}"/>
+									<Binding Path="LightForegroundThreshold" RelativeSource="{RelativeSource Self}"/>
+								</MultiBinding>
+							</DataTrigger.Binding>
 							<Setter TargetName="label" Property="Foreground" Value="#FFFFFFFF"/>
 							<Setter TargetName="labelOutline" Property="Foreground" Value="Transparent"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding Brush, RelativeSource={RelativeSource Self}, Converter={local:BrushToDarknessConverter}}"
-									 Value="Light">
+						<DataTrigger Value="Light">
+							<DataTrigger.Binding>
+								<MultiBinding Converter="{local:BrushToDarknessConverter}">
+									<Binding Path="Brush" RelativeSource="{RelativeSource Self}"/>
+									<Binding Path="LightForegroundThreshold" RelativeSource="{RelativeSource Self}"/>
+								</MultiBinding>
+							</DataTrigger.Binding>
 							<Setter TargetName="label" Property="Foreground" Value="#FF000000"/>
 							<Setter TargetName="labelOutline" Property="Foreground" Value="Transparent"/>
 						</DataTrigger>
-						<DataTrigger Binding="{Binding Brush, RelativeSource={RelativeSource Self}, Converter={local:BrushToDarknessConverter}}"
-									 Value="Unknown">
+						<DataTrigger Value="Unknown">
+							<DataTrigger.Binding>
+								<MultiBinding Converter="{local:BrushToDarknessConverter}">
+									<Binding Path="Brush" RelativeSource="{RelativeSource Self}"/>
+									<Binding Path="LightForegroundThreshold" RelativeSource="{RelativeSource Self}"/>
+								</MultiBinding>
+							</DataTrigger.Binding>
 							<Setter TargetName="label" Property="Foreground" Value="#FF000000"/>
 							<Setter TargetName="labelOutline" Property="Foreground" Value="#FFFFFFFF"/>
 						</DataTrigger>

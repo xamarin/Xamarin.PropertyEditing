@@ -134,8 +134,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			.Where (palette => !palette.IsAccent);
 
 		public IEnumerable<CommonColor?> AccentColorScale => GetScale (ColorName, true);
+		public double AccentColorScriptureLightnessThreshold => FindPalette (ColorName, true).LightScriptureLightnessThreshold;
 
 		public IEnumerable<CommonColor?> NormalColorScale => GetScale (ColorName, false);
+		public double NormalColorScriptureLightnessThreshold => FindPalette (ColorName, false).LightScriptureLightnessThreshold;
 
 		private string colorName;
 		private CommonColor? normalColor = null;
