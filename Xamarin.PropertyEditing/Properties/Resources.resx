@@ -444,4 +444,8 @@
   <data name="White" xml:space="preserve">
     <value>White</value>
   </data>
+  <data name="NoPreviewAvailable" xml:space="preserve">
+    <value>No preview available</value>
+    <comment>Resource selector window preview section text</comment>
+  </data>
 </root>
