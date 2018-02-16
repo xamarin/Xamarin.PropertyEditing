@@ -141,6 +141,61 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public void MultipleValuesNull ()
+		{
+			TValue value = GetNonDefaultRandomTestValue ();
+			TValue otherValue = GetRandomTestValue ();
+
+			var basicEditor = GetBasicEditor ();
+			var prop = basicEditor.Properties.First ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (o => o.Target).Returns (new TestClass ());
+			editor.SetupGet (oe => oe.Properties).Returns (new [] { prop });
+			editor.Setup (oe => oe.GetValueAsync<TValue> (prop, null)).ReturnsAsync ((ValueInfo<TValue>)null);
+			var e2 = new Mock<IObjectEditor> ();
+			e2.SetupGet (o => o.Target).Returns (new TestClass ());
+			e2.SetupGet (oe => oe.Properties).Returns (new [] { prop });
+			e2.Setup (oe => oe.GetValueAsync<TValue> (prop, null)).ReturnsAsync ((ValueInfo<TValue>)null);
+			var vm = GetViewModel (basicEditor.Properties.First (), new [] { e2.Object, editor.Object });
+
+			Assert.That (vm.Value, Is.EqualTo (default (TValue)));
+			Assert.That (vm.MultipleValues, Is.False);
+		}
+
+		[Test]
+		public void MultipleValuesOneNull ()
+		{
+			TValue value = GetNonDefaultRandomTestValue ();
+
+			var basicEditor = GetBasicEditor (value);
+			var prop = basicEditor.Properties.First ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (o => o.Target).Returns (new TestClass ());
+			editor.SetupGet (oe => oe.Properties).Returns (new [] { prop });
+			editor.Setup (oe => oe.GetValueAsync<TValue> (prop, null)).ReturnsAsync ((ValueInfo<TValue>)null);
+			var vm = GetViewModel (basicEditor.Properties.First (), new [] { basicEditor, editor.Object });
+
+			Assert.That (vm.Value, Is.EqualTo (default (TValue)));
+			Assert.That (vm.MultipleValues, Is.True);
+		}
+
+		[Test]
+		public void EmptyEditorList ()
+		{
+			TValue value = GetNonDefaultRandomTestValue ();
+
+			var vm = GetBasicTestModel (value);
+			var editor = vm.Editors.First ();
+			var prop = editor.Properties.First ();
+
+			Assume.That (vm.Value, Is.EqualTo (value));
+			vm.Editors.Remove (vm.Editors.First ());
+
+			Assert.That (vm.Value, Is.EqualTo (default (TValue)));
+			Assert.That (vm.MultipleValues, Is.False);
+		}
+
+		[Test]
 		public void MultipleValuesDontMatchButSourcesDo ()
 		{
 			TValue value = GetNonDefaultRandomTestValue ();
@@ -1054,7 +1109,7 @@ namespace Xamarin.PropertyEditing.Tests
 			mock.SetupGet (pi => pi.Type).Returns (typeof(TValueReal));
 			mock.SetupGet (pi => pi.Name).Returns (name);
 			mock.SetupGet (pi => pi.Category).Returns (category);
-
+			mock.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
 			AugmentPropertyMock (mock);
 
 			return mock;
