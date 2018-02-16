@@ -8,16 +8,23 @@ namespace Xamarin.PropertyEditing.Windows
 	internal partial class TypeSelectorWindow
 		: WindowEx
 	{
-		internal TypeSelectorWindow (AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
+		internal TypeSelectorWindow (IEnumerable<ResourceDictionary> mergedResources, AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
 		{
-			InitializeComponent ();
+			Resources.MergedDictionaries.AddItems (mergedResources);
 			DataContext = new TypeSelectorViewModel (assignableTypes);
+			InitializeComponent ();
 		}
 
-		internal static ITypeInfo RequestType (Window owner, AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
+		internal static ITypeInfo RequestType (PropertyEditorPanel owner, AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
 		{
-			var w = new TypeSelectorWindow (assignableTypes);
-			w.Owner = owner;
+			Window hostWindow = Window.GetWindow (owner);
+
+			var w = new TypeSelectorWindow (owner.Resources.MergedDictionaries, assignableTypes) {
+				Owner = hostWindow,
+			};
+
+			w.Resources.MergedDictionaries.AddItems (owner.Resources.MergedDictionaries);
+
 			if (!w.ShowDialog () ?? false)
 				return null;
 
