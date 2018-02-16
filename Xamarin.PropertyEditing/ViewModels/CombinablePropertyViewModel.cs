@@ -84,7 +84,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				ValueInfo<IReadOnlyList<TValue>>[] values = await Task.WhenAll (Editors.Select (ed => ed.GetValueAsync<IReadOnlyList<TValue>> (Property, Variation)).ToArray ());
 				foreach (ValueInfo<IReadOnlyList<TValue>> valueInfo in values) {
-					if (valueInfo.Value == null || valueInfo.Source == ValueSource.Unset) {
+					if (valueInfo == null || valueInfo.Value == null || valueInfo.Source == ValueSource.Unset) {
 						foreach (var kvp in this.predefinedValues.PredefinedValues) {
 							newValues[kvp.Key] = null;
 						}

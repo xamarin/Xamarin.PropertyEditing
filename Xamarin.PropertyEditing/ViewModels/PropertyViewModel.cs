@@ -129,6 +129,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 					if (currentValue == null)
 						currentValue = valueInfo;
 					else {
+						if (valueInfo == null) {
+							currentValue.Value = default (TValue);
+							disagree = true;
+							continue;
+						}
+
 						if (currentValue.Source != valueInfo.Source) {
 							currentValue.Source = ValueSource.Default;
 							disagree = true;

@@ -143,9 +143,6 @@ namespace Xamarin.PropertyEditing.Tests
 		[Test]
 		public void MultipleValuesNull ()
 		{
-			TValue value = GetNonDefaultRandomTestValue ();
-			TValue otherValue = GetRandomTestValue ();
-
 			var basicEditor = GetBasicEditor ();
 			var prop = basicEditor.Properties.First ();
 			var editor = new Mock<IObjectEditor> ();
@@ -185,9 +182,6 @@ namespace Xamarin.PropertyEditing.Tests
 			TValue value = GetNonDefaultRandomTestValue ();
 
 			var vm = GetBasicTestModel (value);
-			var editor = vm.Editors.First ();
-			var prop = editor.Properties.First ();
-
 			Assume.That (vm.Value, Is.EqualTo (value));
 			vm.Editors.Remove (vm.Editors.First ());
 
@@ -1109,7 +1103,6 @@ namespace Xamarin.PropertyEditing.Tests
 			mock.SetupGet (pi => pi.Type).Returns (typeof(TValueReal));
 			mock.SetupGet (pi => pi.Name).Returns (name);
 			mock.SetupGet (pi => pi.Category).Returns (category);
-			mock.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
 			AugmentPropertyMock (mock);
 
 			return mock;
