@@ -17,7 +17,7 @@
 
 		<Border Grid.Column="0" Width="260" Padding="12" BorderThickness="0,0,1,0" BorderBrush="{DynamicResource CategoryExpanderBorderBrush}">
 			<Grid>
-				<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="No preview available" FontSize="16" />
+				<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{x:Static prop:Resources.NoPreviewAvailable}" FontSize="16" />
 				<ContentPresenter Content="{Binding ElementName=list,Path=SelectedItem.Value}" Style="{DynamicResource LargeResourcePreview}" />
 			</Grid>
 		</Border>

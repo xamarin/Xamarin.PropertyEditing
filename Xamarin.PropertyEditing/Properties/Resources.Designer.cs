@@ -664,6 +664,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No preview available.
+        /// </summary>
+        public static string NoPreviewAvailable {
+            get {
+                return ResourceManager.GetString("NoPreviewAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string OK {
