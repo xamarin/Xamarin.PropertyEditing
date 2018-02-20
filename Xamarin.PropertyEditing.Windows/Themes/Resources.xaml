@@ -612,7 +612,7 @@
 								</local:ChoiceControl>
 								<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
 								<local:ResourceBrushEditorControl x:Name="resourceBrushEditor"/>
-								<local:MaterialDesignColorEditorControl x:Name="materialDesignColorEditor" Visibility="Collapsed"/>
+								<local:MaterialDesignColorEditorControl x:Name="materialDesignColorEditor" AccentColor="{Binding MaterialDesign.AccentColor}" NormalColor="{Binding MaterialDesign.NormalColor}" Visibility="Collapsed"/>
 							</StackPanel>
 						</Border>
 						<Border Padding="1" Visibility="{Binding TargetPlatform.SupportsBrushOpacity, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">

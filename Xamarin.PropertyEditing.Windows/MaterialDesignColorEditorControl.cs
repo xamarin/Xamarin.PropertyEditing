@@ -1,10 +1,6 @@
 using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Media;
 using Xamarin.PropertyEditing.Drawing;
-using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
 {
@@ -15,6 +11,24 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			FocusableProperty.OverrideMetadata (typeof (MaterialDesignColorEditorControl), new FrameworkPropertyMetadata (false));
 			DefaultStyleKeyProperty.OverrideMetadata (typeof (MaterialDesignColorEditorControl), new FrameworkPropertyMetadata (typeof (MaterialDesignColorEditorControl)));
+		}
+
+		public static readonly DependencyProperty NormalColorProperty = DependencyProperty.Register (
+			"NormalColor", typeof(CommonColor?), typeof(MaterialDesignColorEditorControl), new FrameworkPropertyMetadata (default(CommonColor?), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (o, args) => ((MaterialDesignColorEditorControl)o).OnValueChanged()));
+
+		public CommonColor? NormalColor
+		{
+			get { return (CommonColor?) GetValue (NormalColorProperty); }
+			set { SetValue (NormalColorProperty, value); }
+		}
+
+		public static readonly DependencyProperty AccentColorProperty = DependencyProperty.Register (
+			"AccentColor", typeof(CommonColor?), typeof(MaterialDesignColorEditorControl), new PropertyMetadata (default(CommonColor?)));
+
+		public CommonColor? AccentColor
+		{
+			get { return (CommonColor?) GetValue (AccentColorProperty); }
+			set { SetValue (AccentColorProperty, value); }
 		}
 
 		public override void OnApplyTemplate ()
@@ -29,61 +43,32 @@ namespace Xamarin.PropertyEditing.Windows
 			if (this.accentColorPicker == null)
 				throw new InvalidOperationException ($"{nameof (MaterialDesignColorEditorControl)} is missing a child ChoiceControl named \"accentColorPicker\"");
 
-			if (ViewModel == null)
-				throw new InvalidOperationException ($"{nameof (MaterialDesignColorEditorControl)} is missing a data context with a non-null MaterialDesign part.");
-
 			this.normalColorPicker.SelectedItemChanged += (s, e) => {
-				ViewModel.NormalColor = this.normalColorPicker.SelectedItem as CommonColor?;
+				SetCurrentValue (NormalColorProperty, this.normalColorPicker.SelectedItem as CommonColor?);
 				EnsureNormalAndAccentState ();
 			};
+
 			this.accentColorPicker.SelectedItemChanged += (s, e) => {
-				ViewModel.AccentColor = this.accentColorPicker.SelectedItem as CommonColor?;
+				SetCurrentValue (AccentColorProperty, this.accentColorPicker.SelectedItem as CommonColor?);
 				EnsureNormalAndAccentState ();
 			};
-
-			this.normalColorPicker.LayoutUpdated += (s, e) => {
-				EnsureCheckBoxState (this.normalColorPicker, ViewModel?.NormalColor);
-			};
-
-			this.accentColorPicker.LayoutUpdated += (s, e) => {
-				EnsureCheckBoxState (this.accentColorPicker, ViewModel?.AccentColor);
-			};
-		}
-
-		protected override void OnRender (DrawingContext drawingContext)
-		{
-			base.OnRender (drawingContext);
-
-			EnsureNormalAndAccentState ();
 		}
 
 		private ChoiceControl normalColorPicker;
 		private ChoiceControl accentColorPicker;
 
-		private void EnsureCheckBoxState(ChoiceControl control, CommonColor? value)
+		private void OnValueChanged ()
 		{
-			for (int i = 0; i < control.Items.Count; i++) {
-				var container = control.ItemContainerGenerator.ContainerFromIndex (i) as ContentPresenter;
-				if (container == null)
-					throw new InvalidOperationException ("Unexpected visual tree");
-
-				var child = VisualTreeHelper.GetChild (container, 0);
-				var toggle = child as ToggleButton;
-				if (toggle == null)
-					throw new InvalidOperationException ("Children must be of ToggleButton");
-
-				if (value.HasValue && value.Value.Equals ((CommonColor)container.DataContext))
-					toggle.IsChecked = true;
-			}
+			EnsureNormalAndAccentState ();
 		}
 
 		private void EnsureNormalAndAccentState ()
 		{
-			if (ViewModel == null) return;
-			EnsureCheckBoxState (this.normalColorPicker, ViewModel.NormalColor);
-			EnsureCheckBoxState (this.accentColorPicker, ViewModel.AccentColor);
-		}
+			if (this.normalColorPicker == null)
+				return;
 
-		private MaterialDesignColorViewModel ViewModel => (DataContext as BrushPropertyViewModel)?.MaterialDesign;
+			this.normalColorPicker.SelectedItem = NormalColor;
+			this.accentColorPicker.SelectedItem = AccentColor;
+		}
 	}
 }
