@@ -41,6 +41,8 @@
 
 	<local:BoolsToVisibilityConverter x:Key="BoolsToVisibilityConverter" />
 
+	<local:GroupedEditorPropertySelector x:Key="GroupedEditorSelector" />
+
 	<Style TargetType="local:CombinablePredefinedValuesEditor">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -119,7 +121,7 @@
 				</DataTemplate>
 			</Setter.Value>
 		</Setter>
-		<Setter Property="ContentTemplateSelector" Value="{StaticResource PropertyEditorSelector}" />
+		<Setter Property="ContentTemplateSelector" Value="{StaticResource GroupedEditorSelector}" />
 		<Setter Property="ItemContainerStyle">
 			<Setter.Value>
 				<Style TargetType="ContentPresenter">

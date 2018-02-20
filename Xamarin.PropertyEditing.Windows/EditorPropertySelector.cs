@@ -36,6 +36,24 @@ namespace Xamarin.PropertyEditing.Windows
 		private DataTemplate editorTemplate, parentTemplate;
 	}
 
+	internal class GroupedEditorPropertySelector
+		: EditorPropertySelector
+	{
+		protected override bool TryGetTemplateType (Type type, out Type templateType)
+		{
+			if (TypeMap.TryGetValue (type, out templateType))
+				return true;
+
+			return base.TryGetTemplateType (type, out templateType);
+		}
+
+		private static readonly EditorPropertySelector selector;
+
+		private static readonly Dictionary<Type, Type> TypeMap = new Dictionary<Type, Type> {
+			{ typeof(BrushPropertyViewModel), typeof(BrushTabbedEditorControl) }
+		};
+	}
+
 	internal class EditorPropertySelector
 		: DataTemplateSelector
 	{
@@ -43,8 +61,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			if (item != null) {
 				Type type = item.GetType ();
-				DataTemplate template;
-				if (!TryGetTemplate (type, out template)) {
+				if (!TryGetTemplate (type, out DataTemplate template)) {
 					if (type.IsConstructedGenericType) {
 						type = type.GetGenericTypeDefinition ();
 						TryGetTemplate (type, out template);
@@ -58,6 +75,11 @@ namespace Xamarin.PropertyEditing.Windows
 			return base.SelectTemplate (item, container);
 		}
 
+		protected virtual bool TryGetTemplateType (Type type, out Type templateType)
+		{
+			return TypeMap.TryGetValue (type, out templateType);
+		}
+
 		private readonly Dictionary<Type, DataTemplate> templates = new Dictionary<Type, DataTemplate> ();
 
 		private bool TryGetTemplate (Type type, out DataTemplate template)
@@ -65,8 +87,7 @@ namespace Xamarin.PropertyEditing.Windows
 			if (this.templates.TryGetValue (type, out template))
 				return true;
 
-			Type controlType;
-			if (TypeMap.TryGetValue (type, out controlType)) {
+			if (TryGetTemplateType (type, out Type controlType)) {
 				this.templates[type] = template = new DataTemplate (type) {
 					VisualTree = new FrameworkElementFactory (controlType)
 				};
@@ -77,7 +98,6 @@ namespace Xamarin.PropertyEditing.Windows
 			return false;
 		}
 
-		// We can improve on this, but it'll get us started
 		private static readonly Dictionary<Type, Type> TypeMap = new Dictionary<Type, Type> {
 			{ typeof(StringPropertyViewModel), typeof(StringEditorControl) },
 			{ typeof(PropertyViewModel<bool?>), typeof(BoolEditorControl) },
