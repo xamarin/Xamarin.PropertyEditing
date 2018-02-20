@@ -40,7 +40,8 @@
 	</DrawingBrush>
 
 	<local:BoolsToVisibilityConverter x:Key="BoolsToVisibilityConverter" />
-
+	<local:CommonBrushToBrushConverter x:Key="BrushConverter" />
+	<local:CommonColorToColorConverter x:Key="ColorConverter" />
 	<local:GroupedEditorPropertySelector x:Key="GroupedEditorSelector" />
 
 	<Style TargetType="local:CombinablePredefinedValuesEditor">
@@ -68,6 +69,22 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+
+	<DataTemplate x:Key="GroupedPropertyValuePreview">
+		<DataTemplate.Resources>
+			<DataTemplate DataType="{x:Type drawing:CommonColor}">
+				<local:BrushBoxControl BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}">
+					<local:BrushBoxControl.Brush>
+						<SolidColorBrush Color="{Binding Converter={StaticResource ColorConverter}}" />
+					</local:BrushBoxControl.Brush>
+				</local:BrushBoxControl>
+			</DataTemplate>
+			<DataTemplate DataType="{x:Type drawing:CommonBrush}">
+				<local:BrushBoxControl Brush="{Binding Converter={StaticResource BrushConverter}}" BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}" />
+			</DataTemplate>
+		</DataTemplate.Resources>
+		<ContentPresenter MinWidth="40" Content="{Binding Value}" />
+	</DataTemplate>
 
 	<Style x:Key="GroupSelectionItem" TargetType="RadioButton">
 		<Setter Property="OverridesDefaultStyle" Value="True" />
@@ -114,7 +131,7 @@
 					<RadioButton GroupName="GroupSelection" Style="{StaticResource GroupSelectionItem}" Content="{Binding}">
 						<RadioButton.ContentTemplate>
 							<DataTemplate>
-								<local:PropertyPresenter Label="{Binding Name,Mode=OneTime}" Content="{Binding Mode=OneTime}" ContentTemplateSelector="{StaticResource PropertyEditorSelector}" />
+								<local:PropertyPresenter Label="{Binding Name,Mode=OneTime}" Background="Transparent" Content="{Binding Mode=OneTime}" ContentTemplate="{StaticResource GroupedPropertyValuePreview}" />
 							</DataTemplate>
 						</RadioButton.ContentTemplate>
 					</RadioButton>
@@ -141,7 +158,7 @@
 						<Border Style="{TemplateBinding SelectorStyle}" Grid.Row="0">
 							<ItemsPresenter Grid.IsSharedSizeScope="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
 						</Border>
-						<ContentPresenter Grid.Row="1" Name="EditorPresenter" Content="{TemplateBinding SelectedItem}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+						<ContentPresenter Grid.Row="1" Name="EditorPresenter" IsEnabled="{Binding Property.CanWrite}" Content="{TemplateBinding SelectedItem}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -439,9 +456,6 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-
-	<local:CommonBrushToBrushConverter x:Key="BrushConverter" />
-	<local:CommonColorToColorConverter x:Key="ColorConverter" />
 
 	<Style x:Key="LargeResourcePreview" TargetType="ContentPresenter">
 		<Style.Resources>
