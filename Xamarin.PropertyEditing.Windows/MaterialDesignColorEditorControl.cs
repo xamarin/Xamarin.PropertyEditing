@@ -79,6 +79,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void EnsureNormalAndAccentState ()
 		{
+			if (ViewModel == null) return;
 			EnsureCheckBoxState (this.normalColorPicker, ViewModel.NormalColor);
 			EnsureCheckBoxState (this.accentColorPicker, ViewModel.AccentColor);
 		}
