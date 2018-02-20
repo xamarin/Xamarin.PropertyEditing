@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
@@ -493,6 +494,29 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var vm = CreateVm (providerMock.Object);
 			vm.SelectedObjects.Add (null);
+		}
+
+		[Test]
+		public void BasicPredefinedGetsPredefined ()
+		{
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (pi => pi.Type).Returns (typeof(string));
+			var p = property.As<IHavePredefinedValues<string>> ();
+			p.SetupGet (pv => pv.PredefinedValues).Returns (new Dictionary<string, string> { { "key", "value" } });
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.Properties).Returns (new[] { property.Object });
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (target)).ReturnsAsync (editor.Object);
+
+			var vm = CreateVm (provider.Object);
+			vm.SelectedObjects.Add (target);
+
+			Assume.That (vm.Properties, Has.Count.EqualTo (1));
+			Assert.That (vm.Properties.First(), Is.TypeOf<PredefinedValuesViewModel<string>> ());
 		}
 
 		internal abstract PropertiesViewModel CreateVm (IEditorProvider provider);

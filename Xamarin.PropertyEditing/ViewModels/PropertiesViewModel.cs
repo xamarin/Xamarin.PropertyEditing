@@ -440,9 +440,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private PropertyViewModel GetViewModelCore (IPropertyInfo property)
 		{
-			if (ViewModelMap.TryGetValue (property.Type, out var vmFactory))
-				return vmFactory (TargetPlatform, property, this.objEditors);
-
 			Type[] interfaces = property.GetType ().GetInterfaces ();
 
 			Type hasPredefinedValues = interfaces.FirstOrDefault (t => t.IsGenericType && t.GetGenericTypeDefinition () == typeof(IHavePredefinedValues<>));
@@ -456,6 +453,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			} else if (property.Type == typeof(object)) {
 				return new ObjectPropertyViewModel (EditorProvider, TargetPlatform, property, this.objEditors);
 			}
+
+			if (ViewModelMap.TryGetValue (property.Type, out var vmFactory))
+				return vmFactory (TargetPlatform, property, this.objEditors);
 			
 			return new StringPropertyViewModel (TargetPlatform, property, this.objEditors);
 		}
