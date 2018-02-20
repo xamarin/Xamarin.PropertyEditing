@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,6 +16,7 @@ namespace Xamarin.PropertyEditing.Windows
 		public BrushTabbedEditorControl ()
 		{
 			DefaultStyleKey = typeof (BrushTabbedEditorControl);
+			DataContextChanged += OnDataContextChanged;
 		}
 
 		public override void OnApplyTemplate ()
@@ -118,6 +120,24 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private BrushPropertyViewModel ViewModel => DataContext as BrushPropertyViewModel;
 
+		private void OnDataContextChanged (object sender, DependencyPropertyChangedEventArgs e)
+		{
+			if (e.OldValue is INotifyPropertyChanged inpc) {
+				inpc.PropertyChanged -= OnContextPropertyChanged;
+			}
+
+			if (e.NewValue is INotifyPropertyChanged newInpc) {
+				newInpc.PropertyChanged += OnContextPropertyChanged;
+			}
+
+			SelectTabFromBrush();
+		}
+
+		private void OnContextPropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+			SelectTabFromBrush();
+		}
+
 		private void StorePreviousBrush ()
 		{
 			if (ViewModel == null) return;
@@ -128,32 +148,34 @@ namespace Xamarin.PropertyEditing.Windows
 
 		internal void SelectTabFromBrush ()
 		{
-			if (ViewModel != null && ViewModel.MaterialDesign != null
-				&& (ViewModel.MaterialDesign.NormalColor.HasValue || ViewModel.MaterialDesign.AccentColor.HasValue)) {
-				this.brushChoice.SelectedValue = materialDesign;
-				ShowSelectedTab ();
+			if (this.brushChoice == null)
 				return;
-			}
-			switch (ViewModel?.Value) {
-			case null:
-				this.brushChoice.SelectedValue = none;
-				ShowSelectedTab ();
-				break;
-			case CommonSolidBrush _:
-				switch (ViewModel.ValueSource) {
-				case ValueSource.Local:
-					this.brushChoice.SelectedValue = solid;
+
+			if (ViewModel?.MaterialDesign != null && (ViewModel.MaterialDesign.NormalColor.HasValue || ViewModel.MaterialDesign.AccentColor.HasValue)) {
+				this.brushChoice.SelectedValue = materialDesign;
+			} else {
+				switch (ViewModel?.Value) {
+				case null:
+					this.brushChoice.SelectedValue = none;
 					break;
-				case ValueSource.Resource:
-					this.brushChoice.SelectedValue = resource;
-					break;
-				default:
-					this.brushChoice.SelectedValue = solid;
+				case CommonSolidBrush _:
+					switch (ViewModel.ValueSource) {
+					case ValueSource.Local:
+						this.brushChoice.SelectedValue = solid;
+						break;
+					case ValueSource.Resource:
+						this.brushChoice.SelectedValue = resource;
+						break;
+					default:
+						this.brushChoice.SelectedValue = solid;
+						break;
+					}
+
 					break;
 				}
-				ShowSelectedTab ();
-				break;
 			}
+
+			ShowSelectedTab ();
 		}
 
 		private void ShowSelectedTab()
