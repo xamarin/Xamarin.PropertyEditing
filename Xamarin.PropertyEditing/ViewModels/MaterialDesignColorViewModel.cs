@@ -147,6 +147,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public IEnumerable<CommonColor?> NormalColorScale => GetScale (ColorName, false);
 		public double NormalColorScriptureLightnessThreshold => FindPalette (ColorName, false).LightScriptureLightnessThreshold;
 
+		public void SetToClosest ()
+		{
+			CommonColor closest = MaterialPalettes
+				.SelectMany (p => p.Colors)
+				.OrderBy (c => CommonColor.SquaredDistance (c, Color))
+				.First ();
+
+			Color = closest;
+		}
+
 		private string colorName;
 		private CommonColor? normalColor = null;
 		private CommonColor? accentColor = null;

@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Xamarin.PropertyEditing.Drawing;
+using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
 {
@@ -33,15 +37,19 @@ namespace Xamarin.PropertyEditing.Windows
 			if (item == null)
 				return base.SelectTemplate (item, container);
 
-			if (item is ChoiceItem choiceItem) {
-				var choice = choiceItem.Value as string;
-				if (choice == BrushTabbedEditorControl.None) return NoBrushTemplate;
-				if (choice == BrushTabbedEditorControl.Solid) return SolidBrushTemplate;
-				if (choice == BrushTabbedEditorControl.Resource) return ResourceBrushTemplate;
-				if (choice == BrushTabbedEditorControl.MaterialDesign) return MaterialDesignBrushTemplate;
+			if (item is KeyValuePair<string, Type> choiceItem) {
+				if (choiceItem.Value == null)
+					return NoBrushTemplate;
+				if (choiceItem.Value == typeof(CommonSolidBrush))
+					return SolidBrushTemplate;
+				if (choiceItem.Value == typeof(Resource))
+					return ResourceBrushTemplate;
+				if (choiceItem.Value == typeof(MaterialColorScale))
+					return MaterialDesignBrushTemplate;
 			}
 
 			return base.SelectTemplate (item, container);
 		}
+
 	}
 }

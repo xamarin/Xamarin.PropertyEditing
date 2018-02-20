@@ -5,6 +5,7 @@
 					xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
 					xmlns:vm="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing"
 					xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+					xmlns:core="clr-namespace:Xamarin.PropertyEditing;assembly=Xamarin.PropertyEditing"
 					xmlns:prop="clr-namespace:Xamarin.PropertyEditing.Properties;assembly=Xamarin.PropertyEditing"
 					xmlns:system="clr-namespace:System;assembly=mscorlib">
 
@@ -562,35 +563,40 @@
 		</Setter>
 	</Style>
 
+	<Style x:Key="BrushChoiceItem" TargetType="RadioButton" BasedOn="{StaticResource ChoiceControlItem}">
+		<Setter Property="GroupName" Value="brushChoiceType" />
+		<Setter Property="MinHeight" Value="20" />
+		<Setter Property="MinWidth" Value="20" />
+		<Setter Property="ToolTip" Value="{Binding Key,Mode=OneTime}" />
+		<Setter Property="AutomationProperties.Name" Value="{Binding Key,Mode=OneTime}" />
+		<Setter Property="AutomationProperties.HelpText" Value="{Binding Key,Mode=OneTime}" />
+	</Style>
+
 	<local:BrushChoiceTemplateSelector x:Key="BrushChoiceTemplateSelector">
 		<local:BrushChoiceTemplateSelector.NoBrushTemplate>
 			<DataTemplate>
-				<RadioButton Style="{DynamicResource ChoiceControlItem}" MinHeight="20" MinWidth="20"
-							 GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+				<RadioButton Style="{DynamicResource BrushChoiceItem}">
 					<ContentControl ContentTemplate="{DynamicResource BrushChoiceNoBrushIcon}"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.NoBrushTemplate>
 		<local:BrushChoiceTemplateSelector.SolidBrushTemplate>
 			<DataTemplate>
-				<RadioButton Style="{DynamicResource ChoiceControlItem}" MinHeight="20" MinWidth="20"
-							 GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+				<RadioButton Style="{DynamicResource BrushChoiceItem}">
 					<ContentControl ContentTemplate="{DynamicResource BrushChoiceSolidBrushIcon}"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.SolidBrushTemplate>
 		<local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
 			<DataTemplate>
-				<RadioButton Style="{DynamicResource ChoiceControlItem}" MinHeight="20" MinWidth="20"
-							 GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+				<RadioButton Style="{DynamicResource BrushChoiceItem}">
 					<ContentControl ContentTemplate="{DynamicResource BrushChoiceMaterialDesignIcon}"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
 		<local:BrushChoiceTemplateSelector.ResourceBrushTemplate>
 			<DataTemplate>
-				<RadioButton Style="{DynamicResource ChoiceControlItem}" MinHeight="20" MinWidth="20"
-							 GroupName="{Binding Name,RelativeSource={RelativeSource FindAncestor,AncestorType=local:ChoiceControl},Mode=OneTime}">
+				<RadioButton Style="{DynamicResource BrushChoiceItem}">
 					<ContentControl ContentTemplate="{DynamicResource BrushChoiceResourceBrushIcon}"/>
 				</RadioButton>
 			</DataTemplate>
@@ -604,15 +610,10 @@
 					<StackPanel>
 						<Border Padding="8,10,8,4">
 							<StackPanel>
-								<local:ChoiceControl x:Name="brushChoice" ItemTemplateSelector="{StaticResource BrushChoiceTemplateSelector}" ItemTemplate="{x:Null}" HorizontalAlignment="Stretch">
-									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.None}" Name="noBrushTab" Tooltip="{x:Static prop:Resources.NoBrush}"/>
-									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.Solid}" Name="solidColorTab" Tooltip="{x:Static prop:Resources.SolidBrush}"/>
-									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.MaterialDesign}" Name="materialDesignTab" Tooltip="{x:Static prop:Resources.MaterialDesignColorBrush}"/>
-									<local:ChoiceItem Value="{x:Static local:BrushTabbedEditorControl.Resource}" Name="resourceColorTab" Tooltip="{x:Static prop:Resources.ResourceBrush}"/>
-								</local:ChoiceControl>
-								<local:SolidBrushEditorControl x:Name="solidBrushEditor"/>
-								<local:ResourceBrushEditorControl x:Name="resourceBrushEditor"/>
-								<local:MaterialDesignColorEditorControl x:Name="materialDesignColorEditor" AccentColor="{Binding MaterialDesign.AccentColor}" NormalColor="{Binding MaterialDesign.NormalColor}" Visibility="Collapsed"/>
+								<local:ChoiceControl x:Name="brushChoice" SelectedValue="{Binding SelectedBrushType,Mode=TwoWay}" SelectedValuePath="Value" ItemsSource="{Binding BrushTypes,Mode=OneTime}" ItemTemplateSelector="{StaticResource BrushChoiceTemplateSelector}" ItemTemplate="{x:Null}" HorizontalAlignment="Stretch" />
+								<local:SolidBrushEditorControl x:Name="solidBrushEditor" Visibility="Collapsed" />
+								<local:ResourceBrushEditorControl x:Name="resourceBrushEditor" Visibility="Collapsed" />
+								<local:MaterialDesignColorEditorControl x:Name="materialDesignColorEditor" AccentColor="{Binding MaterialDesign.AccentColor}" NormalColor="{Binding MaterialDesign.NormalColor}" Visibility="Collapsed" />
 							</StackPanel>
 						</Border>
 						<Border Padding="1" Visibility="{Binding TargetPlatform.SupportsBrushOpacity, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -631,10 +632,22 @@
 							</Expander>
 						</Border>
 					</StackPanel>
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Type drawing:CommonSolidBrush}">
+							<Setter TargetName="solidBrushEditor" Property="Visibility" Value="Visible" />
+						</DataTrigger>
+						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Type core:Resource}">
+							<Setter TargetName="resourceBrushEditor" Property="Visibility" Value="Visible" />
+						</DataTrigger>
+						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Type vm:MaterialColorScale}">
+							<Setter TargetName="materialDesignColorEditor" Property="Visibility" Value="Visible" />
+						</DataTrigger>
+					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>
+
 	<Style TargetType="local:ResourceBrushEditorControl">
 		<Setter Property="Template">
 			<Setter.Value>

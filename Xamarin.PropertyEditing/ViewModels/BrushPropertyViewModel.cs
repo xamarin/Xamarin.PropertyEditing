@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Cadenza.Collections;
 using Xamarin.PropertyEditing.Drawing;
+using Xamarin.PropertyEditing.Properties;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -19,30 +22,56 @@ namespace Xamarin.PropertyEditing.ViewModels
 					MaterialDesign = new MaterialDesignColorViewModel (this);
 				}
 			}
+
+			// TODO: we actually need to localize this for platforms really, "brush" doesn't make sense for some
+			var types = new OrderedDictionary<string, Type> {
+				{ Resources.NoBrush, null },
+				{ Resources.SolidBrush, typeof(CommonSolidBrush) },
+				{ Resources.ResourceBrush, typeof(Resource) }
+			};
+
+			if (platform.SupportsMaterialDesign) {
+				types.Insert (2, Resources.MaterialDesignColorBrush, typeof(MaterialColorScale));
+			}
+
+			BrushTypes = types;
+			RequestCurrentValueUpdate ();
+		}
+
+		public IReadOnlyDictionary<string, Type> BrushTypes
+		{
+			get;
+		}
+
+		public Type SelectedBrushType
+		{
+			get { return this.selectedBrushType; }
+			set {
+				if (this.selectedBrushType == value)
+					return;
+
+				this.selectedBrushType = value;
+				SetBrushType (value);
+				OnPropertyChanged();
+			}
 		}
 
 		public SolidBrushViewModel Solid { get; }
 		public MaterialDesignColorViewModel MaterialDesign { get; }
 
-		private ResourceSelectorViewModel resourceSelector;
 		public ResourceSelectorViewModel ResourceSelector
 		{
 			get {
-				if (resourceSelector != null)
-					return resourceSelector;
+				if (this.resourceSelector != null)
+					return this.resourceSelector;
 
 				if (ResourceProvider == null || Editors == null)
 					return null;
 
-				return resourceSelector = new ResourceSelectorViewModel (ResourceProvider, Editors.Select (ed => ed.Target), Property);
+				return this.resourceSelector = new ResourceSelectorViewModel (ResourceProvider, Editors.Select (ed => ed.Target), Property);
 			}
 		}
-		public void ResetResourceSelector ()
-		{
-			resourceSelector = null;
-			OnPropertyChanged (nameof (ResourceSelector));
-		}
-
+		
 		// TODO: make this its own property view model so we can edit bindings, set to resources, etc.
 		public double Opacity {
 			get => Value == null ? 1.0 : Value.Opacity;
@@ -76,6 +105,38 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public void ResetResourceSelector ()
+		{
+			this.resourceSelector = null;
+			OnPropertyChanged (nameof (ResourceSelector));
+		}
+
+		protected override async Task UpdateCurrentValueAsync ()
+		{
+			if (BrushTypes == null)
+				return;
+
+			await base.UpdateCurrentValueAsync ();
+
+			if (MaterialDesign != null && (MaterialDesign.NormalColor.HasValue || MaterialDesign.AccentColor.HasValue))
+				this.selectedBrushType = typeof(MaterialColorScale);
+			else if (Value == null)
+				this.selectedBrushType = null;
+			else {
+				switch (ValueSource) {
+				case ValueSource.Resource:
+					this.selectedBrushType = typeof(Resource);
+					break;
+				default:
+				case ValueSource.Local:
+					this.selectedBrushType = typeof(CommonSolidBrush);
+					break;
+				}
+			}
+
+			OnPropertyChanged (nameof (SelectedBrushType));
+		}
+
 		protected override void OnValueChanged ()
 		{
 			base.OnValueChanged ();
@@ -93,6 +154,30 @@ namespace Xamarin.PropertyEditing.ViewModels
 			base.OnPropertyChanged (propertyName);
 			if (propertyName == nameof (PropertyViewModel.ResourceProvider)) {
 				ResetResourceSelector ();
+			}
+		}
+
+		private ResourceSelectorViewModel resourceSelector;
+		private Type selectedBrushType;
+
+		private void StorePreviousBrush ()
+		{
+			if (Value is CommonSolidBrush solid)
+				Solid.PreviousSolidBrush = solid;
+		}
+
+		private void SetBrushType (Type type)
+		{
+			StorePreviousBrush();
+
+			if (type == null)
+				Value = null;
+			else if (type == typeof(CommonSolidBrush)) {
+				Value = Solid?.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
+				Solid.CommitLastColor ();
+				Solid.CommitHue ();
+			} else if (type == typeof(MaterialColorScale)) {
+				MaterialDesign.SetToClosest ();
 			}
 		}
 	}

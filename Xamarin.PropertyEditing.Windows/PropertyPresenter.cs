@@ -56,16 +56,6 @@ namespace Xamarin.PropertyEditing.Windows
 			set { SetValue (ShowPropertyButtonProperty, value); }
 		}
 
-		protected override Size ArrangeOverride (Size arrangeBounds)
-		{
-			return base.ArrangeOverride (arrangeBounds);
-		}
-
-		protected override Size MeasureOverride (Size constraint)
-		{
-			return base.MeasureOverride (constraint);
-		}
-
 		private void OnLoaded (object sender, RoutedEventArgs e)
 		{
 			IsSubProperty = this.FindParentUnless<PropertyPresenter, PropertyEditorPanel>() != null;
