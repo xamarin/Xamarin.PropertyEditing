@@ -1212,7 +1212,7 @@
 									</local:ChoiceControl.ItemTemplate>
 									<local:ChoiceControl.ItemsPanel>
 										<ItemsPanelTemplate>
-											<UniformGrid Columns="10"/>
+											<UniformGrid Columns="10" UseLayoutRounding="False"/>
 										</ItemsPanelTemplate>
 									</local:ChoiceControl.ItemsPanel>
 								</local:ChoiceControl>
@@ -1239,7 +1239,7 @@
 									</local:ChoiceControl.ItemTemplate>
 									<local:ChoiceControl.ItemsPanel>
 										<ItemsPanelTemplate>
-											<UniformGrid Columns="{Binding NormalColorScale.Count}" Height="26"/>
+											<UniformGrid Columns="{Binding NormalColorScale.Count}" Height="25" UseLayoutRounding="False"/>
 										</ItemsPanelTemplate>
 									</local:ChoiceControl.ItemsPanel>
 								</local:ChoiceControl>
@@ -1266,7 +1266,7 @@
 									</local:ChoiceControl.ItemTemplate>
 									<local:ChoiceControl.ItemsPanel>
 										<ItemsPanelTemplate>
-											<UniformGrid Columns="{Binding AccentColorScale.Count}" Height="26"/>
+											<UniformGrid Columns="{Binding AccentColorScale.Count}" Height="25" UseLayoutRounding="False"/>
 										</ItemsPanelTemplate>
 									</local:ChoiceControl.ItemsPanel>
 								</local:ChoiceControl>
