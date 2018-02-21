@@ -43,22 +43,30 @@ namespace Xamarin.PropertyEditing.ViewModels
 			set {
 				// Attempt to retain normal and accent selections
 				if (NormalColor != null) {
-					var normalColorIndex = Array.IndexOf (NormalColorScale.ToArray (), NormalColor);
+					CommonColor? oldNormal = NormalColor;
+					CommonColor?[] oldScale = NormalColorScale.ToArray ();
+					var oldScaleLength = oldScale.Length;
+					var normalColorIndex = Array.IndexOf (oldScale, NormalColor);
 					this.colorName = value;
 					CommonColor?[] newScale = NormalColorScale.ToArray ();
-					if (normalColorIndex != -1 && newScale.Length > normalColorIndex) {
+					if (normalColorIndex != -1 && newScale.Length == oldScaleLength) {
 						NormalColor = newScale[normalColorIndex];
 					} else {
-						NormalColor = null;
+						// Find the color with the closest lightness to the old color
+						var oldLightness = oldNormal.Value.Lightness;
+						NormalColor = newScale.OrderBy(c => Math.Abs(oldLightness - c.Value.Lightness)).FirstOrDefault();
 					}
 				} else if (AccentColor != null) {
+					// Accent scale length, when it exists, is always 4, so the logic here can be simpler than for normal.
+					var oldLightness = AccentColor.Value.Lightness;
 					var accentColorIndex = Array.IndexOf (AccentColorScale.ToArray (), AccentColor);
 					this.colorName = value;
 					CommonColor?[] newScale = AccentColorScale.ToArray ();
 					if (accentColorIndex != -1 && newScale.Length > accentColorIndex) {
 						AccentColor = newScale[accentColorIndex];
 					} else {
-						AccentColor = null;
+						// Find the normal color with the closest lightness to the old color
+						NormalColor = NormalColorScale.OrderBy (c => Math.Abs (oldLightness - c.Value.Lightness)).FirstOrDefault ();
 					}
 				} else {
 					this.colorName = value;
@@ -150,7 +158,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private static IEnumerable<CommonColor?> GetScale (string colorName, bool isAccent)
 		{
-			var palette = FindPalette (colorName, isAccent);
+			MaterialColorScale palette = FindPalette (colorName, isAccent);
 			if (palette == default (MaterialColorScale) || palette.Colors is null) return EmptyColorScale;
 
 			var isBlackAndWhite = palette.MainColor.Equals (CommonColor.Black);
