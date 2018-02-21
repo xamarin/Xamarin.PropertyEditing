@@ -1248,7 +1248,7 @@
 								</local:ChoiceControl>
 								<Border BorderBrush="{StaticResource DarkeningBrush}" BorderThickness="1" Grid.Column="0" Grid.Row="0" Panel.ZIndex="1"/>
 							</Grid>
-							<Grid Margin="0,2,0,2">
+							<Grid Margin="0,2,0,2" Visibility="{Binding AccentColorScale, Converter={local:HasItemsToVisibilityConverter}}">
 								<local:ChoiceControl x:Name="accentColorPicker" Background="Transparent"
 									Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" BorderThickness="0"
 									ItemsSource="{Binding AccentColorScale}"
