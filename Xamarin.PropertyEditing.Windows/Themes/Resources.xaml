@@ -1154,30 +1154,33 @@
 
 	<Style x:Key="MaterialDesignColorControlItem" BasedOn="{StaticResource {x:Type RadioButton}}" TargetType="RadioButton">
 		<Setter Property="Background" Value="{DynamicResource ToggleItemBackgroundBrush}" />
-		<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemBorderBrush}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="RadioButton">
-					<Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}"
-							BorderBrush="{TemplateBinding BorderBrush}" Padding="{TemplateBinding Padding}">
+					<Border Name="ButtonBorder" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"
+							BorderBrush="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
 						<ContentPresenter />
 					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter Property="BorderBrush" TargetName="ButtonBorder" Value="{DynamicResource ToggleItemSelectedBorderBrush}"/>
+							<Setter Property="Padding" TargetName="ButtonBorder" Value="1"/>
+							<Setter Property="BorderThickness" TargetName="ButtonBorder" Value="1"/>
+						</Trigger>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="BorderBrush" TargetName="ButtonBorder" Value="{DynamicResource ToggleItemPressedBorderBrush}" />
+							<Setter Property="Padding" TargetName="ButtonBorder" Value="1"/>
+							<Setter Property="BorderThickness" TargetName="ButtonBorder" Value="1"/>
+						</Trigger>
+						<Trigger Property="IsPressed" Value="True">
+							<Setter Property="BorderBrush" TargetName="ButtonBorder" Value="{DynamicResource ToggleItemPressedBorderBrush}" />
+							<Setter Property="Padding" TargetName="ButtonBorder" Value="1"/>
+							<Setter Property="BorderThickness" TargetName="ButtonBorder" Value="1"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-		<Style.Triggers>
-			<Trigger Property="IsChecked" Value="True">
-				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemSelectedBorderBrush}" />
-				<Setter Property="BorderThickness" Value="1"/>
-				<Setter Property="Padding" Value="1"/>
-			</Trigger>
-			<Trigger Property="IsMouseOver" Value="True">
-				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemPressedBorderBrush}" />
-			</Trigger>
-			<Trigger Property="IsPressed" Value="True">
-				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemPressedBorderBrush}" />
-			</Trigger>
-		</Style.Triggers>
 	</Style>
 
 	<SolidColorBrush x:Key="DarkeningBrush" Color="#40000000"/>
