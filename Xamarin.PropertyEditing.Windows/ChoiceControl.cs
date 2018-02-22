@@ -116,7 +116,7 @@ namespace Xamarin.PropertyEditing.Windows
 				var child = VisualTreeHelper.GetChild (container, 0);
 				var toggle = child as ToggleButton;
 				if (toggle == null)
-					throw new InvalidOperationException ("Children must be of ToggleButton");
+					throw new InvalidOperationException ("Children must be of ToggleButton. This exception may be caused by an error in the template, an uninitialized template, or a disposed template.");
 
 				if (Equals (SelectedItem, container.DataContext))
 					toggle.IsChecked = true;

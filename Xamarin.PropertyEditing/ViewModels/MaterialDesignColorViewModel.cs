@@ -21,7 +21,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get => Parent.Value is CommonSolidBrush solidBrush ? solidBrush.Color : new CommonColor (0, 0, 0);
 			private set {
 				if (!Color.Equals (value)) {
-					Parent.Value = new CommonSolidBrush (value, null, Parent.Value.Opacity);
+					Parent.Value = new CommonSolidBrush (value, null, Parent.Value?.Opacity ?? 1.0);
 					OnPropertyChanged (nameof (Alpha));
 					OnPropertyChanged ();
 				}

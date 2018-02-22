@@ -2,10 +2,7 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows"
 					xmlns:drawing="clr-namespace:Xamarin.PropertyEditing.Drawing;assembly=Xamarin.PropertyEditing"
-					xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
-					xmlns:vm="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing"
 					xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
-					xmlns:core="clr-namespace:Xamarin.PropertyEditing;assembly=Xamarin.PropertyEditing"
 					xmlns:prop="clr-namespace:Xamarin.PropertyEditing.Properties;assembly=Xamarin.PropertyEditing"
 					xmlns:system="clr-namespace:System;assembly=mscorlib">
 
@@ -610,7 +607,11 @@
 					<StackPanel>
 						<Border Padding="8,10,8,4">
 							<StackPanel>
-								<local:ChoiceControl x:Name="brushChoice" SelectedValue="{Binding SelectedBrushType,Mode=TwoWay}" SelectedValuePath="Value" ItemsSource="{Binding BrushTypes,Mode=OneTime}" ItemTemplateSelector="{StaticResource BrushChoiceTemplateSelector}" ItemTemplate="{x:Null}" HorizontalAlignment="Stretch" />
+								<local:ChoiceControl x:Name="brushChoice"
+													 SelectedValue="{Binding SelectedBrushType,Mode=TwoWay}" SelectedValuePath="Value"
+													 ItemsSource="{Binding BrushTypes,Mode=OneTime}"
+													 ItemTemplateSelector="{StaticResource BrushChoiceTemplateSelector}"
+													 ItemTemplate="{x:Null}" HorizontalAlignment="Stretch" />
 								<local:SolidBrushEditorControl x:Name="solidBrushEditor" Visibility="Collapsed" />
 								<local:ResourceBrushEditorControl x:Name="resourceBrushEditor" Visibility="Collapsed" />
 								<local:MaterialDesignColorEditorControl x:Name="materialDesignColorEditor" AccentColor="{Binding MaterialDesign.AccentColor}" NormalColor="{Binding MaterialDesign.NormalColor}" Visibility="Collapsed" />
@@ -633,13 +634,13 @@
 						</Border>
 					</StackPanel>
 					<ControlTemplate.Triggers>
-						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Type drawing:CommonSolidBrush}">
+						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Static drawing:CommonBrushType.Solid}">
 							<Setter TargetName="solidBrushEditor" Property="Visibility" Value="Visible" />
 						</DataTrigger>
-						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Type core:Resource}">
+						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Static drawing:CommonBrushType.Resource}">
 							<Setter TargetName="resourceBrushEditor" Property="Visibility" Value="Visible" />
 						</DataTrigger>
-						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Type vm:MaterialColorScale}">
+						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Static drawing:CommonBrushType.MaterialDesign}">
 							<Setter TargetName="materialDesignColorEditor" Property="Visibility" Value="Visible" />
 						</DataTrigger>
 					</ControlTemplate.Triggers>

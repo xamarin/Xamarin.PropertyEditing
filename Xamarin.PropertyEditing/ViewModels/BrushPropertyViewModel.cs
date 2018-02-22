@@ -24,26 +24,26 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			// TODO: we actually need to localize this for platforms really, "brush" doesn't make sense for some
-			var types = new OrderedDictionary<string, Type> {
-				{ Resources.NoBrush, null },
-				{ Resources.SolidBrush, typeof(CommonSolidBrush) },
-				{ Resources.ResourceBrush, typeof(Resource) }
+			var types = new OrderedDictionary<string, CommonBrushType> {
+				{ Resources.NoBrush, CommonBrushType.NoBrush },
+				{ Resources.SolidBrush, CommonBrushType.Solid },
+				{ Resources.ResourceBrush, CommonBrushType.Resource }
 			};
 
 			if (platform.SupportsMaterialDesign) {
-				types.Insert (2, Resources.MaterialDesignColorBrush, typeof(MaterialColorScale));
+				types.Insert (2, Resources.MaterialDesignColorBrush, CommonBrushType.MaterialDesign);
 			}
 
 			BrushTypes = types;
 			RequestCurrentValueUpdate ();
 		}
 
-		public IReadOnlyDictionary<string, Type> BrushTypes
+		public IReadOnlyDictionary<string, CommonBrushType> BrushTypes
 		{
 			get;
 		}
 
-		public Type SelectedBrushType
+		public CommonBrushType SelectedBrushType
 		{
 			get { return this.selectedBrushType; }
 			set {
@@ -119,17 +119,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 			await base.UpdateCurrentValueAsync ();
 
 			if (MaterialDesign != null && (MaterialDesign.NormalColor.HasValue || MaterialDesign.AccentColor.HasValue))
-				this.selectedBrushType = typeof(MaterialColorScale);
+				this.selectedBrushType = CommonBrushType.MaterialDesign;
 			else if (Value == null)
-				this.selectedBrushType = null;
+				this.selectedBrushType = CommonBrushType.NoBrush;
 			else {
 				switch (ValueSource) {
 				case ValueSource.Resource:
-					this.selectedBrushType = typeof(Resource);
+					this.selectedBrushType = CommonBrushType.Resource;
 					break;
 				default:
 				case ValueSource.Local:
-					this.selectedBrushType = typeof(CommonSolidBrush);
+					this.selectedBrushType = CommonBrushType.Solid;
 					break;
 				}
 			}
@@ -158,7 +158,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private ResourceSelectorViewModel resourceSelector;
-		private Type selectedBrushType;
+		private CommonBrushType selectedBrushType;
 
 		private void StorePreviousBrush ()
 		{
@@ -166,18 +166,22 @@ namespace Xamarin.PropertyEditing.ViewModels
 				Solid.PreviousSolidBrush = solid;
 		}
 
-		private void SetBrushType (Type type)
+		private void SetBrushType (CommonBrushType type)
 		{
 			StorePreviousBrush();
 
-			if (type == null)
+			switch(type) {
+			case CommonBrushType.NoBrush:
 				Value = null;
-			else if (type == typeof(CommonSolidBrush)) {
-				Value = Solid?.PreviousSolidBrush ?? new CommonSolidBrush (new CommonColor (0, 0, 0));
+				break;
+			case CommonBrushType.Solid:
+				Value = Solid?.PreviousSolidBrush ?? new CommonSolidBrush (CommonColor.Black);
 				Solid.CommitLastColor ();
 				Solid.CommitHue ();
-			} else if (type == typeof(MaterialColorScale)) {
+				break;
+			case CommonBrushType.MaterialDesign:
 				MaterialDesign.SetToClosest ();
+				break;
 			}
 		}
 	}

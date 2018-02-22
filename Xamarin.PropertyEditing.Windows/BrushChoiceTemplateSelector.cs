@@ -37,15 +37,17 @@ namespace Xamarin.PropertyEditing.Windows
 			if (item == null)
 				return base.SelectTemplate (item, container);
 
-			if (item is KeyValuePair<string, Type> choiceItem) {
-				if (choiceItem.Value == null)
+			if (item is KeyValuePair<string, CommonBrushType> choiceItem) {
+				switch (choiceItem.Value) {
+				case CommonBrushType.NoBrush:
 					return NoBrushTemplate;
-				if (choiceItem.Value == typeof(CommonSolidBrush))
+				case CommonBrushType.Solid:
 					return SolidBrushTemplate;
-				if (choiceItem.Value == typeof(Resource))
+				case CommonBrushType.Resource:
 					return ResourceBrushTemplate;
-				if (choiceItem.Value == typeof(MaterialColorScale))
+				case CommonBrushType.MaterialDesign:
 					return MaterialDesignBrushTemplate;
+				}
 			}
 
 			return base.SelectTemplate (item, container);
