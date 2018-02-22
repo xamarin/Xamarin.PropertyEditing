@@ -17,6 +17,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public IReadOnlyList<CommonColor> Colors { get; set; }
 		// At which index in the scale the rendering should switch to use a light color for the color label
 		public int LightScriptureIndex { get; set; }
+		public double LightScriptureLightnessThreshold => Colors == null ? 0.667 :
+			Colors.Count <= LightScriptureIndex ? 0 : Colors[LightScriptureIndex].Lightness + 0.001;
 		public bool IsAccent { get; set; }
 		public string Name { get; set; }
 

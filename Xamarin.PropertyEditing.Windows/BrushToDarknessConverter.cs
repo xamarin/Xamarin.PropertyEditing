@@ -7,16 +7,16 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Windows
 {
-	[ValueConversion (typeof (CommonColor), typeof (Darkness))]
-	internal class BrushToDarknessConverter : MarkupExtension, IValueConverter
+	internal class BrushToDarknessConverter : MarkupExtension, IMultiValueConverter
 	{
-		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
+		public object Convert (object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (!(value is SolidColorBrush brush)) return Darkness.Unknown;
-			return brush.Color.ToCommonColor ().Lightness > 0.667 ? Darkness.Light : Darkness.Dark;
+			if (values.Length == 0 || !(values[0] is SolidColorBrush brush)) return Darkness.Unknown;
+			var threshold = (values.Length > 1 && values[1] is double doubleParameter) ? doubleParameter : 0.667;
+			return brush.Color.ToCommonColor ().Lightness >= threshold ? Darkness.Light : Darkness.Dark;
 		}
 
-		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
+		public object[] ConvertBack (object value, Type[] targetTypes, object parameter, CultureInfo culture)
 			=> throw new NotImplementedException ();
 
 		public override object ProvideValue (IServiceProvider serviceProvider) => this;

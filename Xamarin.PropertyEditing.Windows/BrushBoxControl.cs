@@ -39,12 +39,23 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly DependencyProperty LabelProperty =
 			DependencyProperty.Register (
 				nameof (Label), typeof (string), typeof (BrushBoxControl),
-				new PropertyMetadata (""));
+				new PropertyMetadata (null));
 
 		public string Label
 		{
 			get => (string)GetValue (LabelProperty);
 			set => SetValue (LabelProperty, value);
+		}
+
+		public static readonly DependencyProperty LightForegroundThresholdProperty =
+			DependencyProperty.Register (
+				nameof (LightForegroundThreshold), typeof (double), typeof (BrushBoxControl),
+				new PropertyMetadata (0.667));
+
+		public double LightForegroundThreshold
+		{
+			get => (double)GetValue (LightForegroundThresholdProperty);
+			set => SetValue (LightForegroundThresholdProperty, value);
 		}
 	}
 }
