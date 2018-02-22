@@ -269,7 +269,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool SupportsResources
 		{
-			get { return Property.CanWrite; }
+			get { return Property.CanWrite && Property.ValueSources.HasFlag (ValueSources.Resource); }
 		}
 
 		public IResourceProvider ResourceProvider
