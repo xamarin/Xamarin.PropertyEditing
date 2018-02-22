@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public override DataTemplate SelectTemplate (object item, DependencyObject container)
 		{
-			if (item is PropertyViewModel) {
+			if (item is EditorViewModel) {
 				if (this.editorTemplate == null)
 					this.editorTemplate = (DataTemplate)((FrameworkElement)container).TryFindResource (EditorTemplateKey);
 

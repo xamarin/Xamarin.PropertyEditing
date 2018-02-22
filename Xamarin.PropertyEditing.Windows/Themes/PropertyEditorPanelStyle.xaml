@@ -51,10 +51,11 @@
 	<Style x:Key="PropertyListStyle" TargetType="ItemsControl">
 		<Setter Property="Focusable" Value="False" />
 		<Setter Property="ItemTemplateSelector" Value="{StaticResource EditorTreeSelector}" />
+		<Setter Property="ScrollViewer.CanContentScroll" Value="True" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="ItemsControl">
-					<ScrollViewer Focusable="False" CanContentScroll="True" HorizontalScrollBarVisibility="Disabled">
+					<ScrollViewer Focusable="False" HorizontalScrollBarVisibility="Disabled">
 						<ItemsPresenter />
 					</ScrollViewer>
 				</ControlTemplate>
@@ -71,7 +72,7 @@
 
 	<DataTemplate x:Key="PropertyGroupTemplate">
 		<local:CategoryExpander Header="{Binding Key,Mode=OneTime}" Style="{StaticResource TreeExpanderStyle}">
-			<ItemsControl Style="{StaticResource PropertyListStyle}" ItemsSource="{Binding}" />
+			<ItemsControl Style="{StaticResource PropertyListStyle}" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Disabled"  ItemsSource="{Binding}" />
 		</local:CategoryExpander>
 	</DataTemplate>
 
