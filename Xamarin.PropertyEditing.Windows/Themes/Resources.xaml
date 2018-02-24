@@ -614,7 +614,7 @@
 													 ItemTemplate="{x:Null}" HorizontalAlignment="Stretch" />
 								<local:SolidBrushEditorControl x:Name="solidBrushEditor" Visibility="Collapsed" />
 								<local:ResourceBrushEditorControl x:Name="resourceBrushEditor" Visibility="Collapsed" />
-								<local:MaterialDesignColorEditorControl x:Name="materialDesignColorEditor" AccentColor="{Binding MaterialDesign.AccentColor}" NormalColor="{Binding MaterialDesign.NormalColor}" Visibility="Collapsed" />
+								<local:MaterialDesignColorEditorControl x:Name="materialDesignColorEditor" Visibility="Collapsed" />
 							</StackPanel>
 						</Border>
 						<Border Padding="1" Visibility="{Binding TargetPlatform.SupportsBrushOpacity, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -1227,7 +1227,7 @@
 								<local:ChoiceControl x:Name="palettePicker" Background="Transparent"
 									Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" BorderThickness="0"
 									ItemsSource="{Binding Palettes}"
-									SelectedValue="{Binding ColorName, Mode=TwoWay}"
+									SelectedValue="{Binding ColorName}"
 									SelectedValuePath="Name">
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
@@ -1257,7 +1257,7 @@
 								<local:ChoiceControl x:Name="normalColorPicker" Background="Transparent"
 									Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" BorderThickness="0"
 									ItemsSource="{Binding NormalColorScale}"
-									SelectedValue="{Binding NormalColor, Mode=OneWay}" SelectedValuePath="">
+									SelectedValue="{Binding NormalColor}" SelectedValuePath="">
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
 											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"
@@ -1285,7 +1285,7 @@
 								<local:ChoiceControl x:Name="accentColorPicker" Background="Transparent"
 									Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" BorderThickness="0"
 									ItemsSource="{Binding AccentColorScale}"
-									SelectedValue="{Binding AccentColor, Mode=OneWay}" SelectedValuePath="">
+									SelectedValue="{Binding AccentColor}" SelectedValuePath="">
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
 											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"

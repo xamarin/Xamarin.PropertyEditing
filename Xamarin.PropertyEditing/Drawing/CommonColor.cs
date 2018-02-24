@@ -491,8 +491,8 @@ namespace Xamarin.PropertyEditing.Drawing
 		public override bool Equals (object obj)
 		{
 			if (obj == null) return false;
-			if (!(obj is CommonColor)) return false;
-			return base.Equals ((CommonColor)obj);
+			if (!(obj is CommonColor otherColor)) return false;
+			return Equals (otherColor, false);
 		}
 
 		public bool Equals (CommonColor other) => Equals (other, false);

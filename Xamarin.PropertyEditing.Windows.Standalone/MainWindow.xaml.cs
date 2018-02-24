@@ -35,9 +35,8 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 
 		private async void Button_Click (object sender, RoutedEventArgs e)
 		{
-			var mockedControl = sender as IMockedControl;
 			object inspectedObject;
-			if (mockedControl == null || mockedControl.MockedControl == null) {
+			if (!(sender is IMockedControl mockedControl) || mockedControl.MockedControl == null) {
 				inspectedObject = sender;
 			} else {
 				inspectedObject = mockedControl.MockedControl;
