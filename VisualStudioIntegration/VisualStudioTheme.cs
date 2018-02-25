@@ -43,26 +43,26 @@ namespace Xamarin.PropertyEditing.VisualStudioIntegration
 	/// </example>
 	public class VisualStudioTheme
 	{
-		static readonly Guid categoryCider = new Guid ("92d153ee-57d7-431f-a739-0931ca3f7f70");
-		static readonly Guid categoryEnvironment = new Guid ("624ed9c3-bdfd-41fa-96c3-7c824ea32e3d");
-		static readonly Guid categorySearch = new Guid("f1095fad-881f-45f1-8580-589e10325eb8");
-		static readonly Guid categoryTreeView = new Guid("92ecf08e-8b13-4cf4-99e9-ae2692382185");
-
-		IVsUIShell5 vsUiShell5;
-		ResourceDictionary resourceDictionary;
-
 		public ResourceDictionary CreateResourceDictionary (IServiceProvider serviceProvider)
 		{
-			vsUiShell5 = serviceProvider.GetService (typeof (IVsUIShell)) as IVsUIShell5;
-			if (vsUiShell5 == null)
+			this.vsUiShell5 = serviceProvider.GetService (typeof (IVsUIShell)) as IVsUIShell5;
+			if (this.vsUiShell5 == null)
 				throw new Exception ("Couldn't get IVsUIShell5 service");
 
-			resourceDictionary = new ResourceDictionary ();
-			AddBrushes();
-			return resourceDictionary;
+			this.resourceDictionary = new ResourceDictionary ();
+			AddBrushes ();
+			return this.resourceDictionary;
 		}
 
-		void AddBrushes ()
+		private static readonly Guid categoryCider = new Guid ("92d153ee-57d7-431f-a739-0931ca3f7f70");
+		private static readonly Guid categoryEnvironment = new Guid ("624ed9c3-bdfd-41fa-96c3-7c824ea32e3d");
+		private static readonly Guid categorySearch = new Guid("f1095fad-881f-45f1-8580-589e10325eb8");
+		private static readonly Guid categoryTreeView = new Guid("92ecf08e-8b13-4cf4-99e9-ae2692382185");
+
+		private IVsUIShell5 vsUiShell5;
+		private ResourceDictionary resourceDictionary;
+
+		private void AddBrushes ()
 		{
 			AddBrush ("FocusVisualBorderBrush", "VS.Cider.ToolWindowTextColor");
 
@@ -199,7 +199,7 @@ namespace Xamarin.PropertyEditing.VisualStudioIntegration
 				"VS.Environment.ScrollBarArrowDisabledBackgroundColor");
 		}
 
-		void AddBrush (string ourKey, string vsKey)
+		private void AddBrush (string ourKey, string vsKey)
 		{
 			int lastPeriod = vsKey.LastIndexOf ('.');
 			if (lastPeriod == -1)
@@ -219,6 +219,7 @@ namespace Xamarin.PropertyEditing.VisualStudioIntegration
 			else throw new Exception ($"Unknown theme brush category: {categoryName}");
 
 			string longBrushName = vsKey.Substring (lastPeriod + 1);
+
 			string shortBrushName;
 			__THEMEDCOLORTYPE colorType;
 			if (longBrushName.EndsWith ("TextColor")) {
@@ -236,7 +237,7 @@ namespace Xamarin.PropertyEditing.VisualStudioIntegration
 			Color color = Color.FromArgb (bytes[3], bytes[2], bytes[1], bytes[0]);
 			SolidColorBrush brush = new SolidColorBrush (color);
 
-			resourceDictionary.Add (ourKey, brush);
+			this.resourceDictionary.Add (ourKey, brush);
 		}
 	}
 }
