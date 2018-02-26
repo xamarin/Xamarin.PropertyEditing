@@ -244,6 +244,7 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			var mockProperty = GetPropertyMock ();
 			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Resource);
 
 			var resource = new Resource ("name");
 
@@ -287,6 +288,7 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			var mockProperty = GetPropertyMock ();
 			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Resource);
 
 			var resourcesMock = new Mock<IResourceProvider>();
 
@@ -301,6 +303,7 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			var mockProperty = GetPropertyMock ();
 			mockProperty.SetupGet (pi => pi.CanWrite).Returns (true);
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Resource);
 
 			var resource = new Resource ("name");
 
