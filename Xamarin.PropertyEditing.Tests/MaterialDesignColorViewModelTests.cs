@@ -179,7 +179,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.AreEqual (color.A, vm.MaterialDesign.Alpha);
 
 			// Finally, change to grey, which has only normal nuances, but no accents,
-			// so both accent and normal should get reset.
+			// so color should snap to the closest normal.
 			var grey = Properties.Resources.MaterialColorGrey;
 			vm.MaterialDesign.ColorName = Properties.Resources.MaterialColorGrey;
 
@@ -188,8 +188,56 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.IsNull (vm.MaterialDesign.AccentColor);
 			Assert.AreEqual (MaterialDesignColorViewModel.MaterialPalettes.First(p => p.Name == grey).Colors,
 				vm.MaterialDesign.NormalColorScale);
-			Assert.IsNull (vm.MaterialDesign.NormalColor);
+			Assert.IsNotNull (vm.MaterialDesign.NormalColor);
 			Assert.AreEqual (color.A, vm.MaterialDesign.Alpha);
+		}
+
+		[Test]
+		public void ColorsSnapBetweenBlackAndWhiteAndOtherPalettes ()
+		{
+			BrushPropertyViewModel vm = PrepareMockViewModel ();
+
+			MaterialColorScale blackAndWhiteScale = MaterialDesignColorViewModel.MaterialPalettes.Last();
+			MaterialColorScale normalScale = MaterialDesignColorViewModel.MaterialPalettes[0];
+			MaterialColorScale accentScale = MaterialDesignColorViewModel.MaterialPalettes[1];
+
+			CommonColor lightNormalColor = normalScale.Colors[0];
+			CommonColor darkNormalColor = normalScale.Colors[9];
+
+			CommonColor lightAccentColor = accentScale.Colors[0];
+			CommonColor darkAccentColor = accentScale.Colors[3];
+
+			vm.Value = new CommonSolidBrush (lightNormalColor);
+
+			vm.MaterialDesign.ColorName = blackAndWhiteScale.Name;
+			Assert.That (vm.Solid.Color, Is.EqualTo (CommonColor.White));
+
+			vm.MaterialDesign.ColorName = normalScale.Name;
+			Assert.That (vm.Solid.Color, Is.EqualTo (lightNormalColor));
+
+			vm.Value = new CommonSolidBrush (darkNormalColor);
+
+			vm.MaterialDesign.ColorName = blackAndWhiteScale.Name;
+			Assert.That (vm.Solid.Color, Is.EqualTo (CommonColor.Black));
+
+			vm.MaterialDesign.ColorName = normalScale.Name;
+			Assert.That (vm.Solid.Color, Is.EqualTo (darkNormalColor));
+
+			vm.Value = new CommonSolidBrush (lightAccentColor);
+
+			vm.MaterialDesign.ColorName = blackAndWhiteScale.Name;
+			Assert.That (vm.Solid.Color, Is.EqualTo (CommonColor.White));
+
+			vm.MaterialDesign.ColorName = accentScale.Name;
+			Assert.That (vm.Solid.Color, Is.EqualTo (lightNormalColor));
+
+			vm.Value = new CommonSolidBrush (darkAccentColor);
+
+			vm.MaterialDesign.ColorName = blackAndWhiteScale.Name;
+			Assert.That (vm.Solid.Color, Is.EqualTo (CommonColor.Black));
+
+			vm.MaterialDesign.ColorName = accentScale.Name;
+			Assert.That (vm.Solid.Color, Is.EqualTo (darkNormalColor));
 		}
 
 		protected override CommonBrush GetRandomTestValue (Random rand)
