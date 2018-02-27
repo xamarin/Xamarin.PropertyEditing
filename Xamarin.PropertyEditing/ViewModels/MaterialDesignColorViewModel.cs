@@ -197,7 +197,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				.OrderBy (c => CommonColor.SquaredDistance (c, Color))
 				.First ();
 
-			Color = closest;
+			ReplaceColor (closest);
 		}
 
 		private string colorName;
