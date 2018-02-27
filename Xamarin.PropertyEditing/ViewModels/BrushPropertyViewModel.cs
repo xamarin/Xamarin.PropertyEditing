@@ -118,11 +118,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			await base.UpdateCurrentValueAsync ();
 
-			if (MaterialDesign != null && (MaterialDesign.NormalColor.HasValue || MaterialDesign.AccentColor.HasValue))
-				this.selectedBrushType = CommonBrushType.MaterialDesign;
-			else if (Value == null)
+			if (MaterialDesign != null && (MaterialDesign.NormalColor.HasValue || MaterialDesign.AccentColor.HasValue)) {
+				if (this.selectedBrushType != CommonBrushType.Solid)
+					this.selectedBrushType = CommonBrushType.MaterialDesign;
+			} else if (Value == null) {
 				this.selectedBrushType = CommonBrushType.NoBrush;
-			else {
+			} else {
 				switch (ValueSource) {
 				case ValueSource.Resource:
 					this.selectedBrushType = CommonBrushType.Resource;
