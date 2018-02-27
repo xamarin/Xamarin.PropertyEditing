@@ -185,7 +185,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private readonly ICoerce<TValue> coerce;
 		private readonly IValidator<TValue> validator;
-		private const string NullableName = "Nullable`1";
+		internal const string NullableName = "Nullable`1";
 		private bool isNullable;
 		private ValueInfo<TValue> value;
 

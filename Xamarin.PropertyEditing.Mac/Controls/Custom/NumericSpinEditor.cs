@@ -5,7 +5,7 @@ using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class NumericSpinEditor : NSView
+	public class NumericSpinEditor<T> : NSView
 	{
 		NumericTextField numericEditor;
 		NSStepper stepper;
@@ -55,6 +55,7 @@ namespace Xamarin.PropertyEditing.Mac
 			get { return (int)formatter.MaximumFractionDigits; }
 			set { formatter.MaximumFractionDigits = value; }
 		}
+
 
 		public double Value {
 			get { return stepper.DoubleValue; }

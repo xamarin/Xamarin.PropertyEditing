@@ -8,12 +8,11 @@ using Xamarin.PropertyEditing.ViewModels;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class BasePointEditorControl<T> : PropertyEditorControl
-		where T : struct
 	{
 		internal UnfocusableTextField XLabel { get; set; }
-		internal NumericSpinEditor XEditor { get; set; }
+		internal NumericSpinEditor<T> XEditor { get; set; }
 		internal UnfocusableTextField YLabel { get; set; }
-		internal NumericSpinEditor YEditor { get; set; }
+		internal NumericSpinEditor<T> YEditor { get; set; }
 
 		public override NSView FirstKeyView => XEditor;
 		public override NSView LastKeyView => YEditor;
@@ -28,14 +27,14 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			XLabel = new UnfocusableTextField ();
 
-			XEditor = new NumericSpinEditor ();
+			XEditor = new NumericSpinEditor<T> ();
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.Value = 0.0f;
 			XEditor.ValueChanged += OnInputUpdated;
 
 			YLabel = new UnfocusableTextField ();
 
-			YEditor = new NumericSpinEditor ();
+			YEditor = new NumericSpinEditor<T> ();
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.Value = 0.0f;
 			YEditor.ValueChanged += OnInputUpdated;

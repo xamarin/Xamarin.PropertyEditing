@@ -75,7 +75,10 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 						realValue |= Convert.ToUInt64 (val);
 					}
 
-					toValue = realValue;
+					if (toType.IsEnum)
+						toValue = Enum.ToObject (toType, realValue);
+					else
+						toValue = realValue;
 					return true;
 				}
 			} else if (toType.IsEnum) {

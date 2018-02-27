@@ -12,17 +12,25 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public BooleanEditorControl ()
 		{
-			BooleanEditor = new NSButton { 
-				TranslatesAutoresizingMaskIntoConstraints = false,
-				Title = string.Empty,
+			BooleanEditor = new NSButton {
+				AllowsMixedState = true,
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				Title = string.Empty,
+				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 			BooleanEditor.SetButtonType (NSButtonType.Switch);
 
 			// update the value on 'enter'
 			BooleanEditor.Activated += (sender, e) => {
-				ViewModel.Value = BooleanEditor.State == NSCellStateValue.On ? true : false;
+				switch (BooleanEditor.State) {
+					case NSCellStateValue.Off:
+						ViewModel.Value = false;
+						break;
+					case NSCellStateValue.On:
+						ViewModel.Value = true;
+						break;
+				}
 			};
 
 			AddSubview (BooleanEditor);
@@ -46,15 +54,21 @@ namespace Xamarin.PropertyEditing.Mac
 			set { BooleanEditor.Title = value; } 
 		}
 
-		internal new PropertyViewModel<bool> ViewModel {
-			get { return (PropertyViewModel<bool>)base.ViewModel; }
+		internal new PropertyViewModel<bool?> ViewModel {
+			get { return (PropertyViewModel<bool?>)base.ViewModel; }
 			set { base.ViewModel = value; }
 		}
 
 		protected override void UpdateValue ()
 		{
-			BooleanEditor.State = ViewModel.Value ? NSCellStateValue.On : NSCellStateValue.Off;
-			BooleanEditor.Title = ViewModel.Value.ToString ();
+			if (ViewModel.Value.HasValue) {
+				BooleanEditor.State = ViewModel.Value.Value ? NSCellStateValue.On : NSCellStateValue.Off;
+				BooleanEditor.Title = ViewModel.Value.ToString ();
+				BooleanEditor.AllowsMixedState = false;
+			} else {
+				BooleanEditor.State = NSCellStateValue.Mixed;
+				BooleanEditor.Title = string.Empty;
+			}
 		}
 
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
