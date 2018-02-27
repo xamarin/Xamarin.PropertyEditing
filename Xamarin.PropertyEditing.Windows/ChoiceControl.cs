@@ -66,13 +66,17 @@ namespace Xamarin.PropertyEditing.Windows
 
 		protected override void OnSelectionChanged (SelectionChangedEventArgs e)
 		{
-			if (e.AddedItems.Count == 0) return;
-			var presenter = (ContentPresenter) ItemContainerGenerator.ContainerFromItem (e.AddedItems[0]);
-			if (presenter == null)
-				return;
+			if (e.RemovedItems.Count > 0) {
+				var removedToggle = GetToggle (e.RemovedItems[0]);
+				if (removedToggle != null)
+					removedToggle.IsChecked = false;
+			}
 
-			var toggle = (ToggleButton) VisualTreeHelper.GetChild (presenter, 0);
-			toggle.IsChecked = true;
+			if (e.AddedItems.Count > 0) {
+				var addedToggle = GetToggle (e.AddedItems[0]);
+				if (addedToggle != null)
+					addedToggle.IsChecked = true;
+			}
 		}
 
 		internal void FocusSelectedItem ()
@@ -85,6 +89,15 @@ namespace Xamarin.PropertyEditing.Windows
 			if (toggle == null)
 				throw new InvalidOperationException ("Children must be of ToggleButton");
 			toggle.Focus ();
+		}
+
+		private ToggleButton GetToggle (object item)
+		{
+			var presenter = (ContentPresenter) ItemContainerGenerator.ContainerFromItem (item);
+			if (presenter == null)
+				return null;
+
+			return VisualTreeHelper.GetChild (presenter, 0) as ToggleButton;
 		}
 
 		private void OnItemContainerGeneratorOnStatusChanged (object sender, EventArgs args)
@@ -103,7 +116,7 @@ namespace Xamarin.PropertyEditing.Windows
 				var child = VisualTreeHelper.GetChild (container, 0);
 				var toggle = child as ToggleButton;
 				if (toggle == null)
-					throw new InvalidOperationException ("Children must be of ToggleButton");
+					throw new InvalidOperationException ("Children must be of ToggleButton. This exception may be caused by an error in the template, an uninitialized template, or a disposed template.");
 
 				if (Equals (SelectedItem, container.DataContext))
 					toggle.IsChecked = true;

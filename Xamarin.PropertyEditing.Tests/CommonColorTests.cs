@@ -148,6 +148,22 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public void ColorEquality()
+		{
+			var c1 = new CommonColor (1, 2, 3, 4, "one");
+			var c2 = new CommonColor (1, 2, 3, 4, "two");
+			var c3 = new CommonColor (1, 2, 3, 5, "three");
+			var c4 = new CommonColor (5, 6, 7, 4, "four");
+
+			Assert.That (c1 == c2, Is.True);
+			Assert.That (c1 != c2, Is.False);
+			Assert.That (c1.Equals (c2), Is.True);
+			Assert.That (c1.Equals (c3), Is.False);
+			Assert.That (c1.Equals (c3, true), Is.True);
+			Assert.That (c1.Equals (c4), Is.False);
+		}
+
+		[Test]
 		public void ColorToString()
 		{
 			var color = new CommonColor (0x34, 0x56, 0x78, 0x12);

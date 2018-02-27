@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
 {
@@ -29,11 +28,9 @@ namespace Xamarin.PropertyEditing.Windows
 			this.brushTabs = this.brushBoxPopup.Child?.GetDescendants<BrushTabbedEditorControl>().FirstOrDefault();
 
 			this.brushBoxPopup.PlacementTarget = this.brushBoxButton.FindParent<PropertyPresenter>();
-			this.brushBoxPopup.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(PlacePopup);
+			this.brushBoxPopup.CustomPopupPlacementCallback = PlacePopup;
 			this.brushBoxPopup.Opened += (s, e) => {
 				this.brushTabs?.FocusFirstChild ();
-				// Need to refresh the tabs and their value manually
-				this.brushTabs?.SelectTabFromBrush ();
 			};
 			this.brushBoxPopup.Closed += (s, e) => {
 				this.brushBoxButton.Focus ();
@@ -56,7 +53,5 @@ namespace Xamarin.PropertyEditing.Windows
 		private ButtonBase brushBoxButton;
 		private Popup brushBoxPopup;
 		private BrushTabbedEditorControl brushTabs;
-
-		private BrushPropertyViewModel ViewModel => DataContext as BrushPropertyViewModel;
 	}
 }

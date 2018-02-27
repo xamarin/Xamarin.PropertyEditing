@@ -54,6 +54,7 @@
     <Compile Include="Drawing\CommonAlignment.cs" />
     <Compile Include="Drawing\CommonBrush.cs" />
     <Compile Include="Drawing\CommonBrushMappingMode.cs" />
+    <Compile Include="Drawing\CommonBrushType.cs" />
     <Compile Include="Drawing\CommonColor.cs" />
     <Compile Include="Drawing\CommonColorInterpolationMode.cs" />
     <Compile Include="Drawing\CommonGradientBrush.cs" />
