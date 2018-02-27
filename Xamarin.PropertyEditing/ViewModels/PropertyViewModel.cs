@@ -66,9 +66,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return this.value?.CustomExpression; }
 			set
 			{
-				SetValue (new ValueInfo<TValue> {
-					CustomExpression = value
-				});
+				if (value == null) {
+					SetValue (new ValueInfo<TValue> {
+						Source = ValueSource.Unset
+					});
+				} else {
+					SetValue (new ValueInfo<TValue> {
+						CustomExpression = value
+					});
+				}
 			}
 		}
 
