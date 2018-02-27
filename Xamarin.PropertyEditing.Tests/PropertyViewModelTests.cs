@@ -694,6 +694,59 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.Value, Is.EqualTo (default(TValue)));
 		}
 
+		[Test]
+		public void CustomExpression ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+			string custom = value.ToString ();
+
+			var platform = new TargetPlatform {
+				SupportsCustomExpressions = true
+			};
+
+			var mockProperty = GetPropertyMock ();
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.Properties).Returns (new[] { mockProperty.Object });
+
+			var vm = GetViewModel (platform, mockProperty.Object, new[] { editor.Object });
+			Assume.That (vm.CustomExpression, Is.Null);
+
+			vm.CustomExpression = custom;
+			editor.Verify (oe => oe.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				CustomExpression = custom
+			}, null));
+		}
+
+		[Test]
+		[Description ("Since CustomExpression != null is the determiner for whether to set a custom expression, we need to distinguish when its being set as null")]
+		public void CustomExpressionNullUnsets ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+			string custom = value.ToString ();
+
+			var platform = new TargetPlatform {
+				SupportsCustomExpressions = true
+			};
+
+			var mockProperty = GetPropertyMock ();
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.Properties).Returns (new[] { mockProperty.Object });
+
+			SetupPropertyGet (editor, mockProperty.Object, () => new ValueInfo<TValue> {
+				CustomExpression = custom
+			});
+
+			var vm = GetViewModel (platform, mockProperty.Object, new[] { editor.Object });
+			Assume.That (vm.CustomExpression, Is.EqualTo (custom));
+
+			vm.CustomExpression = null;
+			editor.Verify (oe => oe.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Unset
+			}, null));
+		}
+
 		protected TValue GetNonDefaultRandomTestValue ()
 		{
 			TValue value = default (TValue);
