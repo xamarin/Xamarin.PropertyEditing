@@ -102,7 +102,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnItemContainerGeneratorOnStatusChanged (object sender, EventArgs args)
 		{
-			if (ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
+			if (ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated || (ItemTemplate == null && ItemTemplateSelector == null))
 				return;
 
 			// Note: this does not handle a changing items ItemsSource. It's not something that's currently required and unlikely to be.
