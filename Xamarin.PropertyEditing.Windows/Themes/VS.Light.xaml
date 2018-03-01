@@ -51,8 +51,6 @@
 	<SolidColorBrush x:Key="MenuSeparatorBrush">#E0E3E6</SolidColorBrush>
 
 	<SolidColorBrush x:Key="PropertyMenuDotIconBorderBrush">#FF717171</SolidColorBrush>
-	<SolidColorBrush x:Key="LiteralMarkerBrush">#55000000</SolidColorBrush>
-	<SolidColorBrush x:Key="ResourceMarkerBrush">#FF8BD44A</SolidColorBrush>
 
 	<SolidColorBrush x:Key="PropertyButtonBackgroundBrush">#F2F2F6</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyButtonBorderBrush">#717171</SolidColorBrush>
