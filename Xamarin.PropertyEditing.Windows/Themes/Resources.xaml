@@ -11,7 +11,10 @@
         <ResourceDictionary Source="PropertyEditorPanelStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+	<SolidColorBrush x:Key="PopupDropShadowColor">#FFFFFFFF</SolidColorBrush>
 	<Color x:Key="DropShadowBackgroundColor">#72000000</Color>
+	<SolidColorBrush x:Key="LiteralMarkerBrush">#55000000</SolidColorBrush>
+	<SolidColorBrush x:Key="ResourceMarkerBrush">#FF8BD44A</SolidColorBrush>
 
 	<Style x:Key="GenericVisualFocusStyle" TargetType="Control">
 		<Setter Property="Margin" Value="1" />
