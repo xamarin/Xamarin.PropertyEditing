@@ -9,7 +9,8 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Tests
 {
-	public abstract class PropertiesViewModelTests
+	internal abstract class PropertiesViewModelTests<TViewModel>
+		where TViewModel : PropertiesViewModel
 	{
 		protected class TestClass
 		{
@@ -519,6 +520,6 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.Properties.First(), Is.TypeOf<PredefinedValuesViewModel<string>> ());
 		}
 
-		internal abstract PropertiesViewModel CreateVm (IEditorProvider provider);
+		internal abstract TViewModel CreateVm (IEditorProvider provider);
 	}
 }

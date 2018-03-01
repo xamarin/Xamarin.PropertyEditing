@@ -14,8 +14,8 @@ using Xamarin.PropertyEditing.ViewModels;
 namespace Xamarin.PropertyEditing.Tests
 {
 	[TestFixture]
-	public class PanelViewModelTests
-		: PropertiesViewModelTests
+	internal class PanelViewModelTests
+		: PropertiesViewModelTests<PanelViewModel>
 	{
 		[SetUp]
 		public void Setup ()
@@ -618,7 +618,33 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (group, Is.Null);
 		}
 
-		internal override PropertiesViewModel CreateVm (IEditorProvider provider)
+		[Test]
+		public void GroupedWithNullGroupedTypes ()
+		{
+			var normalProp = new Mock<IPropertyInfo> ();
+			normalProp.SetupGet (p => p.Type).Returns (typeof(string));
+			normalProp.SetupGet (p => p.Name).Returns ("name");
+
+			var groupProp = new Mock<IPropertyInfo> ();
+			groupProp.SetupGet (p => p.Type).Returns (typeof(int));
+
+			var target = new object();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target))
+				.ReturnsAsync (new MockObjectEditor (normalProp.Object, groupProp.Object));
+
+			var platform = new TargetPlatform ();
+			Assume.That (platform.GroupedTypes, Is.Null);
+
+			var vm = new PanelViewModel (provider.Object, platform) {
+				ArrangeMode = PropertyArrangeMode.Category
+			};
+
+			Assert.That (() => vm.SelectedObjects.Add (target), Throws.Nothing);
+		}
+
+		internal override PanelViewModel CreateVm (IEditorProvider provider)
 		{
 			return new PanelViewModel (provider, TargetPlatform.Default);
 		}
