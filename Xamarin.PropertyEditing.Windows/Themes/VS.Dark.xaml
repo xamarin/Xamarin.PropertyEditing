@@ -12,7 +12,6 @@
 	<SolidColorBrush x:Key="PanelGroupSecondaryDimmedForegroundBrush">#F1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="PanelHeaderBackgroundBrush">#252526</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertiesPanelIconBackgroundBrush">#252526</SolidColorBrush>
-	<SolidColorBrush x:Key="PopupDropShadowColor">#FFFFFFFF</SolidColorBrush>
 
 	<SolidColorBrush x:Key="AdvancedExpanderCollapsedForegroundBrush">#F1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverForegroundBrush">#007ACC</SolidColorBrush>
