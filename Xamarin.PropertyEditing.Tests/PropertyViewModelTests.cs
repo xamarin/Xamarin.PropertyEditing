@@ -708,6 +708,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (oe => oe.Properties).Returns (new[] { mockProperty.Object });
+			SetupPropertyGet (editor, mockProperty.Object, default(TValue));
 
 			var vm = GetViewModel (platform, mockProperty.Object, new[] { editor.Object });
 			Assume.That (vm.CustomExpression, Is.Null);
