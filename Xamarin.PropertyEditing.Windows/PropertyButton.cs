@@ -176,7 +176,8 @@ namespace Xamarin.PropertyEditing.Windows
 			var popup = new EntryPopup {
 				Placement = PlacementMode.Bottom,
 				PlacementTarget = this.indicator,
-				DataContext = DataContext
+				DataContext = DataContext,
+				StaysOpen = false
 			};
 
 			popup.SetResourceReference (Popup.StyleProperty, "CustomExpressionPopup");

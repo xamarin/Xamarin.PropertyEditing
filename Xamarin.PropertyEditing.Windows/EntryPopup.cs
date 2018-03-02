@@ -60,6 +60,9 @@ namespace Xamarin.PropertyEditing.Windows
 		private void UpdateContentTemplate()
 		{
 			Child = ContentTemplate?.LoadContent() as UIElement;
+			if (Child == null)
+				return;
+
 			this.textBox = ((FrameworkElement)Child)?.FindName ("entry") as TextBox;
 			if (this.textBox == null)
 				throw new InvalidOperationException ("Need an entry TextBox for EntryPopup");
