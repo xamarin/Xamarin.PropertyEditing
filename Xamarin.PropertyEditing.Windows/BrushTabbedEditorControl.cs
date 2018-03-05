@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -40,7 +41,8 @@ namespace Xamarin.PropertyEditing.Windows
 				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child ResourceBrushEditorControl named \"resourceBrushEditor\"");
 
 			if (ViewModel.MaterialDesign == null) {
-				this.brushChoice.Items.Filter = o => ((ChoiceItem)o).Name != "materialDesignTab";
+				this.brushChoice.Items.Filter =
+					o => ((KeyValuePair<string, CommonBrushType>)o).Value != CommonBrushType.MaterialDesign;
 			}
 			/*
 			this.brushChoice.KeyUp += (s, e) => {
