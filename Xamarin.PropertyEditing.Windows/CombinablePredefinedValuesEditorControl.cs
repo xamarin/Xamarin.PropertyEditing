@@ -13,6 +13,7 @@ namespace Xamarin.PropertyEditing.Windows
 		static CombinablePredefinedValuesEditor ()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata (typeof (CombinablePredefinedValuesEditor), new FrameworkPropertyMetadata (typeof (CombinablePredefinedValuesEditor)));
+			FocusableProperty.OverrideMetadata (typeof(CombinablePredefinedValuesEditor), new FrameworkPropertyMetadata (false));
 		}
 	}
 }

@@ -49,10 +49,10 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:CombinablePredefinedValuesEditor">
-					<ItemsControl ItemsSource="{Binding Choices,Mode=OneTime}">
+					<ItemsControl Focusable="{TemplateBinding Focusable}" ItemsSource="{Binding Choices,Mode=OneTime}">
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
-								<CheckBox Foreground="{DynamicResource ListItemForegroundBrush}" IsChecked="{Binding IsFlagged,Mode=TwoWay}" Margin="0,1,0,1" Content="{Binding Name,Mode=OneTime}" />
+								<CheckBox Foreground="{DynamicResource ListItemForegroundBrush}" FocusVisualStyle="{StaticResource GenericVisualFocusStyle}" IsChecked="{Binding IsFlagged,Mode=TwoWay}" Margin="0,1,0,1" Content="{Binding Name,Mode=OneTime}" />
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
 					</ItemsControl>
