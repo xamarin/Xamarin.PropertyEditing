@@ -45,8 +45,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected override TValue ValidateValue (TValue validationValue)
 		{
-			if (!this.predefinedValues.IsConstrainedToPredefined || IsValueDefined (validationValue))
-				return validationValue;
+			if (!IsConstrainedToPredefined || IsValueDefined (validationValue))
+				return base.ValidateValue (validationValue);
 
 			return Value;
 		}
@@ -60,7 +60,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			UpdateValueName();
 		}
 
-		private bool supportUnset;
+		private readonly bool supportUnset;
 		private string valueName;
 		private readonly IHavePredefinedValues<TValue> predefinedValues;
 
@@ -73,7 +73,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			TValue realValue;
 			if (!this.predefinedValues.PredefinedValues.TryGetValue (value, out realValue)) {
-				if (this.predefinedValues.IsConstrainedToPredefined && (!this.supportUnset || value != String.Empty)) {
+				if (IsConstrainedToPredefined && (!this.supportUnset || value != String.Empty)) {
 					SetError (String.Format (Properties.Resources.InvalidValue, value)); 
 					return;
 				}
