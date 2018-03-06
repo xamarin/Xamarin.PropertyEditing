@@ -371,6 +371,32 @@ namespace Xamarin.PropertyEditing.Tests
 			});
 		}
 
+		protected override void SetupPropertySetAndGet (Mock<IObjectEditor> editorMock, IPropertyInfo property, int value = default(int))
+		{
+			base.SetupPropertySetAndGet (editorMock, property, value);
+
+			int[] values = (int[]) Enum.GetValues (typeof(FlagsTestEnum));
+			List<int> setValues = new EditableList<int> ();
+			for (int i = 0; i < values.Length; i++) {
+				int v = values[i];
+				if ((value & v) == v)
+					setValues.Add (v);
+			}
+
+			var valueInfo = new ValueInfo<IReadOnlyList<int>> {
+				Value = values,
+				Source = (value == 0) ? ValueSource.Default : ValueSource.Local
+			};
+
+			editorMock.Setup (oe => oe.SetValueAsync (property, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
+				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((p, vi, v) => {
+					valueInfo = vi;
+					editorMock.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property));
+				})
+				.Returns (Task.FromResult (true));
+			editorMock.Setup (oe => oe.GetValueAsync<IReadOnlyList<int>> (property, null)).ReturnsAsync (() => valueInfo);
+		}
+
 		protected override int GetRandomTestValue (Random rand)
 		{
 			return ((int[])Enum.GetValues (typeof(FlagsTestEnum)))[rand.Next (0, 5)];

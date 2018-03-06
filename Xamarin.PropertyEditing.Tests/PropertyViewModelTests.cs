@@ -748,17 +748,24 @@ namespace Xamarin.PropertyEditing.Tests
 			}, null));
 		}
 
-		protected TValue GetNonDefaultRandomTestValue ()
+		[Test]
+		public void ConstrainedProperty ()
 		{
-			TValue value = default (TValue);
-			while (Equals (value, default (TValue))) {
-				value = GetRandomTestValue (Random);
-			}
+			var value = GetNonDefaultRandomTestValue ();
+			var value2 = GetRandomTestValue (value);
 
-			return value;
+			var mockProperty = GetPropertyMock ();
+			var validator = mockProperty.As<IValidator<TValue>> ();
+			validator.Setup (v => v.ValidateValue (value)).Returns (value2);
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.Properties).Returns (new[] { mockProperty.Object });
+			SetupPropertySetAndGet (editor, mockProperty.Object);
+
+			var vm = GetViewModel (mockProperty.Object, editor.Object);
+			vm.Value = value;
+			Assert.That (vm.Value, Is.EqualTo (value2));
 		}
-
-		protected abstract TValue GetRandomTestValue (Random rand);
 
 		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
 		{
@@ -784,6 +791,22 @@ namespace Xamarin.PropertyEditing.Tests
 			});
 		}
 
+		protected virtual void SetupPropertySetAndGet (Mock<IObjectEditor> editorMock, IPropertyInfo property, TValue value = default(TValue))
+		{
+			ValueInfo<TValue> valueInfo = new ValueInfo<TValue> {
+				Value = value,
+				Source = (Equals (value, default(TValue))) ? ValueSource.Default : ValueSource.Local
+			};
+
+			editorMock.Setup (oe => oe.SetValueAsync (property, It.IsAny<ValueInfo<TValue>> (), null))
+				.Callback<IPropertyInfo, ValueInfo<TValue>, PropertyVariation> ((p, vi, v) => {
+					valueInfo = vi;
+					editorMock.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property));
+				})
+				.Returns (Task.FromResult (true));
+			editorMock.Setup (oe => oe.GetValueAsync<TValue> (property, null)).ReturnsAsync (() => valueInfo);
+		}
+
 		protected virtual void SetupPropertyGet (Mock<IObjectEditor> editorMock, IPropertyInfo property, Func<ValueInfo<TValue>> value)
 		{
 			editorMock.Setup (oe => oe.GetValueAsync<TValue> (property, null)).ReturnsAsync (value);
@@ -802,6 +825,18 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		protected Random Random => this.rand;
+
+		protected TValue GetNonDefaultRandomTestValue ()
+		{
+			TValue value = default (TValue);
+			while (Equals (value, default (TValue))) {
+				value = GetRandomTestValue (Random);
+			}
+
+			return value;
+		}
+
+		protected abstract TValue GetRandomTestValue (Random rand);
 
 		protected internal TValue GetRandomTestValue ()
 		{

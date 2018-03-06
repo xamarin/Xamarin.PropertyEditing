@@ -59,15 +59,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected override T ValidateValue (T validationValue)
 		{
-			if (!IsConstrained)
-				return validationValue;
+			if (IsConstrained) {
+				if (Compare (validationValue, MaximumValue) > 0)
+					validationValue = MaximumValue;
+				else if (Compare (validationValue, MinimumValue) < 0)
+					validationValue = MinimumValue;
+			}
 
-			if (Compare (validationValue, MaximumValue) > 0)
-				return MaximumValue;
-			else if (Compare (validationValue, MinimumValue) < 0)
-				return MinimumValue;
-
-			return validationValue;
+			return base.ValidateValue (validationValue);
 		}
 
 		protected int Compare (T left, T right)
