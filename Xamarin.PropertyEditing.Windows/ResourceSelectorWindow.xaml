@@ -6,7 +6,7 @@
 		xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows"
 		xmlns:prop="clr-namespace:Xamarin.PropertyEditing.Properties;assembly=Xamarin.PropertyEditing"
 		mc:Ignorable="d" x:ClassModifier="internal" WindowStartupLocation="CenterOwner" ShowIcon="False"
-		MinWidth="300" MinHeight="400" Width="700" Height="600" ShowMinimize="False" ShowMaximize="False"
+		MinWidth="550" MinHeight="400" Width="700" Height="600" ShowMinimize="False" ShowMaximize="False"
 		Background="{DynamicResource DialogBackgroundBrush}" Foreground="{DynamicResource DialogForegroundBrush}"
 		Title="{x:Static prop:Resources.SelectResourceTitle}">
 	<Grid>
@@ -31,14 +31,14 @@
 			<local:TextBoxEx Grid.Row="0" Margin="0,4,0,0" Style="{DynamicResource SearchTextBox}" MinHeight="20" Text="{Binding FilterText,UpdateSourceTrigger=PropertyChanged}" ShowClearButton="True" Hint="{x:Static prop:Resources.SearchResourcesTitle}" />
 
 			<ProgressBar Grid.Row="1" IsIndeterminate="True" Height="10" Visibility="{Binding IsLoading,Converter={StaticResource BoolToVisibilityConverter}}" />
-			<ListBox Name="list" Grid.Row="1" Margin="0,4,0,0" ItemsSource="{Binding Resources}" HorizontalContentAlignment="Stretch" BorderThickness="1" SelectionChanged="OnListSelectionChanged" MouseDoubleClick="OnListDoubleClick">
+			<ListBox Name="list" Grid.Row="1" Margin="0,4,0,0" ItemsSource="{Binding Resources}" Grid.IsSharedSizeScope="True" HorizontalContentAlignment="Stretch" BorderThickness="1" SelectionChanged="OnListSelectionChanged" MouseDoubleClick="OnListDoubleClick">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
 						<Grid Margin="12,0,12,0">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition MinWidth="200" Width="Auto" SharedSizeGroup="Name" />
 								<ColumnDefinition Width="*" />
-								<ColumnDefinition Width="100" />
 							</Grid.ColumnDefinitions>
 
 							<TextBlock Grid.Column="1" Text="{Binding Name,Mode=OneTime}" VerticalAlignment="Center" />
