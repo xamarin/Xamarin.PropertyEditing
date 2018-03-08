@@ -52,6 +52,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (this.predefinedValues.IsValueCombinable && !this.predefinedValues.IsConstrainedToPredefined)
 				throw new NotSupportedException ("Properties with combinable values can not be unconstrained currently");
 
+			this.validator = property as IValidator<IReadOnlyList<TValue>>;
+
 			var choices = new List<FlaggableChoiceViewModel<TValue>> (this.predefinedValues.PredefinedValues.Count);
 			foreach (var kvp in this.predefinedValues.PredefinedValues) {
 				var choiceVm = new FlaggableChoiceViewModel<TValue> (kvp.Key, kvp.Value);
@@ -112,6 +114,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private bool fromUpdate;
+		private readonly IValidator<IReadOnlyList<TValue>> validator;
 		private readonly IHavePredefinedValues<TValue> predefinedValues;
 
 		private async void OnChoiceVmPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -146,9 +149,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 								current.Remove (choice.Value);
 						}
 
+						IReadOnlyList<TValue> values = current.ToArray ();
+						if (this.validator != null)
+							values = this.validator.ValidateValue (values);
+
 						await editor.SetValueAsync (Property, new ValueInfo<IReadOnlyList<TValue>> {
 							Source = ValueSource.Local,
-							Value = current.ToArray()
+							Value = values
 						});
 					}
 				} catch (Exception ex) {

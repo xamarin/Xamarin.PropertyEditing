@@ -200,7 +200,6 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		[Ignore ("There's either a bug in the test or in Moq, but the callbacks seem to be causing NREs even empty")]
 		public void SetFlagsMultipleValues ()
 		{
 			FlagsTestEnum value = FlagsTestEnum.Flag2 | FlagsTestEnum.Flag3;
@@ -249,7 +248,8 @@ namespace Xamarin.PropertyEditing.Tests
 						Source = ValueSource.Local
 					});
 					editorMock.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (p.Object));
-				});
+				})
+				.Returns (Task.FromResult (true));
 
 			ValueInfo<IReadOnlyList<int>> setValue2 = null;
 			editorMock2.Setup (oe => oe.SetValueAsync (p.Object, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
@@ -266,7 +266,8 @@ namespace Xamarin.PropertyEditing.Tests
 						Source = ValueSource.Local
 					});
 					editorMock2.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (p.Object));
-				});
+				})
+				.Returns (Task.FromResult (true));
 
 			var vm = GetViewModel (p.Object, new [] { editorMock.Object, editorMock2.Object });
 			Assume.That (vm.Choices.Count, Is.EqualTo (7));
@@ -288,7 +289,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (flag5Choice.Value, Is.EqualTo ((int)FlagsTestEnum.Flag5));
 			Assume.That (flag5Choice.IsFlagged.HasValue, Is.False);
 
-			vm.Choices[1].IsFlagged = true;
+			flag1Choice.IsFlagged = true;
 
 			Assert.That (setValue, Is.Not.Null, "Did not call setvalue");
 			CollectionAssert.AreEquivalent (new[] { (int)FlagsTestEnum.Flag1, (int)FlagsTestEnum.Flag2, (int)FlagsTestEnum.Flag3 }, setValue.Value);
@@ -296,6 +297,57 @@ namespace Xamarin.PropertyEditing.Tests
 
 			Assert.That (setValue2, Is.Not.Null, "Did not call setvalue");
 			CollectionAssert.AreEquivalent (new[] { (int)FlagsTestEnum.Flag1, (int)FlagsTestEnum.Flag2, (int)FlagsTestEnum.Flag4, (int)FlagsTestEnum.Flag5 }, setValue.Value);
+		}
+
+		[Test]
+		[Description ("Since combinables set the value in a different way we need to ensure validators for that type are invoked")]
+		public void Validator ()
+		{
+			FlagsTestEnum value = FlagsTestEnum.Flag2 | FlagsTestEnum.Flag3;
+
+			var p = GetPropertyMock ();
+			var validator = p.As<IValidator<IReadOnlyList<int>>> ();
+			validator.Setup (l => l.ValidateValue (It.IsAny<IReadOnlyList<int>> ())).Returns (new int[] { (int)FlagsTestEnum.Flag1 });
+
+			var target = new object();
+			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.SetupGet (e => e.Target).Returns (target);
+			editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (
+				new ValueInfo<IReadOnlyList<int>> {
+					Value = new int[] { (int) FlagsTestEnum.Flag2, (int) FlagsTestEnum.Flag3 },
+					Source = ValueSource.Local
+				});
+			editorMock.Setup (e => e.GetValueAsync<int> (p.Object, null)).ReturnsAsync (new ValueInfo<int> {
+				Value = (int)value,
+				Source = ValueSource.Local
+			});
+
+			ValueInfo<IReadOnlyList<int>> setValue = null;
+			editorMock.Setup (oe => oe.SetValueAsync (p.Object, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
+				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((pi, v, variation) => {
+					setValue = v;
+					editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (v);
+
+					int rv = 0;
+					for (int i = 0; i < v.Value.Count; i++)
+						rv |= v.Value[i];
+
+					editorMock.Setup (e => e.GetValueAsync<int> (p.Object, null)).ReturnsAsync (new ValueInfo<int> {
+						Value = rv,
+						Source = ValueSource.Local
+					});
+					editorMock.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (p.Object));
+				});
+
+			var vm = GetViewModel (p.Object, editorMock.Object);
+			Assume.That (vm.Choices.Count, Is.EqualTo (7));
+			Assume.That (vm.Value, Is.EqualTo ((int) value));
+
+			value |= FlagsTestEnum.Flag1;
+			vm.Choices.Single (c => c.Value == (int)FlagsTestEnum.Flag1).IsFlagged = true;
+			Assert.That (setValue, Is.Not.Null, "Did not call setvalue");
+			CollectionAssert.AreEquivalent (new[] { (int)FlagsTestEnum.Flag1 }, setValue.Value);
+			Assert.That (vm.Value, Is.EqualTo ((int) FlagsTestEnum.Flag1));
 		}
 
 		[Flags]
