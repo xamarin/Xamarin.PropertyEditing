@@ -459,18 +459,32 @@
 	</Style>
 
 	<Style x:Key="LargeResourcePreview" TargetType="ContentPresenter">
-		<Style.Resources>
-			<DataTemplate DataType="{x:Type drawing:CommonColor}">
-				<local:BrushBoxControl BorderThickness="0">
-					<local:BrushBoxControl.Brush>
-						<SolidColorBrush Color="{Binding Converter={StaticResource ColorConverter}}" />
-					</local:BrushBoxControl.Brush>
-				</local:BrushBoxControl>
-			</DataTemplate>
-			<DataTemplate DataType="{x:Type drawing:CommonBrush}">
-				<local:BrushBoxControl BorderThickness="0" Brush="{Binding Converter={StaticResource BrushConverter}}" />
-			</DataTemplate>
-		</Style.Resources>
+		<Setter Property="ContentTemplateSelector">
+			<Setter.Value>
+				<local:PreviewTemplateSelector>
+					<local:PreviewTemplateSelector.FallbackTemplate>
+						<DataTemplate>
+							<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{x:Static prop:Resources.NoPreviewAvailable}" FontSize="16" />
+						</DataTemplate>
+					</local:PreviewTemplateSelector.FallbackTemplate>
+					<local:PreviewTemplateSelector.Templates>
+						<DataTemplate DataType="{x:Type drawing:CommonColor}">
+							<local:BrushBoxControl BorderThickness="0">
+								<local:BrushBoxControl.Brush>
+									<SolidColorBrush Color="{Binding Converter={StaticResource ColorConverter}}" />
+								</local:BrushBoxControl.Brush>
+							</local:BrushBoxControl>
+						</DataTemplate>
+						<DataTemplate DataType="{x:Type drawing:CommonBrush}">
+							<local:BrushBoxControl BorderThickness="0" Brush="{Binding Converter={StaticResource BrushConverter}}" />
+						</DataTemplate>
+						<DataTemplate DataType="{x:Type system:String}">
+							<TextBlock Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding Mode=OneTime}" />
+						</DataTemplate>
+					</local:PreviewTemplateSelector.Templates>
+				</local:PreviewTemplateSelector>
+			</Setter.Value>
+		</Setter>
 	</Style>
 
 	<Style x:Key="ComplexResourcePreview" TargetType="ContentPresenter">
