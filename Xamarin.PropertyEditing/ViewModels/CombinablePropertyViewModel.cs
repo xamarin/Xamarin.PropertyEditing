@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,6 +53,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (this.predefinedValues.IsValueCombinable && !this.predefinedValues.IsConstrainedToPredefined)
 				throw new NotSupportedException ("Properties with combinable values can not be unconstrained currently");
 
+			this.coerce = property as ICoerce<IReadOnlyList<TValue>>;
 			this.validator = property as IValidator<IReadOnlyList<TValue>>;
 
 			var choices = new List<FlaggableChoiceViewModel<TValue>> (this.predefinedValues.PredefinedValues.Count);
@@ -115,17 +117,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool fromUpdate;
 		private readonly IValidator<IReadOnlyList<TValue>> validator;
+		private readonly ICoerce<IReadOnlyList<TValue>> coerce;
 		private readonly IHavePredefinedValues<TValue> predefinedValues;
 
-		private async void OnChoiceVmPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		private async void OnChoiceVmPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			if (this.fromUpdate)
 				return;
 
-			await PushValuesAsync ();
+			await PushValuesAsync (sender as FlaggableChoiceViewModel<TValue>);
 		}
 
-		private async Task PushValuesAsync ()
+		private async Task PushValuesAsync (FlaggableChoiceViewModel<TValue> changedChoice)
 		{
 			SetError (null);
 
@@ -150,8 +153,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 						}
 
 						IReadOnlyList<TValue> values = current.ToArray ();
-						if (this.validator != null)
-							values = this.validator.ValidateValue (values);
+						if (this.validator != null) {
+							if (!this.validator.IsValid (values)) {
+								// Some combinables simply don't have a valid "none", but if we're going from indeterminate we still need to
+								// update the value, so we'll flip the changed value to true in that case so we don't go right back to indeterminate
+								if (values.Count == 0)
+									changedChoice.IsFlagged = true;
+
+								continue;
+							}
+						}
+
+						if (this.coerce != null)
+							values = this.coerce.CoerceValue (values);
 
 						await editor.SetValueAsync (Property, new ValueInfo<IReadOnlyList<TValue>> {
 							Source = ValueSource.Local,

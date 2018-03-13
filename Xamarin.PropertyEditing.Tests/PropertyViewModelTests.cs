@@ -755,8 +755,8 @@ namespace Xamarin.PropertyEditing.Tests
 			var value2 = GetRandomTestValue (value);
 
 			var mockProperty = GetPropertyMock ();
-			var validator = mockProperty.As<IValidator<TValue>> ();
-			validator.Setup (v => v.ValidateValue (value)).Returns (value2);
+			var validator = mockProperty.As<ICoerce<TValue>> ();
+			validator.Setup (v => v.CoerceValue (value)).Returns (value2);
 
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (oe => oe.Properties).Returns (new[] { mockProperty.Object });

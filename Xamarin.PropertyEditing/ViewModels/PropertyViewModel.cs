@@ -23,7 +23,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (platform, property, editors)
 		{
-			this.validator = property as IValidator<TValue>;
+			this.coerce = property as ICoerce<TValue>;
 			this.isNullable = (!property.ValueSources.HasFlag (ValueSources.Default) || property.Type.Name == NullableName);
 
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
@@ -85,8 +85,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				validationValue = DefaultValue;
 			}
 
-			if (this.validator != null)
-				validationValue = this.validator.ValidateValue (validationValue);
+			if (this.coerce != null)
+				validationValue = this.coerce.CoerceValue (validationValue);
 
 			return validationValue;
 		}
@@ -176,7 +176,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		private readonly IValidator<TValue> validator;
+		private readonly ICoerce<TValue> coerce;
 		private const string NullableName = "Nullable`1";
 		private bool isNullable;
 		private ValueInfo<TValue> value;
