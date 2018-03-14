@@ -745,6 +745,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resource.
+        /// </summary>
+        public static string Resource {
+            get {
+                return ResourceManager.GetString("Resource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Brush from resource.
         /// </summary>
         public static string ResourceBrush {
@@ -759,6 +768,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string ResourceEllipsis {
             get {
                 return ResourceManager.GetString("ResourceEllipsis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resource ({0}).
+        /// </summary>
+        public static string ResourceWithName {
+            get {
+                return ResourceManager.GetString("ResourceWithName", resourceCulture);
             }
         }
         

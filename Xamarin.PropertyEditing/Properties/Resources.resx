@@ -448,4 +448,11 @@
     <value>No preview available</value>
     <comment>Resource selector window preview section text</comment>
   </data>
+  <data name="Resource" xml:space="preserve">
+    <value>Resource</value>
+  </data>
+  <data name="ResourceWithName" xml:space="preserve">
+    <value>Resource ({0})</value>
+    <comment>Resource with the raw embedded resource name</comment>
+  </data>
 </root>

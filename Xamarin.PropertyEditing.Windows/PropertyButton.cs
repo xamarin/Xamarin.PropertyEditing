@@ -35,24 +35,6 @@ namespace Xamarin.PropertyEditing.Windows
 			set { SetValue (CanSetCustomExpressionProperty, value); }
 		}
 
-		public static readonly DependencyProperty SystemResourcesSourceProperty = DependencyProperty.Register (
-			"SystemResourcesSource", typeof (IEnumerable), typeof (PropertyButton), new PropertyMetadata (default (IEnumerable)));
-
-		public IEnumerable SystemResourcesSource
-		{
-			get { return (IEnumerable)GetValue (SystemResourcesSourceProperty); }
-			set { SetValue (SystemResourcesSourceProperty, value); }
-		}
-
-		public static readonly DependencyProperty SystemResourceNamePathProperty = DependencyProperty.Register (
-			"SystemResourceNamePath", typeof (string), typeof (PropertyButton), new PropertyMetadata ("Name"));
-
-		public string SystemResourceNamePath
-		{
-			get { return (string)GetValue (SystemResourceNamePathProperty); }
-			set { SetValue (SystemResourceNamePathProperty, value); }
-		}
-
 		public static readonly DependencyProperty ValueSourceProperty = DependencyProperty.Register (
 			"ValueSource", typeof (ValueSource), typeof (PropertyButton), new PropertyMetadata (ValueSource.Default, (o, args) => ((PropertyButton)o).OnValueSourceChanged ((ValueSource)args.NewValue)));
 
@@ -90,6 +72,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private Rectangle indicator;
 		private ContextMenu menu;
+		private PropertyViewModel vm;
 
 		private void OnBorderMouseDown (object sender, MouseButtonEventArgs e)
 		{
@@ -115,13 +98,12 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnDataContextChanged (object sender, DependencyPropertyChangedEventArgs e)
 		{
-			var pvm = e.OldValue as PropertyViewModel;
-			if (pvm != null)
+			if (e.OldValue is PropertyViewModel pvm)
 				pvm.ResourceRequested -= OnResourceRequested;
 
-			pvm = e.NewValue as PropertyViewModel;
-			if (pvm != null)
-				pvm.ResourceRequested += OnResourceRequested;
+			this.vm = e.NewValue as PropertyViewModel;
+			if (this.vm != null)
+				this.vm.ResourceRequested += OnResourceRequested;
 		}
 
 		private void OnValueSourceChanged (ValueSource source)
@@ -145,8 +127,12 @@ namespace Xamarin.PropertyEditing.Windows
 					break;
 				case ValueSource.DefaultStyle:
 				case ValueSource.Style:
-				case ValueSource.Resource:
 					ToolTip = null;
+					brush = "PropertyResourceBrush";
+					break;
+				case ValueSource.Resource:
+					// VS actually says "static" for system resources, but I think that's worth breaking with
+					ToolTip = (this.vm?.Resource?.Name != null) ? String.Format (Properties.Resources.ResourceWithName, this.vm.Resource.Name) : Properties.Resources.Resource;
 					brush = "PropertyResourceBrush";
 					break;
 
