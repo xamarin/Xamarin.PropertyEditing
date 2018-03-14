@@ -68,6 +68,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return this.canDelve; }
 		}
 
+		public override Resource Resource
+		{
+			// TODO: WPF can support this
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
+		}
+
 		public ObjectViewModel ValueModel
 		{
 			get;

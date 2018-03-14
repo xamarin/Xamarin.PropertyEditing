@@ -47,7 +47,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		public Resource Resource
+		public override Resource Resource
 		{
 			get => this.value?.ValueDescriptor as Resource;
 			set {
@@ -281,6 +281,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public bool SupportsResources
 		{
 			get { return Property.CanWrite && Property.ValueSources.HasFlag (ValueSources.Resource); }
+		}
+
+		public abstract Resource Resource
+		{
+			get;
+			set;
 		}
 
 		public IResourceProvider ResourceProvider
