@@ -231,20 +231,26 @@ namespace Xamarin.PropertyEditing.Tests
 					// start with just supporting ints for now
 					var predefined = (IReadOnlyDictionary<string, int>)property.GetType().GetProperty(nameof(IHavePredefinedValues<int>.PredefinedValues)).GetValue(property);
 
-					var values = new List<int> ();
-					// mock should store as combined value only
-					var underlyingInfo = (ValueInfo<int>)value;
+					var underlyingInfo = value as ValueInfo<int>;
+
+					int realValue;
+					if (value is int i) {
+						realValue = i;
+					} else
+						realValue = ((ValueInfo<int>) value).Value;
+
+					var flags = new List<int> ();
 					foreach (int v in predefined.Values) {
-						if (v == 0 && underlyingInfo.Value != 0)
+						if (v == 0 && realValue != 0)
 							continue;
 
-						if ((underlyingInfo.Value & v) == v)
-							values.Add (v);
+						if ((realValue & v) == v)
+							flags.Add (v);
 					}
 
 					return (ValueInfo<T>)Convert.ChangeType(new ValueInfo<IReadOnlyList<int>> {
-						Value = values,
-						Source = underlyingInfo.Source
+						Value = flags,
+						Source = underlyingInfo?.Source ?? ValueSource.Local
 					}, typeof(ValueInfo<T>));
 				} else {
 					ValueSource source = ValueSource.Local;
