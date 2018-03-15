@@ -134,6 +134,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				try {
+					// Snapshot current choices so we don't catch updates mid-push for multi-editors
+					var currentChoices = Choices.ToDictionary (c => c, c => c.IsFlagged);
+
 					foreach (IObjectEditor editor in Editors) {
 						ValueInfo<IReadOnlyList<TValue>> value = await editor.GetValueAsync<IReadOnlyList<TValue>> (Property, Variation);
 						HashSet<TValue> current;
@@ -142,14 +145,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 						else
 							current = new HashSet<TValue> (value.Value);
 
-						foreach (var choice in Choices) {
-							if (!choice.IsFlagged.HasValue)
+						foreach (var choice in currentChoices) {
+							if (!choice.Value.HasValue)
 								continue;
 
-							if (choice.IsFlagged.Value)
-								current.Add (choice.Value);
+							if (choice.Value.Value)
+								current.Add (choice.Key.Value);
 							else
-								current.Remove (choice.Value);
+								current.Remove (choice.Key.Value);
 						}
 
 						IReadOnlyList<TValue> values = current.ToArray ();

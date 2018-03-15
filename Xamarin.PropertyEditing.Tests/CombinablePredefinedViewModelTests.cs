@@ -200,76 +200,26 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void SetFlagsMultipleValues ()
+		public async Task SetFlagsMultipleValues ()
 		{
 			FlagsTestEnum value = FlagsTestEnum.Flag2 | FlagsTestEnum.Flag3;
 			FlagsTestEnum value2 = FlagsTestEnum.Flag2 | FlagsTestEnum.Flag4;
 
 			var p = GetPropertyMock ();
 
-			var target = new object();
-			var editorMock = new Mock<IObjectEditor> ();
-			editorMock.SetupGet (e => e.Target).Returns (target);
-			editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (
-				new ValueInfo<IReadOnlyList<int>> {
-					Value = new int[] { (int) FlagsTestEnum.Flag2, (int) FlagsTestEnum.Flag3 },
-					Source = ValueSource.Local
-				});
-			editorMock.Setup (e => e.GetValueAsync<int> (p.Object, null)).ReturnsAsync (new ValueInfo<int> {
+			var editor = new MockObjectEditor (p.Object);
+			await editor.SetValueAsync (p.Object, new ValueInfo<int> {
 				Value = (int)value,
 				Source = ValueSource.Local
 			});
 
-			var target2 = new object();
-			var editorMock2 = new Mock<IObjectEditor> ();
-			editorMock2.SetupGet (e => e.Target).Returns (target2);
-			editorMock2.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (
-				new ValueInfo<IReadOnlyList<int>> {
-					Value = new int[] { (int) FlagsTestEnum.Flag2, (int) FlagsTestEnum.Flag4 },
-					Source = ValueSource.Local
-				});
-			editorMock2.Setup (e => e.GetValueAsync<int> (p.Object, null)).ReturnsAsync (new ValueInfo<int> {
+			var editor2 = new MockObjectEditor (p.Object);
+			await editor2.SetValueAsync (p.Object, new ValueInfo<int> {
 				Value = (int)value2,
 				Source = ValueSource.Local
 			});
 
-			ValueInfo<IReadOnlyList<int>> setValue = null;
-			editorMock.Setup (oe => oe.SetValueAsync (p.Object, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
-				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((pi, v, variation) => {
-					setValue = v;
-					editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (v);
-
-					int rv = 0;
-					for (int i = 0; i < v.Value.Count; i++)
-						rv |= v.Value[i];
-
-					editorMock.Setup (e => e.GetValueAsync<int> (p.Object, null)).ReturnsAsync (new ValueInfo<int> {
-						Value = rv,
-						Source = ValueSource.Local
-					});
-					editorMock.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (p.Object));
-				})
-				.Returns (Task.FromResult (true));
-
-			ValueInfo<IReadOnlyList<int>> setValue2 = null;
-			editorMock2.Setup (oe => oe.SetValueAsync (p.Object, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
-				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((pi, v, variation) => {
-					setValue2 = v;
-					editorMock2.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (v);
-
-					int rv = 0;
-					for (int i = 0; i < v.Value.Count; i++)
-						rv |= v.Value[i];
-
-					editorMock2.Setup (e => e.GetValueAsync<int> (p.Object, null)).ReturnsAsync (new ValueInfo<int> {
-						Value = rv,
-						Source = ValueSource.Local
-					});
-					editorMock2.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (p.Object));
-				})
-				.Returns (Task.FromResult (true));
-
-			var vm = GetViewModel (p.Object, new [] { editorMock.Object, editorMock2.Object });
+			var vm = GetViewModel (p.Object, new [] { editor, editor2 });
 			Assume.That (vm.Choices.Count, Is.EqualTo (7));
 			Assume.That (vm.Value, Is.EqualTo (default(int)));
 
@@ -291,11 +241,17 @@ namespace Xamarin.PropertyEditing.Tests
 
 			flag1Choice.IsFlagged = true;
 
-			Assert.That (setValue, Is.Not.Null, "Did not call setvalue");
-			CollectionAssert.AreEquivalent (new[] { (int)FlagsTestEnum.Flag1, (int)FlagsTestEnum.Flag2, (int)FlagsTestEnum.Flag3 }, setValue.Value);
+			Assert.That (flag1Choice.IsFlagged, Is.True);
+			Assert.That (flag2Choice.IsFlagged, Is.True);
+			Assert.That (flag3Choice.IsFlagged, Is.Null);
+			Assert.That (flag4Choice.IsFlagged, Is.Null);
+			Assert.That (flag5Choice.IsFlagged, Is.Null);
 			Assert.That (vm.Value, Is.EqualTo (default(int)));
 
-			Assert.That (setValue2, Is.Not.Null, "Did not call setvalue");
+			var setValue = await editor.GetValueAsync<IReadOnlyList<int>> (p.Object);
+			var setValue2 = await editor2.GetValueAsync<IReadOnlyList<int>> (p.Object);
+
+			CollectionAssert.AreEquivalent (new[] { (int)FlagsTestEnum.Flag1, (int)FlagsTestEnum.Flag2, (int)FlagsTestEnum.Flag3 }, setValue.Value);
 			CollectionAssert.AreEquivalent (new[] { (int)FlagsTestEnum.Flag1, (int)FlagsTestEnum.Flag2, (int)FlagsTestEnum.Flag4, (int)FlagsTestEnum.Flag5 }, setValue2.Value);
 		}
 
