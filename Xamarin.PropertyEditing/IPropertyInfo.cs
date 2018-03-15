@@ -7,6 +7,14 @@ namespace Xamarin.PropertyEditing
 	{
 		string Name { get; }
 
+		/// <summary>
+		/// Gets a summary description of the property.
+		/// </summary>
+		/// <remarks>
+		/// Currently does not support any form of markup.
+		/// </remarks>
+		string Description { get; }
+
 		Type Type { get; }
 
 		/// <summary>

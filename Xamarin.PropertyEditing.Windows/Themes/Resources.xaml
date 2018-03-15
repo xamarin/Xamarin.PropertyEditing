@@ -1435,9 +1435,9 @@
 							</Grid.RowDefinitions>
 
 							<ToggleButton Name="delveButton" Grid.Column="0" Style="{DynamicResource StandaloneToggleStyle}" Width="11" Height="11" Visibility="{Binding HasItems,ElementName=subProperties,Converter={StaticResource BoolToVisibilityConverter}}" />
-							<TextBlock Name="Label" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{TemplateBinding Label}" Height="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+							<TextBlock Name="Label" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" Height="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
 							<ContentPresenter Grid.Column="2" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" />
-							<local:PropertyButton Grid.Column="3" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite}"/>
+							<local:PropertyButton Grid.Column="3" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}"/>
 
 							<ItemsControl Name="subProperties" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Margin="-19,0,0,0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{DynamicResource PropertyEditorTemplate}">
 								<ItemsControl.Visibility>
