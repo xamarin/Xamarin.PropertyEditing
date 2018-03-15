@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Tests.MockControls;
+using Xamarin.PropertyEditing.Tests.MockPropertyInfo;
 
 namespace Xamarin.PropertyEditing.Windows.Standalone
 {
@@ -9,20 +10,20 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 		public MockedSampleControlButton () : base (new MockSampleControl ())
 		{
 			// TODO: Move the declaration of this property to MockSampleControl once SolidBrush is supported on both platforms.
-			this.brushPropertyInfo = new BrushPropertyInfo (
+			this.brushPropertyInfo = new MockBrushPropertyInfo (
 				name: "SolidBrush",
 				category: "Windows Only",
 				canWrite: true,
 				colorSpaces: new[] { "RGB", "sRGB" });
 			MockedControl.AddProperty<CommonBrush> (this.brushPropertyInfo);
 
-			this.materialDesignBrushPropertyInfo = new BrushPropertyInfo (
+			this.materialDesignBrushPropertyInfo = new MockBrushPropertyInfo (
 				name: "MaterialDesignBrush",
 				category: "Windows Only",
 				canWrite: true);
 			MockedControl.AddProperty<CommonBrush> (this.materialDesignBrushPropertyInfo);
 
-			this.readOnlyBrushPropertyInfo = new BrushPropertyInfo (
+			this.readOnlyBrushPropertyInfo = new MockBrushPropertyInfo (
 				name: "ReadOnlySolidBrush",
 				category: "Windows Only",
 				canWrite: false);
