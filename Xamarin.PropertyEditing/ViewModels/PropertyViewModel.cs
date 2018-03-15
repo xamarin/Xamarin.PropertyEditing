@@ -24,6 +24,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			: base (platform, property, editors)
 		{
 			this.coerce = property as ICoerce<TValue>;
+			this.validator = property as IValidator<TValue>;
 			this.isNullable = (!property.ValueSources.HasFlag (ValueSources.Default) || property.Type.Name == NullableName);
 
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
@@ -153,6 +154,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			SetError (null);
 
+			// We may need to be more careful about value sources here
+			if (this.validator != null && !this.validator.IsValid (newValue.Value)) {
+				SignalValueChange(); // Ensure UI refresh its own value
+				return;
+			}
+
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				try {
 					Task[] setValues = new Task[Editors.Count];
@@ -177,9 +184,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private readonly ICoerce<TValue> coerce;
+		private readonly IValidator<TValue> validator;
 		private const string NullableName = "Nullable`1";
 		private bool isNullable;
 		private ValueInfo<TValue> value;
+
+		private void SignalValueChange ()
+		{
+			OnPropertyChanged (nameof (Value));
+			OnPropertyChanged (nameof (ValueSource));
+			OnPropertyChanged (nameof (CustomExpression));
+			OnPropertyChanged (nameof (Resource));
+		}
 
 		private bool SetCurrentValue (ValueInfo<TValue> newValue)
 		{
@@ -191,10 +207,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			this.value = newValue;
 			OnValueChanged ();
-			OnPropertyChanged (nameof (Value));
-			OnPropertyChanged (nameof (ValueSource));
-			OnPropertyChanged (nameof (CustomExpression));
-			OnPropertyChanged (nameof (Resource));
+			SignalValueChange();
 
 			((RelayCommand) ClearValueCommand)?.ChangeCanExecute ();
 
