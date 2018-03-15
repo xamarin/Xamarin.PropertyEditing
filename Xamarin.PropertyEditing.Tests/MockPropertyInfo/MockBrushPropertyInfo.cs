@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using Xamarin.PropertyEditing.Drawing;
 
-namespace Xamarin.PropertyEditing
+namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 {
-	public class BrushPropertyInfo : IPropertyInfo, IColorSpaced
+	public class MockBrushPropertyInfo : IPropertyInfo, IColorSpaced
 	{
-		public BrushPropertyInfo (string name, string category, bool canWrite,
+		public MockBrushPropertyInfo (string name, string category, bool canWrite,
 			IReadOnlyList<string> colorSpaces = null, ValueSources valueSources = ValueSources.Default | ValueSources.Local  |  ValueSources.Resource,
 			IReadOnlyList<PropertyVariation> variations = null,
 			IReadOnlyList<IAvailabilityConstraint> availabilityConstraints = null)
