@@ -39,7 +39,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return (this.value != null) ? this.value.Value : default(TValue); }
 			set
 			{
-				value = ValidateValue (value);
+				value = CoerceValue (value);
 				SetValue (new ValueInfo<TValue> {
 					Source = ValueSource.Local,
 					Value = value
@@ -79,7 +79,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		protected virtual TValue ValidateValue (TValue validationValue)
+		protected virtual TValue CoerceValue (TValue validationValue)
 		{
 			if (!this.isNullable && validationValue == null) {
 				validationValue = DefaultValue;
