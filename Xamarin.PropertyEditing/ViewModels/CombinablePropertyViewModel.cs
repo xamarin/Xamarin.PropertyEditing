@@ -160,8 +160,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 							if (!this.validator.IsValid (values)) {
 								// Some combinables simply don't have a valid "none", but if we're going from indeterminate we still need to
 								// update the value, so we'll flip the changed value to true in that case so we don't go right back to indeterminate
-								if (values.Count == 0)
+								if (values.Count == 0) {
 									changedChoice.IsFlagged = true;
+									// We're explicitly triggering a change and need the update here so we need to update our snapshot.
+									currentChoices = Choices.ToDictionary (c => c, c => c.IsFlagged);
+								}
 
 								continue;
 							}

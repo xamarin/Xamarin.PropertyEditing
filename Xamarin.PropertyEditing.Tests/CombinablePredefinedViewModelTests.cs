@@ -390,6 +390,13 @@ namespace Xamarin.PropertyEditing.Tests
 			// impl swaps flag1 back on, now o1 is flag1; o2 is flag1|flag2
 
 			flag1choice.IsFlagged = false;
+
+			var setValue = await editor.GetValueAsync<IReadOnlyList<int>> (p.Object);
+			var setValue2 = await editor2.GetValueAsync<IReadOnlyList<int>> (p.Object);
+
+			CollectionAssert.AreEquivalent (new[] { (int)FlagsTestEnum.Flag1 }, setValue.Value);
+			CollectionAssert.AreEquivalent (new[] { (int)FlagsTestEnum.Flag1, (int)FlagsTestEnum.Flag2 }, setValue2.Value);
+
 			Assert.That (flag1choice.IsFlagged, Is.True);
 			Assert.That (flag2choice.IsFlagged, Is.Null);
 		}
