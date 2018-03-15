@@ -1,7 +1,7 @@
 namespace Xamarin.PropertyEditing
 {
-	public interface IValidator<T>
+	public interface IValidator<in T>
 	{
-		T ValidateValue (T value);
+		bool IsValid (T value);
 	}
 }

@@ -14,14 +14,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 				Value = Numeric<T>.Increment (Value);
 			}, () => {
 				T value = Numeric<T>.Increment (Value);
-				return Compare (value, ValidateValue (value)) == 0;
+				return Compare (value, CoerceValue (value)) == 0;
 			});
 
 			this.lowerValue = new RelayCommand(() => {
 				Value = Numeric<T>.Decrement (Value);
 			}, () => {
 				T value = Numeric<T>.Decrement (Value);
-				return Compare (value, ValidateValue (value)) == 0;
+				return Compare (value, CoerceValue (value)) == 0;
 			});
 		}
 

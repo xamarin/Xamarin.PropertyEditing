@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,6 +53,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (this.predefinedValues.IsValueCombinable && !this.predefinedValues.IsConstrainedToPredefined)
 				throw new NotSupportedException ("Properties with combinable values can not be unconstrained currently");
 
+			this.coerce = property as ICoerce<IReadOnlyList<TValue>>;
 			this.validator = property as IValidator<IReadOnlyList<TValue>>;
 
 			var choices = new List<FlaggableChoiceViewModel<TValue>> (this.predefinedValues.PredefinedValues.Count);
@@ -115,22 +117,26 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool fromUpdate;
 		private readonly IValidator<IReadOnlyList<TValue>> validator;
+		private readonly ICoerce<IReadOnlyList<TValue>> coerce;
 		private readonly IHavePredefinedValues<TValue> predefinedValues;
 
-		private async void OnChoiceVmPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		private async void OnChoiceVmPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			if (this.fromUpdate)
 				return;
 
-			await PushValuesAsync ();
+			await PushValuesAsync (sender as FlaggableChoiceViewModel<TValue>);
 		}
 
-		private async Task PushValuesAsync ()
+		private async Task PushValuesAsync (FlaggableChoiceViewModel<TValue> changedChoice)
 		{
 			SetError (null);
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				try {
+					// Snapshot current choices so we don't catch updates mid-push for multi-editors
+					var currentChoices = Choices.ToDictionary (c => c, c => c.IsFlagged);
+
 					foreach (IObjectEditor editor in Editors) {
 						ValueInfo<IReadOnlyList<TValue>> value = await editor.GetValueAsync<IReadOnlyList<TValue>> (Property, Variation);
 						HashSet<TValue> current;
@@ -139,19 +145,33 @@ namespace Xamarin.PropertyEditing.ViewModels
 						else
 							current = new HashSet<TValue> (value.Value);
 
-						foreach (var choice in Choices) {
-							if (!choice.IsFlagged.HasValue)
+						foreach (var choice in currentChoices) {
+							if (!choice.Value.HasValue)
 								continue;
 
-							if (choice.IsFlagged.Value)
-								current.Add (choice.Value);
+							if (choice.Value.Value)
+								current.Add (choice.Key.Value);
 							else
-								current.Remove (choice.Value);
+								current.Remove (choice.Key.Value);
 						}
 
 						IReadOnlyList<TValue> values = current.ToArray ();
-						if (this.validator != null)
-							values = this.validator.ValidateValue (values);
+						if (this.validator != null) {
+							if (!this.validator.IsValid (values)) {
+								// Some combinables simply don't have a valid "none", but if we're going from indeterminate we still need to
+								// update the value, so we'll flip the changed value to true in that case so we don't go right back to indeterminate
+								if (values.Count == 0) {
+									changedChoice.IsFlagged = true;
+									// We're explicitly triggering a change and need the update here so we need to update our snapshot.
+									currentChoices = Choices.ToDictionary (c => c, c => c.IsFlagged);
+								}
+
+								continue;
+							}
+						}
+
+						if (this.coerce != null)
+							values = this.coerce.CoerceValue (values);
 
 						await editor.SetValueAsync (Property, new ValueInfo<IReadOnlyList<TValue>> {
 							Source = ValueSource.Local,

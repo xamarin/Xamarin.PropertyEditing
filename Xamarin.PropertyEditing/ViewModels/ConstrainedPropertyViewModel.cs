@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		protected override T ValidateValue (T validationValue)
+		protected override T CoerceValue (T validationValue)
 		{
 			if (IsConstrained) {
 				if (Compare (validationValue, MaximumValue) > 0)
@@ -66,7 +66,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					validationValue = MinimumValue;
 			}
 
-			return base.ValidateValue (validationValue);
+			return base.CoerceValue (validationValue);
 		}
 
 		protected int Compare (T left, T right)

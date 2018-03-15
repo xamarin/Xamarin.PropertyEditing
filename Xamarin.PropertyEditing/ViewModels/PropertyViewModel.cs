@@ -23,6 +23,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (platform, property, editors)
 		{
+			this.coerce = property as ICoerce<TValue>;
 			this.validator = property as IValidator<TValue>;
 			this.isNullable = (!property.ValueSources.HasFlag (ValueSources.Default) || property.Type.Name == NullableName);
 
@@ -39,7 +40,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return (this.value != null) ? this.value.Value : default(TValue); }
 			set
 			{
-				value = ValidateValue (value);
+				value = CoerceValue (value);
 				SetValue (new ValueInfo<TValue> {
 					Source = ValueSource.Local,
 					Value = value
@@ -79,14 +80,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		protected virtual TValue ValidateValue (TValue validationValue)
+		protected virtual TValue CoerceValue (TValue validationValue)
 		{
 			if (!this.isNullable && validationValue == null) {
 				validationValue = DefaultValue;
 			}
 
-			if (this.validator != null)
-				validationValue = this.validator.ValidateValue (validationValue);
+			if (this.coerce != null)
+				validationValue = this.coerce.CoerceValue (validationValue);
 
 			return validationValue;
 		}
@@ -153,6 +154,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			SetError (null);
 
+			// We may need to be more careful about value sources here
+			if (this.validator != null && !this.validator.IsValid (newValue.Value)) {
+				SignalValueChange(); // Ensure UI refresh its own value
+				return;
+			}
+
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				try {
 					Task[] setValues = new Task[Editors.Count];
@@ -176,10 +183,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		private readonly ICoerce<TValue> coerce;
 		private readonly IValidator<TValue> validator;
 		private const string NullableName = "Nullable`1";
 		private bool isNullable;
 		private ValueInfo<TValue> value;
+
+		private void SignalValueChange ()
+		{
+			OnPropertyChanged (nameof (Value));
+			OnPropertyChanged (nameof (ValueSource));
+			OnPropertyChanged (nameof (CustomExpression));
+			OnPropertyChanged (nameof (Resource));
+		}
 
 		private bool SetCurrentValue (ValueInfo<TValue> newValue)
 		{
@@ -191,10 +207,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			this.value = newValue;
 			OnValueChanged ();
-			OnPropertyChanged (nameof (Value));
-			OnPropertyChanged (nameof (ValueSource));
-			OnPropertyChanged (nameof (CustomExpression));
-			OnPropertyChanged (nameof (Resource));
+			SignalValueChange();
 
 			((RelayCommand) ClearValueCommand)?.ChangeCanExecute ();
 

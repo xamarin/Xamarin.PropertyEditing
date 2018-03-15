@@ -43,10 +43,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool IsConstrainedToPredefined => this.predefinedValues.IsConstrainedToPredefined;
 
-		protected override TValue ValidateValue (TValue validationValue)
+		protected override TValue CoerceValue (TValue validationValue)
 		{
 			if (!IsConstrainedToPredefined || IsValueDefined (validationValue))
-				return base.ValidateValue (validationValue);
+				return base.CoerceValue (validationValue);
 
 			return Value;
 		}

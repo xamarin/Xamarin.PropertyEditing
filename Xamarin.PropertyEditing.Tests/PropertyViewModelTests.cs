@@ -749,14 +749,14 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void ConstrainedProperty ()
+		public void CoercedProperty ()
 		{
 			var value = GetNonDefaultRandomTestValue ();
 			var value2 = GetRandomTestValue (value);
 
 			var mockProperty = GetPropertyMock ();
-			var validator = mockProperty.As<IValidator<TValue>> ();
-			validator.Setup (v => v.ValidateValue (value)).Returns (value2);
+			var coerce = mockProperty.As<ICoerce<TValue>> ();
+			coerce.Setup (v => v.CoerceValue (value)).Returns (value2);
 
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (oe => oe.Properties).Returns (new[] { mockProperty.Object });
@@ -765,6 +765,36 @@ namespace Xamarin.PropertyEditing.Tests
 			var vm = GetViewModel (mockProperty.Object, editor.Object);
 			vm.Value = value;
 			Assert.That (vm.Value, Is.EqualTo (value2));
+		}
+
+		[Test]
+		public async Task ValidatedProperty ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+			var value2 = GetRandomTestValue (value);
+
+			var mockProperty = GetPropertyMock ();
+			var validator = mockProperty.As<IValidator<TValue>> ();
+			validator.Setup (v => v.IsValid (It.IsAny<TValue> ())).Returns ((TValue v) => !Equals (v, value));
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Value = value2,
+				Source = ValueSource.Local
+			});
+
+			var vm = GetViewModel (mockProperty.Object, editor);
+			Assume.That (vm.Value, Is.EqualTo (value2));
+
+			bool changed = false;
+			vm.PropertyChanged += (sender, args) => {
+				if (args.PropertyName == nameof(PropertyViewModel<TValue>.Value))
+					changed = true;
+			};
+
+			vm.Value = value;
+			Assert.That (vm.Value, Is.EqualTo (value2));
+			Assert.That (changed, Is.True);
 		}
 
 		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)

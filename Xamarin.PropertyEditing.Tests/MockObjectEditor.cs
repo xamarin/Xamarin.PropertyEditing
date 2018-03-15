@@ -177,6 +177,19 @@ namespace Xamarin.PropertyEditing.Tests
 					softType.GetProperty ("Value").SetValue (softValue, v);
 					softType.GetProperty ("Source").SetValue (softValue, value.Source);
 				}
+
+				if (typeof(T).Name == "IReadOnlyList`1") {
+					var list = (IReadOnlyList<int>) value.Value;
+					int iv = 0;
+					foreach (int flag in list) {
+						iv |= flag;
+					}
+
+					softValue = new ValueInfo<int> {
+						Value = iv,
+						Source = value.Source
+					};
+				}
 			}
 
 			// Set to resource won't pass values so we will store it on the info since we just pass it back in GetValue
@@ -197,6 +210,8 @@ namespace Xamarin.PropertyEditing.Tests
 			if (variation != null)
 				throw new NotSupportedException (); // TODO
 
+			Type tType = typeof(T);
+
 			object value;
 			if (this.values.TryGetValue (property, out value)) {
 				var info = value as ValueInfo<T>;
@@ -209,9 +224,34 @@ namespace Xamarin.PropertyEditing.Tests
 					};
 				} else if (value == null || value is T) {
 					return new ValueInfo<T> {
-						Value = (T)value,
+						Value = (T) value,
 						Source = ValueSource.Local
 					};
+				} else if (tType.Name == "IReadOnlyList`1") {
+					// start with just supporting ints for now
+					var predefined = (IReadOnlyDictionary<string, int>)property.GetType().GetProperty(nameof(IHavePredefinedValues<int>.PredefinedValues)).GetValue(property);
+
+					var underlyingInfo = value as ValueInfo<int>;
+
+					int realValue;
+					if (value is int i) {
+						realValue = i;
+					} else
+						realValue = ((ValueInfo<int>) value).Value;
+
+					var flags = new List<int> ();
+					foreach (int v in predefined.Values) {
+						if (v == 0 && realValue != 0)
+							continue;
+
+						if ((realValue & v) == v)
+							flags.Add (v);
+					}
+
+					return (ValueInfo<T>)Convert.ChangeType(new ValueInfo<IReadOnlyList<int>> {
+						Value = flags,
+						Source = underlyingInfo?.Source ?? ValueSource.Local
+					}, typeof(ValueInfo<T>));
 				} else {
 					ValueSource source = ValueSource.Local;
 					Type valueType = value.GetType ();
