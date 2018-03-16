@@ -13,7 +13,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 
 		public void AddProperty<T> (string name, string category = "",
 			bool canWrite = true, bool flag = false,
-			IEnumerable<Type> converterTypes = null)
+			IEnumerable<Type> converterTypes = null,
+			string description = null)
 		{
 			IPropertyInfo propertyInfo;
 			if (typeof(T).IsEnum) {
@@ -22,7 +23,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 					.MakeGenericType (underlyingType, typeof (T));
 				propertyInfo = (IPropertyInfo)Activator.CreateInstance (enumPropertyInfoType, name, category, canWrite, flag, converterTypes);
 			} else {
-				propertyInfo = new MockPropertyInfo<T> (name, category, canWrite, converterTypes);
+				propertyInfo = new MockPropertyInfo<T> (name, description, category, canWrite, converterTypes);
 			}
 
 			AddProperty<T> (propertyInfo);

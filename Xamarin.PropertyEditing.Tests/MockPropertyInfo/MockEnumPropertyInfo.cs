@@ -15,8 +15,8 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		where TUnderlying : struct
 		where TEnum : struct
 	{
-		public MockEnumPropertyInfo (string name, string category = "", bool canWrite = true, bool flag = false, IEnumerable<Type> converterTypes = null)
-			: base (name, category, canWrite, converterTypes)
+		public MockEnumPropertyInfo (string name, string description = null, string category = "", bool canWrite = true, bool flag = false, IEnumerable<Type> converterTypes = null)
+			: base (name, description, category, canWrite, converterTypes)
 		{
 			var names = Enum.GetNames (typeof (TEnum));
 			Values = Enum.GetValues (typeof (TEnum)).Cast<TUnderlying>().ToArray();

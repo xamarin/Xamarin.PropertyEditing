@@ -6,12 +6,13 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 {
 	public class MockBrushPropertyInfo : IPropertyInfo, IColorSpaced
 	{
-		public MockBrushPropertyInfo (string name, string category, bool canWrite,
+		public MockBrushPropertyInfo (string name, string category, bool canWrite, string description = null,
 			IReadOnlyList<string> colorSpaces = null, ValueSources valueSources = ValueSources.Default | ValueSources.Local  |  ValueSources.Resource,
 			IReadOnlyList<PropertyVariation> variations = null,
 			IReadOnlyList<IAvailabilityConstraint> availabilityConstraints = null)
 		{
 			Name = name;
+			Description = description;
 			Category = category;
 			CanWrite = canWrite;
 			ColorSpaces = colorSpaces;
@@ -23,6 +24,8 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		public IReadOnlyList<string> ColorSpaces { get; }
 
 		public string Name { get; }
+
+		public string Description { get; }
 
 		public Type Type => typeof(CommonBrush);
 

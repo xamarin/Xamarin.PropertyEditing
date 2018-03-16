@@ -8,9 +8,10 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 {
 	public class MockPropertyInfo<T> : IPropertyInfo, IPropertyConverter, IEquatable<MockPropertyInfo<T>>
 	{
-		public MockPropertyInfo (string name, string category = "", bool canWrite = true, IEnumerable<Type> converterTypes = null)
+		public MockPropertyInfo (string name, string description = null, string category = "", bool canWrite = true, IEnumerable<Type> converterTypes = null)
 		{
 			Name = name;
+			Description = description;
 			Category = category;
 			CanWrite = canWrite;
 			if (converterTypes != null) {
@@ -26,6 +27,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		}
 
 		public string Name { get; }
+		public string Description { get; }
 		public virtual Type Type => typeof (T);
 		public string Category { get; }
 		public bool CanWrite { get; }

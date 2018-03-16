@@ -37,6 +37,8 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public string Name => this.propertyInfo.Name;
 
+		public string Description => null;
+
 		public Type Type => this.propertyInfo.PropertyType;
 
 		public string Category => this.category.Value;
