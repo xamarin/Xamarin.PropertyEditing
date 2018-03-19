@@ -21,7 +21,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 				var underlyingType = typeof (T).GetEnumUnderlyingType ();
 				var enumPropertyInfoType = typeof (MockEnumPropertyInfo<,>)
 					.MakeGenericType (underlyingType, typeof (T));
-				propertyInfo = (IPropertyInfo)Activator.CreateInstance (enumPropertyInfoType, name, category, canWrite, flag, converterTypes);
+				propertyInfo = (IPropertyInfo)Activator.CreateInstance (enumPropertyInfoType, name, description, category, canWrite, flag, converterTypes);
 			} else {
 				propertyInfo = new MockPropertyInfo<T> (name, description, category, canWrite, converterTypes);
 			}
