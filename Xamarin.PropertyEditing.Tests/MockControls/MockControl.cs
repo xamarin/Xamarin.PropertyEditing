@@ -23,7 +23,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 					.MakeGenericType (underlyingType, typeof (T));
 				propertyInfo = (IPropertyInfo)Activator.CreateInstance (enumPropertyInfoType, name, description, category, canWrite, flag, converterTypes);
 			} else {
-				propertyInfo = new MockPropertyInfo<T> (name, description, category, canWrite, converterTypes);
+				propertyInfo = new MockPropertyInfo<T> (name, description, category, canWrite, converterTypes, valueSources);
 			}
 
 			AddProperty<T> (propertyInfo);
