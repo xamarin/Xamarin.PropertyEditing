@@ -8,12 +8,13 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 {
 	public class MockPropertyInfo<T> : IPropertyInfo, IPropertyConverter, IEquatable<MockPropertyInfo<T>>
 	{
-		public MockPropertyInfo (string name, string description = null, string category = "", bool canWrite = true, IEnumerable<Type> converterTypes = null)
+		public MockPropertyInfo (string name, string description = null, string category = "", bool canWrite = true, IEnumerable<Type> converterTypes = null, ValueSources valueSources = ValueSources.Local | ValueSources.Default)
 		{
 			Name = name;
 			Description = description;
 			Category = category;
 			CanWrite = canWrite;
+			ValueSources = valueSources;
 			if (converterTypes != null) {
 				this.typeConverters = converterTypes
 					.Where (type => type != null && typeof (TypeConverter).IsAssignableFrom (type))
@@ -31,7 +32,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		public virtual Type Type => typeof (T);
 		public string Category { get; }
 		public bool CanWrite { get; }
-		public virtual ValueSources ValueSources => ValueSources.Local | ValueSources.Default;
+		public virtual ValueSources ValueSources { get; }
 		static readonly PropertyVariation[] EmptyVariations = new PropertyVariation[0];
 		public virtual IReadOnlyList<PropertyVariation> Variations => EmptyVariations;
 		static readonly IAvailabilityConstraint[] EmptyConstraints = new IAvailabilityConstraint[0];

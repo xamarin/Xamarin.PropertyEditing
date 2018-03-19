@@ -9,16 +9,20 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class NumericEditorControl<T>
 		: PropertyEditorControl
-		where T : struct
 	{
 		public NumericEditorControl ()
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			NumericEditor = new NumericSpinEditor ();
+			NumericEditor = new NumericSpinEditor<T> ();
 			NumericEditor.ValueChanged += OnValueChanged;
 
-			TypeCode code = Type.GetTypeCode (typeof (T));
+			var t = typeof (T);
+			if (t.Name == PropertyViewModel<T>.NullableName) {
+				underlyingType = Nullable.GetUnderlyingType (t);
+				t = underlyingType;
+			}
+			TypeCode code = Type.GetTypeCode (t);
 			switch (code) {
 				case TypeCode.Double:
 				case TypeCode.Single:
@@ -41,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 			});
 		}
 
-		protected NumericSpinEditor NumericEditor { get; set; }
+		protected NumericSpinEditor<T> NumericEditor { get; set; }
 
 		protected NSNumberFormatter Formatter {
 			get {
@@ -62,6 +66,14 @@ namespace Xamarin.PropertyEditing.Mac
 				NumericEditor.NumberStyle = value;
 			}
 		}
+
+		internal new NumericPropertyViewModel<T> ViewModel
+		{
+			get { return (NumericPropertyViewModel<T>)base.ViewModel; }
+			set { base.ViewModel = value; }
+		}
+
+		private Type underlyingType;
 
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
@@ -85,12 +97,15 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected virtual void OnValueChanged (object sender, EventArgs e)
 		{
-			((PropertyViewModel<T>)ViewModel).Value = (T)Convert.ChangeType (NumericEditor.Value, typeof(T));
+			var t = typeof (T);
+			if (underlyingType != null)
+				t = underlyingType;
+			ViewModel.Value = (T)Convert.ChangeType (NumericEditor.Value, t);
 		}
 
 		protected override void UpdateValue()
 		{
-			NumericEditor.Value = (double)Convert.ChangeType (((PropertyViewModel<T>)ViewModel).Value, typeof(double));
+			NumericEditor.Value = (double)Convert.ChangeType ((ViewModel).Value, typeof(double));
 		}
 
 		protected override void UpdateAccessibilityValues ()

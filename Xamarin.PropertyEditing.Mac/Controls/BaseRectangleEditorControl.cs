@@ -10,16 +10,15 @@ using Xamarin.PropertyEditing.ViewModels;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class BaseRectangleEditorControl<T> : PropertyEditorControl
-		where T : struct
 	{
 		protected UnfocusableTextField XLabel { get; set; }
-		protected NumericSpinEditor XEditor { get; set; }
+		protected NumericSpinEditor<T> XEditor { get; set; }
 		protected UnfocusableTextField YLabel { get; set; }
-		protected NumericSpinEditor YEditor { get; set; }
+		protected NumericSpinEditor<T> YEditor { get; set; }
 		protected UnfocusableTextField WidthLabel { get; set; }
-		protected NumericSpinEditor WidthEditor { get; set; }
+		protected NumericSpinEditor<T> WidthEditor { get; set; }
 		protected UnfocusableTextField HeightLabel { get; set; }
-		protected NumericSpinEditor HeightEditor { get; set; }
+		protected NumericSpinEditor<T> HeightEditor { get; set; }
 
 		public override NSView FirstKeyView => XEditor;
 		public override NSView LastKeyView => HeightEditor;
@@ -32,25 +31,25 @@ namespace Xamarin.PropertyEditing.Mac
 		public BaseRectangleEditorControl ()
 		{
 			XLabel = new UnfocusableTextField ();
-			XEditor = new NumericSpinEditor ();
+			XEditor = new NumericSpinEditor<T> ();
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.Value = 0.0f;
 			XEditor.ValueChanged += OnInputUpdated;
 
 			YLabel =  new UnfocusableTextField ();
-			YEditor = new NumericSpinEditor ();
+			YEditor = new NumericSpinEditor<T> ();
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.Value = 0.0f;
 			YEditor.ValueChanged += OnInputUpdated;
 
 			WidthLabel = new UnfocusableTextField ();
-			WidthEditor = new NumericSpinEditor ();
+			WidthEditor = new NumericSpinEditor<T> ();
 			WidthEditor.BackgroundColor = NSColor.Clear;
 			WidthEditor.Value = 0.0f;
 			WidthEditor.ValueChanged += OnInputUpdated;
 
 			HeightLabel =  new UnfocusableTextField ();
-			HeightEditor = new NumericSpinEditor ();
+			HeightEditor = new NumericSpinEditor<T> ();
 			HeightEditor.BackgroundColor = NSColor.Clear;
 			HeightEditor.Value = 0.0f;
 			HeightEditor.ValueChanged += OnInputUpdated;

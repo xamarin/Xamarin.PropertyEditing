@@ -14,7 +14,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		public void AddProperty<T> (string name, string category = "",
 			bool canWrite = true, bool flag = false,
 			IEnumerable<Type> converterTypes = null,
-			string description = null)
+			string description = null, ValueSources valueSources = ValueSources.Local | ValueSources.Default)
 		{
 			IPropertyInfo propertyInfo;
 			if (typeof(T).IsEnum) {

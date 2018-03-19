@@ -29,7 +29,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			this.comboBox.SelectionChanged += (sender, e) => {
-				EditorViewModel.ValueName = comboBox.SelectedValue.ToString ();
+				ViewModel.ValueName = comboBox.SelectedValue.ToString ();
 			};
 
 			this.popUpButton = new NSPopUpButton {
@@ -43,7 +43,7 @@ namespace Xamarin.PropertyEditing.Mac
 			popUpButton.Menu = popupButtonList;
 
 			popUpButton.Activated += (o, e) => {
-				EditorViewModel.ValueName = (o as NSPopUpButton).Title;
+				ViewModel.ValueName = (o as NSPopUpButton).Title;
 			};
 
 			UpdateTheme ();
@@ -52,7 +52,11 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => firstKeyView;
 		public override NSView LastKeyView => lastKeyView;
 
-		protected PredefinedValuesViewModel<T> EditorViewModel => (PredefinedValuesViewModel<T>)ViewModel;
+		internal new PredefinedValuesViewModel<T> ViewModel
+		{
+			get { return (PredefinedValuesViewModel<T>)base.ViewModel; }
+			set { base.ViewModel = value; }
+		}
 
 		readonly NSComboBox comboBox;
 		readonly NSPopUpButton popUpButton;
@@ -69,7 +73,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			if (EditorViewModel.IsConstrainedToPredefined) {
+			if (ViewModel.IsConstrainedToPredefined) {
 				this.popUpButton.Enabled = ViewModel.Property.CanWrite;
 			} else {
 				this.comboBox.Enabled = ViewModel.Property.CanWrite;
@@ -89,9 +93,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
 		{
 			if (!dataPopulated) {
-				if (EditorViewModel.IsConstrainedToPredefined) {
+				if (ViewModel.IsConstrainedToPredefined) {
 					this.popupButtonList.RemoveAllItems ();
-					foreach (string item in EditorViewModel.PossibleValues) {
+					foreach (string item in ViewModel.PossibleValues) {
 						popupButtonList.AddItem (new NSMenuItem (item));
 					}
 
@@ -110,7 +114,7 @@ namespace Xamarin.PropertyEditing.Mac
 					this.comboBox.RemoveAll ();
 
 					// Once the VM is loaded we need a one time population
-					foreach (var item in EditorViewModel.PossibleValues) {
+					foreach (var item in ViewModel.PossibleValues) {
 						this.comboBox.Add (new NSString (item));
 					}
 
@@ -135,16 +139,16 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateValue ()
 		{
-			if (EditorViewModel.IsConstrainedToPredefined) {
-				this.popUpButton.Title = EditorViewModel.ValueName ?? String.Empty;
+			if (ViewModel.IsConstrainedToPredefined) {
+				this.popUpButton.Title = ViewModel.ValueName ?? String.Empty;
 			} else {
-				this.comboBox.StringValue = EditorViewModel.ValueName ?? String.Empty;
+				this.comboBox.StringValue = ViewModel.ValueName ?? String.Empty;
 			}
 		}
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			if (EditorViewModel.IsConstrainedToPredefined) {
+			if (ViewModel.IsConstrainedToPredefined) {
 				popUpButton.AccessibilityEnabled = popUpButton.Enabled;
 				popUpButton.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);
 			} else {
