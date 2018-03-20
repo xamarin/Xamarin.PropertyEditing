@@ -35,12 +35,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public ValueSource ValueSource => this.value != null ? this.value.Source : ValueSource.Default;
 
+		/// <remarks>
+		/// This is only meant for use from the UI. Other value setting mechanisms (like, converting resources to local, or setting to a resource) should
+		/// use bespoke value setting mechanisms as this property switches the value source to local and only if the value itself has changed.
+		/// </remarks>
 		public TValue Value
 		{
 			get { return (this.value != null) ? this.value.Value : default(TValue); }
 			set
 			{
 				value = CoerceValue (value);
+
+				if (Equals (value, Value))
+					return;
+
 				SetValue (new ValueInfo<TValue> {
 					Source = ValueSource.Local,
 					Value = value

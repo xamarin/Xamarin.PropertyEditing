@@ -454,6 +454,32 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public async Task ValueNotChangedForSameValueDifferentSource ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Resource,
+				Value = value
+			});
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			Assume.That (vm.Value, Is.EqualTo (value));
+
+			bool changed = false;
+			vm.PropertyChanged += (sender, args) => {
+				changed = true;
+			};
+
+			vm.Value = value;
+
+			Assert.That (changed, Is.False, "PropertyChanged raised when value set to same value");
+		}
+
+		[Test]
 		public void ValueChanged ()
 		{
 			var value = GetNonDefaultRandomTestValue ();
