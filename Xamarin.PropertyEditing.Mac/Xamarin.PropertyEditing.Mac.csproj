@@ -84,6 +84,7 @@
       <DependentUpon>LocalizationResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Controls\Custom\UnfocusableTextField.cs" />
+    <Compile Include="Controls\CombinablePropertyEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
