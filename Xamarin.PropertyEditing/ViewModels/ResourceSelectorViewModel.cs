@@ -163,7 +163,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private bool ResourceFilter (object item)
 		{
 			var r = (Resource)item;
-			if (!String.IsNullOrWhiteSpace (FilterText) && !r.Name.StartsWith (FilterText, StringComparison.OrdinalIgnoreCase))
+			if (!String.IsNullOrWhiteSpace (FilterText) && !r.Name.Contains (FilterText, StringComparison.OrdinalIgnoreCase))
 				return false;
 			if (ShowOnlySystemResources && r.Source.IsLocal)
 				return false;
