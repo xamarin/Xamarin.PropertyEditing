@@ -427,6 +427,78 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public async Task ConvertToLocalValue ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+
+			var resource = new Resource ("name");
+
+			var resourcesMock = new Mock<IResourceProvider> ();
+			resourcesMock.Setup (rp => rp.GetResourcesAsync (new object(), mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Resource,
+				ValueDescriptor = resource,
+				Value = value
+			});
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			vm.ResourceProvider = resourcesMock.Object;
+			Assume.That (vm.Value, Is.EqualTo (value));
+			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Resource));
+
+			Assert.That (vm.ConvertToLocalValueCommand.CanExecute (null), Is.True);
+
+			bool changed = false;
+			vm.ConvertToLocalValueCommand.CanExecuteChanged += (o, e) => changed = true;
+			vm.ConvertToLocalValueCommand.Execute (null);
+
+			Assert.That (vm.Value, Is.EqualTo (value));
+			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
+			Assert.That (changed, Is.True, "CanExecuteChanged didn't fire"); // Converitng to local should make the command unexecutable because its now already local
+		}
+
+		[Test]
+		public async Task ConvertToLocalValueAlreadyLocal ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Local,
+				Value = value
+			});
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			Assume.That (vm.Value, Is.EqualTo (value));
+			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
+
+			Assert.That (vm.ConvertToLocalValueCommand.CanExecute (null), Is.False);
+		}
+
+		[Test]
+		public async Task ConvertToLocalValueUnset ()
+		{
+			var mockProperty = GetPropertyMock ();
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Unset
+			});
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			Assume.That (vm.Value, Is.EqualTo (default(TValue)));
+			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Unset));
+
+			Assert.That (vm.ConvertToLocalValueCommand.CanExecute (null), Is.False);
+		}
+
+		[Test]
 		[Description ("For performance reasons, we should never raise a value change when it hasn't changed")]
 		public async Task ValueNotChangedForSameValue ()
 		{

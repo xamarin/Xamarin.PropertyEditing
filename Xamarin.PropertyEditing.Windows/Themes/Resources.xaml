@@ -400,7 +400,7 @@
 						<MenuItem x:Name="CustomExpressionItem" Header="{x:Static prop:Resources.CustomExpressionEllipsis}" Icon="{StaticResource LiteralMarker}" Visibility="{Binding TargetPlatform.SupportsCustomExpressions,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<Separator Visibility="{Binding TargetPlatform.SupportsCustomExpressions,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<MenuItem Header="{x:Static prop:Resources.Reset}" Icon="{StaticResource LiteralMarker}" Command="{Binding ClearValueCommand,Mode=OneTime}" />
-						<!--<MenuItem Header="{x:Static prop:Resources.ConvertToLocalValue}" Icon="{StaticResource LiteralMarker}" Command="{Binding ConvertToLocalValueCommand,Mode=OneTime}" Visibility="{Binding SupportsResources,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />!-->
+						<MenuItem Header="{x:Static prop:Resources.ConvertToLocalValue}" Icon="{StaticResource LiteralMarker}" Command="{Binding ConvertToLocalValueCommand,Mode=OneTime}" />
 						<Separator Visibility="{Binding SupportsResources,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<MenuItem Header="{x:Static prop:Resources.ResourceEllipsis}" Command="{Binding RequestResourceCommand,Mode=OneTime}" Icon="{StaticResource ResourceMarker}" Visibility="{Binding SupportsResources,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<!--<MenuItem Header="{x:Static p:Resources.LocalResource}" />

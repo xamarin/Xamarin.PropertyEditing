@@ -29,6 +29,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
+			ConvertToLocalValueCommand = new RelayCommand(OnConvertToLocalValue, CanClearToLocalValue);
 
 			RequestCurrentValueUpdate();
 		}
@@ -217,6 +218,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnValueChanged ();
 			SignalValueChange();
 
+			((RelayCommand) ConvertToLocalValueCommand)?.ChangeCanExecute ();
 			((RelayCommand) ClearValueCommand)?.ChangeCanExecute ();
 
 			return true;
@@ -253,6 +255,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private bool CanClearValue ()
 		{
 			return (ValueSource != ValueSource.Default && ValueSource != ValueSource.Unset && ValueSource != ValueSource.Unknown);
+		}
+
+		private bool CanClearToLocalValue ()
+		{
+			return (ValueSource != ValueSource.Local && ValueSource != ValueSource.Unset);
+		}
+
+		private void OnConvertToLocalValue ()
+		{
+			SetValue (new ValueInfo<TValue> {
+				Value = Value,
+				Source = ValueSource.Local
+			});
 		}
 
 		private static TValue DefaultValue;
@@ -348,6 +363,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public ICommand RequestResourceCommand => this.requestResourceCommand;
 
 		public ICommand ClearValueCommand
+		{
+			get;
+			protected set;
+		}
+
+		public ICommand ConvertToLocalValueCommand
 		{
 			get;
 			protected set;
