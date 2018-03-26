@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Shapes;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -111,43 +112,30 @@ namespace Xamarin.PropertyEditing.Windows
 			if (this.indicator == null)
 				return;
 
-			string brush = null;
-
 			switch (source) {
 				case ValueSource.Local:
-					brush = "PropertyLocalValueBrush";
 					ToolTip = Properties.Resources.Local;
 					break;
 				case ValueSource.Binding:
-					brush = "PropertyBoundValueBrush";
 					break;
 				case ValueSource.Inherited:
-					brush = "PropertyResourceBrush";
 					ToolTip = Properties.Resources.Inherited;
 					break;
 				case ValueSource.DefaultStyle:
 				case ValueSource.Style:
 					ToolTip = null;
-					brush = "PropertyResourceBrush";
 					break;
 				case ValueSource.Resource:
 					// VS actually says "static" for system resources, but I think that's worth breaking with
 					ToolTip = (this.vm?.Resource?.Name != null) ? String.Format (Properties.Resources.ResourceWithName, this.vm.Resource.Name) : Properties.Resources.Resource;
-					brush = "PropertyResourceBrush";
 					break;
-
 				case ValueSource.Default:
 					ToolTip = Properties.Resources.Default;
-					this.indicator.ClearValue (Shape.FillProperty);
 					return;
-
 				case ValueSource.Unset:
 					ToolTip = Properties.Resources.Unset;
-					this.indicator.ClearValue (Shape.FillProperty);
 					return;
 			}
-
-			this.indicator.SetResourceReference (Shape.FillProperty, brush);
 		}
 
 		private void OnResourceRequested (object sender, ResourceRequestedEventArgs e)

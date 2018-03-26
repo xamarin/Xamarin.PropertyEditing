@@ -259,6 +259,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Go to Source.
+        /// </summary>
+        public static string GoToSource {
+            get {
+                return ResourceManager.GetString("GoToSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Green.
         /// </summary>
         public static string Green {
