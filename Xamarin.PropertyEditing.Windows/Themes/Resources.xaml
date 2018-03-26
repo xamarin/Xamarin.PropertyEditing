@@ -384,10 +384,18 @@
 
 	<system:Double x:Key="MenuOffset">3</system:Double>
 
-	<Rectangle x:Shared="False" x:Key="LiteralMarker" Stroke="{DynamicResource PropertyButtonBorderBrush}" Fill="{DynamicResource LiteralMarkerBrush}" Height="12" Width="12" StrokeThickness="1" />
-	<Rectangle x:Shared="False" x:Key="ResourceMarker" Stroke="{DynamicResource PropertyButtonBorderBrush}" Fill="{DynamicResource ResourceMarkerBrush}" Height="12" Width="12" StrokeThickness="1" />
+	<Style x:Key="MarkerStyle" TargetType="Rectangle">
+		<Setter Property="Width" Value="12" />
+		<Setter Property="Height" Value="12" />
+		<Setter Property="Stroke" Value="{DynamicResource PropertyButtonBorderBrush}" />
+		<Setter Property="StrokeThickness" Value="1" />
+	</Style>
+
+	<Rectangle x:Shared="False" x:Key="LiteralMarker" Style="{StaticResource MarkerStyle}" Fill="{DynamicResource LiteralMarkerBrush}" />
+	<Rectangle x:Shared="False" x:Key="ResourceMarker" Style="{StaticResource MarkerStyle}" Fill="{DynamicResource ResourceMarkerBrush}" />
 
 	<Style TargetType="local:PropertyButton">
+		<Setter Property="Foreground" Value="Transparent" />
 		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="BorderThickness" Value="0" />
 		<Setter Property="Height" Value="17" />
@@ -421,7 +429,7 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyButton">
 					<Border Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
-						<Rectangle Name="Indicator" Fill="{DynamicResource PanelBackgroundBrush}" Stroke="{DynamicResource PropertyButtonBorderBrush}" Height="7" Width="7" />
+						<Rectangle Name="Indicator" Fill="{TemplateBinding Foreground}" Stroke="{DynamicResource PropertyButtonBorderBrush}" Height="7" Width="7" />
 					</Border>
 				</ControlTemplate>
 			</Setter.Value>
@@ -431,6 +439,24 @@
 				<Trigger.Setters>
 					<Setter Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}" />
 				</Trigger.Setters>
+			</Trigger>
+			<Trigger Property="ValueSource" Value="Local">
+				<Setter Property="Foreground" Value="{DynamicResource PropertyLocalValueBrush}" />
+			</Trigger>
+			<Trigger Property="ValueSource" Value="Binding">
+				<Setter Property="Foreground" Value="{DynamicResource PropertyBoundValueBrush}" />
+			</Trigger>
+			<Trigger Property="ValueSource" Value="Inherited">
+				<Setter Property="Foreground" Value="{DynamicResource PropertyResourceBrush}" />
+			</Trigger>
+			<Trigger Property="ValueSource" Value="DefaultStyle">
+				<Setter Property="Foreground" Value="{DynamicResource PropertyResourceBrush}" />
+			</Trigger>
+			<Trigger Property="ValueSource" Value="Style">
+				<Setter Property="Foreground" Value="{DynamicResource PropertyResourceBrush}" />
+			</Trigger>
+			<Trigger Property="ValueSource" Value="Resource">
+				<Setter Property="Foreground" Value="{DynamicResource PropertyResourceBrush}" />
 			</Trigger>
 		</Style.Triggers>
 	</Style>
