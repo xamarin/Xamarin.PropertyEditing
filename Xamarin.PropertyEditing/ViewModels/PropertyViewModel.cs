@@ -25,8 +25,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			this.coerce = property as ICoerce<TValue>;
 			this.validator = property as IValidator<TValue>;
+			this.valueNavigator = property as ICanNavigateToSource;
 			this.isNullable = (!property.ValueSources.HasFlag (ValueSources.Default) || property.Type.Name == NullableName);
 
+			NavigateToValueSourceCommand = new RelayCommand (OnNavigateToSource, CanNavigateToSource);
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
 			ConvertToLocalValueCommand = new RelayCommand(OnConvertToLocalValue, CanClearToLocalValue);
@@ -88,6 +90,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				}
 			}
 		}
+
+		public override bool SupportsValueSourceNavigation => this.valueNavigator != null;
 
 		protected virtual TValue CoerceValue (TValue validationValue)
 		{
@@ -194,6 +198,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private readonly ICoerce<TValue> coerce;
 		private readonly IValidator<TValue> validator;
+		private readonly ICanNavigateToSource valueNavigator;
 		internal const string NullableName = "Nullable`1";
 		private bool isNullable;
 		private ValueInfo<TValue> value;
@@ -220,6 +225,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			((RelayCommand) ConvertToLocalValueCommand)?.ChangeCanExecute ();
 			((RelayCommand) ClearValueCommand)?.ChangeCanExecute ();
+			((RelayCommand) NavigateToValueSourceCommand)?.ChangeCanExecute ();
 
 			return true;
 		}
@@ -268,6 +274,23 @@ namespace Xamarin.PropertyEditing.ViewModels
 				Value = Value,
 				Source = ValueSource.Local
 			});
+		}
+
+		private bool CanNavigateToSource ()
+		{
+			if (this.valueNavigator == null)
+				return false;
+			if (Editors.Count != 1)
+				return false;
+			if (ValueSource == ValueSource.Default || ValueSource == ValueSource.Unset)
+				return false;
+
+			return this.valueNavigator.CanNavigateToSource (Editors.Single());
+		}
+
+		private void OnNavigateToSource ()
+		{
+			this.valueNavigator?.NavigateToSource (Editors.FirstOrDefault ());
 		}
 
 		private static TValue DefaultValue;
@@ -373,6 +396,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 			protected set;
 		}
+
+		public ICommand NavigateToValueSourceCommand
+		{
+			get;
+			protected set;
+		}
+
+		public virtual bool SupportsValueSourceNavigation => false;
 
 		public bool HasErrors => this.error != null;
 

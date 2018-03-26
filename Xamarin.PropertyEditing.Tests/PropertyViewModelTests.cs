@@ -895,6 +895,114 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (changed, Is.True);
 		}
 
+		[Test]
+		public async Task NavigateToSource ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+			var nav = mockProperty.As<ICanNavigateToSource> ();
+			nav.Setup (n => n.CanNavigateToSource (It.IsAny<IObjectEditor> ())).Returns (true);
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Value = value,
+				Source = ValueSource.Local
+			});
+
+			var vm = GetViewModel (mockProperty.Object, editor);
+			Assume.That (vm.Value, Is.EqualTo (value));
+			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
+
+			Assert.That (vm.SupportsValueSourceNavigation, Is.True);
+			Assert.That (vm.NavigateToValueSourceCommand.CanExecute (null), Is.True);
+
+			vm.NavigateToValueSourceCommand.Execute (null);
+			nav.Verify (n => n.NavigateToSource (editor));
+		}
+
+		[Test]
+		public async Task CantNavigateToMultipleObjectValueSources ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+			var nav = mockProperty.As<ICanNavigateToSource> ();
+			nav.Setup (n => n.CanNavigateToSource (It.IsAny<IObjectEditor> ())).Returns (true);
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Value = value,
+				Source = ValueSource.Local
+			});
+
+			var editor2 = new MockObjectEditor (mockProperty.Object);
+			await editor2.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Value = value,
+				Source = ValueSource.Local
+			});
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor, editor2 });
+			Assume.That (vm.Value, Is.EqualTo (value));
+			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
+
+			Assert.That (vm.SupportsValueSourceNavigation, Is.True);
+			Assert.That (vm.NavigateToValueSourceCommand.CanExecute (null), Is.False, "Navigate not disabled when multi-selecting");
+		}
+
+		[Test]
+		public async Task CantNavigateToValueSource ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+			var nav = mockProperty.As<ICanNavigateToSource> ();
+			nav.Setup (n => n.CanNavigateToSource (It.IsAny<IObjectEditor> ())).Returns (false);
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Value = value,
+				Source = ValueSource.Local
+			});
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			Assume.That (vm.Value, Is.EqualTo (value));
+			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
+
+			Assert.That (vm.SupportsValueSourceNavigation, Is.True);
+			Assert.That (vm.NavigateToValueSourceCommand.CanExecute (null), Is.False, "Navigate not disabled when unnavigable");
+		}
+
+		[Test]
+		public async Task CanNavigateToSourceUpdated ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+			var nav = mockProperty.As<ICanNavigateToSource> ();
+			nav.Setup (n => n.CanNavigateToSource (It.IsAny<IObjectEditor> ())).Returns (true);
+
+			var editor = new MockObjectEditor (mockProperty.Object);
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			Assume.That (vm.Value, Is.EqualTo (default(TValue)));
+			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Default).Or.EqualTo (ValueSource.Unset));
+			Assume.That (vm.SupportsValueSourceNavigation, Is.True);
+
+			Assert.That (vm.NavigateToValueSourceCommand.CanExecute (null), Is.False, "Navigate not disabled when unset/default");
+
+			bool changed = false;
+			vm.NavigateToValueSourceCommand.CanExecuteChanged += (o, e) => { changed = true; };
+
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Value = value,
+				Source = ValueSource.Local
+			});
+
+			Assert.That (changed, Is.True, "CanExecuteChanged did not fire");
+			Assert.That (vm.NavigateToValueSourceCommand.CanExecute (null), Is.True, "Navigate not enabled once value source became valid");
+		}
+
 		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
 		{
 			return GetViewModel (property, new[] { editor });

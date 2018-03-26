@@ -393,6 +393,7 @@
 
 	<Rectangle x:Shared="False" x:Key="LiteralMarker" Style="{StaticResource MarkerStyle}" Fill="{DynamicResource LiteralMarkerBrush}" />
 	<Rectangle x:Shared="False" x:Key="ResourceMarker" Style="{StaticResource MarkerStyle}" Fill="{DynamicResource ResourceMarkerBrush}" />
+	<Rectangle x:Shared="False" x:Key="SourceMarker" Style="{StaticResource MarkerStyle}" Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=local:PropertyButton,Mode=FindAncestor}}" />
 
 	<Style TargetType="local:PropertyButton">
 		<Setter Property="Foreground" Value="Transparent" />
@@ -411,16 +412,16 @@
 						<MenuItem Header="{x:Static prop:Resources.ConvertToLocalValue}" Icon="{StaticResource LiteralMarker}" Command="{Binding ConvertToLocalValueCommand,Mode=OneTime}" />
 						<Separator Visibility="{Binding SupportsResources,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<MenuItem Header="{x:Static prop:Resources.ResourceEllipsis}" Command="{Binding RequestResourceCommand,Mode=OneTime}" Icon="{StaticResource ResourceMarker}" Visibility="{Binding SupportsResources,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
-						<!--<MenuItem Header="{x:Static p:Resources.LocalResource}" />
-						<MenuItem Header="{x:Static p:Resources.SystemResource}" />
-						<MenuItem Header="{x:Static p:Resources.EditResourceEllipse}" />
-						<MenuItem Header="{x:Static p:Resources.ConvertToNewResourceEllipse}" />
+						<!--<MenuItem Header="{x:Static prop:Resources.LocalResource}" />
+						<MenuItem Header="{x:Static prop:Resources.SystemResource}" />
+						<MenuItem Header="{x:Static prop:Resources.EditResourceEllipse}" />
+						<MenuItem Header="{x:Static prop:Resources.ConvertToNewResourceEllipse}" />
 						<Separator />
-						<MenuItem Header="{x:Static p:Resources.CreateDataBindingEllipse}" />
-						<MenuItem Header="{x:Static p:Resources.TemplateBinding}" />
-						<Separator />
-						<MenuItem Header="{x:Static p:Resources.RecordCurrentValue}" />
-						<MenuItem Header="{x:Static p:Resources.GoToSource}" />!-->
+						<MenuItem Header="{x:Static prop:Resources.CreateDataBindingEllipse}" />
+						<MenuItem Header="{x:Static prop:Resources.TemplateBinding}" />!-->
+						<Separator Visibility="{Binding SupportsValueSourceNavigation,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
+						<!--<MenuItem Header="{x:Static prop:Resources.RecordCurrentValue}" />!-->
+						<MenuItem Header="{x:Static prop:Resources.GoToSource}" Command="{Binding NavigateToValueSourceCommand,Mode=OneTime}" Icon="{StaticResource SourceMarker}" Visibility="{Binding SupportsValueSourceNavigation,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 					</local:HeaderedContextMenu>
 				</DataTemplate>
 			</Setter.Value>
