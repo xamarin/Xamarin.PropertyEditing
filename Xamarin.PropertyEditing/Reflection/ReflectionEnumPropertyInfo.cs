@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.Reflection
@@ -131,12 +131,8 @@ namespace Xamarin.PropertyEditing.Reflection
 		{
 			return Casters.GetOrAdd (typeof(T), t => {
 				return Task.Run (() => {
-					DynamicMethod method = new DynamicMethod ("Caster", typeof(T), new[] { typeof(object) });
-					ILGenerator generator = method.GetILGenerator ();
-					generator.Emit (OpCodes.Ldarg_0);
-					generator.Emit (OpCodes.Castclass, typeof(T));
-					generator.Emit (OpCodes.Ret);
-					return method.CreateDelegate (typeof(Func<object, T>));
+					var arg = Expression.Parameter (typeof(object));
+					return Expression.Lambda (Expression.Convert (arg, typeof(T)), arg).Compile ();
 				});
 			});
 		}
@@ -145,24 +141,10 @@ namespace Xamarin.PropertyEditing.Reflection
 		{
 			return HasFlagsMethods.GetOrAdd (typeof(T), t => {
 				return Task.Run (() => {
-					DynamicMethod method = new DynamicMethod ("HasFlags", typeof(bool), new[] { typeof(T), typeof(T) });
-					ILGenerator generator = method.GetILGenerator ();
-					generator.Emit (OpCodes.Ldarg_0);
-					generator.Emit (OpCodes.Ldarg_1);
-					generator.Emit (OpCodes.And); // arg0 & arg1
-					generator.Emit (OpCodes.Ldc_I4_0);
-					if (typeof (T) == typeof (uint))
-						generator.Emit (OpCodes.Conv_U4);
-					else if (typeof (T) == typeof (long))
-						generator.Emit (OpCodes.Conv_I8);
-					else if (typeof (T) == typeof (ulong))
-						generator.Emit (OpCodes.Conv_U8);
-
-					generator.Emit (OpCodes.Ceq); // pushes 1 if not equal
-					generator.Emit (OpCodes.Ldc_I4_0);
-					generator.Emit (OpCodes.Ceq); // reverses
-					generator.Emit (OpCodes.Ret);
-					return method.CreateDelegate (typeof(Func<T, T, bool>));
+					var left = Expression.Parameter (typeof(T));
+					var right = Expression.Parameter (typeof(T));
+					var hasFlag = Expression.Equal (Expression.And (left, right), right);
+					return Expression.Lambda (hasFlag, left, right).Compile();
 				});
 			});
 		}
@@ -171,13 +153,10 @@ namespace Xamarin.PropertyEditing.Reflection
 		{
 			return OrOperators.GetOrAdd (typeof(T), t => {
 				return Task.Run (() => {
-					DynamicMethod method = new DynamicMethod ("Or", typeof(T), new[] { typeof(T), typeof(T) });
-					ILGenerator generator = method.GetILGenerator ();
-					generator.Emit (OpCodes.Ldarg_0);
-					generator.Emit (OpCodes.Ldarg_1);
-					generator.Emit (OpCodes.Or);
-					generator.Emit (OpCodes.Ret);
-					return method.CreateDelegate (typeof(Func<T, T, T>));
+					var left = Expression.Parameter (typeof(T));
+					var right = Expression.Parameter (typeof(T));
+					var or = Expression.Or (left, right);
+					return Expression.Lambda (or, left, right).Compile ();
 				});
 			});
 		}
