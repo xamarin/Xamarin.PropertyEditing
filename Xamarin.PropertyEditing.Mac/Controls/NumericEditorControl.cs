@@ -105,7 +105,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateValue()
 		{
-			NumericEditor.Value = (double)Convert.ChangeType ((ViewModel).Value, typeof(double));
+			if (underlyingType != null) {
+				NumericEditor.StringValue = ViewModel.Value == null ? string.Empty : ViewModel.Value.ToString ();
+			} else {
+				NumericEditor.Value = (double)Convert.ChangeType (ViewModel.Value, typeof (double));
+			}
 		}
 
 		protected override void UpdateAccessibilityValues ()
