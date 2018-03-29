@@ -167,5 +167,29 @@ namespace Xamarin.PropertyEditing.Mac.Resources {
                 return ResourceManager.GetString("ValueColumnTitle", resourceCulture);
             }
         }
+        
+        internal static string AccessibilityPropertiesButton {
+            get {
+                return ResourceManager.GetString("AccessibilityPropertiesButton", resourceCulture);
+            }
+        }
+        
+        internal static string AccessibilityPropertiesButtonDescription {
+            get {
+                return ResourceManager.GetString("AccessibilityPropertiesButtonDescription", resourceCulture);
+            }
+        }
+        
+        internal static string AccessibilityActionButton {
+            get {
+                return ResourceManager.GetString("AccessibilityActionButton", resourceCulture);
+            }
+        }
+        
+        internal static string AccessibilityActionButtonDescription {
+            get {
+                return ResourceManager.GetString("AccessibilityActionButtonDescription", resourceCulture);
+            }
+        }
     }
 }

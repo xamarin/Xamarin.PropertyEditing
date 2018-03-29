@@ -5,6 +5,8 @@ using AppKit;
 using CoreGraphics;
 using System.Windows.Input;
 
+using Xamarin.PropertyEditing.Mac.Resources;
+
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class BaseEditorControl : NSView
@@ -35,9 +37,12 @@ namespace Xamarin.PropertyEditing.Mac
 			actionButton = new NSButton {
 				Bordered = false,
 				Enabled = false,
+				Hidden = true,
 				ImageScaling = NSImageScale.AxesIndependently,
 				Title = string.Empty,
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				AccessibilityTitle = LocalizationResources.AccessibilityActionButton,
+				AccessibilityHelp = LocalizationResources.AccessibilityActionButtonDescription,
 			};
 
 #if DESIGNER_DEBUG
@@ -56,7 +61,7 @@ namespace Xamarin.PropertyEditing.Mac
 					errorMessagePopUp.Show (default (CGRect), actionButton, NSRectEdge.MinYEdge);
 				}
 
-				NotifyActioButtonClicked ();
+				NotifyActionButtonClicked ();
 			};
 
 			AddSubview (actionButton);
@@ -97,12 +102,13 @@ namespace Xamarin.PropertyEditing.Mac
 			errorList = errors;
 
 			actionButton.Enabled = errors != null;
+			actionButton.Hidden = !actionButton.Enabled;
 
 			// Using NSImageName.Caution for now, we can change this later at the designers behest
 			actionButton.Image = actionButton.Enabled ? NSImage.ImageNamed ("action-warning-16") : null;
 		}
 
-		void NotifyActioButtonClicked ()
+		void NotifyActionButtonClicked ()
 		{
 			ActionButtonClicked?.Invoke (this, EventArgs.Empty);
 		}
