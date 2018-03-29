@@ -26,12 +26,16 @@ namespace Xamarin.PropertyEditing.Mac
 			XEditor.Value = 0.0f;
 			XEditor.ValueChanged += OnInputUpdated;
 
+			XLabel.AccessibilityElement = false;
+
 			YLabel = new UnfocusableTextField ();
 
 			YEditor = new NumericSpinEditor<T> ();
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.Value = 0.0f;
 			YEditor.ValueChanged += OnInputUpdated;
+
+			YLabel.AccessibilityElement = false;
 
 			AddSubview (XLabel);
 			AddSubview (XEditor);

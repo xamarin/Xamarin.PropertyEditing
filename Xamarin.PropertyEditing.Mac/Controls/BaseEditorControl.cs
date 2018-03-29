@@ -37,7 +37,6 @@ namespace Xamarin.PropertyEditing.Mac
 			actionButton = new NSButton {
 				Bordered = false,
 				Enabled = false,
-				Hidden = true,
 				ImageScaling = NSImageScale.AxesIndependently,
 				Title = string.Empty,
 				TranslatesAutoresizingMaskIntoConstraints = false,
