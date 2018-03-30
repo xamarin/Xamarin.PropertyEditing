@@ -453,6 +453,56 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.Value, Is.EqualTo ((int) value));
 		}
 
+		[Test]
+		public void ValueChangedAfterFlagsUpToDate ()
+		{
+			var p = GetPropertyMock ();
+
+			var target = new object();
+			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.SetupGet (e => e.Target).Returns (target);
+			editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (
+				new ValueInfo<IReadOnlyList<int>> {
+					Value = null,
+					Source = ValueSource.Unset
+				});
+			editorMock.Setup (e => e.GetValueAsync<int> (p.Object, null)).ReturnsAsync (new ValueInfo<int> {
+				Value = default(int),
+				Source = ValueSource.Unset
+			});
+
+			ValueInfo<IReadOnlyList<int>> setValue = null;
+			editorMock.Setup (oe => oe.SetValueAsync (p.Object, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
+				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((pi, v, variation) => {
+					setValue = v;
+					editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (v);
+
+					int rv = 0;
+					for (int i = 0; i < v.Value.Count; i++)
+						rv |= v.Value[i];
+
+					editorMock.Setup (e => e.GetValueAsync<int> (p.Object, null)).ReturnsAsync (new ValueInfo<int> {
+						Value = rv,
+						Source = ValueSource.Local
+					});
+					editorMock.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (p.Object));
+				});
+
+			var vm = GetViewModel (p.Object, editorMock.Object);
+			Assume.That (vm.Choices.Count, Is.EqualTo (7));
+			Assume.That (vm.Value, Is.EqualTo (default(int)));
+		
+			vm.PropertyChanged += (o, e) => {
+				if (e.PropertyName == nameof(CombinablePropertyViewModel<int>.Value)) {
+					Assert.That (vm.Choices[2].IsFlagged, Is.False, "Flag was not updated when Value was changed");
+				}
+			};
+
+			vm.Choices[1].IsFlagged = true;
+			Assume.That (setValue, Is.Not.Null, "Did not call setvalue");
+			Assume.That (vm.Value, Is.EqualTo ((int) (FlagsTestEnum.Flag1)));
+		}
+
 		[Flags]
 
 		internal enum FlagsTestEnum
