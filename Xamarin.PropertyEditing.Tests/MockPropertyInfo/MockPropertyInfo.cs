@@ -32,7 +32,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		public virtual Type Type => typeof (T);
 		public string Category { get; }
 		public bool CanWrite { get; }
-		public virtual ValueSources ValueSources { get; }
+		public ValueSources ValueSources { get; }
 		static readonly PropertyVariation[] EmptyVariations = new PropertyVariation[0];
 		public virtual IReadOnlyList<PropertyVariation> Variations => EmptyVariations;
 		static readonly IAvailabilityConstraint[] EmptyConstraints = new IAvailabilityConstraint[0];
