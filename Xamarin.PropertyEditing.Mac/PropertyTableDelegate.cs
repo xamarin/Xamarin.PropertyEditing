@@ -14,6 +14,9 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		bool goldenRatioApplied = false;
 
+		const string editorIdentifier = "editor";
+		const string labelIdentifier = "label";
+
 		public PropertyTableDelegate (PropertyTableDataSource datasource)
 		{
 			this.dataSource = datasource;
@@ -43,10 +46,10 @@ namespace Xamarin.PropertyEditing.Mac
 		// the table is looking for this method, picks it up automagically
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
-			var facade = (NSObjectFacade)item;
-			var vm = facade.Target as PropertyViewModel;
-			var group = facade.Target as IGroupingList<string, EditorViewModel>;
-			string cellIdentifier = (group == null) ? vm.GetType ().Name : group.Key;
+			PropertyViewModel vm;
+			IGroupingList<string, EditorViewModel> group;
+			string cellIdentifier;
+			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
 
 			// Let's make the columns look pretty
 			if (!goldenRatioApplied) {
@@ -61,10 +64,10 @@ namespace Xamarin.PropertyEditing.Mac
 			// Setup view based on the column
 			switch (tableColumn.Identifier) {
 				case PropertyEditorPanel.PropertyListColId:
-					var view = (UnfocusableTextField)outlineView.MakeView ("label", this);
+					var view = (UnfocusableTextField)outlineView.MakeView (labelIdentifier, this);
 					if (view == null) {
 						view = new UnfocusableTextField {
-							Identifier = "label",
+							Identifier = labelIdentifier,
 							Alignment = NSTextAlignment.Right,
 						};
 					}
@@ -83,13 +86,11 @@ namespace Xamarin.PropertyEditing.Mac
 					if (vm == null)
 						return null;
 
-					var editor = (PropertyEditorControl)outlineView.MakeView (cellIdentifier + "edits", this);
-					if (editor == null) {
-						editor = GetEditor (vm, outlineView);
-						// If still null we have no editor yet.
-						if (editor == null)
-							return new NSView ();
-					}
+					var editor = MakeEditorView (cellIdentifier + editorIdentifier, vm, outlineView);
+
+					// If still null we have no editor yet.
+					if (editor == null)
+						return new NSView ();
 
 					// we must reset these every time, as the view may have been reused
 					editor.TableRow = outlineView.RowForItem (item);
@@ -157,21 +158,22 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
 		{
-			var facade = (NSObjectFacade)item;
-			var group = facade.Target as IGroupingList<string, EditorViewModel>;
+			PropertyViewModel vm;
+			IGroupingList<string, EditorViewModel> group;
+			string cellIdentifier;
+			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
+
 			if (group != null) {
 				return 30;
 			}
 
-			var vm = (EditorViewModel)facade.Target;
-			var editor = (PropertyEditorControl)outlineView.MakeView (vm.GetType ().Name + "edits", this);
+			var editor = MakeEditorView (cellIdentifier + editorIdentifier, vm, outlineView);
+
+			// If still null we have no editor yet.
 			if (editor == null) {
-				editor = GetEditor (vm, outlineView);
-				// If still null we have no editor yet.
-				if (editor == null) {
-					return 22;
-				}
+				return 22;
 			}
+
 			return editor.RowHeight;
 		}
 
@@ -187,6 +189,24 @@ namespace Xamarin.PropertyEditing.Mac
 			view.ViewModel = (PropertyViewModel)property;
 
 			return view;
+		}
+
+		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out PropertyViewModel vm, out IGroupingList<string, EditorViewModel> group, out string cellIdentifier)
+		{
+			var facade = (NSObjectFacade)item;
+			vm = facade.Target as PropertyViewModel;
+			group = facade.Target as IGroupingList<string, EditorViewModel>;
+			cellIdentifier = (group == null) ? vm.GetType ().Name : group.Key;
+		}
+
+		private PropertyEditorControl MakeEditorView (string identifier, PropertyViewModel vm, NSOutlineView outlineView)
+		{
+			var editor = (PropertyEditorControl)outlineView.MakeView (identifier, this);
+			if (editor == null) {
+				editor = GetEditor (vm, outlineView);
+			}
+
+			return editor;
 		}
 
 		private static readonly Dictionary<Type, Type> ViewModelTypes = new Dictionary<Type, Type> {
