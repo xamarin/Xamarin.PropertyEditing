@@ -62,6 +62,12 @@ namespace Xamarin.PropertyEditing.Mac
 			set { SetValue (value); }
 		}
 
+		public string StringValue
+		{
+			get { return numericEditor.StringValue; }
+			set { SetValue (value); }
+		}
+
 		public bool Wrap {
 			get { return stepper.ValueWraps; }
 			set { stepper.ValueWraps = value; }
@@ -239,8 +245,13 @@ namespace Xamarin.PropertyEditing.Mac
 		void SetValue (string value)
 		{
 			//Regulates maximun and minium out of range
-			stepper.DoubleValue = CoerceValue (FieldValidation.FixInitialValue (value, Value.ToEditorString ()).ToEditorDouble ());
-			numericEditor.StringValue = FieldValidation.RoundDoubleValue (stepper.DoubleValue.ToEditorString (), NumericMode == ValidationType.Decimal ? FieldValidation.DefaultXcodeMaxRoundDigits : 0);
+			if (!string.IsNullOrEmpty (value)) {
+				stepper.DoubleValue = CoerceValue (FieldValidation.FixInitialValue (value, Value.ToEditorString ()).ToEditorDouble ());
+				numericEditor.StringValue = FieldValidation.RoundDoubleValue (stepper.DoubleValue.ToEditorString (), NumericMode == ValidationType.Decimal ? FieldValidation.DefaultXcodeMaxRoundDigits : 0);
+			} else {
+				stepper.StringValue = value;
+				numericEditor.StringValue = value;
+			}
 		}
 
 		public void SetValue (double value)
