@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel;
-using System.Reflection.Emit;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing
@@ -28,6 +28,17 @@ namespace Xamarin.PropertyEditing
 		private static Func<T, T> IncrementValue, DecrementValue;
 		private static NullableConverter NullConverter;
 
+		private static Func<T, T> GetNullableVersion (Expression shiftExpression, Type realType)
+		{
+			var v = Expression.Parameter (typeof(T));
+			var convert = Expression.Call (Expression.Constant (NullConverter), nameof(NullableConverter.ConvertFrom), null, Expression.Convert (v, typeof(object)));
+			var shift = Expression.Invoke (shiftExpression, Expression.Convert (convert, realType));
+			var conditional = Expression.Condition (Expression.Equal (v, Expression.Constant (null)), Expression.Default (realType), shift);
+
+			// (T v) => (T)((v == null) ? default(realType) : shiftExpression ((realType)NullableConverter.ConvertFrom ((object)v));
+			return Expression.Lambda<Func<T, T>> (Expression.Convert (conditional, typeof(T)), v).Compile();
+		}
+
 		private static void SetupMath ()
 		{
 			if (IncrementValue != null)
@@ -40,110 +51,41 @@ namespace Xamarin.PropertyEditing
 				t = Nullable.GetUnderlyingType (t);
 			}
 
-			Task<Func<T, T>> createIncrement = Task.Run (() => {
-				var add = new DynamicMethod ("Add", t, new[] { t });
-				ILGenerator gen = add.GetILGenerator ();
-				gen.Emit (OpCodes.Ldarg_0);
+			Task<Func<T,T>> createIncrement = Task.Run (() => {
+				var value = Expression.Parameter (t);
 
-				switch (Type.GetTypeCode (t)) {
-				case TypeCode.Byte:
-				case TypeCode.UInt16:
-				case TypeCode.UInt32:
-					gen.Emit (OpCodes.Ldc_I4_1);
-					gen.Emit (OpCodes.Add_Ovf_Un);
-					break;
-				case TypeCode.UInt64:
-					gen.Emit (OpCodes.Ldc_I8, 1L);
-					gen.Emit (OpCodes.Add_Ovf_Un);
-					break;
-				case TypeCode.SByte:
-				case TypeCode.Int16:
-				case TypeCode.Int32:
-					gen.Emit (OpCodes.Ldc_I4_1);
-					gen.Emit (OpCodes.Add_Ovf);
-					break;
-				case TypeCode.Int64:
-					gen.Emit (OpCodes.Ldc_I8, 1L);
-					gen.Emit (OpCodes.Add_Ovf);
-					break;
-				case TypeCode.Single:
-					gen.Emit (OpCodes.Ldc_R4, 1f);
-					gen.Emit (OpCodes.Add);
-					break;
-				case TypeCode.Double:
-					gen.Emit (OpCodes.Ldc_R8, 1d);
-					gen.Emit (OpCodes.Add);
-					break;
-				default:
-					throw new NotSupportedException();
+				Expression add;
+				if (t == typeof(byte) || t == typeof(sbyte)) {
+					// (t value) => (t)((int)value + 1);
+					add = Expression.Convert (Expression.Add (Expression.Convert (value, typeof(int)), Expression.Constant (1)), t);
+				} else {
+					var shiftby = Expression.Convert (Expression.Constant (1), t);
+					add = Expression.Add (value, shiftby);
 				}
 
-				gen.Emit (OpCodes.Ret);
-				if (!isNullable)
-					return (Func<T,T>)add.CreateDelegate (typeof(Func<T, T>));
-				else {
-					Delegate a = add.CreateDelegate (typeof(Func<,>).MakeGenericType (new[] { t, t }));
-					return (v) => {
-						if (v == null)
-							return (T)Activator.CreateInstance (t);
-						else {
-							return (T)a.DynamicInvoke (NullConverter.ConvertFrom (v));
-						}
-					};
-				}
+				var increment = Expression.Lambda (add, value);
+				if (isNullable)
+					return GetNullableVersion (increment, t);
+
+				return (Func<T, T>)increment.Compile();
 			});
 
-			Task<Func<T, T>> createDecrement = Task.Run (() => {
-				var sub = new DynamicMethod ("Sub", t, new[] { t });
-				ILGenerator gen = sub.GetILGenerator ();
-				gen.Emit (OpCodes.Ldarg_0);
+			Task<Func<T,T>> createDecrement = Task.Run (() => {
+				var shiftby = Expression.Convert (Expression.Constant (1), t);
+				var value = Expression.Parameter (t);
 
-				switch (Type.GetTypeCode (t)) {
-				case TypeCode.Byte:
-				case TypeCode.UInt16:
-				case TypeCode.UInt32:
-					gen.Emit (OpCodes.Ldc_I4_1);
-					gen.Emit (OpCodes.Sub_Ovf_Un);
-					break;
-				case TypeCode.UInt64:
-					gen.Emit (OpCodes.Ldc_I8, 1L);
-					gen.Emit (OpCodes.Sub_Ovf_Un);
-					break;
-				case TypeCode.SByte:
-				case TypeCode.Int16:
-				case TypeCode.Int32:
-					gen.Emit (OpCodes.Ldc_I4_1);
-					gen.Emit (OpCodes.Sub_Ovf);
-					break;
-				case TypeCode.Int64:
-					gen.Emit (OpCodes.Ldc_I8, 1L);
-					gen.Emit (OpCodes.Sub_Ovf);
-					break;
-				case TypeCode.Single:
-					gen.Emit (OpCodes.Ldc_R4, 1f);
-					gen.Emit (OpCodes.Sub);
-					break;
-				case TypeCode.Double:
-					gen.Emit (OpCodes.Ldc_R8, 1d);
-					gen.Emit (OpCodes.Sub);
-					break;
-				default:
-					throw new NotSupportedException();
+				Expression sub;
+				if (t == typeof(byte) || t == typeof(sbyte)) {
+					sub = Expression.Convert (Expression.Subtract (Expression.Convert (value, typeof(int)), Expression.Constant (1)), t);
+				} else {
+					sub = Expression.Subtract (value, shiftby);
 				}
 
-				gen.Emit (OpCodes.Ret);
-				if (!isNullable)
-					return (Func<T,T>)sub.CreateDelegate (typeof(Func<T, T>));
-				else {
-					Delegate s = sub.CreateDelegate (typeof(Func<,>).MakeGenericType (t, t));
-					return (v) => {
-						if (v == null)
-							return (T)Activator.CreateInstance (t);
-						else {
-							return (T)s.DynamicInvoke (NullConverter.ConvertFrom (v));
-						}
-					};
-				}
+				var decrement = Expression.Lambda (sub, value);
+				if (isNullable)
+					return GetNullableVersion (decrement, t);
+
+				return (Func<T, T>)decrement.Compile();
 			});
 
 			IncrementValue = createIncrement.Result;
