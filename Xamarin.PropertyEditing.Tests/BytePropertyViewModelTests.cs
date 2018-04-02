@@ -36,7 +36,7 @@ namespace Xamarin.PropertyEditing.Tests
 		protected override byte GetConstrainedRandomValueBelowBounds (Random rand, out byte max, out byte min)
 		{
 			var value = (byte)rand.Next (2, byte.MaxValue - 2);
-			max = (byte)rand.Next (value + 1, byte.MaxValue);
+			max = (byte)rand.Next (value + 2, byte.MaxValue);
 			min = (byte)rand.Next (value + 1, (byte)(max - 1));
 
 			return value;
