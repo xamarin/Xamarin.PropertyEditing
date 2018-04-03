@@ -584,7 +584,7 @@
 									  IsEnabled="{TemplateBinding IsEnabled}" FocusVisualStyle="{StaticResource BrushBoxFocusVisual}"
 									  IsHitTestVisible="{Binding ElementName=brushBoxPopup, Path=IsOpen, Mode=OneWay, Converter={StaticResource OppositeBoolConverter}}"
 									  AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}"/>
-						<Popup x:Name="brushBoxPopup" StaysOpen="False" MaxWidth="300" Width="300" PopupAnimation="Slide" AllowsTransparency="True" Placement="Custom"
+						<Popup x:Name="brushBoxPopup" StaysOpen="False" MaxWidth="300" Width="300" PopupAnimation="Slide" AllowsTransparency="True"
 							IsOpen="{Binding ElementName=brushBoxButton, Path=IsChecked}">
 							<theme:SystemDropShadowChrome x:Name="shadow" Color="{DynamicResource DropShadowBackgroundColor}" Margin="0,0,5,5">
 								<Border x:Name="dropDownBorder" BorderBrush="{DynamicResource ComboBoxPopupBorderBrush}" BorderThickness="1" Background="{DynamicResource ComboBoxPopupBackgroundBrush}">

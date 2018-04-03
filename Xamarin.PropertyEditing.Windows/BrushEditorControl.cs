@@ -27,8 +27,6 @@ namespace Xamarin.PropertyEditing.Windows
 
 			this.brushTabs = this.brushBoxPopup.Child?.GetDescendants<BrushTabbedEditorControl>().FirstOrDefault();
 
-			this.brushBoxPopup.PlacementTarget = this.brushBoxButton.FindParent<PropertyPresenter>();
-			this.brushBoxPopup.CustomPopupPlacementCallback = PlacePopup;
 			this.brushBoxPopup.Opened += (s, e) => {
 				this.brushTabs?.FocusFirstChild ();
 			};
@@ -39,14 +37,6 @@ namespace Xamarin.PropertyEditing.Windows
 				if (e.Key == Key.Escape) {
 					this.brushBoxPopup.IsOpen = false;
 				}
-			};
-		}
-
-		public static CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset) {
-			return new[] {
-				new CustomPopupPlacement (new Point(offset.X, offset.Y + targetSize.Height), PopupPrimaryAxis.Horizontal),
-				new CustomPopupPlacement (new Point(offset.X, offset.Y - popupSize.Height), PopupPrimaryAxis.Horizontal),
-				new CustomPopupPlacement (new Point(offset.X - popupSize.Width, offset.Y + targetSize.Height), PopupPrimaryAxis.Horizontal),
 			};
 		}
 
