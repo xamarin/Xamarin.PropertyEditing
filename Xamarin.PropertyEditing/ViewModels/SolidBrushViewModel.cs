@@ -87,6 +87,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof (HueColor));
 		}
 
+		public void ResetInitialColor()
+		{
+			this.initialColor = null;
+			OnPropertyChanged (nameof (InitialColor));
+		}
+
 		private BrushPropertyViewModel Parent { get; }
 
 		private CommonColor? hueColor;

@@ -11,7 +11,6 @@
         <ResourceDictionary Source="PropertyEditorPanelStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-	<SolidColorBrush x:Key="PopupDropShadowColor">#FFFFFFFF</SolidColorBrush>
 	<Color x:Key="DropShadowBackgroundColor">#72000000</Color>
 	<SolidColorBrush x:Key="LiteralMarkerBrush">#55000000</SolidColorBrush>
 	<SolidColorBrush x:Key="ResourceMarkerBrush">#FF8BD44A</SolidColorBrush>
@@ -585,18 +584,17 @@
 									  IsEnabled="{TemplateBinding IsEnabled}" FocusVisualStyle="{StaticResource BrushBoxFocusVisual}"
 									  IsHitTestVisible="{Binding ElementName=brushBoxPopup, Path=IsOpen, Mode=OneWay, Converter={StaticResource OppositeBoolConverter}}"
 									  AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}"/>
-						<Popup x:Name="brushBoxPopup" StaysOpen="False" MaxWidth="300" Width="300" PopupAnimation="Slide" AllowsTransparency="True" Placement="Custom"
-							   IsOpen="{Binding ElementName=brushBoxButton, Path=IsChecked}">
-								<Border Margin="0,0,5,5" Background="{DynamicResource PopupDropShadowColor}" BorderThickness="1">
-									<Border.Effect>
-										<DropShadowEffect BlurRadius="5" ShadowDepth="2" Opacity="0.6"/>
-									</Border.Effect>
+						<Popup x:Name="brushBoxPopup" StaysOpen="False" MaxWidth="300" Width="300" PopupAnimation="Slide" AllowsTransparency="True"
+							IsOpen="{Binding ElementName=brushBoxButton, Path=IsChecked}">
+							<theme:SystemDropShadowChrome x:Name="shadow" Color="{DynamicResource DropShadowBackgroundColor}" Margin="0,0,5,5">
+								<Border x:Name="dropDownBorder" BorderBrush="{DynamicResource ComboBoxPopupBorderBrush}" BorderThickness="1" Background="{DynamicResource ComboBoxPopupBackgroundBrush}">
 									<Grid>
 										<Rectangle VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0"
-											   Fill="{DynamicResource MenuPopupBackgroundBrush}" Stroke="{DynamicResource MenuPopupBorderBrush}"/>
+											Fill="{DynamicResource MenuPopupBackgroundBrush}" Stroke="{DynamicResource MenuPopupBorderBrush}"/>
 										<local:BrushTabbedEditorControl Grid.Column="0" Grid.Row="0"/>
 									</Grid>
-							</Border>
+								</Border>
+							</theme:SystemDropShadowChrome>
 						</Popup>
 					</Grid>
 				</ControlTemplate>
