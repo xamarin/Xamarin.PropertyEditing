@@ -47,7 +47,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					OnPropertyChanged ();
 					Parent.Value = new CommonSolidBrush (
 						new CommonColor(value.R, value.G, value.B, Color.A),
-						ColorSpace, Parent.Value.Opacity);
+						ColorSpace, Parent.Value?.Opacity ?? 1);
 				}
 			}
 		}
@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get => Parent.Value is CommonSolidBrush solidBrush ? solidBrush.Color : new CommonColor (0, 0, 0);
 			set {
 				if (!Color.Equals (value)) {
-					Parent.Value = new CommonSolidBrush (value, ColorSpace, Parent.Value.Opacity);
+					Parent.Value = new CommonSolidBrush (value, ColorSpace, Parent.Value?.Opacity ?? 1);
 					OnPropertyChanged ();
 					if (!this.initialColor.HasValue) {
 						this.initialColor = value;

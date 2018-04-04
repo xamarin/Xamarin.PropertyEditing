@@ -1,4 +1,6 @@
-﻿namespace Xamarin.PropertyEditing.Tests.MockControls
+﻿using Xamarin.PropertyEditing.Drawing;
+
+namespace Xamarin.PropertyEditing.Tests.MockControls
 {
 	public class MockNSButton : MockNSControl
 	{
@@ -21,6 +23,7 @@
 			AddProperty<NSCellStateValue> ("State");
 			AddProperty<string> ("Title");
 			AddProperty<bool> ("Transparent");
+			AddProperty<CommonBrush> ("BackgroundColor");
 		}
 
 		public enum NSBezelStyle
