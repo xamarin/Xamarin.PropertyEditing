@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
+using CoreImage;
 using Foundation;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
@@ -86,35 +87,48 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public HistoryLayer ()
 		{
-			var clip = new CALayer () {
-				BorderWidth = 1,
-				CornerRadius = BorderRadius,
-				BorderColor = new CGColor (.5f, .5f, .5f, .5f),
-				MasksToBounds = true,
-			};
-			clip.AddSublayer (Previous);
-			clip.AddSublayer (Current);
-			AddSublayer (clip);
+			Clip.AddSublayer (Previous);
+			Clip.AddSublayer (Current);
+			AddSublayer (Clip);
 		}
 
 		CALayer Previous = new CALayer ();
 		CALayer Current = new CALayer ();
+		CALayer Clip = new CALayer () {
+			BorderWidth = 1,
+			CornerRadius = BorderRadius,
+			BorderColor = new CGColor (.5f, .5f, .5f, .5f),
+			MasksToBounds = true,
+		};
+
+		public CGImage GenerateCheckerboard (CGRect frame) {
+			var board = new CICheckerboardGenerator () {
+				Color0 = CIColor.WhiteColor,
+				Color1 = CIColor.BlackColor,
+				Width = (float)Math.Min (frame.Height / 2f, 10),
+				Center = new CIVector (new nfloat[] { 0, 0 }),
+			};
+
+			var context = new CIContext (null);
+			return context.CreateCGImage (board.OutputImage, new CGRect (0, 0, frame.Width, frame.Height));
+		}
 
 		public override void LayoutSublayers ()
 		{
 			base.LayoutSublayers ();
-			var clip = Sublayers.First ();
 
-			clip.Frame = new CGRect (
+			Clip.Frame = new CGRect (
 				Margin,
 				Margin,
 				Frame.Width - 2 * Margin,
 				Frame.Height - 2 * Margin);
 			
-			var width = clip.Frame.Width / 2;
+			Clip.Contents = GenerateCheckerboard (Clip.Frame);
+			Clip.ContentsScale = 1;
+			var width = Clip.Frame.Width / 2;
 
-			Previous.Frame = new CGRect (0, 0, width, clip.Frame.Height);
-			Current.Frame = new CGRect (width, 0, width, clip.Frame.Height);
+			Previous.Frame = new CGRect (0, 0, width, Clip.Frame.Height);
+			Current.Frame = new CGRect (width, 0, width, Clip.Frame.Height);
 		}
 
 		public override void UpdateFromModel (SolidBrushViewModel viewModel)
@@ -131,7 +145,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	class ShadeLayer : ColorEditorLayer
 	{
-		const float GripRadius = 3;
+		const float GripRadius = 4;
 		const float BorderRadius = 3;
 		const float Margin = 3;
 
@@ -140,11 +154,19 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSublayer (Colors);
 			Colors.AddSublayer (Black);
 			AddSublayer (Grip);
+			float innerRadius = GripRadius - 1;
+
+			Grip.AddSublayer (new CALayer {
+				BorderWidth = 1,
+				BorderColor = new CGColor (0, 0, 0),
+				Frame = new CGRect (GripRadius - innerRadius, GripRadius - innerRadius, innerRadius * 2, innerRadius * 2),
+				CornerRadius = innerRadius
+			});
 		}
 
 		CALayer Grip = new CALayer {
-			BorderColor = new CGColor (.9f, .9f, .9f, .9f),
-			BorderWidth = 2,
+			BorderColor = new CGColor (1,1,1),
+			BorderWidth = 1,
 			CornerRadius = GripRadius,
 		};
 
@@ -184,10 +206,9 @@ namespace Xamarin.PropertyEditing.Mac
 			var frame = Colors.Frame;
 			var x = color.Saturation * frame.Width + frame.X;
 			var y = color.Brightness * frame.Height + frame.Y;
+
 			Grip.Frame = new CGRect (x - GripRadius, y - GripRadius, GripRadius * 2, GripRadius * 2);
-			float g = (float)(1 - color.Brightness);
-			g *= g;
-			Grip.BorderColor = new CGColor (g, g, g);
+
 			Colors.Colors = new[] {
 				new CGColor (1f, 1f, 1f),
 				color.HueColor.ToCGColor ()
@@ -221,13 +242,19 @@ namespace Xamarin.PropertyEditing.Mac
 		const float BorderRadius = 3;
 		const float GripRadius = 3;
 
+		public CGColor GripColor
+		{
+			get => Grip.BorderColor;
+			set => Grip.BorderColor = value;
+		}
+
 		public HueLayer ()
 		{
-			AddSublayer (colors);
+			AddSublayer (Colors);
 			AddSublayer (Grip);
 		}
 
-		CAGradientLayer colors = new CAGradientLayer {
+		CAGradientLayer Colors = new CAGradientLayer {
 			BorderColor = new CGColor (.5f, .5f, .5f, .5f),
 			BorderWidth = 1,
 			CornerRadius = BorderRadius,
@@ -243,7 +270,7 @@ namespace Xamarin.PropertyEditing.Mac
 		};
 
 		CALayer Grip = new CALayer {
-			BorderColor = new CGColor (1f, 1f, 1f),
+			BorderColor = NSColor.Text.CGColor,
 			BorderWidth = 2,
 			CornerRadius = GripRadius,
 		};
@@ -254,20 +281,20 @@ namespace Xamarin.PropertyEditing.Mac
 
 			var color = viewModel.Color;
 			var hue = color.Hue / 360;
-			var pos = colors.Frame.Height * (1 - hue);
+			var pos = Colors.Frame.Height * (1 - hue);
 			var loc = new CGPoint (1, pos);
 			loc.Y -= Grip.Frame.Height / 2f;
 
-			Grip.Frame = new CGRect (loc.X, loc.Y + colors.Frame.Y, Grip.Frame.Width, Grip.Frame.Height);
+			Grip.Frame = new CGRect (loc.X, loc.Y + Colors.Frame.Y, Grip.Frame.Width, Grip.Frame.Height);
 		}
 
 		public override void UpdateFromLocation (SolidBrushViewModel viewModel, CGPoint location)
 		{
 			var loc = location;
-			var clos = Math.Min (colors.Frame.Height, Math.Max (0, loc.Y - colors.Frame.Y));
+			var clos = Math.Min (Colors.Frame.Height, Math.Max (0, loc.Y - Colors.Frame.Y));
 
 			Grip.Frame = new CGRect (1, loc.Y - Grip.Frame.Height / 2, Frame.Width - 2, 2 * GripRadius);
-			var hue = (1 - clos/ colors.Frame.Height) * 360;
+			var hue = (1 - clos/ Colors.Frame.Height) * 360;
 
 			if (viewModel == null)
 				return;
@@ -282,7 +309,7 @@ namespace Xamarin.PropertyEditing.Mac
         public override void LayoutSublayers()
         {
 			base.LayoutSublayers ();
-        	colors.Frame = new CGRect (Margin, Margin, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
+        	Colors.Frame = new CGRect (Margin, Margin, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
 			Grip.Frame = new CGRect (Grip.Frame.X, Grip.Frame.Y, Frame.Width - 2, 2 * GripRadius);
 		}
 	}
@@ -314,6 +341,8 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public static CGColor ToCGColor (this CommonColor color)
 			=> new CGColor (color.R / 255f, color.G / 255f, color.B / 255f);
+		public static CGColor ToCGColor (this CommonColor color, float alpha)
+			=> new CGColor (color.R / 255f, color.G / 255f, color.B / 255f, alpha);
 	}
 
 	class SolidColorBrushEditor : ColorEditorView
@@ -321,18 +350,20 @@ namespace Xamarin.PropertyEditing.Mac
 		ShadeLayer Shade = new ShadeLayer ();
 		HueLayer Hue = new HueLayer ();
 		HistoryLayer History = new HistoryLayer ();
+		CALayer Background = new CALayer {
+			CornerRadius = 3,
+			BorderWidth = 1
+		};
 
 		public override bool AcceptsFirstResponder() => true;
         
         public SolidColorBrushEditor (IntPtr handle) : base (handle)
 		{
-			InitializeLayers ();
 		}
 
 		[Export ("initWithCoder:")]
 		public SolidColorBrushEditor (NSCoder coder) : base (coder)
 		{
-			InitializeLayers ();
 		}
 
 		public SolidColorBrushEditor (CGRect frame) : base (frame)
@@ -341,11 +372,13 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		void InitializeLayers ()
-		{	
-			WantsLayer = true;
+		{
+			Layer = new CALayer ();
+			Layer.AddSublayer (Background);
 			Layer.AddSublayer (Shade);
 			Layer.AddSublayer (Hue);
 			Layer.AddSublayer (History);
+			WantsLayer = true;
 		}
 
 		public override void UpdateFromEvent (NSEvent theEvent)
@@ -382,12 +415,18 @@ namespace Xamarin.PropertyEditing.Mac
 			var secondBase = padding + secondarySpan;
 			var firstStop = firstBase + primarySpan;
 
+			Background.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
+			Background.BackgroundColor = NSColor.ControlBackground.CGColor;
+			Background.Frame = new CGRect (0, 0, Frame.Height, Frame.Height);
 			Hue.Frame = new CGRect (firstStop, secondBase, secondarySpan, primarySpan);
+			Hue.GripColor = NSColor.Text.CGColor;
 			Shade.Frame = new CGRect (firstBase, secondBase, primarySpan, primarySpan);
 			History.Frame = new CGRect (firstBase, firstBase, primarySpan, secondarySpan);
 			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
 				editor.UpdateFromModel (ViewModel);
 			}
+
+
 		}
 	}
 }
