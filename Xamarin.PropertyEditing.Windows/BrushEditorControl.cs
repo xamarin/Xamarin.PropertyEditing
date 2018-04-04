@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
 {
@@ -29,6 +29,9 @@ namespace Xamarin.PropertyEditing.Windows
 
 			this.brushBoxPopup.Opened += (s, e) => {
 				this.brushTabs?.FocusFirstChild ();
+				if (DataContext is BrushPropertyViewModel viewModel) {
+					viewModel.Solid?.ResetInitialColor ();
+				}
 			};
 			this.brushBoxPopup.Closed += (s, e) => {
 				this.brushBoxButton.Focus ();
