@@ -4,48 +4,65 @@ using System.ComponentModel;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
+using CoreImage;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
+	internal class ColorPopUpButton : NSPopUpButton
+	{
+		public NSPopover Popover { get; set; }
+
+		public ColorPopUpButton () : base ()
+		{
+		}
+
+		public ColorPopUpButton (CGRect frame) : base (frame, true)
+		{
+		}
+
+		public ColorPopUpButton (IntPtr handle) : base (handle)
+		{
+		}
+
+		public override void MouseDown (NSEvent theEvent) {
+			if (Popover != null)
+				Popover.Show (new CGRect (20, this.Frame.Height/2 - 5, 5, 5), this, NSRectEdge.MinYEdge);
+		}
+
+        public override void Layout()
+        {
+            base.Layout();
+
+        }
+    }
+
 	internal class BrushEditorControl : PropertyEditorControl
 	{
 		public BrushEditorControl ()
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 			RowHeight = 300f;
-			this.comboBox = new NSComboBox {
-				TranslatesAutoresizingMaskIntoConstraints = false,
-				BackgroundColor = NSColor.Clear,
-				StringValue = "taco",
-
-				ControlSize = NSControlSize.Small,
-				Editable = false,
-				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
-			};
-
-			this.comboBox.SelectionChanged += (sender, e) => {
-				//ViewModel.ValueName = comboBox.SelectedValue.ToString ();
-			};
 
 			this.colorEditor = new SolidColorBrushEditor (new CGRect (0, 30, 239, 239));
 
+			this.popover = new NSPopover ();
+			popover.Behavior = NSPopoverBehavior.Transient;
+			popover.ContentViewController = new ColorPopoverViewController ();
 
-			this.popUpButton = new NSPopUpButton {
+			this.popUpButton = new ColorPopUpButton {
 				TranslatesAutoresizingMaskIntoConstraints = false,
-				StringValue = String.Empty,
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				Popover = this.popover
 			};
-
-			this.popover = new NSPopover ();
 
 			popupButtonList = new NSMenu ();
 			popUpButton.Menu = popupButtonList;
 
 			popUpButton.Activated += (o, e) => {
-				//ViewModel.ValueName = (o as NSPopUpButton).Title;
+				//popover.Show (popUpButton.Frame, popUpButton, NSRectEdge.MinYEdge);
 			};
 
 			UpdateTheme ();
@@ -57,7 +74,6 @@ namespace Xamarin.PropertyEditing.Mac
 			set { base.ViewModel = value; }
 		}
 
-		readonly NSComboBox comboBox;
 		readonly NSPopUpButton popUpButton;
 		readonly SolidColorBrushEditor colorEditor;
 		readonly NSPopover popover;
@@ -65,9 +81,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		bool dataPopulated;
 
-		public override NSView FirstKeyView => this.comboBox;
+		public override NSView FirstKeyView => this.popUpButton;
 
-		public override NSView LastKeyView => this.comboBox;
+		public override NSView LastKeyView => this.popUpButton;
 
 		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
 		{
@@ -88,22 +104,47 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateValue ()
 		{
 			if (ViewModel.Solid != null) {
-				this.comboBox.StringValue = ViewModel.Solid.Color.ToString ();
-				this.popUpButton.StringValue = ViewModel.Solid.Color.ToString ();
+				var title = ViewModel.Solid.Color.ToString ();
 				this.colorEditor.ViewModel = ViewModel.Solid;
+
+				var controller = this.popover.ContentViewController as ColorPopoverViewController;
+				controller.ViewModel = ViewModel.Solid;
+
+				if (popupButtonList.Count == 0)
+					popupButtonList.AddItem (new NSMenuItem ());
+				
+				var item = popupButtonList.ItemAt (0);
+				if (item.Title != title) {
+					item.Title = title;
+					item.Image = CreateSwatch (ViewModel.Solid.Color, new CGSize (30, 10));
+				}
 			}
+		}
+
+		NSImage CreateSwatch (CommonColor color, CGSize size)
+		{
+			var board = new CICheckerboardGenerator () {
+				Color0 = CIColor.FromCGColor (color.ToCGColor ()),
+				Color1 = CIColor.FromCGColor (color.ToCGColor ()),
+				Width = (float)Math.Min (size.Height / 2f, 10),
+				Center = new CIVector (new nfloat[] { 0, 0 }),
+			};
+
+			var context = new CIContext (null);
+			return new NSImage (context.CreateCGImage (board.OutputImage, new CGRect (0, 0, size.Width, size.Height)), size); 
 		}
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
 		{
 			if (!dataPopulated) {
 				this.DoConstraints (new[] {
-						comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 35),
-						comboBox.ConstraintTo (this, (cb, c) => cb.Height == DefaultControlHeight),
-						comboBox.ConstraintTo (this, (cb, c) => cb.Left == cb.Left + 4),
-						comboBox.ConstraintTo (this, (cb, c) => cb.Top == cb.Top + 0),
+						popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 34),
+						popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
+						popUpButton.ConstraintTo (this, (pub, c) => pub.Left == pub.Left + 4),
+						popUpButton.ConstraintTo (this, (pub, c) => pub.Top == pub.Top + 0),
 					});
-				AddSubview (this.comboBox);
+
+				AddSubview (this.popUpButton);
 				AddSubview (this.colorEditor);
 			}
 			UpdateValue ();

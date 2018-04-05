@@ -30,6 +30,10 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
+		public ColorEditorView () : base ()
+		{
+		}
+
 		public SolidBrushViewModel ViewModel
 		{
 			get => viewModel;
@@ -55,15 +59,16 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public override void MouseDragged (NSEvent theEvent)
+        public override void MouseDragged (NSEvent theEvent)
 		{
-			base.MouseDragged (theEvent);
+			//base.MouseDragged (theEvent);
+
 			UpdateFromEvent (theEvent);
 		}
 
 		public override void MouseDown (NSEvent theEvent)
 		{
-			base.MouseDown (theEvent);
+			//base.MouseDown (theEvent);
 			UpdateFromEvent (theEvent);
 		}
 
@@ -124,7 +129,6 @@ namespace Xamarin.PropertyEditing.Mac
 				Frame.Height - 2 * Margin);
 			
 			Clip.Contents = GenerateCheckerboard (Clip.Frame);
-			Clip.ContentsScale = 1;
 			var width = Clip.Frame.Width / 2;
 
 			Previous.Frame = new CGRect (0, 0, width, Clip.Frame.Height);
@@ -359,16 +363,23 @@ namespace Xamarin.PropertyEditing.Mac
         
         public SolidColorBrushEditor (IntPtr handle) : base (handle)
 		{
+			InitializeLayers ();
 		}
 
 		[Export ("initWithCoder:")]
 		public SolidColorBrushEditor (NSCoder coder) : base (coder)
 		{
+			InitializeLayers ();
 		}
 
 		public SolidColorBrushEditor (CGRect frame) : base (frame)
 		{
 			InitializeLayers ();
+		}
+
+		public SolidColorBrushEditor () : base ()
+		{
+			InitializeLayers ();	
 		}
 
 		void InitializeLayers ()
@@ -425,8 +436,6 @@ namespace Xamarin.PropertyEditing.Mac
 			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
 				editor.UpdateFromModel (ViewModel);
 			}
-
-
 		}
 	}
 }
