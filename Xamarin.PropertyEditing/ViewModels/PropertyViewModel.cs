@@ -152,10 +152,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 					}
 				}
 
-				MultipleValues = disagree;
-
 				// The public setter for Value is a local set for binding
-				SetCurrentValue (currentValue);
+				SetCurrentValue (currentValue, disagree);
 			}
 		}
 
@@ -217,10 +215,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof (Resource));
 		}
 
-		private bool SetCurrentValue (ValueInfo<TValue> newValue)
+		private bool SetCurrentValue (ValueInfo<TValue> newValue, bool multipleValues)
 		{
-			if (!this.isNullable && newValue != null && newValue.Value == null)
+			if (!this.isNullable && !multipleValues && newValue != null && newValue.Value == null)
 				newValue.Value = DefaultValue;
+
+			MultipleValues = multipleValues;
 
 			if (this.value == newValue)
 				return false;
