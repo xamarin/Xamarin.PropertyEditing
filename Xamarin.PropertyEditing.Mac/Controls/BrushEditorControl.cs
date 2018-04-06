@@ -28,7 +28,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void MouseDown (NSEvent theEvent) {
 			if (Popover != null)
-				Popover.Show (new CGRect (20, this.Frame.Height/2 - 5, 5, 5), this, NSRectEdge.MinYEdge);
+				Popover.Show (new CGRect (20, this.Frame.Height/2 - 2.5, 5, 5), this, NSRectEdge.MinYEdge);
 		}
 
         public override void Layout()
@@ -121,17 +121,20 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+
 		NSImage CreateSwatch (CommonColor color, CGSize size)
 		{
 			var board = new CICheckerboardGenerator () {
-				Color0 = CIColor.FromCGColor (color.ToCGColor ()),
-				Color1 = CIColor.FromCGColor (color.ToCGColor ()),
+				Color0 = CIColor.FromCGColor (color.Blend (CommonColor.White).ToCGColor ()),
+				Color1 = CIColor.FromCGColor (color.Blend (CommonColor.Black).ToCGColor ()),
 				Width = (float)Math.Min (size.Height / 2f, 10),
 				Center = new CIVector (new nfloat[] { 0, 0 }),
 			};
 
 			var context = new CIContext (null);
-			return new NSImage (context.CreateCGImage (board.OutputImage, new CGRect (0, 0, size.Width, size.Height)), size); 
+			var image = new NSImage (context.CreateCGImage (board.OutputImage, new CGRect (0, 0, size.Width, size.Height)), size);
+			context.Dispose ();
+			return image;
 		}
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)

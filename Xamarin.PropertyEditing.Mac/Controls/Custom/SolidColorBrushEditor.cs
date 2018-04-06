@@ -236,7 +236,8 @@ namespace Xamarin.PropertyEditing.Mac
 			viewModel.Color = CommonColor.FromHSB (
 				Math.Min (360, Math.Max (0, color.Hue)),
 				Math.Min (1, Math.Max (0, saturation)),
-				Math.Min (1, Math.Max (0, brightness)));
+				Math.Min (1, Math.Max (0, brightness)),
+				color.A);
 		}
     }
 
@@ -307,7 +308,8 @@ namespace Xamarin.PropertyEditing.Mac
 			viewModel.Color = CommonColor.FromHSB (
 				Math.Max (0, Math.Min (360, hue)),
 				Math.Max (0, Math.Min (1, color.Saturation)),
-				Math.Max (0, Math.Min (1, color.Brightness)));
+				Math.Max (0, Math.Min (1, color.Brightness)),
+				color.A);
 		}
 
         public override void LayoutSublayers()
@@ -344,9 +346,27 @@ namespace Xamarin.PropertyEditing.Mac
 	public static class DrawingHelpers
 	{
 		public static CGColor ToCGColor (this CommonColor color)
-			=> new CGColor (color.R / 255f, color.G / 255f, color.B / 255f);
+			=> new CGColor (color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
 		public static CGColor ToCGColor (this CommonColor color, float alpha)
 			=> new CGColor (color.R / 255f, color.G / 255f, color.B / 255f, alpha);
+
+		public static CommonColor Blend (this CommonColor a, CommonColor b)
+		{
+			byte C (byte cb1, byte ab1, byte cb2) {
+				var c1 = cb1 / 255f;
+				var a1 = ab1 / 255f;
+				var c2 = cb2 / 255f;
+
+				var c = Math.Max (0, Math.Min (255, (c1 + c2 * (1 - a1)) * 255));
+				return (byte)c;
+			}
+
+			return new CommonColor (
+				C (a.R, a.A, b.R),
+				C (a.G, a.A, b.G),
+				C (a.B, a.A, b.B),
+				C (a.A, a.A, b.A));
+		}
 	}
 
 	class SolidColorBrushEditor : ColorEditorView
