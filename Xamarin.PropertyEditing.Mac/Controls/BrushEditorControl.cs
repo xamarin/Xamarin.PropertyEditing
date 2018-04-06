@@ -43,13 +43,16 @@ namespace Xamarin.PropertyEditing.Mac
 		public BrushEditorControl ()
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
-			RowHeight = 300f;
+			RowHeight = 600f;
 
-			this.colorEditor = new SolidColorBrushEditor (new CGRect (0, 30, 239, 239));
+			//this.colorEditor = new SolidColorBrushEditor (new CGRect (0, 30, 239, 239));
+			this.colorEditor = new BrushTabViewController ();
+
 
 			this.popover = new NSPopover ();
 			popover.Behavior = NSPopoverBehavior.Transient;
-			popover.ContentViewController = new ColorPopoverViewController ();
+			popover.ContentViewController = new SolidColorBrushEditorViewController ();
+			popover.ContentViewController.PreferredContentSize = new CGSize (200, 200);
 
 			this.popUpButton = new ColorPopUpButton {
 				TranslatesAutoresizingMaskIntoConstraints = false,
@@ -75,7 +78,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		readonly NSPopUpButton popUpButton;
-		readonly SolidColorBrushEditor colorEditor;
+		readonly BrushTabViewController colorEditor;
 		readonly NSPopover popover;
 		NSMenu popupButtonList;
 
@@ -103,12 +106,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateValue ()
 		{
+			this.colorEditor.ViewModel = ViewModel;
+			var controller = this.popover.ContentViewController as SolidColorBrushEditorViewController;
+			controller.ViewModel = ViewModel;
+
 			if (ViewModel.Solid != null) {
 				var title = ViewModel.Solid.Color.ToString ();
-				this.colorEditor.ViewModel = ViewModel.Solid;
-
-				var controller = this.popover.ContentViewController as ColorPopoverViewController;
-				controller.ViewModel = ViewModel.Solid;
 
 				if (popupButtonList.Count == 0)
 					popupButtonList.AddItem (new NSMenuItem ());
@@ -116,25 +119,9 @@ namespace Xamarin.PropertyEditing.Mac
 				var item = popupButtonList.ItemAt (0);
 				if (item.Title != title) {
 					item.Title = title;
-					item.Image = CreateSwatch (ViewModel.Solid.Color, new CGSize (30, 10));
+					item.Image = ViewModel?.Solid?.Color.CreateSwatch (new CGSize (30, 10));
 				}
 			}
-		}
-
-
-		NSImage CreateSwatch (CommonColor color, CGSize size)
-		{
-			var board = new CICheckerboardGenerator () {
-				Color0 = CIColor.FromCGColor (color.Blend (CommonColor.White).ToCGColor ()),
-				Color1 = CIColor.FromCGColor (color.Blend (CommonColor.Black).ToCGColor ()),
-				Width = (float)Math.Min (size.Height / 2f, 10),
-				Center = new CIVector (new nfloat[] { 0, 0 }),
-			};
-
-			var context = new CIContext (null);
-			var image = new NSImage (context.CreateCGImage (board.OutputImage, new CGRect (0, 0, size.Width, size.Height)), size);
-			context.Dispose ();
-			return image;
 		}
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
@@ -148,7 +135,7 @@ namespace Xamarin.PropertyEditing.Mac
 					});
 
 				AddSubview (this.popUpButton);
-				AddSubview (this.colorEditor);
+				AddSubview (this.colorEditor.View);
 			}
 			UpdateValue ();
 			dataPopulated = true;

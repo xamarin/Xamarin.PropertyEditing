@@ -106,18 +106,6 @@ namespace Xamarin.PropertyEditing.Mac
 			MasksToBounds = true,
 		};
 
-		public CGImage GenerateCheckerboard (CGRect frame) {
-			var board = new CICheckerboardGenerator () {
-				Color0 = CIColor.WhiteColor,
-				Color1 = CIColor.BlackColor,
-				Width = (float)Math.Min (frame.Height / 2f, 10),
-				Center = new CIVector (new nfloat[] { 0, 0 }),
-			};
-
-			var context = new CIContext (null);
-			return context.CreateCGImage (board.OutputImage, new CGRect (0, 0, frame.Width, frame.Height));
-		}
-
 		public override void LayoutSublayers ()
 		{
 			base.LayoutSublayers ();
@@ -128,7 +116,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Frame.Width - 2 * Margin,
 				Frame.Height - 2 * Margin);
 			
-			Clip.Contents = GenerateCheckerboard (Clip.Frame);
+			Clip.Contents = DrawingExtensions.GenerateCheckerboard (Clip.Frame);
 			var width = Clip.Frame.Width / 2;
 
 			Previous.Frame = new CGRect (0, 0, width, Clip.Frame.Height);
@@ -163,7 +151,11 @@ namespace Xamarin.PropertyEditing.Mac
 			Grip.AddSublayer (new CALayer {
 				BorderWidth = 1,
 				BorderColor = new CGColor (0, 0, 0),
-				Frame = new CGRect (GripRadius - innerRadius, GripRadius - innerRadius, innerRadius * 2, innerRadius * 2),
+				Frame = new CGRect (
+					GripRadius - innerRadius,
+					GripRadius - innerRadius,
+					innerRadius * 2,
+					innerRadius * 2),
 				CornerRadius = innerRadius
 			});
 		}
@@ -340,32 +332,6 @@ namespace Xamarin.PropertyEditing.Mac
 			Red.StringValue = color.R.ToString ();
 			Green.StringValue = color.G.ToString ();
 			Blue.StringValue = color.B.ToString ();
-		}
-	}
-
-	public static class DrawingHelpers
-	{
-		public static CGColor ToCGColor (this CommonColor color)
-			=> new CGColor (color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
-		public static CGColor ToCGColor (this CommonColor color, float alpha)
-			=> new CGColor (color.R / 255f, color.G / 255f, color.B / 255f, alpha);
-
-		public static CommonColor Blend (this CommonColor a, CommonColor b)
-		{
-			byte C (byte cb1, byte ab1, byte cb2) {
-				var c1 = cb1 / 255f;
-				var a1 = ab1 / 255f;
-				var c2 = cb2 / 255f;
-
-				var c = Math.Max (0, Math.Min (255, (c1 + c2 * (1 - a1)) * 255));
-				return (byte)c;
-			}
-
-			return new CommonColor (
-				C (a.R, a.A, b.R),
-				C (a.G, a.A, b.G),
-				C (a.B, a.A, b.B),
-				C (a.A, a.A, b.A));
 		}
 	}
 

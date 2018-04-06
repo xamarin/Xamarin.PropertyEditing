@@ -94,7 +94,11 @@
     <Compile Include="Controls\Custom\AutoClosePopOver.cs" />
     <Compile Include="Controls\BrushEditorControl.cs" />
     <Compile Include="Controls\Custom\SolidColorBrushEditor.cs" />
-    <Compile Include="Controls\Custom\ColorPopoverViewController.cs" />
+    <Compile Include="Controls\Custom\BrushTabViewController.cs" />
+    <Compile Include="Controls\Custom\PropertyTabViewController.cs" />
+    <Compile Include="Controls\Custom\PropertyViewController.cs" />
+    <Compile Include="Controls\Custom\SolidColorBrushEditorViewController.cs" />
+    <Compile Include="Controls\Custom\DrawingExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
