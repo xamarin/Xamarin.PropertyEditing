@@ -14,7 +14,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<float> ("FloatingPoint", ReadWrite);
 			AddProperty<string> ("String", ReadWrite);
 			AddProperty<Enumeration> ("Enumeration", ReadWrite);
-			AddProperty<Flags> ("Flags", ReadWrite, canWrite: true, flag: true);
+			AddProperty<FlagsNoValues> ("FlagsNoValues", ReadWrite, canWrite: true, flag: true);
+			AddProperty<FlagsWithValues> ("FlagsWithValues", ReadWrite, canWrite: true, flag: true);
 			AddProperty<CommonPoint> ("Point", ReadWrite);
 			AddProperty<CommonSize> ("Size", ReadWrite);
 			AddProperty<CommonRectangle> ("Rectangle", ReadWrite);
@@ -25,7 +26,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddReadOnlyProperty<float> ("ReadOnlyFloatingPoint", ReadOnly);
 			AddReadOnlyProperty<string> ("ReadOnlyString", ReadOnly);
 			AddReadOnlyProperty<Enumeration> ("ReadOnlyEnumeration", ReadOnly);
-			AddProperty<Flags> ("ReadOnlyFlags", ReadOnly, canWrite: false, flag: true);
+			AddProperty<FlagsNoValues> ("ReadOnlyFlagsNotValue", ReadOnly, canWrite: false, flag: true);
+			AddProperty<FlagsWithValues> ("ReadOnlyFlagsWithValues", ReadOnly, canWrite: false, flag: true);
 			AddReadOnlyProperty<CommonPoint> ("ReadOnlyPoint", ReadOnly);
 			AddReadOnlyProperty<CommonSize> ("ReadOnlySize", ReadOnly);
 			AddReadOnlyProperty<CommonRectangle> ("ReadOnlyRectangle", ReadOnly);
@@ -49,12 +51,20 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			ThirdOption
 		}
 
-		[Flags]
-		public enum Flags
+		[Flags] // Treated like a 0 based Enum
+		public enum FlagsNoValues
 		{
-			FlagOne,
-			FlagTwo,
-			FlagThree
+			FlagNoValueZero,
+			FlagNoValueOne,
+			FlagNoValueTwo,
+		}
+
+		[Flags]
+		public enum FlagsWithValues
+		{
+			FlagHasValueOne = 1,
+			FlagHasValueTwo = 2,
+			FlagHasValueFour = 4,
 		}
 	}
 }

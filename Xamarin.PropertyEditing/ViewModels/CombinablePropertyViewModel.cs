@@ -78,8 +78,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return;
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
-				await base.UpdateCurrentValueAsync ();
-
 				var newValues = new Dictionary<string, bool?> (this.predefinedValues.PredefinedValues.Count);
 
 				ValueInfo<IReadOnlyList<TValue>>[] values = await Task.WhenAll (Editors.Select (ed => ed.GetValueAsync<IReadOnlyList<TValue>> (Property, Variation)).ToArray ());
@@ -112,6 +110,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 					}
 				}
 				this.fromUpdate = false;
+
+				await base.UpdateCurrentValueAsync ();
 			}
 		}
 
