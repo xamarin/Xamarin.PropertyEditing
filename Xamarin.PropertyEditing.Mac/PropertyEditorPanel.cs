@@ -70,6 +70,19 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+		public IResourceProvider ResourceProvider
+		{
+			get { return resourceProvider; }
+			set
+			{
+				resourceProvider = value;
+				if (this.viewModel == null)
+					return;
+				
+				this.viewModel.ResourceProvider = value;
+			}
+		}
+
 		public ICollection<object> SelectedItems => this.viewModel.SelectedObjects;
 
 		public static Themes.MacThemeManager ThemeManager = new Themes.MacThemeManager ();

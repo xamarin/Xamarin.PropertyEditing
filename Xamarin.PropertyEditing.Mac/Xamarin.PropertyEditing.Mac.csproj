@@ -99,6 +99,8 @@
     <Compile Include="Controls\Custom\PropertyViewController.cs" />
     <Compile Include="Controls\Custom\SolidColorBrushEditorViewController.cs" />
     <Compile Include="Controls\Custom\DrawingExtensions.cs" />
+    <Compile Include="Controls\Custom\ResourceBrushViewController.cs" />
+    <Compile Include="Controls\Custom\CommonBrushView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

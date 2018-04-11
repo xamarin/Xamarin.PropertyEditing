@@ -105,7 +105,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void LoadView ()
 		{
 			View = brushEditor = new NSButton {
-				StringValue = "taco"
+				Title = "Edit"
 			};
 			brushEditor.Activated += (o, e) => {
 				ViewModel.SelectedBrushType = CommonBrushType.Solid;
@@ -149,7 +149,7 @@ namespace Xamarin.PropertyEditing.Mac
 						item.ViewController = material;
 						break;
 					case CommonBrushType.Resource:
-						var material2 = new EmptyBrushEditorViewController ();
+						var material2 = new ResourceBrushViewController ();
 						material2.ViewModel = ViewModel;
 						item.ViewController = material2;
 						break;
@@ -200,6 +200,14 @@ namespace Xamarin.PropertyEditing.Mac
 			if (inhibitSelection)
 				return;
 			ViewModel.SelectedBrushType = ViewModel.BrushTypes[item.Label];
+        }
+
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+			var old = View.Frame;
+			old.Height = 200;
+			View.Frame = old;
         }
     }
 }

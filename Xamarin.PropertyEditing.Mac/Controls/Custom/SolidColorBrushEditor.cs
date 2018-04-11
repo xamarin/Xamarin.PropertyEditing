@@ -59,7 +59,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-        public override void MouseDragged (NSEvent theEvent)
+		public override void MouseDragged (NSEvent theEvent)
 		{
 			//base.MouseDragged (theEvent);
 
@@ -83,6 +83,101 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		abstract public void UpdateFromModel (SolidBrushViewModel viewModel);
 		abstract public void UpdateFromLocation (SolidBrushViewModel viewModel, CGPoint location);
+	}
+
+	class CommonGradientBrushLayer : CALayer
+	{
+		CommonGradientBrush brush;
+		public CommonGradientBrush Brush
+		{
+			get => brush;
+			set {
+				brush = value;
+				SetNeedsDisplay ();
+			}
+		}
+
+		public override void DrawInContext (CGContext ctx)
+		{
+			ctx.SaveState ();
+
+			var colorspace = CGColorSpace.CreateDeviceRGB ();
+			var colors = Brush.GradientStops.Select (stop => stop.Color.ToCGColor ()).ToArray ();
+			var locations = Brush.GradientStops.Select (stop => (nfloat)stop.Offset).ToArray ();
+
+			var gradient = new CGGradient (colorspace, colors, locations);
+			var center = new CGPoint (Bounds.Width / 2f, Bounds.Height / 2f);
+			var radius = (float)Math.Min (Bounds.Width / 2.0, Bounds.Height / 2.0);
+
+			switch (Brush) {
+				case CommonLinearGradientBrush linear:
+					ctx.DrawLinearGradient (gradient, new CGPoint (0, 0), new CGPoint (0, Bounds.Width), CGGradientDrawingOptions.None);
+					break;
+				case CommonRadialGradientBrush radial:
+					ctx.DrawRadialGradient (gradient, startCenter: center, startRadius: 0f, endCenter: center, endRadius: radius, options: CGGradientDrawingOptions.None);
+					break;
+			}
+        }
+    }
+
+	class CommonBrushLayer : CALayer
+	{
+		public CommonBrushLayer ()
+		{
+			this.CornerRadius = 3;
+			this.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
+			this.BorderWidth = 1;
+			MasksToBounds = true;
+		}
+
+		CALayer brushLayer;
+		CALayer BrushLayer {
+			get => brushLayer;
+			set {
+				if (brushLayer != null)
+					brushLayer.RemoveFromSuperLayer ();
+
+				brushLayer = value;
+		
+				if (brushLayer != null)
+					AddSublayer (brushLayer);
+			}
+		}
+
+		CommonBrush brush;
+		public CommonBrush Brush {
+			get => brush;
+			set {
+				brush = value;
+				BrushLayer = CreateBrushLayer (brush);
+			}
+		}
+
+		public static CALayer CreateBrushLayer (CommonBrush brush)
+		{
+			switch (brush) {
+				case CommonSolidBrush solid:
+					return new CALayer {
+						BackgroundColor = solid.Color.ToCGColor (),
+						Opacity = (float)solid.Opacity
+					};
+				case CommonGradientBrush gradient:
+					return new CommonGradientBrushLayer {
+						Opacity = (float)gradient.Opacity
+					};
+				default:
+					return new CALayer {
+						BackgroundColor = NSColor.Clear.CGColor
+					};
+			}
+		}
+
+		public override void LayoutSublayers ()
+		{
+			base.LayoutSublayers ();
+			BrushLayer.Frame = new CGRect (0, 0, Frame.Width, Frame.Height);
+			Contents = DrawingExtensions.GenerateCheckerboard (Frame);
+		}
 	}
 
 	class HistoryLayer : ColorEditorLayer

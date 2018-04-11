@@ -43,7 +43,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public BrushEditorControl ()
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
-			RowHeight = 600f;
+			RowHeight = 230f;
 
 			//this.colorEditor = new SolidColorBrushEditor (new CGRect (0, 30, 239, 239));
 			this.colorEditor = new BrushTabViewController ();
@@ -104,6 +104,25 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
+		public string GetTitle ()
+		{
+			var title = "Unknown";
+			switch (ViewModel.Value) {
+				case CommonSolidBrush solid:
+					title = solid.Color.ToString ();
+					break;
+				case CommonGradientBrush gradient:
+					title = "Gradient";
+					break;
+				default:
+					if (ViewModel.Value == null)
+					title = "null";
+					break;
+			}
+
+			return ViewModel.Resource == null ? title : $"{title} - (Resource: {ViewModel?.Resource?.Name})";
+		}
+
 		protected override void UpdateValue ()
 		{
 			this.colorEditor.ViewModel = ViewModel;
@@ -111,7 +130,7 @@ namespace Xamarin.PropertyEditing.Mac
 			controller.ViewModel = ViewModel;
 
 			if (ViewModel.Solid != null) {
-				var title = ViewModel.Solid.Color.ToString ();
+				var title = GetTitle ();
 
 				if (popupButtonList.Count == 0)
 					popupButtonList.AddItem (new NSMenuItem ());

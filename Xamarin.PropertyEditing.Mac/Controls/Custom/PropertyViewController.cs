@@ -22,8 +22,8 @@ namespace Xamarin.PropertyEditing.Mac
 				if (viewModel == value)
 					return;
 
-				if (viewModel != null)
-					viewModel.PropertyChanged -= OnPropertyChanged;
+				if (oldModel != null)
+					oldModel.PropertyChanged -= OnPropertyChanged;
 
 				viewModel = value;
 
