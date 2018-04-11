@@ -30,12 +30,6 @@ namespace Xamarin.PropertyEditing.Mac
 			if (Popover != null)
 				Popover.Show (new CGRect (20, this.Frame.Height/2 - 2.5, 5, 5), this, NSRectEdge.MinYEdge);
 		}
-
-        public override void Layout()
-        {
-            base.Layout();
-
-        }
     }
 
 	internal class BrushEditorControl : PropertyEditorControl
@@ -45,14 +39,11 @@ namespace Xamarin.PropertyEditing.Mac
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 			RowHeight = 230f;
 
-			//this.colorEditor = new SolidColorBrushEditor (new CGRect (0, 30, 239, 239));
 			this.colorEditor = new BrushTabViewController ();
-
 
 			this.popover = new NSPopover ();
 			popover.Behavior = NSPopoverBehavior.Transient;
-			popover.ContentViewController = new SolidColorBrushEditorViewController ();
-			popover.ContentViewController.PreferredContentSize = new CGSize (200, 200);
+			popover.ContentViewController = new BrushTabViewController ();
 
 			this.popUpButton = new ColorPopUpButton {
 				TranslatesAutoresizingMaskIntoConstraints = false,
@@ -64,12 +55,10 @@ namespace Xamarin.PropertyEditing.Mac
 			popupButtonList = new NSMenu ();
 			popUpButton.Menu = popupButtonList;
 
-			popUpButton.Activated += (o, e) => {
-				//popover.Show (popUpButton.Frame, popUpButton, NSRectEdge.MinYEdge);
-			};
-
 			UpdateTheme ();
 		}
+
+
 
 		internal new BrushPropertyViewModel ViewModel
 		{
@@ -81,6 +70,9 @@ namespace Xamarin.PropertyEditing.Mac
 		readonly BrushTabViewController colorEditor;
 		readonly NSPopover popover;
 		NSMenu popupButtonList;
+		readonly CommonBrushLayer previewLayer = new CommonBrushLayer {
+			Frame = new CGRect (0, 0, 30, 10)
+		};
 
 		bool dataPopulated;
 
@@ -104,7 +96,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		public string GetTitle ()
+		string GetTitle ()
 		{
 			var title = "Unknown";
 			switch (ViewModel.Value) {
@@ -126,7 +118,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateValue ()
 		{
 			this.colorEditor.ViewModel = ViewModel;
-			var controller = this.popover.ContentViewController as SolidColorBrushEditorViewController;
+			var controller = this.popover.ContentViewController as BrushTabViewController;
 			controller.ViewModel = ViewModel;
 
 			if (ViewModel.Solid != null) {
@@ -134,11 +126,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 				if (popupButtonList.Count == 0)
 					popupButtonList.AddItem (new NSMenuItem ());
-				
+
+				previewLayer.Brush = ViewModel.Value;
 				var item = popupButtonList.ItemAt (0);
 				if (item.Title != title) {
 					item.Title = title;
-					item.Image = ViewModel?.Solid?.Color.CreateSwatch (new CGSize (30, 10));
+					item.Image = previewLayer.RenderPreview ();
 				}
 			}
 		}

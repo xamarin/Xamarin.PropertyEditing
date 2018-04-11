@@ -178,6 +178,25 @@ namespace Xamarin.PropertyEditing.Mac
 			BrushLayer.Frame = new CGRect (0, 0, Frame.Width, Frame.Height);
 			Contents = DrawingExtensions.GenerateCheckerboard (Frame);
 		}
+
+		public NSImage RenderPreview ()
+		{
+			var scale = this.ContentsScale;
+			nint h = (nint)(this.Bounds.Height * scale);
+			nint w = (nint)(this.Bounds.Width * scale);
+			nint bytesPerRow = w * 4;
+
+			if (h <= 0 || w <= 0)
+				return null;
+
+			using (var colorSpace = CGColorSpace.CreateGenericRgb ())
+			using (var context = new CGBitmapContext (IntPtr.Zero, w, h, 8, bytesPerRow, colorSpace, CGImageAlphaInfo.PremultipliedLast)) {
+				this.RenderInContext (context);
+				using (var image = context.ToImage ()) {
+					return new NSImage (image, new CGSize (w, h));
+				}
+			}
+		}
 	}
 
 	class HistoryLayer : ColorEditorLayer
