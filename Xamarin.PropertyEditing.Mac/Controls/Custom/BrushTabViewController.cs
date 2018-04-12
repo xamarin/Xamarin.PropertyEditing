@@ -39,6 +39,31 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			public override bool IsFlipped => true;
 
+			readonly string[] ColorNames = {
+				"50",
+				"100",
+				"200",
+				"300",
+				"400",
+				"500",
+				"600",
+				"700",
+				"800",
+				"900"
+			};
+
+			readonly string[] AccentNames = {
+				"A100",
+				"A200",
+				"A400",
+				"A700"
+			};
+
+			readonly string[] BlackWhite = {
+				"White",
+				"Black"
+			};
+
 			public MaterialView () : base ()
 			{
 				Initialize ();
@@ -62,28 +87,44 @@ namespace Xamarin.PropertyEditing.Mac
 				get => ViewModel?.MaterialDesign;
 			}
 
-			public override void Layout ()
+			CGRect frame;
+			String name;
+            public override void Layout()
 			{
 				base.Layout ();
-				if (Layer.Sublayers != null)
+				if (name == MaterialDesign.ColorName && frame == Frame) {
+					return;
+				}
+				name = MaterialDesign.ColorName;
+				frame = Frame;
+
+				if (Subviews != null)
+					foreach (var v in this.Subviews)
+						v.RemoveFromSuperview ();
+
+				if (Layer?.Sublayers != null)
 					foreach (var l in Layer.Sublayers)
 						l.RemoveFromSuperLayer ();
-				
+
 				if (MaterialDesign != null) {
-					var colors = MaterialDesign.Palettes.Select (p => new { p.Name, p.MainColor }).ToArray ();
+					var colors = MaterialDesign.Palettes.Select (p => new { p.Name, Color = p.MainColor }).ToArray ();
 					int col = 0;
 					nfloat x = 0;
 					nfloat y = 0;
-					var width = Bounds.Width / 10;
-					var height = Bounds.Height / 5;
+					var width = Frame.Width / 10;
+					var height = Frame.Height / 5;
 
 					foreach (var p in colors) {
-						var layer = new CALayer {
-							BackgroundColor = p.MainColor.ToCGColor (),
+						var frame = new CGRect (x, y, width, height);
+						var l = new CALayer {
+							Frame = frame,
+							BackgroundColor = p.Color.ToCGColor (),
 							CornerRadius = 3,
-							Frame = new CGRect (x, y, width, height)
+							BorderColor = NSColor.SelectedControl.CGColor,
+							BorderWidth = MaterialDesign.ColorName == p.Name ? 3 : 0
 						};
-						Layer.AddSublayer (layer);
+						
+						Layer.AddSublayer (l);
 						x += width;
 						col++;
 						if (col >= 10) {
@@ -93,29 +134,55 @@ namespace Xamarin.PropertyEditing.Mac
 						}
 					}
 
+					AddSubview (new NSTextField (new CGRect (x, y, Frame.Width, 30))
+					{
+						StringValue = MaterialDesign.ColorName,
+						DrawsBackground = false,
+						Bordered = false,
+						Editable = false
+					});
 					y += 30;
 					x = 0;
-					width = Bounds.Width / MaterialDesign.NormalColorScale.Count ();
-					foreach (var n in MaterialDesign.NormalColorScale) {
-						var layer = new CALayer {
-							BackgroundColor = n.Value.ToCGColor (),
+					width = Frame.Width / MaterialDesign.NormalColorScale.Count ();
+					var names = MaterialDesign.NormalColorScale.Count () > 2 ? ColorNames : BlackWhite;
+					foreach (var n in MaterialDesign.NormalColorScale.Zip (names, (c, n) => new { Name = n, Color = c.Value })) {
+						var frame = new CGRect (x, y, width, height);
+						var l = new CALayer {
+							BackgroundColor = n.Color.ToCGColor (),
 							CornerRadius = 3,
-							Frame = new CGRect (x, y, width, height)
+							Frame = frame
 						};
-						Layer.AddSublayer (layer);
+						Layer.AddSublayer (l);
+						var c = new NSTextField (frame) {
+							StringValue = n.Name,
+							BackgroundColor = NSColor.Clear,
+							DrawsBackground = false,
+							Bordered = false,
+							Editable = false,
+						};
+						AddSubview (c);
 						x += width;
 					}
 
 					y += height;
 					x = 0;
-					width = Bounds.Width / MaterialDesign.AccentColorScale.Count ();
-					foreach (var n in MaterialDesign.AccentColorScale) {
-						var layer = new CALayer {
-							BackgroundColor = n.Value.ToCGColor (),
+					width = Frame.Width / MaterialDesign.AccentColorScale.Count ();
+					foreach (var n in MaterialDesign.AccentColorScale.Zip (AccentNames, (c, n) => new { Name = n, Color = c.Value })) {
+						var frame = new CGRect (x, y, width, height);
+						var l = new CALayer {
+							BackgroundColor = n.Color.ToCGColor (),
 							CornerRadius = 3,
-							Frame = new CGRect (x, y, width, height)
+							Frame = frame
 						};
-						Layer.AddSublayer (layer);
+						Layer.AddSublayer (l);
+						var c = new NSTextField (frame) {
+							StringValue = n.Name,
+							BackgroundColor = NSColor.Clear,
+							DrawsBackground = false,
+							Bordered = false,
+							Editable = false
+						};
+						AddSubview (c);
 						x += width;
 					}
 				}
