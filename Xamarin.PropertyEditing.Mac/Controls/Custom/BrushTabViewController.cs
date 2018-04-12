@@ -35,6 +35,63 @@ namespace Xamarin.PropertyEditing.Mac
 				materialEditor.ViewModel = ViewModel;
 		}
 
+		public class MaterialColorLayer : CATextLayer
+		{
+			public MaterialColorLayer ()
+			{
+				AddSublayer (Selection);
+			}
+
+			CATextLayer Selection { get; } = new CATextLayer () {
+				CornerRadius = 3
+			};
+
+			string text;
+			public string Text {
+				get => text;
+				set {
+					text = value;
+					SetNeedsLayout ();
+				}
+			}
+
+			CommonColor materialColor;
+			public new CommonColor BackgroundColor
+			{
+				get => materialColor;
+				set
+				{
+					materialColor = value;
+					base.BackgroundColor = materialColor.ToCGColor ();
+				}
+			}
+
+			bool isSelected;
+			public bool IsSelected {
+				get => isSelected;
+				set {
+					if (isSelected == value)
+						return;
+					isSelected = value;
+					SetNeedsLayout ();
+				}
+			}
+
+			public override void LayoutSublayers ()
+			{
+				base.LayoutSublayers ();
+				//String = isSelected ? "" : text;
+				Selection.String = text;
+				Selection.Frame = Frame.Bounds ().Border (new CommonThickness (3));
+				Selection.BorderWidth = isSelected ? 2 : 0;
+				Selection.BorderColor = ForegroundColor;
+				Selection.ForegroundColor = ForegroundColor;
+				Selection.FontSize = FontSize;
+				Selection.ContentsScale = ContentsScale;
+				Selection.TextAlignmentMode = TextAlignmentMode;
+			}
+        }
+
 		public class MaterialView : NSView
 		{
 			public override bool IsFlipped => true;
@@ -52,14 +109,14 @@ namespace Xamarin.PropertyEditing.Mac
 				"900"
 			};
 
-			readonly string[] AccentNames = {
+			readonly string [] AccentNames = {
 				"A100",
 				"A200",
 				"A400",
 				"A700"
 			};
 
-			readonly string[] BlackWhite = {
+			readonly string [] BlackWhite = {
 				"White",
 				"Black"
 			};
@@ -83,24 +140,13 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			}
 
-			public MaterialDesignColorViewModel MaterialDesign {
+			public MaterialDesignColorViewModel MaterialDesign
+			{
 				get => ViewModel?.MaterialDesign;
 			}
 
-			CGRect frame;
-			String name;
-            public override void Layout()
+			public override void Layout ()
 			{
-				base.Layout ();
-				if (name == MaterialDesign.ColorName && frame == Frame) {
-					return;
-				}
-				name = MaterialDesign.ColorName;
-				frame = Frame;
-
-				if (Subviews != null)
-					foreach (var v in this.Subviews)
-						v.RemoveFromSuperview ();
 
 				if (Layer?.Sublayers != null)
 					foreach (var l in Layer.Sublayers)
@@ -110,80 +156,123 @@ namespace Xamarin.PropertyEditing.Mac
 					var colors = MaterialDesign.Palettes.Select (p => new { p.Name, Color = p.MainColor }).ToArray ();
 					int col = 0;
 					nfloat x = 0;
-					nfloat y = 0;
-					var width = Frame.Width / 10;
-					var height = Frame.Height / 5;
+					nfloat y = 6;
+					var width = (Frame.Width - 54) / 10;
+					var height = (Frame.Height - 49) / 4;
 
 					foreach (var p in colors) {
 						var frame = new CGRect (x, y, width, height);
-						var l = new CALayer {
+						var selectedColor = p.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
+						var l = new MaterialColorLayer {
 							Frame = frame,
-							BackgroundColor = p.Color.ToCGColor (),
+							ForegroundColor = selectedColor.CGColor,
+							BackgroundColor = p.Color,
 							CornerRadius = 3,
-							BorderColor = NSColor.SelectedControl.CGColor,
-							BorderWidth = MaterialDesign.ColorName == p.Name ? 3 : 0
+							BorderColor = new CGColor (.5f, .5f, .5f, .5f),
+							MasksToBounds = false,
+							IsSelected = MaterialDesign.Color == p.Color
 						};
-						
+
 						Layer.AddSublayer (l);
-						x += width;
+						x += width + 6;
 						col++;
 						if (col >= 10) {
 							x = 0;
-							y += height;
+							y += height + 6;
 							col = 0;
 						}
 					}
 
-					AddSubview (new NSTextField (new CGRect (x, y, Frame.Width, 30))
-					{
-						StringValue = MaterialDesign.ColorName,
-						DrawsBackground = false,
-						Bordered = false,
-						Editable = false
+					Layer.AddSublayer (new CATextLayer {
+						ForegroundColor = NSColor.ControlText.CGColor,
+						Frame = new CGRect (x, y + 6, Frame.Width, 25),
+						String = MaterialDesign.ColorName,
+						FontSize = NSFont.SmallSystemFontSize,
+						ContentsScale = Window?.Screen?.BackingScaleFactor ?? NSScreen.MainScreen.BackingScaleFactor
 					});
-					y += 30;
+
+					y += 25;
 					x = 0;
 					width = Frame.Width / MaterialDesign.NormalColorScale.Count ();
 					var names = MaterialDesign.NormalColorScale.Count () > 2 ? ColorNames : BlackWhite;
-					foreach (var n in MaterialDesign.NormalColorScale.Zip (names, (c, n) => new { Name = n, Color = c.Value })) {
+					var normal = new CALayer {
+						CornerRadius = 3,
+						MasksToBounds = true,
+						Frame = new CGRect (x, y, Frame.Width, height),
+						BorderColor = new CGColor (.5f, .5f, .5f, .5f),
+						BorderWidth = 1
+					};
+
+					Layer.AddSublayer (normal);
+					foreach (var n in MaterialDesign.NormalColorScale.Zip (names, (c, name) => new { Name = name, Color = c.Value })) {
 						var frame = new CGRect (x, y, width, height);
-						var l = new CALayer {
-							BackgroundColor = n.Color.ToCGColor (),
-							CornerRadius = 3,
-							Frame = frame
+						var selectedColor = n.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
+						var l = new MaterialColorLayer {
+							BackgroundColor = n.Color,
+							ForegroundColor = selectedColor.CGColor,
+							Frame = new CGRect (x, 0, width, height),
+							Text = n.Name,
+							FontSize = 12,
+							ContentsScale = NSScreen.MainScreen.BackingScaleFactor,
+							TextAlignmentMode = CATextLayerAlignmentMode.Center,
+							IsSelected = MaterialDesign.Color == n.Color
 						};
-						Layer.AddSublayer (l);
-						var c = new NSTextField (frame) {
-							StringValue = n.Name,
-							BackgroundColor = NSColor.Clear,
-							DrawsBackground = false,
-							Bordered = false,
-							Editable = false,
-						};
-						AddSubview (c);
+						normal.AddSublayer (l);
 						x += width;
 					}
 
-					y += height;
+					if (MaterialDesign.AccentColorScale.Count () <= 0)
+						return;
+
+					y += height + 6;
 					x = 0;
+
+					var accent = new CALayer {
+						CornerRadius = 3,
+						MasksToBounds = true,
+						Frame = new CGRect (x, y, Frame.Width, height),
+						BorderColor = new CGColor (.5f, .5f, .5f, .5f),
+						BorderWidth = 1
+					};
+					Layer.AddSublayer (accent);
 					width = Frame.Width / MaterialDesign.AccentColorScale.Count ();
 					foreach (var n in MaterialDesign.AccentColorScale.Zip (AccentNames, (c, n) => new { Name = n, Color = c.Value })) {
 						var frame = new CGRect (x, y, width, height);
-						var l = new CALayer {
-							BackgroundColor = n.Color.ToCGColor (),
-							CornerRadius = 3,
-							Frame = frame
+						var selectedColor = n.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
+						var l = new MaterialColorLayer {
+							BackgroundColor = n.Color,
+							ForegroundColor = selectedColor.CGColor,
+							Frame = new CGRect (x, 0, width, height),
+							Text = n.Name,
+							FontSize = 12,
+							ContentsScale = NSScreen.MainScreen.BackingScaleFactor,
+							TextAlignmentMode = CATextLayerAlignmentMode.Center,
+							IsSelected = ViewModel.Solid.Color == n.Color,
 						};
-						Layer.AddSublayer (l);
-						var c = new NSTextField (frame) {
-							StringValue = n.Name,
-							BackgroundColor = NSColor.Clear,
-							DrawsBackground = false,
-							Bordered = false,
-							Editable = false
-						};
-						AddSubview (c);
+
+						accent.AddSublayer (l);
 						x += width;
+					}
+				}
+			}
+
+			public override void MouseDown (NSEvent theEvent)
+			{
+				UpdateFromEvent (theEvent);
+			}
+
+			public void UpdateFromEvent (NSEvent theEvent)
+			{
+				var location = ConvertPointToLayer (ConvertPointFromView (theEvent.LocationInWindow, null));
+
+				foreach (var layer in Layer.Sublayers) {
+					var hit = layer.HitTest (location);
+					for (var c = hit; c != null; c = c.SuperLayer) {
+						var editor = c as MaterialColorLayer;
+						if (editor != null) {
+							ViewModel.Solid.Color = editor.BackgroundColor;
+							NeedsLayout = true;
+						}
 					}
 				}
 			}
@@ -210,12 +299,7 @@ namespace Xamarin.PropertyEditing.Mac
 		internal BrushPropertyViewModel ViewModel
 		{
 			get => viewModel;
-			set
-			{
-				viewModel = value;
-				//if (brushEditor != null)
-					//brushEditor.ViewModel = viewModel?.Solid;
-			}
+			set => viewModel = value;
 		}
 
 		public override void LoadView ()
@@ -315,12 +399,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 			if (inhibitSelection)
 				return;
+			
 			ViewModel.SelectedBrushType = ViewModel.BrushTypes[item.Label];
         }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+			View.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
 			var old = View.Frame;
 			old.Height = 200;
 			View.Frame = old;

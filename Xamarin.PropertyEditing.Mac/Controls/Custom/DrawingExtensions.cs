@@ -61,5 +61,15 @@ namespace Xamarin.PropertyEditing.Mac
 				C (a.B, a.A, b.B),
 				C (a.A, a.A, b.A));
 		}
+
+		public static CGRect Bounds (this CGRect rect)
+			=> new CGRect (x: 0, y: 0, width: rect.Width, height: rect.Height);
+
+		public static CGRect Border (this CGRect rect, CommonThickness padding)
+			=> new CGRect (
+				x: rect.X + padding.Left,
+				y: rect.Y + padding.Top,
+				width: Math.Max (0, rect.Width - padding.Left - padding.Right),
+				height: Math.Max (0, rect.Height - padding.Top - padding.Bottom));
 	}
 }
