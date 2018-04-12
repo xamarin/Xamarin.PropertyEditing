@@ -212,9 +212,9 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSublayer (Clip);
 		}
 
-		CALayer Previous = new CALayer ();
-		CALayer Current = new CALayer ();
-		CALayer Clip = new CALayer () {
+		readonly CALayer Previous = new CALayer ();
+		readonly CALayer Current = new CALayer ();
+		readonly CALayer Clip = new CALayer () {
 			BorderWidth = 1,
 			CornerRadius = BorderRadius,
 			BorderColor = new CGColor (.5f, .5f, .5f, .5f),
@@ -247,6 +247,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void UpdateFromLocation (SolidBrushViewModel viewModel, CGPoint location)
 		{
+			if (Previous == HitTest (location))
+				viewModel.Color = viewModel.LastColor;
 		}
 	}
 
@@ -422,7 +424,8 @@ namespace Xamarin.PropertyEditing.Mac
         public override void LayoutSublayers()
         {
 			base.LayoutSublayers ();
-        	Colors.Frame = new CGRect (Margin, Margin, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
+			Colors.Frame = Frame.Bounds ().Border (new CommonThickness (2));
+        	//Colors.Frame = new CGRect (Margin, Margin, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
 			Grip.Frame = new CGRect (Grip.Frame.X, Grip.Frame.Y, Frame.Width - 2, 2 * GripRadius);
 		}
 	}
@@ -495,17 +498,20 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void UpdateFromEvent (NSEvent theEvent)
 		{
-			var location = ConvertPointToLayer (ConvertPointFromView (theEvent.LocationInWindow, null));
+			var location = ConvertPointFromView (theEvent.LocationInWindow, null);
+			location = ConvertPointToLayer (location);
 
-			var hit = Layer.HitTest (new CGPoint (location.X + Layer.Frame.X, location.Y + Layer.Frame.Y));
+			foreach (var layer in Layer.Sublayers) {
+				var hit = layer.HitTest (location);
 
-			for (var c = hit; c != null; c = c.SuperLayer) {
-				var editor = c as ColorEditorLayer;
-				if (editor != null) {
-					editor.UpdateFromLocation (
-						ViewModel,
-						Layer.ConvertPointToLayer (location, editor));
-					break;
+				for (var c = hit; c != null; c = c.SuperLayer) {
+					var editor = c as ColorEditorLayer;
+					if (editor != null) {
+						editor.UpdateFromLocation (
+							ViewModel,
+							Layer.ConvertPointToLayer (location, editor));
+						return;
+					}
 				}
 			}
 		}
