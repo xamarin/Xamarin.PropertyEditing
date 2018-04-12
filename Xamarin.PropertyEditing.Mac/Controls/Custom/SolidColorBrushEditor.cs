@@ -150,6 +150,7 @@ namespace Xamarin.PropertyEditing.Mac
 			set {
 				brush = value;
 				BrushLayer = CreateBrushLayer (brush);
+				Opacity = brush == null ? 0 : 1;
 			}
 		}
 

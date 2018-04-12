@@ -123,14 +123,12 @@ namespace Xamarin.PropertyEditing.Mac
 		// Called when created from unmanaged code
 		public ResourceOutlineView (IntPtr handle) : base (handle)
 		{
-			Initialize ();
 		}
 
 		// Called when created directly from a XIB file
 		[Export ("initWithCoder:")]
 		public ResourceOutlineView (NSCoder coder) : base (coder)
 		{
-			Initialize ();
 		}
 
 		public void Initialize ()
@@ -200,6 +198,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (ViewModel.Resource != null && source.TryGetFacade (ViewModel?.Resource, out var facade)) {
 				index = resourceSelector.RowForItem (facade);
 			}
+
 			if (index < 0)
 				resourceSelector.DeselectAll (null);
 			else
@@ -212,6 +211,11 @@ namespace Xamarin.PropertyEditing.Mac
 				viewDelegate.ViewModel = ViewModel;
 				resourceSelector.ViewModel = ViewModel?.ResourceSelector;
 			}
+		}
+
+		public new ResourceOutlineView View {
+			get => base.View as ResourceOutlineView;
+			set => base.View = (value as ResourceOutlineView);
 		}
 
 		public override void LoadView ()

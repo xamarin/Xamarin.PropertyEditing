@@ -5,6 +5,7 @@ using System.Linq;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
+using Foundation;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -22,11 +23,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			switch (e.PropertyName) {
-				case nameof (BrushPropertyViewModel.Solid):
-					if (materialEditor != null)
-						materialEditor.ViewModel = ViewModel;
+				case nameof (BrushPropertyViewModel.MaterialDesign):
+					materialEditor.ViewModel = ViewModel;
 					break;
-
 			}
 		}
 
@@ -38,18 +37,15 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public class MaterialView : NSView
 		{
+			public override bool IsFlipped => true;
+
 			public MaterialView () : base ()
 			{
-
+				Initialize ();
 			}
 
 			void Initialize () {
 				WantsLayer = true;
-				Layer = new CALayer {
-					CornerRadius = 3,
-					BorderColor = NSColor.SystemGrayColor.CGColor,
-					BorderWidth = 1
-				};
 			}
 
 			BrushPropertyViewModel viewModel;
@@ -68,16 +64,69 @@ namespace Xamarin.PropertyEditing.Mac
 
 			public override void Layout ()
 			{
-				if (ViewModel.MaterialDesign != null) {
-					Layer.BackgroundColor = (MaterialDesign?.AccentColor ?? CommonColor.White).ToCGColor ();
-				}
 				base.Layout ();
+				if (Layer.Sublayers != null)
+					foreach (var l in Layer.Sublayers)
+						l.RemoveFromSuperLayer ();
+				
+				if (MaterialDesign != null) {
+					var colors = MaterialDesign.Palettes.Select (p => new { p.Name, p.MainColor }).ToArray ();
+					int col = 0;
+					nfloat x = 0;
+					nfloat y = 0;
+					var width = Bounds.Width / 10;
+					var height = Bounds.Height / 5;
+
+					foreach (var p in colors) {
+						var layer = new CALayer {
+							BackgroundColor = p.MainColor.ToCGColor (),
+							CornerRadius = 3,
+							Frame = new CGRect (x, y, width, height)
+						};
+						Layer.AddSublayer (layer);
+						x += width;
+						col++;
+						if (col >= 10) {
+							x = 0;
+							y += height;
+							col = 0;
+						}
+					}
+
+					y += 30;
+					x = 0;
+					width = Bounds.Width / MaterialDesign.NormalColorScale.Count ();
+					foreach (var n in MaterialDesign.NormalColorScale) {
+						var layer = new CALayer {
+							BackgroundColor = n.Value.ToCGColor (),
+							CornerRadius = 3,
+							Frame = new CGRect (x, y, width, height)
+						};
+						Layer.AddSublayer (layer);
+						x += width;
+					}
+
+					y += height;
+					x = 0;
+					width = Bounds.Width / MaterialDesign.AccentColorScale.Count ();
+					foreach (var n in MaterialDesign.AccentColorScale) {
+						var layer = new CALayer {
+							BackgroundColor = n.Value.ToCGColor (),
+							CornerRadius = 3,
+							Frame = new CGRect (x, y, width, height)
+						};
+						Layer.AddSublayer (layer);
+						x += width;
+					}
+				}
 			}
         }
 
 		public override void LoadView ()
 		{
-			View = materialEditor = new MaterialView ();
+			View = materialEditor = new MaterialView {
+				ViewModel = ViewModel
+			};
 		}
 	}
 
