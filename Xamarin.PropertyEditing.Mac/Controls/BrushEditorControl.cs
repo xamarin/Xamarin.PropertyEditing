@@ -112,7 +112,8 @@ namespace Xamarin.PropertyEditing.Mac
 					break;
 			}
 
-			return ViewModel.Resource == null ? title : $"{title} - (Resource: {ViewModel?.Resource?.Name})";
+			//return ViewModel.Resource == null ? title : $"{title} - (Resource: {ViewModel?.Resource?.Name})";
+			return title;
 		}
 
 		protected override void UpdateValue ()
