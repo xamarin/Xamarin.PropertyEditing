@@ -166,7 +166,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		Resource resource;
-		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			switch (e.PropertyName) {
 				case nameof (BrushPropertyViewModel.Resource):
@@ -205,8 +205,9 @@ namespace Xamarin.PropertyEditing.Mac
 				resourceSelector.SelectRow (index, false);
 		}
 
-		protected override void OnViewModelChanged (BrushPropertyViewModel oldModel)
+		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
 		{
+			base.OnViewModelChanged (oldModel);
 			if (resourceSelector != null) {
 				viewDelegate.ViewModel = ViewModel;
 				resourceSelector.ViewModel = ViewModel?.ResourceSelector;

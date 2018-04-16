@@ -12,64 +12,49 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	abstract class ColorEditorView : NSControl
+	abstract class ColorEditorView : NSControl, INotifyingListner<SolidBrushViewModel>
 	{
-		SolidBrushViewModel viewModel;
 		protected const float padding = 3;
+		protected NotifyingViewAdaptor<SolidBrushViewModel> adaptor { get; }
 
 		public ColorEditorView (IntPtr handle) : base (handle)
 		{
+			adaptor = new NotifyingViewAdaptor<SolidBrushViewModel> (this);
 		}
 
 		[Export ("initWithCoder:")]
 		public ColorEditorView (NSCoder coder) : base (coder)
 		{
+			adaptor = new NotifyingViewAdaptor<SolidBrushViewModel> (this);
 		}
 
 		public ColorEditorView (CGRect frame) : base (frame)
 		{
+			adaptor = new NotifyingViewAdaptor<SolidBrushViewModel> (this);
 		}
 
 		public ColorEditorView () : base ()
 		{
+			adaptor = new NotifyingViewAdaptor<SolidBrushViewModel> (this);
 		}
 
-		public SolidBrushViewModel ViewModel
-		{
-			get => viewModel;
-			set
-			{
-				if (value == viewModel)
-					return;
-
-				if (viewModel != null)
-					viewModel.PropertyChanged -= ModelChanged;
-
-				var oldModel = viewModel;
-				viewModel = value;
-				ModelSet (oldModel);
-				viewModel.PropertyChanged += ModelChanged;
-			}
+		public SolidBrushViewModel ViewModel {
+			get => adaptor.ViewModel;
+			set => adaptor.ViewModel = value;
 		}
 
-		protected virtual void ModelSet (SolidBrushViewModel oldModel)
+		protected virtual void OnViewModelChanged (SolidBrushViewModel oldModel)
 		{
-			ModelChanged (ViewModel, new PropertyChangedEventArgs (nameof (SolidBrushViewModel.Color)));
+			OnPropertyChanged (ViewModel, new PropertyChangedEventArgs (nameof (SolidBrushViewModel.Color)));
 		}
 
-		protected virtual void ModelChanged (object sender, PropertyChangedEventArgs args)
+		protected virtual void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
-			switch (args.PropertyName) {
-				case nameof (SolidBrushViewModel.Color):
-					UpdateFromColor (ViewModel.Color);
-					break;
-			}
 		}
 
 		public override void MouseDragged (NSEvent theEvent)
 		{
 			//base.MouseDragged (theEvent);
-
 			UpdateFromEvent (theEvent);
 		}
 
@@ -78,8 +63,6 @@ namespace Xamarin.PropertyEditing.Mac
 			//base.MouseDown (theEvent);
 			UpdateFromEvent (theEvent);
 		}
-
-		public abstract void UpdateFromColor (CommonColor color);
 
 		public virtual void UpdateFromEvent (NSEvent theEvent)
 		{
@@ -91,9 +74,18 @@ namespace Xamarin.PropertyEditing.Mac
 
 			if (!disposing)
 				return;
-			
-			if (ViewModel != null)
-				ViewModel.PropertyChanged -= ModelChanged;
+
+			adaptor.Disconnect ();
+		}
+
+		void INotifyingListner<SolidBrushViewModel>.OnViewModelChanged (SolidBrushViewModel oldModel)
+		{
+			OnViewModelChanged (oldModel);
+		}
+
+		void INotifyingListner<SolidBrushViewModel>.OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+			OnPropertyChanged (sender, e);
 		}
 	}
 
@@ -225,7 +217,6 @@ namespace Xamarin.PropertyEditing.Mac
 		Hsb,
 		Cmyk
 	};
-
 
 	class HistoryLayer : ColorEditorLayer
 	{
@@ -434,7 +425,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var loc = location;
 			var clos = Math.Min (Colors.Frame.Height, Math.Max (0, loc.Y - Colors.Frame.Y));
 
-			Grip.Frame = new CGRect (1, loc.Y - Grip.Frame.Height / 2, Frame.Width - 2, 2 * GripRadius);
+			Grip.Frame = new CGRect (1, clos + Colors.Frame.Y - Grip.Frame.Height / 2, Frame.Width - 2, 2 * GripRadius);
 			var hue = (1 - clos/ Colors.Frame.Height) * 360;
 
 			if (viewModel == null)
@@ -503,40 +494,54 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (componentTabs.View);
 		}
 
+		ColorEditorLayer active;
+
 		public override void UpdateFromEvent (NSEvent theEvent)
+		{
+		}
+		
+		public override void MouseDown (NSEvent theEvent)
 		{
 			var location = ConvertPointFromView (theEvent.LocationInWindow, null);
 			location = ConvertPointToLayer (location);
-
+			active = null;
 			foreach (var layer in Layer.Sublayers) {
 				var hit = layer.HitTest (location);
 
 				for (var c = hit; c != null; c = c.SuperLayer) {
-					var editor = c as ColorEditorLayer;
-					if (editor != null) {
-						editor.UpdateFromLocation (
+					active = c as ColorEditorLayer;
+					if (active != null) {
+						active.UpdateFromLocation (
 							ViewModel,
-							Layer.ConvertPointToLayer (location, editor));
+							Layer.ConvertPointToLayer (location, active));
 						return;
 					}
 				}
 			}
 		}
 
-		public override void UpdateFromColor (CommonColor color)
+        public override void MouseDragged(NSEvent theEvent)
+        {
+			var location = ConvertPointFromView (theEvent.LocationInWindow, null);
+			active?.UpdateFromLocation (
+						ViewModel,
+						Layer.ConvertPointToLayer (location, active));
+        }
+
+        protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
-			//componentTabs.UpdateFromColor (ViewModel.Color);
 			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
 				editor.UpdateFromModel (ViewModel);
-
 			}
 		}
 
-        protected override void ModelSet(SolidBrushViewModel oldModel)
+		protected override void OnViewModelChanged (SolidBrushViewModel oldModel)
         {
-            base.ModelSet(oldModel);
-
+            base.OnViewModelChanged(oldModel);
 			componentTabs.ViewModel = ViewModel;
+				foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
+				editor.UpdateFromModel (ViewModel);
+			}
 		}
 
         public override void Layout ()

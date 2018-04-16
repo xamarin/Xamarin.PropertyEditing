@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-        protected override void OnViewModelChanged(SolidBrushViewModel oldModel)
+       	public override void OnViewModelChanged(SolidBrushViewModel oldModel)
         {
             base.OnViewModelChanged(oldModel);
 			var controller = TabView.Item(SelectedTabViewItemIndex).ViewController as ColorComponentViewController;

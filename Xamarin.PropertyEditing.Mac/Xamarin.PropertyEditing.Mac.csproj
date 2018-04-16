@@ -104,6 +104,7 @@
     <Compile Include="Controls\Custom\ColorComponentEditor.cs" />
     <Compile Include="Controls\Custom\ColorComponentTabVewController.cs" />
     <Compile Include="Controls\Custom\ColorComponentViewController.cs" />
+    <Compile Include="Controls\Custom\NotifyingViewAdaptor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

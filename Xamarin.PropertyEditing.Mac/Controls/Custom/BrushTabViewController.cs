@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.Mac
 			PreferredContentSize = new CGSize (100, 100);
 		}
 
-		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			switch (e.PropertyName) {
 				case nameof (BrushPropertyViewModel.MaterialDesign):
@@ -29,7 +29,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		protected override void OnViewModelChanged (BrushPropertyViewModel oldModel)
+		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
 		{
 			if (materialEditor != null)
 				materialEditor.ViewModel = ViewModel;
@@ -286,20 +286,13 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class EmptyBrushEditorViewController : NSViewController
+	class EmptyBrushEditorViewController : PropertyViewController<BrushPropertyViewModel>
 	{
 		NSButton brushEditor;
 
 		public EmptyBrushEditorViewController ()
 		{
 			PreferredContentSize = new CGSize (100, 100);
-		}
-
-		BrushPropertyViewModel viewModel;
-		internal BrushPropertyViewModel ViewModel
-		{
-			get => viewModel;
-			set => viewModel = value;
 		}
 
 		public override void LoadView ()
@@ -319,7 +312,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		bool inhibitSelection;
 
-		protected override void OnViewModelChanged (BrushPropertyViewModel oldModel)
+		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
         {
 			inhibitSelection = true;
             base.OnViewModelChanged(oldModel);
@@ -377,7 +370,7 @@ namespace Xamarin.PropertyEditing.Mac
 			inhibitSelection = false;
         }
 
-		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs args)
+		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs args)
 		{
 			switch (args.PropertyName) {
 				case nameof (BrushPropertyViewModel.SelectedBrushType):
@@ -390,9 +383,13 @@ namespace Xamarin.PropertyEditing.Mac
 
         public override void WillSelect(NSTabView tabView, NSTabViewItem item)
         {
+			var brushController = item.ViewController as PropertyViewController<BrushPropertyViewModel>;
+			if (brushController != null)
+				brushController.ViewModel = ViewModel;
+			
 			if (inhibitSelection)
 				return;
-			
+
             base.WillSelect(tabView, item);
         }
 

@@ -8,12 +8,7 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		SolidColorBrushEditor brushEditor;
 
-		public SolidColorBrushEditorViewController ()
-		{
-			//PreferredMinimumSize = new CGSize (200, 200);
-		}
-
-		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			switch (e.PropertyName) {
 				case nameof (BrushPropertyViewModel.Solid):
@@ -27,7 +22,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		protected override void OnViewModelChanged (BrushPropertyViewModel oldModel)
+		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
 		{
 			if (brushEditor != null)
 				brushEditor.ViewModel = ViewModel?.Solid;

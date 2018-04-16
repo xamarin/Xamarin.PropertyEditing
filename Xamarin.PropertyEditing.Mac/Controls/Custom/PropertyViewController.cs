@@ -10,33 +10,26 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class PropertyViewController<T> : NSViewController where T : NotifyingObject
+	class PropertyViewController<T> : NSViewController, INotifyingListner<T> where T : NotifyingObject
 	{
-		T viewModel;
 		internal T ViewModel
 		{
-			get => viewModel;
-			set
-			{
-				var oldModel = viewModel;
-				if (viewModel == value)
-					return;
-
-				if (oldModel != null)
-					oldModel.PropertyChanged -= OnPropertyChanged;
-
-				viewModel = value;
-
-				OnViewModelChanged (oldModel);
-				viewModel.PropertyChanged += OnPropertyChanged;
-			}
+			get => adaptor.ViewModel;
+			set => adaptor.ViewModel = value;
 		}
 
-		protected virtual void OnViewModelChanged (T oldModel)
+		public PropertyViewController ()
+		{
+			adaptor = new NotifyingViewAdaptor<T> (this);
+		}
+
+		protected NotifyingViewAdaptor<T> adaptor { get; }
+
+		public virtual void OnViewModelChanged (T oldModel)
 		{
 		}
 
-		protected virtual void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+		public virtual void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 		}
 	}

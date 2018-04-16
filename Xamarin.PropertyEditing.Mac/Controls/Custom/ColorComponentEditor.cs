@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using AppKit;
 using CoreGraphics;
@@ -91,17 +92,9 @@ namespace Xamarin.PropertyEditing.Mac
 			Editors = CreateEditors (EditorType);
 			this.DoConstraints (Editors.Select (
 				ce => new[] {
-					ce.Editor.ConstraintTo (this, (editor, c) =>  editor.Width == 90),
+					ce.Editor.ConstraintTo (this, (editor, c) => editor.Width == 90),
 					ce.Editor.ConstraintTo (this, (editor, c) => editor.Height == DefaultControlHeight)
 				}).SelectMany (e => e).ToArray ());
-		}
-
-		public override void UpdateFromColor (CommonColor color)
-		{
-			foreach (var e in Editors) {
-				var editor = e.Editor;
-				editor.Value = editor.ValueFromColor (color);
-			}
 		}
 
         void UpdateComponent (object sender, EventArgs args)
@@ -114,7 +107,20 @@ namespace Xamarin.PropertyEditing.Mac
 			ViewModel.Color = editor.UpdateColorFromValue (color, editor.Value);
 		}
 
-		public override void Layout ()
+        protected override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(sender, e);
+			switch (e.PropertyName) {
+				case nameof (SolidBrushViewModel.Color):
+					foreach (var c in Editors) {
+						var editor = c.Editor;
+						editor.Value = editor.ValueFromColor(ViewModel.Color);
+					}
+				break;
+			}
+        }
+
+        public override void Layout ()
 		{
 			base.Layout ();
 

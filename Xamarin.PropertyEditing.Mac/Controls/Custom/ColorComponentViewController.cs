@@ -14,17 +14,16 @@ namespace Xamarin.PropertyEditing.Mac
 			this.EditorType = type;
 		}
 
-		protected override void OnViewModelChanged (SolidBrushViewModel oldModel)
+		public override void OnViewModelChanged (SolidBrushViewModel oldModel)
 		{
 			base.OnViewModelChanged (oldModel);
 			editor.ViewModel = ViewModel;
 		}
 
-		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs args)
+		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs args)
 		{
 			switch (args.PropertyName) {
 				case nameof (SolidBrushViewModel.Color):
-
 					break;
 			}
 		}
