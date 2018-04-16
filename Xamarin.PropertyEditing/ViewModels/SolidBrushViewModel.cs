@@ -14,6 +14,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			parent.PropertyChanged += Parent_PropertyChanged;
 		}
 
+		public bool HasColorSpaces => ColorSpaces != null && ColorSpaces.Count > 0;
 		public IReadOnlyList<string> ColorSpaces { get; }
 
 		public CommonSolidBrush PreviousSolidBrush { get; set; }

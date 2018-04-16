@@ -751,7 +751,7 @@
 							</TabItem.Header>-->
 					<StackPanel Orientation="Vertical">
 						<local:PropertyPresenter x:Name="colorSpacePresenter" Label="{x:Static prop:Resources.ColorSpace}" ShowPropertyButton="false">
-							<ComboBox Name="colorSpacePicker" ItemsSource="{Binding Solid.ColorSpaces}"
+							<ComboBox Name="colorSpacePicker" ItemsSource="{Binding Solid.ColorSpaces}" Visibility="{Binding Solid.HasColorSpaces,Converter={StaticResource BoolToVisibilityConverter}}"
 								SelectedItem="{Binding Solid.ColorSpace, Mode=OneTime}" VerticalContentAlignment="Center"
 								AutomationProperties.Name="{x:Static prop:Resources.ColorSpace}"
 								AutomationProperties.HelpText="{x:Static prop:Resources.ColorSpace}" ToolTip="{x:Static prop:Resources.ColorSpace}"/>
