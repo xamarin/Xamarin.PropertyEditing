@@ -23,8 +23,10 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			switch (e.PropertyName) {
+				case nameof (BrushPropertyViewModel.Value):
 				case nameof (BrushPropertyViewModel.MaterialDesign):
-					materialEditor.ViewModel = ViewModel;
+					if (materialEditor != null)
+						materialEditor.ViewModel = ViewModel;
 					break;
 			}
 		}
