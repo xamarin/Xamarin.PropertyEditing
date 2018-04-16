@@ -404,8 +404,10 @@ namespace Xamarin.PropertyEditing.Mac
 
         public override void ViewDidLoad()
         {
+			inhibitSelection = true;
             base.ViewDidLoad();
-			//View.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
+			inhibitSelection = false;
+
 			var old = View.Frame;
 			old.Height = 200;
 			View.Frame = old;
