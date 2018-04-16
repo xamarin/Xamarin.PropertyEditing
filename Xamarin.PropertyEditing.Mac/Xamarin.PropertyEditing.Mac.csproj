@@ -263,6 +263,26 @@
     <BundleResource Include="Resources\property-brush-solid-16~dark~sel%402x.png" />
     <BundleResource Include="Resources\property-brush-solid-16~sel.png" />
     <BundleResource Include="Resources\property-brush-solid-16~sel%402x.png" />
+    <BundleResource Include="Resources\stepper-down~dark.png" />
+    <BundleResource Include="Resources\stepper-down~dark%402x.png" />
+    <BundleResource Include="Resources\stepper-up~dark.png" />
+    <BundleResource Include="Resources\stepper-up~dark%402x.png" />
+    <BundleResource Include="Resources\stepper-down-focus-blue.png" />
+    <BundleResource Include="Resources\stepper-down-focus-blue%402x.png" />
+    <BundleResource Include="Resources\stepper-down-focus-blue~dark.png" />
+    <BundleResource Include="Resources\stepper-down-focus-blue~dark%402x.png" />
+    <BundleResource Include="Resources\stepper-down-focus-graphite.png" />
+    <BundleResource Include="Resources\stepper-down-focus-graphite%402x.png" />
+    <BundleResource Include="Resources\stepper-down-focus-graphite~dark.png" />
+    <BundleResource Include="Resources\stepper-down-focus-graphite~dark%402x.png" />
+    <BundleResource Include="Resources\stepper-up-focus-blue.png" />
+    <BundleResource Include="Resources\stepper-up-focus-blue%402x.png" />
+    <BundleResource Include="Resources\stepper-up-focus-blue~dark.png" />
+    <BundleResource Include="Resources\stepper-up-focus-blue~dark%402x.png" />
+    <BundleResource Include="Resources\stepper-up-focus-graphite.png" />
+    <BundleResource Include="Resources\stepper-up-focus-graphite%402x.png" />
+    <BundleResource Include="Resources\stepper-up-focus-graphite~dark.png" />
+    <BundleResource Include="Resources\stepper-up-focus-graphite~dark%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

@@ -13,6 +13,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class NumericSpinEditor : NSView, INSAccessibilityGroup
 	{
+		const int stepperSpace = 2;
+		const int stepperWidth = 11;
+		const int stepperTopHeight = 9;
+		const int stepperBotHeight = 10;
+
 		NumericTextField numericEditor;
 		public NumericTextField NumericEditor {
 			get { return numericEditor; }
@@ -201,16 +206,18 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (decrementButton);
 
 			this.DoConstraints (new[] {
-				numericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - 16),
+				numericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - (stepperWidth + stepperSpace + 1)),
 				numericEditor.ConstraintTo (this, (n, c) => n.Height == PropertyEditorControl.DefaultControlHeight - 3),
-				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Left == n.Right + 5),
-				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Top == n.Top + 1),
-				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Width == 9),
-				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Height == 9),
-				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Left == n.Right + 5),
-				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Top == n.Top + 10),
-				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Width == 9),
-				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Height == 9),
+
+				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Left == n.Right + stepperSpace),
+				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Top == n.Top),
+				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Width == stepperWidth),
+				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Height == stepperTopHeight),
+
+				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Left == n.Right + stepperSpace),
+				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Top == n.Top + stepperTopHeight),
+				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Width == stepperWidth),
+				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Height == stepperBotHeight),
 			});
 
 			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
@@ -233,25 +240,6 @@ namespace Xamarin.PropertyEditing.Mac
 		protected void UpdateTheme ()
 		{
 			this.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
-
-			// Skin the inc/dec buttons until we support theming files
-			switch (PropertyEditorPanel.ThemeManager.Theme) {
-				case PropertyEditorTheme.Dark:
-					incrementButton.Image = NSImage.ImageNamed ("stepper-up"); // TODO path to proper image
-					decrementButton.Image = NSImage.ImageNamed ("stepper-down"); // TODO path to proper image
-					break;
-
-				case PropertyEditorTheme.Light:
-					incrementButton.Image = NSImage.ImageNamed ("stepper-up"); // TODO path to proper image
-					decrementButton.Image = NSImage.ImageNamed ("stepper-down"); // TODO path to proper image
-					break;
-
-				case PropertyEditorTheme.None:
-					incrementButton.Image = NSImage.ImageNamed ("stepper-up"); // TODO path to proper image
-					decrementButton.Image = NSImage.ImageNamed ("stepper-down"); // TODO path to proper image
-					break;
-			}
-
 		}
 
 		virtual protected void OnEditingEnded (object sender, EventArgs e)
