@@ -10,6 +10,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public SolidColorBrushEditorViewController ()
 		{
+			//PreferredMinimumSize = new CGSize (200, 200);
 		}
 
 		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
@@ -19,7 +20,10 @@ namespace Xamarin.PropertyEditing.Mac
 					if (brushEditor != null)
 						brushEditor.ViewModel = ViewModel.Solid;
 					break;
-
+				case nameof (BrushPropertyViewModel.Value):
+					if (brushEditor != null)
+						brushEditor.ViewModel = ViewModel.Solid;
+					break;
 			}
 		}
 
@@ -29,11 +33,20 @@ namespace Xamarin.PropertyEditing.Mac
 				brushEditor.ViewModel = ViewModel?.Solid;
 		}
 
-		public override void LoadView ()
-		{
-			View = brushEditor = new SolidColorBrushEditor ();
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+			//View.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
 			if (ViewModel != null)
 				brushEditor.ViewModel = ViewModel?.Solid;
+        }
+
+        public override void LoadView ()
+		{
+			View = brushEditor = new SolidColorBrushEditor {
+				//Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance,
+				ViewModel = ViewModel?.Solid
+			};
 		}
 	}
 }

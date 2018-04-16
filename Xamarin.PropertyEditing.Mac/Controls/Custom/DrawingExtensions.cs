@@ -63,7 +63,11 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		public static CGRect Bounds (this CGRect rect)
-			=> new CGRect (x: 0, y: 0, width: rect.Width, height: rect.Height);
+			=> new CGRect (
+				x: 0,
+				y: 0,
+				width: rect.Width,
+				height: rect.Height);
 
 		public static CGRect Border (this CGRect rect, CommonThickness padding)
 			=> new CGRect (
@@ -71,5 +75,71 @@ namespace Xamarin.PropertyEditing.Mac
 				y: rect.Y + padding.Top,
 				width: Math.Max (0, rect.Width - padding.Left - padding.Right),
 				height: Math.Max (0, rect.Height - padding.Top - padding.Bottom));
+
+		public static CGRect Translate (this CGRect rect, double x, double y)
+			=> new CGRect (
+				x: rect.X + x, 
+				y: rect.Y + y,
+				width: rect.Width,
+				height: rect.Height);
+
+
+		public static CommonColor UpdateRGB (
+			this CommonColor color,
+			byte? r = null,
+			byte? g = null,
+			byte? b = null,
+			byte? a = null)
+		{
+			return new CommonColor (
+				r: r ?? color.R,
+				g: g ?? color.G,
+				b: b ?? color.B,
+				a: a ?? color.A);
+		}
+
+		public static CommonColor UpdateHSB (
+			this CommonColor color,
+			double? hue = null,
+			double? saturation = null,
+			double? brightness = null,
+			byte? alpha = null)
+		{
+			return CommonColor.FromHSB (
+				hue: hue ?? color.Hue,
+				saturation: saturation ?? color.Saturation,
+				brightness: brightness ?? color.B,
+				alpha: alpha ?? color.A);
+		}
+
+		public static CommonColor UpdateHLS (
+			this CommonColor color,
+			double? hue = null,
+			double? lightness = null,
+			double? saturation = null,
+			byte? alpha = null)
+		{
+			return CommonColor.FromHLS (
+				hue: hue ?? color.Hue,
+				lightness: lightness ?? color.B,
+				saturation: saturation ?? color.Saturation,
+				alpha: alpha ?? color.A);
+		}
+
+		public static CommonColor UpdateCMYK (
+			this CommonColor color,
+			double? c = null,
+			double? m = null,
+			double? y = null,
+			double? k = null,
+			byte? alpha = null)
+		{
+			return CommonColor.FromCMYK (
+				c: c ?? color.C,
+				m: m ?? color.M,
+				y: y ?? color.Y,
+				k: k ?? color.K,
+				alpha: alpha ?? color.A);
+		}
 	}
 }

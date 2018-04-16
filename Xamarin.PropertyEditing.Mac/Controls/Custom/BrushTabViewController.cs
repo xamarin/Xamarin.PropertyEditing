@@ -147,112 +147,112 @@ namespace Xamarin.PropertyEditing.Mac
 
 			public override void Layout ()
 			{
-
 				if (Layer?.Sublayers != null)
 					foreach (var l in Layer.Sublayers)
 						l.RemoveFromSuperLayer ();
 
-				if (MaterialDesign != null) {
-					var colors = MaterialDesign.Palettes.Select (p => new { p.Name, Color = p.MainColor }).ToArray ();
-					int col = 0;
-					nfloat x = 0;
-					nfloat y = 6;
-					var width = (Frame.Width - 54) / 10;
-					var height = (Frame.Height - 49) / 4;
+				if (MaterialDesign == null)
+					return;
+				
+				var colors = MaterialDesign.Palettes.Select (p => new { p.Name, Color = p.MainColor }).ToArray ();
+				int col = 0;
+				nfloat x = 0;
+				nfloat y = 6;
+				var width = (Frame.Width - 54) / 10;
+				var height = (Frame.Height - 49) / 4;
 
-					foreach (var p in colors) {
-						var frame = new CGRect (x, y, width, height);
-						var selectedColor = p.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
-						var l = new MaterialColorLayer {
-							Frame = frame,
-							ForegroundColor = selectedColor.CGColor,
-							BackgroundColor = p.Color,
-							CornerRadius = 3,
-							BorderColor = new CGColor (.5f, .5f, .5f, .5f),
-							MasksToBounds = false,
-							IsSelected = MaterialDesign.Color == p.Color
-						};
-
-						Layer.AddSublayer (l);
-						x += width + 6;
-						col++;
-						if (col >= 10) {
-							x = 0;
-							y += height + 6;
-							col = 0;
-						}
-					}
-
-					Layer.AddSublayer (new CATextLayer {
-						ForegroundColor = NSColor.ControlText.CGColor,
-						Frame = new CGRect (x, y + 6, Frame.Width, 25),
-						String = MaterialDesign.ColorName,
-						FontSize = NSFont.SmallSystemFontSize,
-						ContentsScale = Window?.Screen?.BackingScaleFactor ?? NSScreen.MainScreen.BackingScaleFactor
-					});
-
-					y += 25;
-					x = 0;
-					width = Frame.Width / MaterialDesign.NormalColorScale.Count ();
-					var names = MaterialDesign.NormalColorScale.Count () > 2 ? ColorNames : BlackWhite;
-					var normal = new CALayer {
+				foreach (var p in colors) {
+					var frame = new CGRect (x, y, width, height);
+					var selectedColor = p.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
+					var l = new MaterialColorLayer {
+						Frame = frame,
+						ForegroundColor = selectedColor.CGColor,
+						BackgroundColor = p.Color,
 						CornerRadius = 3,
-						MasksToBounds = true,
-						Frame = new CGRect (x, y, Frame.Width, height),
 						BorderColor = new CGColor (.5f, .5f, .5f, .5f),
-						BorderWidth = 1
+						MasksToBounds = false,
+						IsSelected = MaterialDesign.Color == p.Color
 					};
 
-					Layer.AddSublayer (normal);
-					foreach (var n in MaterialDesign.NormalColorScale.Zip (names, (c, name) => new { Name = name, Color = c.Value })) {
-						var frame = new CGRect (x, y, width, height);
-						var selectedColor = n.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
-						var l = new MaterialColorLayer {
-							BackgroundColor = n.Color,
-							ForegroundColor = selectedColor.CGColor,
-							Frame = new CGRect (x, 0, width, height),
-							Text = n.Name,
-							FontSize = 12,
-							ContentsScale = NSScreen.MainScreen.BackingScaleFactor,
-							TextAlignmentMode = CATextLayerAlignmentMode.Center,
-							IsSelected = MaterialDesign.Color == n.Color
-						};
-						normal.AddSublayer (l);
-						x += width;
+					Layer.AddSublayer (l);
+					x += width + 6;
+					col++;
+					if (col >= 10) {
+						x = 0;
+						y += height + 6;
+						col = 0;
 					}
+				}
 
-					if (MaterialDesign.AccentColorScale.Count () <= 0)
-						return;
+				Layer.AddSublayer (new CATextLayer {
+					ForegroundColor = NSColor.ControlText.CGColor,
+					Frame = new CGRect (x, y + 6, Frame.Width, 25),
+					String = MaterialDesign.ColorName,
+					FontSize = NSFont.SmallSystemFontSize,
+					ContentsScale = Window?.Screen?.BackingScaleFactor ?? NSScreen.MainScreen.BackingScaleFactor
+				});
 
-					y += height + 6;
-					x = 0;
+				y += 25;
+				x = 0;
+				width = Frame.Width / MaterialDesign.NormalColorScale.Count ();
+				var names = MaterialDesign.NormalColorScale.Count () > 2 ? ColorNames : BlackWhite;
+				var normal = new CALayer {
+					CornerRadius = 3,
+					MasksToBounds = true,
+					Frame = new CGRect (x, y, Frame.Width, height),
+					BorderColor = new CGColor (.5f, .5f, .5f, .5f),
+					BorderWidth = 1
+				};
 
-					var accent = new CALayer {
-						CornerRadius = 3,
-						MasksToBounds = true,
-						Frame = new CGRect (x, y, Frame.Width, height),
-						BorderColor = new CGColor (.5f, .5f, .5f, .5f),
-						BorderWidth = 1
+				Layer.AddSublayer (normal);
+				foreach (var n in MaterialDesign.NormalColorScale.Zip (names, (c, name) => new { Name = name, Color = c.Value })) {
+					var frame = new CGRect (x, y, width, height);
+					var selectedColor = n.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
+					var l = new MaterialColorLayer {
+						BackgroundColor = n.Color,
+						ForegroundColor = selectedColor.CGColor,
+						Frame = new CGRect (x, 0, width, height),
+						Text = n.Name,
+						FontSize = 12,
+						ContentsScale = NSScreen.MainScreen.BackingScaleFactor,
+						TextAlignmentMode = CATextLayerAlignmentMode.Center,
+						IsSelected = MaterialDesign.Color == n.Color
 					};
-					Layer.AddSublayer (accent);
-					width = Frame.Width / MaterialDesign.AccentColorScale.Count ();
-					foreach (var n in MaterialDesign.AccentColorScale.Zip (AccentNames, (c, n) => new { Name = n, Color = c.Value })) {
-						var frame = new CGRect (x, y, width, height);
-						var selectedColor = n.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
-						var l = new MaterialColorLayer {
-							BackgroundColor = n.Color,
-							ForegroundColor = selectedColor.CGColor,
-							Frame = new CGRect (x, 0, width, height),
-							Text = n.Name,
-							FontSize = 12,
-							ContentsScale = NSScreen.MainScreen.BackingScaleFactor,
-							TextAlignmentMode = CATextLayerAlignmentMode.Center,
-							IsSelected = ViewModel.Solid.Color == n.Color,
-						};
+					normal.AddSublayer (l);
+					x += width;
+				}
 
-						accent.AddSublayer (l);
-						x += width;
-					}
+				if (MaterialDesign.AccentColorScale.Count () <= 0)
+					return;
+
+				y += height + 6;
+				x = 0;
+
+				var accent = new CALayer {
+					CornerRadius = 3,
+					MasksToBounds = true,
+					Frame = new CGRect (x, y, Frame.Width, height),
+					BorderColor = new CGColor (.5f, .5f, .5f, .5f),
+					BorderWidth = 1
+				};
+				Layer.AddSublayer (accent);
+				width = Frame.Width / MaterialDesign.AccentColorScale.Count ();
+				foreach (var n in MaterialDesign.AccentColorScale.Zip (AccentNames, (c, n) => new { Name = n, Color = c.Value })) {
+					var frame = new CGRect (x, y, width, height);
+					var selectedColor = n.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
+					var l = new MaterialColorLayer {
+						BackgroundColor = n.Color,
+						ForegroundColor = selectedColor.CGColor,
+						Frame = new CGRect (x, 0, width, height),
+						Text = n.Name,
+						FontSize = 12,
+						ContentsScale = NSScreen.MainScreen.BackingScaleFactor,
+						TextAlignmentMode = CATextLayerAlignmentMode.Center,
+						IsSelected = ViewModel.Solid.Color == n.Color,
+					};
+
+					accent.AddSublayer (l);
+					x += width;
 				}
 			}
 
@@ -324,10 +324,10 @@ namespace Xamarin.PropertyEditing.Mac
 			inhibitSelection = true;
             base.OnViewModelChanged(oldModel);
 
-
 			foreach (var item in TabViewItems) {
 				RemoveTabViewItem (item);
 			}
+
 			BrushTypeTable.Clear ();
 			if (ViewModel == null)
 				return;
@@ -390,23 +390,25 @@ namespace Xamarin.PropertyEditing.Mac
 
         public override void WillSelect(NSTabView tabView, NSTabViewItem item)
         {
+			if (inhibitSelection)
+				return;
+			
             base.WillSelect(tabView, item);
         }
 
         public override void DidSelect(NSTabView tabView, NSTabViewItem item)
         {
-            base.DidSelect(tabView, item);
-
 			if (inhibitSelection)
 				return;
 			
+			base.DidSelect (tabView, item);
 			ViewModel.SelectedBrushType = ViewModel.BrushTypes[item.Label];
         }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-			View.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
+			//View.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
 			var old = View.Frame;
 			old.Height = 200;
 			View.Frame = old;

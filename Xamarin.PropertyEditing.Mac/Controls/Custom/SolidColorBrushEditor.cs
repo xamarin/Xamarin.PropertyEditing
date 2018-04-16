@@ -12,7 +12,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	abstract class ColorEditorView : NSView
+	abstract class ColorEditorView : NSControl
 	{
 		SolidBrushViewModel viewModel;
 		protected const float padding = 3;
@@ -45,9 +45,16 @@ namespace Xamarin.PropertyEditing.Mac
 				if (viewModel != null)
 					viewModel.PropertyChanged -= ModelChanged;
 
+				var oldModel = viewModel;
 				viewModel = value;
+				ModelSet (oldModel);
 				viewModel.PropertyChanged += ModelChanged;
 			}
+		}
+
+		protected virtual void ModelSet (SolidBrushViewModel oldModel)
+		{
+			ModelChanged (ViewModel, new PropertyChangedEventArgs (nameof (SolidBrushViewModel.Color)));
 		}
 
 		protected virtual void ModelChanged (object sender, PropertyChangedEventArgs args)
@@ -76,6 +83,17 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public virtual void UpdateFromEvent (NSEvent theEvent)
 		{
+		}
+
+		protected override void Dispose (bool disposing)
+		{
+			base.Dispose (disposing);
+
+			if (!disposing)
+				return;
+			
+			if (ViewModel != null)
+				ViewModel.PropertyChanged -= ModelChanged;
 		}
 	}
 
@@ -199,6 +217,15 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 	}
+
+	public enum EditorType
+	{
+		Rgb,
+		Hls,
+		Hsb,
+		Cmyk
+	};
+
 
 	class HistoryLayer : ColorEditorLayer
 	{
@@ -425,31 +452,7 @@ namespace Xamarin.PropertyEditing.Mac
         {
 			base.LayoutSublayers ();
 			Colors.Frame = Frame.Bounds ().Border (new CommonThickness (2));
-        	//Colors.Frame = new CGRect (Margin, Margin, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
 			Grip.Frame = new CGRect (Grip.Frame.X, Grip.Frame.Y, Frame.Width - 2, 2 * GripRadius);
-		}
-	}
-
-	class ColorComponentEditor : ColorEditorView
-	{
-		NSTextField Red { get; set; }
-		NSTextField Blue { get; set; }
-		NSTextField Green { get; set; }
-		NSTextField Alpha { get; set; }
-
-		public ColorComponentEditor (CGRect frame) : base (frame)
-		{
-			Red = new NSTextField (new CGRect (frame.X + padding * 2, frame.Height - 30, 50, 50));
-			Green = new NSTextField (new CGRect (frame.X + padding * 2, frame.Height - 80, 50, 50));
-			Blue = new NSTextField (new CGRect (frame.X + padding * 2, frame.Height - 120, 50, 50));
-			Alpha = new NSTextField (new CGRect (frame.X + padding * 2, frame.Height - 150, 50, 50));
-		}
-
-		public override void UpdateFromColor (CommonColor color)
-		{
-			Red.StringValue = color.R.ToString ();
-			Green.StringValue = color.G.ToString ();
-			Blue.StringValue = color.B.ToString ();
 		}
 	}
 
@@ -462,31 +465,34 @@ namespace Xamarin.PropertyEditing.Mac
 			CornerRadius = 3,
 			BorderWidth = 1
 		};
+		readonly ColorComponentTabViewController componentTabs = new ColorComponentTabViewController () {
+			EditorType = EditorType.Rgb
+		};
 
 		public override bool AcceptsFirstResponder() => true;
         
         public SolidColorBrushEditor (IntPtr handle) : base (handle)
 		{
-			InitializeLayers ();
+			Initialize ();
 		}
 
 		[Export ("initWithCoder:")]
 		public SolidColorBrushEditor (NSCoder coder) : base (coder)
 		{
-			InitializeLayers ();
+			Initialize ();
 		}
 
 		public SolidColorBrushEditor (CGRect frame) : base (frame)
 		{
-			InitializeLayers ();
+			Initialize ();
 		}
 
 		public SolidColorBrushEditor () : base ()
 		{
-			InitializeLayers ();	
+			Initialize ();	
 		}
 
-		void InitializeLayers ()
+		void Initialize ()
 		{
 			Layer = new CALayer ();
 			Layer.AddSublayer (Background);
@@ -494,6 +500,7 @@ namespace Xamarin.PropertyEditing.Mac
 			Layer.AddSublayer (Hue);
 			Layer.AddSublayer (History);
 			WantsLayer = true;
+			AddSubview (componentTabs.View);
 		}
 
 		public override void UpdateFromEvent (NSEvent theEvent)
@@ -518,12 +525,21 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void UpdateFromColor (CommonColor color)
 		{
+			//componentTabs.UpdateFromColor (ViewModel.Color);
 			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
 				editor.UpdateFromModel (ViewModel);
+
 			}
 		}
 
-		public override void Layout ()
+        protected override void ModelSet(SolidBrushViewModel oldModel)
+        {
+            base.ModelSet(oldModel);
+
+			componentTabs.ViewModel = ViewModel;
+		}
+
+        public override void Layout ()
 		{
 			base.Layout ();
 
@@ -536,13 +552,16 @@ namespace Xamarin.PropertyEditing.Mac
 			Background.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
 			Background.BackgroundColor = NSColor.ControlBackground.CGColor;
 			Background.Frame = new CGRect (0, 0, Frame.Height, Frame.Height);
+			Background.SetNeedsDisplay ();
 			Hue.Frame = new CGRect (firstStop, secondBase, secondarySpan, primarySpan);
 			Hue.GripColor = NSColor.Text.CGColor;
+			Hue.SetNeedsDisplay ();
 			Shade.Frame = new CGRect (firstBase, secondBase, primarySpan, primarySpan);
 			History.Frame = new CGRect (firstBase, firstBase, primarySpan, secondarySpan);
 			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
 				editor.UpdateFromModel (ViewModel);
 			}
+			componentTabs.View.Frame = new CGRect (Frame.Height, 0, Frame.Width - Frame.Height, Frame.Height);
 		}
 	}
 }

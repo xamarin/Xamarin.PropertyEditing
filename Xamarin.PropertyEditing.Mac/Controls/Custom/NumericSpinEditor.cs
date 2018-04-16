@@ -5,7 +5,11 @@ using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class NumericSpinEditor<T> : NSView, INSAccessibilityGroup
+	public class NumericSpinEditor<T> : NumericSpinEditor
+	{
+	}
+
+	public class NumericSpinEditor : NSView, INSAccessibilityGroup
 	{
 		NumericTextField numericEditor;
 		NSStepper stepper;

@@ -26,9 +26,12 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		public override void MouseDown (NSEvent theEvent) {
-			if (Popover != null)
-				Popover.Show (new CGRect (20, this.Frame.Height/2 - 2.5, 5, 5), this, NSRectEdge.MinYEdge);
+		public override void MouseDown (NSEvent theEvent)
+		{
+			if (Popover == null)
+				return;
+			Popover.SetAppearance (PropertyEditorPanel.ThemeManager.CurrentAppearance);
+			Popover?.Show (new CGRect (20, this.Frame.Height / 2 - 2.5, 5, 5), this, NSRectEdge.MinYEdge);
 		}
     }
 
@@ -43,7 +46,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.popover = new NSPopover ();
 			popover.Behavior = NSPopoverBehavior.Transient;
-			popover.ContentViewController = new BrushTabViewController ();
+			popover.ContentViewController = brushTabViewController = new BrushTabViewController {
+				PreferredContentSize = new CGSize (300, 200)
+			};
 
 			this.popUpButton = new ColorPopUpButton {
 				TranslatesAutoresizingMaskIntoConstraints = false,
@@ -58,18 +63,17 @@ namespace Xamarin.PropertyEditing.Mac
 			UpdateTheme ();
 		}
 
-
-
 		internal new BrushPropertyViewModel ViewModel
 		{
-			get { return (BrushPropertyViewModel)base.ViewModel; }
-			set { base.ViewModel = value; }
+			get  => (BrushPropertyViewModel)base.ViewModel;
+			set  => base.ViewModel = value;
 		}
 
 		readonly NSPopUpButton popUpButton;
 		readonly BrushTabViewController colorEditor;
 		readonly NSPopover popover;
-		NSMenu popupButtonList;
+		readonly BrushTabViewController brushTabViewController;
+		readonly NSMenu popupButtonList;
 		readonly CommonBrushLayer previewLayer = new CommonBrushLayer {
 			Frame = new CGRect (0, 0, 30, 10)
 		};
@@ -77,7 +81,6 @@ namespace Xamarin.PropertyEditing.Mac
 		bool dataPopulated;
 
 		public override NSView FirstKeyView => this.popUpButton;
-
 		public override NSView LastKeyView => this.popUpButton;
 
 		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
@@ -116,11 +119,10 @@ namespace Xamarin.PropertyEditing.Mac
 			return title;
 		}
 
-		protected override void UpdateValue ()
+        protected override void UpdateValue ()
 		{
 			this.colorEditor.ViewModel = ViewModel;
-			var controller = this.popover.ContentViewController as BrushTabViewController;
-			controller.ViewModel = ViewModel;
+			this.brushTabViewController.ViewModel = ViewModel;
 
 			if (ViewModel.Solid != null) {
 				var title = GetTitle ();

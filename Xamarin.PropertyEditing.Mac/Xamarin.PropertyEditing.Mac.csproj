@@ -101,6 +101,9 @@
     <Compile Include="Controls\Custom\DrawingExtensions.cs" />
     <Compile Include="Controls\Custom\ResourceBrushViewController.cs" />
     <Compile Include="Controls\Custom\CommonBrushView.cs" />
+    <Compile Include="Controls\Custom\ColorComponentEditor.cs" />
+    <Compile Include="Controls\Custom\ColorComponentTabVewController.cs" />
+    <Compile Include="Controls\Custom\ColorComponentViewController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
