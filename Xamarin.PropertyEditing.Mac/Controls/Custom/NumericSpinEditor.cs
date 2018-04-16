@@ -27,8 +27,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public ValidationType NumericMode {
 			get { return numericEditor.NumericMode; }
-			set
-			{
+			set {
 				this.numericEditor.NumericMode = value;
 				Reset ();
 			}
