@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssignableTypesResult.cs" />
     <Compile Include="AsyncValue.cs" />
     <Compile Include="AsyncWorkQueue.cs" />
     <Compile Include="BidirectionalDictionary.cs" />

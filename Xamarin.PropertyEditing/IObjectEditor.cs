@@ -58,7 +58,10 @@ namespace Xamarin.PropertyEditing
 		/// </summary>
 		event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
 
-		Task<IReadOnlyList<ITypeInfo>> GetAssignableTypesAsync (IPropertyInfo property);
+		/// <param name="property">The property to get retrieve assignable types for.</param>
+		/// <param name="childTypes">Whether or not to return assignable types for a property's children rather than the property itself.</param>
+		/// <returns>An <see cref="AssignableTypesResult"/> instance containing the assignable types. No assignable types should use an empty array and not return <c>null</c>.</returns>
+		Task<AssignableTypesResult> GetAssignableTypesAsync (IPropertyInfo property, bool childTypes);
 
 		/*
 		 * Dealing with async values in the context of what's possible across all target platforms is a bit complex.

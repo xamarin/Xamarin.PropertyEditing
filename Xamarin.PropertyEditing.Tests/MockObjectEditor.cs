@@ -127,21 +127,21 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult<IReadOnlyList<string>> (new string[0]);
 		}
 
-		public Task<IReadOnlyList<ITypeInfo>> GetAssignableTypesAsync (IPropertyInfo property)
+		public Task<AssignableTypesResult> GetAssignableTypesAsync (IPropertyInfo property, bool childTypes)
 		{
 			if (this.assignableTypes == null) {
-				return Task.Run<IReadOnlyList<ITypeInfo>> (() => {
-					return AppDomain.CurrentDomain.GetAssemblies().SelectMany (a => a.GetTypes()).AsParallel()
+				return Task.Run (() => {
+					return new AssignableTypesResult (AppDomain.CurrentDomain.GetAssemblies().SelectMany (a => a.GetTypes()).AsParallel()
 						.Where (t => property.Type.IsAssignableFrom (t) && t.GetConstructor (Type.EmptyTypes) != null && t.Namespace != null && !t.IsAbstract && !t.IsInterface && t.IsPublic)
 						.Select (t => {
 							string asmName = t.Assembly.GetName().Name;
 							return new TypeInfo (new AssemblyInfo (asmName, isRelevant: asmName.StartsWith ("Xamarin")), t.Namespace, t.Name);
-						}).ToList();
+						}).ToList());
 				});
 			} else if (!this.assignableTypes.TryGetValue (property, out IReadOnlyList<ITypeInfo> types))
-				return Task.FromResult<IReadOnlyList<ITypeInfo>> (Enumerable.Empty<ITypeInfo>().ToArray());
+				return Task.FromResult (new AssignableTypesResult (Enumerable.Empty<ITypeInfo> ().ToArray ()));
 			else
-				return Task.FromResult (types);
+				return Task.FromResult (new AssignableTypesResult (types));
 		}
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
