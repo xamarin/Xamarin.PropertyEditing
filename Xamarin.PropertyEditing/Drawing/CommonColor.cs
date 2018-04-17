@@ -460,7 +460,7 @@ namespace Xamarin.PropertyEditing.Drawing
 				throw new ArgumentOutOfRangeException (nameof (saturation));
 			}
 			if (brightness < 0 || brightness > 1) {
-				throw new ArgumentOutOfRangeException (nameof (lightness));
+				throw new ArgumentOutOfRangeException (nameof (brightness));
 			}
 
 			var c = brightness * saturation;
