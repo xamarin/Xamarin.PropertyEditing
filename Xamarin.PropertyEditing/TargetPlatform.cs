@@ -28,6 +28,12 @@ namespace Xamarin.PropertyEditing
 			set;
 		}
 
+		public bool SupportsImageBrush
+		{
+			get;
+			set;
+		}
+
 		public bool SupportsBrushOpacity
 		{
 			get;

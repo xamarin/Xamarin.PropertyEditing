@@ -20,6 +20,12 @@ namespace Xamarin.PropertyEditing.Windows
 			set;
 		}
 
+		public DataTemplate ImageBrushTemplate
+		{
+			get;
+			set;
+		}
+
 		public DataTemplate ResourceBrushTemplate
 		{
 			get;
@@ -43,6 +49,8 @@ namespace Xamarin.PropertyEditing.Windows
 					return NoBrushTemplate;
 				case CommonBrushType.Solid:
 					return SolidBrushTemplate;
+				case CommonBrushType.Image:
+					return ImageBrushTemplate;
 				case CommonBrushType.Resource:
 					return ResourceBrushTemplate;
 				case CommonBrushType.MaterialDesign:

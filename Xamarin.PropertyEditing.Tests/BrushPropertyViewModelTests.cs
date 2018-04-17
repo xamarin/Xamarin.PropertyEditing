@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
@@ -11,6 +12,15 @@ namespace Xamarin.PropertyEditing.Tests
 		protected override PropertyViewModel<CommonBrush> GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
 			return new BrushPropertyViewModel (platform, property, editors);
+		}
+
+		[SetUp]
+		public void EnsurePackSchemeIsKnown ()
+		{
+			// "pack" URIs are not valid until initialized, which will happen naturally in a WPF app, but not in a test assembly.
+			if (!UriParser.IsKnownScheme ("pack")) {
+				UriParser.Register (new GenericUriParser (GenericUriParserOptions.GenericAuthority), "pack", -1);
+			}
 		}
 
 		[Test]

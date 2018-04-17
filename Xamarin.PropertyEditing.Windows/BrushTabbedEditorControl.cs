@@ -1,11 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -27,6 +22,7 @@ namespace Xamarin.PropertyEditing.Windows
 			this.advancedPropertyPanel = GetTemplateChild ("advancedPropertyPanel") as Expander;
 			this.solidBrushEditor = GetTemplateChild ("solidBrushEditor") as SolidBrushEditorControl;
 			this.materialDesignColorEditor = GetTemplateChild ("materialDesignColorEditor") as MaterialDesignColorEditorControl;
+			this.imageBrushColorEditor = GetTemplateChild ("imageBrushEditor") as ImageBrushEditorControl;
 			this.resourceBrushEditor = GetTemplateChild ("resourceBrushEditor") as ResourceBrushEditorControl;
 
 			if (this.brushChoice == null)
@@ -37,6 +33,8 @@ namespace Xamarin.PropertyEditing.Windows
 				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child SolidBrushEditorControl named \"solidBrushEditor\"");
 			if (this.materialDesignColorEditor == null)
 				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child MaterialDesignColorEditorControl named \"materialDesignColorEditor\"");
+			if (this.imageBrushColorEditor == null)
+				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child ImageBrushEditorControl named \"imageBrushEditor\"");
 			if (this.resourceBrushEditor == null)
 				throw new InvalidOperationException ($"{nameof (BrushTabbedEditorControl)} is missing a child ResourceBrushEditorControl named \"resourceBrushEditor\"");
 
@@ -80,8 +78,9 @@ namespace Xamarin.PropertyEditing.Windows
 		private ChoiceControl brushChoice;
 		private Expander advancedPropertyPanel;
 		private SolidBrushEditorControl solidBrushEditor;
-		private ResourceBrushEditorControl resourceBrushEditor;
 		private MaterialDesignColorEditorControl materialDesignColorEditor;
+		private ImageBrushEditorControl imageBrushColorEditor;
+		private ResourceBrushEditorControl resourceBrushEditor;
 
 		private BrushPropertyViewModel ViewModel => DataContext as BrushPropertyViewModel;
 	}

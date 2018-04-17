@@ -11,10 +11,10 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <summary>
 		/// The coordinate system is not relative to a bounding box.
 		/// </summary>
-		Absolute,
+		Absolute = 0,
 		/// <summary>
 		/// The coordinate system is relative to a bounding box.
 		/// </summary>
-		RelativeToBoundingBox
+		RelativeToBoundingBox = 1
 	}
 }

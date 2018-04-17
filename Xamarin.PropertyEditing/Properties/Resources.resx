@@ -461,4 +461,20 @@
   <data name="GoToSource" xml:space="preserve">
     <value>Go to Source</value>
   </data>
+  <data name="ImageBrush" xml:space="preserve">
+    <value>Image brush</value>
+    <comment>Image brush tab help text</comment>
+  </data>
+  <data name="ImageSource" xml:space="preserve">
+    <value>Image source</value>
+    <comment>ImageSource label text</comment>
+  </data>
+  <data name="Stretch" xml:space="preserve">
+    <value>Stretch</value>
+    <comment>Stretch label text</comment>
+  </data>
+  <data name="TileMode" xml:space="preserve">
+    <value>Tile mode</value>
+    <comment>TileMode editor label text</comment>
+  </data>
 </root>
