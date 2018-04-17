@@ -94,6 +94,8 @@
 	<SolidColorBrush x:Key="IconButtonSimpleBorderBrush" Color="Transparent" />
 	<SolidColorBrush x:Key="IconButtonForegroundBrush">#FFF1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="IconButtonMouseOverForegroundBrush">#FF007ACC</SolidColorBrush>
+	<SolidColorBrush x:Key="IconButtonMouseOverBackgroundBrush">#FF3E3E40</SolidColorBrush>
+	<SolidColorBrush x:Key="IconButtonMouseOverBorderBrush">#FF3E3E40</SolidColorBrush>
 	<SolidColorBrush x:Key="IconButtonPressedForegroundBrush">#FFFFFFFF</SolidColorBrush>
 
 	<SolidColorBrush x:Key="CategoryExpanderBorderBrush" Color="#333333" />

@@ -94,6 +94,8 @@
 	<SolidColorBrush x:Key="IconButtonSimpleBorderBrush" Color="Transparent" />
 	<SolidColorBrush x:Key="IconButtonForegroundBrush">#FF1E1E1E</SolidColorBrush>
 	<SolidColorBrush x:Key="IconButtonMouseOverForegroundBrush">#FF1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="IconButtonMouseOverBackgroundBrush">#FFC9DEF5</SolidColorBrush>
+	<SolidColorBrush x:Key="IconButtonMouseOverBorderBrush">#FFC9DEF5</SolidColorBrush>
 	<SolidColorBrush x:Key="IconButtonPressedForegroundBrush">#FFFFFFFF</SolidColorBrush>
 
 	<SolidColorBrush x:Key="ComboBoxBackgroundBrush">#FFFFFFFF</SolidColorBrush>

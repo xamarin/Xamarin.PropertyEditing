@@ -95,6 +95,7 @@
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />
     <Compile Include="DoubleToQuantityConverter.cs" />
+    <Compile Include="Eyedropper.cs" />
     <Compile Include="HasItemsToVisibilityConverter.cs" />
     <Compile Include="InvertedVisibilityConverter.cs" />
     <Compile Include="IPropertiesHost.cs" />

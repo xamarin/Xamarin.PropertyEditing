@@ -740,6 +740,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+
 	<Style TargetType="local:SolidBrushEditorControl">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -777,13 +778,15 @@
 									Margin="0,6,0,1" Panel.ZIndex="1"/>
 								<local:HueEditorControl
 									x:Name="hueChooser" HueColor="{Binding Path=Solid.HueColor, Mode=TwoWay}"
-									Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="1,6,3,1" Panel.ZIndex="0" Focusable="False"/>
+									Grid.Column="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="1,6,3,1" Panel.ZIndex="0" Focusable="False"/>
 								<local:CurrentColorEditorControl
 									Color="{Binding Path=Solid.Color, Mode=TwoWay}"
 									InitialColor="{Binding Solid.InitialColor}"
 									LastColor="{Binding Solid.LastColor}"
 									Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="20"
 									Margin="0,0,0,0" Panel.ZIndex="0" Focusable="False"/>
+
+								<ToggleButton Grid.Column="1" Grid.Row="1" Name="eyedropper" Style="{DynamicResource ImageToggleButton}" Width="20" Height="20" />
 							</Grid>
 							<local:ColorComponentsEditorControl x:Name="componentEditor"
 								Color="{Binding Path=Solid.Color, Mode=TwoWay}"
@@ -1876,6 +1879,33 @@
 						</Rectangle.Fill>
 					</Rectangle>
 				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="ImageToggleButton" TargetType="ToggleButton">
+		<Setter Property="Height" Value="16" />
+		<Setter Property="Width" Value="16"/>
+		<Setter Property="Background" Value="{DynamicResource IconButtonSimpleBackgroundBrush}" />
+		<Setter Property="Foreground" Value="{DynamicResource IconButtonForegroundBrush}" />
+		<Setter Property="BorderBrush" Value="Transparent" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="ToggleButton">
+					<Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+						<ContentPresenter />
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="border" Property="Background" Value="{DynamicResource IconButtonMouseOverBackgroundBrush}" />
+							<Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource IconButtonMouseOverBorderBrush}" />
+						</Trigger>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter TargetName="border" Property="Background" Value="{DynamicResource IconButtonMouseOverBackgroundBrush}" />
+							<Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource IconButtonMouseOverBorderBrush}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>
