@@ -108,7 +108,7 @@ namespace Xamarin.PropertyEditing.Mac
 			return CommonColor.FromHSB (
 				hue: hue ?? color.Hue,
 				saturation: saturation ?? color.Saturation,
-				brightness: brightness ?? color.B,
+				brightness: brightness ?? color.Brightness,
 				alpha: alpha ?? color.A);
 		}
 
@@ -121,7 +121,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			return CommonColor.FromHLS (
 				hue: hue ?? color.Hue,
-				lightness: lightness ?? color.B,
+				lightness: lightness ?? color.Lightness,
 				saturation: saturation ?? color.Saturation,
 				alpha: alpha ?? color.A);
 		}

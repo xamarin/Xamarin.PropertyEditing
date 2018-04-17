@@ -182,7 +182,7 @@ namespace Xamarin.PropertyEditing.Mac
 	class CyanComponentEditor : ComponentEditor 
 	{
 		public override double ValueFromColor (CommonColor color)
-		=> (double)color.C;
+		=> color.C;
 
 		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
 		=> color.UpdateCMYK (c: value);
@@ -191,7 +191,7 @@ namespace Xamarin.PropertyEditing.Mac
 	class MagentaComponentEditor : ComponentEditor
 	{
 		public override double ValueFromColor (CommonColor color)
-		=> (double)color.M;
+		=> color.M;
 
 		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
 		=> color.UpdateCMYK (m: value);
@@ -200,7 +200,7 @@ namespace Xamarin.PropertyEditing.Mac
 	class YellowComponentEditor : ComponentEditor 
 	{
 		public override double ValueFromColor (CommonColor color)
-		=> (double)color.Y;
+		=> color.Y;
 
 		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
 		=> color.UpdateCMYK (y: value);
@@ -209,7 +209,7 @@ namespace Xamarin.PropertyEditing.Mac
 	class BlackComponentEditor : ComponentEditor 
 	{
 		public override double ValueFromColor (CommonColor color)
-		=> (double)color.K;
+		=> color.K;
 
 		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
 		=> color.UpdateCMYK (k: value);
@@ -217,7 +217,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	class HsbHueComponentEditor : ComponentEditor {
 		public override double ValueFromColor (CommonColor color)
-		=> (double)color.Hue;
+		=> color.Hue;
 
 		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
 		=> color.UpdateHSB (hue: value);
@@ -226,7 +226,7 @@ namespace Xamarin.PropertyEditing.Mac
 	class HsbSaturationComponentEditor : ComponentEditor
 	{
 		public override double ValueFromColor (CommonColor color)
-		=> (double)color.Saturation;
+		=> color.Saturation;
 
 		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
 		=> color.UpdateHSB (saturation: value);
@@ -235,7 +235,7 @@ namespace Xamarin.PropertyEditing.Mac
 	class HsbBrightnessComponentEditor : ComponentEditor
 	{
 		public override double ValueFromColor (CommonColor color)
-		=> (double)color.Brightness;
+		=> color.Brightness;
 
 		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
 		=> color.UpdateHSB (brightness: value);
@@ -244,7 +244,7 @@ namespace Xamarin.PropertyEditing.Mac
 	class HlsHueComponentEditor : ComponentEditor
 	{
 		public override double ValueFromColor (CommonColor color)
-		=> (double)color.Hue;
+		=> color.Hue;
 
 		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
 		=> color.UpdateHLS (hue: value);
