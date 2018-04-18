@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.Tests
 			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (CommonBrush));
 			var mockEditor = new MockObjectEditor (mockProperty.Object);
 
-			var vm = new BrushPropertyViewModel (TargetPlatform.Default, mockProperty.Object, new[] { mockEditor });
+			var vm = new BrushPropertyViewModel (MockEditorProvider.MockPlatform, mockProperty.Object, new[] { mockEditor });
 			var changed = false;
 			vm.PropertyChanged += (s, e) => {
 				if (e.PropertyName == nameof(BrushPropertyViewModel.Opacity)) {
@@ -37,7 +37,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var mockProperty = new Mock<IPropertyInfo> ();
 			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (CommonBrush));
 			var mockEditor = new MockObjectEditor (mockProperty.Object);
-			var vm = new BrushPropertyViewModel (TargetPlatform.Default, mockProperty.Object, new [] { mockEditor });
+			var vm = new BrushPropertyViewModel (MockEditorProvider.MockPlatform, mockProperty.Object, new [] { mockEditor });
 			vm.ResourceProvider = new MockResourceProvider ();
 			var changed = false;
 			vm.PropertyChanged += (s, e) => {
@@ -58,7 +58,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var mockProperty = new Mock<IPropertyInfo> ();
 			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (CommonBrush));
 			var mockEditor = new MockObjectEditor (mockProperty.Object);
-			var vm = new BrushPropertyViewModel (TargetPlatform.Default, mockProperty.Object, new [] { mockEditor });
+			var vm = new BrushPropertyViewModel (MockEditorProvider.MockPlatform, mockProperty.Object, new [] { mockEditor });
 			
 			var changed = false;
 			vm.PropertyChanged += (s, e) => {

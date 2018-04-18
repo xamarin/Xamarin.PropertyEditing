@@ -284,7 +284,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 		private static BrushPropertyViewModel PrepareMockViewModel ()
 		{
-			var platform = new TargetPlatform {
+			var platform = new TargetPlatform (new MockEditorProvider()) {
 				SupportsMaterialDesign = true
 			};
 			var mockProperty = new Mock<IPropertyInfo> ();

@@ -28,17 +28,8 @@ namespace Xamarin.PropertyEditing.Windows
 			SelectedItems = selectedItems;
 		}
 
-		public static readonly DependencyProperty EditorProviderProperty = DependencyProperty.Register (
-			nameof(EditorProvider), typeof(IEditorProvider), typeof(PropertyEditorPanel), new PropertyMetadata (default(IEditorProvider), (o, args) => ((PropertyEditorPanel)o).OnProviderChanged()));
-
-		public IEditorProvider EditorProvider
-		{
-			get { return (IEditorProvider) GetValue (EditorProviderProperty); }
-			set { SetValue (EditorProviderProperty, value); }
-		}
-
 		public static readonly DependencyProperty ResourceProviderProperty = DependencyProperty.Register (
-			nameof(ResourceProvider), typeof(IResourceProvider), typeof(PropertyEditorPanel), new PropertyMetadata (default(IResourceProvider), (o, args) => ((PropertyEditorPanel)o).OnProviderChanged()));
+			nameof(ResourceProvider), typeof(IResourceProvider), typeof(PropertyEditorPanel), new PropertyMetadata (default(IResourceProvider), (o, args) => ((PropertyEditorPanel)o).OnTargetPlatformChanged()));
 
 		public IResourceProvider ResourceProvider
 		{
@@ -47,7 +38,7 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static readonly DependencyProperty TargetPlatformProperty = DependencyProperty.Register (
-			"TargetPlatform", typeof(TargetPlatform), typeof(PropertyEditorPanel), new PropertyMetadata (TargetPlatform.Default));
+			"TargetPlatform", typeof(TargetPlatform), typeof(PropertyEditorPanel), new PropertyMetadata (null, (o,e) => ((PropertyEditorPanel)o).OnTargetPlatformChanged ()));
 
 		public TargetPlatform TargetPlatform
 		{
@@ -97,7 +88,7 @@ namespace Xamarin.PropertyEditing.Windows
 			this.paneSelector = (ChoiceControl) GetTemplateChild ("paneSelector");
 			this.paneSelector.SelectedValue = EditingPane.Properties;
 			this.paneSelector.SelectedItemChanged += OnPaneChanged;
-			OnProviderChanged();
+			OnTargetPlatformChanged();
 
 			if (this.vm.SelectedObjects.Count > 0)
 				OnArrangeModeChanged (ArrangeMode);
@@ -153,7 +144,7 @@ namespace Xamarin.PropertyEditing.Windows
 				OnArrangeModeChanged (ArrangeMode);
 		}
 
-		private void OnProviderChanged ()
+		private void OnTargetPlatformChanged ()
 		{
 			if (this.root == null)
 				return;
@@ -162,8 +153,8 @@ namespace Xamarin.PropertyEditing.Windows
 				this.vm.PropertyChanged -= OnVmPropertyChanged;
 
 			PanelViewModel newVm = null;
-			if (EditorProvider != null) {
-				newVm = new PanelViewModel (EditorProvider, TargetPlatform) {
+			if (TargetPlatform != null) {
+				newVm = new PanelViewModel (TargetPlatform) {
 					ResourceProvider = ResourceProvider
 				};
 			}

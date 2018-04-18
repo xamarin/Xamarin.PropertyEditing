@@ -42,7 +42,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var providerMock = CreateProviderMock (value, new MockObjectEditor { Target = value });
 
-			var vm = new ObjectPropertyViewModel (providerMock.Object, TargetPlatform.Default, p.Object, new[] { editor });
+			var vm = new ObjectPropertyViewModel (new TargetPlatform (providerMock.Object), p.Object, new[] { editor });
 
 			bool requested = false;
 			vm.TypeRequested += (sender, args) => {
@@ -76,7 +76,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var providerMock = CreateProviderMock (value, new MockObjectEditor { Target = value });
 
-			var vm = new ObjectPropertyViewModel (providerMock.Object, TargetPlatform.Default, p.Object, new[] { editor });
+			var vm = new ObjectPropertyViewModel (new TargetPlatform (providerMock.Object), p.Object, new[] { editor });
 
 			bool requested = false;
 			vm.TypeRequested += (sender, args) => {
@@ -117,7 +117,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var providerMock = CreateProviderMock (value, new MockObjectEditor { Target = value });
 
-			var vm = new ObjectPropertyViewModel (providerMock.Object, TargetPlatform.Default, p.Object, new[] { editor, editor2 });
+			var vm = new ObjectPropertyViewModel (new TargetPlatform (providerMock.Object), p.Object, new[] { editor, editor2 });
 			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Unknown));
 		}
 
@@ -140,7 +140,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var providerMock = CreateProviderMock (value, new MockObjectEditor { Target = value });
 
-			var vm = new ObjectPropertyViewModel (providerMock.Object, TargetPlatform.Default, p.Object, new[] { editor });
+			var vm = new ObjectPropertyViewModel (new TargetPlatform (providerMock.Object), p.Object, new[] { editor });
 			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
 
 			bool changed = false;
@@ -162,7 +162,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var p = CreatePropertyMock ("prop");
 			var providerMock = CreateProviderMock (value, new MockObjectEditor { Target = value });
 
-			var vm = new ObjectPropertyViewModel (providerMock.Object, TargetPlatform.Default, p.Object, new IObjectEditor[0]);
+			var vm = new ObjectPropertyViewModel (new TargetPlatform (providerMock.Object), p.Object, new IObjectEditor[0]);
 			Assume.That (vm.ValueType, Is.Null);
 			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Default));
 
@@ -192,7 +192,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var providerMock = CreateProviderMock (value, new MockObjectEditor { Target = value });
 
-			var vm = new ObjectPropertyViewModel (providerMock.Object, TargetPlatform.Default, p.Object, new IObjectEditor[0]);
+			var vm = new ObjectPropertyViewModel (new TargetPlatform (providerMock.Object), p.Object, new IObjectEditor[0]);
 			Assert.That (vm.CanDelve, Is.False);
 
 			bool changed = false;
@@ -250,7 +250,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var providerMock = CreateProviderMock (value, new MockObjectEditor { Target = value });
 			providerMock.Setup (a => a.GetObjectEditorAsync (value2)).ReturnsAsync (new MockObjectEditor { Target = value2 });
 
-			var vm = new ObjectPropertyViewModel (providerMock.Object, TargetPlatform.Default, p.Object, new[] { editor, editor2 });
+			var vm = new ObjectPropertyViewModel (new TargetPlatform (providerMock.Object), p.Object, new[] { editor, editor2 });
 			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
 			Assert.That (vm.ValueType, Is.Null);
 		}

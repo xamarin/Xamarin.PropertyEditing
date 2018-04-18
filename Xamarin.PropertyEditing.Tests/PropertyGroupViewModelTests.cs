@@ -1,4 +1,4 @@
-﻿using System.Collections.Specialized;
+using System.Collections.Specialized;
 using Moq;
 using NUnit.Framework;
 using Xamarin.PropertyEditing.ViewModels;
@@ -20,10 +20,10 @@ namespace Xamarin.PropertyEditing.Tests
 			prop2.SetupGet (p => p.Type).Returns (typeof(int));
 
 			editor = new MockObjectEditor (prop.Object, prop2.Object);
-			var pvm = new PropertyViewModel<int> (TargetPlatform.Default, prop.Object, new[] { editor });
-			var pvm2 = new PropertyViewModel<int> (TargetPlatform.Default, prop2.Object, new[] { editor });
+			var pvm = new PropertyViewModel<int> (MockEditorProvider.MockPlatform, prop.Object, new[] { editor });
+			var pvm2 = new PropertyViewModel<int> (MockEditorProvider.MockPlatform, prop2.Object, new[] { editor });
 
-			var vm = new PropertyGroupViewModel (TargetPlatform.Default, "category", new[] { pvm, pvm2 }, new [] { editor});
+			var vm = new PropertyGroupViewModel (MockEditorProvider.MockPlatform, "category", new[] { pvm, pvm2 }, new [] { editor});
 			Assert.That (vm.Properties, Contains.Item (pvm));
 			Assert.That (vm.Properties, Contains.Item (pvm2));
 		}
@@ -47,10 +47,10 @@ namespace Xamarin.PropertyEditing.Tests
 			constraint.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (true);
 			constraint2.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (false);
 
-			var pvm = new PropertyViewModel<int> (TargetPlatform.Default, prop.Object, new[] { editor });
-			var pvm2 = new PropertyViewModel<int> (TargetPlatform.Default, prop2.Object, new[] { editor });
+			var pvm = new PropertyViewModel<int> (MockEditorProvider.MockPlatform, prop.Object, new[] { editor });
+			var pvm2 = new PropertyViewModel<int> (MockEditorProvider.MockPlatform, prop2.Object, new[] { editor });
 
-			var vm = new PropertyGroupViewModel (TargetPlatform.Default, "category", new[] { pvm, pvm2 }, new [] { editor});
+			var vm = new PropertyGroupViewModel (MockEditorProvider.MockPlatform, "category", new[] { pvm, pvm2 }, new [] { editor});
 			Assert.That (vm.Properties, Contains.Item (pvm));
 			Assert.That (vm.Properties, Does.Not.Contain (pvm2));
 		}
@@ -77,10 +77,10 @@ namespace Xamarin.PropertyEditing.Tests
 			constraint.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (true);
 			constraint2.Setup (c => c.GetIsAvailableAsync (editor)).ReturnsAsync (() => isAvailable);
 
-			var pvm = new PropertyViewModel<int> (TargetPlatform.Default, prop.Object, new[] { editor });
-			var pvm2 = new PropertyViewModel<int> (TargetPlatform.Default, prop2.Object, new[] { editor });
+			var pvm = new PropertyViewModel<int> (MockEditorProvider.MockPlatform, prop.Object, new[] { editor });
+			var pvm2 = new PropertyViewModel<int> (MockEditorProvider.MockPlatform, prop2.Object, new[] { editor });
 
-			var vm = new PropertyGroupViewModel (TargetPlatform.Default, "category", new[] { pvm, pvm2 }, new [] { editor});
+			var vm = new PropertyGroupViewModel (MockEditorProvider.MockPlatform, "category", new[] { pvm, pvm2 }, new [] { editor});
 			Assume.That (vm.Properties, Contains.Item (pvm));
 			Assume.That (vm.Properties, Does.Not.Contain (pvm2));
 
@@ -117,10 +117,10 @@ namespace Xamarin.PropertyEditing.Tests
 			prop2.SetupGet (p => p.Name).Returns ("two");
 
 			editor = new MockObjectEditor (prop.Object, prop2.Object);
-			var pvm = new PropertyViewModel<int> (TargetPlatform.Default, prop.Object, new[] { editor });
-			var pvm2 = new PropertyViewModel<int> (TargetPlatform.Default, prop2.Object, new[] { editor });
+			var pvm = new PropertyViewModel<int> (MockEditorProvider.MockPlatform, prop.Object, new[] { editor });
+			var pvm2 = new PropertyViewModel<int> (MockEditorProvider.MockPlatform, prop2.Object, new[] { editor });
 
-			var vm = new PropertyGroupViewModel (TargetPlatform.Default, "category", new[] { pvm, pvm2 }, new [] { editor});
+			var vm = new PropertyGroupViewModel (MockEditorProvider.MockPlatform, "category", new[] { pvm, pvm2 }, new [] { editor});
 			Assume.That (vm.Properties, Contains.Item (pvm));
 			Assume.That (vm.Properties, Contains.Item (pvm2));
 
@@ -155,10 +155,10 @@ namespace Xamarin.PropertyEditing.Tests
 			prop2.SetupGet (p => p.Name).Returns ("two");
 
 			editor = new MockObjectEditor (prop.Object, prop2.Object);
-			var pvm = new PropertyViewModel<int> (TargetPlatform.Default, prop.Object, new[] { editor });
-			var pvm2 = new PropertyViewModel<int> (TargetPlatform.Default, prop2.Object, new[] { editor });
+			var pvm = new PropertyViewModel<int> (MockEditorProvider.MockPlatform, prop.Object, new[] { editor });
+			var pvm2 = new PropertyViewModel<int> (MockEditorProvider.MockPlatform, prop2.Object, new[] { editor });
 
-			var vm = new PropertyGroupViewModel (TargetPlatform.Default, "category", new[] { pvm, pvm2 }, new [] { editor});
+			var vm = new PropertyGroupViewModel (MockEditorProvider.MockPlatform, "category", new[] { pvm, pvm2 }, new [] { editor});
 			Assume.That (vm.Properties, Contains.Item (pvm));
 			Assume.That (vm.Properties, Contains.Item (pvm2));
 

@@ -847,7 +847,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var value = GetNonDefaultRandomTestValue ();
 			string custom = value.ToString ();
 
-			var platform = new TargetPlatform {
+			var platform = new TargetPlatform (new MockEditorProvider()) {
 				SupportsCustomExpressions = true
 			};
 
@@ -873,7 +873,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var value = GetNonDefaultRandomTestValue ();
 			string custom = value.ToString ();
 
-			var platform = new TargetPlatform {
+			var platform = new TargetPlatform (new MockEditorProvider()) {
 				SupportsCustomExpressions = true
 			};
 
@@ -1059,7 +1059,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 		protected TViewModel GetViewModel (IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return GetViewModel (TargetPlatform.Default, property, editors);
+			return GetViewModel (MockEditorProvider.MockPlatform, property, editors);
 		}
 
 		protected abstract TViewModel GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors);

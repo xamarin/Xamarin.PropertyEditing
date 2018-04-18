@@ -10,6 +10,22 @@ namespace Xamarin.PropertyEditing
 	/// </summary>
 	public sealed class TargetPlatform
 	{
+		public TargetPlatform (IEditorProvider provider)
+		{
+			if (provider == null)
+				throw new ArgumentNullException (nameof(provider));
+
+			EditorProvider = provider;
+		}
+
+		/// <summary>
+		/// Gets the <see cref="IEditorProvider"/> associated with this platform.
+		/// </summary>
+		public IEditorProvider EditorProvider
+		{
+			get;
+		}
+
 		/// <summary>
 		/// Gets or sets whether the platform supports custom expressions (default false).
 		/// </summary>
@@ -43,10 +59,5 @@ namespace Xamarin.PropertyEditing
 			set;
 		}
 
-		public static readonly TargetPlatform Default = new TargetPlatform {
-			GroupedTypes = new Dictionary<Type, string> {
-				{ typeof(CommonBrush), "Brush" }
-			}
-		};
 	}
 }

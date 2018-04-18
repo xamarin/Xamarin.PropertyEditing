@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +25,7 @@ namespace Xamarin.PropertyEditing.Tests
 			const string handler = "handler";
 			editor.AttachHandlerAsync (info.Object, handler);
 
-			var ev = new EventViewModel (TargetPlatform.Default, info.Object, new[] { editor });
+			var ev = new EventViewModel (MockEditorProvider.MockPlatform, info.Object, new[] { editor });
 
 			Assert.That (ev.MethodName, Is.EqualTo (handler));
 		}
@@ -41,7 +41,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var eeditor = editor.As<IObjectEventEditor> ();
 			eeditor.SetupGet (e => e.Events).Returns (new[] { info.Object });
 
-			var vm = new EventViewModel (TargetPlatform.Default, info.Object, new[] { editor.Object });
+			var vm = new EventViewModel (MockEditorProvider.MockPlatform, info.Object, new[] { editor.Object });
 			Assume.That (vm.MethodName, Is.Null);
 
 			bool changed = false;
@@ -69,7 +69,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var eeditor = editor.As<IObjectEventEditor> ();
 			eeditor.SetupGet (e => e.Events).Returns (new[] { info.Object });
 			eeditor.Setup (e => e.GetHandlersAsync (info.Object)).ReturnsAsync (new[] { oldHandler });
-			var vm = new EventViewModel (TargetPlatform.Default, info.Object, new[] { editor.Object });
+			var vm = new EventViewModel (MockEditorProvider.MockPlatform, info.Object, new[] { editor.Object });
 			Assume.That (vm.MethodName, Is.EqualTo (oldHandler));
 
 			bool changed = false;
@@ -104,7 +104,7 @@ namespace Xamarin.PropertyEditing.Tests
 			};
 			editor.AttachHandlerAsync (info.Object, "handler2");
 
-			var ev = new EventViewModel (TargetPlatform.Default, info.Object, new[] { editor, editor2 });
+			var ev = new EventViewModel (MockEditorProvider.MockPlatform, info.Object, new[] { editor, editor2 });
 
 			Assert.That (ev.MethodName, Is.Null);
 			Assert.That (ev.MultipleValues, Is.True);

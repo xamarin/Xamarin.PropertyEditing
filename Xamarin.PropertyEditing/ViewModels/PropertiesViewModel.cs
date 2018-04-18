@@ -13,14 +13,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal abstract class PropertiesViewModel
 		: NotifyingObject, INotifyDataErrorInfo
 	{
-		public PropertiesViewModel (IEditorProvider provider, TargetPlatform targetPlatform)
+		public PropertiesViewModel (TargetPlatform targetPlatform)
 		{
-			if (provider == null)
-				throw new ArgumentNullException (nameof (provider));
 			if (targetPlatform == null)
 				throw new ArgumentNullException (nameof(targetPlatform));
 
-			EditorProvider = provider;
 			TargetPlatform = targetPlatform;
 
 			this.selectedObjects.CollectionChanged += OnSelectedObjectsChanged;
@@ -109,10 +106,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool HasErrors => this.errors.IsValueCreated && this.errors.Value.Count > 0;
 
-		protected IEditorProvider EditorProvider
-		{
-			get;
-		}
+		protected IEditorProvider EditorProvider => TargetPlatform.EditorProvider;
 
 		protected IReadOnlyList<IObjectEditor> ObjectEditors => this.objEditors;
 
@@ -450,8 +444,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 					: typeof(PredefinedValuesViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0]);
 
 				return (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors);
-			} else if (property.Type == typeof(object)) {
-				return new ObjectPropertyViewModel (EditorProvider, TargetPlatform, property, this.objEditors);
 			}
 
 			if (ViewModelMap.TryGetValue (property.Type, out var vmFactory))
@@ -475,6 +467,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(CommonSize), (tp,p,e) => new SizePropertyViewModel (tp, p, e) },
 			{ typeof(CommonRectangle), (tp,p,e) => new RectanglePropertyViewModel (tp, p, e) },
 			{ typeof(CommonThickness), (tp,p, e) => new ThicknessPropertyViewModel (tp, p, e) },
+			{ typeof(object), (tp,p,e) => new ObjectPropertyViewModel (tp,p,e) },
 		};
 	}
 }
