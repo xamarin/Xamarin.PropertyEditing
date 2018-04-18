@@ -1835,12 +1835,32 @@
 		</Setter>
 	</Style>
 
+	<Style x:Key="SearchIconStyle" TargetType="Path">
+		<Setter Property="Stroke" Value="{DynamicResource InputForegroundBrush}" />
+		<Setter Property="Fill" Value="{DynamicResource InputForegroundBrush}" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="Width" Value="16"/>
+	</Style>
+
+
 	<Style x:Key="SearchButton" TargetType="Button" BasedOn="{StaticResource SearchButtonBase}">
-		<Setter Property="Content" Value="{StaticResource SearchLoopIcon}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<ContentControl ContentTemplate="{DynamicResource SearchLoopIcon}"/>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 
 	<Style x:Key="ClearButton" TargetType="Button" BasedOn="{StaticResource SearchButtonBase}">
-		<Setter Property="Content" Value="{StaticResource ClearSearchIcon}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<ContentControl ContentTemplate="{DynamicResource ClearSearchIcon}"/>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 
 	<Style TargetType="local:TextBoxEx">
