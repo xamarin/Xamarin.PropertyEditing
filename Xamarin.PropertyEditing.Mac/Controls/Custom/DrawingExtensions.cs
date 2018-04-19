@@ -85,7 +85,6 @@ namespace Xamarin.PropertyEditing.Mac
 				width: rect.Width,
 				height: rect.Height);
 
-
 		public static CommonColor UpdateRGB (
 			this CommonColor color,
 			byte? r = null,

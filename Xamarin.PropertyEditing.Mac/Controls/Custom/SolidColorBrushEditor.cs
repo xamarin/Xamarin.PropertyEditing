@@ -345,7 +345,7 @@ namespace Xamarin.PropertyEditing.Mac
             base.LayoutSublayers();
 
 			Saturation.Frame = new CGRect (Margin, Margin, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
-			Brightness.Frame = new CGRect (0, 0, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
+			Brightness.Frame = Saturation.Frame.Bounds ();
 			Saturation.StartPoint = new CGPoint (0, .5);
 			Saturation.EndPoint = new CGPoint (1, .5);
         }
@@ -355,20 +355,17 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			LayoutIfNeeded ();
 			var color = interaction.Color;
-			
-			var frame = Saturation.Frame;
+
 			var sat = saturationEditor.LocationFromColor (Saturation, color);
 			var bright = brightnessEditor.LocationFromColor (Brightness, color);
 
 			var x = sat.X;
-			var y = bright.Y + frame.Y;
+			var y = bright.Y + Saturation.Frame.Y;
 
 			Grip.Frame = new CGRect (x - GripRadius, y - GripRadius, GripRadius * 2, GripRadius * 2);
 
-			Saturation.Colors = new[] {
-				new CGColor (1f, 1f, 1f),
-				interaction.Color.HueColor.ToCGColor ()
-			};
+			if (interaction.StartColor.ToCGColor () != Saturation.Colors.Last())
+				saturationEditor.UpdateGradientLayer (Saturation, interaction.StartColor.HueColor);
 		}
 
 		public override void UpdateFromLocation (EditorInteraction interaction, CGPoint location)
@@ -441,16 +438,17 @@ namespace Xamarin.PropertyEditing.Mac
 			var loc = location;
 			var clos = Math.Min (Colors.Frame.Height, Math.Max (0, loc.Y - Colors.Frame.Y));
 
-			Grip.Frame = new CGRect (1, clos + Colors.Frame.Y - Grip.Frame.Height / 2, Frame.Width - 2, 2 * GripRadius);
+			Grip.Frame = new CGRect (1, clos + Colors.Frame.Y - Grip.Frame.Height / 2f, Frame.Width - 2, 2 * GripRadius);
 			var hue = (1 - clos/ Colors.Frame.Height) * 360;
 
 			if (interaction == null)
 				return;
 
 			var color = interaction.Color;
-			c = interaction.Color = hueEditor.UpdateColorFromValue (
+			c = interaction.Color = hueEditor.UpdateColorFromLocation (
+				Colors,
 				interaction.Color,
-				hueEditor.ValueFromLocation (Colors, loc));
+				loc);
 		}
 
         public override void LayoutSublayers()

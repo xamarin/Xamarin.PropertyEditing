@@ -157,9 +157,10 @@ namespace Xamarin.PropertyEditing.Mac
 					if (set != null) {
 						var channel = set.Editor.ComponentEditor;
 						var grad = set.Gradient;
-						ViewModel.Color = channel.UpdateColorFromValue (
+						ViewModel.Color = channel.UpdateColorFromLocation (
+							grad,
 							ViewModel.Color,
-							channel.ValueFromLocation (grad, Layer.ConvertPointToLayer (location,grad.SuperLayer)));
+							Layer.ConvertPointToLayer (location,grad.SuperLayer));
 						return;
 					}
 				}
@@ -175,9 +176,10 @@ namespace Xamarin.PropertyEditing.Mac
 			if (set != null) {
 				var channel = set.Editor.ComponentEditor;
 				var grad = set.Gradient;
-				ViewModel.Color = channel.UpdateColorFromValue (
+				ViewModel.Color = channel.UpdateColorFromLocation (
+					grad,
 					ViewModel.Color,
-					channel.ValueFromLocation (grad, Layer.ConvertPointToLayer (location, grad.SuperLayer)));
+					Layer.ConvertPointToLayer (location, grad.SuperLayer));
 				return;
 			}
 			base.MouseMoved (theEvent);
@@ -232,26 +234,31 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public void UpdateGradientLayer (CAGradientLayer layer, CommonColor color)
 		{
+			var c = color.UpdateRGB (a: 255);
+
 			layer.Colors = LerpSteps (MinimumValue, MaximumValue, 7)
-				.Select (value => UpdateColorFromValue (color.UpdateRGB (a: 255), value).ToCGColor ()).ToArray ();
+				.Select (value => UpdateColorFromValue (c, value).ToCGColor ()).ToArray ();
 		}
 
-		public double InverseLerp (CGPoint start, CGPoint end, CGPoint loc)
+		public double InvLerp (CGPoint start, CGPoint end, CGPoint loc)
 		{
 			var a = new CGVector (end.X - start.X, end.Y - start.Y);
 			var b = new CGVector (loc.X - start.X, loc.Y - start.Y);
 			var dot = a.dx * b.dx + a.dy * b.dy;
 			var len = Math.Sqrt (a.dx * a.dx + a.dy * a.dy);
-			var pos = dot / len;
-			return MaximumValue * pos - MinimumValue * (1 - pos);
+			return dot / len;
 		}
 
-		public CGPoint Lerp (CGPoint start, CGPoint end, double amount)
-		{
-			return new CGPoint (
-				start.X + (end.X - start.X) * amount,
-				start.Y + (end.Y - start.Y) * amount);
-		}
+		public static double InvLerp (double start, double end, double value)
+		=> (value - start) / (end - start);
+
+		public static double Lerp (double start, double end, double amount)
+		=> end * amount - start * (1 - amount);
+
+		public static CGPoint Lerp (CGPoint start, CGPoint end, double amount)
+		=>  new CGPoint (
+			start.X + (end.X - start.X) * amount,
+			start.Y + (end.Y - start.Y) * amount);
 
 		public double ValueFromLocation (CAGradientLayer layer, CGPoint loc)
 		{
@@ -260,13 +267,17 @@ namespace Xamarin.PropertyEditing.Mac
 				(loc.X - rect.X) / rect.Width,
 				(loc.Y - rect.Y) / rect.Height);
 			
-			return Clamp (InverseLerp (layer.StartPoint, layer.EndPoint, unitLoc));
+			return Clamp (Lerp (MinimumValue, MaximumValue, InvLerp (layer.StartPoint, layer.EndPoint, unitLoc)));
 		}
+
+		public CommonColor UpdateColorFromLocation (CAGradientLayer layer, CommonColor color, CGPoint loc)
+		=> UpdateColorFromValue (color, ValueFromLocation (layer, loc));
 
 		public CGPoint LocationFromColor (CAGradientLayer layer, CommonColor color)
 		{
 			var pos = ValueFromColor (color);
-			var amount = (pos - MinimumValue) / (MaximumValue - MinimumValue);
+
+			var amount = InvLerp (MinimumValue, MaximumValue, pos);
 			var unitLoc = Lerp (layer.StartPoint, layer.EndPoint, amount);
 
 			return new CGPoint (
