@@ -17,7 +17,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public MaterialBrushEditorViewController ()
 		{
-			PreferredContentSize = new CGSize (100, 100);
+			PreferredContentSize = new CGSize (200, 200);
 		}
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
@@ -374,6 +374,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs args)
 		{
+			base.OnPropertyChanged (sender, args);
 			switch (args.PropertyName) {
 				case nameof (BrushPropertyViewModel.SelectedBrushType):
 					if (BrushTypeTable.TryGetValue (ViewModel.SelectedBrushType, out var index)) {

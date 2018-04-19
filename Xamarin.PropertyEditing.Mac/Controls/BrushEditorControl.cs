@@ -40,15 +40,16 @@ namespace Xamarin.PropertyEditing.Mac
 		public BrushEditorControl ()
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
-			RowHeight = 230f;
+
 
 			this.colorEditor = new BrushTabViewController ();
 
 			this.popover = new NSPopover ();
 			popover.Behavior = NSPopoverBehavior.Transient;
 			popover.ContentViewController = brushTabViewController = new BrushTabViewController {
-				PreferredContentSize = new CGSize (300, 200)
+				PreferredContentSize = new CGSize (200, 200)
 			};
+			RowHeight = 200 + 30;
 
 			this.popUpButton = new ColorPopUpButton {
 				TranslatesAutoresizingMaskIntoConstraints = false,

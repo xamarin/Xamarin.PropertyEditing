@@ -91,8 +91,16 @@ namespace Xamarin.PropertyEditing.Mac
 
 	abstract class ColorEditorLayer : CALayer
 	{
-		abstract public void UpdateFromModel (SolidBrushViewModel viewModel);
-		abstract public void UpdateFromLocation (SolidBrushViewModel viewModel, CGPoint location);
+		public ColorEditorLayer ()
+		{
+			Actions = new NSDictionary (
+				new NSString ("onOrderIn"), new NSNull (),
+				new NSString ("onOrderOut"), new NSNull (),
+				new NSString ("sublayers"), new NSNull (),
+				new NSString ("bounds"), new NSNull ());
+		}
+		abstract public void UpdateFromModel (EditorInteraction viewModel);
+		abstract public void UpdateFromLocation (EditorInteraction viewModel, CGPoint location);
 	}
 
 	class CommonGradientBrushLayer : CALayer
@@ -121,10 +129,20 @@ namespace Xamarin.PropertyEditing.Mac
 
 			switch (Brush) {
 				case CommonLinearGradientBrush linear:
-					ctx.DrawLinearGradient (gradient, new CGPoint (0, 0), new CGPoint (0, Bounds.Width), CGGradientDrawingOptions.None);
+					ctx.DrawLinearGradient (
+						gradient,
+						new CGPoint (0, 0),
+						new CGPoint (0, Bounds.Width),
+						CGGradientDrawingOptions.None);
 					break;
 				case CommonRadialGradientBrush radial:
-					ctx.DrawRadialGradient (gradient, startCenter: center, startRadius: 0f, endCenter: center, endRadius: radius, options: CGGradientDrawingOptions.None);
+					ctx.DrawRadialGradient (
+						gradient,
+						startCenter: center,
+						startRadius: 0f,
+						endCenter: center,
+						endRadius: radius,
+						options: CGGradientDrawingOptions.None);
 					break;
 			}
         }
@@ -210,12 +228,12 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	public enum EditorType
+	public enum ChannelEditorType
 	{
-		Rgb,
-		Hls,
-		Hsb,
-		Cmyk
+		RGB,
+		HLS,
+		HSB,
+		CMYK
 	};
 
 	class HistoryLayer : ColorEditorLayer
@@ -256,17 +274,17 @@ namespace Xamarin.PropertyEditing.Mac
 			Current.Frame = new CGRect (width, 0, width, Clip.Frame.Height);
 		}
 
-		public override void UpdateFromModel (SolidBrushViewModel viewModel)
+		public override void UpdateFromModel (EditorInteraction interaction)
 		{
 			LayoutIfNeeded ();
-			Current.BackgroundColor = viewModel.Color.ToCGColor ();
-			Previous.BackgroundColor = viewModel.LastColor.ToCGColor ();
+			Current.BackgroundColor = interaction.Color.ToCGColor ();
+			Previous.BackgroundColor = interaction.LastColor.ToCGColor ();
 		}
 
-		public override void UpdateFromLocation (SolidBrushViewModel viewModel, CGPoint location)
+		public override void UpdateFromLocation (EditorInteraction interaction, CGPoint location)
 		{
 			if (Previous == HitTest (location))
-				viewModel.Color = viewModel.LastColor;
+				interaction.Color = interaction.LastColor;
 		}
 	}
 
@@ -275,11 +293,13 @@ namespace Xamarin.PropertyEditing.Mac
 		const float GripRadius = 4;
 		const float BorderRadius = 3;
 		const float Margin = 3;
+		ComponentEditor saturationEditor = new HsbSaturationComponentEditor ();
+		ComponentEditor brightnessEditor = new HsbBrightnessComponentEditor ();
 
 		public ShadeLayer ()
 		{
-			AddSublayer (Colors);
-			Colors.AddSublayer (Black);
+			AddSublayer (Saturation);
+			Saturation.AddSublayer (Brightness);
 			AddSublayer (Grip);
 			float innerRadius = GripRadius - 1;
 
@@ -301,7 +321,7 @@ namespace Xamarin.PropertyEditing.Mac
 			CornerRadius = GripRadius,
 		};
 
-		CALayer Black = new CAGradientLayer {
+		CAGradientLayer Brightness = new CAGradientLayer {
 			Colors = new[] {
 					new CGColor (0f, 0f, 0f, 1f),
 					new CGColor (0f, 0f, 0f, 0f)
@@ -309,7 +329,7 @@ namespace Xamarin.PropertyEditing.Mac
 			CornerRadius = BorderRadius,
 		};
 
-		CAGradientLayer Colors = new CAGradientLayer {
+		CAGradientLayer Saturation = new CAGradientLayer {
 			Colors = new[] {
 					new CGColor (1f, 1f, 1f),
 					new CGColor (1f, .3f, 0f)
@@ -324,47 +344,48 @@ namespace Xamarin.PropertyEditing.Mac
         {
             base.LayoutSublayers();
 
-			Colors.Frame = new CGRect (Margin, Margin, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
-			Black.Frame = new CGRect (0, 0, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
-			Colors.StartPoint = new CGPoint (0, .5);
-			Colors.EndPoint = new CGPoint (1, .5);
+			Saturation.Frame = new CGRect (Margin, Margin, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
+			Brightness.Frame = new CGRect (0, 0, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
+			Saturation.StartPoint = new CGPoint (0, .5);
+			Saturation.EndPoint = new CGPoint (1, .5);
         }
 
-		public override void UpdateFromModel (SolidBrushViewModel viewModel)
+		CommonColor c;
+		public override void UpdateFromModel (EditorInteraction interaction)
 		{
 			LayoutIfNeeded ();
-			var color = viewModel.Color;
-			var frame = Colors.Frame;
-			var x = color.Saturation * frame.Width + frame.X;
-			var y = color.Brightness * frame.Height + frame.Y;
+			var color = interaction.Color;
+			
+			var frame = Saturation.Frame;
+			var sat = saturationEditor.LocationFromColor (Saturation, color);
+			var bright = brightnessEditor.LocationFromColor (Brightness, color);
+
+			var x = sat.X;
+			var y = bright.Y + frame.Y;
 
 			Grip.Frame = new CGRect (x - GripRadius, y - GripRadius, GripRadius * 2, GripRadius * 2);
 
-			Colors.Colors = new[] {
+			Saturation.Colors = new[] {
 				new CGColor (1f, 1f, 1f),
-				color.HueColor.ToCGColor ()
+				interaction.Color.HueColor.ToCGColor ()
 			};
 		}
 
-		public override void UpdateFromLocation (SolidBrushViewModel viewModel, CGPoint location)
+		public override void UpdateFromLocation (EditorInteraction interaction, CGPoint location)
 		{
 			var loc = location;
-			var frame = Colors.Frame;
-			loc.X -= frame.X;
-			loc.Y -= frame.Y;
+			var frame = Saturation.Frame;
 
-			var brightness = loc.Y / frame.Height;
-			var saturation = loc.X / frame.Width;
-
-			if (viewModel == null)
+			if (interaction.ViewModel == null)
 				return;
 
-			var color = viewModel.Color;
-			viewModel.Color = CommonColor.FromHSB (
-				Math.Min (360, Math.Max (0, color.Hue)),
-				Math.Min (1, Math.Max (0, saturation)),
-				Math.Min (1, Math.Max (0, brightness)),
-				color.A);
+			var color = interaction.Color;
+			var saturation = saturationEditor.ValueFromLocation (Saturation, loc);
+			var brightness = saturationEditor.ValueFromLocation (
+				Brightness, 
+			    new CGPoint (loc.X + Brightness.Frame.X, loc.Y + Brightness.Frame.Y));
+			
+			c = interaction.Color = interaction.Color.UpdateHSB (saturation: saturation, brightness: brightness);
 		}
     }
 
@@ -373,6 +394,7 @@ namespace Xamarin.PropertyEditing.Mac
 		const float Margin = 3;
 		const float BorderRadius = 3;
 		const float GripRadius = 3;
+		ComponentEditor hueEditor = new HsbHueComponentEditor ();
 
 		public CGColor GripColor
 		{
@@ -382,23 +404,17 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public HueLayer ()
 		{
+			hueEditor.UpdateGradientLayer (Colors, new CommonColor (0,255,0));
 			AddSublayer (Colors);
 			AddSublayer (Grip);
 		}
 
 		CAGradientLayer Colors = new CAGradientLayer {
 			BorderColor = new CGColor (.5f, .5f, .5f, .5f),
+			StartPoint = new CGPoint (0,1),
+			EndPoint = new CGPoint (0,0),
 			BorderWidth = 1,
 			CornerRadius = BorderRadius,
-			Colors = new[] {
-				new CGColor (1,0,0),
-				new CGColor (1,0,1),
-				new CGColor (0,0,1),
-				new CGColor (0,1,1),
-				new CGColor (0,1,0),
-				new CGColor (1,1,0),
-				new CGColor (1,0,0)
-			}
 		};
 
 		CALayer Grip = new CALayer {
@@ -407,20 +423,20 @@ namespace Xamarin.PropertyEditing.Mac
 			CornerRadius = GripRadius,
 		};
 
-		public override void UpdateFromModel (SolidBrushViewModel viewModel)
+		CommonColor c;
+		public override void UpdateFromModel (EditorInteraction interaction)
 		{
 			LayoutIfNeeded ();
 
-			var color = viewModel.Color;
-			var hue = color.Hue / 360;
-			var pos = Colors.Frame.Height * (1 - hue);
-			var loc = new CGPoint (1, pos);
-			loc.Y -= Grip.Frame.Height / 2f;
+			var color = interaction.Color;
+			if (c == color)
+				return;
 
-			Grip.Frame = new CGRect (loc.X, loc.Y + Colors.Frame.Y, Grip.Frame.Width, Grip.Frame.Height);
+			var loc = hueEditor.LocationFromColor (Colors, color);
+			Grip.Frame = new CGRect (1, loc.Y - Grip.Frame.Height / 2f, Grip.Frame.Width, Grip.Frame.Height);
 		}
 
-		public override void UpdateFromLocation (SolidBrushViewModel viewModel, CGPoint location)
+		public override void UpdateFromLocation (EditorInteraction interaction, CGPoint location)
 		{
 			var loc = location;
 			var clos = Math.Min (Colors.Frame.Height, Math.Max (0, loc.Y - Colors.Frame.Y));
@@ -428,15 +444,13 @@ namespace Xamarin.PropertyEditing.Mac
 			Grip.Frame = new CGRect (1, clos + Colors.Frame.Y - Grip.Frame.Height / 2, Frame.Width - 2, 2 * GripRadius);
 			var hue = (1 - clos/ Colors.Frame.Height) * 360;
 
-			if (viewModel == null)
+			if (interaction == null)
 				return;
 
-			var color = viewModel.Color;
-			viewModel.Color = CommonColor.FromHSB (
-				Math.Max (0, Math.Min (360, hue)),
-				Math.Max (0, Math.Min (1, color.Saturation)),
-				Math.Max (0, Math.Min (1, color.Brightness)),
-				color.A);
+			var color = interaction.Color;
+			c = interaction.Color = hueEditor.UpdateColorFromValue (
+				interaction.Color,
+				hueEditor.ValueFromLocation (Colors, loc));
 		}
 
         public override void LayoutSublayers()
@@ -447,17 +461,61 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
+	class EditorInteraction : NotifyingObject
+	{
+		public EditorInteraction (SolidBrushViewModel viewModel, ColorEditorLayer layer)
+		{
+			ViewModel = viewModel;
+			StartColor = Color = viewModel.Color;
+			Layer = layer;
+		}
+
+		public ColorEditorLayer Layer { get; set; }
+		public SolidBrushViewModel ViewModel { get; set; }
+
+		public CommonColor StartColor { get; }
+
+		CommonColor color;
+		public CommonColor Color
+		{
+			get => color;
+			set {
+				if (color == value)
+					return;
+
+				color = value;
+				OnPropertyChanged ();
+			}
+		}
+
+		public CommonColor LastColor {
+			get => ViewModel.LastColor;
+		}
+
+		public void Commit ()
+		{
+			ViewModel.Color = Color;
+			ViewModel.CommitLastColor ();
+		}
+	}
+
 	class SolidColorBrushEditor : ColorEditorView
 	{
 		ShadeLayer Shade = new ShadeLayer ();
 		HueLayer Hue = new HueLayer ();
 		HistoryLayer History = new HistoryLayer ();
+
 		CALayer Background = new CALayer {
 			CornerRadius = 3,
 			BorderWidth = 1
 		};
+		readonly CALayer componentBackground = new CALayer {
+			CornerRadius = 3,
+			BorderWidth = 1
+		};
+
 		readonly ColorComponentTabViewController componentTabs = new ColorComponentTabViewController () {
-			EditorType = EditorType.Rgb
+			EditorType = ChannelEditorType.RGB
 		};
 
 		public override bool AcceptsFirstResponder() => true;
@@ -490,57 +548,82 @@ namespace Xamarin.PropertyEditing.Mac
 			Layer.AddSublayer (Shade);
 			Layer.AddSublayer (Hue);
 			Layer.AddSublayer (History);
+			Layer.AddSublayer (componentBackground);
 			WantsLayer = true;
 			AddSubview (componentTabs.View);
 		}
 
-		ColorEditorLayer active;
-
+		EditorInteraction interaction;
 		public override void UpdateFromEvent (NSEvent theEvent)
 		{
 		}
-		
+
 		public override void MouseDown (NSEvent theEvent)
 		{
 			var location = ConvertPointFromView (theEvent.LocationInWindow, null);
 			location = ConvertPointToLayer (location);
-			active = null;
+			interaction = null;
 			foreach (var layer in Layer.Sublayers) {
 				var hit = layer.HitTest (location);
 
 				for (var c = hit; c != null; c = c.SuperLayer) {
-					active = c as ColorEditorLayer;
+					var active = c as ColorEditorLayer;
 					if (active != null) {
+						interaction = new EditorInteraction (ViewModel, active);
 						active.UpdateFromLocation (
-							ViewModel,
+							interaction,
 							Layer.ConvertPointToLayer (location, active));
+						OnPropertyChanged (ViewModel, new PropertyChangedEventArgs (nameof (SolidBrushViewModel.Color)));
 						return;
 					}
 				}
 			}
 		}
 
+		CGPoint last;
         public override void MouseDragged(NSEvent theEvent)
         {
 			var location = ConvertPointFromView (theEvent.LocationInWindow, null);
-			active?.UpdateFromLocation (
-						ViewModel,
-						Layer.ConvertPointToLayer (location, active));
+			var diff = new CGPoint (last.X - location.X, last.Y - location.Y);
+
+			if (diff.X * diff.X < .5 && diff.Y * diff.Y < .5)
+				return;
+
+			interaction?.Layer?.UpdateFromLocation (
+						interaction,
+						Layer.ConvertPointToLayer (location, interaction.Layer));
+
+			OnPropertyChanged (ViewModel, new PropertyChangedEventArgs (nameof (SolidBrushViewModel.Color)));
         }
 
-        protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+        public override void MouseUp(NSEvent theEvent)
+        {
+            base.MouseUp(theEvent);
+			interaction?.Commit ();
+			interaction = null;
+        }
+
+		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
-			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
-				editor.UpdateFromModel (ViewModel);
+			var inter = interaction ?? new EditorInteraction (ViewModel, null);
+
+			switch (e.PropertyName) {
+				case nameof (SolidBrushViewModel.Color):
+				case nameof (SolidBrushViewModel.HueColor):	
+				foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
+					editor.UpdateFromModel (inter);
+				}
+					break;
 			}
 		}
 
 		protected override void OnViewModelChanged (SolidBrushViewModel oldModel)
         {
             base.OnViewModelChanged(oldModel);
+			var inter = interaction ?? new EditorInteraction (ViewModel, null);
 			componentTabs.ViewModel = ViewModel;
 				foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
-				editor.UpdateFromModel (ViewModel);
+				editor.UpdateFromModel (inter);
 			}
 		}
 
@@ -558,15 +641,25 @@ namespace Xamarin.PropertyEditing.Mac
 			Background.BackgroundColor = NSColor.ControlBackground.CGColor;
 			Background.Frame = new CGRect (0, 0, Frame.Height, Frame.Height);
 			Background.SetNeedsDisplay ();
+
+			componentBackground.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
+			componentBackground.BackgroundColor = NSColor.ControlBackground.CGColor;
+			componentBackground.Frame = new CGRect (0, 0, Frame.Height, Frame.Height);
+			componentBackground.SetNeedsDisplay ();
+			var x = Frame.Height + 4 * padding;
+			componentBackground.Frame = new CGRect (Frame.Height + 4 * padding, 0, Frame.Width - x, Frame.Height);
+
 			Hue.Frame = new CGRect (firstStop, secondBase, secondarySpan, primarySpan);
 			Hue.GripColor = NSColor.Text.CGColor;
 			Hue.SetNeedsDisplay ();
 			Shade.Frame = new CGRect (firstBase, secondBase, primarySpan, primarySpan);
 			History.Frame = new CGRect (firstBase, firstBase, primarySpan, secondarySpan);
+			var inter = interaction ?? new EditorInteraction (ViewModel, null);
 			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
-				editor.UpdateFromModel (ViewModel);
+				editor.UpdateFromModel (inter);
 			}
-			componentTabs.View.Frame = new CGRect (Frame.Height, 0, Frame.Width - Frame.Height, Frame.Height);
+
+			componentTabs.View.Frame = componentBackground.Frame.Inset (4 * padding, 2 * padding);
 		}
 	}
 }

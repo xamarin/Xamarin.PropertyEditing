@@ -9,7 +9,7 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		ColorComponentEditor editor;
 
-		public ColorComponentViewController (EditorType type) : base ()
+		public ColorComponentViewController (ChannelEditorType type) : base ()
 		{
 			this.EditorType = type;
 		}
@@ -28,7 +28,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public EditorType EditorType { get; }
+		public ChannelEditorType EditorType { get; }
 
         public override void LoadView ()
         {

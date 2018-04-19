@@ -35,6 +35,10 @@ namespace Xamarin.PropertyEditing.Mac
 			get { return stepper; }
 		}
 
+		public NSTextField TextField {
+			get { return numericEditor; }
+		}
+
 		public override CGSize IntrinsicContentSize {
 			get {
 				var baseSize = stepper.IntrinsicContentSize;

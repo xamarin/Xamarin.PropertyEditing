@@ -7,12 +7,12 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	class ColorComponentTabViewController : PropertyTabViewController<SolidBrushViewModel>
 	{
-		public EditorType EditorType { get; set; }
+		public ChannelEditorType EditorType { get; set; }
 
 		public ColorComponentTabViewController ()
 		{
-			foreach (var value in Enum.GetValues (typeof (EditorType))) {
-				var editorType = (EditorType)value;
+			foreach (var value in Enum.GetValues (typeof (ChannelEditorType))) {
+				var editorType = (ChannelEditorType)value;
 				AddTabViewItem (new NSTabViewItem {
 					Label = value.ToString (),
 					ViewController = new ColorComponentViewController (editorType)
