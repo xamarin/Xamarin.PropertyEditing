@@ -36,7 +36,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			RequestCurrentValueUpdate();
 		}
 
-		public ValueSource ValueSource => this.value != null ? this.value.Source : ValueSource.Default;
+		public override ValueSource ValueSource => this.value != null ? this.value.Source : ValueSource.Default;
 
 		/// <remarks>
 		/// This is only meant for use from the UI. Other value setting mechanisms (like, converting resources to local, or setting to a resource) should
@@ -410,6 +410,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		public virtual bool SupportsValueSourceNavigation => false;
+
+		public abstract ValueSource ValueSource
+		{
+			get;
+		}
 
 		public bool HasErrors => this.error != null;
 

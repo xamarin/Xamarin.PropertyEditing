@@ -8,7 +8,7 @@ using Xamarin.PropertyEditing.ViewModels;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class NumericEditorControl<T>
-		: PropertyEditorControl
+		: PropertyEditorControl<NumericPropertyViewModel<T>>
 	{
 		public NumericEditorControl ()
 		{
@@ -65,12 +65,6 @@ namespace Xamarin.PropertyEditing.Mac
 			set {
 				NumericEditor.NumberStyle = value;
 			}
-		}
-
-		internal new NumericPropertyViewModel<T> ViewModel
-		{
-			get { return (NumericPropertyViewModel<T>)base.ViewModel; }
-			set { base.ViewModel = value; }
 		}
 
 		private Type underlyingType;

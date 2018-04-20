@@ -107,17 +107,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		public ValueSource ValueSource
+		public override ValueSource ValueSource
 		{
 			get { return this.valueSource; }
-			private set
-			{
-				if (this.valueSource == value)
-					return;
-
-				this.valueSource = value;
-				OnPropertyChanged();
-			}
 		}
 
 		protected override void OnPropertyChanged ([CallerMemberName] string propertyName = null)
@@ -170,9 +162,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 				MultipleValues = multipleValues;
 				ValueType = (!multipleValues) ? type : null;
 				if (multipleSources)
-					ValueSource = ValueSource.Unknown;
+					SetValueSource (ValueSource.Unknown);
 				else
-					ValueSource = source ?? ValueSource.Default;
+					SetValueSource (source ?? ValueSource.Default);
 
 				SetCanDelve (values.Length > 0);
 				OnPropertyChanged (nameof(CustomExpression));
@@ -298,6 +290,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 			} finally {
 				IsCreateInstancePending = false;
 			}
+		}
+
+		private void SetValueSource (ValueSource value)
+		{
+			if (this.valueSource == value)
+				return;
+
+			this.valueSource = value;
+			OnPropertyChanged (nameof (ValueSource));
 		}
 	}
 }

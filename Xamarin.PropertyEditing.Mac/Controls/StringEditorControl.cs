@@ -8,7 +8,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class StringEditorControl : PropertyEditorControl
+	internal class StringEditorControl : PropertyEditorControl<PropertyViewModel<string>>
 	{
 		public StringEditorControl ()
 		{
@@ -40,11 +40,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override NSView FirstKeyView => StringEditor;
 		public override NSView LastKeyView => StringEditor;
-
-		internal new StringPropertyViewModel ViewModel {
-			get { return (StringPropertyViewModel)base.ViewModel; }
-			set { base.ViewModel = value; }
-		}
 
 		protected override void UpdateValue ()
 		{
