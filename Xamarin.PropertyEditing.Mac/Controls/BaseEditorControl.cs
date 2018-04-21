@@ -20,7 +20,6 @@ namespace Xamarin.PropertyEditing.Mac
 			get { return actionButton; }
 		}
 
-		public event EventHandler PropertyButtonClicked;
 		PropertyButton propertyButton;
 		public PropertyButton PropertyButton
 		{
@@ -101,11 +100,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			// Using NSImageName.Caution for now, we can change this later at the designers behest
 			actionButton.Image = actionButton.Enabled ? NSImage.ImageNamed ("action-warning-16") : null;
-		}
-
-		void NotifyPropertyButtonClicked ()
-		{
-			PropertyButtonClicked?.Invoke (this, EventArgs.Empty);
 		}
 
 		void NotifyActioButtonClicked ()

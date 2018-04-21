@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using AppKit;
 using Foundation;
 using Xamarin.PropertyEditing.Tests;
@@ -17,6 +17,13 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 		{
 			base.ViewDidLoad ();
 			// Do any additional setup after loading the view.
+
+			PropertyPanel.TargetPlatform = new TargetPlatform {
+				SupportsCustomExpressions = true,
+				GroupedTypes = new Dictionary<Type, string> {
+					// TODO Add Types
+				}
+			};
 
 			PropertyPanel.EditorProvider = new MockEditorProvider ();
 		}

@@ -7,6 +7,7 @@ namespace Xamarin.PropertyEditing.Mac
 	public class CommandMenuItem : NSMenuItem
 	{
 		ICommand command;
+		NSView senderView;
 
 		public ICommand Command {
 			get { return command; }
@@ -24,16 +25,21 @@ namespace Xamarin.PropertyEditing.Mac
 			HookUpCommandEvents ();
 		}
 
-		public CommandMenuItem (string title, ICommand command) : this (title)
+		public CommandMenuItem (string title, ICommand command, NSView senderView) : this (title)
 		{
 			this.Command = command;
+			this.senderView = senderView;
 		}
 
 		private void HookUpCommandEvents ()
 		{
 			Activated += (object sender, EventArgs e) => {
-				if (this.command != null)
-					this.command.Execute (null);
+				if (this.command != null) {
+					if (this.command.GetType ().IsGenericType)
+						this.command.Execute (senderView);
+					else
+						this.command.Execute (null);
+				}
 			};
 
 			ValidateMenuItem = ValidatePropertyMenuItem;
