@@ -1811,11 +1811,11 @@
 	</Style>
 
 	<Style x:Key="SearchButton" TargetType="Button" BasedOn="{StaticResource SearchButtonBase}">
-		<Setter Property="Content" Value="{StaticResource SearchLoopIcon}" />
+		<Setter Property="Content" Value="{DynamicResource SearchLoopIcon}" />
 	</Style>
 
 	<Style x:Key="ClearButton" TargetType="Button" BasedOn="{StaticResource SearchButtonBase}">
-		<Setter Property="Content" Value="{StaticResource ClearSearchIcon}" />
+		<Setter Property="Content" Value="{DynamicResource ClearSearchIcon}" />
 	</Style>
 
 	<Style TargetType="local:TextBoxEx">
