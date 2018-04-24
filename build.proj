@@ -60,6 +60,10 @@
 
 	<Target Name="Rebuild" DependsOnTargets="Clean;Build" />
 
+	<Target Name="Restore">
+		<MSBuild Projects="@(SolutionFiles)" Properties="$(CommonBuildProperties)" Targets="Restore" />
+	</Target>
+
 	<Target Name="Test" DependsOnTargets="TestMac;TestWindows">
 		<MakeDir Directories="$(Out)" />
 		<Exec Command="$(Mono64) @(NunitConsoleRunner) $(TestAssembly) -result=$(Out)\TestResult.xml" />
