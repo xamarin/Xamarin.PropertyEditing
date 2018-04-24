@@ -1,6 +1,6 @@
 /bot-provisioning/_provisionator/
 /bot-provisioning/provisionator.msbuild.props
-packages
+/Xamarin.PropertyEditing.Tests/packages
 bin
 obj
 *.DotSettings

@@ -113,9 +113,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <BundleResource Include="Resources\action-browse-16.png" />
     <BundleResource Include="Resources\action-browse-16%402x.png" />
     <BundleResource Include="Resources\action-browse-16~dark.png" />
