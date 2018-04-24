@@ -33,9 +33,21 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="Exists('..\..\designer\Xamarin.Designer.VisualStudio\src\VisualStudio.Designer\Resources\ProppyIcons.xaml')">
+  <PropertyGroup Condition="Exists('..\..\designer\Xamarin.Designer.VisualStudio\src\VisualStudio.Designer\Resources\ProppyIcons.xaml') OR Exists('..\..\..\Xamarin.Designer.VisualStudio\src\VisualStudio.Designer\Resources\ProppyIcons.xaml')">
     <DefineConstants>$(DefineConstants);USE_VS_ICONS</DefineConstants>
   </PropertyGroup>
+  <Choose>
+    <When Condition="Exists('..\..\designer\Xamarin.Designer.VisualStudio\src\VisualStudio.Designer\Resources\ProppyIcons.xaml')">
+      <PropertyGroup>
+        <ProppyIconPath>..\..\designer\Xamarin.Designer.VisualStudio\src\VisualStudio.Designer\Resources\ProppyIcons.xaml</ProppyIconPath>
+      </PropertyGroup>
+    </When>
+    <When Condition="Exists('..\..\..\Xamarin.Designer.VisualStudio\src\VisualStudio.Designer\Resources\ProppyIcons.xaml')">
+      <PropertyGroup>
+        <ProppyIconPath>..\..\..\Xamarin.Designer.VisualStudio\src\VisualStudio.Designer\Resources\ProppyIcons.xaml</ProppyIconPath>
+      </PropertyGroup>
+    </When>
+  </Choose>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -72,8 +84,8 @@
     </Compile>
   </ItemGroup>
   <!-- Conditionally include resource file with icons when the file exists. To be replaced later with default open icons. -->
-  <ItemGroup Condition="Exists('..\..\designer\Xamarin.Designer.VisualStudio\src\VisualStudio.Designer\Resources\ProppyIcons.xaml')">
-    <Page Include="..\..\designer\Xamarin.Designer.VisualStudio\src\VisualStudio.Designer\Resources\ProppyIcons.xaml">
+  <ItemGroup Condition="Exists($(ProppyIconPath))">
+    <Page Include="$(ProppyIconPath)">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
