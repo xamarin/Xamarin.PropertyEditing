@@ -17,10 +17,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			if (property.Type.IsAssignableFrom (typeof (CommonSolidBrush))) {
 				Solid = new SolidBrushViewModel (this,
-					property is IColorSpaced colorSpacedPropertyInfo ? colorSpacedPropertyInfo.ColorSpaces :  null);
+					property is IColorSpaced colorSpacedPropertyInfo ? colorSpacedPropertyInfo.ColorSpaces : null);
 				if (platform.SupportsMaterialDesign) {
 					MaterialDesign = new MaterialDesignColorViewModel (this);
 				}
+			}
+
+			if (property.Type.IsAssignableFrom (typeof (CommonImageBrush))) {
+				Image = new ImageBrushViewModel (this);
 			}
 
 			// TODO: we actually need to localize this for platforms really, "brush" doesn't make sense for some
@@ -30,6 +34,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 				{ Resources.ResourceBrush, CommonBrushType.Resource }
 			};
 
+			if (platform.SupportsImageBrush) {
+				types.Insert (2, Resources.ImageBrush, CommonBrushType.Image);
+			}
 			if (platform.SupportsMaterialDesign) {
 				types.Insert (2, Resources.MaterialDesignColorBrush, CommonBrushType.MaterialDesign);
 			}
@@ -52,12 +59,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				this.selectedBrushType = value;
 				SetBrushType (value);
-				OnPropertyChanged();
+				OnPropertyChanged ();
 			}
 		}
 
 		public SolidBrushViewModel Solid { get; }
 		public MaterialDesignColorViewModel MaterialDesign { get; }
+		public ImageBrushViewModel Image { get; }
 
 		public ResourceSelectorViewModel ResourceSelector
 		{
@@ -130,7 +138,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 					break;
 				default:
 				case ValueSource.Local:
-					this.selectedBrushType = CommonBrushType.Solid;
+					switch (Value) {
+					case CommonSolidBrush _:
+						this.selectedBrushType = CommonBrushType.Solid;
+						break;
+					case CommonImageBrush _:
+						this.selectedBrushType = CommonBrushType.Image;
+						break;
+					case CommonGradientBrush _:
+						this.selectedBrushType = CommonBrushType.Gradient;
+						break;
+					default:
+						throw new InvalidOperationException ("Unrecognized brush type");
+					}
 					break;
 				}
 			}
@@ -165,6 +185,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			if (Value is CommonSolidBrush solid)
 				Solid.PreviousSolidBrush = solid;
+			else if (Value is CommonImageBrush image)
+				Image.PreviousImageBrush = image;
 		}
 
 		private void SetBrushType (CommonBrushType type)
@@ -176,12 +198,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 				Value = null;
 				break;
 			case CommonBrushType.Solid:
+			case CommonBrushType.MaterialDesign:
 				Value = Solid?.PreviousSolidBrush ?? new CommonSolidBrush (CommonColor.Black);
 				Solid.CommitLastColor ();
 				Solid.CommitHue ();
+				if (type == CommonBrushType.MaterialDesign) {
+					MaterialDesign.SetToClosest ();
+				}
 				break;
-			case CommonBrushType.MaterialDesign:
-				MaterialDesign.SetToClosest ();
+			case CommonBrushType.Image:
+				Value = Image.PreviousImageBrush ?? new CommonImageBrush("");
 				break;
 			}
 		}

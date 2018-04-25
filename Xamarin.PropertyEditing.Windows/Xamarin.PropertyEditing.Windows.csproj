@@ -75,15 +75,20 @@
     <Compile Include="ColorEditorControlBase.cs" />
     <Compile Include="ColorHelper.cs" />
     <Compile Include="CommonColorToColorConverter.cs" />
+    <Compile Include="CommonImageSourceToImageSourceConverter.cs" />
+    <Compile Include="CommonStretchToStretchConverter.cs" />
+    <Compile Include="CommonTileModeToTileModeConverter.cs" />
     <Compile Include="EntryPopup.cs" />
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />
     <Compile Include="DoubleToQuantityConverter.cs" />
     <Compile Include="HasItemsToVisibilityConverter.cs" />
+    <Compile Include="ImageBrushEditorControl.cs" />
     <Compile Include="MaterialDesignColorEditorControl.cs" />
     <Compile Include="MultiplyMarginConverter.cs" />
     <Compile Include="ObjectEditorControl.cs" />
     <Compile Include="PreviewTemplateSelector.cs" />
+    <Compile Include="RectHelper.cs" />
     <Compile Include="ResourceBrushEditorControl.cs" />
     <Compile Include="ResourceSelectorWindow.xaml.cs">
       <DependentUpon>ResourceSelectorWindow.xaml</DependentUpon>

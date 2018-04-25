@@ -6,7 +6,7 @@ namespace Xamarin.PropertyEditing.Drawing
 		Solid,
 		MaterialDesign,
 		Gradient,
-		Tile,
+		Image,
 		Resource
 	}
 }

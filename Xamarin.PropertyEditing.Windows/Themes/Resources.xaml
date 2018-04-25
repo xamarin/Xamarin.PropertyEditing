@@ -533,7 +533,7 @@
 				</StackPanel>
 			</DataTemplate>
 			<DataTemplate DataType="{x:Type drawing:CommonImageBrush}">
-				<TextBlock Margin="4" Text="{Binding ImageSource,Mode=OneTime}" />
+				<local:BrushBoxControl Margin="4" Height="14" Brush="{Binding Converter={StaticResource BrushConverter}}"  BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1" />
 			</DataTemplate>
 			<DataTemplate DataType="{x:Type system:String}">
 				<TextBlock Margin="4" Text="{Binding Mode=OneTime}" />
@@ -633,6 +633,13 @@
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
+		<local:BrushChoiceTemplateSelector.ImageBrushTemplate>
+			<DataTemplate>
+				<RadioButton Style="{DynamicResource BrushChoiceItem}">
+					<ContentControl ContentTemplate="{DynamicResource BrushChoiceImageBrushIcon}"/>
+				</RadioButton>
+			</DataTemplate>
+		</local:BrushChoiceTemplateSelector.ImageBrushTemplate>
 		<local:BrushChoiceTemplateSelector.ResourceBrushTemplate>
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource BrushChoiceItem}">
@@ -655,8 +662,9 @@
 													 ItemTemplateSelector="{StaticResource BrushChoiceTemplateSelector}"
 													 ItemTemplate="{x:Null}" HorizontalAlignment="Stretch" />
 								<local:SolidBrushEditorControl x:Name="solidBrushEditor" Visibility="Collapsed" />
-								<local:ResourceBrushEditorControl x:Name="resourceBrushEditor" Visibility="Collapsed" />
 								<local:MaterialDesignColorEditorControl x:Name="materialDesignColorEditor" Visibility="Collapsed" />
+								<local:ImageBrushEditorControl x:Name="imageBrushEditor" Visibility="Collapsed" />
+								<local:ResourceBrushEditorControl x:Name="resourceBrushEditor" Visibility="Collapsed" />
 							</StackPanel>
 						</Border>
 						<Border Padding="1" Visibility="{Binding TargetPlatform.SupportsBrushOpacity, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -679,11 +687,14 @@
 						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Static drawing:CommonBrushType.Solid}">
 							<Setter TargetName="solidBrushEditor" Property="Visibility" Value="Visible" />
 						</DataTrigger>
-						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Static drawing:CommonBrushType.Resource}">
-							<Setter TargetName="resourceBrushEditor" Property="Visibility" Value="Visible" />
-						</DataTrigger>
 						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Static drawing:CommonBrushType.MaterialDesign}">
 							<Setter TargetName="materialDesignColorEditor" Property="Visibility" Value="Visible" />
+						</DataTrigger>
+						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Static drawing:CommonBrushType.Image}">
+							<Setter TargetName="imageBrushEditor" Property="Visibility" Value="Visible" />
+						</DataTrigger>
+						<DataTrigger Binding="{Binding SelectedBrushType}" Value="{x:Static drawing:CommonBrushType.Resource}">
+							<Setter TargetName="resourceBrushEditor" Property="Visibility" Value="Visible" />
 						</DataTrigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
@@ -1359,6 +1370,59 @@
 							</local:PropertyPresenter>
 						</StackPanel>
 					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:ImageBrushEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:ImageBrushEditorControl">
+					<Border BorderThickness="0" Padding="0,2,0,2">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+							<Border Name="TilePreview" Width="102" Height="77" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1" VerticalAlignment="Top" Grid.Column="0">
+								<Canvas Background="{DynamicResource CheckerBoard}" Width="100" Height="75">
+									<Rectangle Name="Brush" Width="100" Height="75">
+										<Rectangle.Fill>
+											<ImageBrush ImageSource="{Binding Value.ImageSource, Converter={local:CommonImageSourceToImageSourceConverter}}"
+														Stretch="{Binding Value.Stretch, Converter={local:CommonStretchToStretchConverter}}"
+														TileMode="{Binding Value.TileMode, Converter={local:CommonTileModeToTileModeConverter}}"
+														AlignmentX="Center" AlignmentY="Center" Viewport="0.2,0.2,0.6,0.6" ViewportUnits="RelativeToBoundingBox"/>
+										</Rectangle.Fill>
+									</Rectangle>
+									<Path Name="Mask" Fill="#80FFFFFF" Data="M0,0L100,0 100,75 0,75z M20,15L80,15 80,60 20,60z"/>
+									<Path Name="Outline" Stroke="#FFFF0000" StrokeDashArray="5 5" StrokeDashOffset="2.5" StrokeThickness="1" Data="M20,0L20,75 M80,0L80,75 M0,15L100,15 M0,60L100,60"/>
+								</Canvas>
+							</Border>
+							<Border BorderThickness="0" Padding="5,0,0,0" VerticalAlignment="Top" Grid.Column="1">
+								<StackPanel Orientation="Vertical">
+									<Label Content="{x:Static prop:Resources.TileMode}" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0" Margin="0,0,0,3"
+										   AutomationProperties.Name="{x:Static prop:Resources.TileMode}" AutomationProperties.HelpText="{x:Static prop:Resources.TileMode}" ToolTip="{x:Static prop:Resources.TileMode}"/>
+									<ComboBox x:Name="TileModeComboBox" ItemsSource="{Binding Image.TileModeValues, Mode=OneTime}" SelectedValue="{Binding Image.TileMode}" SelectedValuePath="Key" DisplayMemberPath="Value"
+											  IsEditable="False" VerticalContentAlignment="Center" AutomationProperties.Name="{x:Static prop:Resources.TileMode}" Margin="0,0,0,8" />
+									<Label Content="{x:Static prop:Resources.Stretch}" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0" Margin="0,0,3,0"
+										   AutomationProperties.Name="{x:Static prop:Resources.Stretch}" AutomationProperties.HelpText="{x:Static prop:Resources.Stretch}" ToolTip="{x:Static prop:Resources.Stretch}"/>
+									<ComboBox x:Name="StretchComboBox" ItemsSource="{Binding Image.StretchValues, Mode=OneTime}" SelectedValue="{Binding Image.Stretch}" SelectedValuePath="Key" DisplayMemberPath="Value"
+											  IsEditable="False" VerticalContentAlignment="Center" AutomationProperties.Name="{x:Static prop:Resources.Stretch}" Margin="0,0,0,8" />
+									<Label Content="{x:Static prop:Resources.ImageSource}" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0" Margin="0,0,0,3"
+										   AutomationProperties.Name="{x:Static prop:Resources.ImageSource}" AutomationProperties.HelpText="{x:Static prop:Resources.ImageSource}" ToolTip="{x:Static prop:Resources.ImageSource}"/>
+									<ComboBox x:Name="ImageSourceComboBox" ItemsSource="{Binding Image.ImageSources, Mode=OneTime}" SelectedValue="{Binding Image.ImageSource}" SelectedValuePath="Key" DisplayMemberPath="Value"
+											  IsEditable="True" VerticalContentAlignment="Center" AutomationProperties.Name="{x:Static prop:Resources.ImageSource}" Margin="0,0,0,8" />
+								</StackPanel>
+							</Border>
+						</Grid>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger SourceName="TilePreview" Property="IsMouseOver" Value="True">
+							<Setter TargetName="Mask" Property="Visibility" Value="Hidden"/>
+							<Setter TargetName="Outline" Property="Visibility" Value="Hidden"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

@@ -27,13 +27,27 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		internal static readonly ResourceSource SystemResourcesSource = new ResourceSource ("System Resources", isLocal: false);
+		internal static readonly ResourceSource LocalResourcesSource = new ResourceSource ("Local Resources", isLocal: true);
+
+		private static readonly string oneUrl = "pack://application:,,,/" + typeof (MockResourceProvider).Assembly.GetName ().Name + ";component/Resources/One.png";
+		private static readonly string twoUrl = "pack://application:,,,/" + typeof (MockResourceProvider).Assembly.GetName ().Name + ";component/Resources/Two.png";
 
 		private static readonly IReadOnlyList<Resource> SystemResources = new Resource[] {
 			new Resource<CommonSolidBrush> (SystemResourcesSource, "ControlTextBrush", new CommonSolidBrush (0, 0, 0)),
 			new Resource<CommonSolidBrush> (SystemResourcesSource, "HighlightBrush", new CommonSolidBrush (51, 153, 255)),
 			new Resource<CommonSolidBrush> (SystemResourcesSource, "TransparentBrush", new CommonSolidBrush (0, 0, 0, 0)),
 			new Resource<CommonColor> (SystemResourcesSource, "ControlTextColor", new CommonColor (0, 0, 0)),
-			new Resource<CommonColor> (SystemResourcesSource, "HighlightColor", new CommonColor (51, 153, 255))
+			new Resource<CommonColor> (SystemResourcesSource, "HighlightColor", new CommonColor (51, 153, 255)),
+			new Resource<CommonImageBrush> (LocalResourcesSource, "OneBrush", new CommonImageBrush(oneUrl,
+				CommonAlignmentX.Center, CommonAlignmentY.Center, CommonStretch.UniformToFill, CommonTileMode.None,
+				new CommonRectangle(0, 0, 1, 1), CommonBrushMappingMode.RelativeToBoundingBox,
+				new CommonRectangle(0, 0, 1, 1), CommonBrushMappingMode.RelativeToBoundingBox)),
+			new Resource<CommonImageBrush> (LocalResourcesSource, "TwoBrush", new CommonImageBrush(twoUrl,
+				CommonAlignmentX.Center, CommonAlignmentY.Center, CommonStretch.UniformToFill, CommonTileMode.None,
+				new CommonRectangle(0, 0, 1, 1), CommonBrushMappingMode.RelativeToBoundingBox,
+				new CommonRectangle(0, 0, 1, 1), CommonBrushMappingMode.RelativeToBoundingBox)),
+			new Resource<CommonImageSource> (LocalResourcesSource, "OneUri", new CommonImageSource { UriSource = new Uri(oneUrl) }),
+			new Resource<CommonImageSource> (LocalResourcesSource, "TwoUri", new CommonImageSource { UriSource = new Uri(twoUrl) })
 		};
 	}
 }

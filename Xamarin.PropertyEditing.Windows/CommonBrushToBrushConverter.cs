@@ -15,12 +15,30 @@ namespace Xamarin.PropertyEditing.Windows
 		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value == null) return null;
-			if (value is CommonSolidBrush solidBrush) return new SolidColorBrush (solidBrush.Color.ToColor ());
+			if (value is CommonSolidBrush solidBrush) return new SolidColorBrush {
+				Color = solidBrush.Color.ToColor (),
+				Opacity = solidBrush.Opacity
+			};
 
-			// TODO: revisit this with more details when we build the editors for those brushes
-			if (value is CommonImageBrush imageBrush) {
-				return new ImageBrush (new BitmapImage (new Uri (imageBrush.ImageSource)));
+			if (value is CommonImageBrush commonImageBrush) {
+				var imageBrush = new ImageBrush {
+					AlignmentX = (AlignmentX)commonImageBrush.AlignmentX,
+					AlignmentY = (AlignmentY)commonImageBrush.AlignmentY,
+					Opacity = commonImageBrush.Opacity,
+					Stretch = (Stretch)commonImageBrush.Stretch,
+					TileMode = (TileMode)commonImageBrush.TileMode,
+					Viewbox = commonImageBrush.ViewBox.ToRect (),
+					ViewboxUnits = (BrushMappingMode)commonImageBrush.ViewBoxUnits,
+					Viewport = commonImageBrush.ViewPort.ToRect (),
+					ViewportUnits = (BrushMappingMode)commonImageBrush.ViewPortUnits
+				};
+				if (commonImageBrush.ImageSource != null && commonImageBrush.ImageSource.UriSource != null) {
+					var image = new BitmapImage (commonImageBrush.ImageSource.UriSource);
+					imageBrush.ImageSource = image;
+				}
+				return imageBrush;
 			}
+			// TODO: revisit this with more details when we build the editors for those brushes
 			if (value is CommonLinearGradientBrush linearGradientBrush) {
 				return new LinearGradientBrush (
 					new GradientStopCollection (linearGradientBrush.GradientStops.Select (stop => new GradientStop (stop.Color.ToColor (), stop.Offset))),
