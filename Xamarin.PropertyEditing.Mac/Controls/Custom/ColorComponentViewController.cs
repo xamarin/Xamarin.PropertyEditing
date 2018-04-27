@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using AppKit;
+using CoreGraphics;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -11,6 +12,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public ColorComponentViewController (ChannelEditorType type) : base ()
 		{
+			PreferredContentSize = new CGSize (200, 200);
 			this.EditorType = type;
 		}
 

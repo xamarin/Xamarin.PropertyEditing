@@ -17,7 +17,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public MaterialBrushEditorViewController ()
 		{
-			PreferredContentSize = new CGSize (200, 200);
+			PreferredContentSize = new CGSize (200, 230);
 		}
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
@@ -314,6 +314,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		bool inhibitSelection;
 
+		public BrushTabViewController ()
+		{
+			PreferredContentSize = new CGSize (300, 230);
+		}
+
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
         {
 			inhibitSelection = true;
@@ -344,19 +349,19 @@ namespace Xamarin.PropertyEditing.Mac
 						item.ViewController = material;
 						break;
 					case CommonBrushType.Resource:
-						var material2 = new ResourceBrushViewController ();
-						material2.ViewModel = ViewModel;
-						item.ViewController = material2;
+						var resource = new ResourceBrushViewController ();
+						resource.ViewModel = ViewModel;
+						item.ViewController = resource;
 						break;
 					case CommonBrushType.Gradient:
-						var material3 = new EmptyBrushEditorViewController ();
-						material3.ViewModel = ViewModel;
-						item.ViewController = material3;
+						var gradient = new EmptyBrushEditorViewController ();
+						gradient.ViewModel = ViewModel;
+						item.ViewController = gradient;
 						break;
 					case CommonBrushType.NoBrush:
-						var material4 = new EmptyBrushEditorViewController ();
-						material4.ViewModel = ViewModel;
-						item.ViewController = material4;
+						var none = new EmptyBrushEditorViewController ();
+						none.ViewModel = ViewModel;
+						item.ViewController = none;
 						break;
 
 				}
@@ -404,14 +409,18 @@ namespace Xamarin.PropertyEditing.Mac
 			base.DidSelect (tabView, item);
 			ViewModel.SelectedBrushType = ViewModel.BrushTypes[item.Label];
         }
-
+   
         public override void ViewDidLoad()
         {
+			var old = View.Frame;
+			old.Height = 200;
+			View.Frame = old;
+
 			inhibitSelection = true;
             base.ViewDidLoad();
 			inhibitSelection = false;
 
-			var old = View.Frame;
+			old = View.Frame;
 			old.Height = 200;
 			View.Frame = old;
         }

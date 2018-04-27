@@ -31,6 +31,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AccessibilityElement = false;
 		}
 
+		/*
 		public override void DrawRect (CGRect dirtyRect)
 		{
 			CGPoint origin = new CGPoint (0.0f, 4.0f);
@@ -38,5 +39,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.AttributedStringValue.DrawInRect (rect);
 		}
+		*/
 	}
 }

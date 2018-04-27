@@ -30,7 +30,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (Popover == null)
 				return;
-			Popover.SetAppearance (PropertyEditorPanel.ThemeManager.CurrentAppearance);
+			//Popover.SetAppearance (PropertyEditorPanel.ThemeManager.CurrentAppearance);
 			Popover?.Show (new CGRect (20, this.Frame.Height / 2 - 2.5, 5, 5), this, NSRectEdge.MinYEdge);
 		}
     }
@@ -39,17 +39,16 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public BrushEditorControl ()
 		{
-			base.TranslatesAutoresizingMaskIntoConstraints = false;
-
-
+			TranslatesAutoresizingMaskIntoConstraints = false;
 			this.colorEditor = new BrushTabViewController ();
 
 			this.popover = new NSPopover ();
 			popover.Behavior = NSPopoverBehavior.Transient;
 			popover.ContentViewController = brushTabViewController = new BrushTabViewController {
-				PreferredContentSize = new CGSize (200, 200)
+				PreferredContentSize = new CGSize (300, 250)
 			};
-			RowHeight = 200 + 30;
+
+			RowHeight = 200 + 28;
 
 			this.popUpButton = new ColorPopUpButton {
 				TranslatesAutoresizingMaskIntoConstraints = false,
@@ -60,6 +59,19 @@ namespace Xamarin.PropertyEditing.Mac
 
 			popupButtonList = new NSMenu ();
 			popUpButton.Menu = popupButtonList;
+			var view = this.colorEditor.View;
+
+			this.DoConstraints (new[] {
+				popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 34),
+				popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
+				popUpButton.ConstraintTo (this, (pub, c) => pub.Left == c.Left + 4),
+				popUpButton.ConstraintTo (this, (pub, c) => pub.Top == c.Top + 0),
+				view.ConstraintTo (popUpButton, (v, pub) => v.Top == pub.Bottom),
+				view.ConstraintTo (popUpButton, (v, pub) => v.Left == pub.Left)
+			});
+
+			AddSubview (this.popUpButton);
+			AddSubview (this.colorEditor.View);
 
 			UpdateTheme ();
 		}
@@ -78,8 +90,6 @@ namespace Xamarin.PropertyEditing.Mac
 		readonly CommonBrushLayer previewLayer = new CommonBrushLayer {
 			Frame = new CGRect (0, 0, 30, 10)
 		};
-
-		bool dataPopulated;
 
 		public override NSView FirstKeyView => this.popUpButton;
 		public override NSView LastKeyView => this.popUpButton;
@@ -142,19 +152,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
 		{
-			if (!dataPopulated) {
-				this.DoConstraints (new[] {
-						popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 34),
-						popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
-						popUpButton.ConstraintTo (this, (pub, c) => pub.Left == pub.Left + 4),
-						popUpButton.ConstraintTo (this, (pub, c) => pub.Top == pub.Top + 0),
-					});
-
-				AddSubview (this.popUpButton);
-				AddSubview (this.colorEditor.View);
-			}
 			UpdateValue ();
-			dataPopulated = true;
 		}
-	}
+    }
 }

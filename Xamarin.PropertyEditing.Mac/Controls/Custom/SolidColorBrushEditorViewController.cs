@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using CoreGraphics;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -7,6 +8,11 @@ namespace Xamarin.PropertyEditing.Mac
 	class SolidColorBrushEditorViewController : PropertyViewController<BrushPropertyViewModel>
 	{
 		SolidColorBrushEditor brushEditor;
+
+		public SolidColorBrushEditorViewController ()
+		{
+			PreferredContentSize = new CGSize (300, 230);
+		}
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
@@ -31,7 +37,7 @@ namespace Xamarin.PropertyEditing.Mac
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-			//View.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
+
 			if (ViewModel != null)
 				brushEditor.ViewModel = ViewModel?.Solid;
         }
@@ -39,7 +45,6 @@ namespace Xamarin.PropertyEditing.Mac
         public override void LoadView ()
 		{
 			View = brushEditor = new SolidColorBrushEditor {
-				//Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance,
 				ViewModel = ViewModel?.Solid
 			};
 		}

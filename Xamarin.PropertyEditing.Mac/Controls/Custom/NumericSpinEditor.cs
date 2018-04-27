@@ -42,7 +42,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override CGSize IntrinsicContentSize {
 			get {
 				var baseSize = stepper.IntrinsicContentSize;
-				return new CGSize (baseSize.Width + 20, baseSize.Height);
+				return new CGSize (baseSize.Width + 40, baseSize.Height);
 			}
 		}
 
