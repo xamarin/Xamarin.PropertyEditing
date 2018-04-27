@@ -88,6 +88,19 @@ namespace Xamarin.PropertyEditing
 			self.Add (with);
 		}
 
+		public static void Move (this IList self, int index, int moveTo)
+		{
+			if (self == null)
+				throw new ArgumentNullException (nameof(self));
+
+			if (index < moveTo)
+				moveTo--;
+
+			object item = self[index];
+			self.RemoveAt (index);
+			self.Insert (moveTo, item);
+		}
+
 		public static bool TryRemove<TKey, TElement> (this IDictionary<TKey, TElement> self, TKey key, out TElement element)
 		{
 			if (!self.TryGetValue (key, out element))

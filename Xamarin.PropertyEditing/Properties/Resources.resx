@@ -461,4 +461,29 @@
   <data name="GoToSource" xml:space="preserve">
     <value>Go to Source</value>
   </data>
+  <data name="CollectionValue" xml:space="preserve">
+    <value>(Collection)</value>
+    <comment>Indicates that a collection is the value of the property</comment>
+  </data>
+  <data name="Ellipsis" xml:space="preserve">
+    <value>…</value>
+  </data>
+  <data name="OtherTypeAction" xml:space="preserve">
+    <value>&lt;Other type…&gt;</value>
+  </data>
+  <data name="Items" xml:space="preserve">
+    <value>Items</value>
+  </data>
+  <data name="CollectionEditorTitle" xml:space="preserve">
+    <value>Collection Editor: {0}</value>
+  </data>
+  <data name="MoveItemDown" xml:space="preserve">
+    <value>Move item down</value>
+  </data>
+  <data name="MoveItemUp" xml:space="preserve">
+    <value>Move item up</value>
+  </data>
+  <data name="RemoveItem" xml:space="preserve">
+    <value>Remove item</value>
+  </data>
 </root>

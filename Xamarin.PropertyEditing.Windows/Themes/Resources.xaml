@@ -1441,6 +1441,24 @@
 		</Style.Triggers>
 	</Style>
 
+	<Style TargetType="local:CollectionEditor">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:CollectionEditor">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<TextBlock Text="{x:Static prop:Resources.CollectionValue}" Grid.Column="0" />
+						<Button Name="launch"  Content="{x:Static prop:Resources.Ellipsis}" MinWidth="20" Grid.Column="1" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style TargetType="local:PropertyPresenter">
 		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
 		<Setter Property="Template">

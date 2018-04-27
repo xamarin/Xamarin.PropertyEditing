@@ -1,0 +1,50 @@
+<local:WindowEx x:Class="Xamarin.PropertyEditing.Windows.CollectionEditorWindow" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows"
+	xmlns:prop="clr-namespace:Xamarin.PropertyEditing.Properties;assembly=Xamarin.PropertyEditing"
+	mc:Ignorable="d" Background="{DynamicResource DialogBackgroundBrush}" Foreground="{DynamicResource DialogForegroundBrush}"
+	MinHeight="300" Height="500" MinWidth="500" Width="700" ShowIcon="False" ShowMaximize="False" ShowMinimize="False"
+	Title="{Binding Property.Name, StringFormat={x:Static prop:Resources.CollectionEditorTitle},Mode=OneTime}">
+	<Grid Margin="12">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<TextBlock Text="{x:Static prop:Resources.Items}" Grid.Row="0" Grid.Column="0" />
+		<TextBlock Text="{x:Static prop:Resources.Properties}" Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" />
+
+		<ListBox ItemsSource="{Binding Targets,Mode=OneTime}" SelectedItem="{Binding SelectedTarget,Mode=TwoWay}" Margin="0,4,0,0" Grid.Column="0" Grid.Row="1" />
+		<Grid Grid.Row="2" Margin="0,12,0,0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+
+			<StackPanel Orientation="Horizontal" Grid.Column="0">
+				<Button Command="{Binding RemoveTargetCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.RemoveItem}" MinWidth="29" FontFamily="Segoe UI Symbol" Content="❌" />
+				<Button Command="{Binding MoveUpCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.MoveItemUp}" AutomationProperties.Name="{x:Static prop:Resources.MoveItemUp}" MinWidth="29" Margin="4,0,0,0" FontFamily="Segoe UI Symbol" Content="⭡" />
+				<Button Command="{Binding MoveDownCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.MoveItemDown}" AutomationProperties.Name="{x:Static prop:Resources.MoveItemDown}" MinWidth="29" Margin="4,0,0,0" FontFamily="Segoe UI Symbol" Content="⭣" />
+			</StackPanel>
+			<ComboBox Grid.Column="1" ItemsSource="{Binding SuggestedTypes}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedType,Mode=TwoWay}" Margin="12,0,0,0" />
+			<Button Grid.Column="2" Command="{Binding AddTargetCommand,Mode=OneTime}" Margin="4,0,0,0">Add</Button>
+		</Grid>
+
+		<ItemsControl Margin="12,4,0,0" Style="{StaticResource PropertyListStyle}" ItemsSource="{Binding Panel.Properties}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" />
+
+		<StackPanel Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,4,0,0">
+			<Button IsDefault="True" MinWidth="75" MinHeight="23" Content="{x:Static prop:Resources.OK}" Command="{Binding CommitCommand,Mode=OneTime}" Click="OnOkClick" />
+			<Button Margin="5,0,0,0" MinWidth="75" MinHeight="23" IsCancel="True" Content="{x:Static prop:Resources.Cancel}" />
+		</StackPanel>
+	</Grid>
+</local:WindowEx>

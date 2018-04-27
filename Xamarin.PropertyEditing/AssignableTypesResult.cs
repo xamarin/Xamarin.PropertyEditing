@@ -13,6 +13,7 @@ namespace Xamarin.PropertyEditing
 				throw new ArgumentNullException (nameof(assignableTypes));
 
 			AssignableTypes = assignableTypes;
+			SuggestedTypes = new ITypeInfo[0];
 		}
 
 		public AssignableTypesResult (IReadOnlyList<ITypeInfo> suggestedTypes, IReadOnlyCollection<ITypeInfo> assignableTypes)

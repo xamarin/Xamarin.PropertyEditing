@@ -60,75 +60,111 @@ namespace Xamarin.PropertyEditing.Mac.Resources {
             }
         }
         
-        internal static string PropertyFilterLabel {
-            get {
-                return ResourceManager.GetString("PropertyFilterLabel", resourceCulture);
-            }
-        }
-        
-        internal static string PropertyColumnTitle {
-            get {
-                return ResourceManager.GetString("PropertyColumnTitle", resourceCulture);
-            }
-        }
-        
-        internal static string ValueColumnTitle {
-            get {
-                return ResourceManager.GetString("ValueColumnTitle", resourceCulture);
-            }
-        }
-        
-        internal static string AccessibilityNumeric {
-            get {
-                return ResourceManager.GetString("AccessibilityNumeric", resourceCulture);
-            }
-        }
-        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Boolean Editor.
+        /// </summary>
         internal static string AccessibilityBoolean {
             get {
                 return ResourceManager.GetString("AccessibilityBoolean", resourceCulture);
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Combobox Editor.
+        /// </summary>
         internal static string AccessibilityCombobox {
             get {
                 return ResourceManager.GetString("AccessibilityCombobox", resourceCulture);
             }
         }
         
-        internal static string AccessibilityString {
-            get {
-                return ResourceManager.GetString("AccessibilityString", resourceCulture);
-            }
-        }
-        
-        internal static string AccessibilityXEditor {
-            get {
-                return ResourceManager.GetString("AccessibilityXEditor", resourceCulture);
-            }
-        }
-        
-        internal static string AccessibilityYEditor {
-            get {
-                return ResourceManager.GetString("AccessibilityYEditor", resourceCulture);
-            }
-        }
-        
-        internal static string AccessibilityWidthEditor {
-            get {
-                return ResourceManager.GetString("AccessibilityWidthEditor", resourceCulture);
-            }
-        }
-        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Height Editor.
+        /// </summary>
         internal static string AccessibilityHeightEditor {
             get {
                 return ResourceManager.GetString("AccessibilityHeightEditor", resourceCulture);
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Numeric Editor.
+        /// </summary>
+        internal static string AccessibilityNumeric {
+            get {
+                return ResourceManager.GetString("AccessibilityNumeric", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} String Editor.
+        /// </summary>
+        internal static string AccessibilityString {
+            get {
+                return ResourceManager.GetString("AccessibilityString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Width Editor.
+        /// </summary>
+        internal static string AccessibilityWidthEditor {
+            get {
+                return ResourceManager.GetString("AccessibilityWidthEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} X Editor.
+        /// </summary>
+        internal static string AccessibilityXEditor {
+            get {
+                return ResourceManager.GetString("AccessibilityXEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Y Editor.
+        /// </summary>
+        internal static string AccessibilityYEditor {
+            get {
+                return ResourceManager.GetString("AccessibilityYEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arrange By:.
+        /// </summary>
         internal static string ArrangeByLabel {
             get {
                 return ResourceManager.GetString("ArrangeByLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property.
+        /// </summary>
+        internal static string PropertyColumnTitle {
+            get {
+                return ResourceManager.GetString("PropertyColumnTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property Filter.
+        /// </summary>
+        internal static string PropertyFilterLabel {
+            get {
+                return ResourceManager.GetString("PropertyFilterLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        internal static string ValueColumnTitle {
+            get {
+                return ResourceManager.GetString("ValueColumnTitle", resourceCulture);
             }
         }
     }

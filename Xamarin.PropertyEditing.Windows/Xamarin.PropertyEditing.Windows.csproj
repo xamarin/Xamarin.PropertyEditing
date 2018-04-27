@@ -65,6 +65,10 @@
     <Compile Include="BrushTabbedEditorControl.cs" />
     <Compile Include="BrushToDarknessConverter.cs" />
     <Compile Include="CategoryExpander.cs" />
+    <Compile Include="CollectionEditor.cs" />
+    <Compile Include="CollectionEditorWindow.xaml.cs">
+      <DependentUpon>CollectionEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CombinablePredefinedValuesEditorControl.cs" />
     <Compile Include="CommonBrushToBrushConverter.cs" />
     <Compile Include="ByteToPercentageConverter.cs" />
@@ -126,6 +130,10 @@
     <Compile Include="XamlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="CollectionEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ResourceSelectorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
