@@ -81,6 +81,7 @@
     <Compile Include="DoubleToPercentageConverter.cs" />
     <Compile Include="DoubleToQuantityConverter.cs" />
     <Compile Include="HasItemsToVisibilityConverter.cs" />
+    <Compile Include="IPropertiesHost.cs" />
     <Compile Include="MaterialDesignColorEditorControl.cs" />
     <Compile Include="MultiplyMarginConverter.cs" />
     <Compile Include="ObjectEditorControl.cs" />

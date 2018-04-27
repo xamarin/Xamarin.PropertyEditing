@@ -15,7 +15,7 @@ namespace Xamarin.PropertyEditing.Windows
 	[TemplatePart (Name = "propertyItems", Type = typeof(ItemsControl))]
 	[TemplatePart (Name = "paneSelector", Type = typeof(ChoiceControl))]
 	public class PropertyEditorPanel
-		: Control
+		: Control, IPropertiesHost
 	{
 		public PropertyEditorPanel ()
 		{
