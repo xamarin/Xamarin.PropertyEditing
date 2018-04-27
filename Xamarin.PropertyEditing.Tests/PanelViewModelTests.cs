@@ -643,6 +643,24 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (() => vm.SelectedObjects.Add (target), Throws.Nothing);
 		}
 
+		[Test]
+		public async Task AutoExpand ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+
+			var vm = new PanelViewModel (new TargetPlatform (provider)) {
+				ArrangeMode = PropertyArrangeMode.Category,
+				AutoExpand = true
+			};
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
+			Assert.That (vm.GetIsExpanded (vm.ArrangedEditors[0].Key), Is.True);
+		}
+
 		internal override PanelViewModel CreateVm (IEditorProvider provider)
 		{
 			return new PanelViewModel (new TargetPlatform (provider));

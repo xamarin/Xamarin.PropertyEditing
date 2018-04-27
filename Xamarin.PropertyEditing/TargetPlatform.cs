@@ -51,7 +51,7 @@ namespace Xamarin.PropertyEditing
 		}
 
 		/// <summary>
-		/// Gets a dictionary defining the property types will be grouped into a single editor and their groups resource name.
+		/// Gets or sets a dictionary defining the property types will be grouped into a single editor and their groups key.
 		/// </summary>
 		public IReadOnlyDictionary<Type, string> GroupedTypes
 		{
@@ -59,5 +59,13 @@ namespace Xamarin.PropertyEditing
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets a collection of group keys that should be automatically expanded in grouped mode at first load.
+		/// </summary>
+		public IReadOnlyCollection<string> AutoExpandGroups
+		{
+			get;
+			set;
+		}
 	}
 }
