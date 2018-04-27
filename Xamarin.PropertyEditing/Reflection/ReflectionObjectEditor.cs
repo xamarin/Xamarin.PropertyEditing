@@ -94,18 +94,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public Task<AssignableTypesResult> GetAssignableTypesAsync (IPropertyInfo property, bool childTypes)
 		{
-			return Task.Run (() => {
-				ReflectionPropertyInfo realInfo = (ReflectionPropertyInfo) property;
-				var assemblies = AppDomain.CurrentDomain.GetAssemblies ();
-				var entry = Assembly.GetEntryAssembly();
-
-				return new AssignableTypesResult (assemblies.Select (a => new { Assembly = a, Info = new AssemblyInfo (a.FullName, a == entry)})
-					.SelectMany (a =>
-						a.Assembly.DefinedTypes.Select (t => new { Type = t, Assembly = a }))
-					.AsParallel ()
-					.Where (t => realInfo.Type.IsAssignableFrom (t.Type))
-					.Select (t => new TypeInfo (t.Assembly.Info, t.Type.Namespace, t.Type.Name)).ToList());
-			});
+			return GetAssignableTypes (property, childTypes);
 		}
 
 		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
@@ -136,6 +125,31 @@ namespace Xamarin.PropertyEditing.Reflection
 				Source = ValueSource.Local,
 				Value = value
 			};
+		}
+
+		internal static Task<AssignableTypesResult> GetAssignableTypes (IPropertyInfo property, bool childTypes)
+		{
+			return Task.Run (() => {
+				var types = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (a => a.GetTypes ()).AsParallel ()
+					.Where (t => t.Namespace != null && !t.IsAbstract && !t.IsInterface && t.IsPublic && t.GetConstructor (Type.EmptyTypes) != null);
+
+				Type type = property.Type;
+				if (childTypes) {
+					var generic = property.Type.GetInterface ("ICollection`1");
+					if (generic != null) {
+						type = generic.GetGenericArguments()[0];
+					} else {
+						type = typeof(object);
+					}
+				}
+
+				types = types.Where (t => type.IsAssignableFrom (t));
+
+				return new AssignableTypesResult (types.Select (t => {
+					string asmName = t.Assembly.GetName ().Name;
+					return new TypeInfo (new AssemblyInfo (asmName, isRelevant: asmName.StartsWith ("Xamarin")), t.Namespace, t.Name);
+				}).ToList ());
+			});
 		}
 
 		private readonly object target;

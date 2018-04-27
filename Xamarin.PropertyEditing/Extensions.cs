@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing
 {
@@ -102,6 +103,38 @@ namespace Xamarin.PropertyEditing
 				throw new ArgumentNullException (nameof(self));
 
 			return self.IndexOf (value, comparison) >= 0;
+		}
+
+		public static async Task<AssignableTypesResult> GetCommonAssignableTypes (this IEnumerable<IObjectEditor> editors, IPropertyInfo property, bool childTypes)
+		{
+			if (editors == null)
+				throw new ArgumentNullException (nameof(editors));
+			if (property == null)
+				throw new ArgumentNullException (nameof(property));
+
+			List<ITypeInfo> suggested = null;
+			HashSet<ITypeInfo> all = null;
+			var tasks = new HashSet<Task<AssignableTypesResult>> (editors.Select (oe => oe.GetAssignableTypesAsync (property, childTypes)));
+
+			while (tasks.Count > 0) {
+				var task = await Task.WhenAny (tasks).ConfigureAwait (false);
+				tasks.Remove (task);
+
+				if (suggested == null) {
+					suggested = new List<ITypeInfo> (task.Result.SuggestedTypes ?? Enumerable.Empty<ITypeInfo>());
+					all = new HashSet<ITypeInfo> (task.Result.AssignableTypes);
+					continue;
+				}
+
+				all.IntersectWith (task.Result.AssignableTypes);
+
+				foreach (ITypeInfo type in suggested.ToArray()) {
+					if (!task.Result.AssignableTypes.Contains (type))
+						suggested.Remove (type);
+				}
+			}
+
+			return new AssignableTypesResult (suggested, all);
 		}
 	}
 }

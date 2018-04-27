@@ -233,19 +233,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private async Task<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> GetAssignableTypesAsync ()
 		{
-			Task<AssignableTypesResult>[] typeTasks = Editors.Select (o => o.GetAssignableTypesAsync (Property, childTypes: false)).ToArray();
-			AssignableTypesResult[] lists = await Task.WhenAll (typeTasks).ConfigureAwait (false);
-
-			var assemblies = new Dictionary<IAssemblyInfo, ILookup<string, ITypeInfo>> ();
-			foreach (ITypeInfo type in lists.SelectMany (t => t.AssignableTypes)) {
-				if (!assemblies.TryGetValue (type.Assembly, out ILookup<string, ITypeInfo> types)) {
-					assemblies[type.Assembly] = types = new ObservableLookup<string, ITypeInfo> ();
-				}
-
-				((IMutableLookup<string, ITypeInfo>) types).Add (type.NameSpace, type);
-			}
-
-			return assemblies;
+			AssignableTypesResult result = await Editors.GetCommonAssignableTypes (Property, childTypes: false).ConfigureAwait (false);
+			return result.GetTypeTree ();
 		}
 
 		private async void CreateInstance ()
