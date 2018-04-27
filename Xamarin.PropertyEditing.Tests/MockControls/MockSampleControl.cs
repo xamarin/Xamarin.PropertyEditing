@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Tests.MockControls
@@ -20,6 +21,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<CommonSize> ("Size", ReadWrite);
 			AddProperty<CommonRectangle> ("Rectangle", ReadWrite);
 			// AddProperty<CommonThickness> ("Thickness", ReadWrite); // Lacking support on the mac at this point in time.
+			AddProperty<object> ("Object", ReadWrite);
+			AddProperty<IList> ("Collection", ReadWrite);
 
 			AddReadOnlyProperty<bool> ("ReadOnlyBoolean", ReadOnly);
 			AddReadOnlyProperty<int> ("ReadOnlyInteger", ReadOnly);
