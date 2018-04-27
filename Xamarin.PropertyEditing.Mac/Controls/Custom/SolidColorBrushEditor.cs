@@ -103,147 +103,6 @@ namespace Xamarin.PropertyEditing.Mac
 		abstract public void UpdateFromLocation (EditorInteraction viewModel, CGPoint location);
 	}
 
-	class CommonGradientBrushLayer : CALayer
-	{
-		public CommonGradientBrushLayer ()
-		{
-		}
-
-		public CommonGradientBrushLayer (IntPtr handle) : base ()
-		{
-		}
-
-		CommonGradientBrush brush;
-		public CommonGradientBrush Brush
-		{
-			get => brush;
-			set {
-				brush = value;
-				SetNeedsDisplay ();
-			}
-		}
-
-		public override void DrawInContext (CGContext ctx)
-		{
-			ctx.SaveState ();
-
-			var colorspace = CGColorSpace.CreateDeviceRGB ();
-			var colors = Brush.GradientStops.Select (stop => stop.Color.ToCGColor ()).ToArray ();
-			var locations = Brush.GradientStops.Select (stop => (nfloat)stop.Offset).ToArray ();
-
-			var gradient = new CGGradient (colorspace, colors, locations);
-			var center = new CGPoint (Bounds.Width / 2f, Bounds.Height / 2f);
-			var radius = (float)Math.Min (Bounds.Width / 2.0, Bounds.Height / 2.0);
-
-			switch (Brush) {
-				case CommonLinearGradientBrush linear:
-					ctx.DrawLinearGradient (
-						gradient,
-						new CGPoint (0, 0),
-						new CGPoint (0, Bounds.Width),
-						CGGradientDrawingOptions.None);
-					break;
-				case CommonRadialGradientBrush radial:
-					ctx.DrawRadialGradient (
-						gradient,
-						startCenter: center,
-						startRadius: 0f,
-						endCenter: center,
-						endRadius: radius,
-						options: CGGradientDrawingOptions.None);
-					break;
-			}
-        }
-    }
-
-	class CommonBrushLayer : CALayer
-	{
-		public CommonBrushLayer ()
-		{
-			this.CornerRadius = 3;
-			this.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
-			this.BorderWidth = 1;
-			MasksToBounds = true;
-		}
-
-		CALayer brushLayer;
-		CALayer BrushLayer {
-			get => brushLayer;
-			set {
-				if (brushLayer != null)
-					brushLayer.RemoveFromSuperLayer ();
-
-				brushLayer = value;
-		
-				if (brushLayer != null)
-					AddSublayer (brushLayer);
-			}
-		}
-
-		CommonBrush brush;
-		public CommonBrush Brush {
-			get => brush;
-			set {
-				brush = value;
-				BrushLayer = CreateBrushLayer (brush);
-				Opacity = brush == null ? 0 : 1;
-			}
-		}
-
-		public static CALayer CreateBrushLayer (CommonBrush brush)
-		{
-			switch (brush) {
-				case CommonSolidBrush solid:
-					return new CALayer {
-						BackgroundColor = solid.Color.ToCGColor (),
-						Opacity = (float)solid.Opacity
-					};
-				case CommonGradientBrush gradient:
-					return new CommonGradientBrushLayer {
-						Opacity = (float)gradient.Opacity
-					};
-				default:
-					return new CALayer {
-						BackgroundColor = NSColor.Clear.CGColor
-					};
-			}
-		}
-
-		public override void LayoutSublayers ()
-		{
-			base.LayoutSublayers ();
-			BrushLayer.Frame = new CGRect (0, 0, Frame.Width, Frame.Height);
-			Contents = DrawingExtensions.GenerateCheckerboard (Frame);
-		}
-
-		public NSImage RenderPreview ()
-		{
-			var scale = this.ContentsScale;
-			nint h = (nint)(this.Bounds.Height * scale);
-			nint w = (nint)(this.Bounds.Width * scale);
-			nint bytesPerRow = w * 4;
-
-			if (h <= 0 || w <= 0)
-				return null;
-
-			using (var colorSpace = CGColorSpace.CreateGenericRgb ())
-			using (var context = new CGBitmapContext (IntPtr.Zero, w, h, 8, bytesPerRow, colorSpace, CGImageAlphaInfo.PremultipliedLast)) {
-				this.RenderInContext (context);
-				using (var image = context.ToImage ()) {
-					return new NSImage (image, new CGSize (w, h));
-				}
-			}
-		}
-	}
-
-	public enum ChannelEditorType
-	{
-		RGB,
-		HLS,
-		HSB,
-		CMYK
-	};
-
 	class HistoryLayer : ColorEditorLayer
 	{
 		const float Margin = 3;
@@ -305,8 +164,8 @@ namespace Xamarin.PropertyEditing.Mac
 		const float GripRadius = 4;
 		const float BorderRadius = 3;
 		const float Margin = 3;
-		ComponentEditor saturationEditor = new HsbSaturationComponentEditor ();
-		ComponentEditor brightnessEditor = new HsbBrightnessComponentEditor ();
+		ChannelEditor saturationEditor = new HsbSaturationChannelEditor ();
+		ChannelEditor brightnessEditor = new HsbBrightnessChannelEditor ();
 
 		public ShadeLayer ()
 		{
@@ -407,7 +266,7 @@ namespace Xamarin.PropertyEditing.Mac
 		const float Margin = 3;
 		const float BorderRadius = 3;
 		const float GripRadius = 3;
-		ComponentEditor hueEditor = new HsbHueComponentEditor ();
+		ChannelEditor hueEditor = new HsbHueChannelEditor ();
 
 		public CGColor GripColor
 		{

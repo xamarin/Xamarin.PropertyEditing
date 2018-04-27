@@ -50,7 +50,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void CanExecuteChanged (object sender, EventArgs e)
 		{
-			if(sender is ICommand cmd)
+			if (sender is ICommand cmd)
 				this.Enabled = cmd.CanExecute (null);
 		}
 	}

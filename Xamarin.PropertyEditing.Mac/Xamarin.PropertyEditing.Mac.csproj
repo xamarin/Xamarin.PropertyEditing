@@ -105,6 +105,14 @@
     <Compile Include="Controls\Custom\ColorComponentTabVewController.cs" />
     <Compile Include="Controls\Custom\ColorComponentViewController.cs" />
     <Compile Include="Controls\Custom\NotifyingViewAdaptor.cs" />
+    <Compile Include="Controls\Custom\MaterialBrushEditorViewController.cs" />
+    <Compile Include="Controls\Custom\MaterialView.cs" />
+    <Compile Include="Controls\Custom\MaterialColorLayer.cs" />
+    <Compile Include="Controls\Custom\EmptyBrushEditorViewController.cs" />
+    <Compile Include="Controls\Custom\ChannelEditorType.cs" />
+    <Compile Include="Controls\Custom\ChannelEditor.cs" />
+    <Compile Include="Controls\Custom\CommonBrushLayer.cs" />
+    <Compile Include="Controls\Custom\CommonGradientBrushLayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

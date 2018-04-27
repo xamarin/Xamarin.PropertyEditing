@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using AppKit;
@@ -41,7 +40,7 @@ namespace Xamarin.PropertyEditing.Mac
 			public CAGradientLayer Gradient { get; set; }
 		}
 
-		ComponentSet CreateEditor (ComponentEditor editor)
+		ComponentSet CreateEditor (ChannelEditor editor)
 		{
 			var ce = new ComponentSet {
 				Label = new UnfocusableTextField {
@@ -72,33 +71,33 @@ namespace Xamarin.PropertyEditing.Mac
 			switch (type) {
 				case ChannelEditorType.HSB:
 					return new[] {
-						CreateEditor (new HsbHueComponentEditor ()),
-						CreateEditor (new HsbSaturationComponentEditor ()),
-						CreateEditor (new HsbBrightnessComponentEditor ()),
-						CreateEditor (new AlphaComponentEditor ())
+						CreateEditor (new HsbHueChannelEditor ()),
+						CreateEditor (new HsbSaturationChannelEditor ()),
+						CreateEditor (new HsbBrightnessChannelEditor ()),
+						CreateEditor (new AlphaChannelEditor ())
 					};
 				case ChannelEditorType.HLS:
 					return new[] {
-						CreateEditor (new HlsHueComponentEditor ()),
-						CreateEditor (new HlsLightnessComponentEditor ()),
-						CreateEditor (new HlsSaturationComponentEditor ()),
-						CreateEditor (new AlphaComponentEditor ())
+						CreateEditor (new HlsHueChannelEditor ()),
+						CreateEditor (new HlsLightnessChannelEditor ()),
+						CreateEditor (new HlsSaturationChannelEditor ()),
+						CreateEditor (new AlphaChannelEditor ())
 					};
 				case ChannelEditorType.RGB:
 					return new[] {
-						CreateEditor (new RedComponentEditor ()),
-						CreateEditor (new GreenComponentEditor ()),
-						CreateEditor (new BlueComponentEditor ()),
-						CreateEditor (new AlphaComponentEditor ())
+						CreateEditor (new RedChannelEditor ()),
+						CreateEditor (new GreenChannelEditor ()),
+						CreateEditor (new BlueChannelEditor ()),
+						CreateEditor (new AlphaChannelEditor ())
 					};
 				default:
 				case ChannelEditorType.CMYK:
 					return new[] {
-						CreateEditor (new CyanComponentEditor ()),
-						CreateEditor (new MagentaComponentEditor ()),
-						CreateEditor (new YellowComponentEditor ()),
-						CreateEditor (new BlackComponentEditor ()),
-						CreateEditor (new AlphaComponentEditor ())
+						CreateEditor (new CyanChannelEditor ()),
+						CreateEditor (new MagentaChannelEditor ()),
+						CreateEditor (new YellowChannelEditor ()),
+						CreateEditor (new BlackChannelEditor ()),
+						CreateEditor (new AlphaChannelEditor ())
 					};
 			}
 		}
@@ -233,9 +232,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var editorFrame = new CGRect (labelFrame.Right, labelFrame.Y, frame.Width - labelFrame.Right, DefaultControlHeight);
 			var yOffset = DefaultControlHeight + DefaultGradientHeight + 3;
 
-
 			foreach (var e in Editors) {
-				//e.Label.TopAnchor.ConstraintEqualToAnchor (this.TopAnchor);
 				e.Label.Frame = labelFrame;
 				e.Editor.Frame = editorFrame;
 				e.Gradient.Frame = new CGRect (editorFrame.X, editorFrame.Y - DefaultGradientHeight, editorFrame.Width - 16, DefaultGradientHeight);
@@ -247,90 +244,9 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	public abstract class ComponentEditor
-	{
-		public string Name { get; }
-		public double MinimumValue { get; }
-		public double MaximumValue { get; }
-		public double IncrementValue { get; }
-
-		static IEnumerable<double> LerpSteps (double min, double max, int steps)
-			=> Enumerable.Range (0, steps).Select (v => {
-				var pos = v / (double)steps;
-				return max * pos - min * (1 - pos);
-			});
-
-		public ComponentEditor (string name, double min, double max, double increment)
-		{
-			MinimumValue = min;
-			MaximumValue = max;
-			IncrementValue = increment;
-			Name = name;
-		}
-
-		public void UpdateGradientLayer (CAGradientLayer layer, CommonColor color)
-		{
-			var c = color.UpdateRGB (a: 255);
-
-			layer.Colors = LerpSteps (MinimumValue, MaximumValue, 7)
-				.Select (value => UpdateColorFromValue (c, value).ToCGColor ()).ToArray ();
-		}
-
-		public double InvLerp (CGPoint start, CGPoint end, CGPoint loc)
-		{
-			var a = new CGVector (end.X - start.X, end.Y - start.Y);
-			var b = new CGVector (loc.X - start.X, loc.Y - start.Y);
-			var dot = a.dx * b.dx + a.dy * b.dy;
-			var len = Math.Sqrt (a.dx * a.dx + a.dy * a.dy);
-			return dot / len;
-		}
-
-		public static double InvLerp (double start, double end, double value)
-		=> (value - start) / (end - start);
-
-		public static double Lerp (double start, double end, double amount)
-		=> end * amount - start * (1 - amount);
-
-		public static CGPoint Lerp (CGPoint start, CGPoint end, double amount)
-		=>  new CGPoint (
-			start.X + (end.X - start.X) * amount,
-			start.Y + (end.Y - start.Y) * amount);
-
-		public double ValueFromLocation (CAGradientLayer layer, CGPoint loc)
-		{
-			var rect = layer.Frame;
-			var unitLoc = new CGPoint (
-				(loc.X - rect.X) / rect.Width,
-				(loc.Y - rect.Y) / rect.Height);
-			
-			return Clamp (Lerp (MinimumValue, MaximumValue, InvLerp (layer.StartPoint, layer.EndPoint, unitLoc)));
-		}
-
-		public CommonColor UpdateColorFromLocation (CAGradientLayer layer, CommonColor color, CGPoint loc)
-		=> UpdateColorFromValue (color, ValueFromLocation (layer, loc));
-
-		public CGPoint LocationFromColor (CAGradientLayer layer, CommonColor color)
-		{
-			var pos = ValueFromColor (color);
-
-			var amount = InvLerp (MinimumValue, MaximumValue, pos);
-			var unitLoc = Lerp (layer.StartPoint, layer.EndPoint, amount);
-
-			return new CGPoint (
-				layer.Frame.X + unitLoc.X * layer.Frame.Width,
-			    layer.Frame.Y + unitLoc.Y * layer.Frame.Height);
-		}
-
-		public double Clamp (double value)
-		=> Math.Max (MinimumValue, Math.Min (MaximumValue, value));
-
-		public abstract CommonColor UpdateColorFromValue (CommonColor color, double value);
-		public abstract double ValueFromColor (CommonColor color);
-	}
-
 	class ComponentSpinEditor : NumericSpinEditor
 	{
-		public ComponentSpinEditor (ComponentEditor component)
+		public ComponentSpinEditor (ChannelEditor component)
 		{
 			ComponentEditor = component;
 			MinimumValue = component.MinimumValue;
@@ -339,187 +255,6 @@ namespace Xamarin.PropertyEditing.Mac
 			Digits = 2;
 		}
 
-		public ComponentEditor ComponentEditor { get; }
-	}
-
-	class RedComponentEditor : ComponentEditor
-	{
-		public RedComponentEditor () : base ("R", 0d, 255d, 1d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> (double)color.R;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateRGB (r: (byte)Clamp (value));
-	}
-
-	class GreenComponentEditor : ComponentEditor
-	{
-		public GreenComponentEditor () : base ("G", 0d, 255d, 1d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> (double)color.G;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateRGB (g: (byte)Clamp (value));
-	}
-
-	class BlueComponentEditor : ComponentEditor
-	{
-		public BlueComponentEditor () : base ("B", 0d, 255d, 1d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> (double)color.B;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateRGB (b: (byte)Clamp (value));
-	}
-
-	class AlphaComponentEditor : ComponentEditor
-	{
-		public AlphaComponentEditor () : base ("A", 0d, 255d, 1d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> (double)color.A;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateRGB (a: (byte)Clamp (value));
-	}
-
-	class CyanComponentEditor : ComponentEditor 
-	{
-		public CyanComponentEditor () : base ("C", 0d, 1d, .01d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> color.C;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateCMYK (c: Clamp (value));
-	}
-
-	class MagentaComponentEditor : ComponentEditor
-	{
-		public MagentaComponentEditor () : base ("M", 0d, 1d, .01d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> color.M;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateCMYK (m: Clamp (value));
-	}
-
-	class YellowComponentEditor : ComponentEditor 
-	{
-		public YellowComponentEditor () : base ("Y", 0d, 1d, .01d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> color.Y;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateCMYK (y: Clamp (value));
-	}
-
-	class BlackComponentEditor : ComponentEditor 
-	{
-		public BlackComponentEditor () : base ("K", 0d, 1d, .01d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> color.K;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateCMYK (k: Clamp (value));
-	}
-
-	class HsbHueComponentEditor : ComponentEditor {
-		public HsbHueComponentEditor () : base ("H", 0d, 360d, 1d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> color.Hue;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateHSB (hue: Clamp (value));
-	}
-
-	class HsbSaturationComponentEditor : ComponentEditor
-	{
-		public HsbSaturationComponentEditor () : base ("S", 0d, 1d, .01d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> color.Saturation;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateHSB (saturation: Clamp (value));
-	}
-
-	class HsbBrightnessComponentEditor : ComponentEditor
-	{
-		public HsbBrightnessComponentEditor () : base ("B", 0d, 1d, .01d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> color.Brightness;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateHSB (brightness: Clamp (value));
-	}
-
-	class HlsHueComponentEditor : ComponentEditor
-	{
-		public HlsHueComponentEditor () : base ("H", 0d, 360d, 1d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> color.Hue;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateHLS (hue: Clamp (value));
-	}
-
-	class HlsLightnessComponentEditor : ComponentEditor
-	{
-		public HlsLightnessComponentEditor () : base ("L", 0d, 1d, .01d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> (double)color.Lightness;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateHLS (lightness: Clamp (value));
-	}
-
-	class HlsSaturationComponentEditor : ComponentEditor
-	{
-		public HlsSaturationComponentEditor () : base ("S", 0d, 1d, .01d)
-		{
-		}
-
-		public override double ValueFromColor (CommonColor color)
-		=> (double)color.Saturation;
-
-		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
-		=> color.UpdateHLS (saturation: Clamp (value));
+		public ChannelEditor ComponentEditor { get; }
 	}
 }

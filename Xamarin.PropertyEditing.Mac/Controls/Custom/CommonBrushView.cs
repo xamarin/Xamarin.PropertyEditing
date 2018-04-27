@@ -12,12 +12,17 @@ namespace Xamarin.PropertyEditing.Mac
 			set => (Layer as CommonBrushLayer).Brush = value;
 		}
 
-		public CommonBrushView () : base ()
+		public CommonBrushView ()
 		{
 			Initialize ();
 		}
 
 		public CommonBrushView (CGRect frame) : base (frame)
+		{
+			Initialize ();
+		}
+
+		public CommonBrushView (IntPtr handle) : base (handle)
 		{
 			Initialize ();
 		}

@@ -40,8 +40,6 @@ namespace Xamarin.PropertyEditing.Mac
 		public static CGColor ToCGColor (this CommonColor color)
 			=> new CGColor (color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
 
-
-
 		public static NSColor ToNSColor (this CommonColor color)
 			=> NSColor.FromRgba (color.R, color.G, color.B, color.A);
 
