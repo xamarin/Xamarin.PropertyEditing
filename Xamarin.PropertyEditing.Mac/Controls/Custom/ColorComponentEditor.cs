@@ -227,7 +227,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.Layout ();
 
-			var frame = Frame.Bounds ().Border (new CommonThickness (padding));
+			var frame = Bounds.Inset (padding, padding);
 			var labelFrame = new CGRect (frame.X, frame.Height - DefaultControlHeight, 20, DefaultControlHeight);
 			var editorFrame = new CGRect (labelFrame.Right, labelFrame.Y, frame.Width - labelFrame.Right, DefaultControlHeight);
 			var yOffset = DefaultControlHeight + DefaultGradientHeight + 3;

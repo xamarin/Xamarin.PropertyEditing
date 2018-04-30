@@ -1,4 +1,5 @@
 ﻿using CoreAnimation;
+using CoreGraphics;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -54,7 +55,7 @@ namespace Xamarin.PropertyEditing.Mac
 			base.LayoutSublayers ();
 			//String = isSelected ? "" : text;
 			Selection.String = text;
-			Selection.Frame = Frame.Bounds ().Border (new CommonThickness (3));
+			Selection.Frame = Bounds.Inset (3, 3);
 			Selection.BorderWidth = isSelected ? 2 : 0;
 			Selection.BorderColor = ForegroundColor;
 			Selection.ForegroundColor = ForegroundColor;

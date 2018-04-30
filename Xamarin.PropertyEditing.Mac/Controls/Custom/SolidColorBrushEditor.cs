@@ -220,7 +220,7 @@ namespace Xamarin.PropertyEditing.Mac
             base.LayoutSublayers();
 
 			Saturation.Frame = new CGRect (Margin, Margin, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
-			Brightness.Frame = Saturation.Frame.Bounds ();
+			Brightness.Frame = Saturation.Bounds;
 			Saturation.StartPoint = new CGPoint (0, .5);
 			Saturation.EndPoint = new CGPoint (1, .5);
         }
@@ -266,6 +266,7 @@ namespace Xamarin.PropertyEditing.Mac
 		const float Margin = 3;
 		const float BorderRadius = 3;
 		const float GripRadius = 3;
+
 		ChannelEditor hueEditor = new HsbHueChannelEditor ();
 
 		public CGColor GripColor
@@ -333,7 +334,7 @@ namespace Xamarin.PropertyEditing.Mac
         public override void LayoutSublayers()
         {
 			base.LayoutSublayers ();
-			Colors.Frame = Frame.Bounds ().Border (new CommonThickness (2));
+			Colors.Frame = Bounds.Inset (2, 2);
 			Grip.Frame = new CGRect (Grip.Frame.X, Grip.Frame.Y, Frame.Width - 2, 2 * GripRadius);
 		}
 	}
