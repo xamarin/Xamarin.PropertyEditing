@@ -93,7 +93,7 @@ namespace Xamarin.PropertyEditing.Windows
 			if (ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
 				return;
 
-			if (SelectedItem == null)
+			if (SelectedItem == null && Items.Count > 0)
 				SetCurrentValue (SelectedItemProperty, Items[0]);
 
 			for (int i = 0; i < Items.Count; i++) {
