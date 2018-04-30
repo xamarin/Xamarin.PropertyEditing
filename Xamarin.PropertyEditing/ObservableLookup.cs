@@ -216,9 +216,10 @@ namespace Xamarin.PropertyEditing
 		{
 			if (key == null) {
 				bool removed = (this.nullGrouping.Count > 0);
-				this.nullGrouping.Clear();
-				if (removed)
-					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, (object)this.nullGrouping, this.groupings.Count));
+				if (removed) {
+					this.nullGrouping.Clear();
+					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, (object) this.nullGrouping, this.groupings.Count));
+				}
 
 				return removed;
 			}
