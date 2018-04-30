@@ -6,8 +6,9 @@
 	xmlns:local="clr-namespace:Xamarin.PropertyEditing.Windows"
 	xmlns:prop="clr-namespace:Xamarin.PropertyEditing.Properties;assembly=Xamarin.PropertyEditing"
 	mc:Ignorable="d" Background="{DynamicResource DialogBackgroundBrush}" Foreground="{DynamicResource DialogForegroundBrush}"
-	MinHeight="300" Height="500" MinWidth="500" Width="700" ShowIcon="False" ShowMaximize="False" ShowMinimize="False"
+	MinHeight="300" Height="500" MinWidth="500" Width="700" ShowIcon="False" ShowMaximize="False" ShowMinimize="False" WindowStartupLocation="CenterOwner"
 	Title="{Binding Property.Name, StringFormat={x:Static prop:Resources.CollectionEditorTitle},Mode=OneTime}">
+
 	<Grid Margin="12">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />

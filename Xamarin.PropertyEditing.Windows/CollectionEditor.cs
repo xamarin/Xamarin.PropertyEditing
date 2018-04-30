@@ -24,7 +24,8 @@ namespace Xamarin.PropertyEditing.Windows
 
 			button.Click += (sender, args) => {
 				var window = new CollectionEditorWindow (topLevel.Resources.MergedDictionaries) {
-					DataContext = DataContext
+					DataContext = DataContext,
+					Owner = Window.GetWindow (topLevel)
 				};
 
 				window.ShowDialog ();
