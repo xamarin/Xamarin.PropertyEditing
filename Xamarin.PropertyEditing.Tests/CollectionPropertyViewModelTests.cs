@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
@@ -53,7 +54,7 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.AddTargetCommand.Execute (null);
 
 			Assert.That (vm.Targets, Is.Not.Empty, "Adding a target failed");
-			Assume.That (vm.Targets.Single (), Is.InstanceOf (typeof(MockWpfButton)));
+			Assume.That (vm.Targets.Single ().Item, Is.InstanceOf (typeof(MockWpfButton)));
 		}
 
 		[Test]
@@ -101,7 +102,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (vm.Targets.Count, Is.EqualTo (2));
 
 			Assume.That (vm.Targets, Is.Not.Empty, "Adding a target failed");
-			object target = vm.Targets.Skip (1).First ();
+			var target = vm.Targets.Skip (1).First ();
 			vm.SelectedTarget = target;
 
 			Assume.That (vm.Targets[0], Is.Not.SameAs (target));
@@ -132,7 +133,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (vm.Targets.Count, Is.EqualTo (2));
 
 			Assume.That (vm.Targets, Is.Not.Empty, "Adding a target failed");
-			object target = vm.Targets.First ();
+			var target = vm.Targets.First ();
 			vm.SelectedTarget = target;
 
 			Assume.That (vm.Targets[1], Is.Not.SameAs (target));
@@ -160,22 +161,22 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedType = GetTypeInfo (typeof(MockWpfButton));
 			vm.AddTargetCommand.Execute (null);
 
+			Assume.That (vm.Targets.Count, Is.EqualTo (1));
 			Assume.That (vm.Targets, Is.Not.Empty, "Adding a target failed");
 			vm.SelectedTarget = vm.Targets.First ();
-			object target = vm.SelectedTarget;
 
 			Assume.That (vm.MoveUpCommand.CanExecute (null), Is.False);
 			Assume.That (vm.MoveDownCommand.CanExecute (null), Is.False);
 
-			bool downChanged = false;
-			vm.MoveDownCommand.CanExecuteChanged += (sender, args) => downChanged = true;
+			bool upChanged = false;
+			vm.MoveUpCommand.CanExecuteChanged += (sender, args) => upChanged = true;
 
 			vm.AddTargetCommand.Execute (null);
-			Assume.That (vm.SelectedTarget, Is.SameAs (target), "Selected target changed");
+			Assume.That (vm.SelectedTarget, Is.SameAs (vm.Targets[vm.Targets.Count-1]), "Selected target not expected");
 
-			Assert.That (vm.MoveUpCommand.CanExecute (null), Is.False);
-			Assert.That (downChanged, Is.True);
-			Assert.That (vm.MoveDownCommand.CanExecute (null), Is.True);
+			Assert.That (upChanged, Is.True);
+			Assert.That (vm.MoveUpCommand.CanExecute (null), Is.True);
+			Assert.That (vm.MoveDownCommand.CanExecute (null), Is.False);
 		}
 
 		[Test]
@@ -196,9 +197,47 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.AddTargetCommand.Execute (null);
 
 			Assume.That (vm.Targets, Is.Not.Empty, "Adding a target failed");
-			Assume.That (vm.Targets.Single (), Is.InstanceOf (typeof(MockWpfButton)));
+			Assume.That (vm.Targets.Single ().Item, Is.InstanceOf (typeof(MockWpfButton)));
 
 			Assert.That (vm.SelectedTarget, Is.SameAs (vm.Targets[0]), "Didn't auto-select first added");
+		}
+
+		[Test]
+		[Description ("The added item should be inserted after a selected item")]
+		public async Task AddAfterSelected ()
+		{
+			TargetPlatform platform = new TargetPlatform (new MockEditorProvider());
+
+			var obj = new {
+				Collection = new ArrayList ()
+			};
+
+			var editor = new ReflectionObjectEditor (obj);
+			
+			var vm = new CollectionPropertyViewModel (platform, editor.Properties.First(), new[] { editor });
+			await vm.AssignableTypes.Task;
+
+			vm.SelectedType = GetTypeInfo (typeof(MockWpfButton));
+			vm.AddTargetCommand.Execute (null);
+			vm.AddTargetCommand.Execute (null);
+			vm.AddTargetCommand.Execute (null);
+			Assume.That (vm.Targets.Count, Is.EqualTo (3), "Dummy items were not added");
+
+			bool changed = false;
+			var incc = (INotifyCollectionChanged) vm.Targets;
+			incc.CollectionChanged += (sender, args) => {
+				changed = true;
+				Assert.That (args.Action, Is.EqualTo (NotifyCollectionChangedAction.Add));
+				Assert.That (args.NewStartingIndex, Is.EqualTo (2));
+			};
+
+			vm.SelectedTarget = vm.Targets[1];
+			vm.AddTargetCommand.Execute (null);
+
+			Assert.That (changed, Is.True);
+			Assert.That (vm.Targets[1].Row, Is.EqualTo (1));
+			Assert.That (vm.Targets[2].Row, Is.EqualTo (2));
+			Assert.That (vm.Targets[3].Row, Is.EqualTo (3));
 		}
 
 		[Test]
@@ -221,8 +260,8 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.AddTargetCommand.Execute (null);
 
 			Assume.That (vm.Targets, Is.Not.Empty);
-			object newTarget = vm.Targets[1];
-			object target = vm.Targets[2];
+			var newTarget = vm.Targets[1];
+			var target = vm.Targets[2];
 			vm.SelectedTarget = target;
 
 			Assume.That (vm.RemoveTargetCommand.CanExecute (null), Is.True);

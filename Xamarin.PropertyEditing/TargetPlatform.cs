@@ -67,5 +67,19 @@ namespace Xamarin.PropertyEditing
 			get;
 			set;
 		}
+
+		internal TargetPlatform WithProvider (IEditorProvider provider)
+		{
+			if (provider == null)
+				throw new ArgumentNullException (nameof(provider));
+
+			return new TargetPlatform (provider) {
+				SupportsMaterialDesign = SupportsMaterialDesign,
+				SupportsCustomExpressions = SupportsCustomExpressions,
+				SupportsBrushOpacity = SupportsBrushOpacity,
+				GroupedTypes = GroupedTypes,
+				AutoExpandGroups = AutoExpandGroups
+			};
+		}
 	}
 }

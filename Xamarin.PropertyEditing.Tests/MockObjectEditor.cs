@@ -50,6 +50,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Properties = control.Properties.Values.ToArray();
 			Events = control.Events.Values.ToArray();
 			Target = control;
+			TypeName = control.GetType ().Name;
 		}
 
 		public object Target
