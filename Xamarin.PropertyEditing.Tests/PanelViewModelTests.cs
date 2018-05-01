@@ -694,6 +694,40 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.GetIsExpanded (vm.ArrangedEditors[0].Key), Is.True);
 		}
 
+		[Test]
+		public async Task AutoExpandGroupedProperties ()
+		{
+			var normalProp = new Mock<IPropertyInfo> ();
+			normalProp.SetupGet (p => p.Type).Returns (typeof(string));
+			normalProp.SetupGet (p => p.Category).Returns ("Category");
+			normalProp.SetupGet (p => p.Name).Returns ("name");
+
+			var groupProp = new Mock<IPropertyInfo> ();
+			groupProp.SetupGet (p => p.Type).Returns (typeof(int));
+
+			var target = new object();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target))
+				.ReturnsAsync (new MockObjectEditor (normalProp.Object, groupProp.Object));
+
+			var platform = new TargetPlatform (provider.Object) {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(int), "ints" }
+				}
+			};
+
+			var vm = new PanelViewModel (platform) {
+				ArrangeMode = PropertyArrangeMode.Category,
+				AutoExpand = true
+			};
+			vm.SelectedObjects.Add (target);
+
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
+			Assume.That (vm.ArrangedEditors.Any (g => g.Key == "ints"), Is.True, "Does not have grouped editors category");
+			Assert.That (vm.GetIsExpanded ("ints"), Is.True);
+		}
+
 		internal override PanelViewModel CreateVm (IEditorProvider provider)
 		{
 			return new PanelViewModel (new TargetPlatform (provider));
