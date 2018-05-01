@@ -644,6 +644,39 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		[Description ("Bug coverage for grouped property failing to add if last")]
+		public void AddGroupedAtEnd ()
+		{
+			var normalProp = new Mock<IPropertyInfo> ();
+			normalProp.SetupGet (p => p.Type).Returns (typeof(string));
+			normalProp.SetupGet (p => p.Category).Returns ("Category");
+			normalProp.SetupGet (p => p.Name).Returns ("name");
+
+			var groupProp = new Mock<IPropertyInfo> ();
+			groupProp.SetupGet (p => p.Type).Returns (typeof(int));
+
+			var target = new object();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target))
+				.ReturnsAsync (new MockObjectEditor (normalProp.Object, groupProp.Object));
+
+			var platform = new TargetPlatform (provider.Object) {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(int), "ints" }
+				}
+			};
+
+			var vm = new PanelViewModel (platform) {
+				ArrangeMode = PropertyArrangeMode.Category,
+				AutoExpand = true
+			};
+			vm.SelectedObjects.Add (target);
+
+			Assert.That (vm.ArrangedEditors.Any (g => g.Key == "ints"), Is.True, "Does not have grouped editors category");
+		}
+
+		[Test]
 		public async Task AutoExpand ()
 		{
 			var provider = new ReflectionEditorProvider ();

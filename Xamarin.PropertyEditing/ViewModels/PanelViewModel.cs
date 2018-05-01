@@ -135,20 +135,26 @@ namespace Xamarin.PropertyEditing.ViewModels
 						new PropertyGroupViewModel (TargetPlatform, kvp.Key, kvp.Value, ObjectEditors)
 					};
 
+					bool added = false;
 					for (; i < this.arranged.Count; i++) {
 						var g = (IGrouping<string, EditorViewModel>) this.arranged[i];
 
 						// TODO: Are we translating categories? If so this needs to lookup the resource and be culture specific
 						if (g.Key == null) { // nulls go on the bottom.
+							added = true;
 							AutoExpandGroup (group.Key);
 							this.arranged.Insert (i, group);
 							break;
 						} else if (String.Compare (g.Key, kvp.Key, StringComparison.Ordinal) > 0) {
+							added = true;
 							AutoExpandGroup (g.Key);
 							this.arranged.Insert (i++, group);
 							break;
 						}
 					}
+
+					if (!added)
+						this.arranged.Add (group);
 				}
 			}
 
