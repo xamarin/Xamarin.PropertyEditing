@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSublayer (Selection);
 		}
 
-		CATextLayer Selection { get; } = new CATextLayer () {
+		readonly CATextLayer Selection = new CATextLayer () {
 			CornerRadius = 3
 		};
 
@@ -53,7 +53,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void LayoutSublayers ()
 		{
 			base.LayoutSublayers ();
-			//String = isSelected ? "" : text;
+
 			Selection.String = text;
 			Selection.Frame = Bounds.Inset (3, 3);
 			Selection.BorderWidth = isSelected ? 2 : 0;

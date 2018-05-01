@@ -3,6 +3,7 @@ using System.Linq;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
+using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -78,6 +79,20 @@ namespace Xamarin.PropertyEditing.Mac
 			var width = (Frame.Width - 54) / 10;
 			var height = (Frame.Height - 49) / 4;
 
+			MaterialColorLayer CreateLayer (string name, CommonColor color)
+			{
+				var selectedColor = color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
+				return new MaterialColorLayer {
+					BackgroundColor = color,
+					ForegroundColor = selectedColor.CGColor,
+					Text = name,
+					FontSize = 12,
+					ContentsScale = NSScreen.MainScreen.BackingScaleFactor,
+					TextAlignmentMode = CATextLayerAlignmentMode.Center,
+					IsSelected = MaterialDesign.Color == color
+				};
+			}
+
 			foreach (var p in colors) {
 				var frame = new CGRect (x, y, width, height);
 				var selectedColor = p.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
@@ -91,6 +106,8 @@ namespace Xamarin.PropertyEditing.Mac
 					IsSelected = MaterialDesign.Color == p.Color
 				};
 
+				l.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
+				l.Frame = new CGRect (x, y, width, height);
 				Layer.AddSublayer (l);
 				x += width + 6;
 				col++;
@@ -123,18 +140,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			Layer.AddSublayer (normal);
 			foreach (var n in MaterialDesign.NormalColorScale.Zip (names, (c, name) => new { Name = name, Color = c.Value })) {
-				var frame = new CGRect (x, y, width, height);
-				var selectedColor = n.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
-				var l = new MaterialColorLayer {
-					BackgroundColor = n.Color,
-					ForegroundColor = selectedColor.CGColor,
-					Frame = new CGRect (x, 0, width, height),
-					Text = n.Name,
-					FontSize = 12,
-					ContentsScale = NSScreen.MainScreen.BackingScaleFactor,
-					TextAlignmentMode = CATextLayerAlignmentMode.Center,
-					IsSelected = MaterialDesign.Color == n.Color
-				};
+				var l = CreateLayer (n.Name, n.Color);
+				l.Frame = new CGRect (x, 0, width, height);
 				normal.AddSublayer (l);
 				x += width;
 			}
@@ -155,19 +162,8 @@ namespace Xamarin.PropertyEditing.Mac
 			Layer.AddSublayer (accent);
 			width = Frame.Width / MaterialDesign.AccentColorScale.Count ();
 			foreach (var n in MaterialDesign.AccentColorScale.Zip (AccentNames, (c, n) => new { Name = n, Color = c.Value })) {
-				var frame = new CGRect (x, y, width, height);
-				var selectedColor = n.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
-				var l = new MaterialColorLayer {
-					BackgroundColor = n.Color,
-					ForegroundColor = selectedColor.CGColor,
-					Frame = new CGRect (x, 0, width, height),
-					Text = n.Name,
-					FontSize = 12,
-					ContentsScale = NSScreen.MainScreen.BackingScaleFactor,
-					TextAlignmentMode = CATextLayerAlignmentMode.Center,
-					IsSelected = ViewModel.Solid.Color == n.Color,
-				};
-
+				var l = CreateLayer (n.Name, n.Color);
+				l.Frame = new CGRect (x, 0, width, height);
 				accent.AddSublayer (l);
 				x += width;
 			}

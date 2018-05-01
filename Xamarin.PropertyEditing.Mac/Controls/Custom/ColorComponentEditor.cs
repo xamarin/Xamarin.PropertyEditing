@@ -104,40 +104,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		void Initialize ()
 		{
-			//TranslatesAutoresizingMaskIntoConstraints = false;
 			WantsLayer = true;
 			Editors = CreateEditors (EditorType);
-			/*
-			var top = new NSView {
-				TranslatesAutoresizingMaskIntoConstraints = false
-			};
-			this.AddSubview (top);
-
-			var list = new List<NSLayoutConstraint> ();
-			list.AddRange (new[] {
-				//this.ConstraintTo (null, (t, c) => t.Height == ),
-				//this.ConstraintTo (null, (t, c) => t.Width == 200),
-				top.ConstraintTo (this, (t, c) => t.Top == c.Top),
-				top.ConstraintTo (this, (t, c) => t.Left == c.Left),
-				top.ConstraintTo (this, (t, c) => t.Width == c.Width),
-				top.ConstraintTo (this, (t, c) => t.Height == 6)
-			});
-
-			NSView prev = top;
-			foreach (var ce in Editors) {
-				list.AddRange (new[] {
-					ce.Label.ConstraintTo (prev,  (label, p) => label.Top == p.Bottom),
-					ce.Label.ConstraintTo (this,  (label, c) => label.Left == c.Left + 6),
-					ce.Label.ConstraintTo (this,  (label, c) => label.Height == DefaultControlHeight),
-					ce.Label.ConstraintTo (this,  (label, c) => label.Width == 20),
-					ce.Editor.ConstraintTo (ce.Label, (editor, label) => editor.Left == label.Right),
-					ce.Editor.ConstraintTo (prev, (editor, p) => editor.Top == p.Bottom),
-					ce.Editor.ConstraintTo (this, (editor, c) => editor.Right == c.Right - 6),
-					ce.Editor.ConstraintTo (this, (editor, c) => editor.Height == DefaultControlHeight)});
-				prev = ce.Label;
-			}
-			this.DoConstraints (list.ToArray ());
-			*/
 		}
 
         void UpdateComponent (object sender, EventArgs args)

@@ -113,6 +113,11 @@
     <Compile Include="Controls\Custom\ChannelEditor.cs" />
     <Compile Include="Controls\Custom\CommonBrushLayer.cs" />
     <Compile Include="Controls\Custom\CommonGradientBrushLayer.cs" />
+    <Compile Include="Controls\Custom\HueLayer.cs" />
+    <Compile Include="Controls\Custom\ShadeLayer.cs" />
+    <Compile Include="Controls\Custom\HistoryLayer.cs" />
+    <Compile Include="Controls\Custom\ColorEditorView.cs" />
+    <Compile Include="Controls\Custom\ColorEditorLayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

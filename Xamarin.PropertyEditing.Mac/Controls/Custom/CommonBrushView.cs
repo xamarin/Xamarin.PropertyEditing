@@ -24,7 +24,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public CommonBrushView (IntPtr handle) : base (handle)
 		{
-			Initialize ();
 		}
 
 		void Initialize () {
