@@ -556,8 +556,6 @@ namespace Xamarin.PropertyEditing.Tests
 			});
 			Assume.That (view, Is.Not.Empty);
 
-			
-
 			var topKvp = view.Cast<KeyValuePair<string, SimpleCollectionView>>().First();
 			var leafKvp = topKvp.Value.Cast<KeyValuePair<string, SimpleCollectionView>>().First();
 			var leafItem = leafKvp.Value.Cast<object>().First();
@@ -630,6 +628,36 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (view.Cast<TestNode>().ElementAt (0), Is.EqualTo (nodes[2]));
 			Assert.That (view.Cast<TestNode>().ElementAt (1), Is.EqualTo (nodes[0]));
 			Assert.That (view.Cast<TestNode>().ElementAt (2), Is.EqualTo (nodes[1]));
+		}
+
+		[Test]
+		public void AddBackInUnorderedPartial()
+		{
+			var nodes = new ObservableCollection<TestNode> {
+				new TestNode ("B"),
+				new TestNode ("Xamarin"),
+				new TestNode ("A"),
+				new TestNode ("Xamagon"),
+			};
+
+			var view  = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector
+			});
+
+			Assume.That (view.Cast<TestNode>().ElementAt (0), Is.EqualTo (nodes[2]));
+			Assume.That (view.Cast<TestNode>().ElementAt (1), Is.EqualTo (nodes[0]));
+			Assume.That (view.Cast<TestNode>().ElementAt (2), Is.EqualTo (nodes[3]));
+			Assume.That (view.Cast<TestNode>().ElementAt (3), Is.EqualTo (nodes[1]));
+
+			view.Options.Filter = o => ((TestNode)o).Key.StartsWith ("Xamarin");
+
+			Assume.That (view.Cast<TestNode>().Count(), Is.EqualTo (1));
+			Assume.That (view.Cast<TestNode>().ElementAt (0), Is.EqualTo (nodes[1]));
+
+			view.Options.Filter = o => ((TestNode)o).Key.StartsWith ("Xama");
+
+			Assert.That (view.Cast<TestNode>().ElementAt (0), Is.EqualTo (nodes[3]));
+			Assert.That (view.Cast<TestNode>().ElementAt (1), Is.EqualTo (nodes[1]));
 		}
 
 		[Test]

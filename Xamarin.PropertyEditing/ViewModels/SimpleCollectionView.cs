@@ -275,7 +275,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					
 					if (Comparer.Compare (currentKey, key) > 0) {
 						index = i;
-						this.filtered.Insert (i, key, this.arranged[i]);
+						this.filtered.Insert (i, key, this.arranged[key]);
 						added = true;
 						break;
 					}
