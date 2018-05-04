@@ -154,10 +154,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return;
 			}
 
-			if (this.resourcesView.Options.Filter != ResourceFilter)
-				this.resourcesView.Options.Filter = ResourceFilter;
-			else
-				this.resourcesView.UpdateFilter();
+			this.resourcesView.Options.Filter = ResourceFilter;
 		}
 
 		private bool ResourceFilter (object item)
