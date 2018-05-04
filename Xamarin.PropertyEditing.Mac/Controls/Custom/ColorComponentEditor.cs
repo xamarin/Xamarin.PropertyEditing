@@ -33,16 +33,16 @@ namespace Xamarin.PropertyEditing.Mac
 			Initialize ();
 		}
 
-		class ComponentSet
+		class ChannelGroup
 		{
 			public UnfocusableTextField Label { get; set; }
 			public ComponentSpinEditor Editor { get; set; }
 			public CAGradientLayer Gradient { get; set; }
 		}
 
-		ComponentSet CreateEditor (ChannelEditor editor)
+		ChannelGroup CreateEditor (ChannelEditor editor)
 		{
-			var ce = new ComponentSet {
+			var ce = new ChannelGroup {
 				Label = new UnfocusableTextField {
 					StringValue = $"{editor.Name}:",
 				},
@@ -64,9 +64,9 @@ namespace Xamarin.PropertyEditing.Mac
 			return ce;
 		}
 
-		ComponentSet[] Editors { get; set; }
+		ChannelGroup[] Editors { get; set; }
 
-		ComponentSet[] CreateEditors (ChannelEditorType type)
+		ChannelGroup[] CreateEditors (ChannelEditorType type)
 		{
 			switch (type) {
 				case ChannelEditorType.HSB:
@@ -121,12 +121,13 @@ namespace Xamarin.PropertyEditing.Mac
         protected override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(sender, e);
+
 			switch (e.PropertyName) {
 				case nameof (SolidBrushViewModel.Color):
-					foreach (var c in Editors) {
-						var editor = c.Editor;
+					foreach (var channelGroup in Editors) {
+						var editor = channelGroup.Editor;
 						editor.Value = editor.ComponentEditor.ValueFromColor(ViewModel.Color);
-						editor.ComponentEditor.UpdateGradientLayer (c.Gradient, ViewModel.Color);
+						editor.ComponentEditor.UpdateGradientLayer (channelGroup.Gradient, ViewModel.Color);
 					}
 				break;
 			}
@@ -137,11 +138,11 @@ namespace Xamarin.PropertyEditing.Mac
             base.UpdateConstraints();
         }
 
-        ComponentSet set;
+        ChannelGroup activeChannel;
 		public override void MouseDown (NSEvent theEvent)
 		{
 			if (!ClickableGradients) {
-				set = null;
+				activeChannel = null;
 				base.MouseDown (theEvent);
 				return;
 			}
@@ -152,11 +153,11 @@ namespace Xamarin.PropertyEditing.Mac
 			foreach (var layer in Layer.Sublayers) {
 				var hit = layer.PresentationLayer.HitTest (location) ?? layer.PresentationLayer.HitTest (new CGPoint (location.X, location.Y + 4));
 
-				for (var c = hit; c != null; c = c.SuperLayer) {
-					set = Editors.FirstOrDefault (ce => ce.Gradient == c.ModelLayer);
-					if (set != null) {
-						var channel = set.Editor.ComponentEditor;
-						var grad = set.Gradient;
+				for (var currentLayer = hit; currentLayer != null; currentLayer = currentLayer.SuperLayer) {
+					activeChannel = Editors.FirstOrDefault (ce => ce.Gradient == currentLayer.ModelLayer);
+					if (activeChannel != null) {
+						var channel = activeChannel.Editor.ComponentEditor;
+						var grad = activeChannel.Gradient;
 						ViewModel.Color = channel.UpdateColorFromLocation (
 							grad,
 							ViewModel.Color,
@@ -173,9 +174,9 @@ namespace Xamarin.PropertyEditing.Mac
 			var location = ConvertPointFromView (theEvent.LocationInWindow, null);
 			location = ConvertPointToLayer (location);
 
-			if (set != null) {
-				var channel = set.Editor.ComponentEditor;
-				var grad = set.Gradient;
+			if (activeChannel != null) {
+				var channel = activeChannel.Editor.ComponentEditor;
+				var grad = activeChannel.Gradient;
 				ViewModel.Color = channel.UpdateColorFromLocation (
 					grad,
 					ViewModel.Color,
@@ -187,7 +188,7 @@ namespace Xamarin.PropertyEditing.Mac
 
         public override void MouseUp(NSEvent theEvent)
         {
-			set = null;
+			activeChannel = null;
             base.MouseUp(theEvent); 
         }
 
@@ -200,12 +201,12 @@ namespace Xamarin.PropertyEditing.Mac
 			var editorFrame = new CGRect (labelFrame.Right, labelFrame.Y, frame.Width - labelFrame.Right, DefaultControlHeight);
 			var yOffset = DefaultControlHeight + DefaultGradientHeight + 3;
 
-			foreach (var e in Editors) {
-				e.Label.Frame = labelFrame;
-				e.Editor.Frame = editorFrame;
-				e.Gradient.Frame = new CGRect (editorFrame.X, editorFrame.Y - DefaultGradientHeight, editorFrame.Width - 16, DefaultGradientHeight);
-				e.Gradient.BorderColor = NSColor.DisabledControlText.CGColor;
-				e.Gradient.ContentsScale = Window?.Screen?.BackingScaleFactor ?? NSScreen.MainScreen.BackingScaleFactor;
+			foreach (var channelGroup in Editors) {
+				channelGroup.Label.Frame = labelFrame;
+				channelGroup.Editor.Frame = editorFrame;
+				channelGroup.Gradient.Frame = new CGRect (editorFrame.X, editorFrame.Y - DefaultGradientHeight, editorFrame.Width - 16, DefaultGradientHeight);
+				channelGroup.Gradient.BorderColor = NSColor.DisabledControlText.CGColor;
+				channelGroup.Gradient.ContentsScale = Window?.Screen?.BackingScaleFactor ?? NSScreen.MainScreen.BackingScaleFactor;
 				labelFrame = labelFrame.Translate (0, -yOffset);
 				editorFrame = editorFrame.Translate (0, -yOffset);
 			}
