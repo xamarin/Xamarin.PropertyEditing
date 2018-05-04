@@ -61,7 +61,9 @@ namespace Xamarin.PropertyEditing.Mac
 					this.viewModel.ArrangedPropertiesChanged -= OnPropertiesChanged;
 
 				this.targetPlatform = value;
-				this.viewModel = new PanelViewModel (value);
+				this.viewModel = new PanelViewModel (value) {
+					ResourceProvider = this.ResourceProvider
+				};
 				this.dataSource = new PropertyTableDataSource (this.viewModel);
 				this.propertyTable.Delegate = new PropertyTableDelegate (this.dataSource);
 				this.propertyTable.DataSource = this.dataSource;
@@ -91,6 +93,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private bool isArrangeEnabled = true;
 		// when this property changes, need to create new datasource
 		private TargetPlatform targetPlatform;
+		private IResourceProvider resourceProvider;
 		private NSOutlineView propertyTable;
 		private PropertyTableDataSource dataSource;
 		private PanelViewModel viewModel;
