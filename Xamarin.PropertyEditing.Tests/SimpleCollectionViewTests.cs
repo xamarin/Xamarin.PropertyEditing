@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -629,6 +630,34 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (view.Cast<TestNode>().ElementAt (0), Is.EqualTo (nodes[2]));
 			Assert.That (view.Cast<TestNode>().ElementAt (1), Is.EqualTo (nodes[0]));
 			Assert.That (view.Cast<TestNode>().ElementAt (2), Is.EqualTo (nodes[1]));
+		}
+
+		[Test]
+		public void SettingEvenSameFilterTriggersUpdate ()
+		{
+			var nodes = new ObservableCollection<TestNode> {
+				new TestNode ("Baz"),
+				new TestNode ("Bar"),
+				new TestNode ("A")
+			};
+
+			var view  = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector
+			});
+
+			string textFilter = "B";
+			Predicate<object> filter = o => ((TestNode) o).Key.StartsWith (textFilter, StringComparison.OrdinalIgnoreCase);
+			view.Options.Filter = filter;
+
+			Assume.That (view, Contains.Item (nodes[0]));
+			Assume.That (view, Contains.Item (nodes[1]));
+			Assume.That (view, Does.Not.Contain (nodes[2]));
+
+			textFilter = "Bar";
+			view.Options.Filter = filter;
+			Assert.That (view, Does.Not.Contain (nodes[0]));
+			Assert.That (view, Contains.Item (nodes[1]));
+			Assert.That (view, Does.Not.Contain (nodes[2]));
 		}
 
 		private IEnumerable TestNodeChildrenSelector (object o)
