@@ -134,9 +134,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private readonly SimpleCollectionView parent;
 		private readonly string key;
 		private readonly object item;
+		private readonly IEnumerable source;
 		private SimpleCollectionViewOptions options;
 		private bool wasFilterNull;
-		private IEnumerable source;
 
 		private IComparer<string> Comparer => Options?.DisplayComparer ?? Comparer<string>.Default;
 
@@ -238,6 +238,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				}
 			}
 
+			RemoveFiltered (toRemove, notify);
+
 			if (!isPureSubset) {
 				var toAdd = new List<string> (filteredOut.Count);
 				foreach (string key in filteredOut) {
@@ -249,8 +251,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				AddFiltered (toAdd, notify);
 			}
-
-			RemoveFiltered (toRemove, notify);
 
 			if (hadChildren != HasChildElements)
 				OnPropertyChanged (nameof(HasChildElements));
@@ -375,15 +375,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				this.arranged.Add (sourceItem.Key, e);
 
-				SimpleCollectionView childView = null;
 				IEnumerable children = (Options.ChildrenSelector != null) ? this.options.ChildrenSelector (sourceItem.Item) : sourceItem.Item as IEnumerable;
 				if (Options.ChildOptions != null) {
 					if (children == null) {
 						throw new InvalidOperationException ("ChildOptions specified, but element not enumerable or no selector");
 					}
 
-					childView = new SimpleCollectionView (children, Options.ChildOptions, this, sourceItem.Key, sourceItem.Item);
-					e.ChildrenView = childView;
+					e.ChildrenView = new SimpleCollectionView (children, Options.ChildOptions, this, sourceItem.Key, sourceItem.Item);
 				}
 
 				if (!filtering || this.options.Filter (e.Item))
