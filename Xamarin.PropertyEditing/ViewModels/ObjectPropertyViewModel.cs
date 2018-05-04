@@ -26,16 +26,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class ObjectPropertyViewModel
 		: PropertyViewModel
 	{
-		public ObjectPropertyViewModel (IEditorProvider provider, TargetPlatform targetPlatform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		public ObjectPropertyViewModel (TargetPlatform targetPlatform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (targetPlatform, property, editors)
 		{
-			if (provider == null)
-				throw new ArgumentNullException (nameof(provider));
 			if (targetPlatform == null)
 				throw new ArgumentNullException (nameof(targetPlatform));
 
-			this.provider = provider;
-			ValueModel = new ObjectViewModel (provider, targetPlatform);
+			ValueModel = new ObjectViewModel (targetPlatform);
 			RequestCurrentValueUpdate();
 
 			QueryTypes();
@@ -171,7 +168,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		private readonly IEditorProvider provider;
 		private AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes;
 		private bool createInstancePending;
 		private string customExpression;
@@ -237,19 +233,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private async Task<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> GetAssignableTypesAsync ()
 		{
-			Task<IReadOnlyList<ITypeInfo>>[] typeTasks = Editors.Select (o => o.GetAssignableTypesAsync (Property)).ToArray();
-			IReadOnlyList<ITypeInfo>[] lists = await Task.WhenAll (typeTasks).ConfigureAwait (false);
-
-			var assemblies = new Dictionary<IAssemblyInfo, ILookup<string, ITypeInfo>> ();
-			foreach (ITypeInfo type in lists.SelectMany (t => t)) {
-				if (!assemblies.TryGetValue (type.Assembly, out ILookup<string, ITypeInfo> types)) {
-					assemblies[type.Assembly] = types = new ObservableLookup<string, ITypeInfo> ();
-				}
-
-				((IMutableLookup<string, ITypeInfo>) types).Add (type.NameSpace, type);
-			}
-
-			return assemblies;
+			AssignableTypesResult result = await Editors.GetCommonAssignableTypes (Property, childTypes: false).ConfigureAwait (false);
+			return result.GetTypeTree ();
 		}
 
 		private async void CreateInstance ()
@@ -282,7 +267,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					}
 
 					await SetValueAsync (new ValueInfo<object> {
-							Value = await this.provider.CreateObjectAsync (selectedType),
+							Value = await TargetPlatform.EditorProvider.CreateObjectAsync (selectedType),
 							ValueDescriptor = selectedType,
 							Source = ValueSource.Local
 						});

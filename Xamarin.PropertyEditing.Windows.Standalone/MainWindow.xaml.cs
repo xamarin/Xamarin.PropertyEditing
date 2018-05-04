@@ -15,7 +15,7 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 		public MainWindow ()
 		{
 			InitializeComponent ();
-			this.panel.TargetPlatform = new TargetPlatform {
+			this.panel.TargetPlatform = new TargetPlatform (new MockEditorProvider()) {
 				SupportsCustomExpressions = true,
 				SupportsMaterialDesign = true,
 				SupportsBrushOpacity = false,
@@ -23,7 +23,6 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 					{ typeof(CommonBrush), "Brush" }
 				}
 			};
-			this.panel.EditorProvider = new MockEditorProvider ();
 
 			this.panel.ResourceProvider = new MockResourceProvider ();
 #if USE_VS_ICONS
@@ -41,7 +40,7 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 			} else {
 				inspectedObject = mockedControl.MockedControl;
 				if (mockedControl is MockedSampleControlButton mockedButton) {
-					IObjectEditor editor = await this.panel.EditorProvider.GetObjectEditorAsync (inspectedObject);
+					IObjectEditor editor = await this.panel.TargetPlatform.EditorProvider.GetObjectEditorAsync (inspectedObject);
 					await mockedButton.SetBrushInitialValueAsync (editor, new CommonSolidBrush (20, 120, 220, 240, "sRGB"));
 					await mockedButton.SetMaterialDesignBrushInitialValueAsync (editor, new CommonSolidBrush (0x65, 0x1F, 0xFF, 200));
 					await mockedButton.SetReadOnlyBrushInitialValueAsync (editor, new CommonSolidBrush (240, 220, 15, 190));

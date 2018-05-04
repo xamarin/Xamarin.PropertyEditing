@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Xamarin.PropertyEditing</RootNamespace>
     <AssemblyName>Xamarin.PropertyEditing</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssignableTypesResult.cs" />
     <Compile Include="AsyncValue.cs" />
     <Compile Include="AsyncWorkQueue.cs" />
     <Compile Include="BidirectionalDictionary.cs" />
@@ -111,6 +113,7 @@
     <Compile Include="ValueSource.cs" />
     <Compile Include="ViewModels\ArrangeModeViewModel.cs" />
     <Compile Include="ViewModels\BrushPropertyViewModel.cs" />
+    <Compile Include="ViewModels\CollectionPropertyViewModel.cs" />
     <Compile Include="ViewModels\MaterialColorScale.cs" />
     <Compile Include="ViewModels\MaterialDesignColorViewModel.cs" />
     <Compile Include="ViewModels\CombinablePropertyViewModel.cs" />

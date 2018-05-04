@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
+using Xamarin.PropertyEditing.Reflection;
 using Xamarin.PropertyEditing.Tests.MockControls;
 
 namespace Xamarin.PropertyEditing.Tests
@@ -50,6 +50,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Properties = control.Properties.Values.ToArray();
 			Events = control.Events.Values.ToArray();
 			Target = control;
+			TypeName = control.GetType ().Name;
 		}
 
 		public object Target
@@ -127,21 +128,14 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult<IReadOnlyList<string>> (new string[0]);
 		}
 
-		public Task<IReadOnlyList<ITypeInfo>> GetAssignableTypesAsync (IPropertyInfo property)
+		public Task<AssignableTypesResult> GetAssignableTypesAsync (IPropertyInfo property, bool childTypes)
 		{
 			if (this.assignableTypes == null) {
-				return Task.Run<IReadOnlyList<ITypeInfo>> (() => {
-					return AppDomain.CurrentDomain.GetAssemblies().SelectMany (a => a.GetTypes()).AsParallel()
-						.Where (t => property.Type.IsAssignableFrom (t) && t.GetConstructor (Type.EmptyTypes) != null && t.Namespace != null && !t.IsAbstract && !t.IsInterface && t.IsPublic)
-						.Select (t => {
-							string asmName = t.Assembly.GetName().Name;
-							return new TypeInfo (new AssemblyInfo (asmName, isRelevant: asmName.StartsWith ("Xamarin")), t.Namespace, t.Name);
-						}).ToList();
-				});
+				return ReflectionObjectEditor.GetAssignableTypes (property, childTypes);
 			} else if (!this.assignableTypes.TryGetValue (property, out IReadOnlyList<ITypeInfo> types))
-				return Task.FromResult<IReadOnlyList<ITypeInfo>> (Enumerable.Empty<ITypeInfo>().ToArray());
+				return Task.FromResult (new AssignableTypesResult (Enumerable.Empty<ITypeInfo> ().ToArray ()));
 			else
-				return Task.FromResult (types);
+				return Task.FromResult (new AssignableTypesResult (types));
 		}
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously

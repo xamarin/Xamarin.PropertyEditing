@@ -7,8 +7,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class PanelViewModel
 		: PropertiesViewModel, IFilterable
 	{
-		public PanelViewModel (IEditorProvider provider, TargetPlatform targetPlatform)
-			: base (provider, targetPlatform)
+		public PanelViewModel (TargetPlatform targetPlatform)
+			: base (targetPlatform)
 		{
 			ArrangeModes = new List<ArrangeModeViewModel> {
 				new ArrangeModeViewModel (PropertyArrangeMode.Name, this),
@@ -19,6 +19,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public event EventHandler ArrangedPropertiesChanged;
 
 		public IReadOnlyList<IGroupingList<string, EditorViewModel>> ArrangedEditors => this.arranged;
+
+		public bool AutoExpand
+		{
+			get { return this.autoExpand; }
+			set
+			{
+				if (this.autoExpand == value)
+					return;
+
+				this.autoExpand = value;
+				UpdateExpanded (value);
+				OnPropertyChanged();
+			}
+		}
 
 		public bool HasChildElements => (this.arranged.Count > 0);
 
@@ -71,18 +85,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public void SetIsExpanded (string group, bool isExpanded)
 		{
-			HashSet<string> groups;
-			if (!this.expandedGroups.TryGetValue (ArrangeMode, out groups)) {
-				if (!isExpanded)
-					return;
-
-				this.expandedGroups[ArrangeMode] = groups = new HashSet<string> ();
-			}
-
-			if (isExpanded)
-				groups.Add (group);
-			else
-				groups.Remove (group);
+			SetIsExpanded (ArrangeMode, group, isExpanded);
 		}
 
 		protected override void OnAddEditors (IEnumerable<EditorViewModel> editors)
@@ -118,6 +121,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					}
 				}
 
+				AutoExpandGroup (grouping.Key);
 				if (remainingItems != null)
 					this.arranged.Add (grouping.Key, remainingItems);
 				else
@@ -131,18 +135,23 @@ namespace Xamarin.PropertyEditing.ViewModels
 						new PropertyGroupViewModel (TargetPlatform, kvp.Key, kvp.Value, ObjectEditors)
 					};
 
+					AutoExpandGroup (group.Key);
+
+					bool added = false;
 					for (; i < this.arranged.Count; i++) {
 						var g = (IGrouping<string, EditorViewModel>) this.arranged[i];
 
 						// TODO: Are we translating categories? If so this needs to lookup the resource and be culture specific
-						if (g.Key == null) { // nulls go on the bottom.
+						// nulls go on the bottom.
+						if (g.Key == null || String.Compare (g.Key, kvp.Key, StringComparison.Ordinal) > 0) {
+							added = true;
 							this.arranged.Insert (i, group);
-							break;
-						} else if (String.Compare (g.Key, kvp.Key, StringComparison.Ordinal) > 0) {
-							this.arranged.Insert (i++, group);
 							break;
 						}
 					}
+
+					if (!added)
+						this.arranged.Add (group);
 				}
 			}
 
@@ -176,6 +185,45 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private PropertyArrangeMode arrangeMode;
 		private string filterText;
+		private bool autoExpand;
+
+		private void AutoExpandGroup (string group)
+		{
+			if (AutoExpand)
+				UpdateExpanded (new[] { group }, true);
+		}
+
+		private void SetIsExpanded (PropertyArrangeMode mode, string group, bool isExpanded)
+		{
+			if (!this.expandedGroups.TryGetValue (mode, out HashSet<string> groups)) {
+				if (!isExpanded)
+					return;
+
+				this.expandedGroups[mode] = groups = new HashSet<string> ();
+			}
+
+			if (isExpanded)
+				groups.Add (group);
+			else
+				groups.Remove (group);
+		}
+
+		private void UpdateExpanded (bool expanded)
+		{
+			UpdateExpanded (this.arranged.Select<IGroupingList<string, EditorViewModel>, string> (g => g.Key), expanded);
+		}
+
+		private void UpdateExpanded (IEnumerable<string> groups, bool expanded)
+		{
+			foreach (string group in groups) {
+				foreach (var mode in ArrangeModes) {
+					if (mode.ArrangeMode == PropertyArrangeMode.Name)
+						continue;
+
+					SetIsExpanded (mode.ArrangeMode, group, expanded);
+				}
+			}
+		}
 
 		private void Arrange()
 		{

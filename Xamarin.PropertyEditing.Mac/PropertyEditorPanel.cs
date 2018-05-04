@@ -51,20 +51,19 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public IEditorProvider EditorProvider
+		public TargetPlatform TargetPlatform
 		{
-			get { return editorProvider; }
+			get { return this.targetPlatform; }
 			set
 			{
 				if (this.viewModel != null)
 					this.viewModel.ArrangedPropertiesChanged -= OnPropertiesChanged;
 
-				// Populate the Property Table
-				editorProvider = value;
-				viewModel = new PanelViewModel (editorProvider, TargetPlatform.Default);
-				dataSource = new PropertyTableDataSource (viewModel);
-				propertyTable.Delegate = new PropertyTableDelegate (dataSource);
-				propertyTable.DataSource = dataSource;
+				this.targetPlatform = value;
+				this.viewModel = new PanelViewModel (value);
+				this.dataSource = new PropertyTableDataSource (this.viewModel);
+				this.propertyTable.Delegate = new PropertyTableDelegate (this.dataSource);
+				this.propertyTable.DataSource = this.dataSource;
 
 				if (this.viewModel != null)
 					this.viewModel.ArrangedPropertiesChanged += OnPropertiesChanged;
@@ -77,7 +76,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private bool isArrangeEnabled = true;
 		// when this property changes, need to create new datasource
-		private IEditorProvider editorProvider;
+		private TargetPlatform targetPlatform;
 		private NSOutlineView propertyTable;
 		private PropertyTableDataSource dataSource;
 		private PanelViewModel viewModel;

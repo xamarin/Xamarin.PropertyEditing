@@ -31,7 +31,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (1));
 
-			var vm = new PanelViewModel (provider, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (provider));
 			vm.SelectedObjects.Add (obj);
 
 			Assert.That (vm.Properties, Is.Not.Empty);
@@ -59,7 +59,7 @@ namespace Xamarin.PropertyEditing.Tests
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj1)).ReturnsAsync (editor1Mock.Object);
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj2)).ReturnsAsync (editor2Mock.Object);
 
-			var vm = new PanelViewModel (providerMock.Object, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (providerMock.Object));
 			vm.SelectedObjects.Add (obj1);
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
@@ -92,7 +92,7 @@ namespace Xamarin.PropertyEditing.Tests
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj1)).ReturnsAsync (editor1Mock.Object);
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj2)).ReturnsAsync (editor2Mock.Object);
 
-			var vm = new PanelViewModel (providerMock.Object, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (providerMock.Object));
 			vm.SelectedObjects.Add (obj2);
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (2));
@@ -114,7 +114,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var obj1 = new TestClass ();
 			var obj2 = new TestClass ();
 
-			var vm = new PanelViewModel (provider, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (provider));
 			vm.SelectedObjects.Add (obj1);
 
 			var property = vm.Properties[0];
@@ -137,7 +137,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var obj1 = new TestClass ();
 			var obj2 = new TestClass ();
 
-			var vm = new PanelViewModel (provider, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (provider));
 			vm.SelectedObjects.Add (obj1);
 			vm.SelectedObjects.Add (obj2);
 
@@ -169,7 +169,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
 
-			var vm = new PanelViewModel (provider.Object, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (provider.Object));
 			vm.SelectedObjects.Add (obj);
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (2));
@@ -199,7 +199,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
 
-			var vm = new PanelViewModel (provider.Object, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (provider.Object));
 			vm.SelectedObjects.Add (obj);
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
@@ -230,7 +230,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
 
-			var vm = new PanelViewModel (provider.Object, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (provider.Object));
 
 			// We need access to the custom reset method here to ensure compliance
 			// It's a bit hacky but this is unlikely to change. If it does, this test
@@ -272,7 +272,7 @@ namespace Xamarin.PropertyEditing.Tests
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (derivedObj)).ReturnsAsync (derivedEditorMock.Object);
 
-			var vm = new PanelViewModel (providerMock.Object, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (providerMock.Object));
 			vm.SelectedObjects.AddItems (new[] { baseObj, derivedObj });
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
@@ -306,7 +306,7 @@ namespace Xamarin.PropertyEditing.Tests
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (derivedObj)).ReturnsAsync (derivedEditorMock.Object);
 
-			var vm = new PanelViewModel (providerMock.Object, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (providerMock.Object));
 			vm.SelectedObjects.AddItems (new[] { baseObj, derivedObj });
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
@@ -344,7 +344,7 @@ namespace Xamarin.PropertyEditing.Tests
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (derivedObj)).ReturnsAsync (derivedEditorMock.Object);
 
-			var vm = new PanelViewModel (providerMock.Object, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (providerMock.Object));
 			vm.SelectedObjects.AddItems (new[] { baseObj, derivedObj });
 
 			Assume.That (vm.Properties.Count, Is.EqualTo (1));
@@ -386,7 +386,7 @@ namespace Xamarin.PropertyEditing.Tests
 			});
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj2)).ReturnsAsync (editor2.Object);
 
-			var vm = new PanelViewModel (provider.Object, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (provider.Object));
 			vm.SelectedObjects.Add (obj1);
 
 			Assume.That (returnObject, Is.Not.Null);
@@ -410,7 +410,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 
-			var vm = new PanelViewModel (provider, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (provider));
 			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
 			vm.SelectedObjects.Add (obj);
 
@@ -429,7 +429,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 
-			var vm = new PanelViewModel (provider, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (provider));
 			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
 			vm.SelectedObjects.Add (obj);
 
@@ -464,7 +464,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 			
-			var vm = new PanelViewModel (provider, TargetPlatform.Default);
+			var vm = new PanelViewModel (new TargetPlatform (provider));
 			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
 			vm.SelectedObjects.Add (obj);
 
@@ -486,7 +486,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 
-			var vm = new PanelViewModel (provider, TargetPlatform.Default) { ArrangeMode = PropertyArrangeMode.Category };
+			var vm = new PanelViewModel (new TargetPlatform (provider)) { ArrangeMode = PropertyArrangeMode.Category };
 			vm.SelectedObjects.Add (obj);
 
 			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
@@ -510,13 +510,13 @@ namespace Xamarin.PropertyEditing.Tests
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (p => p.GetObjectEditorAsync (editor.Target)).ReturnsAsync (editor);
 
-			var platform = new TargetPlatform {
+			var platform = new TargetPlatform (provider.Object) {
 				GroupedTypes = new Dictionary<Type, string> {
 					{ typeof(string), "B" }
 				}
 			};
 
-			var vm = new PanelViewModel (provider.Object, platform);
+			var vm = new PanelViewModel (platform);
 			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
 
 			vm.ArrangeMode = PropertyArrangeMode.Category;
@@ -534,7 +534,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = await provider.GetObjectEditorAsync (obj);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 
-			var vm = new PanelViewModel (provider, TargetPlatform.Default) { ArrangeMode = PropertyArrangeMode.Category };
+			var vm = new PanelViewModel (new TargetPlatform (provider)) { ArrangeMode = PropertyArrangeMode.Category };
 			vm.SelectedObjects.Add (obj);
 
 			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
@@ -558,22 +558,22 @@ namespace Xamarin.PropertyEditing.Tests
 			var groupProp = new Mock<IPropertyInfo> ();
 			groupProp.SetupGet (p => p.Type).Returns (typeof(int));
 
-			var mockPlatform = new TargetPlatform {
-				GroupedTypes = new Dictionary<Type, string> {
-					{ typeof(int), "ints" }
-				}
-			};
-
 			var target = new object ();
 
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (p => p.GetObjectEditorAsync (target))
 				.ReturnsAsync (new MockObjectEditor (normalProp.Object, groupProp.Object));
 
+			var mockPlatform = new TargetPlatform (provider.Object) {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(int), "ints" }
+				}
+			};
+
 			var editor = await provider.Object.GetObjectEditorAsync (target);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 
-			var vm = new PanelViewModel (provider.Object, mockPlatform) { ArrangeMode = PropertyArrangeMode.Category };
+			var vm = new PanelViewModel (mockPlatform) { ArrangeMode = PropertyArrangeMode.Category };
 			vm.SelectedObjects.Add (target);
 
 			Assert.That (vm.ArrangedEditors.Count, Is.EqualTo (2));
@@ -591,22 +591,21 @@ namespace Xamarin.PropertyEditing.Tests
 			var groupProp = new Mock<IPropertyInfo> ();
 			groupProp.SetupGet (p => p.Type).Returns (typeof(int));
 
-			var mockPlatform = new TargetPlatform {
-				GroupedTypes = new Dictionary<Type, string> {
-					{ typeof(int), "ints" }
-				}
-			};
-
 			var target = new object ();
-
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (p => p.GetObjectEditorAsync (target))
 				.ReturnsAsync (new MockObjectEditor (normalProp.Object, groupProp.Object));
 
+			var mockPlatform = new TargetPlatform (provider.Object) {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(int), "ints" }
+				}
+			};			
+
 			var editor = await provider.Object.GetObjectEditorAsync (target);
 			Assume.That (editor.Properties.Count, Is.EqualTo (2));
 
-			var vm = new PanelViewModel (provider.Object, mockPlatform) { ArrangeMode = PropertyArrangeMode.Category };
+			var vm = new PanelViewModel (mockPlatform) { ArrangeMode = PropertyArrangeMode.Category };
 			vm.SelectedObjects.Add (target);
 
 			Assume.That (vm.ArrangedEditors.Count, Is.EqualTo (2));
@@ -634,19 +633,104 @@ namespace Xamarin.PropertyEditing.Tests
 			provider.Setup (p => p.GetObjectEditorAsync (target))
 				.ReturnsAsync (new MockObjectEditor (normalProp.Object, groupProp.Object));
 
-			var platform = new TargetPlatform ();
+			var platform = new TargetPlatform (provider.Object);
 			Assume.That (platform.GroupedTypes, Is.Null);
 
-			var vm = new PanelViewModel (provider.Object, platform) {
+			var vm = new PanelViewModel (platform) {
 				ArrangeMode = PropertyArrangeMode.Category
 			};
 
 			Assert.That (() => vm.SelectedObjects.Add (target), Throws.Nothing);
 		}
 
+		[Test]
+		[Description ("Bug coverage for grouped property failing to add if last")]
+		public void AddGroupedAtEnd ()
+		{
+			var normalProp = new Mock<IPropertyInfo> ();
+			normalProp.SetupGet (p => p.Type).Returns (typeof(string));
+			normalProp.SetupGet (p => p.Category).Returns ("Category");
+			normalProp.SetupGet (p => p.Name).Returns ("name");
+
+			var groupProp = new Mock<IPropertyInfo> ();
+			groupProp.SetupGet (p => p.Type).Returns (typeof(int));
+
+			var target = new object();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target))
+				.ReturnsAsync (new MockObjectEditor (normalProp.Object, groupProp.Object));
+
+			var platform = new TargetPlatform (provider.Object) {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(int), "ints" }
+				}
+			};
+
+			var vm = new PanelViewModel (platform) {
+				ArrangeMode = PropertyArrangeMode.Category,
+				AutoExpand = true
+			};
+			vm.SelectedObjects.Add (target);
+
+			Assert.That (vm.ArrangedEditors.Any (g => g.Key == "ints"), Is.True, "Does not have grouped editors category");
+		}
+
+		[Test]
+		public async Task AutoExpand ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClassSub ();
+			var editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (2));
+
+			var vm = new PanelViewModel (new TargetPlatform (provider)) {
+				ArrangeMode = PropertyArrangeMode.Category,
+				AutoExpand = true
+			};
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
+			Assert.That (vm.GetIsExpanded (vm.ArrangedEditors[0].Key), Is.True);
+		}
+
+		[Test]
+		public async Task AutoExpandGroupedProperties ()
+		{
+			var normalProp = new Mock<IPropertyInfo> ();
+			normalProp.SetupGet (p => p.Type).Returns (typeof(string));
+			normalProp.SetupGet (p => p.Category).Returns ("Category");
+			normalProp.SetupGet (p => p.Name).Returns ("name");
+
+			var groupProp = new Mock<IPropertyInfo> ();
+			groupProp.SetupGet (p => p.Type).Returns (typeof(int));
+
+			var target = new object();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target))
+				.ReturnsAsync (new MockObjectEditor (normalProp.Object, groupProp.Object));
+
+			var platform = new TargetPlatform (provider.Object) {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(int), "ints" }
+				}
+			};
+
+			var vm = new PanelViewModel (platform) {
+				ArrangeMode = PropertyArrangeMode.Category,
+				AutoExpand = true
+			};
+			vm.SelectedObjects.Add (target);
+
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
+			Assume.That (vm.ArrangedEditors.Any (g => g.Key == "ints"), Is.True, "Does not have grouped editors category");
+			Assert.That (vm.GetIsExpanded ("ints"), Is.True);
+		}
+
 		internal override PanelViewModel CreateVm (IEditorProvider provider)
 		{
-			return new PanelViewModel (provider, TargetPlatform.Default);
+			return new PanelViewModel (new TargetPlatform (provider));
 		}
 
 		private TestContext context;

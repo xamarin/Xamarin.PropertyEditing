@@ -15,7 +15,7 @@ namespace Xamarin.PropertyEditing.Windows
 			InitializeComponent ();
 		}
 
-		internal static ITypeInfo RequestType (PropertyEditorPanel owner, AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
+		internal static ITypeInfo RequestType (FrameworkElement owner, AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
 		{
 			Window hostWindow = Window.GetWindow (owner);
 

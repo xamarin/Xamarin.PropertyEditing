@@ -9,6 +9,8 @@ namespace Xamarin.PropertyEditing.Tests
 	public class MockEditorProvider
 		: IEditorProvider
 	{
+		public static readonly TargetPlatform MockPlatform = new TargetPlatform (new MockEditorProvider ());
+
 		public Task<IObjectEditor> GetObjectEditorAsync (object item)
 		{
 			if (this.editorCache.TryGetValue (item, out IObjectEditor cachedEditor)) {

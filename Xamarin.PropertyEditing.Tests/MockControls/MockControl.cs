@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 
 		public IReadOnlyDictionary<string, IEventInfo> Events => this.events;
 
-		public void AddProperty<T> (string name, string category = "",
+		public void AddProperty<T> (string name, string category = null,
 			bool canWrite = true, bool flag = false,
 			IEnumerable<Type> converterTypes = null,
 			string description = null, ValueSources valueSources = ValueSources.Local | ValueSources.Default)

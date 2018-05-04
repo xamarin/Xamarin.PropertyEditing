@@ -33,6 +33,16 @@ namespace Xamarin.PropertyEditing.Windows
 			return parent.FindParentOrSelf<T>();
 		}
 
+		public static FrameworkElement FindPropertiesHost (this FrameworkElement self)
+		{
+			DependencyObject parent = self;
+			while (!(parent is IPropertiesHost) && parent != null) {
+				parent = VisualTreeHelper.GetParent (parent);
+			}
+
+			return (FrameworkElement)parent;
+		}
+
 		public static T FindParentOrSelf<T> (this UIElement self)
 			where T : UIElement
 		{

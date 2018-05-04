@@ -1,7 +1,8 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using AppKit;
 using Foundation;
+using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Tests;
 
 namespace Xamarin.PropertyEditing.Mac.Standalone
@@ -18,7 +19,13 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 			base.ViewDidLoad ();
 			// Do any additional setup after loading the view.
 
-			PropertyPanel.EditorProvider = new MockEditorProvider ();
+			PropertyPanel.TargetPlatform = new TargetPlatform (new MockEditorProvider ()) {
+				SupportsCustomExpressions = true,
+				SupportsMaterialDesign = true,
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(CommonBrush), "Brush" }
+				}
+			};
 		}
 
 		public override NSObject RepresentedObject {

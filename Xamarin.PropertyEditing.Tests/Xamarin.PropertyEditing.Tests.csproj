@@ -9,9 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Xamarin.PropertyEditing.Tests</RootNamespace>
     <AssemblyName>Xamarin.PropertyEditing.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <RestorePackagesPath>$(MSBuildThisFileDirectory)packages\</RestorePackagesPath>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +63,7 @@
     <Compile Include="BoolViewModelTests.cs" />
     <Compile Include="BrushPropertyViewModelTests.cs" />
     <Compile Include="BytePropertyViewModelTests.cs" />
+    <Compile Include="CollectionPropertyViewModelTests.cs" />
     <Compile Include="MaterialDesignColorViewModelTests.cs" />
     <Compile Include="CombinablePredefinedViewModelTests.cs" />
     <Compile Include="MockControls\MockResourceProvider.cs" />

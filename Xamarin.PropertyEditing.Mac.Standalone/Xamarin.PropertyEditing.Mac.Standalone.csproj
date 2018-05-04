@@ -9,7 +9,8 @@
     <RootNamespace>Xamarin.PropertyEditing.Mac.Standalone</RootNamespace>
     <AssemblyName>Xamarin.PropertyEditing.Mac.Standalone</AssemblyName>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

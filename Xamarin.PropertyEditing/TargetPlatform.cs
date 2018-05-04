@@ -10,6 +10,22 @@ namespace Xamarin.PropertyEditing
 	/// </summary>
 	public sealed class TargetPlatform
 	{
+		public TargetPlatform (IEditorProvider provider)
+		{
+			if (provider == null)
+				throw new ArgumentNullException (nameof(provider));
+
+			EditorProvider = provider;
+		}
+
+		/// <summary>
+		/// Gets the <see cref="IEditorProvider"/> associated with this platform.
+		/// </summary>
+		public IEditorProvider EditorProvider
+		{
+			get;
+		}
+
 		/// <summary>
 		/// Gets or sets whether the platform supports custom expressions (default false).
 		/// </summary>
@@ -35,7 +51,7 @@ namespace Xamarin.PropertyEditing
 		}
 
 		/// <summary>
-		/// Gets a dictionary defining the property types will be grouped into a single editor and their groups resource name.
+		/// Gets or sets a dictionary defining the property types will be grouped into a single editor and their groups key.
 		/// </summary>
 		public IReadOnlyDictionary<Type, string> GroupedTypes
 		{
@@ -43,10 +59,27 @@ namespace Xamarin.PropertyEditing
 			set;
 		}
 
-		public static readonly TargetPlatform Default = new TargetPlatform {
-			GroupedTypes = new Dictionary<Type, string> {
-				{ typeof(CommonBrush), "Brush" }
-			}
-		};
+		/// <summary>
+		/// Gets or sets a collection of group keys that should be automatically expanded in grouped mode at first load.
+		/// </summary>
+		public IReadOnlyCollection<string> AutoExpandGroups
+		{
+			get;
+			set;
+		}
+
+		internal TargetPlatform WithProvider (IEditorProvider provider)
+		{
+			if (provider == null)
+				throw new ArgumentNullException (nameof(provider));
+
+			return new TargetPlatform (provider) {
+				SupportsMaterialDesign = SupportsMaterialDesign,
+				SupportsCustomExpressions = SupportsCustomExpressions,
+				SupportsBrushOpacity = SupportsBrushOpacity,
+				GroupedTypes = GroupedTypes,
+				AutoExpandGroups = AutoExpandGroups
+			};
+		}
 	}
 }

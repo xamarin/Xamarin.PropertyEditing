@@ -116,5 +116,32 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (lookup, Is.Empty);
 			Assert.That (changed, Is.False);
 		}
+
+		[Test]
+		public void RemoveLastElementFromNullGroup ()
+		{
+			const string element = "test";
+			var lookup = new ObservableLookup<string, string> ();
+			lookup.Add (null, element);
+
+			int groupChanged = 0;
+			var g = lookup[null];
+			((INotifyCollectionChanged) g).CollectionChanged += (sender, args) => {
+				groupChanged++;
+				Assert.That (args.Action, Is.EqualTo (NotifyCollectionChangedAction.Remove));
+				Assert.That (args.OldItems[0], Is.SameAs (element));
+			};
+
+			int lookupChanged = 0;
+			lookup.CollectionChanged += (sender, args) => {
+				lookupChanged++;
+				Assert.That (args.Action, Is.EqualTo (NotifyCollectionChangedAction.Remove));
+				Assert.That (args.OldItems[0], Is.SameAs (g));
+			};
+
+			lookup.Remove (null, element);
+			Assert.That (lookupChanged, Is.EqualTo (1));
+			Assert.That (groupChanged, Is.EqualTo (1));
+		}
 	}
 }
