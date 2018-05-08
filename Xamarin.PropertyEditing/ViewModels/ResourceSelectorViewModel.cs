@@ -162,9 +162,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			var r = (Resource)item;
 			if (!String.IsNullOrWhiteSpace (FilterText) && !r.Name.Contains (FilterText, StringComparison.OrdinalIgnoreCase))
 				return false;
-			if (ShowOnlySystemResources && r.Source.IsLocal)
+			if (ShowOnlySystemResources && r.Source.Type == ResourceSourceType.System)
 				return false;
-			if (ShowOnlyLocalResources && !r.Source.IsLocal)
+			if (ShowOnlyLocalResources && r.Source.Type != ResourceSourceType.System)
 				return false;
 
 			return true;

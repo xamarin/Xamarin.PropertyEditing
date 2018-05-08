@@ -11,6 +11,8 @@ namespace Xamarin.PropertyEditing.Tests
 	public class MockResourceProvider
 		: IResourceProvider
 	{
+		public bool CanCreateResources => false;
+
 		public Task<Resource> CreateResourceAsync<T> (ResourceSource source, string name, T value)
 		{
 			throw new NotImplementedException ();
@@ -26,7 +28,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult<IReadOnlyList<ResourceSource>> (new[] { SystemResourcesSource });
 		}
 
-		internal static readonly ResourceSource SystemResourcesSource = new ResourceSource ("System Resources", isLocal: false);
+		internal static readonly ResourceSource SystemResourcesSource = new ResourceSource ("System Resources", ResourceSourceType.System);
 
 		private static readonly IReadOnlyList<Resource> SystemResources = new Resource[] {
 			new Resource<CommonSolidBrush> (SystemResourcesSource, "ControlTextBrush", new CommonSolidBrush (0, 0, 0)),

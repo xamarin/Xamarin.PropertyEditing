@@ -8,6 +8,11 @@ namespace Xamarin.PropertyEditing
 	public interface IResourceProvider
 	{
 		/// <summary>
+		/// Gets whether or not the resource provider can create resources.
+		/// </summary>
+		bool CanCreateResources { get; }
+
+		/// <summary>
 		/// Gets the resources available to the given <paramref name="target"/> and <paramref name="property"/>.
 		/// </summary>
 		/// <exception cref="ArgumentNullException"><paramref name="property"/> or <paramref name="target"/> is <c>null</c>.</exception>
@@ -27,6 +32,7 @@ namespace Xamarin.PropertyEditing
 
 		/// <typeparam name="T">The representation type.</typeparam>
 		/// <param name="value">The value of the resource in it's representative form.</param>
+		/// <exception cref="NotSupportedException"><see cref="CanCreateResources"/> is <c>false</c>.</exception>
 		Task<Resource> CreateResourceAsync<T> (ResourceSource source, string name, T value);
 	}
 }
