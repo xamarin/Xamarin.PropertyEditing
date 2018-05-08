@@ -23,8 +23,6 @@ namespace Xamarin.PropertyEditing.Windows
 				Owner = hostWindow,
 			};
 
-			w.Resources.MergedDictionaries.AddItems (owner.Resources.MergedDictionaries);
-
 			if (!w.ShowDialog () ?? false)
 				return null;
 
