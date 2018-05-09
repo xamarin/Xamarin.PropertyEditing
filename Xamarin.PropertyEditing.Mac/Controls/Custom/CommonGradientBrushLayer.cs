@@ -12,7 +12,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		public CommonGradientBrushLayer (IntPtr handle) : base ()
+		public CommonGradientBrushLayer (IntPtr handle) : base (handle)
 		{
 		}
 

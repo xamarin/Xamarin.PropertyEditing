@@ -8,10 +8,10 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public MaterialColorLayer ()
 		{
-			AddSublayer (Selection);
+			AddSublayer (selection);
 		}
 
-		readonly CATextLayer Selection = new CATextLayer () {
+		readonly CATextLayer selection = new CATextLayer () {
 			CornerRadius = 3
 		};
 
@@ -26,14 +26,14 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		CommonColor materialColor;
+		CommonColor backgroundColor;
 		public new CommonColor BackgroundColor
 		{
-			get => materialColor;
+			get => backgroundColor;
 			set
 			{
-				materialColor = value;
-				base.BackgroundColor = materialColor.ToCGColor ();
+				backgroundColor = value;
+				base.BackgroundColor = backgroundColor.ToCGColor ();
 			}
 		}
 
@@ -54,14 +54,14 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.LayoutSublayers ();
 
-			Selection.String = text;
-			Selection.Frame = Bounds.Inset (3, 3);
-			Selection.BorderWidth = isSelected ? 2 : 0;
-			Selection.BorderColor = ForegroundColor;
-			Selection.ForegroundColor = ForegroundColor;
-			Selection.FontSize = FontSize;
-			Selection.ContentsScale = ContentsScale;
-			Selection.TextAlignmentMode = TextAlignmentMode;
+			selection.String = text;
+			selection.Frame = Bounds.Inset (3, 3);
+			selection.BorderWidth = isSelected ? 2 : 0;
+			selection.BorderColor = ForegroundColor;
+			selection.ForegroundColor = ForegroundColor;
+			selection.FontSize = FontSize;
+			selection.ContentsScale = ContentsScale;
+			selection.TextAlignmentMode = TextAlignmentMode;
 		}
 	}
 }

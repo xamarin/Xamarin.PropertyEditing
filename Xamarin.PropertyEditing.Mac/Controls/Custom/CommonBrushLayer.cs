@@ -66,8 +66,8 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void LayoutSublayers ()
 		{
 			base.LayoutSublayers ();
-			BrushLayer.Frame = new CGRect (0, 0, Frame.Width, Frame.Height);
-			Contents = DrawingExtensions.GenerateCheckerboard (Frame);
+			BrushLayer.Frame = Bounds;
+			Contents = DrawingExtensions.GenerateCheckerboard (Bounds);
 		}
 
 		public NSImage RenderPreview ()

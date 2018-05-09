@@ -10,14 +10,13 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	class BrushTabViewController : PropertyTabViewController<BrushPropertyViewModel>
 	{
-		Dictionary<CommonBrushType, int> BrushTypeTable = new Dictionary<CommonBrushType, int> ();
-
-		bool inhibitSelection;
-
 		public BrushTabViewController ()
 		{
 			PreferredContentSize = new CGSize (300, 230);
 		}
+
+		Dictionary<CommonBrushType, int> BrushTypeTable = new Dictionary<CommonBrushType, int> ();
+		bool inhibitSelection;
 
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
         {

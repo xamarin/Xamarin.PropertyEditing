@@ -17,60 +17,38 @@ namespace Xamarin.PropertyEditing.Mac
 		public EditorInteraction (SolidBrushViewModel viewModel, ColorEditorLayer layer)
 		{
 			ViewModel = viewModel;
-			StartColor = Color = viewModel.Color;
 			Layer = layer;
 		}
 
 		public ColorEditorLayer Layer { get; set; }
 		public SolidBrushViewModel ViewModel { get; set; }
 
-		public CommonColor StartColor { get; }
+		public CommonColor LastColor => ViewModel.LastColor;
+		public CommonColor InitialColor => ViewModel.InitialColor;
 
-		CommonColor color;
-		public CommonColor Color
-		{
-			get => color;
-			set {
-				if (color == value)
-					return;
-
-				color = value;
-				OnPropertyChanged ();
-			}
+		public CommonColor Color {
+			get => ViewModel.Color;
+			set => ViewModel.Color = value;
 		}
 
-		public CommonColor LastColor {
-			get => ViewModel.LastColor;
+		public CommonColor HueColor {
+			get => ViewModel.HueColor;
+			set => ViewModel.HueColor = value;
+		}
+
+		public CommonColor Shade {
+			get => ViewModel.Shade;
+			set => ViewModel.Shade = value;
 		}
 
 		public void Commit ()
 		{
-			ViewModel.Color = Color;
+			Layer.Commit (this);
 		}
 	}
 
 	class SolidColorBrushEditor : ColorEditorView
 	{
-		readonly ShadeLayer Shade = new ShadeLayer ();
-		readonly HueLayer Hue = new HueLayer ();
-		readonly HistoryLayer History = new HistoryLayer ();
-
-		readonly CALayer Background = new CALayer {
-			CornerRadius = 3,
-			BorderWidth = 1
-		};
-
-		readonly CALayer componentBackground = new CALayer {
-			CornerRadius = 3,
-			BorderWidth = 1
-		};
-
-		readonly ColorComponentTabViewController componentTabs = new ColorComponentTabViewController () {
-			EditorType = ChannelEditorType.RGB
-		};
-
-		public override bool AcceptsFirstResponder() => true;
-        
         public SolidColorBrushEditor (IntPtr handle) : base (handle)
 		{
 			Initialize ();
@@ -95,14 +73,34 @@ namespace Xamarin.PropertyEditing.Mac
 		void Initialize ()
 		{
 			Layer = new CALayer ();
-			Layer.AddSublayer (Background);
-			Layer.AddSublayer (Shade);
-			Layer.AddSublayer (Hue);
-			Layer.AddSublayer (History);
+			Layer.AddSublayer (background);
+			Layer.AddSublayer (shadeLayer);
+			Layer.AddSublayer (hueLayer);
+			Layer.AddSublayer (historyLayer);
 			Layer.AddSublayer (componentBackground);
 			WantsLayer = true;
 			AddSubview (componentTabs.View);
 		}
+
+		readonly ColorComponentTabViewController componentTabs = new ColorComponentTabViewController () {
+			EditorType = ChannelEditorType.RGB
+		};
+
+		public override bool AcceptsFirstResponder() => true;
+        
+		readonly ShadeLayer shadeLayer = new ShadeLayer ();
+		readonly HueLayer hueLayer = new HueLayer ();
+		readonly HistoryLayer historyLayer = new HistoryLayer ();
+
+		readonly CALayer background = new CALayer {
+			CornerRadius = 3,
+			BorderWidth = 1
+		};
+
+		readonly CALayer componentBackground = new CALayer {
+			CornerRadius = 3,
+			BorderWidth = 1
+		};
 
 		EditorInteraction interaction;
 		public override void UpdateFromEvent (NSEvent theEvent)
@@ -154,16 +152,15 @@ namespace Xamarin.PropertyEditing.Mac
 			interaction = null;
         }
 
+		bool modelChanged = true;
 		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			var inter = interaction ?? new EditorInteraction (ViewModel, null);
 
 			switch (e.PropertyName) {
 				case nameof (SolidBrushViewModel.Color):
-				case nameof (SolidBrushViewModel.HueColor):	
-				foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
-					editor.UpdateFromModel (inter);
-				}
+				case nameof (SolidBrushViewModel.LastColor):
+					modelChanged = NeedsLayout = true;
 					break;
 			}
 		}
@@ -172,8 +169,9 @@ namespace Xamarin.PropertyEditing.Mac
         {
             base.OnViewModelChanged(oldModel);
 			var inter = interaction ?? new EditorInteraction (ViewModel, null);
+
 			componentTabs.ViewModel = ViewModel;
-				foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
+			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
 				editor.UpdateFromModel (inter);
 			}
 		}
@@ -181,6 +179,14 @@ namespace Xamarin.PropertyEditing.Mac
         public override void Layout ()
 		{
 			base.Layout ();
+
+			if (modelChanged) {
+				var interx = interaction ?? new EditorInteraction (ViewModel, null);
+				foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
+					editor.UpdateFromModel (interx);
+				}
+				modelChanged = false;
+			}
 
 			if (Frame.IsEmpty || Frame.IsInfinite () || double.IsNaN (Frame.X) || double.IsInfinity (Frame.X))
 				return;
@@ -191,23 +197,22 @@ namespace Xamarin.PropertyEditing.Mac
 			var secondBase = padding + secondarySpan;
 			var firstStop = firstBase + primarySpan;
 
-			Background.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
-			Background.BackgroundColor = NSColor.ControlBackground.CGColor;
-			Background.Frame = new CGRect (0, 0, Frame.Height, Frame.Height);
-			//Background.SetNeedsDisplay ();
+			background.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
+			background.BackgroundColor = NSColor.ControlBackground.CGColor;
+			background.Frame = new CGRect (0, 0, Frame.Height, Frame.Height);
 
 			componentBackground.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
 			componentBackground.BackgroundColor = NSColor.ControlBackground.CGColor;
 			componentBackground.Frame = new CGRect (0, 0, Frame.Height, Frame.Height);
-			//componentBackground.SetNeedsDisplay ();
+
 			var x = Frame.Height + 4 * padding;
 			componentBackground.Frame = new CGRect (Frame.Height + 4 * padding, 0, Frame.Width - x, Frame.Height);
 
-			Hue.Frame = new CGRect (firstStop, secondBase, secondarySpan, primarySpan);
-			Hue.GripColor = NSColor.Text.CGColor;
-			//Hue.SetNeedsDisplay ();
-			Shade.Frame = new CGRect (firstBase, secondBase, primarySpan, primarySpan);
-			History.Frame = new CGRect (firstBase, firstBase, primarySpan, secondarySpan);
+			hueLayer.Frame = new CGRect (firstStop, secondBase, secondarySpan, primarySpan);
+			hueLayer.GripColor = NSColor.Text.CGColor;
+
+			shadeLayer.Frame = new CGRect (firstBase, secondBase, primarySpan, primarySpan);
+			historyLayer.Frame = new CGRect (firstBase, firstBase, primarySpan, secondarySpan);
 			var inter = interaction ?? new EditorInteraction (ViewModel, null);
 			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
 				editor.UpdateFromModel (inter);

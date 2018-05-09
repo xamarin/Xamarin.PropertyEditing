@@ -16,6 +16,8 @@ namespace Xamarin.PropertyEditing.Mac
 			this.EditorType = type;
 		}
 
+		public ChannelEditorType EditorType { get; }
+
 		public override void OnViewModelChanged (SolidBrushViewModel oldModel)
 		{
 			base.OnViewModelChanged (oldModel);
@@ -29,8 +31,6 @@ namespace Xamarin.PropertyEditing.Mac
 					break;
 			}
 		}
-
-		public ChannelEditorType EditorType { get; }
 
         public override void LoadView ()
         {

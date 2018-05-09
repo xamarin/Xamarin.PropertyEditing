@@ -30,7 +30,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (Popover == null)
 				return;
-			//Popover.SetAppearance (PropertyEditorPanel.ThemeManager.CurrentAppearance);
+			
 			Popover?.Show (new CGRect (20, this.Frame.Height / 2 - 2.5, 5, 5), this, NSRectEdge.MinYEdge);
 		}
     }

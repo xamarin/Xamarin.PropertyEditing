@@ -3,7 +3,6 @@ using System.ComponentModel;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-
 	interface INotifyingListner<T> where T : NotifyingObject
 	{
 		void OnViewModelChanged (T oldModel);

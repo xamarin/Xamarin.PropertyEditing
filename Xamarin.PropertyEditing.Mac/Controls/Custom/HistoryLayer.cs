@@ -11,18 +11,29 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public HistoryLayer ()
 		{
-			Clip.AddSublayer (Previous);
-			Clip.AddSublayer (Current);
-			AddSublayer (Clip);
+			clip.AddSublayer (previous);
+			clip.AddSublayer (current);
+			AddSublayer (clip);
+			AddSublayer (lastClip);
+			lastClip.AddSublayer (last);
 		}
 
 		public HistoryLayer (IntPtr handle) : base (handle)
 		{
 		}
 
-		readonly CALayer Previous = new CALayer ();
-		readonly CALayer Current = new CALayer ();
-		readonly CALayer Clip = new CALayer () {
+		readonly CALayer previous = new CALayerQuick ();
+		readonly CALayer current = new CALayerQuick ();
+		readonly CALayer last = new CALayerQuick ();
+
+		readonly CALayer lastClip = new CALayer {
+			BorderWidth = 1,
+			CornerRadius = BorderRadius,
+			BorderColor = new CGColor (.5f, .5f, .5f, .5f),
+			MasksToBounds = true
+		};
+
+		readonly CALayer clip = new CALayer {
 			BorderWidth = 1,
 			CornerRadius = BorderRadius,
 			BorderColor = new CGColor (.5f, .5f, .5f, .5f),
@@ -33,30 +44,43 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.LayoutSublayers ();
 
-			Clip.Frame = new CGRect (
-				Margin,
-				Margin,
-				Frame.Width - 2 * Margin,
-				Frame.Height - 2 * Margin);
+			lastClip.Frame = new CGRect (
+				Bounds.Right - Bounds.Height,
+				0,
+				Bounds.Height,
+				Bounds.Height).Inset (Margin, Margin);
+			
+			clip.Frame = new CGRect (
+				0,
+				0,
+				Bounds.Width - Bounds.Height + Margin,
+				Bounds.Height).Inset (Margin, Margin);
 
-			Clip.Contents = DrawingExtensions.GenerateCheckerboard (Clip.Frame);
-			var width = Clip.Frame.Width / 2;
+			clip.Contents = DrawingExtensions.GenerateCheckerboard (clip.Bounds);
+			lastClip.Contents = DrawingExtensions.GenerateCheckerboard (last.Bounds);
+			last.Frame = lastClip.Bounds;
 
-			Previous.Frame = new CGRect (0, 0, width, Clip.Frame.Height);
-			Current.Frame = new CGRect (width, 0, width, Clip.Frame.Height);
+			var width = clip.Frame.Width / 2;
+			previous.Frame = new CGRect (0, 0, width, clip.Frame.Height);
+			current.Frame = new CGRect (width, 0, width, clip.Frame.Height);
 		}
 
 		public override void UpdateFromModel (EditorInteraction interaction)
 		{
 			LayoutIfNeeded ();
-			Current.BackgroundColor = interaction.Color.ToCGColor ();
-			Previous.BackgroundColor = interaction.LastColor.ToCGColor ();
+			current.BackgroundColor = interaction.Color.ToCGColor ();
+			previous.BackgroundColor = interaction.ViewModel.InitialColor.ToCGColor ();
+			last.BackgroundColor = interaction.LastColor.ToCGColor ();
 		}
 
 		public override void UpdateFromLocation (EditorInteraction interaction, CGPoint location)
 		{
-			if (Previous == HitTest (location))
-				interaction.Color = interaction.LastColor;
+			if (previous == HitTest (location))
+				interaction.Color = interaction.ViewModel.InitialColor;
 		}
-	}
+
+        public override void Commit (EditorInteraction interaction)
+        { 
+        }
+    }
 }

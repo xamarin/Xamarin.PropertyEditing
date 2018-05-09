@@ -12,7 +12,7 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public override bool IsFlipped => true;
 
-		readonly string[] ColorNames = {
+		static readonly string[] ColorNames = {
 				"50",
 				"100",
 				"200",
@@ -25,19 +25,19 @@ namespace Xamarin.PropertyEditing.Mac
 				"900"
 			};
 
-		readonly string[] AccentNames = {
+		static readonly string[] AccentNames = {
 				"A100",
 				"A200",
 				"A400",
 				"A700"
 			};
 
-		readonly string[] BlackWhite = {
+		static readonly string[] BlackWhite = {
 				"White",
 				"Black"
 			};
 
-		public MaterialView () : base ()
+		public MaterialView ()
 		{
 			Initialize ();
 		}
@@ -53,6 +53,9 @@ namespace Xamarin.PropertyEditing.Mac
 			get => viewModel;
 			set
 			{
+				if (viewModel == value)
+					return;
+				
 				viewModel = value;
 				NeedsLayout = true;
 			}
@@ -137,7 +140,6 @@ namespace Xamarin.PropertyEditing.Mac
 				BorderColor = new CGColor (.5f, .5f, .5f, .5f),
 				BorderWidth = 1
 			};
-
 			Layer.AddSublayer (normal);
 			foreach (var n in MaterialDesign.NormalColorScale.Zip (names, (c, name) => new { Name = name, Color = c.Value })) {
 				var l = CreateLayer (n.Name, n.Color);

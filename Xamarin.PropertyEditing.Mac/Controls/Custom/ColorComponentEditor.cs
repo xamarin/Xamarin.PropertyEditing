@@ -4,8 +4,6 @@ using System.Linq;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
-using Foundation;
-using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -116,6 +114,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var color = ViewModel.Color;
 			var editor = sender as ComponentSpinEditor;
 			ViewModel.Color = editor.ComponentEditor.UpdateColorFromValue (color, editor.Value);
+			ViewModel.CommitLastColor ();
 		}
 
         protected override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -188,6 +187,9 @@ namespace Xamarin.PropertyEditing.Mac
 
         public override void MouseUp(NSEvent theEvent)
         {
+			if (activeChannel != null)
+				ViewModel.CommitLastColor ();
+			
 			activeChannel = null;
             base.MouseUp(theEvent); 
         }

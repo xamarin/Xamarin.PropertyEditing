@@ -17,12 +17,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public ShadeLayer ()
 		{
-			AddSublayer (Saturation);
-			Saturation.AddSublayer (Brightness);
-			AddSublayer (Grip);
+			AddSublayer (saturationLayer);
+			saturationLayer.AddSublayer (brightnessLayer);
+			AddSublayer (grip);
 			float innerRadius = GripRadius - 1;
 
-			Grip.AddSublayer (new CALayer {
+			grip.AddSublayer (new CALayer {
 				BorderWidth = 1,
 				BorderColor = new CGColor (0, 0, 0),
 				Frame = new CGRect (
@@ -38,13 +38,13 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		CALayer Grip = new CALayer {
+		readonly CALayer grip = new CALayerQuick {
 			BorderColor = new CGColor (1, 1, 1),
 			BorderWidth = 1,
 			CornerRadius = GripRadius,
 		};
 
-		CAGradientLayer Brightness = new CAGradientLayer {
+		readonly CAGradientLayer brightnessLayer = new CAGradientLayerQuick {
 			Colors = new[] {
 					new CGColor (0f, 0f, 0f, 1f),
 					new CGColor (0f, 0f, 0f, 0f)
@@ -52,11 +52,12 @@ namespace Xamarin.PropertyEditing.Mac
 			CornerRadius = BorderRadius,
 		};
 
-		CAGradientLayer Saturation = new CAGradientLayer {
+		readonly CAGradientLayer saturationLayer = new CAGradientLayerQuick {
 			Colors = new[] {
 					new CGColor (1f, 1f, 1f),
 					new CGColor (1f, .3f, 0f)
 				},
+			Actions = new Foundation.NSDictionary (),
 			BackgroundColor = NSColor.Black.CGColor,
 			BorderColor = new CGColor (.5f, .5f, .5f, .5f),
 			BorderWidth = 1,
@@ -67,45 +68,50 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.LayoutSublayers ();
 
-			Saturation.Frame = new CGRect (Margin, Margin, Frame.Width - 2 * Margin, Frame.Height - 2 * Margin);
-			Brightness.Frame = Saturation.Bounds;
-			Saturation.StartPoint = new CGPoint (0, .5);
-			Saturation.EndPoint = new CGPoint (1, .5);
+			saturationLayer.Frame = Bounds.Inset (Margin, Margin);
+			brightnessLayer.Frame = saturationLayer.Bounds;
+			saturationLayer.StartPoint = new CGPoint (0, .5);
+			saturationLayer.EndPoint = new CGPoint (1, .5);
 		}
 
-		CommonColor c;
 		public override void UpdateFromModel (EditorInteraction interaction)
 		{
 			LayoutIfNeeded ();
 			var color = interaction.Color;
 
-			var sat = saturationEditor.LocationFromColor (Saturation, color);
-			var bright = brightnessEditor.LocationFromColor (Brightness, color);
+			var sat = saturationEditor.LocationFromColor (saturationLayer, color);
+			var bright = brightnessEditor.LocationFromColor (brightnessLayer, color);
 
 			var x = sat.X;
-			var y = bright.Y + Saturation.Frame.Y;
+			var y = bright.Y + saturationLayer.Frame.Y;
 
-			Grip.Frame = new CGRect (x - GripRadius, y - GripRadius, GripRadius * 2, GripRadius * 2);
+			grip.Frame = new CGRect (x - GripRadius, y - GripRadius, GripRadius * 2, GripRadius * 2);
 
-			if (interaction.StartColor.ToCGColor () != Saturation.Colors.Last ())
-				saturationEditor.UpdateGradientLayer (Saturation, interaction.StartColor.HueColor);
+			var hueColor = interaction.Color.HueColor;
+			saturationEditor.UpdateGradientLayer (saturationLayer, hueColor);
 		}
 
 		public override void UpdateFromLocation (EditorInteraction interaction, CGPoint location)
 		{
 			var loc = location;
-			var frame = Saturation.Frame;
+			var frame = saturationLayer.Frame;
 
 			if (interaction.ViewModel == null)
 				return;
 
 			var color = interaction.Color;
-			var saturation = saturationEditor.ValueFromLocation (Saturation, loc);
+			var saturation = saturationEditor.ValueFromLocation (saturationLayer, loc);
 			var brightness = saturationEditor.ValueFromLocation (
-				Brightness,
-				new CGPoint (loc.X + Brightness.Frame.X, loc.Y + Brightness.Frame.Y));
+				brightnessLayer,
+				new CGPoint (loc.X + brightnessLayer.Frame.X, loc.Y + brightnessLayer.Frame.Y));
 
-			c = interaction.Color = interaction.Color.UpdateHSB (saturation: saturation, brightness: brightness);
+			interaction.Color = interaction.Color.UpdateHSB (saturation: saturation, brightness: brightness);
+			//interaction.Shade = shade;
 		}
-	}
+
+		public override void Commit(EditorInteraction interaction)
+        {
+			interaction.ViewModel.CommitLastColor ();
+        }
+    }
 }
