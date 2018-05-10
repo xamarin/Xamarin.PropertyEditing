@@ -16,7 +16,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public CustomExpressionView (PropertyViewModel viewModel) : base (viewModel,  Properties.Resources.CustomExpression, "custom-expression-32")
 		{
-			Frame = new CGRect (CGPoint.Empty, new CGSize (250, 60));
+			Frame = new CGRect (CGPoint.Empty, new CGSize (250, 80));
 
 			var customExpressionField = new NSTextField {
 				StringValue = string.Empty,
@@ -36,9 +36,9 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (customExpressionField);
 
 			this.DoConstraints (new[] {
-				customExpressionField.ConstraintTo (this, (s, c) => s.Top == c.Top + 30),
-				customExpressionField.ConstraintTo (this, (s, c) => s.Left == c.Left + 30),
-				customExpressionField.ConstraintTo (this, (s, c) => s.Width == c.Width - 37),
+				customExpressionField.ConstraintTo (this, (s, c) => s.Top == c.Top + 37),
+				customExpressionField.ConstraintTo (this, (s, c) => s.Left == c.Left + 38),
+				customExpressionField.ConstraintTo (this, (s, c) => s.Width == c.Width - 57),
 				customExpressionField.ConstraintTo (this, (s, c) => s.Height == 24),
 			});
 		}

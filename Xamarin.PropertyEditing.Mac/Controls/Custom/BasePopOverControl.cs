@@ -6,7 +6,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class BasePopOverControl : NSView
 	{
-		const int DefaultIconButtonSize = 24;
+		const int DefaultIconButtonSize = 32;
 
 		public BasePopOverControl (string title, string imageNamed) : base ()
 		{
@@ -30,6 +30,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var viewTitle = new UnfocusableTextField () {
 				StringValue = title,
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				Font = NSFont.BoldSystemFontOfSize(11)
 			};
 
 			AddSubview (viewTitle);
@@ -39,8 +40,9 @@ namespace Xamarin.PropertyEditing.Mac
 				iconView.ConstraintTo (this, (iv, c) => iv.Left == c.Left + 5),
 				iconView.ConstraintTo (this, (iv, c) => iv.Width == DefaultIconButtonSize),
 				iconView.ConstraintTo (this, (iv, c) => iv.Height == DefaultIconButtonSize),
-				viewTitle.ConstraintTo (this, (vt, c) => vt.Top == c.Top + 6),
-				viewTitle.ConstraintTo (this, (vt, c) => vt.Left == c.Left + 30),
+
+				viewTitle.ConstraintTo (this, (vt, c) => vt.Top == c.Top + 10),
+				viewTitle.ConstraintTo (this, (vt, c) => vt.Left == c.Left + 38),
 				viewTitle.ConstraintTo (this, (vt, c) => vt.Width == 120),
 				viewTitle.ConstraintTo (this, (vt, c) => vt.Height == 24),
 			});
