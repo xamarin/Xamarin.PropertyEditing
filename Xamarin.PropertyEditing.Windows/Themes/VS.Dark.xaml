@@ -92,8 +92,11 @@
 	<SolidColorBrush x:Key="CategoryExpanderBorderBrush" Color="#333333" />
 
 	<SolidColorBrush x:Key="ComboBoxBackgroundBrush">#FF333337</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxDisabledBackgroundBrush">#FF2D2D30</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxBorderBrush">#FF434346</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxDisabledBorderBrush">#FF434346</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxForegroundBrush">#FFF1F1F1</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxDisabledForegroundBrush">#FF6D6D6D</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxSeparatorBrush">#FF333337</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxButtonBackgroundBrush">#FF333337</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxButtonSeparatorBrush">#FF333337</SolidColorBrush>

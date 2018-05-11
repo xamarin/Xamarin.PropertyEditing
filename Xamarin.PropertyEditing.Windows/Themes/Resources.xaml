@@ -2566,6 +2566,16 @@
 							<Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource ComboBoxButtonMouseOverSeparatorBrush}" />
 							<Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource ComboBoxButtonMouseOverBackgroundBrush}" />
 						</MultiDataTrigger>
+						<MultiDataTrigger>
+							<MultiDataTrigger.Conditions>
+								<Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+							</MultiDataTrigger.Conditions>
+							<Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource ComboBoxDisabledBackgroundBrush}" />
+							<Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource ComboBoxDisabledBorderBrush}" />
+							<Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource ComboBoxButtonSeparatorBrush}" />
+							<Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource ComboBoxButtonBackgroundBrush}" />
+							<Setter TargetName="arrow" Property="Visibility" Value="Hidden" />
+						</MultiDataTrigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
@@ -2613,6 +2623,9 @@
 			<Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
 				<Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
 				<Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
+			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{DynamicResource ComboBoxDisabledForegroundBrush}" />
 			</Trigger>
 		</ControlTemplate.Triggers>
 	</ControlTemplate>
@@ -2684,6 +2697,9 @@
 			<Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
 				<Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
 				<Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
+			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter TargetName="PART_EditableTextBox" Property="Foreground" Value="{DynamicResource ComboBoxDisabledForegroundBrush}" />
 			</Trigger>
 		</ControlTemplate.Triggers>
 	</ControlTemplate>

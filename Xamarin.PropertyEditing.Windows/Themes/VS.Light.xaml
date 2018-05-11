@@ -90,8 +90,11 @@
 	<SolidColorBrush x:Key="IconButtonPressedForegroundBrush">#FFFFFFFF</SolidColorBrush>
 
 	<SolidColorBrush x:Key="ComboBoxBackgroundBrush">#FFFFFFFF</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxDisabledBackgroundBrush">#FFF5F5F5</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxBorderBrush">#FFCCCEDB</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxDisabledBorderBrush">#FFCCCEDB</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxForegroundBrush">#FF1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="ComboBoxDisabledForegroundBrush">#FF6D6D6D</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxSeparatorBrush">#FFFFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxButtonBackgroundBrush">#FFFFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxButtonSeparatorBrush">#FFFFFFFF</SolidColorBrush>
