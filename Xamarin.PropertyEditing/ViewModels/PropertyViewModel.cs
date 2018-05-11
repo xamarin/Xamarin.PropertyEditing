@@ -28,10 +28,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.valueNavigator = property as ICanNavigateToSource;
 			this.isNullable = (!property.ValueSources.HasFlag (ValueSources.Default) || property.Type.Name == NullableName);
 
+			RequestCreateResourceCommand = new RelayCommand (OnCreateResource, CanCreateResource);
 			NavigateToValueSourceCommand = new RelayCommand (OnNavigateToSource, CanNavigateToSource);
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
-			ConvertToLocalValueCommand = new RelayCommand(OnConvertToLocalValue, CanClearToLocalValue);
+			ConvertToLocalValueCommand = new RelayCommand (OnConvertToLocalValue, CanClearToLocalValue);
 
 			RequestCurrentValueUpdate();
 		}
@@ -106,10 +107,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		/// <remarks>
-		/// For updating property-type-specific value properties, override this. <see cref="PropertyViewModel.MultipleValues"/> <see cref="Value"/> is up to date
+		/// For updating property-type-specific value properties, override this. <see cref="PropertyViewModel.MultipleValues"/> <see cref="Value"/> is up to date.
 		/// </remarks>
 		protected virtual void OnValueChanged ()
 		{
+			((RelayCommand)RequestCreateResourceCommand)?.ChangeCanExecute();
 		}
 
 		/// <summary>
@@ -299,6 +301,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.valueNavigator?.NavigateToSource (Editors.FirstOrDefault ());
 		}
 
+		private bool CanCreateResource ()
+		{
+			return SupportsResources && ResourceProvider != null && !MultipleValues;
+		}
+
+		private async void OnCreateResource ()
+		{
+			var e = RequestCreateResource ();
+			if (e.Source == null)
+				return;
+
+			Resource resource =  await ResourceProvider.CreateResourceAsync (e.Source, e.Name, Value);
+			OnSetValueToResource (resource);
+		}
+
 		private static TValue DefaultValue;
 	}
 
@@ -318,6 +335,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		public event EventHandler<ResourceRequestedEventArgs> ResourceRequested;
+		public event EventHandler<CreateResourceRequestedEventArgs> CreateResourceRequested;
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
 		public IPropertyInfo Property
@@ -346,6 +364,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public bool SupportsResources
 		{
 			get { return Property.CanWrite && Property.ValueSources.HasFlag (ValueSources.Resource); }
+		}
+
+		public bool CanCreateResources
+		{
+			get { return SupportsResources && (ResourceProvider?.CanCreateResources ?? false); }
 		}
 
 		public abstract Resource Resource
@@ -390,6 +413,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		public ICommand RequestResourceCommand => this.requestResourceCommand;
+
+		public ICommand RequestCreateResourceCommand
+		{
+			get;
+			protected set;
+		}
 
 		public ICommand ClearValueCommand
 		{
@@ -486,9 +515,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 			editor.PropertyChanged -= OnEditorPropertyChanged;
 		}
 
+		protected CreateResourceRequestedEventArgs RequestCreateResource ()
+		{
+			var e = new CreateResourceRequestedEventArgs ();
+			CreateResourceRequested?.Invoke (this, e);
+			return e;
+		}
+
+		private readonly RelayCommand requestResourceCommand;
 		private IResourceProvider resourceProvider;
 		private ICommand setValueResourceCommand;
-		private RelayCommand requestResourceCommand;
 		private HashSet<IPropertyInfo> constraintProperties;
 		private PropertyVariation variation;
 		private string error;
@@ -569,7 +605,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void OnSetValueResourceCommandCanExecuteChanged (object sender, EventArgs e)
 		{
-			this.requestResourceCommand.ChangeCanExecute();
+			((RelayCommand)RequestResourceCommand)?.ChangeCanExecute();
 		}
 	}
 }

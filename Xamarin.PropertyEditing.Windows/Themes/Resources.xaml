@@ -411,11 +411,8 @@
 						<MenuItem Header="{x:Static prop:Resources.ConvertToLocalValue}" Icon="{StaticResource LiteralMarker}" Command="{Binding ConvertToLocalValueCommand,Mode=OneTime}" />
 						<Separator Visibility="{Binding SupportsResources,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<MenuItem Header="{x:Static prop:Resources.ResourceEllipsis}" Command="{Binding RequestResourceCommand,Mode=OneTime}" Icon="{StaticResource ResourceMarker}" Visibility="{Binding SupportsResources,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
-						<!--<MenuItem Header="{x:Static prop:Resources.LocalResource}" />
-						<MenuItem Header="{x:Static prop:Resources.SystemResource}" />
-						<MenuItem Header="{x:Static prop:Resources.EditResourceEllipse}" />
-						<MenuItem Header="{x:Static prop:Resources.ConvertToNewResourceEllipse}" />
-						<Separator />
+						<MenuItem Header="{x:Static prop:Resources.ConvertToNewResourceEllipsis}" Command="{Binding RequestCreateResourceCommand}" Icon="{StaticResource ResourceMarker}" Visibility="{Binding CanCreateResources,Converter={StaticResource BoolToVisibilityConverter}}" />
+						<!--<Separator />
 						<MenuItem Header="{x:Static prop:Resources.CreateDataBindingEllipse}" />
 						<MenuItem Header="{x:Static prop:Resources.TemplateBinding}" />!-->
 						<Separator Visibility="{Binding SupportsValueSourceNavigation,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
@@ -1933,6 +1930,21 @@
 				<Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
 			</MultiTrigger>
 		</Style.Triggers>
+	</Style>
+
+	<Style x:Key="ValidationTextBox" TargetType="local:TextBoxEx" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
+		<Setter	Property="Validation.ErrorTemplate">
+			<Setter.Value>
+				<ControlTemplate>
+					<DockPanel>
+						<AdornedElementPlaceholder Name="adorned"  DockPanel.Dock="Top" />
+						<Border DockPanel.Dock="Bottom" Background="{DynamicResource ToolTipBackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource ToolTipBorderBrush}">
+							<ContentPresenter Margin="7,4,7,4" TextElement.Foreground="{DynamicResource ToolTipForegroundBrush}" Content="{Binding ElementName=adorned,Path=AdornedElement.(Validation.Errors)/ErrorContent}" />
+						</Border>
+					</DockPanel>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 
 	<local:NumericTemplateSelector x:Key="NumericTemplateSelector">

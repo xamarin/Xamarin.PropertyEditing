@@ -76,6 +76,10 @@
 	<SolidColorBrush x:Key="PopupForegroundBrush">#FFF1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="PopupBorderBrush">#FF333337</SolidColorBrush>
 
+	<SolidColorBrush x:Key="ToolTipForegroundBrush">#FF000000</SolidColorBrush>
+	<SolidColorBrush x:Key="ToolTipBorderBrush">#FF000000</SolidColorBrush>
+	<SolidColorBrush x:Key="ToolTipBackgroundBrush">#FFFFFFFF</SolidColorBrush>
+
 	<SolidColorBrush x:Key="ThicknessIconBackgroundBrush">#292929</SolidColorBrush>
 	<SolidColorBrush x:Key="ThicknessIconBorderBrush">#292929</SolidColorBrush>
 
@@ -110,7 +114,7 @@
 	<SolidColorBrush x:Key="ComboBoxButtonPressedSeparatorBrush">#FF007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxPopupBackgroundBrush">#FF1B1B1C</SolidColorBrush>
 	<SolidColorBrush x:Key="ComboBoxPopupBorderBrush">#FF333337</SolidColorBrush>
-	
+
 	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Fill" Color="Transparent"/>
 	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Stroke" Color="#F1F1F1"/>
 	<SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Fill" Color="#F1F1F1"/>

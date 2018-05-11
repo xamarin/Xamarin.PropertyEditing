@@ -99,12 +99,16 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnDataContextChanged (object sender, DependencyPropertyChangedEventArgs e)
 		{
-			if (e.OldValue is PropertyViewModel pvm)
+			if (e.OldValue is PropertyViewModel pvm) {
 				pvm.ResourceRequested -= OnResourceRequested;
+				pvm.CreateResourceRequested -= OnCreateResourceRequested;
+			}
 
 			this.vm = e.NewValue as PropertyViewModel;
-			if (this.vm != null)
+			if (this.vm != null) {
 				this.vm.ResourceRequested += OnResourceRequested;
+				this.vm.CreateResourceRequested += OnCreateResourceRequested;
+			}
 		}
 
 		private void OnValueSourceChanged (ValueSource source)
@@ -140,9 +144,19 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnResourceRequested (object sender, ResourceRequestedEventArgs e)
 		{
-			var panel = this.FindParent<PropertyEditorPanel> ();
-			var vm = ((PropertyViewModel)DataContext);
-			e.Resource = ResourceSelectorWindow.RequestResource (panel, vm.ResourceProvider, vm.Editors.Select (ed => ed.Target), vm.Property, e.Resource);
+			var panel = this.FindPropertiesHost();
+			var pvm = (PropertyViewModel) DataContext;
+			e.Resource = ResourceSelectorWindow.RequestResource (panel, pvm.ResourceProvider, pvm.Editors.Select (ed => ed.Target), pvm.Property, e.Resource);
+		}
+
+		private void OnCreateResourceRequested (object sender, CreateResourceRequestedEventArgs e)
+		{
+			var panel = this.FindPropertiesHost();
+			var pvm = (PropertyViewModel) DataContext;
+
+			var result = CreateResourceWindow.CreateResource (panel, pvm.ResourceProvider, pvm.Editors.Select (oe => oe.Target), pvm.Property);
+			e.Source = result.Item1;
+			e.Name = result.Item2;
 		}
 
 		private void OnCustomExpression (object sender, RoutedEventArgs e)

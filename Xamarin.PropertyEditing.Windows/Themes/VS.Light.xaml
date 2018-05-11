@@ -77,6 +77,10 @@
 	<SolidColorBrush x:Key="PopupForegroundBrush">#FF1E1E1E</SolidColorBrush>
 	<SolidColorBrush x:Key="PopupBorderBrush">#FFCCCEDB</SolidColorBrush>
 
+	<SolidColorBrush x:Key="ToolTipForegroundBrush">#FF000000</SolidColorBrush>
+	<SolidColorBrush x:Key="ToolTipBorderBrush">#FF000000</SolidColorBrush>
+	<SolidColorBrush x:Key="ToolTipBackgroundBrush">#FFFFFFFF</SolidColorBrush>
+
 	<SolidColorBrush x:Key="ThicknessIconBackgroundBrush">#EEEEF2</SolidColorBrush>
 	<SolidColorBrush x:Key="ThicknessIconBorderBrush">#EEEEF2</SolidColorBrush>
 

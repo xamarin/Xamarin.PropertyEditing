@@ -80,6 +80,9 @@
     <Compile Include="ColorEditorControlBase.cs" />
     <Compile Include="ColorHelper.cs" />
     <Compile Include="CommonColorToColorConverter.cs" />
+    <Compile Include="CreateResourceWindow.xaml.cs">
+      <DependentUpon>CreateResourceWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EntryPopup.cs" />
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />
@@ -131,6 +134,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="CollectionEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreateResourceWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

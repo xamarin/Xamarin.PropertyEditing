@@ -1052,6 +1052,108 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.NavigateToValueSourceCommand.CanExecute (null), Is.True, "Navigate not enabled once value source became valid");
 		}
 
+		[Test]
+		public void CanCreateResource ()
+		{
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local | ValueSources.Resource);
+			var editor = new MockObjectEditor (mockProperty.Object);
+
+			var resourceProvider = new Mock<IResourceProvider> ();
+			resourceProvider.SetupGet (rp => rp.CanCreateResources).Returns (true);
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			vm.ResourceProvider = resourceProvider.Object;
+			Assert.That (vm.CanCreateResources, Is.True);
+		}
+
+		[Test]
+		public async Task CanRequestCreateResource ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local | ValueSources.Resource);
+			var editor = new MockObjectEditor (mockProperty.Object);
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Local,
+				Value = value
+			});
+
+			var resourceProvider = new Mock<IResourceProvider> ();
+			resourceProvider.SetupGet (rp => rp.CanCreateResources).Returns (true);
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			vm.ResourceProvider = resourceProvider.Object;
+			Assert.That (vm.RequestCreateResourceCommand.CanExecute (null), Is.True, "Can't create resources");
+		}
+
+		[Test]
+		public async Task CanRequestCreateResourceMultipleValues ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+			var value2 = GetRandomTestValue (notValue: value);
+
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local | ValueSources.Resource);
+			var editor = new MockObjectEditor (mockProperty.Object);
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Local,
+				Value = value
+			});
+			var editor2 = new MockObjectEditor (mockProperty.Object);
+			await editor2.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Local,
+				Value = value2
+			});
+
+			var resourceProvider = new Mock<IResourceProvider> ();
+			resourceProvider.SetupGet (rp => rp.CanCreateResources).Returns (true);
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			vm.ResourceProvider = resourceProvider.Object;
+			Assume.That (vm.RequestCreateResourceCommand.CanExecute (null), Is.True, "Can't create resources initially");
+
+			bool changed = false;
+			vm.RequestCreateResourceCommand.CanExecuteChanged += (sender, args) => {
+				changed = true;
+			};
+
+			vm.Editors.Add (editor2);
+			Assume.That (vm.MultipleValues, Is.True);
+			Assert.That (changed, Is.True, "RequestCreateResourceCommand didn't change can execute");
+			Assert.That (vm.RequestCreateResourceCommand.CanExecute (null), Is.False, "CanCreateResources was true after differing value added");
+		}
+
+		[Test]
+		public async Task CreateResource ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local | ValueSources.Resource);
+			var editor = new MockObjectEditor (mockProperty.Object);
+			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Local,
+				Value = value
+			});
+
+			var resourceProvider = new Mock<IResourceProvider> ();
+			resourceProvider.SetupGet (rp => rp.CanCreateResources).Returns (true);
+
+			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			vm.ResourceProvider = resourceProvider.Object;
+			Assume.That (vm.RequestCreateResourceCommand.CanExecute (null), Is.True, "Can't create resources");
+
+			bool requested = false;
+			vm.CreateResourceRequested += (o, e) => {
+				requested = true;
+			};
+
+			vm.RequestCreateResourceCommand.Execute (null);
+			Assert.That (requested, Is.True, "CreateResourceRequested did not fire");
+		}
+
 		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
 		{
 			return GetViewModel (property, new[] { editor });
@@ -1103,6 +1205,7 @@ namespace Xamarin.PropertyEditing.Tests
 			mock.SetupGet (pi => pi.Type).Returns (typeof(TValueReal));
 			mock.SetupGet (pi => pi.Name).Returns (name);
 			mock.SetupGet (pi => pi.Category).Returns (category);
+			mock.SetupGet (pi => pi.CanWrite).Returns (true);
 			AugmentPropertyMock (mock);
 
 			return mock;
