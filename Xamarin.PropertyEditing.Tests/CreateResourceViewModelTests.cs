@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+<<<<<<< HEAD
 using System.Linq;
+=======
+>>>>>>> [Core/Win] Create resource core/window
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;

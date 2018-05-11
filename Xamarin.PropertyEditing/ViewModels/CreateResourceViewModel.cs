@@ -108,6 +108,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					return;
 
 				if (!value) {
+<<<<<<< HEAD
 					if (HasDocumentSources)
 						DefineInDocument = true;
 					else if (HasApplicationSources)
@@ -115,6 +116,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 					else
 						DefineInApplication = true;
 
+=======
+					DefineInDocument = true;
+>>>>>>> [Core/Win] Create resource core/window
 					return;
 				}
 
