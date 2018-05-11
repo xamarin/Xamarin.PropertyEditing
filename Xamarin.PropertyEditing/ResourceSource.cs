@@ -10,7 +10,7 @@ namespace Xamarin.PropertyEditing
 		Document = 3
 	}
 
-	public sealed class ResourceSource
+	public class ResourceSource
 		: IEquatable<ResourceSource>
 	{
 		public ResourceSource (string name, ResourceSourceType type)
@@ -35,7 +35,7 @@ namespace Xamarin.PropertyEditing
 			get;
 		}
 
-		public bool Equals (ResourceSource other)
+		public virtual bool Equals (ResourceSource other)
 		{
 			if (ReferenceEquals (other, null))
 				return false;
