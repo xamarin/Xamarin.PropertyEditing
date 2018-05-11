@@ -15,7 +15,15 @@ namespace Xamarin.PropertyEditing
 		/// </remarks>
 		string Description { get; }
 
+		/// <summary>
+		/// Gets the representative type for the property (Common*, primitive, etc).
+		/// </summary>
 		Type Type { get; }
+
+		/// <summary>
+		/// Gets the name of the real type of this property, not the representative type (<see cref="Type"/>).
+		/// </summary>
+		string TypeName { get; }
 
 		/// <summary>
 		/// A resource-name of the category the property belongs to.

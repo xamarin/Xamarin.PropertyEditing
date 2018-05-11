@@ -41,6 +41,8 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public Type Type => this.propertyInfo.PropertyType;
 
+		public string TypeName => this.propertyInfo.Name;
+
 		public string Category => this.category.Value;
 
 		public bool CanWrite => this.propertyInfo.CanWrite;

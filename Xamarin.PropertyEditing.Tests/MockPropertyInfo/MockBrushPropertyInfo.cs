@@ -29,6 +29,8 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 		public Type Type => typeof(CommonBrush);
 
+		public string TypeName => Type.Name;
+
 		public string Category { get; }
 
 		public bool CanWrite { get; }
