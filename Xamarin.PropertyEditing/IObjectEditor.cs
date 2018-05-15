@@ -42,6 +42,14 @@ namespace Xamarin.PropertyEditing
 		IReadOnlyCollection<IPropertyInfo> Properties { get; }
 
 		/// <summary>
+		/// Gets a mapping between known properties (such as CommonBrush.Opacity) and their provider counterparts.
+		/// </summary>
+		/// <remarks>
+		/// Should only include known properties present in <see cref="Properties"/>. Can be <c>null</c> if there are none.
+		/// </remarks>
+		IReadOnlyDictionary<KnownProperty, IPropertyInfo> KnownProperties { get; }
+
+		/// <summary>
 		/// Gets the parent object editor for the object this editor represents or <c>null</c> if none.
 		/// </summary>
 		IObjectEditor Parent { get; }

@@ -90,6 +90,7 @@
     <Compile Include="ISelfConstrainedPropertyInfo.cs" />
     <Compile Include="ITypeInfo.cs" />
     <Compile Include="IValidator.cs" />
+    <Compile Include="KnownProperty.cs" />
     <Compile Include="MultiAvailabilityConstraint.cs" />
     <Compile Include="NotifyingObject.cs" />
     <Compile Include="Numeric.cs" />

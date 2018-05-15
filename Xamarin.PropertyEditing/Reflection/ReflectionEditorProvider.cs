@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.Reflection
@@ -19,6 +20,11 @@ namespace Xamarin.PropertyEditing.Reflection
 
 			object instance = Activator.CreateInstance (realType);
 			return Task.FromResult (instance);
+		}
+
+		public Task<IReadOnlyDictionary<Type, ITypeInfo>> GetKnownTypesAsync (IReadOnlyCollection<Type> knownTypes)
+		{
+			return Task.FromResult<IReadOnlyDictionary<Type, ITypeInfo>> (new Dictionary<Type, ITypeInfo> ());
 		}
 
 		public static Type GetRealType (ITypeInfo type)

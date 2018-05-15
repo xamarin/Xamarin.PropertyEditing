@@ -251,6 +251,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return editor;
 			}
 
+			public Task<IReadOnlyDictionary<Type, ITypeInfo>> GetKnownTypesAsync (IReadOnlyCollection<Type> knownTypes)
+			{
+				return this.realProvider.GetKnownTypesAsync (knownTypes);
+			}
+
 			public Task<object> CreateObjectAsync (ITypeInfo type)
 			{
 				return this.realProvider.CreateObjectAsync (type);
