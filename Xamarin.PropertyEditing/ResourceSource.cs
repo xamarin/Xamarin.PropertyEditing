@@ -2,16 +2,24 @@ using System;
 
 namespace Xamarin.PropertyEditing
 {
-	public sealed class ResourceSource
+	public enum ResourceSourceType
+	{
+		System = 0,
+		Application = 1,
+		ResourceDictionary = 2,
+		Document = 3
+	}
+
+	public class ResourceSource
 		: IEquatable<ResourceSource>
 	{
-		public ResourceSource (string name, bool isLocal)
+		public ResourceSource (string name, ResourceSourceType type)
 		{
 			if (name == null)
 				throw new ArgumentNullException (nameof (name));
 
 			Name = name;
-			IsLocal = isLocal;
+			Type = type;
 		}
 
 		public string Name
@@ -20,21 +28,21 @@ namespace Xamarin.PropertyEditing
 		}
 
 		/// <summary>
-		/// Gets whether the source is local/relative to a target object.
+		/// Gets the type of resource source.
 		/// </summary>
-		public bool IsLocal
+		public ResourceSourceType Type
 		{
 			get;
 		}
 
-		public bool Equals (ResourceSource other)
+		public virtual bool Equals (ResourceSource other)
 		{
 			if (ReferenceEquals (other, null))
 				return false;
 			if (ReferenceEquals (other, this))
 				return true;
 
-			return IsLocal == other.IsLocal && Name == other.Name;
+			return Type == other.Type && Name == other.Name;
 		}
 
 		public override bool Equals (object obj)
@@ -53,7 +61,7 @@ namespace Xamarin.PropertyEditing
 		{
 			unchecked {
 				int hashCode = Name.GetHashCode();
-				hashCode = (hashCode * 397) ^ IsLocal.GetHashCode();
+				hashCode = (hashCode * 397) ^ Type.GetHashCode();
 				return hashCode;
 			}
 		}

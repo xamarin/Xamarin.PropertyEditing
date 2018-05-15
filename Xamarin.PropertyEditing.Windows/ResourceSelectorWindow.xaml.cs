@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Windows
 			InitializeComponent ();
 		}
 
-		internal static Resource RequestResource (PropertyEditorPanel owner, IResourceProvider provider, IEnumerable<object> targets, IPropertyInfo property, Resource currentValue)
+		internal static Resource RequestResource (FrameworkElement owner, IResourceProvider provider, IEnumerable<object> targets, IPropertyInfo property, Resource currentValue)
 		{
 			Window hostWindow = Window.GetWindow (owner);
 

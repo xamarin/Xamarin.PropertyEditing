@@ -28,8 +28,8 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			const string name = "name";
 			const string sourceName = "source";
-			var source = new ResourceSource (sourceName, isLocal: true);
-			var source2 = new ResourceSource (sourceName, isLocal: false);
+			var source = new ResourceSource (sourceName, ResourceSourceType.Application);
+			var source2 = new ResourceSource (sourceName, ResourceSourceType.System);
 			Assume.That (source, Is.Not.EqualTo (source2));
 
 			var r = new Resource (source, name);
@@ -49,8 +49,8 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			const string name = "name";
 			const string sourceName = "source";
-			var source = new ResourceSource (sourceName, isLocal: true);
-			var source2 = new ResourceSource (sourceName, isLocal: false);
+			var source = new ResourceSource (sourceName, ResourceSourceType.Application);
+			var source2 = new ResourceSource (sourceName, ResourceSourceType.System);
 			Assume.That (source.GetHashCode(), Is.Not.EqualTo (source2.GetHashCode()));
 
 			var r = new Resource (source, name);

@@ -114,6 +114,8 @@
     <Compile Include="ViewModels\ArrangeModeViewModel.cs" />
     <Compile Include="ViewModels\BrushPropertyViewModel.cs" />
     <Compile Include="ViewModels\CollectionPropertyViewModel.cs" />
+    <Compile Include="ViewModels\CreateResourceRequestedEventArgs.cs" />
+    <Compile Include="ViewModels\CreateResourceViewModel.cs" />
     <Compile Include="ViewModels\MaterialColorScale.cs" />
     <Compile Include="ViewModels\MaterialDesignColorViewModel.cs" />
     <Compile Include="ViewModels\CombinablePropertyViewModel.cs" />

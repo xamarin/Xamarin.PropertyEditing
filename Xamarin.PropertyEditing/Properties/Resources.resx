@@ -486,4 +486,32 @@
   <data name="RemoveItem" xml:space="preserve">
     <value>Remove item</value>
   </data>
+  <data name="GenericErrorMessage" xml:space="preserve">
+    <value>Something went wrong</value>
+  </data>
+  <data name="DefineIn" xml:space="preserve">
+    <value>Define in</value>
+  </data>
+  <data name="Application" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="ApplyToAll" xml:space="preserve">
+    <value>Apply to all</value>
+  </data>
+  <data name="ThisDocument" xml:space="preserve">
+    <value>This document</value>
+  </data>
+  <data name="ConvertToNewResourceEllipsis" xml:space="preserve">
+    <value>Convert to new resource…</value>
+  </data>
+  <data name="CreateResourceTitle" xml:space="preserve">
+    <value>Create {0} Resource</value>
+    <comment>Create {Type} Resource</comment>
+  </data>
+  <data name="ResourceNameLabel" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ResourceDictionary" xml:space="preserve">
+    <value>Resource dictionary</value>
+  </data>
 </root>
