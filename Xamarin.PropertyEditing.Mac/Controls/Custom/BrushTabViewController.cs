@@ -8,7 +8,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class BrushTabViewController : PropertyTabViewController<BrushPropertyViewModel>
+	class BrushTabViewController : NotifyingTabViewController<BrushPropertyViewModel>
 	{
 		public BrushTabViewController ()
 		{
@@ -90,7 +90,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void WillSelect (NSTabView tabView, NSTabViewItem item)
 		{
-			var brushController = item.ViewController as PropertyViewController<BrushPropertyViewModel>;
+			var brushController = item.ViewController as NotifyingViewController<BrushPropertyViewModel>;
 			if (brushController != null)
 				brushController.ViewModel = ViewModel;
 

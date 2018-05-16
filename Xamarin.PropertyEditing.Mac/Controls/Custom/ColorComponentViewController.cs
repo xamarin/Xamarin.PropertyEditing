@@ -6,7 +6,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class ColorComponentViewController : PropertyViewController<SolidBrushViewModel>
+	class ColorComponentViewController : NotifyingViewController<SolidBrushViewModel>
 	{
 		ColorComponentEditor editor;
 

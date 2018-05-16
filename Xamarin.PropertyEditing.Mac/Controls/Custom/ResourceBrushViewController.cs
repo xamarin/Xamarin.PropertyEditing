@@ -155,7 +155,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class ResourceBrushViewController :PropertyViewController<BrushPropertyViewModel>
+	class ResourceBrushViewController : NotifyingViewController<BrushPropertyViewModel>
 	{
 		ResourceOutlineView resourceSelector;
 		ResourceBrushPropertyViewDelegate viewDelegate;

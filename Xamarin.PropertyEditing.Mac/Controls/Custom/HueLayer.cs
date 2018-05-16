@@ -42,7 +42,7 @@ namespace Xamarin.PropertyEditing.Mac
 			CornerRadius = BorderRadius,
 		};
 
-		readonly CALayer grip = new CALayerQuick {
+		readonly CALayer grip = new UnanimatedLayer {
 			BorderColor = NSColor.Text.CGColor,
 			BorderWidth = 2,
 			CornerRadius = GripRadius,

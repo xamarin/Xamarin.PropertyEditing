@@ -22,9 +22,9 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		readonly CALayer previous = new CALayerQuick ();
-		readonly CALayer current = new CALayerQuick ();
-		readonly CALayer last = new CALayerQuick ();
+		readonly CALayer previous = new UnanimatedLayer ();
+		readonly CALayer current = new UnanimatedLayer ();
+		readonly CALayer last = new UnanimatedLayer ();
 
 		readonly CALayer lastClip = new CALayer {
 			BorderWidth = 1,

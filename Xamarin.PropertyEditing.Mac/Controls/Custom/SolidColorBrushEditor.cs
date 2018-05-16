@@ -44,12 +44,6 @@ namespace Xamarin.PropertyEditing.Mac
 			Initialize ();
 		}
 
-		[Export ("initWithCoder:")]
-		public SolidColorBrushEditor (NSCoder coder) : base (coder)
-		{
-			Initialize ();
-		}
-
 		public SolidColorBrushEditor (CGRect frame) : base (frame)
 		{
 			Initialize ();

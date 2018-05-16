@@ -5,7 +5,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class ColorComponentTabViewController : PropertyTabViewController<SolidBrushViewModel>
+	class ColorComponentTabViewController : NotifyingTabViewController<SolidBrushViewModel>
 	{
 		public ColorComponentTabViewController ()
 		{

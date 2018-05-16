@@ -5,9 +5,9 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class PropertyTabViewController<T> : NSTabViewController, INotifyingListner<T> where T : NotifyingObject
+	class NotifyingTabViewController<T> : NSTabViewController, INotifyingListner<T> where T : NotifyingObject
 	{
-		public PropertyTabViewController () : base ()
+		public NotifyingTabViewController () : base ()
 		{
 			adaptor = new NotifyingViewAdaptor<T> (this);
 		}

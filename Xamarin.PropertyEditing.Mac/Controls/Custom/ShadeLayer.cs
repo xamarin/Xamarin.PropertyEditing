@@ -38,13 +38,13 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		readonly CALayer grip = new CALayerQuick {
+		readonly CALayer grip = new UnanimatedLayer {
 			BorderColor = new CGColor (1, 1, 1),
 			BorderWidth = 1,
 			CornerRadius = GripRadius,
 		};
 
-		readonly CAGradientLayer brightnessLayer = new CAGradientLayerQuick {
+		readonly CAGradientLayer brightnessLayer = new UnanimatedGradientLayer {
 			Colors = new [] {
 					new CGColor (0f, 0f, 0f, 1f),
 					new CGColor (0f, 0f, 0f, 0f)
@@ -52,7 +52,7 @@ namespace Xamarin.PropertyEditing.Mac
 			CornerRadius = BorderRadius,
 		};
 
-		readonly CAGradientLayer saturationLayer = new CAGradientLayerQuick {
+		readonly CAGradientLayer saturationLayer = new UnanimatedGradientLayer {
 			Colors = new [] {
 					new CGColor (1f, 1f, 1f),
 					new CGColor (1f, .3f, 0f)

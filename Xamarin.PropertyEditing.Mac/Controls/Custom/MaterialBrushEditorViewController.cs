@@ -7,7 +7,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class MaterialBrushEditorViewController : PropertyViewController<BrushPropertyViewModel>
+	class MaterialBrushEditorViewController : NotifyingViewController<BrushPropertyViewModel>
 	{
 		public MaterialBrushEditorViewController ()
 		{

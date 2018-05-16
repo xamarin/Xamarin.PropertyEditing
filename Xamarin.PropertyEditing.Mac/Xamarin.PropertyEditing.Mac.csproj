@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -25,14 +25,18 @@
     <EnablePackageSigning>false</EnablePackageSigning>
     <IncludeMonoRuntime>false</IncludeMonoRuntime>
     <UseSGen>false</UseSGen>
-    <HttpClientHandler></HttpClientHandler>
-    <LinkMode></LinkMode>
-    <XamMacArch></XamMacArch>
+    <HttpClientHandler>
+    </HttpClientHandler>
+    <LinkMode>
+    </LinkMode>
+    <XamMacArch>
+    </XamMacArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -40,9 +44,12 @@
     <EnablePackageSigning>false</EnablePackageSigning>
     <IncludeMonoRuntime>false</IncludeMonoRuntime>
     <UseSGen>false</UseSGen>
-    <HttpClientHandler></HttpClientHandler>
-    <LinkMode></LinkMode>
-    <XamMacArch></XamMacArch>
+    <HttpClientHandler>
+    </HttpClientHandler>
+    <LinkMode>
+    </LinkMode>
+    <XamMacArch>
+    </XamMacArch>
   </PropertyGroup>
   <!-- Build with strong naming if built as part of some Xamarin VSIX, normally referencing this project as a git submodule under external\Xamarin.PropertyEditing -->
   <PropertyGroup Condition="Exists('../../../xamarin.snk')">
@@ -95,8 +102,8 @@
     <Compile Include="Controls\BrushEditorControl.cs" />
     <Compile Include="Controls\Custom\SolidColorBrushEditor.cs" />
     <Compile Include="Controls\Custom\BrushTabViewController.cs" />
-    <Compile Include="Controls\Custom\PropertyTabViewController.cs" />
-    <Compile Include="Controls\Custom\PropertyViewController.cs" />
+    <Compile Include="Controls\Custom\NotifyingTabViewController.cs" />
+    <Compile Include="Controls\Custom\NotifyingViewController.cs" />
     <Compile Include="Controls\Custom\SolidColorBrushEditorViewController.cs" />
     <Compile Include="Controls\Custom\DrawingExtensions.cs" />
     <Compile Include="Controls\Custom\ResourceBrushViewController.cs" />
@@ -121,17 +128,11 @@
     <Compile Include="Controls\Custom\ComponentSpinEditor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\" />
-    <Folder Include="Controls\Custom\" />
-    <Folder Include="Resources\" />
     <Compile Include="Themes\MacThemeManager.cs" />
     <Compile Include="Controls\BaseEditorControl.cs" />
     <Compile Include="Controls\ErrorMessageView.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-    <Folder Include="Themes\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">
       <Project>{A0B6FE73-D046-4E1C-BA9D-F20683889C5A}</Project>
