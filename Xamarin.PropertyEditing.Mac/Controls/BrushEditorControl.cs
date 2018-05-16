@@ -40,15 +40,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public BrushEditorControl ()
 		{
 			TranslatesAutoresizingMaskIntoConstraints = false;
-			this.colorEditor = new BrushTabViewController ();
 
 			this.popover = new NSPopover ();
 			popover.Behavior = NSPopoverBehavior.Transient;
 			popover.ContentViewController = brushTabViewController = new BrushTabViewController {
 				PreferredContentSize = new CGSize (250, 300)
 			};
-
-			RowHeight = 230 + 28;
 
 			this.popUpButton = new ColorPopUpButton {
 				TranslatesAutoresizingMaskIntoConstraints = false,
@@ -58,19 +55,15 @@ namespace Xamarin.PropertyEditing.Mac
 
 			popupButtonList = new NSMenu ();
 			popUpButton.Menu = popupButtonList;
-			var view = this.colorEditor.View;
 
 			this.DoConstraints (new[] {
 				popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 34),
 				popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
 				popUpButton.ConstraintTo (this, (pub, c) => pub.Left == c.Left + 4),
 				popUpButton.ConstraintTo (this, (pub, c) => pub.Top == c.Top + 0),
-				view.ConstraintTo (popUpButton, (v, pub) => v.Top == pub.Bottom),
-				view.ConstraintTo (popUpButton, (v, pub) => v.Left == pub.Left)
 			});
 
 			AddSubview (this.popUpButton);
-			AddSubview (this.colorEditor.View);
 
 			UpdateTheme ();
 		}
@@ -82,7 +75,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		readonly ColorPopUpButton popUpButton;
-		readonly BrushTabViewController colorEditor;
+		//readonly BrushTabViewController colorEditor;
 		readonly NSPopover popover;
 		readonly BrushTabViewController brushTabViewController;
 		readonly NSMenu popupButtonList;
@@ -99,6 +92,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
+			this.popUpButton.Enabled = this.ViewModel?.Property.CanWrite ?? false;
 		}
 
 		protected override void UpdateAccessibilityValues ()
@@ -131,9 +125,9 @@ namespace Xamarin.PropertyEditing.Mac
 
         protected override void UpdateValue ()
 		{
-			this.colorEditor.ViewModel = ViewModel;
+			SetEnabled ();
 			this.brushTabViewController.ViewModel = ViewModel;
-			this.popUpButton.Popover = ViewModel.Property.CanWrite ? popover : null;
+			this.popUpButton.Popover = (ViewModel?.Property.CanWrite ?? false) ? popover : null;
 
 			if (ViewModel.Solid != null) {
 				var title = GetTitle ();

@@ -33,8 +33,8 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		ChannelGroup[] Editors { get; set; }
-		UnfocusableTextField StringLabel { get; set; }
-		NSTextField StringEditor { get; set; }
+		UnfocusableTextField hexLabel;
+		NSTextField hexEditor;
 
 		class ChannelGroup
 		{
@@ -48,6 +48,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var ce = new ChannelGroup {
 				Label = new UnfocusableTextField {
 					StringValue = $"{editor.Name}:",
+					Alignment = NSTextAlignment.Right
 				},
 				Editor = new ComponentSpinEditor (editor),
 				Gradient = new CAGradientLayer {
@@ -60,6 +61,7 @@ namespace Xamarin.PropertyEditing.Mac
 			ce.Editor.TranslatesAutoresizingMaskIntoConstraints = true;
 			ce.Editor.ValueChanged += UpdateComponent;
 			ce.Editor.BackgroundColor = NSColor.Clear;
+			ce.Label.BackgroundColor = NSColor.Clear;
 			AddSubview (ce.Label);
 			AddSubview (ce.Editor);
 
@@ -109,21 +111,25 @@ namespace Xamarin.PropertyEditing.Mac
 			WantsLayer = true;
 			Editors = CreateEditors (EditorType);
 
-			StringLabel = new UnfocusableTextField {
+			hexLabel = new UnfocusableTextField {
 				StringValue = "#:",
-				Alignment = NSTextAlignment.Right
+				Alignment = NSTextAlignment.Right,
+				BackgroundColor = NSColor.Clear
 			};
-			AddSubview (StringLabel);
-			StringEditor = new NSTextField {
-				Alignment = NSTextAlignment.Right
+			AddSubview (hexLabel);
+
+			hexEditor = new NSTextField {
+				Alignment = NSTextAlignment.Right,
+				BackgroundColor = NSColor.Clear
 			};
-			StringEditor.EditingEnded += (o, e) => {
-				if (CommonColor.TryParseRgbaHex (StringEditor.StringValue, out CommonColor c)) {
+			AddSubview (hexEditor);
+
+			hexEditor.EditingEnded += (o, e) => {
+				if (CommonColor.TryParseArgbHex (hexEditor.StringValue, out CommonColor c)) {
 					ViewModel.Color = c;
-					StringEditor.StringValue = c.ToRgbaHex ();
+					hexEditor.StringValue = c.ToString ();
 				}
 			};
-			AddSubview (StringEditor);
 		}
 
 		void UpdateComponent (object sender, EventArgs args)
@@ -148,7 +154,7 @@ namespace Xamarin.PropertyEditing.Mac
 						editor.Value = editor.ComponentEditor.ValueFromColor (ViewModel.Color);
 						editor.ComponentEditor.UpdateGradientLayer (channelGroup.Gradient, ViewModel.Color);
 					}
-					StringEditor.StringValue = ViewModel.Color.ToString ();
+					hexEditor.StringValue = ViewModel.Color.ToString ();
 					break;
 			}
 		}
@@ -229,7 +235,7 @@ namespace Xamarin.PropertyEditing.Mac
 				channelGroup.Editor.Frame = editorFrame;
 				channelGroup.Gradient.Frame = new CGRect (
 					editorFrame.X,
-					editorFrame.Y - DefaultGradientHeight,
+					editorFrame.Y - DefaultGradientHeight + 1,
 					editorFrame.Width - 16, DefaultGradientHeight);
 				
 				channelGroup.Gradient.BorderColor = NSColor.DisabledControlText.CGColor;
@@ -238,8 +244,8 @@ namespace Xamarin.PropertyEditing.Mac
 				editorFrame = editorFrame.Translate (0, -yOffset);
 			}
 
-			StringLabel.Frame = new CGRect (frame.X, padding, 20, DefaultControlHeight);
-			StringEditor.Frame = new CGRect (
+			hexLabel.Frame = new CGRect (frame.X, padding, 20, DefaultControlHeight);
+			hexEditor.Frame = new CGRect (
 				labelFrame.Right,
 			    padding,
 				frame.Width - labelFrame.Right - 16,
