@@ -88,6 +88,10 @@
     <Compile Include="Controls\CombinablePropertyEditor.cs" />
     <Compile Include="Controls\Custom\PropertyButton.cs" />
     <Compile Include="Controls\Custom\CommandMenuItem.cs" />
+    <Compile Include="Controls\Custom\BasePopOverControl.cs" />
+    <Compile Include="Controls\Custom\BasePopOverViewModelControl.cs" />
+    <Compile Include="Controls\CustomExpressionView.cs" />
+    <Compile Include="Controls\Custom\AutoClosePopOver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
@@ -170,6 +174,10 @@
     <BundleResource Include="Resources\property-button-local-mac-active-10%402x.png" />
     <BundleResource Include="Resources\property-button-local-mac-active-10~dark.png" />
     <BundleResource Include="Resources\property-button-local-mac-active-10~dark%402x.png" />
+    <BundleResource Include="Resources\custom-expression-32.png" />
+    <BundleResource Include="Resources\custom-expression-32%402x.png" />
+    <BundleResource Include="Resources\custom-expression-32~dark.png" />
+    <BundleResource Include="Resources\custom-expression-32~dark%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

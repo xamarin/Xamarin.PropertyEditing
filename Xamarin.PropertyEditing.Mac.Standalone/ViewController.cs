@@ -17,8 +17,8 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-			// Do any additional setup after loading the view.
 
+			// Do any additional setup after loading the view.
 			PropertyPanel.TargetPlatform = new TargetPlatform (new MockEditorProvider ()) {
 				SupportsCustomExpressions = true,
 				SupportsMaterialDesign = true,

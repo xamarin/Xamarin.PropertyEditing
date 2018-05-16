@@ -32,8 +32,9 @@ namespace Xamarin.PropertyEditing.Mac
 		private void HookUpCommandEvents ()
 		{
 			Activated += (object sender, EventArgs e) => {
-				if (this.command != null)
-					this.command.Execute (null);
+				if (this.command != null) {
+						this.command.Execute (null);
+				}
 			};
 
 			ValidateMenuItem = ValidatePropertyMenuItem;
