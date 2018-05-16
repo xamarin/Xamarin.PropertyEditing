@@ -31,16 +31,6 @@ namespace Xamarin.PropertyEditing.Mac
 			set => ViewModel.Color = value;
 		}
 
-		public CommonColor HueColor {
-			get => ViewModel.HueColor;
-			set => ViewModel.HueColor = value;
-		}
-
-		public CommonColor Shade {
-			get => ViewModel.Shade;
-			set => ViewModel.Shade = value;
-		}
-
 		public void Commit ()
 		{
 			Layer.Commit (this);
