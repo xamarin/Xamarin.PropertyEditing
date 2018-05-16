@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CoreAnimation;
 using CoreGraphics;
 using Foundation;
@@ -11,12 +11,12 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-        public override NSObject ActionForKey(string eventKey)
-        {
+		public override NSObject ActionForKey (string eventKey)
+		{
 			return null;
-        }
+		}
 
-        public ColorEditorLayer (IntPtr handle) : base (handle)
+		public ColorEditorLayer (IntPtr handle) : base (handle)
 		{
 		}
 
@@ -25,12 +25,13 @@ namespace Xamarin.PropertyEditing.Mac
 		abstract public void UpdateFromLocation (EditorInteraction interaction, CGPoint location);
 	}
 
-	class CAGradientLayerQuick : CAGradientLayer {
-		public CAGradientLayerQuick ()
+	class UnanimatedGradientLayer : CAGradientLayer
+	{
+		public UnanimatedGradientLayer ()
 		{
 		}
 
-		public CAGradientLayerQuick (IntPtr handle) : base (handle)
+		public UnanimatedGradientLayer (IntPtr handle) : base (handle)
 		{
 		}
 
@@ -40,12 +41,13 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class CALayerQuick : CALayer {
-		public CALayerQuick ()
+	class UnanimatedLayer : CALayer
+	{
+		public UnanimatedLayer ()
 		{
 		}
 
-		public CALayerQuick (IntPtr handle) : base (handle)
+		public UnanimatedLayer (IntPtr handle) : base (handle)
 		{
 		}
 

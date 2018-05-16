@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using AppKit;
 using CoreGraphics;
@@ -33,8 +33,7 @@ namespace Xamarin.PropertyEditing.Mac
 			adaptor = new NotifyingViewAdaptor<SolidBrushViewModel> (this);
 		}
 
-		public SolidBrushViewModel ViewModel
-		{
+		public SolidBrushViewModel ViewModel {
 			get => adaptor.ViewModel;
 			set => adaptor.ViewModel = value;
 		}

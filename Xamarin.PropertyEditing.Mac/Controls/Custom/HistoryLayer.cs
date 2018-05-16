@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CoreAnimation;
 using CoreGraphics;
 
@@ -49,7 +49,7 @@ namespace Xamarin.PropertyEditing.Mac
 				0,
 				Bounds.Height,
 				Bounds.Height).Inset (Margin, Margin);
-			
+
 			clip.Frame = new CGRect (
 				0,
 				0,
@@ -79,8 +79,8 @@ namespace Xamarin.PropertyEditing.Mac
 				interaction.Color = interaction.ViewModel.InitialColor;
 		}
 
-        public override void Commit (EditorInteraction interaction)
-        { 
-        }
-    }
+		public override void Commit (EditorInteraction interaction)
+		{
+		}
+	}
 }

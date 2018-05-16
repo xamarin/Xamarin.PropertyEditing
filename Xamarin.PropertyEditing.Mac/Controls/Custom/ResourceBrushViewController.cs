@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using AppKit;
@@ -19,11 +19,11 @@ namespace Xamarin.PropertyEditing.Mac
 		public override nint GetChildrenCount (NSOutlineView outlineView, NSObject item)
 		{
 			if (this.vm?.Resources == null)
-				return 0;	
-			
+				return 0;
+
 			if (this.vm.Resources?.Count () == 0)
 				return 0;
-			
+
 			return this.vm.Resources.Count ();
 		}
 
@@ -31,7 +31,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			object element;
 
-			element = (this.vm.Resources.ElementAt((int)childIndex));
+			element = (this.vm.Resources.ElementAt ((int)childIndex));
 
 			return GetFacade (element);
 		}
@@ -46,7 +46,7 @@ namespace Xamarin.PropertyEditing.Mac
 			NSObject facade;
 
 			if (!this.groupFacades.TryGetValue (element, out facade)) {
-				this.groupFacades[element] = facade = new NSObjectFacade (element);
+				this.groupFacades [element] = facade = new NSObjectFacade (element);
 			}
 			return facade;
 		}
@@ -60,7 +60,8 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly Dictionary<object, NSObject> groupFacades = new Dictionary<object, NSObject> ();
 	}
 
-	class ResourceBrushPropertyViewDelegate : ResourceOutlineViewDelegate {
+	class ResourceBrushPropertyViewDelegate :ResourceOutlineViewDelegate
+	{
 		public BrushPropertyViewModel ViewModel {
 			get;
 			set;
@@ -78,7 +79,8 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class ResourceOutlineViewDelegate : NSOutlineViewDelegate {
+	class ResourceOutlineViewDelegate :NSOutlineViewDelegate
+	{
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
 			var facade = item as NSObjectFacade;
@@ -113,7 +115,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class ResourceOutlineView : NSOutlineView
+	class ResourceOutlineView :NSOutlineView
 	{
 		public ResourceOutlineView ()
 		{
@@ -144,18 +146,16 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		ResourceSelectorViewModel viewModel;
-		public ResourceSelectorViewModel ViewModel
-		{
+		public ResourceSelectorViewModel ViewModel {
 			get => viewModel;
-			set
-			{
+			set {
 				viewModel = value;
 				DataSource = new ResourceDataSource (viewModel);
 			}
 		}
 	}
 
-	class ResourceBrushViewController : PropertyViewController<BrushPropertyViewModel>
+	class ResourceBrushViewController :PropertyViewController<BrushPropertyViewModel>
 	{
 		ResourceOutlineView resourceSelector;
 		ResourceBrushPropertyViewDelegate viewDelegate;
@@ -172,7 +172,7 @@ namespace Xamarin.PropertyEditing.Mac
 				case nameof (BrushPropertyViewModel.Resource):
 					if (resource == ViewModel.Resource)
 						return;
-					
+
 					resource = ViewModel?.Resource;
 					UpdateSelection ();
 					break;
@@ -189,11 +189,11 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (resourceSelector == null)
 				return;
-			
+
 			var source = resourceSelector.DataSource as ResourceDataSource;
 			if (source == null || ViewModel == null)
 				return;
-			
+
 			nint index = -1;
 			if (ViewModel.Resource != null && source.TryGetFacade (ViewModel?.Resource, out var facade)) {
 				index = resourceSelector.RowForItem (facade);
@@ -230,5 +230,5 @@ namespace Xamarin.PropertyEditing.Mac
 				resourceSelector.ViewModel = ViewModel?.ResourceSelector;
 			}
 		}
-    }
+	}
 }

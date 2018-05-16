@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
@@ -17,11 +17,9 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		CALayer brushLayer;
-		CALayer BrushLayer
-		{
+		CALayer BrushLayer {
 			get => brushLayer;
-			set
-			{
+			set {
 				if (brushLayer != null)
 					brushLayer.RemoveFromSuperLayer ();
 
@@ -33,11 +31,9 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		CommonBrush brush;
-		public CommonBrush Brush
-		{
+		public CommonBrush Brush {
 			get => brush;
-			set
-			{
+			set {
 				brush = value;
 				BrushLayer = CreateBrushLayer (brush);
 				Opacity = brush == null ? 0 : 1;

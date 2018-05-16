@@ -1,4 +1,4 @@
-﻿using AppKit;
+using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
@@ -7,12 +7,12 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	class EmptyBrushEditorViewController : PropertyViewController<BrushPropertyViewModel>
 	{
-		NSButton brushEditor;
-
 		public EmptyBrushEditorViewController ()
 		{
 			PreferredContentSize = new CGSize (100, 100);
 		}
+
+		NSButton brushEditor;
 
 		public override void LoadView ()
 		{

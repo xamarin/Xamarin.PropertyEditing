@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using AppKit;
 using Xamarin.PropertyEditing.ViewModels;
@@ -7,8 +7,6 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	class ColorComponentTabViewController : PropertyTabViewController<SolidBrushViewModel>
 	{
-		public ChannelEditorType EditorType { get; set; }
-
 		public ColorComponentTabViewController ()
 		{
 			foreach (var value in Enum.GetValues (typeof (ChannelEditorType))) {
@@ -20,14 +18,16 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-       	public override void OnViewModelChanged(SolidBrushViewModel oldModel)
-        {
-            base.OnViewModelChanged(oldModel);
-			var controller = TabView.Item(SelectedTabViewItemIndex).ViewController as ColorComponentViewController;
-			controller.ViewModel = ViewModel;
-        }
+		public ChannelEditorType EditorType { get; set; }
 
-        public override void WillSelect (NSTabView tabView, NSTabViewItem item)
+		public override void OnViewModelChanged (SolidBrushViewModel oldModel)
+		{
+			base.OnViewModelChanged (oldModel);
+			var controller = TabView.Item (SelectedTabViewItemIndex).ViewController as ColorComponentViewController;
+			controller.ViewModel = ViewModel;
+		}
+
+		public override void WillSelect (NSTabView tabView, NSTabViewItem item)
 		{
 			var controller = item.ViewController as ColorComponentViewController;
 

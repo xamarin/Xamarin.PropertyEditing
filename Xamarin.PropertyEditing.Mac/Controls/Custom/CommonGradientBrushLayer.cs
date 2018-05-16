@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using CoreAnimation;
 using CoreGraphics;
@@ -17,11 +17,9 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		CommonGradientBrush brush;
-		public CommonGradientBrush Brush
-		{
+		public CommonGradientBrush Brush {
 			get => brush;
-			set
-			{
+			set {
 				brush = value;
 				SetNeedsDisplay ();
 			}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AppKit;
 using CoreGraphics;
 using CoreImage;
@@ -17,7 +17,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		public static NSImage CreateSwatch (this CommonColor color, CGSize size, CIColor c0, CIColor c1)
-			=> new NSImage (GenerateCheckerboard (new CGRect (0, 0, size.Width,size.Height), c0, c1), size);
+			=> new NSImage (GenerateCheckerboard (new CGRect (0, 0, size.Width, size.Height), c0, c1), size);
 
 
 		public static CGImage GenerateCheckerboard (CGRect frame)
@@ -29,7 +29,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Color0 = c0,
 				Color1 = c1,
 				Width = (float)Math.Min (frame.Height / 2f, 10),
-				Center = new CIVector (new nfloat[] { 0, 0 }),
+				Center = new CIVector (new nfloat [] { 0, 0 }),
 			}) {
 				using (var context = new CIContext (null)) {
 					return context.CreateCGImage (board.OutputImage, new CGRect (0, 0, frame.Width, frame.Height));
@@ -64,7 +64,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public static CGRect Translate (this CGRect rect, double x, double y)
 			=> new CGRect (
-				x: rect.X + x, 
+				x: rect.X + x,
 				y: rect.Y + y,
 				width: rect.Width,
 				height: rect.Height);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using AppKit;
 using Xamarin.PropertyEditing.ViewModels;
@@ -12,7 +12,7 @@ namespace Xamarin.PropertyEditing.Mac
 			adaptor = new NotifyingViewAdaptor<T> (this);
 		}
 
-		protected NotifyingViewAdaptor<T> adaptor { get; } 
+		protected NotifyingViewAdaptor<T> adaptor { get; }
 
 		public virtual void OnPropertyChanged (object sender, PropertyChangedEventArgs args)
 		{
@@ -22,8 +22,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		internal T ViewModel
-		{
+		internal T ViewModel {
 			get => adaptor.ViewModel;
 			set => adaptor.ViewModel = value;
 		}

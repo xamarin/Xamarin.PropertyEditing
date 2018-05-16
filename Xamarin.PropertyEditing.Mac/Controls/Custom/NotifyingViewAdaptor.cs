@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -19,11 +19,9 @@ namespace Xamarin.PropertyEditing.Mac
 		INotifyingListner<T> listener;
 
 		T viewModel;
-		internal T ViewModel
-		{
+		internal T ViewModel {
 			get => viewModel;
-			set
-			{
+			set {
 				var oldModel = viewModel;
 				if (viewModel == value)
 					return;

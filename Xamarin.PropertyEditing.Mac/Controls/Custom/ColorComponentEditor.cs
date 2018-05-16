@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using AppKit;
@@ -32,7 +32,7 @@ namespace Xamarin.PropertyEditing.Mac
 			Initialize ();
 		}
 
-		ChannelGroup[] Editors { get; set; }
+		ChannelGroup [] Editors { get; set; }
 		UnfocusableTextField hexLabel;
 		NSTextField hexEditor;
 
@@ -54,7 +54,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Gradient = new CAGradientLayer {
 					StartPoint = new CGPoint (0, 0),
 					EndPoint = new CGPoint (1, 0),
-					BorderWidth = .5f, 
+					BorderWidth = .5f,
 				}
 			};
 
@@ -69,26 +69,26 @@ namespace Xamarin.PropertyEditing.Mac
 			return ce;
 		}
 
-		ChannelGroup[] CreateEditors (ChannelEditorType type)
+		ChannelGroup [] CreateEditors (ChannelEditorType type)
 		{
 
 			switch (type) {
 				case ChannelEditorType.HSB:
-					return new[] {
+					return new [] {
 						CreateEditor (new HsbHueChannelEditor ()),
 						CreateEditor (new HsbSaturationChannelEditor ()),
 						CreateEditor (new HsbBrightnessChannelEditor ()),
 						CreateEditor (new AlphaChannelEditor ())
 					};
 				case ChannelEditorType.HLS:
-					return new[] {
+					return new [] {
 						CreateEditor (new HlsHueChannelEditor ()),
 						CreateEditor (new HlsLightnessChannelEditor ()),
 						CreateEditor (new HlsSaturationChannelEditor ()),
 						CreateEditor (new AlphaChannelEditor ())
 					};
 				case ChannelEditorType.RGB:
-					return new[] {
+					return new [] {
 						CreateEditor (new RedChannelEditor ()),
 						CreateEditor (new GreenChannelEditor ()),
 						CreateEditor (new BlueChannelEditor ()),
@@ -96,7 +96,7 @@ namespace Xamarin.PropertyEditing.Mac
 					};
 				default:
 				case ChannelEditorType.CMYK:
-					return new[] {
+					return new [] {
 						CreateEditor (new CyanChannelEditor ()),
 						CreateEditor (new MagentaChannelEditor ()),
 						CreateEditor (new YellowChannelEditor ()),
@@ -159,12 +159,12 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-        public override void UpdateConstraints()
-        {
-            base.UpdateConstraints();
-        }
+		public override void UpdateConstraints ()
+		{
+			base.UpdateConstraints ();
+		}
 
-        ChannelGroup activeChannel;
+		ChannelGroup activeChannel;
 		public override void MouseDown (NSEvent theEvent)
 		{
 			if (!ClickableGradients) {
@@ -187,13 +187,13 @@ namespace Xamarin.PropertyEditing.Mac
 						ViewModel.Color = channel.UpdateColorFromLocation (
 							grad,
 							ViewModel.Color,
-							Layer.ConvertPointToLayer (location,grad.SuperLayer));
+							Layer.ConvertPointToLayer (location, grad.SuperLayer));
 						return;
 					}
 				}
 			}
 			base.MouseDown (theEvent);
-        }
+		}
 
 		public override void MouseDragged (NSEvent theEvent)
 		{
@@ -212,16 +212,16 @@ namespace Xamarin.PropertyEditing.Mac
 			base.MouseMoved (theEvent);
 		}
 
-        public override void MouseUp(NSEvent theEvent)
-        {
+		public override void MouseUp (NSEvent theEvent)
+		{
 			if (activeChannel != null)
 				ViewModel.CommitLastColor ();
-			
-			activeChannel = null;
-            base.MouseUp(theEvent); 
-        }
 
-        public override void Layout ()
+			activeChannel = null;
+			base.MouseUp (theEvent);
+		}
+
+		public override void Layout ()
 		{
 			base.Layout ();
 
@@ -237,7 +237,7 @@ namespace Xamarin.PropertyEditing.Mac
 					editorFrame.X,
 					editorFrame.Y - DefaultGradientHeight + 1,
 					editorFrame.Width - 16, DefaultGradientHeight);
-				
+
 				channelGroup.Gradient.BorderColor = NSColor.DisabledControlText.CGColor;
 				channelGroup.Gradient.ContentsScale = Window?.Screen?.BackingScaleFactor ?? NSScreen.MainScreen.BackingScaleFactor;
 				labelFrame = labelFrame.Translate (0, -yOffset);
@@ -247,7 +247,7 @@ namespace Xamarin.PropertyEditing.Mac
 			hexLabel.Frame = new CGRect (frame.X, padding, 20, DefaultControlHeight);
 			hexEditor.Frame = new CGRect (
 				labelFrame.Right,
-			    padding,
+				padding,
 				frame.Width - labelFrame.Right - 16,
 				DefaultControlHeight);
 		}

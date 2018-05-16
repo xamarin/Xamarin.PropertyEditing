@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using AppKit;
 using CoreGraphics;
@@ -19,9 +19,9 @@ namespace Xamarin.PropertyEditing.Mac
 		bool inhibitSelection;
 
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
-        {
+		{
 			inhibitSelection = true;
-            base.OnViewModelChanged(oldModel);
+			base.OnViewModelChanged (oldModel);
 
 			foreach (var item in TabViewItems) {
 				RemoveTabViewItem (item);
@@ -34,7 +34,7 @@ namespace Xamarin.PropertyEditing.Mac
 			foreach (var key in ViewModel.BrushTypes.Keys) {
 				var item = new NSTabViewItem ();
 				item.Label = key;
-				var brushType = ViewModel.BrushTypes[key];
+				var brushType = ViewModel.BrushTypes [key];
 
 				switch (brushType) {
 					case CommonBrushType.Solid:
@@ -65,7 +65,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				}
 				if (item.ViewController != null) {
-					BrushTypeTable[brushType] = TabViewItems.Length;
+					BrushTypeTable [brushType] = TabViewItems.Length;
 					AddTabViewItem (item);
 				}
 			}
@@ -74,7 +74,7 @@ namespace Xamarin.PropertyEditing.Mac
 				SelectedTabViewItemIndex = index;
 			}
 			inhibitSelection = false;
-        }
+		}
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs args)
 		{
@@ -88,8 +88,8 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-        public override void WillSelect(NSTabView tabView, NSTabViewItem item)
-        {
+		public override void WillSelect (NSTabView tabView, NSTabViewItem item)
+		{
 			var brushController = item.ViewController as PropertyViewController<BrushPropertyViewModel>;
 			if (brushController != null)
 				brushController.ViewModel = ViewModel;
@@ -97,31 +97,31 @@ namespace Xamarin.PropertyEditing.Mac
 			if (inhibitSelection)
 				return;
 
-            base.WillSelect(tabView, item);
-        }
+			base.WillSelect (tabView, item);
+		}
 
-        public override void DidSelect(NSTabView tabView, NSTabViewItem item)
-        {
+		public override void DidSelect (NSTabView tabView, NSTabViewItem item)
+		{
 			if (inhibitSelection)
 				return;
 
 			base.DidSelect (tabView, item);
-			ViewModel.SelectedBrushType = ViewModel.BrushTypes[item.Label];
-        }
+			ViewModel.SelectedBrushType = ViewModel.BrushTypes [item.Label];
+		}
 
-        public override void ViewDidLoad()
-        {
+		public override void ViewDidLoad ()
+		{
 			var old = View.Frame;
 			old.Height = 230;
 			View.Frame = old;
 
 			inhibitSelection = true;
-            base.ViewDidLoad();
+			base.ViewDidLoad ();
 			inhibitSelection = false;
 
 			old = View.Frame;
 			//old.Height = 230;
 			View.Frame = old;
-        }
-    }
+		}
+	}
 }

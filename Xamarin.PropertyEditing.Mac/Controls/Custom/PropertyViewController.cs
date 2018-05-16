@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -12,8 +12,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	class PropertyViewController<T> : NSViewController, INotifyingListner<T> where T : NotifyingObject
 	{
-		internal T ViewModel
-		{
+		internal T ViewModel {
 			get => adaptor.ViewModel;
 			set => adaptor.ViewModel = value;
 		}

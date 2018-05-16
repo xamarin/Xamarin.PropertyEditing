@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -37,9 +37,9 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class SolidColorBrushEditor : ColorEditorView
+	class SolidColorBrushEditor :ColorEditorView
 	{
-        public SolidColorBrushEditor (IntPtr handle) : base (handle)
+		public SolidColorBrushEditor (IntPtr handle) : base (handle)
 		{
 			Initialize ();
 		}
@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public SolidColorBrushEditor () : base ()
 		{
-			Initialize ();	
+			Initialize ();
 		}
 
 		void Initialize ()
@@ -76,8 +76,8 @@ namespace Xamarin.PropertyEditing.Mac
 			EditorType = ChannelEditorType.RGB
 		};
 
-		public override bool AcceptsFirstResponder() => true;
-        
+		public override bool AcceptsFirstResponder () => true;
+
 		readonly ShadeLayer shadeLayer = new ShadeLayer ();
 		readonly HueLayer hueLayer = new HueLayer ();
 		readonly HistoryLayer historyLayer = new HistoryLayer ();
@@ -120,8 +120,8 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		CGPoint last;
-        public override void MouseDragged(NSEvent theEvent)
-        {
+		public override void MouseDragged (NSEvent theEvent)
+		{
 			var location = ConvertPointFromView (theEvent.LocationInWindow, null);
 			var diff = new CGPoint (last.X - location.X, last.Y - location.Y);
 
@@ -133,14 +133,14 @@ namespace Xamarin.PropertyEditing.Mac
 						Layer.ConvertPointToLayer (location, interaction.Layer));
 
 			OnPropertyChanged (ViewModel, new PropertyChangedEventArgs (nameof (SolidBrushViewModel.Color)));
-        }
+		}
 
-        public override void MouseUp(NSEvent theEvent)
-        {
-            base.MouseUp(theEvent);
+		public override void MouseUp (NSEvent theEvent)
+		{
+			base.MouseUp (theEvent);
 			interaction?.Commit ();
 			interaction = null;
-        }
+		}
 
 		bool modelChanged = true;
 		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
@@ -156,8 +156,8 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		protected override void OnViewModelChanged (SolidBrushViewModel oldModel)
-        {
-            base.OnViewModelChanged(oldModel);
+		{
+			base.OnViewModelChanged (oldModel);
 			var inter = interaction ?? new EditorInteraction (ViewModel, null);
 
 			componentTabs.ViewModel = ViewModel;
@@ -166,7 +166,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-        public override void Layout ()
+		public override void Layout ()
 		{
 			if (modelChanged) {
 				var interx = interaction ?? new EditorInteraction (ViewModel, null);

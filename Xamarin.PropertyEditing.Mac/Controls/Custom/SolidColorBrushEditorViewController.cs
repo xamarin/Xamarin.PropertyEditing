@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using CoreGraphics;
 using Xamarin.PropertyEditing.ViewModels;
@@ -34,15 +34,15 @@ namespace Xamarin.PropertyEditing.Mac
 				brushEditor.ViewModel = ViewModel?.Solid;
 		}
 
-        public override void ViewDidLoad()
-        {
-            base.ViewDidLoad();
+		public override void ViewDidLoad ()
+		{
+			base.ViewDidLoad ();
 
 			if (ViewModel != null)
 				brushEditor.ViewModel = ViewModel?.Solid;
-        }
+		}
 
-        public override void LoadView ()
+		public override void LoadView ()
 		{
 			View = brushEditor = new SolidColorBrushEditor {
 				ViewModel = ViewModel?.Solid

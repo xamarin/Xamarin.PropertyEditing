@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using AppKit;
 using CoreAnimation;
@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 		};
 
 		readonly CAGradientLayer brightnessLayer = new CAGradientLayerQuick {
-			Colors = new[] {
+			Colors = new [] {
 					new CGColor (0f, 0f, 0f, 1f),
 					new CGColor (0f, 0f, 0f, 0f)
 				},
@@ -53,7 +53,7 @@ namespace Xamarin.PropertyEditing.Mac
 		};
 
 		readonly CAGradientLayer saturationLayer = new CAGradientLayerQuick {
-			Colors = new[] {
+			Colors = new [] {
 					new CGColor (1f, 1f, 1f),
 					new CGColor (1f, .3f, 0f)
 				},
@@ -109,9 +109,9 @@ namespace Xamarin.PropertyEditing.Mac
 			//interaction.Shade = shade;
 		}
 
-		public override void Commit(EditorInteraction interaction)
-        {
+		public override void Commit (EditorInteraction interaction)
+		{
 			interaction.ViewModel.CommitLastColor ();
-        }
-    }
+		}
+	}
 }

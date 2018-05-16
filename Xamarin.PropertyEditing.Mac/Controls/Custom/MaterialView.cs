@@ -8,11 +8,11 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class MaterialView : NSView  
+	class MaterialView : NSView
 	{
 		public override bool IsFlipped => true;
 
-		static readonly string[] ColorNames = {
+		static readonly string [] ColorNames = {
 				"50",
 				"100",
 				"200",
@@ -25,14 +25,14 @@ namespace Xamarin.PropertyEditing.Mac
 				"900"
 			};
 
-		static readonly string[] AccentNames = {
+		static readonly string [] AccentNames = {
 				"A100",
 				"A200",
 				"A400",
 				"A700"
 			};
 
-		static readonly string[] BlackWhite = {
+		static readonly string [] BlackWhite = {
 				"White",
 				"Black"
 			};
@@ -48,21 +48,18 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		BrushPropertyViewModel viewModel;
-		public BrushPropertyViewModel ViewModel
-		{
+		public BrushPropertyViewModel ViewModel {
 			get => viewModel;
-			set
-			{
+			set {
 				if (viewModel == value)
 					return;
-				
+
 				viewModel = value;
 				NeedsLayout = true;
 			}
 		}
 
-		public MaterialDesignColorViewModel MaterialDesign
-		{
+		public MaterialDesignColorViewModel MaterialDesign {
 			get => ViewModel?.MaterialDesign;
 		}
 

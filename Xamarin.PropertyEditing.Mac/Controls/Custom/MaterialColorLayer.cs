@@ -1,4 +1,4 @@
-﻿using CoreAnimation;
+using CoreAnimation;
 using CoreGraphics;
 using Xamarin.PropertyEditing.Drawing;
 
@@ -16,33 +16,27 @@ namespace Xamarin.PropertyEditing.Mac
 		};
 
 		string text;
-		public string Text
-		{
+		public string Text {
 			get => text;
-			set
-			{
+			set {
 				text = value;
 				SetNeedsLayout ();
 			}
 		}
 
 		CommonColor backgroundColor;
-		public new CommonColor BackgroundColor
-		{
+		public new CommonColor BackgroundColor {
 			get => backgroundColor;
-			set
-			{
+			set {
 				backgroundColor = value;
 				base.BackgroundColor = backgroundColor.ToCGColor ();
 			}
 		}
 
 		bool isSelected;
-		public bool IsSelected
-		{
+		public bool IsSelected {
 			get => isSelected;
-			set
-			{
+			set {
 				if (isSelected == value)
 					return;
 				isSelected = value;

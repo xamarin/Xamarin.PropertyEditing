@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
@@ -13,8 +13,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		ChannelEditor hueEditor = new HsbHueChannelEditor ();
 
-		public CGColor GripColor
-		{
+		public CGColor GripColor {
 			get => grip.BorderColor;
 			set => grip.BorderColor = value;
 		}
@@ -55,7 +54,7 @@ namespace Xamarin.PropertyEditing.Mac
 			LayoutIfNeeded ();
 
 			var color = interaction.Color;
-			
+
 			var loc = hueEditor.LocationFromColor (colors, color);
 			grip.Frame = new CGRect (1, loc.Y - grip.Frame.Height / 2f, grip.Frame.Width, grip.Frame.Height);
 		}
@@ -80,12 +79,12 @@ namespace Xamarin.PropertyEditing.Mac
 				location);
 		}
 
-        public override void Commit(EditorInteraction viewModel)
-        {
+		public override void Commit (EditorInteraction viewModel)
+		{
 			viewModel.ViewModel.CommitLastColor ();
-        }
+		}
 
-        public override void LayoutSublayers ()
+		public override void LayoutSublayers ()
 		{
 			base.LayoutSublayers ();
 			colors.Frame = Bounds.Inset (2, 2);

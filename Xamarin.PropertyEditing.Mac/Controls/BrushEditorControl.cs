@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.ComponentModel;
 using AppKit;
@@ -12,8 +12,6 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class ColorPopUpButton : NSPopUpButton
 	{
-		public NSPopover Popover { get; set; }
-
 		public ColorPopUpButton () : base ()
 		{
 		}
@@ -26,14 +24,16 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
+		public NSPopover Popover { get; set; }
+
 		public override void MouseDown (NSEvent theEvent)
 		{
 			if (Popover == null)
 				return;
-			
+
 			Popover?.Show (new CGRect (20, this.Frame.Height / 2 - 2.5, 5, 5), this, NSRectEdge.MinYEdge);
 		}
-    }
+	}
 
 	internal class BrushEditorControl : PropertyEditorControl
 	{
@@ -56,7 +56,7 @@ namespace Xamarin.PropertyEditing.Mac
 			popupButtonList = new NSMenu ();
 			popUpButton.Menu = popupButtonList;
 
-			this.DoConstraints (new[] {
+			this.DoConstraints (new [] {
 				popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 34),
 				popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
 				popUpButton.ConstraintTo (this, (pub, c) => pub.Left == c.Left + 4),
@@ -68,10 +68,9 @@ namespace Xamarin.PropertyEditing.Mac
 			UpdateTheme ();
 		}
 
-		internal new BrushPropertyViewModel ViewModel
-		{
-			get  => (BrushPropertyViewModel)base.ViewModel;
-			set  => base.ViewModel = value;
+		internal new BrushPropertyViewModel ViewModel {
+			get => (BrushPropertyViewModel)base.ViewModel;
+			set => base.ViewModel = value;
 		}
 
 		readonly ColorPopUpButton popUpButton;
@@ -115,7 +114,7 @@ namespace Xamarin.PropertyEditing.Mac
 					break;
 				default:
 					if (ViewModel.Value == null)
-					title = "null";
+						title = "null";
 					break;
 			}
 
@@ -123,7 +122,7 @@ namespace Xamarin.PropertyEditing.Mac
 			return title;
 		}
 
-        protected override void UpdateValue ()
+		protected override void UpdateValue ()
 		{
 			SetEnabled ();
 			this.brushTabViewController.ViewModel = ViewModel;
@@ -148,5 +147,5 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			UpdateValue ();
 		}
-    }
+	}
 }
