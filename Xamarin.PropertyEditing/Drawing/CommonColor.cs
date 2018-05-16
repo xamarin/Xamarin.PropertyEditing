@@ -367,7 +367,7 @@ namespace Xamarin.PropertyEditing.Drawing
 			return $"#{R:X2}{G:X2}{B:X2}{A:X2}";
 		}
 
-		public static bool TryParseRgbaHex (string value, out CommonColor color)
+		public static bool TryParseArgbHex (string value, out CommonColor color)
 		{
 			if (Regex.IsMatch (value, @"^#(([A-Fa-f0-9]{2}){3}|[A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|([A-Fa-f0-9]{2}){4})$")) {
 				var hex = value.Substring (1);
@@ -384,10 +384,10 @@ namespace Xamarin.PropertyEditing.Drawing
 				case 8:
 					var v = Convert.ToInt32 (hex, 16);
 					color = new CommonColor (
-						r: (byte)(v >> 24),
-						g: (byte)(v >> 16),
-						b: (byte)(v >> 8),
-						a: (byte)v);
+						a: (byte)(v >> 24),
+						r: (byte)(v >> 16),
+						g: (byte)(v >> 8),
+						b: (byte)v);
 
 					return true;
 				}
@@ -574,7 +574,7 @@ namespace Xamarin.PropertyEditing.Drawing
 
 		public override string ToString ()
 		{
-			return $"#{R:X2}{G:X2}{B:X2}{A:X2}";
+			return (A == 255) ? $"#{R:X2}{G:X2}{B:X2}" : $"#{A:X2}{R:X2}{G:X2}{B:X2}";
 		}
 	}
 }
