@@ -362,6 +362,40 @@ namespace Xamarin.PropertyEditing.Drawing
 			return delta == 0 ? highest : (component - lowest) * 255 / delta;
 		}
 
+		public string ToRgbaHex ()
+		{
+			return $"#{R:X2}{G:X2}{B:X2}{A:X2}";
+		}
+
+		public static bool TryParseRgbaHex (string value, out CommonColor color)
+		{
+			if (Regex.IsMatch (value, @"^#(([A-Fa-f0-9]{2}){3}|[A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|([A-Fa-f0-9]{2}){4})$")) {
+				var hex = value.Substring (1);
+				switch (hex.Length) {
+				case 3:
+					hex = hex.Select (c => $"{c}{c}").Aggregate ((a, b) => (a + b));
+					goto case 6;
+				case 6:
+					hex = hex + "ff";
+					goto case 8;
+				case 4:
+					hex = hex.Select (c => $"{c}{c}").Aggregate ((a, b) => (a + b));
+					goto case 8;
+				case 8:
+					var v = Convert.ToInt32 (hex, 16);
+					color = new CommonColor (
+						r: (byte)(v >> 24),
+						g: (byte)(v >> 16),
+						b: (byte)(v >> 8),
+						a: (byte)v);
+
+					return true;
+				}
+			}
+			color = CommonColor.Black;
+			return false;
+		}
+
 		/// <summary>
 		/// Creates a color from cyan, magenta, yellow, and black components
 		/// </summary>
@@ -524,34 +558,7 @@ namespace Xamarin.PropertyEditing.Drawing
 			+ (left.g - right.g) * (left.g - right.g)
 			+ (left.b - right.b) * (left.b - right.b);
 
-		public static bool TryParse (string value, out CommonColor color)
-		{
-			if (Regex.IsMatch(value, @"^#(([A-Fa-f0-9]{2}){3}|[A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|([A-Fa-f0-9]{2}){4})$")) {
-				var hex =  value.Substring (1);
-				switch (hex.Length) {
-				case 3:
-					hex = hex.Select (c => $"{c}{c}").Aggregate ((a, b) => (a + b));
-					goto case 6;
-				case 6:
-					hex = hex + "ff";
-					goto case 8;
-				case 4:
-					hex = hex.Select (c => $"{c}{c}").Aggregate ((a, b) => (a + b));
-					goto case 8;
-				case 8:
-					var  v = Convert.ToInt32 (hex, 16);
-					color = new CommonColor (
-						r: (byte)(v >> 24),
-						g: (byte)(v >> 16),
-						b: (byte)(v >> 8),
-						a: (byte) v);
 
-					return true;
-				}
-			}
-			color = CommonColor.Black;
-			return false;
-		}
 
 		public override int GetHashCode ()
 		{

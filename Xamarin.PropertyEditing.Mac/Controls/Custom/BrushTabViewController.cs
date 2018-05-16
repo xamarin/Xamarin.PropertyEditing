@@ -120,7 +120,7 @@ namespace Xamarin.PropertyEditing.Mac
 			inhibitSelection = false;
 
 			old = View.Frame;
-			old.Height = 230;
+			//old.Height = 230;
 			View.Frame = old;
         }
     }

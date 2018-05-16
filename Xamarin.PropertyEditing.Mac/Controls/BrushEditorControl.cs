@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.popover = new NSPopover ();
 			popover.Behavior = NSPopoverBehavior.Transient;
 			popover.ContentViewController = brushTabViewController = new BrushTabViewController {
-				PreferredContentSize = new CGSize (300, 280)
+				PreferredContentSize = new CGSize (250, 300)
 			};
 
 			RowHeight = 230 + 28;
@@ -54,7 +54,6 @@ namespace Xamarin.PropertyEditing.Mac
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
-				Popover = this.popover
 			};
 
 			popupButtonList = new NSMenu ();
@@ -82,7 +81,7 @@ namespace Xamarin.PropertyEditing.Mac
 			set  => base.ViewModel = value;
 		}
 
-		readonly NSPopUpButton popUpButton;
+		readonly ColorPopUpButton popUpButton;
 		readonly BrushTabViewController colorEditor;
 		readonly NSPopover popover;
 		readonly BrushTabViewController brushTabViewController;
@@ -134,6 +133,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.colorEditor.ViewModel = ViewModel;
 			this.brushTabViewController.ViewModel = ViewModel;
+			this.popUpButton.Popover = ViewModel.Property.CanWrite ? popover : null;
 
 			if (ViewModel.Solid != null) {
 				var title = GetTitle ();

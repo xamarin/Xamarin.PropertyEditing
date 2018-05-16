@@ -114,17 +114,19 @@ namespace Xamarin.PropertyEditing.Mac
 				Alignment = NSTextAlignment.Right
 			};
 			AddSubview (StringLabel);
-			StringEditor = new NSTextField ();
+			StringEditor = new NSTextField {
+				Alignment = NSTextAlignment.Right
+			};
 			StringEditor.EditingEnded += (o, e) => {
-				if (CommonColor.TryParse (StringEditor.StringValue, out CommonColor c)) {
+				if (CommonColor.TryParseRgbaHex (StringEditor.StringValue, out CommonColor c)) {
 					ViewModel.Color = c;
-					StringEditor.StringValue = c.ToString ();
+					StringEditor.StringValue = c.ToRgbaHex ();
 				}
 			};
 			AddSubview (StringEditor);
 		}
 
-        void UpdateComponent (object sender, EventArgs args)
+		void UpdateComponent (object sender, EventArgs args)
 		{
 			if (ViewModel == null)
 				return;
@@ -135,21 +137,21 @@ namespace Xamarin.PropertyEditing.Mac
 			ViewModel.CommitLastColor ();
 		}
 
-        protected override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            base.OnPropertyChanged(sender, e);
+		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+			base.OnPropertyChanged (sender, e);
 
 			switch (e.PropertyName) {
 				case nameof (SolidBrushViewModel.Color):
-				foreach (var channelGroup in Editors) {
-					var editor = channelGroup.Editor;
-					editor.Value = editor.ComponentEditor.ValueFromColor(ViewModel.Color);
-					editor.ComponentEditor.UpdateGradientLayer (channelGroup.Gradient, ViewModel.Color);
-				}
-				StringEditor.StringValue = ViewModel.Color.ToString ();
-				break;
+					foreach (var channelGroup in Editors) {
+						var editor = channelGroup.Editor;
+						editor.Value = editor.ComponentEditor.ValueFromColor (ViewModel.Color);
+						editor.ComponentEditor.UpdateGradientLayer (channelGroup.Gradient, ViewModel.Color);
+					}
+					StringEditor.StringValue = ViewModel.Color.ToString ();
+					break;
 			}
-        }
+		}
 
         public override void UpdateConstraints()
         {
