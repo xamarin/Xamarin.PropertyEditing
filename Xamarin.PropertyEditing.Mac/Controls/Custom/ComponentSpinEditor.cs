@@ -1,0 +1,16 @@
+﻿namespace Xamarin.PropertyEditing.Mac
+{
+	class ComponentSpinEditor : NumericSpinEditor
+	{
+		public ComponentSpinEditor (ChannelEditor component)
+		{
+			ComponentEditor = component;
+			MinimumValue = component.MinimumValue;
+			MaximumValue = component.MaximumValue;
+			IncrementValue = component.IncrementValue;
+			Digits = 2;
+		}
+
+		public ChannelEditor ComponentEditor { get; }
+	}
+}

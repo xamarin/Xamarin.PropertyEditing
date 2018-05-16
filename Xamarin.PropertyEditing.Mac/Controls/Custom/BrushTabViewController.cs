@@ -112,7 +112,7 @@ namespace Xamarin.PropertyEditing.Mac
         public override void ViewDidLoad()
         {
 			var old = View.Frame;
-			old.Height = 200;
+			old.Height = 230;
 			View.Frame = old;
 
 			inhibitSelection = true;
@@ -120,7 +120,7 @@ namespace Xamarin.PropertyEditing.Mac
 			inhibitSelection = false;
 
 			old = View.Frame;
-			old.Height = 200;
+			old.Height = 230;
 			View.Frame = old;
         }
     }

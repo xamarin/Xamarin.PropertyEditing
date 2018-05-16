@@ -118,6 +118,7 @@
     <Compile Include="Controls\Custom\HistoryLayer.cs" />
     <Compile Include="Controls\Custom\ColorEditorView.cs" />
     <Compile Include="Controls\Custom\ColorEditorLayer.cs" />
+    <Compile Include="Controls\Custom\ComponentSpinEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

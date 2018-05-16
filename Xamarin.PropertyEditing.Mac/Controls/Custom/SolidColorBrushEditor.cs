@@ -178,8 +178,6 @@ namespace Xamarin.PropertyEditing.Mac
 
         public override void Layout ()
 		{
-			base.Layout ();
-
 			if (modelChanged) {
 				var interx = interaction ?? new EditorInteraction (ViewModel, null);
 				foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
@@ -187,6 +185,8 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 				modelChanged = false;
 			}
+
+			base.Layout ();
 
 			if (Frame.IsEmpty || Frame.IsInfinite () || double.IsNaN (Frame.X) || double.IsInfinity (Frame.X))
 				return;

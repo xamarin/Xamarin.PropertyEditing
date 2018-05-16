@@ -4,6 +4,7 @@ using System.Linq;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
+using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -30,6 +31,10 @@ namespace Xamarin.PropertyEditing.Mac
 			EditorType = editorType;
 			Initialize ();
 		}
+
+		ChannelGroup[] Editors { get; set; }
+		UnfocusableTextField StringLabel { get; set; }
+		NSTextField StringEditor { get; set; }
 
 		class ChannelGroup
 		{
@@ -62,10 +67,9 @@ namespace Xamarin.PropertyEditing.Mac
 			return ce;
 		}
 
-		ChannelGroup[] Editors { get; set; }
-
 		ChannelGroup[] CreateEditors (ChannelEditorType type)
 		{
+
 			switch (type) {
 				case ChannelEditorType.HSB:
 					return new[] {
@@ -104,6 +108,20 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			WantsLayer = true;
 			Editors = CreateEditors (EditorType);
+
+			StringLabel = new UnfocusableTextField {
+				StringValue = "#:",
+				Alignment = NSTextAlignment.Right
+			};
+			AddSubview (StringLabel);
+			StringEditor = new NSTextField ();
+			StringEditor.EditingEnded += (o, e) => {
+				if (CommonColor.TryParse (StringEditor.StringValue, out CommonColor c)) {
+					ViewModel.Color = c;
+					StringEditor.StringValue = c.ToString ();
+				}
+			};
+			AddSubview (StringEditor);
 		}
 
         void UpdateComponent (object sender, EventArgs args)
@@ -123,11 +141,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 			switch (e.PropertyName) {
 				case nameof (SolidBrushViewModel.Color):
-					foreach (var channelGroup in Editors) {
-						var editor = channelGroup.Editor;
-						editor.Value = editor.ComponentEditor.ValueFromColor(ViewModel.Color);
-						editor.ComponentEditor.UpdateGradientLayer (channelGroup.Gradient, ViewModel.Color);
-					}
+				foreach (var channelGroup in Editors) {
+					var editor = channelGroup.Editor;
+					editor.Value = editor.ComponentEditor.ValueFromColor(ViewModel.Color);
+					editor.ComponentEditor.UpdateGradientLayer (channelGroup.Gradient, ViewModel.Color);
+				}
+				StringEditor.StringValue = ViewModel.Color.ToString ();
 				break;
 			}
         }
@@ -206,26 +225,23 @@ namespace Xamarin.PropertyEditing.Mac
 			foreach (var channelGroup in Editors) {
 				channelGroup.Label.Frame = labelFrame;
 				channelGroup.Editor.Frame = editorFrame;
-				channelGroup.Gradient.Frame = new CGRect (editorFrame.X, editorFrame.Y - DefaultGradientHeight, editorFrame.Width - 16, DefaultGradientHeight);
+				channelGroup.Gradient.Frame = new CGRect (
+					editorFrame.X,
+					editorFrame.Y - DefaultGradientHeight,
+					editorFrame.Width - 16, DefaultGradientHeight);
+				
 				channelGroup.Gradient.BorderColor = NSColor.DisabledControlText.CGColor;
 				channelGroup.Gradient.ContentsScale = Window?.Screen?.BackingScaleFactor ?? NSScreen.MainScreen.BackingScaleFactor;
 				labelFrame = labelFrame.Translate (0, -yOffset);
 				editorFrame = editorFrame.Translate (0, -yOffset);
 			}
-		}
-	}
 
-	class ComponentSpinEditor : NumericSpinEditor
-	{
-		public ComponentSpinEditor (ChannelEditor component)
-		{
-			ComponentEditor = component;
-			MinimumValue = component.MinimumValue;
-			MaximumValue = component.MaximumValue;
-			IncrementValue = component.IncrementValue;
-			Digits = 2;
+			StringLabel.Frame = new CGRect (frame.X, padding, 20, DefaultControlHeight);
+			StringEditor.Frame = new CGRect (
+				labelFrame.Right,
+			    padding,
+				frame.Width - labelFrame.Right - 16,
+				DefaultControlHeight);
 		}
-
-		public ChannelEditor ComponentEditor { get; }
 	}
 }

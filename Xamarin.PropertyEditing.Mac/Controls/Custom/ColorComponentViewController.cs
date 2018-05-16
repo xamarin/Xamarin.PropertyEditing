@@ -12,7 +12,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public ColorComponentViewController (ChannelEditorType type) : base ()
 		{
-			PreferredContentSize = new CGSize (200, 200);
+			PreferredContentSize = new CGSize (200, 220);
 			this.EditorType = type;
 		}
 
