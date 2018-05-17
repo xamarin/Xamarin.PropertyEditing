@@ -51,7 +51,7 @@ namespace Xamarin.PropertyEditing.Mac
 					Alignment = NSTextAlignment.Right
 				},
 				Editor = new ComponentSpinEditor (editor),
-				Gradient = new CAGradientLayer {
+				Gradient = new UnanimatedGradientLayer {
 					StartPoint = new CGPoint (0, 0),
 					EndPoint = new CGPoint (1, 0),
 					BorderWidth = .5f,
