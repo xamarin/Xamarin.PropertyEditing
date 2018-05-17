@@ -8,7 +8,7 @@
 			MinimumValue = component.MinimumValue;
 			MaximumValue = component.MaximumValue;
 			IncrementValue = component.IncrementValue;
-			Digits = 2;
+			Digits = 3;
 		}
 
 		public ChannelEditor ComponentEditor { get; }

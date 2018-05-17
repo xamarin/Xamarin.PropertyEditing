@@ -142,7 +142,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	class CyanChannelEditor : ChannelEditor
 	{
-		public CyanChannelEditor () : base ("C", 0d, 1d, .01d)
+		public CyanChannelEditor () : base ("C", 0d, 1d, .001d)
 		{
 		}
 
@@ -155,7 +155,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	class MagentaChannelEditor : ChannelEditor
 	{
-		public MagentaChannelEditor () : base ("M", 0d, 1d, .01d)
+		public MagentaChannelEditor () : base ("M", 0d, 1d, .001d)
 		{
 		}
 
@@ -168,7 +168,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	class YellowChannelEditor : ChannelEditor
 	{
-		public YellowChannelEditor () : base ("Y", 0d, 1d, .01d)
+		public YellowChannelEditor () : base ("Y", 0d, 1d, .001d)
 		{
 		}
 
@@ -181,7 +181,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	class BlackChannelEditor : ChannelEditor
 	{
-		public BlackChannelEditor () : base ("K", 0d, 1d, .01d)
+		public BlackChannelEditor () : base ("K", 0d, 1d, .001d)
 		{
 		}
 
@@ -207,7 +207,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	class HsbSaturationChannelEditor : ChannelEditor
 	{
-		public HsbSaturationChannelEditor () : base ("S", 0d, 1d, .01d)
+		public HsbSaturationChannelEditor () : base ("S", 0d, 1d, .001d)
 		{
 		}
 
@@ -220,7 +220,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	class HsbBrightnessChannelEditor : ChannelEditor
 	{
-		public HsbBrightnessChannelEditor () : base ("B", 0d, 1d, .01d)
+		public HsbBrightnessChannelEditor () : base ("B", 0d, 1d, .001d)
 		{
 		}
 
@@ -246,7 +246,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	class HlsLightnessChannelEditor : ChannelEditor
 	{
-		public HlsLightnessChannelEditor () : base ("L", 0d, 1d, .01d)
+		public HlsLightnessChannelEditor () : base ("L", 0d, 1d, .001d)
 		{
 		}
 
@@ -259,7 +259,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	class HlsSaturationChannelEditor : ChannelEditor
 	{
-		public HlsSaturationChannelEditor () : base ("S", 0d, 1d, .01d)
+		public HlsSaturationChannelEditor () : base ("S", 0d, 1d, .001d)
 		{
 		}
 
