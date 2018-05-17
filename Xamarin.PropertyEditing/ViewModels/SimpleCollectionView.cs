@@ -71,9 +71,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return this.filter; }
 			set
 			{
-				if (this.filter == value)
-					return;
-
+				// Purposefully doesn't check for existing equality since a common case is setting to the same delegate but
+				// variables it checks only have changed.
 				this.filter = value;
 				OnPropertyChanged();
 			}
@@ -111,19 +110,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public bool HasChildElements => (this.filtered.Count > 0);
 
 		public bool IsFiltering => Options?.Filter != null;
-
-		/// <summary>
-		/// Forces an update of the contens as if the filter has changed.
-		/// </summary>
-		/// <remarks>
-		/// Some filters may not change their delegate, but that delegate may act different based on outside forces.
-		/// In that scenario, call this to trigger the update.
-		/// </remarks>
-		public void UpdateFilter()
-		{
-			FilterCore (isPureSubset: this.wasFilterNull);
-			this.wasFilterNull = Options.Filter == null;
-		}
 
 		public IEnumerator GetEnumerator ()
 		{
@@ -215,7 +201,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private void OnOptionsPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == nameof(SimpleCollectionViewOptions.Filter)) {
-				UpdateFilter();
+				FilterCore (isPureSubset: this.wasFilterNull);
+				this.wasFilterNull = Options.Filter == null;
 			} else
 				Reset();
 		}
@@ -288,7 +275,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					
 					if (Comparer.Compare (currentKey, key) > 0) {
 						index = i;
-						this.filtered.Insert (i, key, this.arranged[i]);
+						this.filtered.Insert (i, key, this.arranged[key]);
 						added = true;
 						break;
 					}
