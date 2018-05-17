@@ -12,31 +12,6 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public override bool IsFlipped => true;
 
-		static readonly string [] ColorNames = {
-				"50",
-				"100",
-				"200",
-				"300",
-				"400",
-				"500",
-				"600",
-				"700",
-				"800",
-				"900"
-			};
-
-		static readonly string [] AccentNames = {
-				"A100",
-				"A200",
-				"A400",
-				"A700"
-			};
-
-		static readonly string [] BlackWhite = {
-				"White",
-				"Black"
-			};
-
 		public MaterialView ()
 		{
 			Initialize ();
@@ -79,13 +54,13 @@ namespace Xamarin.PropertyEditing.Mac
 			var width = (Frame.Width - 54) / 10;
 			var height = (Frame.Height - 49) / 4;
 
-			MaterialColorLayer CreateLayer (string name, CommonColor color)
+			MaterialColorLayer CreateLayer (CommonColor color)
 			{
 				var selectedColor = color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
 				return new MaterialColorLayer {
 					BackgroundColor = color,
 					ForegroundColor = selectedColor.CGColor,
-					Text = name,
+					Text = color.Label,
 					FontSize = 12,
 					ContentsScale = NSScreen.MainScreen.BackingScaleFactor,
 					TextAlignmentMode = CATextLayerAlignmentMode.Center,
@@ -129,7 +104,6 @@ namespace Xamarin.PropertyEditing.Mac
 			y += 25;
 			x = 0;
 			width = Frame.Width / MaterialDesign.NormalColorScale.Count ();
-			var names = MaterialDesign.NormalColorScale.Count () > 2 ? ColorNames : BlackWhite;
 			var normal = new CALayer {
 				CornerRadius = 3,
 				MasksToBounds = true,
@@ -138,8 +112,8 @@ namespace Xamarin.PropertyEditing.Mac
 				BorderWidth = 1
 			};
 			Layer.AddSublayer (normal);
-			foreach (var n in MaterialDesign.NormalColorScale.Zip (names, (c, name) => new { Name = name, Color = c.Value })) {
-				var l = CreateLayer (n.Name, n.Color);
+			foreach (var color in MaterialDesign.NormalColorScale) {
+				var l = CreateLayer (color.Value);
 				l.Frame = new CGRect (x, 0, width, height);
 				normal.AddSublayer (l);
 				x += width;
@@ -160,8 +134,8 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			Layer.AddSublayer (accent);
 			width = Frame.Width / MaterialDesign.AccentColorScale.Count ();
-			foreach (var n in MaterialDesign.AccentColorScale.Zip (AccentNames, (c, n) => new { Name = n, Color = c.Value })) {
-				var l = CreateLayer (n.Name, n.Color);
+			foreach (var color in MaterialDesign.AccentColorScale) {
+				var l = CreateLayer (color.Value);
 				l.Frame = new CGRect (x, 0, width, height);
 				accent.AddSublayer (l);
 				x += width;
