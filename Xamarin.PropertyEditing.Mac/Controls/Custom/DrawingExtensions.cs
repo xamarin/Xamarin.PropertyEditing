@@ -6,7 +6,7 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public static class DrawingExtensions
+	static class DrawingExtensions
 	{
 		public static NSImage CreateSwatch (this CommonColor color, CGSize size)
 		{
