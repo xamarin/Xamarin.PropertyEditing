@@ -35,7 +35,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class BrushEditorControl : PropertyEditorControl
+	internal class BrushEditorControl : PropertyEditorControl<BrushPropertyViewModel>
 	{
 		public BrushEditorControl ()
 		{
@@ -68,10 +68,6 @@ namespace Xamarin.PropertyEditing.Mac
 			UpdateTheme ();
 		}
 
-		internal new BrushPropertyViewModel ViewModel {
-			get => (BrushPropertyViewModel)base.ViewModel;
-			set => base.ViewModel = value;
-		}
 
 		readonly ColorPopUpButton popUpButton;
 		//readonly BrushTabViewController colorEditor;
@@ -124,7 +120,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateValue ()
 		{
-			SetEnabled ();
 			this.brushTabViewController.ViewModel = ViewModel;
 			this.popUpButton.Popover = (ViewModel?.Property.CanWrite ?? false) ? popover : null;
 
@@ -141,11 +136,6 @@ namespace Xamarin.PropertyEditing.Mac
 					item.Image = previewLayer.RenderPreview ();
 				}
 			}
-		}
-
-		protected override void OnViewModelChanged (PropertyViewModel oldModel)
-		{
-			UpdateValue ();
 		}
 	}
 }
