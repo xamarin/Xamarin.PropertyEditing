@@ -48,9 +48,13 @@ namespace Xamarin.PropertyEditing.Mac
 			var ce = new ChannelGroup {
 				Label = new UnfocusableTextField {
 					StringValue = $"{editor.Name}:",
-					Alignment = NSTextAlignment.Right
+					Alignment = NSTextAlignment.Right,
+					BackgroundColor = NSColor.Clear
 				},
-				Editor = new ComponentSpinEditor (editor),
+				Editor = new ComponentSpinEditor (editor) {
+					BackgroundColor = NSColor.Clear,
+					TranslatesAutoresizingMaskIntoConstraints = true
+				},
 				Gradient = new UnanimatedGradientLayer {
 					StartPoint = new CGPoint (0, 0),
 					EndPoint = new CGPoint (1, 0),
@@ -58,10 +62,7 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			};
 
-			ce.Editor.TranslatesAutoresizingMaskIntoConstraints = true;
 			ce.Editor.ValueChanged += UpdateComponent;
-			ce.Editor.BackgroundColor = NSColor.Clear;
-			ce.Label.BackgroundColor = NSColor.Clear;
 			AddSubview (ce.Label);
 			AddSubview (ce.Editor);
 
