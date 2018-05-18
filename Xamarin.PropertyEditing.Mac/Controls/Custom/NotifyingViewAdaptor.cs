@@ -32,6 +32,9 @@ namespace Xamarin.PropertyEditing.Mac
 				viewModel = value;
 
 				OnViewModelChanged (oldModel);
+				if (viewModel == null)
+					return;
+				
 				viewModel.PropertyChanged += OnPropertyChanged;
 			}
 		}

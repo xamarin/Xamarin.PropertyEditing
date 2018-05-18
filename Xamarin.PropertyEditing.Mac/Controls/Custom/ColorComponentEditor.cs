@@ -79,14 +79,14 @@ namespace Xamarin.PropertyEditing.Mac
 						CreateEditor (new HsbHueChannelEditor ()),
 						CreateEditor (new HsbSaturationChannelEditor ()),
 						CreateEditor (new HsbBrightnessChannelEditor ()),
-						CreateEditor (new AlphaChannelEditor ())
+						CreateEditor (new HsbAlphaChannelEditor ())
 					};
 				case ChannelEditorType.HLS:
 					return new [] {
 						CreateEditor (new HlsHueChannelEditor ()),
 						CreateEditor (new HlsLightnessChannelEditor ()),
 						CreateEditor (new HlsSaturationChannelEditor ()),
-						CreateEditor (new AlphaChannelEditor ())
+						CreateEditor (new HlsAlphaChannelEditor ())
 					};
 				case ChannelEditorType.RGB:
 					return new [] {
@@ -148,6 +148,9 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.OnPropertyChanged (sender, e);
 
+			if (ViewModel == null)
+				return;
+			
 			switch (e.PropertyName) {
 				case nameof (SolidBrushViewModel.Color):
 					foreach (var channelGroup in Editors) {

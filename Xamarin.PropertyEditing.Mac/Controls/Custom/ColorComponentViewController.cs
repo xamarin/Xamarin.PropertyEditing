@@ -24,17 +24,21 @@ namespace Xamarin.PropertyEditing.Mac
 			editor.ViewModel = ViewModel;
 		}
 
-		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs args)
+		public override void ViewWillDisappear ()
 		{
-			switch (args.PropertyName) {
-				case nameof (SolidBrushViewModel.Color):
-					break;
-			}
+			base.ViewWillDisappear ();
+			editor.ViewModel = null;
 		}
 
-        public override void LoadView ()
-        {
+		public override void ViewWillAppear ()
+		{
+			base.ViewWillAppear ();
+			editor.ViewModel = ViewModel;
+		}
+
+		public override void LoadView ()
+		{
 			View = editor = new ColorComponentEditor (this.EditorType);
-        }
-    }
+		}
+	}
 }

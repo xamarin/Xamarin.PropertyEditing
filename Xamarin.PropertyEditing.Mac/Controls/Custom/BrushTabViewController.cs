@@ -118,10 +118,6 @@ namespace Xamarin.PropertyEditing.Mac
 			inhibitSelection = true;
 			base.ViewDidLoad ();
 			inhibitSelection = false;
-
-			old = View.Frame;
-			//old.Height = 230;
-			View.Frame = old;
 		}
 	}
 }

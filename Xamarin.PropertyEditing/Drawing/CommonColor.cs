@@ -90,6 +90,9 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// </summary>
 		public CommonColor HueColor {
 			get {
+				if (this.hue.HasValue)
+					return CommonColor.FromHSB (this.hue.Value, 1, 1);
+				
 				if (this.hueR.HasValue)
 					return new CommonColor(this.hueR.Value, this.hueG, this.hueB);
 
@@ -316,6 +319,8 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <returns>The hue between 0 and 360 degrees</returns>
 		public static double GetHueFromHueColor (CommonColor hueColor)
 		{
+			if (hueColor.hue.HasValue) return hueColor.hue.Value;
+			
 			if (hueColor.B == 0) {
 				// We're between 0 and 120
 				if (hueColor.R == 255) {

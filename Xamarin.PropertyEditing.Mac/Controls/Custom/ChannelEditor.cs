@@ -231,6 +231,19 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateHSB (brightness: Clamp (value));
 	}
 
+	class HsbAlphaChannelEditor : ChannelEditor
+	{
+		public HsbAlphaChannelEditor () : base ("A", 0d, 255d, 1d)
+		{
+		}
+
+		public override double ValueFromColor (CommonColor color)
+		=> (double)color.A;
+
+		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
+		=> color.UpdateHSB (alpha: (byte)Clamp (value));
+	}
+
 	class HlsHueChannelEditor : ChannelEditor
 	{
 		public HlsHueChannelEditor () : base ("H", 0d, 360d, 1d)
@@ -268,5 +281,18 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
 		=> color.UpdateHLS (saturation: Clamp (value));
+	}
+
+	class HlsAlphaChannelEditor : ChannelEditor
+	{
+		public HlsAlphaChannelEditor () : base ("A", 0d, 255d, 1d)
+		{
+		}
+
+		public override double ValueFromColor (CommonColor color)
+		=> (double)color.A;
+
+		public override CommonColor UpdateColorFromValue (CommonColor color, double value)
+		=> color.UpdateHLS (alpha: (byte)Clamp (value));
 	}
 }
