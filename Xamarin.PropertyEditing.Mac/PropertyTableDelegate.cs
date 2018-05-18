@@ -12,11 +12,6 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class PropertyTableDelegate
 		: NSOutlineViewDelegate
 	{
-		bool goldenRatioApplied = false;
-
-		const string editorIdentifier = "editor";
-		const string labelIdentifier = "label";
-
 		public PropertyTableDelegate (PropertyTableDataSource datasource)
 		{
 			this.dataSource = datasource;
@@ -64,10 +59,10 @@ namespace Xamarin.PropertyEditing.Mac
 			// Setup view based on the column
 			switch (tableColumn.Identifier) {
 				case PropertyEditorPanel.PropertyListColId:
-					var view = (UnfocusableTextField)outlineView.MakeView (labelIdentifier, this);
+					var view = (UnfocusableTextField)outlineView.MakeView (LabelIdentifier, this);
 					if (view == null) {
 						view = new UnfocusableTextField {
-							Identifier = labelIdentifier,
+							Identifier = LabelIdentifier,
 							Alignment = NSTextAlignment.Right,
 						};
 					}
@@ -86,7 +81,7 @@ namespace Xamarin.PropertyEditing.Mac
 					if (vm == null)
 						return null;
 
-					var editor = MakeEditorView (cellIdentifier + editorIdentifier, vm, outlineView);
+					var editor = GetEditor (cellIdentifier, vm, outlineView);
 
 					// If still null we have no editor yet.
 					if (editor == null)
@@ -103,30 +98,6 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			throw new Exception ("Unknown column identifier: " + tableColumn.Identifier);
-		}
-
-		PropertyEditorControl GetEditor (EditorViewModel vm, NSOutlineView outlineView)
-		{
-			Type[] genericArgs = null;
-			Type controlType;
-			Type propertyType = vm.GetType ();
-			if (!ViewModelTypes.TryGetValue (propertyType, out controlType)) {
-				if (propertyType.IsConstructedGenericType) {
-					genericArgs = propertyType.GetGenericArguments ();
-					propertyType = propertyType.GetGenericTypeDefinition ();
-					ViewModelTypes.TryGetValue (propertyType, out controlType);
-				}
-			}
-			if (controlType == null)
-				return null;
-
-			if (controlType.IsGenericTypeDefinition) {
-				if (genericArgs == null)
-					genericArgs = propertyType.GetGenericArguments ();
-				controlType = controlType.MakeGenericType (genericArgs);
-			}
-
-			return SetUpEditor (controlType, vm, outlineView);
 		}
 
 		public override bool ShouldSelectItem (NSOutlineView outlineView, NSObject item)
@@ -167,7 +138,7 @@ namespace Xamarin.PropertyEditing.Mac
 				return 30;
 			}
 
-			var editor = MakeEditorView (cellIdentifier + editorIdentifier, vm, outlineView);
+			var editor = GetEditor (cellIdentifier, vm, outlineView);
 
 			// If still null we have no editor yet.
 			if (editor == null) {
@@ -177,16 +148,43 @@ namespace Xamarin.PropertyEditing.Mac
 			return editor.RowHeight;
 		}
 
+		private const string LabelIdentifier = "label";
+
 		private PropertyTableDataSource dataSource;
 		private bool isExpanding;
+		private bool goldenRatioApplied = false;
 
-		// set up the editor based on the type of view model
-		private PropertyEditorControl SetUpEditor (Type controlType, EditorViewModel property, NSOutlineView outline)
+		private PropertyEditorControl GetEditor (string identifier, EditorViewModel vm, NSOutlineView outlineView)
 		{
-			var view = (PropertyEditorControl)Activator.CreateInstance (controlType);
-			view.Identifier = property.GetType ().Name;
-			view.TableView = outline;
-			view.ViewModel = (PropertyViewModel)property;
+			var view = (PropertyEditorControl)outlineView.MakeView (identifier, this);
+			if (view != null)
+				return view;
+
+			Type[] genericArgs = null;
+			Type controlType;
+			Type propertyType = vm.GetType ();
+			if (!ViewModelTypes.TryGetValue (propertyType, out controlType)) {
+				if (propertyType.IsConstructedGenericType) {
+					genericArgs = propertyType.GetGenericArguments ();
+					propertyType = propertyType.GetGenericTypeDefinition ();
+					ViewModelTypes.TryGetValue (propertyType, out controlType);
+				}
+			}
+
+			if (controlType == null)
+				return null;
+
+			if (controlType.IsGenericTypeDefinition) {
+				if (genericArgs == null)
+					genericArgs = propertyType.GetGenericArguments ();
+
+				controlType = controlType.MakeGenericType (genericArgs);
+			}
+
+			view = (PropertyEditorControl)Activator.CreateInstance (controlType);
+			view.Identifier = identifier;
+			view.TableView = outlineView;
+			view.ViewModel = (PropertyViewModel)vm;
 
 			return view;
 		}
@@ -196,17 +194,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var facade = (NSObjectFacade)item;
 			vm = facade.Target as PropertyViewModel;
 			group = facade.Target as IGroupingList<string, EditorViewModel>;
-			cellIdentifier = (group == null) ? vm.GetType ().Name : group.Key;
-		}
-
-		private PropertyEditorControl MakeEditorView (string identifier, PropertyViewModel vm, NSOutlineView outlineView)
-		{
-			var editor = (PropertyEditorControl)outlineView.MakeView (identifier, this);
-			if (editor == null) {
-				editor = GetEditor (vm, outlineView);
-			}
-
-			return editor;
+			cellIdentifier = (group == null) ? vm.GetType ().FullName : group.Key;
 		}
 
 		private static readonly Dictionary<Type, Type> ViewModelTypes = new Dictionary<Type, Type> {
