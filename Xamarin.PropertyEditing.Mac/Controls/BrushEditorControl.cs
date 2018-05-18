@@ -31,7 +31,8 @@ namespace Xamarin.PropertyEditing.Mac
 			if (Popover == null)
 				return;
 
-			Popover?.Show (new CGRect (20, this.Frame.Height / 2 - 2.5, 5, 5), this, NSRectEdge.MinYEdge);
+			if (!Popover.Shown)
+				Popover?.Show (new CGRect (20, this.Frame.Height / 2 - 2.5, 5, 5), this, NSRectEdge.MinYEdge);
 		}
 	}
 
