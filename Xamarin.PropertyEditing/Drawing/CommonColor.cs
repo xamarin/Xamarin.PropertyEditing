@@ -376,7 +376,7 @@ namespace Xamarin.PropertyEditing.Drawing
 					hex = hex.Select (c => $"{c}{c}").Aggregate ((a, b) => (a + b));
 					goto case 6;
 				case 6:
-					hex = hex + "ff";
+					hex = "FF" + hex;
 					goto case 8;
 				case 4:
 					hex = hex.Select (c => $"{c}{c}").Aggregate ((a, b) => (a + b));
