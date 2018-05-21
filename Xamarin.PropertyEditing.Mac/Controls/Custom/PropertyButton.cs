@@ -1,6 +1,7 @@
 ﻿using System;
 using AppKit;
 using CoreGraphics;
+using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -30,6 +31,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public PropertyButton ()
 		{
+			AccessibilityTitle = LocalizationResources.AccessibilityPropertiesButton;
+			AccessibilityHelp = LocalizationResources.AccessibilityPropertiesButtonDescription;
 			AlternateImage = NSImage.ImageNamed ("property-button-default-mac-active-10");
 			Cell = new NSButtonCell {
 				HighlightsBy = 1,

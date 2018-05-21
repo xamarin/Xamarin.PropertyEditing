@@ -59,4 +59,16 @@
 	<data name="ArrangeByLabel" xml:space="preserve">
 		<value>Arrange By:</value>
 	</data>
+  <data name="AccessibilityPropertiesButton" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="AccessibilityPropertiesButtonDescription" xml:space="preserve">
+    <value>Edit the properties of this editor</value>
+  </data>
+  <data name="AccessibilityActionButton" xml:space="preserve">
+    <value>Warnings</value>
+  </data>
+  <data name="AccessibilityActionButtonDescription" xml:space="preserve">
+    <value>Display warnings.</value>>
+  </data>
 </root>
