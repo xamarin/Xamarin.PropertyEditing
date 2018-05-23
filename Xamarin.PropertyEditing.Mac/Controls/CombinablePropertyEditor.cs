@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel;
 
 using Foundation;
@@ -9,8 +10,6 @@ using CoreGraphics;
 
 using Xamarin.PropertyEditing.ViewModels;
 using Xamarin.PropertyEditing.Mac.Resources;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -26,6 +25,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override NSView FirstKeyView => firstKeyView;
 		public override NSView LastKeyView => lastKeyView;
+
+		public override bool TriggerRowChange => true;
+
+		public override nint GetHeight (PropertyViewModel vm)
+		{
+			var realVm = (CombinablePropertyViewModel<T>)vm;
+			return 22 * realVm.Choices.Count;
+		}
 
 		Dictionary<NSButton, FlaggableChoiceViewModel<T>> combinableList = new Dictionary<NSButton, FlaggableChoiceViewModel<T>> ();
 		NSView firstKeyView;
@@ -58,13 +65,11 @@ namespace Xamarin.PropertyEditing.Mac
 			combinableList.Clear ();
 
 			const float controlHeight = 22;
-
-			// Set our new RowHeight
-			RowHeight = (ViewModel.Choices.Count * controlHeight);
+			nint rowHeight = GetHeight (ViewModel);
 
 			float top = controlHeight;
 			foreach (var item in ViewModel.Choices) {
-				var BooleanEditor = new NSButton (new CGRect (4, RowHeight - top, Frame.Width - 4, controlHeight)) {
+				var BooleanEditor = new NSButton (new CGRect (4, rowHeight - top, Frame.Width - 4, controlHeight)) {
 					AllowsMixedState = true,
 					ControlSize = NSControlSize.Small,
 					Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),

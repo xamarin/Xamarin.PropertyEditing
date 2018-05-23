@@ -17,14 +17,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public nint TableRow { get; set; } = -1;
 		public NSTableView TableView { get; set; }
 
-		const int DefaultRowHeight = 22;
-		protected const int DefaultControlHeight = 22;
+		public const int DefaultControlHeight = 22;
 		public const int DefaultFontSize = 11;
 		public const int DefaultPropertyLabelFontSize = 11;
 		public const int DefaultDescriptionLabelFontSize = 10;
 		public const string DefaultFontName = ".AppleSystemUIFont";
-		public nfloat RowHeight { get; set; } = DefaultRowHeight;
-		public bool TriggerRowChange => RowHeight != DefaultRowHeight;
+		public virtual bool TriggerRowChange => false;
 
 		PropertyViewModel viewModel;
 		public PropertyViewModel ViewModel {
@@ -74,6 +72,12 @@ namespace Xamarin.PropertyEditing.Mac
 				LastKeyView.NextKeyView = ctrl.FirstKeyView;
 				ctrl.UpdateKeyViews (backward: false);
 			}
+		}
+
+		/// <remarks>You should treat the implementation of this as static.</remarks>
+		public virtual nint GetHeight (PropertyViewModel vm)
+		{
+			return DefaultControlHeight;
 		}
 
 		protected abstract void UpdateValue ();

@@ -81,7 +81,10 @@ namespace Xamarin.PropertyEditing.Mac
 					if (vm == null)
 						return null;
 
-					var editor = GetEditor (cellIdentifier, vm, outlineView);
+					if (this.firstCache.TryGetValue (cellIdentifier, out PropertyEditorControl editor)) {
+						this.firstCache.Remove (cellIdentifier);
+					} else
+						editor = GetEditor (cellIdentifier, vm, outlineView);
 
 					// If still null we have no editor yet.
 					if (editor == null)
@@ -89,6 +92,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 					// we must reset these every time, as the view may have been reused
 					editor.TableRow = outlineView.RowForItem (item);
+					editor.ViewModel = vm;
 
 					// Force a row update due to new height, but only when we are non-default
 					if (editor.TriggerRowChange)
@@ -134,18 +138,47 @@ namespace Xamarin.PropertyEditing.Mac
 			string cellIdentifier;
 			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
 
-			if (group != null) {
+			if (group != null)
 				return 30;
+
+			if (!this.registrations.TryGetValue (cellIdentifier, out EditorRegistration registration)) {
+				var view = GetEditor (cellIdentifier, vm, outlineView);
+				if (view == null) {
+					this.registrations[cellIdentifier] = registration = new EditorRegistration {
+						RowSize = PropertyEditorControl.DefaultControlHeight
+					};
+				} else if (view.TriggerRowChange) {
+					this.registrations[cellIdentifier] = registration = new EditorRegistration {
+						SizingInstance = view
+					};
+
+					// We're cheating by declaring GetHeight should act static, so we can call it from
+					// an instance that is being used elsewhere.
+					this.firstCache[cellIdentifier] = view;
+				} else {
+					this.registrations[cellIdentifier] = registration = new EditorRegistration {
+						RowSize = view.GetHeight (vm)
+					};
+
+					this.firstCache[cellIdentifier] = view;
+				}
 			}
 
-			var editor = GetEditor (cellIdentifier, vm, outlineView);
+			return registration.GetHeight (vm);
+		}
 
-			// If still null we have no editor yet.
-			if (editor == null) {
-				return 22;
+		private class EditorRegistration
+		{
+			public nint RowSize;
+			public PropertyEditorControl SizingInstance;
+
+			public nint GetHeight (PropertyViewModel vm)
+			{
+				if (SizingInstance != null)
+					return SizingInstance.GetHeight (vm);
+				else
+					return RowSize;
 			}
-
-			return editor.RowHeight;
 		}
 
 		private const string LabelIdentifier = "label";
@@ -153,6 +186,9 @@ namespace Xamarin.PropertyEditing.Mac
 		private PropertyTableDataSource dataSource;
 		private bool isExpanding;
 		private bool goldenRatioApplied = false;
+
+		private readonly Dictionary<string, EditorRegistration> registrations = new Dictionary<string, EditorRegistration> ();
+		private readonly Dictionary<string, PropertyEditorControl> firstCache = new Dictionary<string, PropertyEditorControl> ();
 
 		private PropertyEditorControl GetEditor (string identifier, EditorViewModel vm, NSOutlineView outlineView)
 		{
@@ -184,7 +220,6 @@ namespace Xamarin.PropertyEditing.Mac
 			view = (PropertyEditorControl)Activator.CreateInstance (controlType);
 			view.Identifier = identifier;
 			view.TableView = outlineView;
-			view.ViewModel = (PropertyViewModel)vm;
 
 			return view;
 		}
