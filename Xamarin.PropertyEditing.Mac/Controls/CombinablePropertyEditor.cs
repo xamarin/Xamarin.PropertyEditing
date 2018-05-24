@@ -8,6 +8,7 @@ using Foundation;
 using AppKit;
 using CoreGraphics;
 
+using Cadenza.Collections;
 using Xamarin.PropertyEditing.ViewModels;
 using Xamarin.PropertyEditing.Mac.Resources;
 
@@ -23,20 +24,16 @@ namespace Xamarin.PropertyEditing.Mac
 			UpdateTheme ();
 		}
 
-		public override NSView FirstKeyView => firstKeyView;
-		public override NSView LastKeyView => lastKeyView;
+		public override NSView FirstKeyView => this.firstKeyView;
+		public override NSView LastKeyView => this.lastKeyView;
 
 		public override bool TriggerRowChange => true;
 
 		public override nint GetHeight (PropertyViewModel vm)
 		{
 			var realVm = (CombinablePropertyViewModel<T>)vm;
-			return 22 * realVm.Choices.Count;
+			return checkHeight * realVm.Choices.Count;
 		}
-
-		Dictionary<NSButton, FlaggableChoiceViewModel<T>> combinableList = new Dictionary<NSButton, FlaggableChoiceViewModel<T>> ();
-		NSView firstKeyView;
-		NSView lastKeyView;
 
 		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
 		{
@@ -45,7 +42,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			foreach (var item in combinableList) {
+			foreach (var item in this.combinableList) {
 				item.Key.Enabled = ViewModel.Property.CanWrite;
 			}
 		}
@@ -62,38 +59,55 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
 		{
-			combinableList.Clear ();
-
-			const float controlHeight = 22;
 			nint rowHeight = GetHeight (ViewModel);
 
-			float top = controlHeight;
-			foreach (var item in ViewModel.Choices) {
-				var BooleanEditor = new NSButton (new CGRect (4, rowHeight - top, Frame.Width - 4, controlHeight)) {
-					AllowsMixedState = true,
-					ControlSize = NSControlSize.Small,
-					Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
-					Title = item.Name,
-					TranslatesAutoresizingMaskIntoConstraints = false,
-				};
-				BooleanEditor.SetButtonType (NSButtonType.Switch);
-				BooleanEditor.Activated += SelectionChanged;
+			float top = checkHeight;
 
-				AddSubview (BooleanEditor);
-				combinableList.Add (BooleanEditor, item);
-				top += controlHeight;
+			while (this.combinableList.Count > ViewModel.Choices.Count) {
+				var child = this.combinableList.KeyAt (ViewModel.Choices.Count);
+				child.RemoveFromSuperview ();
+				this.combinableList.RemoveAt (ViewModel.Choices.Count);
+			}
+
+			int i = 0;
+			for (; i < ViewModel.Choices.Count; i++) {
+				var choice = ViewModel.Choices[i];
+
+				NSButton checkbox;
+				if (i >= this.combinableList.Count) {
+					checkbox = new NSButton {
+						AllowsMixedState = true,
+						ControlSize = NSControlSize.Small,
+						Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+						TranslatesAutoresizingMaskIntoConstraints = false,
+					};
+
+					checkbox.SetButtonType (NSButtonType.Switch);
+					checkbox.Activated += SelectionChanged;
+
+					AddSubview (checkbox);
+				} else {
+					checkbox = this.combinableList.KeyAt (i);
+				}
+
+				checkbox.Title = choice.Name;
+				checkbox.Frame = new CGRect (0, rowHeight - top, Frame.Width, checkHeight);
+
+				this.combinableList[checkbox] = choice;
+				top += checkHeight;
 			}
 
 			// Set our tabable order
-			firstKeyView = combinableList.First ().Key;
-			lastKeyView = combinableList.Last ().Key;
+			this.firstKeyView = this.combinableList.KeyAt (0);
+			this.lastKeyView = this.combinableList.KeyAt (this.combinableList.Count - 1);
 
 			base.OnViewModelChanged (oldModel);
+
 		}
 
 		protected override void UpdateValue ()
 		{
-			foreach (var item in combinableList) {
+			foreach (var item in this.combinableList) {
 				if (item.Value.IsFlagged.HasValue) {
 					item.Key.AllowsMixedState = false;
 					item.Key.State = item.Value.IsFlagged.Value ? NSCellStateValue.On : NSCellStateValue.Off;
@@ -112,12 +126,17 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		void SelectionChanged (object sender, EventArgs e)
+		private const int checkHeight = 22;
+		private readonly OrderedDictionary<NSButton, FlaggableChoiceViewModel<T>> combinableList = new OrderedDictionary<NSButton, FlaggableChoiceViewModel<T>> ();
+		private NSView firstKeyView;
+		private NSView lastKeyView;
+
+		private void SelectionChanged (object sender, EventArgs e)
 		{
 			if (sender is NSButton button) {
-				var choice = combinableList[button];
+				var choice = this.combinableList[button];
 				if (choice.Value.Equals (default (T)) && (button.State == NSCellStateValue.On)) {
-					foreach (var item in combinableList) {
+					foreach (var item in this.combinableList) {
 						if (!item.Value.Equals (default (T))) {
 							item.Value.IsFlagged = false;
 						}
