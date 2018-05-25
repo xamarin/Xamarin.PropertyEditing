@@ -51,7 +51,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		{
 			FirstOption,
 			SecondOption,
-			ThirdOption
+			ThirdOption,
+			FourthOption
 		}
 
 		[Flags] // Treated like a 0 based Enum
@@ -68,6 +69,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			FlagHasValueOne = 1,
 			FlagHasValueTwo = 2,
 			FlagHasValueFour = 4,
+			FlagHasValueEight = 8,
+			FlagsHasValueSixteen = 16
 		}
 	}
 }

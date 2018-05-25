@@ -12,28 +12,30 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public StringEditorControl ()
 		{
-			StringEditor = new NSTextField {
-				BackgroundColor = NSColor.Clear,
-				ControlSize = NSControlSize.Small,
-				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
-				StringValue = string.Empty,
-				TranslatesAutoresizingMaskIntoConstraints = false,
-			};
+			using (Performance.StartNew ()) {
+				StringEditor = new NSTextField {
+					BackgroundColor = NSColor.Clear,
+					ControlSize = NSControlSize.Small,
+					Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+					StringValue = string.Empty,
+					TranslatesAutoresizingMaskIntoConstraints = false,
+				};
 
-			// update the value on keypress
-			StringEditor.Changed += (sender, e) => {
-				ViewModel.Value = StringEditor.StringValue;
-			};
-			AddSubview (StringEditor);
+				// update the value on keypress
+				StringEditor.Changed += (sender, e) => {
+					ViewModel.Value = StringEditor.StringValue;
+				};
+				AddSubview (StringEditor);
 
-			this.DoConstraints (new[] {
+				this.DoConstraints (new[] {
 				StringEditor.ConstraintTo (this, (s, c) => s.Width == c.Width - 34),
 				StringEditor.ConstraintTo (this, (s, c) => s.Height == DefaultControlHeight - 3),
 				StringEditor.ConstraintTo (this, (s, c) => s.Left == s.Left + 4),
 				StringEditor.ConstraintTo (this, (s, c) => s.Top == s.Top + 1),
 			});
 
-			UpdateTheme ();
+				UpdateTheme ();
+			}
 		}
 
 		internal NSTextField StringEditor { get; set; }

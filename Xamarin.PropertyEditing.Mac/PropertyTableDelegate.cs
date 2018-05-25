@@ -19,45 +19,48 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public void UpdateExpansions (NSOutlineView outlineView)
 		{
-			this.isExpanding = true;
+			using (Performance.StartNew ()) {
+				this.isExpanding = true;
 
-			if (!String.IsNullOrWhiteSpace (this.dataSource.DataContext.FilterText)) {
-				outlineView.ExpandItem (null, true);
-			} else {
-				foreach (IGrouping<string, EditorViewModel> g in this.dataSource.DataContext.ArrangedEditors) {
-					NSObject item;
-					if (!this.dataSource.TryGetFacade (g, out item))
-						continue;
+				if (!String.IsNullOrWhiteSpace (this.dataSource.DataContext.FilterText)) {
+					outlineView.ExpandItem (null, true);
+				} else {
+					foreach (IGrouping<string, EditorViewModel> g in this.dataSource.DataContext.ArrangedEditors) {
+						NSObject item;
+						if (!this.dataSource.TryGetFacade (g, out item))
+							continue;
 
-					if (this.dataSource.DataContext.GetIsExpanded (g.Key))
-						outlineView.ExpandItem (item);
-					else
-						outlineView.CollapseItem (item);
+						if (this.dataSource.DataContext.GetIsExpanded (g.Key))
+							outlineView.ExpandItem (item);
+						else
+							outlineView.CollapseItem (item);
+					}
 				}
+				this.isExpanding = false;
 			}
-			this.isExpanding = false;
 		}
 
 		// the table is looking for this method, picks it up automagically
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
-			PropertyViewModel vm;
-			IGroupingList<string, EditorViewModel> group;
-			string cellIdentifier;
-			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
+			using (Performance.StartNew ()) {
+				PropertyViewModel vm;
+				IGroupingList<string, EditorViewModel> group;
+				string cellIdentifier;
+				GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
 
-			// Let's make the columns look pretty
-			if (!goldenRatioApplied) {
-				int middleColumnWidth = 5;
-				nfloat rightColumnWidth = (outlineView.Frame.Width - middleColumnWidth) / 1.618f;
-				nfloat leftColumnWidth = outlineView.Frame.Width - rightColumnWidth - middleColumnWidth;
-				outlineView.TableColumns ()[0].Width = leftColumnWidth;
-				outlineView.TableColumns ()[1].Width = rightColumnWidth;
-				goldenRatioApplied = true;
-			}
+				// Let's make the columns look pretty
+				if (!goldenRatioApplied) {
+					int middleColumnWidth = 5;
+					nfloat rightColumnWidth = (outlineView.Frame.Width - middleColumnWidth) / 1.618f;
+					nfloat leftColumnWidth = outlineView.Frame.Width - rightColumnWidth - middleColumnWidth;
+					outlineView.TableColumns ()[0].Width = leftColumnWidth;
+					outlineView.TableColumns ()[1].Width = rightColumnWidth;
+					goldenRatioApplied = true;
+				}
 
-			// Setup view based on the column
-			switch (tableColumn.Identifier) {
+				// Setup view based on the column
+				switch (tableColumn.Identifier) {
 				case PropertyEditorPanel.PropertyListColId:
 					var view = (UnfocusableTextField)outlineView.MakeView (LabelIdentifier, this);
 					if (view == null) {
@@ -99,6 +102,7 @@ namespace Xamarin.PropertyEditing.Mac
 						outlineView.NoteHeightOfRowsWithIndexesChanged (new NSIndexSet (editor.TableRow));
 
 					return editor;
+				}
 			}
 
 			throw new Exception ("Unknown column identifier: " + tableColumn.Identifier);
@@ -133,38 +137,40 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
 		{
-			PropertyViewModel vm;
-			IGroupingList<string, EditorViewModel> group;
-			string cellIdentifier;
-			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
+			using (Performance.StartNew ()) {
+				PropertyViewModel vm;
+				IGroupingList<string, EditorViewModel> group;
+				string cellIdentifier;
+				GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
 
-			if (group != null)
-				return 30;
+				if (group != null)
+					return 30;
 
-			if (!this.registrations.TryGetValue (cellIdentifier, out EditorRegistration registration)) {
-				var view = GetEditor (cellIdentifier, vm, outlineView);
-				if (view == null) {
-					this.registrations[cellIdentifier] = registration = new EditorRegistration {
-						RowSize = PropertyEditorControl.DefaultControlHeight
-					};
-				} else if (view.TriggerRowChange) {
-					this.registrations[cellIdentifier] = registration = new EditorRegistration {
-						SizingInstance = view
-					};
+				if (!this.registrations.TryGetValue (cellIdentifier, out EditorRegistration registration)) {
+					var view = GetEditor (cellIdentifier, vm, outlineView);
+					if (view == null) {
+						this.registrations[cellIdentifier] = registration = new EditorRegistration {
+							RowSize = PropertyEditorControl.DefaultControlHeight
+						};
+					} else if (view.TriggerRowChange) {
+						this.registrations[cellIdentifier] = registration = new EditorRegistration {
+							SizingInstance = view
+						};
 
-					// We're cheating by declaring GetHeight should act static, so we can call it from
-					// an instance that is being used elsewhere.
-					this.firstCache[cellIdentifier] = view;
-				} else {
-					this.registrations[cellIdentifier] = registration = new EditorRegistration {
-						RowSize = view.GetHeight (vm)
-					};
+						// We're cheating by declaring GetHeight should act static, so we can call it from
+						// an instance that is being used elsewhere.
+						this.firstCache[cellIdentifier] = view;
+					} else {
+						this.registrations[cellIdentifier] = registration = new EditorRegistration {
+							RowSize = view.GetHeight (vm)
+						};
 
-					this.firstCache[cellIdentifier] = view;
+						this.firstCache[cellIdentifier] = view;
+					}
 				}
-			}
 
-			return registration.GetHeight (vm);
+				return registration.GetHeight (vm);
+			}
 		}
 
 		private class EditorRegistration
@@ -217,7 +223,9 @@ namespace Xamarin.PropertyEditing.Mac
 				controlType = controlType.MakeGenericType (genericArgs);
 			}
 
-			view = (PropertyEditorControl)Activator.CreateInstance (controlType);
+			using (Performance.StartNew (controlType.Name + "-Create")) {
+				view = (PropertyEditorControl)Activator.CreateInstance (controlType);
+			}
 			view.Identifier = identifier;
 			view.TableView = outlineView;
 

@@ -12,17 +12,19 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public PointEditorControl ()
 		{
-			XLabel.Frame = new CGRect (38, -6, 25, 22);
-			XLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
-			XLabel.StringValue = "X"; // TODO Localise
+			using (Performance.StartNew ()) {
+				XLabel.Frame = new CGRect (38, -6, 25, 22);
+				XLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
+				XLabel.StringValue = "X"; // TODO Localise
 
-			XEditor.Frame = new CGRect (4, 13, 90, 20);
+				XEditor.Frame = new CGRect (4, 13, 90, 20);
 
-			YLabel.Frame = new CGRect (166, -6, 25, 22);
-			YLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
-			YLabel.StringValue = "Y"; // TODO Localise
+				YLabel.Frame = new CGRect (166, -6, 25, 22);
+				YLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
+				YLabel.StringValue = "Y"; // TODO Localise
 
-			YEditor.Frame = new CGRect (132, 13, 90, 20);
+				YEditor.Frame = new CGRect (132, 13, 90, 20);
+			}
 		}
 
 		public override nint GetHeight (PropertyViewModel vm)

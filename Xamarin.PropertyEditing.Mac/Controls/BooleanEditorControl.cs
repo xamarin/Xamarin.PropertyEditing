@@ -12,34 +12,42 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public BooleanEditorControl ()
 		{
-			BooleanEditor = new NSButton {
-				AllowsMixedState = true,
-				ControlSize = NSControlSize.Small,
-				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
-				Title = string.Empty,
-				TranslatesAutoresizingMaskIntoConstraints = false,
-			};
-			BooleanEditor.SetButtonType (NSButtonType.Switch);
+			using (Performance.StartNew ("Create")) {
+				BooleanEditor = new NSButton {
+					AllowsMixedState = true,
+					ControlSize = NSControlSize.Small,
+					Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+					Title = string.Empty,
+					TranslatesAutoresizingMaskIntoConstraints = false,
+				};
+				BooleanEditor.SetButtonType (NSButtonType.Switch);
+			}
 
-			// update the value on 'enter'
-			BooleanEditor.Activated += (sender, e) => {
-				switch (BooleanEditor.State) {
+			using (Performance.StartNew ("ActivatedSub")) {
+				// update the value on 'enter'
+				BooleanEditor.Activated += (sender, e) => {
+					switch (BooleanEditor.State) {
 					case NSCellStateValue.Off:
 						ViewModel.Value = false;
 						break;
 					case NSCellStateValue.On:
 						ViewModel.Value = true;
 						break;
-				}
-			};
+					}
+				};
+			}
 
-			AddSubview (BooleanEditor);
+			using (Performance.StartNew ("AddSubview")) {
+				AddSubview (BooleanEditor);
+			}
 
-            this.DoConstraints (new[] {
+			using (Performance.StartNew ("Constraints")) {
+				this.DoConstraints (new[] {
 				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 50),
 				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Top == c.Top + 5),
 				BooleanEditor.ConstraintTo (this, (cb, c) => cb.Left == c.Left + 4),
 			});
+			}
 
 			UpdateTheme ();
 		}
@@ -91,5 +99,6 @@ namespace Xamarin.PropertyEditing.Mac
 			BooleanEditor.AccessibilityEnabled = BooleanEditor.Enabled;
 			BooleanEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityBoolean, ViewModel.Property.Name);
 		}
+
 	}
 }

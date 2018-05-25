@@ -25,50 +25,64 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public BaseRectangleEditorControl ()
 		{
-			XLabel = new UnfocusableTextField ();
-			XEditor = new NumericSpinEditor<T> ();
-			XEditor.BackgroundColor = NSColor.Clear;
-			XEditor.Value = 0.0f;
-			XEditor.ValueChanged += OnInputUpdated;
+			using (Performance.StartNew ("X")) {
+				XLabel = new UnfocusableTextField ();
+				XEditor = new NumericSpinEditor<T> ();
+				XEditor.BackgroundColor = NSColor.Clear;
+				XEditor.Value = 0.0f;
+				XEditor.ValueChanged += OnInputUpdated;
+				AddSubview (XLabel);
+				AddSubview (XEditor);
+			}
 
-			YLabel =  new UnfocusableTextField ();
-			YEditor = new NumericSpinEditor<T> ();
-			YEditor.BackgroundColor = NSColor.Clear;
-			YEditor.Value = 0.0f;
-			YEditor.ValueChanged += OnInputUpdated;
+			using (Performance.StartNew ("Y")) {
+				YLabel = new UnfocusableTextField ();
+				YEditor = new NumericSpinEditor<T> ();
+				YEditor.BackgroundColor = NSColor.Clear;
+				YEditor.Value = 0.0f;
+				YEditor.ValueChanged += OnInputUpdated;
 
-			WidthLabel = new UnfocusableTextField ();
-			WidthEditor = new NumericSpinEditor<T> ();
-			WidthEditor.BackgroundColor = NSColor.Clear;
-			WidthEditor.Value = 0.0f;
-			WidthEditor.ValueChanged += OnInputUpdated;
+				AddSubview (YLabel);
+				AddSubview (YEditor);
+			}
 
-			HeightLabel =  new UnfocusableTextField ();
-			HeightEditor = new NumericSpinEditor<T> ();
-			HeightEditor.BackgroundColor = NSColor.Clear;
-			HeightEditor.Value = 0.0f;
-			HeightEditor.ValueChanged += OnInputUpdated;
+			using (Performance.StartNew ("Width")) {
+				WidthLabel = new UnfocusableTextField ();
+				WidthEditor = new NumericSpinEditor<T>();
+				WidthEditor.BackgroundColor = NSColor.Clear;
+				WidthEditor.Value = 0.0f;
+				WidthEditor.ValueChanged += OnInputUpdated;
+				AddSubview (WidthLabel);
+				AddSubview (WidthEditor);
+			}
 
-			AddSubview (XLabel);
-			AddSubview (XEditor);
-			AddSubview (YLabel);
-			AddSubview (YEditor);
-			AddSubview (WidthLabel);
-			AddSubview (WidthEditor);
-			AddSubview (HeightLabel);
-			AddSubview (HeightEditor);
+			using (Performance.StartNew("Height")) {
+				HeightLabel = new UnfocusableTextField ();
+				HeightEditor = new NumericSpinEditor<T> ();
+				HeightEditor.BackgroundColor = NSColor.Clear;
+				HeightEditor.Value = 0.0f;
+				HeightEditor.ValueChanged += OnInputUpdated;
+				AddSubview (HeightLabel);
+				AddSubview (HeightEditor);
+			}
 
-			this.DoConstraints (new[] {
-				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 90),
-				XEditor.ConstraintTo (this, (xe, c) => xe.Height == DefaultControlHeight),
-				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 90),
-				YEditor.ConstraintTo (this, (ye, c) => ye.Height == DefaultControlHeight),
-				WidthEditor.ConstraintTo (this, (we, c) => we.Width == 90),
-				WidthEditor.ConstraintTo (this, (we, c) => we.Height == DefaultControlHeight),
-				HeightEditor.ConstraintTo (this, (he, c) => he.Width == 90),
-				HeightEditor.ConstraintTo (this, (he, c) => he.Height == DefaultControlHeight),
-			});
 
+
+
+
+			using (Performance.StartNew ("Constraints")) {
+				this.DoConstraints (new[] {
+					XEditor.ConstraintTo (this, (xe, c) => xe.Width == 90),
+					XEditor.ConstraintTo (this, (xe, c) => xe.Height == DefaultControlHeight),
+					YEditor.ConstraintTo (this, (ye, c) => ye.Width == 90),
+					YEditor.ConstraintTo (this, (ye, c) => ye.Height == DefaultControlHeight),
+					WidthEditor.ConstraintTo (this, (we, c) => we.Width == 90),
+					WidthEditor.ConstraintTo (this, (we, c) => we.Height == DefaultControlHeight),
+					HeightEditor.ConstraintTo (this, (he, c) => he.Width == 90),
+					HeightEditor.ConstraintTo (this, (he, c) => he.Height == DefaultControlHeight),
+				});
+			}
+		
 			UpdateTheme ();
 		}
 

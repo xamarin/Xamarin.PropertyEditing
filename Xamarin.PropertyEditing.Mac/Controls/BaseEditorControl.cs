@@ -28,41 +28,47 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public BaseEditorControl ()
 		{
-			propertyButton = new PropertyButton ();
+			using (Performance.StartNew ("PropertyButton")) {
+				propertyButton = new PropertyButton ();
 
-			AddSubview (propertyButton);
+				AddSubview (propertyButton);
+			}
 
-			actionButton = new NSButton {
-				Bordered = false,
-				Enabled = false,
-				ImageScaling = NSImageScale.AxesIndependently,
-				Title = string.Empty,
-				TranslatesAutoresizingMaskIntoConstraints = false,
-			};
+			using (Performance.StartNew ("ActionButton")) {
+				actionButton = new NSButton {
+					Bordered = false,
+					Enabled = false,
+					ImageScaling = NSImageScale.AxesIndependently,
+					Title = string.Empty,
+					TranslatesAutoresizingMaskIntoConstraints = false,
+				};
 
 #if DESIGNER_DEBUG
 			actionButton.Image = NSImage.ImageNamed ("action-warning-16");
 #endif
+				using (Performance.StartNew ("ActionButton-ActivatedSub")) {
+					actionButton.Activated += (object sender, EventArgs e) => {
+						if (errorList != null) {
+							var Container = new ErrorMessageView (errorList);
 
-			actionButton.Activated += (object sender, EventArgs e) => {
-				if (errorList != null) {
-					var Container = new ErrorMessageView (errorList);
+							var errorMessagePopUp = new NSPopover {
+								Behavior = NSPopoverBehavior.Semitransient,
+								ContentViewController = new NSViewController (null, null) { View = Container },
+							};
 
-					var errorMessagePopUp = new NSPopover {
-						Behavior = NSPopoverBehavior.Semitransient,
-						ContentViewController = new NSViewController (null, null) { View = Container },
+							errorMessagePopUp.Show (default (CGRect), actionButton, NSRectEdge.MinYEdge);
+						}
+
+						NotifyActioButtonClicked ();
 					};
-
-					errorMessagePopUp.Show (default (CGRect), actionButton, NSRectEdge.MinYEdge);
 				}
 
-				NotifyActioButtonClicked ();
-			};
-
 			AddSubview (actionButton);
+		}
 
-			this.DoConstraints (new[] {
-				propertyButton.ConstraintTo (this, (ab, c) => ab.Width == DefaultPropertyButtonSize),
+			using (Performance.StartNew("ConstraintSetup")) {
+				this.DoConstraints (new[] {
+				propertyButton.ConstraintTo(this, (ab, c) => ab.Width == DefaultPropertyButtonSize),
 				propertyButton.ConstraintTo (this, (ab, c) => ab.Height == DefaultPropertyButtonSize),
 				propertyButton.ConstraintTo (this, (ab, c) => ab.Top == c.Top + 6), // TODO: Better centering based on the icon height
 				propertyButton.ConstraintTo (this, (ab, c) => ab.Left == c.Right - 28),
@@ -71,8 +77,9 @@ namespace Xamarin.PropertyEditing.Mac
 				actionButton.ConstraintTo (propertyButton, (eb, ab) => eb.Left == ab.Left + 10),
 				actionButton.ConstraintTo (this, (eb, c) => eb.Top == c.Top + 3), // TODO: Better centering based on the icon height
 			});
+	}
+				PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
 
-			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
 		}
 
 		protected override void Dispose (bool disposing)
@@ -89,7 +96,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected void UpdateTheme ()
 		{
-			this.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
+			Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
 		}
 
 		protected void SetErrors (IEnumerable errors)

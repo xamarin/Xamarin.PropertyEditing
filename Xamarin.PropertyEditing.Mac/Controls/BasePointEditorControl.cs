@@ -19,33 +19,35 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public BasePointEditorControl ()
 		{
-			XLabel = new UnfocusableTextField ();
+			using (Performance.StartNew ()) {
+				XLabel = new UnfocusableTextField ();
 
-			XEditor = new NumericSpinEditor<T> ();
-			XEditor.BackgroundColor = NSColor.Clear;
-			XEditor.Value = 0.0f;
-			XEditor.ValueChanged += OnInputUpdated;
+				XEditor = new NumericSpinEditor<T> ();
+				XEditor.BackgroundColor = NSColor.Clear;
+				XEditor.Value = 0.0f;
+				XEditor.ValueChanged += OnInputUpdated;
 
-			YLabel = new UnfocusableTextField ();
+				YLabel = new UnfocusableTextField ();
 
-			YEditor = new NumericSpinEditor<T> ();
-			YEditor.BackgroundColor = NSColor.Clear;
-			YEditor.Value = 0.0f;
-			YEditor.ValueChanged += OnInputUpdated;
+				YEditor = new NumericSpinEditor<T> ();
+				YEditor.BackgroundColor = NSColor.Clear;
+				YEditor.Value = 0.0f;
+				YEditor.ValueChanged += OnInputUpdated;
 
-			AddSubview (XLabel);
-			AddSubview (XEditor);
-			AddSubview (YLabel);
-			AddSubview (YEditor);
+				AddSubview (XLabel);
+				AddSubview (XEditor);
+				AddSubview (YLabel);
+				AddSubview (YEditor);
 
-			this.DoConstraints (new[] {
+				this.DoConstraints (new[] {
 				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 90),
 				XEditor.ConstraintTo (this, (xe, c) => xe.Height == DefaultControlHeight),
 				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 90),
 				YEditor.ConstraintTo (this, (ye, c) => ye.Height == DefaultControlHeight),
 			});
 
-			UpdateTheme ();
+				UpdateTheme ();
+			}
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)

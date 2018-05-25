@@ -147,19 +147,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		protected virtual async void OnSelectedObjectsChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
-			var tcs = new TaskCompletionSource<bool> ();
-			var existingTask = Interlocked.Exchange (ref this.busyTask, tcs.Task);
-			if (existingTask != null)
-				await existingTask;
+			using (Performance.StartNew (GetType().Name)) {
+				var tcs = new TaskCompletionSource<bool> ();
+				var existingTask = Interlocked.Exchange (ref this.busyTask, tcs.Task);
+				if (existingTask != null)
+					await existingTask;
 
-			IObjectEditor[] newEditors = null;
-			IObjectEditor[] removedEditors = null;
+				IObjectEditor[] newEditors = null;
+				IObjectEditor[] removedEditors = null;
 
-			switch (e.Action) {
+				switch (e.Action) {
 				case NotifyCollectionChangedAction.Add: {
-					newEditors = await AddEditorsAsync (e.NewItems);
-					break;
-				}
+						newEditors = await AddEditorsAsync (e.NewItems);
+						break;
+					}
 
 				case NotifyCollectionChangedAction.Remove:
 					removedEditors = new IObjectEditor[e.OldItems.Count];
@@ -177,23 +178,24 @@ namespace Xamarin.PropertyEditing.ViewModels
 				case NotifyCollectionChangedAction.Replace:
 				case NotifyCollectionChangedAction.Move:
 				case NotifyCollectionChangedAction.Reset: {
-					removedEditors = new IObjectEditor[this.objEditors.Count];
-					for (int i = 0; i < removedEditors.Length; i++) {
-						removedEditors[i] = this.objEditors[i];
-						INotifyCollectionChanged notifier = removedEditors[i]?.Properties as INotifyCollectionChanged;
-						if (notifier != null)
-							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
+						removedEditors = new IObjectEditor[this.objEditors.Count];
+						for (int i = 0; i < removedEditors.Length; i++) {
+							removedEditors[i] = this.objEditors[i];
+							INotifyCollectionChanged notifier = removedEditors[i]?.Properties as INotifyCollectionChanged;
+							if (notifier != null)
+								notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
+						}
+
+						this.objEditors.Clear ();
+
+						newEditors = await AddEditorsAsync (this.selectedObjects);
+						break;
 					}
-
-					this.objEditors.Clear ();
-
-					newEditors = await AddEditorsAsync (this.selectedObjects);
-					break;
 				}
-			}
 
-			UpdateMembers (removedEditors, newEditors);
-			tcs.SetResult (true);
+				UpdateMembers (removedEditors, newEditors);
+				tcs.SetResult (true);
+			}
 		}
 
 		protected virtual void OnAddEditors (IEnumerable<EditorViewModel> editors)

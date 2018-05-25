@@ -198,7 +198,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnPropertiesChanged (object sender, EventArgs e)
 		{
-			this.propertyTable.ReloadData ();
+			using (Performance.StartNew ("ReloadData")) {
+				this.propertyTable.ReloadData ();
+			}
 
 			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
 		}

@@ -12,18 +12,19 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public NumericEditorControl ()
 		{
-			base.TranslatesAutoresizingMaskIntoConstraints = false;
+			using (Performance.StartNew ()) {
+				base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			NumericEditor = new NumericSpinEditor<T> ();
-			NumericEditor.ValueChanged += OnValueChanged;
+				NumericEditor = new NumericSpinEditor<T> ();
+				NumericEditor.ValueChanged += OnValueChanged;
 
-			var t = typeof (T);
-			if (t.Name == PropertyViewModel<T>.NullableName) {
-				underlyingType = Nullable.GetUnderlyingType (t);
-				t = underlyingType;
-			}
-			TypeCode code = Type.GetTypeCode (t);
-			switch (code) {
+				var t = typeof (T);
+				if (t.Name == PropertyViewModel<T>.NullableName) {
+					underlyingType = Nullable.GetUnderlyingType (t);
+					t = underlyingType;
+				}
+				TypeCode code = Type.GetTypeCode (t);
+				switch (code) {
 				case TypeCode.Double:
 				case TypeCode.Single:
 				case TypeCode.Decimal:
@@ -34,15 +35,16 @@ namespace Xamarin.PropertyEditing.Mac
 				default:
 					NumberStyle = NSNumberFormatterStyle.None;
 					break;
-			}
+				}
 
-			AddSubview (NumericEditor);
+				AddSubview (NumericEditor);
 
-			this.DoConstraints ( new[] {
+				this.DoConstraints (new[] {
 				NumericEditor.ConstraintTo (this, (n, c) => n.Top == c.Top + 1),
 				NumericEditor.ConstraintTo (this, (n, c) => n.Left == c.Left + 4),
 				NumericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - 33),
 			});
+			}
 		}
 
 		protected NumericSpinEditor<T> NumericEditor { get; set; }

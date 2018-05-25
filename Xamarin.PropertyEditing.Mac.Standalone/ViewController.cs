@@ -41,17 +41,23 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 		// load panel from active designer item, clear it if none selected
 		partial void OnClickEvent (NSObject sender)
 		{
-			var clickedButton = sender as NSButton;
-			var mockedButton = clickedButton?.Cell as IMockedControl;
-			var inspectedObject = (mockedButton == null || mockedButton.MockedControl == null)
-				? (object)sender : mockedButton.MockedControl;
-			if (PropertyPanel.SelectedItems.Contains (inspectedObject)) {
-				PropertyPanel.SelectedItems.Remove (inspectedObject);
-			} else {
-				PropertyPanel.SelectedItems.Add (inspectedObject);
+			((PerformanceProvider)Performance.Provider).DumpStats ();
+			using (Performance.StartNew ()) {
+				var clickedButton = sender as NSButton;
+				var mockedButton = clickedButton?.Cell as IMockedControl;
+				var inspectedObject = (mockedButton == null || mockedButton.MockedControl == null)
+					? (object)sender : mockedButton.MockedControl;
+				if (PropertyPanel.SelectedItems.Contains (inspectedObject)) {
+					PropertyPanel.SelectedItems.Remove (inspectedObject);
+				} else {
+					PropertyPanel.SelectedItems.Add (inspectedObject);
+				}
 			}
-		}
 
+			//BeginInvokeOnMainThread (() => {
+				//((PerformanceProvider)Performance.Provider).DumpStats ();
+			//});
+		}
 		// If theme toggled, then notify our manager
 		partial void OnThemeChanged (NSObject sender)
 		{

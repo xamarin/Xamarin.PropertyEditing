@@ -24,9 +24,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public static NSLayoutConstraint ConstraintTo (this NSView view1, NSView view2, Expression<Func<ConstraintProxy, ConstraintProxy, bool>> expression)
 		{
-			var mainExpression = expression.Body as BinaryExpression;
-			NSLayoutRelation relation = NSLayoutRelation.Equal;
-			switch (mainExpression.NodeType) {
+			using (Performance.StartNew (view1.GetType().Name)) {
+				var mainExpression = expression.Body as BinaryExpression;
+				NSLayoutRelation relation = NSLayoutRelation.Equal;
+				switch (mainExpression.NodeType) {
 				case ExpressionType.Equal:
 					relation = NSLayoutRelation.Equal;
 					break;
@@ -38,61 +39,59 @@ namespace Xamarin.PropertyEditing.Mac
 					break;
 				default:
 					throw new ArgumentException ("Relation " + mainExpression.NodeType.ToString () + " not valid");
-			}
-
-			var propLeft = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), ((MemberExpression)mainExpression.Left).Member.Name);
-			var propRight = propLeft;
-
-			if (mainExpression.Right.NodeType == ExpressionType.Constant) {
-				var c = Convert.ToSingle (((ConstantExpression)mainExpression.Right).Value);
-				return NSLayoutConstraint.Create (view1, propLeft, relation, null, NSLayoutAttribute.NoAttribute, 1, c);
-			}
-			else if (mainExpression.Right is MemberExpression) {
-				propRight = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), ((MemberExpression)mainExpression.Right).Member.Name);
-				return NSLayoutConstraint.Create (view1, propLeft, relation, view2, propRight, 1, 0);
-			}
-
-			var addNode = mainExpression.Right as BinaryExpression;
-
-			var mulNode = addNode;
-			var constant = 0f;
-			var multiplier = 1f;
-
-			if (addNode.Left.NodeType == ExpressionType.Constant) {
-				mulNode = addNode.Right as BinaryExpression;
-				constant = Convert.ToSingle (((ConstantExpression)addNode.Left).Value);
-			}
-			else {
-				mulNode = addNode.Left as BinaryExpression;
-				constant = Convert.ToSingle (((ConstantExpression)addNode.Right).Value);
-			}
-			constant *= addNode.NodeType == ExpressionType.Subtract ? -1 : 1;
-
-			if (mulNode != null) {
-				if (mulNode.Left.NodeType == ExpressionType.Constant) {
-					multiplier = Convert.ToSingle (((ConstantExpression)mulNode.Left).Value);
-					propRight = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), ((MemberExpression)mulNode.Right).Member.Name);
 				}
-				else {
-					multiplier = Convert.ToSingle (((ConstantExpression)mulNode.Right).Value);
-					propRight = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), ((MemberExpression)mulNode.Left).Member.Name);
+
+				var propLeft = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), ((MemberExpression)mainExpression.Left).Member.Name);
+				var propRight = propLeft;
+
+				if (mainExpression.Right.NodeType == ExpressionType.Constant) {
+					var c = Convert.ToSingle (((ConstantExpression)mainExpression.Right).Value);
+					return NSLayoutConstraint.Create (view1, propLeft, relation, null, NSLayoutAttribute.NoAttribute, 1, c);
+				} else if (mainExpression.Right is MemberExpression) {
+					propRight = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), ((MemberExpression)mainExpression.Right).Member.Name);
+					return NSLayoutConstraint.Create (view1, propLeft, relation, view2, propRight, 1, 0);
 				}
-				if (mulNode.NodeType == ExpressionType.Divide)
-					multiplier = 1.0f / multiplier;
-			}
-			else {
-				var member = (MemberExpression)(addNode.Right is MemberExpression ? addNode.Right : addNode.Left);
-				propRight = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), member.Member.Name);
-			}
 
-			//Console.WriteLine ("v1.{0} {1} v2.{2} * {3} + {4}", propLeft, relation, propRight, multiplier, constant);
+				var addNode = mainExpression.Right as BinaryExpression;
 
-			return NSLayoutConstraint.Create (view1, propLeft, relation, view2, propRight, multiplier, constant);
+				var mulNode = addNode;
+				var constant = 0f;
+				var multiplier = 1f;
+
+				if (addNode.Left.NodeType == ExpressionType.Constant) {
+					mulNode = addNode.Right as BinaryExpression;
+					constant = Convert.ToSingle (((ConstantExpression)addNode.Left).Value);
+				} else {
+					mulNode = addNode.Left as BinaryExpression;
+					constant = Convert.ToSingle (((ConstantExpression)addNode.Right).Value);
+				}
+				constant *= addNode.NodeType == ExpressionType.Subtract ? -1 : 1;
+
+				if (mulNode != null) {
+					if (mulNode.Left.NodeType == ExpressionType.Constant) {
+						multiplier = Convert.ToSingle (((ConstantExpression)mulNode.Left).Value);
+						propRight = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), ((MemberExpression)mulNode.Right).Member.Name);
+					} else {
+						multiplier = Convert.ToSingle (((ConstantExpression)mulNode.Right).Value);
+						propRight = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), ((MemberExpression)mulNode.Left).Member.Name);
+					}
+					if (mulNode.NodeType == ExpressionType.Divide)
+						multiplier = 1.0f / multiplier;
+				} else {
+					var member = (MemberExpression)(addNode.Right is MemberExpression ? addNode.Right : addNode.Left);
+					propRight = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), member.Member.Name);
+				}
+
+				//Console.WriteLine ("v1.{0} {1} v2.{2} * {3} + {4}", propLeft, relation, propRight, multiplier, constant);
+
+				return NSLayoutConstraint.Create (view1, propLeft, relation, view2, propRight, multiplier, constant);
+			}
 		}
 
 		public static void DoConstraints (this NSView view, params NSLayoutConstraint[] constraints)
 		{
-			view.AddConstraints (constraints);
+			NSLayoutConstraint.ActivateConstraints (constraints);
+			//view.AddConstraints (constraints);
 		}
 
 		public static void DoMergedConstraints (this NSView view, params object[] constraints)
@@ -103,7 +102,8 @@ namespace Xamarin.PropertyEditing.Mac
 				if (singleConstraint != null)
 					view.AddConstraint (singleConstraint);
 				else if (multipleConstraint != null)
-					view.AddConstraints (multipleConstraint);
+					NSLayoutConstraint.ActivateConstraints (multipleConstraint);
+					//view.AddConstraints (multipleConstraint);
 				else
 					throw new ArgumentException ("Unexpected constraint type: " + o.GetType ());
 			}
