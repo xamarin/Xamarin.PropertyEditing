@@ -6,6 +6,14 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
+	public class BooleanCreateor
+
+	{
+		public static object Create ()
+		{
+			return new BooleanEditorControl ();
+		}
+	}
 	internal class BooleanEditorControl : PropertyEditorControl<PropertyViewModel<bool?>>
 	{
 		const string setBezelColorSelector = "setBezelColor:";
