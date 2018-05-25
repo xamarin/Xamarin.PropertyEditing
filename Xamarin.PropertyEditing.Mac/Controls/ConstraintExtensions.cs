@@ -84,13 +84,17 @@ namespace Xamarin.PropertyEditing.Mac
 
 				//Console.WriteLine ("v1.{0} {1} v2.{2} * {3} + {4}", propLeft, relation, propRight, multiplier, constant);
 
-				return NSLayoutConstraint.Create (view1, propLeft, relation, view2, propRight, multiplier, constant);
+				using (Performance.StartNew ("Create")) {
+					return NSLayoutConstraint.Create (view1, propLeft, relation, view2, propRight, multiplier, constant);
+				}
 			}
 		}
 
 		public static void DoConstraints (this NSView view, params NSLayoutConstraint[] constraints)
 		{
-			NSLayoutConstraint.ActivateConstraints (constraints);
+			using (Performance.StartNew ()) {
+				NSLayoutConstraint.ActivateConstraints (constraints);
+			}
 			//view.AddConstraints (constraints);
 		}
 
