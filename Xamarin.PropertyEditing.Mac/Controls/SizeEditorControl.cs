@@ -4,6 +4,7 @@ using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Mac.Resources;
+using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -23,8 +24,11 @@ namespace Xamarin.PropertyEditing.Mac
 			YLabel.StringValue = "HEIGHT"; // TODO Localise
 
 			YEditor.Frame = new CGRect (132, 13, 90, 20);
+		}
 
-			RowHeight = 33;
+		public override nint GetHeight (PropertyViewModel vm)
+		{
+			return 33;
 		}
 
 		protected override void UpdateAccessibilityValues ()
