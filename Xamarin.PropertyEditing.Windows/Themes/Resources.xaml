@@ -912,7 +912,7 @@
 							<local:ColorComponentBox x:Name="hueEntry"
 								HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"
-								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Mode=TwoWay}" Unit="°">
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Converter={local:DoubleToAngleConverter}, Mode=TwoWay}" Unit="°">
 								<local:ColorComponentBox.GradientBrush>
 									<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
 										<GradientStop Color="Red" Offset="0"/>
@@ -974,7 +974,7 @@
 							</Label>
 							<local:ColorComponentBox x:Name="hsbHueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}" ToolTip="{x:Static prop:Resources.Hue}"
-								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Mode=TwoWay}" Unit="°">
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Hue, Converter={local:DoubleToAngleConverter}, Mode=TwoWay}" Unit="°">
 								<local:ColorComponentBox.GradientBrush>
 									<LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
 										<GradientStop Color="Red" Offset="0"/>
@@ -1035,7 +1035,7 @@
 							</Label>
 							<local:ColorComponentBox x:Name="redEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0"
 								AutomationProperties.Name="{x:Static prop:Resources.Red}" AutomationProperties.HelpText="{x:Static prop:Resources.Red}" ToolTip="{x:Static prop:Resources.Red}"
-								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=R, Mode=TwoWay}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=R, Converter={local:ByteToDoubleConverter}, Mode=TwoWay}"
 								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToRedBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
@@ -1045,7 +1045,7 @@
 							</Label>
 							<local:ColorComponentBox x:Name="greenEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1"
 								AutomationProperties.Name="{x:Static prop:Resources.Green}" AutomationProperties.HelpText="{x:Static prop:Resources.Green}" ToolTip="{x:Static prop:Resources.Green}"
-								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=G, Mode=TwoWay}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=G, Converter={local:ByteToDoubleConverter}, Mode=TwoWay}"
 								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToGreenBrushConverter}}"/>
 
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="2" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
@@ -1055,7 +1055,7 @@
 							</Label>
 							<local:ColorComponentBox x:Name="blueEntry" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2"
 								AutomationProperties.Name="{x:Static prop:Resources.Blue}" AutomationProperties.HelpText="{x:Static prop:Resources.Blue}" ToolTip="{x:Static prop:Resources.Blue}"
-								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=B, Mode=TwoWay}"
+								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=B, Converter={local:ByteToDoubleConverter}, Mode=TwoWay}"
 								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToBlueBrushConverter}}"/>
 
 							<Label Content="{x:Static prop:Resources.AlphaInitial}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3"

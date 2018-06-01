@@ -64,6 +64,7 @@
     <Compile Include="BrushEditorControl.cs" />
     <Compile Include="BrushTabbedEditorControl.cs" />
     <Compile Include="BrushToDarknessConverter.cs" />
+    <Compile Include="ByteToDoubleConverter.cs" />
     <Compile Include="CategoryExpander.cs" />
     <Compile Include="CollectionEditor.cs" />
     <Compile Include="CollectionEditorWindow.xaml.cs">
@@ -83,6 +84,7 @@
     <Compile Include="CreateResourceWindow.xaml.cs">
       <DependentUpon>CreateResourceWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DoubleToAngleConverter.cs" />
     <Compile Include="EntryPopup.cs" />
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />

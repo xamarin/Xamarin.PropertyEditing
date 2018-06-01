@@ -6,18 +6,17 @@ using System.Windows.Markup;
 
 namespace Xamarin.PropertyEditing.Windows
 {
-	[ValueConversion (typeof (byte), typeof (double))]
-	internal class ByteToPercentageConverter : MarkupExtension, IValueConverter
+	[ValueConversion (typeof (double), typeof (double))]
+	internal class DoubleToAngleConverter : MarkupExtension, IValueConverter
 	{
 		public object Convert (object value, Type targetType, object parameter, CultureInfo culture)
-			=> !(value is byte byteValue) ? DependencyProperty.UnsetValue
-				: byteValue / 2.55d;
-
-		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
 			=> !(value is double doubleValue) ? DependencyProperty.UnsetValue
 				: doubleValue < 0 ? 0
-				: doubleValue > 100 ? 255
-				: System.Convert.ToByte (doubleValue * 2.55d);
+				: doubleValue > 360 ? 360
+				: doubleValue;
+
+		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
+			=> Convert (value, targetType, parameter, culture);
 
 		public override object ProvideValue (IServiceProvider serviceProvider) => this;
 	}
