@@ -61,6 +61,7 @@ namespace Xamarin.PropertyEditing.Mac
 				BooleanEditor.Title = ViewModel.Value.ToString ();
 				BooleanEditor.AllowsMixedState = false;
 			} else {
+				BooleanEditor.AllowsMixedState = true;
 				BooleanEditor.State = NSCellStateValue.Mixed;
 				BooleanEditor.Title = string.Empty;
 			}
