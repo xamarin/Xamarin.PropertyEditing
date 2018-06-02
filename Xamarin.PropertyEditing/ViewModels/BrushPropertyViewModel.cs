@@ -15,12 +15,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public BrushPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (platform, property, editors)
 		{
-			if (property.Type.IsAssignableFrom (typeof (CommonSolidBrush))) {
-				Solid = new SolidBrushViewModel (this,
-					property is IColorSpaced colorSpacedPropertyInfo ? colorSpacedPropertyInfo.ColorSpaces :  null);
-				if (platform.SupportsMaterialDesign) {
-					MaterialDesign = new MaterialDesignColorViewModel (this);
-				}
+			Solid = new SolidBrushViewModel (this,
+				property is IColorSpaced colorSpacedPropertyInfo ? colorSpacedPropertyInfo.ColorSpaces :  null);
+			if (platform.SupportsMaterialDesign) {
+				MaterialDesign = new MaterialDesignColorViewModel (this);
 			}
 
 			// TODO: we actually need to localize this for platforms really, "brush" doesn't make sense for some

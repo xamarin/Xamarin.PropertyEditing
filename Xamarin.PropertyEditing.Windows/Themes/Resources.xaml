@@ -1297,6 +1297,9 @@
 									Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" BorderThickness="0"
 									ItemsSource="{Binding NormalColorScale}"
 									SelectedValue="{Binding NormalColor}" SelectedValuePath="">
+									<local:ChoiceControl.Resources>
+										<FrameworkElement x:Key="NormalColorProxyElement" DataContext="{Binding}"/>
+									</local:ChoiceControl.Resources>
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
 											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"
@@ -1304,7 +1307,7 @@
 												ToolTip="{Binding Label}" AutomationProperties.Name="{Binding Label}" AutomationProperties.HelpText="{Binding Label}"
 												GroupName="MaterialDesignAccentOrNormal">
 												<local:BrushBoxControl Label="{Binding Label}" FontSize="10"
-																	   LightForegroundThreshold="{Binding Path=DataContext.NormalColorScriptureLightnessThreshold, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChoiceControl}}}">
+																	   LightForegroundThreshold="{Binding Path=DataContext.NormalColorScriptureLightnessThreshold, Source={StaticResource NormalColorProxyElement}, Mode=OneTime}">
 													<local:BrushBoxControl.Brush>
 														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
 													</local:BrushBoxControl.Brush>
@@ -1325,6 +1328,9 @@
 									Grid.Column="0" Grid.Row="0" Panel.ZIndex="0" BorderThickness="0"
 									ItemsSource="{Binding AccentColorScale}"
 									SelectedValue="{Binding AccentColor}" SelectedValuePath="">
+									<local:ChoiceControl.Resources>
+										<FrameworkElement x:Key="AccentColorProxyElement" DataContext="{Binding}"/>
+									</local:ChoiceControl.Resources>
 									<local:ChoiceControl.ItemTemplate>
 										<DataTemplate>
 											<RadioButton Style="{DynamicResource MaterialDesignColorControlItem}"
@@ -1332,7 +1338,7 @@
 												ToolTip="{Binding Label}" AutomationProperties.Name="{Binding Label}" AutomationProperties.HelpText="{Binding Label}"
 												GroupName="MaterialDesignAccentOrNormal">
 												<local:BrushBoxControl Label="{Binding Label}" FontSize="10"
-																	   LightForegroundThreshold="{Binding Path=DataContext.AccentColorScriptureLightnessThreshold, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChoiceControl}}}">
+																	   LightForegroundThreshold="{Binding Path=DataContext.AccentColorScriptureLightnessThreshold, Source={StaticResource AccentColorProxyElement}, Mode=OneTime}">
 													<local:BrushBoxControl.Brush>
 														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
 													</local:BrushBoxControl.Brush>
