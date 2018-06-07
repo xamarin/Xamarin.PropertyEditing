@@ -247,11 +247,14 @@ namespace Xamarin.PropertyEditing.Tests
 						Source = underlyingInfo?.Source ?? ValueSource.Local
 					}, typeof(ValueInfo<T>));
 				} else {
+					object descriptor = null;
 					ValueSource source = ValueSource.Local;
 					Type valueType = value.GetType ();
 					if (valueType.IsConstructedGenericType && valueType.GetGenericTypeDefinition () == typeof(ValueInfo<>)) {
 						source = (ValueSource)valueType.GetProperty ("Source").GetValue (value);
+						descriptor = valueType.GetProperty (nameof (ValueInfo<T>.ValueDescriptor)).GetValue (value);
 						value = valueType.GetProperty ("Value").GetValue (value);
+						valueType = valueType.GetGenericArguments ()[0];
 					}
 
 					object newValue;
@@ -259,7 +262,14 @@ namespace Xamarin.PropertyEditing.Tests
 					if (converter != null && converter.TryConvert (value, typeof(T), out newValue)) {
 						return new ValueInfo<T> {
 							Source = source,
-							Value = (T)newValue
+							Value = (T)newValue,
+							ValueDescriptor = descriptor
+						};
+					} else if (typeof(T).IsAssignableFrom (valueType)) {
+						return new ValueInfo<T> {
+							Source = source,
+							Value = (T)value,
+							ValueDescriptor = descriptor
 						};
 					}
 				}
