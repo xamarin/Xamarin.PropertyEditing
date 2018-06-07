@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Xamarin.PropertyEditing.Drawing;
@@ -238,6 +240,33 @@ namespace Xamarin.PropertyEditing.Tests
 
 			vm.MaterialDesign.ColorName = accentScale.Name;
 			Assert.That (vm.Solid.Color, Is.EqualTo (darkNormalColor));
+		}
+
+		[Test]
+		[Description ("If we have a resource brush value that matches material, we need to ensure it doesn't auto switch to material")]
+		public async Task ResourceBrushMatchesMaterialStaysResource()
+		{
+			var platform = new TargetPlatform (new MockEditorProvider ()) {
+				SupportsMaterialDesign = true
+			};
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (CommonSolidBrush));
+
+			var mockEditor = new MockObjectEditor (mockProperty.Object);
+
+			var provider = new MockResourceProvider ();
+			var resources = await provider.GetResourcesAsync (mockEditor.Target, mockProperty.Object, CancellationToken.None);
+			var resource = resources.OfType<Resource<CommonSolidBrush>> ().First (r => r.Value == new CommonSolidBrush (0, 0, 0));
+
+			await mockEditor.SetValueAsync (mockProperty.Object, new ValueInfo<CommonSolidBrush> {
+				Source = ValueSource.Resource,
+				Value = resource.Value,
+				ValueDescriptor = resource
+			});
+
+			var vm = new BrushPropertyViewModel (platform, mockProperty.Object, new[] { mockEditor });
+			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Resource));
+			Assert.That (vm.SelectedBrushType, Is.EqualTo (CommonBrushType.Resource));
 		}
 
 		protected override CommonBrush GetRandomTestValue (Random rand)
