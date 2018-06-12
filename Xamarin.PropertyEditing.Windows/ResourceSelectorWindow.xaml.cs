@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -50,7 +52,18 @@ namespace Xamarin.PropertyEditing.Windows
 			if (this.list.SelectedItem == null)
 				return;
 
-			DialogResult = true;
+			Point pos = e.GetPosition (this.list);
+			var element = this.list.InputHitTest (pos) as DependencyObject;
+			while (element != null) {
+				if (element is ListBoxItem) {
+					DialogResult = true;
+					return;
+				}
+				if (element is ListBox)
+					return;
+
+				element = VisualTreeHelper.GetParent (element);
+			}
 		}
 	}
 }
