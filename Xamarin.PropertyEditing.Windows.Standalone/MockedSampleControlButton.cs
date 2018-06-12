@@ -28,6 +28,13 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 				category: "Windows Only",
 				canWrite: false);
 			MockedControl.AddProperty<CommonBrush> (this.readOnlyBrushPropertyInfo);
+
+			this.colorPropertyInfo = new MockPropertyInfo<CommonColor> (
+				name: "ColorNoBrush",
+				category: "Windows Only",
+				canWrite: true,
+				valueSources: ValueSources.Default | ValueSources.Local | ValueSources.Resource);
+			MockedControl.AddProperty<CommonColor> (this.colorPropertyInfo);
 		}
 
 		public async Task SetBrushInitialValueAsync (IObjectEditor editor, CommonBrush brush)
@@ -51,9 +58,10 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 			this.readOnlyBrushSet = true;
 		}
 
-		private IPropertyInfo brushPropertyInfo;
-		private IPropertyInfo materialDesignBrushPropertyInfo;
-		private IPropertyInfo readOnlyBrushPropertyInfo;
+		private readonly IPropertyInfo brushPropertyInfo;
+		private readonly IPropertyInfo materialDesignBrushPropertyInfo;
+		private readonly IPropertyInfo readOnlyBrushPropertyInfo;
+		private readonly IPropertyInfo colorPropertyInfo;
 		private bool brushSet = false;
 		private bool materialDesignBrushSet = false;
 		private bool readOnlyBrushSet = false;

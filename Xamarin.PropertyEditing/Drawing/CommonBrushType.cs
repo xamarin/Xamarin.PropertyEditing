@@ -1,3 +1,5 @@
+using System;
+
 namespace Xamarin.PropertyEditing.Drawing
 {
 	public enum CommonBrushType

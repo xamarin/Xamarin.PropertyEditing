@@ -454,14 +454,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private Task busyTask;
 
-		private static readonly Dictionary<Type,Func<TargetPlatform,IPropertyInfo,IEnumerable<IObjectEditor>,PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
+		private static readonly Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
 			{ typeof(string), (tp,p,e) => new StringPropertyViewModel (tp, p, e) },
 			{ typeof(bool), (tp,p,e) => new PropertyViewModel<bool?> (tp, p, e) },
 			{ typeof(float), (tp,p,e) => new NumericPropertyViewModel<float?> (tp, p, e) },
 			{ typeof(double), (tp,p,e) => new NumericPropertyViewModel<double?> (tp, p, e) },
 			{ typeof(int), (tp,p,e) => new NumericPropertyViewModel<int?> (tp, p, e) },
 			{ typeof(long), (tp,p,e) => new NumericPropertyViewModel<long?> (tp, p, e) },
-			{ typeof(CommonSolidBrush), (tp,p,e) => new BrushPropertyViewModel(tp, p, e) },
+			{ typeof(CommonSolidBrush), (tp,p,e) => new BrushPropertyViewModel(tp, p, e, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
+			{ typeof(CommonColor), (tp,p,e) => new BrushPropertyViewModel(tp, p, e, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
 			{ typeof(CommonBrush), (tp,p,e) => new BrushPropertyViewModel(tp, p, e) },
 			{ typeof(CommonPoint), (tp,p,e) => new PointPropertyViewModel (tp, p, e) },
 			{ typeof(CommonSize), (tp,p,e) => new SizePropertyViewModel (tp, p, e) },

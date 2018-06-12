@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Reflection;
 using Xamarin.PropertyEditing.Tests.MockControls;
@@ -188,10 +190,19 @@ namespace Xamarin.PropertyEditing.Tests
 
 			// Set to resource won't pass values so we will store it on the info since we just pass it back in GetValue
 			if (value.Source == ValueSource.Resource && value.ValueDescriptor is Resource) {
-				var rt = value.ValueDescriptor.GetType();
-				if (rt.IsGenericType && typeof(T).IsAssignableFrom (rt.GetGenericArguments ()[0])) {
-					var pi = rt.GetProperty ("Value");
-					value.Value = (T)pi.GetValue (value.ValueDescriptor);
+				Type rt = value.ValueDescriptor.GetType();
+				if (rt.IsGenericType) {
+					Type ta = rt.GetGenericArguments ()[0];
+					if (typeof (T).IsAssignableFrom (ta)) {
+						PropertyInfo pi = rt.GetProperty ("Value");
+						value.Value = (T)pi.GetValue (value.ValueDescriptor);
+					} else {
+						TypeConverter converter = TypeDescriptor.GetConverter (ta);
+						if (converter != null && converter.CanConvertTo(typeof(T))) {
+							PropertyInfo pi = rt.GetProperty ("Value");
+							value.Value = (T)converter.ConvertTo (pi.GetValue (value.ValueDescriptor), typeof (T));
+						}
+					}
 				}
 			}
 			
@@ -259,7 +270,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 					object newValue;
 					IPropertyConverter converter = property as IPropertyConverter;
-					if (converter != null && converter.TryConvert (value, typeof(T), out newValue)) {
+					if (converter != null && converter.TryConvert (value, tType, out newValue)) {
 						return new ValueInfo<T> {
 							Source = source,
 							Value = (T)newValue,

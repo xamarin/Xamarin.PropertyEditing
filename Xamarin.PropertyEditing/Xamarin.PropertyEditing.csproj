@@ -58,6 +58,7 @@
     <Compile Include="Drawing\CommonBrushType.cs" />
     <Compile Include="Drawing\CommonColor.cs" />
     <Compile Include="Drawing\CommonColorInterpolationMode.cs" />
+    <Compile Include="Drawing\CommonColorToCommonBrushConverter.cs" />
     <Compile Include="Drawing\CommonGradientBrush.cs" />
     <Compile Include="Drawing\CommonGradientSpreadMethod.cs" />
     <Compile Include="Drawing\CommonGradientStop.cs" />
