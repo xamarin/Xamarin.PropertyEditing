@@ -193,6 +193,15 @@ Those manual tests should be performed on the standalone app.
 	- The hue picker updates its cursor position.
 	- Other components update as relevant.
 
+## Components are clamped to their range
+
+1. Open the brush editor for the "Mocked Sample 1" , then switch to the HLS view.
+2. For each of the HLS, HSB, RGB, and CYMK, change the values of each field to out of range values and check validation kicks in when moving focus out of the field:
+	- For hue, try -1 and 361. That should cause respectively 0 and 360 to become the values.
+	- For percentage values (lightness, saturation, etc.), try -1 and 101. That should cause respectively 0% and 100% to become the values.
+	- For red, green, and blue, trye -1 and 256. That should cause respectively 0 and 255 to become the values.
+	- Enter non-numeric values, such as 'a' into each of the component fields. This should cause the previous value to replace the invalid value entered on blur.
+
 ## The brush editor is properly themed
 
 1. Open the brush editor and check that all UI elements are properly styled.
