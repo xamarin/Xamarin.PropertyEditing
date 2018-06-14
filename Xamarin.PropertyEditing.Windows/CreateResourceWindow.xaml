@@ -53,7 +53,7 @@
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
 
-				<RadioButton Grid.Column="0" Grid.Row="0" Content="{x:Static prop:Resources.Application}" IsChecked="{Binding DefineInApplication,Mode=TwoWay}" />
+				<RadioButton Grid.Column="0" Grid.Row="0" Content="{x:Static prop:Resources.Application}" IsEnabled="{Binding HasApplicationSource}" IsChecked="{Binding DefineInApplication,Mode=TwoWay}" />
 				<RadioButton Grid.Column="0" Grid.Row="1" Content="{x:Static prop:Resources.ThisDocument}" IsEnabled="{Binding HasDocumentSources}" IsChecked="{Binding DefineInDocument,Mode=TwoWay}" />
 				<RadioButton Grid.Column="0" Grid.Row="2" Content="{x:Static prop:Resources.ResourceDictionary}" IsEnabled="{Binding HasApplicationSources}" IsChecked="{Binding DefineInApplicationSource,Mode=TwoWay}" />
 

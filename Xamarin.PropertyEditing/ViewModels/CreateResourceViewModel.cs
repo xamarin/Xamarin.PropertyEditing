@@ -108,7 +108,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 					return;
 
 				if (!value) {
-					DefineInDocument = true;
+					if (HasDocumentSources)
+						DefineInDocument = true;
+					else if (HasApplicationSources)
+						DefineInApplicationSource = true;
+					else
+						DefineInApplication = true;
+
 					return;
 				}
 
@@ -132,7 +138,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 					this.defineIn = ResourceSourceType.Document;
 					SelectedResourceSource = SelectedDocumentSource;
 				} else {
-					DefineInApplication = true;
+					if (HasApplicationSource)
+						DefineInApplication = true;
+					else if (HasApplicationSources)
+						DefineInApplicationSource = true;
+					else
+						DefineInDocument = true;
+
 					return;
 				}
 
@@ -167,7 +179,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 					this.defineIn = ResourceSourceType.ResourceDictionary;
 					SelectedResourceSource = SelectedApplicationSource;
 				} else {
-					DefineInApplication = true;
+					if (HasApplicationSource)
+						DefineInApplication = true;
+					else if (HasDocumentSources)
+						DefineInDocument = true;
+					else
+						DefineInApplicationSource = true;
+
 					return;
 				}
 
@@ -190,6 +208,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				SelectedResourceSource = value;
 			}
 		}
+
+		public bool HasApplicationSource => this.applicationSource != null;
 
 		public bool HasApplicationSources => (ApplicationSources?.Count ?? 0) > 0;
 
@@ -341,14 +361,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 						docSources.Add (source);
 				}
 
-				if (this.applicationSource == null)
-					throw new NotSupportedException ("You must define an application level resource source.");
-
 				ApplicationSources = appSources;
 				SelectedApplicationSource = appSources.FirstOrDefault ();
 				DocumentSources = docSources;
 				SelectedDocumentSource = docSources.FirstOrDefault ();
-				DefineInApplication = true;
+
+				if (HasApplicationSource)
+					DefineInApplication = true;
+				else if (HasDocumentSources)
+					DefineInDocument = true;
+				else if (HasApplicationSources)
+					DefineInApplicationSource = true;
+
 				await suggestedNameTask;
 			} catch (Exception ex) {
 				FatalError = ex.Message;
