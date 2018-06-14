@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
@@ -260,6 +261,192 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (selectedSourceChanged, Is.True);
 			Assert.That (inAppChanged, Is.True);
 			Assert.That (inDocumentChanged, Is.True);
+		}
+
+		[TestCase (true, true, true)]
+		[TestCase (false, true, true)]
+		[TestCase (false, false, true)]
+		[TestCase (false, true, false)]
+		[TestCase (false, false, false)]
+		public void DefaultDefines (bool appSource, bool documentSource, bool applicationSources)
+		{
+			var target = new object();
+			var property = new Mock<IPropertyInfo>();
+			var provider = new Mock<IResourceProvider>();
+			provider.Setup (p => p.GetResourceSourcesAsync (target, property.Object)).ReturnsAsync (Sources.Where (s => {
+				if (s.Type == ResourceSourceType.Application)
+					return appSource;
+				if (s.Type == ResourceSourceType.Document)
+					return documentSource;
+				if (s.Type == ResourceSourceType.ResourceDictionary)
+					return applicationSources;
+
+				return false;
+			}).ToArray());
+
+			var vm = new CreateResourceViewModel (provider.Object, new[] { target }, property.Object);
+
+			var values = new[] {
+				appSource,
+				documentSource,
+				applicationSources
+			};
+
+			var defaultOrder = new Func<bool>[] {
+				() => vm.DefineInApplication,
+				() => vm.DefineInDocument,
+				() => vm.DefineInApplicationSource
+			};
+
+			bool hasDefault = false;
+			for (int i = 0; i < values.Length; i++) {
+				if (!hasDefault && values[i]) {
+					hasDefault = true;
+					Assert.That (defaultOrder[i] (), Is.True);
+				} else
+					Assert.That (defaultOrder[i] (), Is.False);
+			}
+		}
+
+		[TestCase (true, true)]
+		[TestCase (false, true)]
+		[TestCase (true, false)]
+		[TestCase (false, false)]
+		public void DontDefineInDocumentFallback (bool appSource, bool applicationSources)
+		{
+			var target = new object();
+			var property = new Mock<IPropertyInfo>();
+			var provider = new Mock<IResourceProvider>();
+			provider.Setup (p => p.GetResourceSourcesAsync (target, property.Object)).ReturnsAsync (Sources.Where (s => {
+				if (s.Type == ResourceSourceType.Application)
+					return appSource;
+				if (s.Type == ResourceSourceType.Document)
+					return true;
+				if (s.Type == ResourceSourceType.ResourceDictionary)
+					return applicationSources;
+
+				return false;
+			}).ToArray());
+
+			var vm = new CreateResourceViewModel (provider.Object, new[] { target }, property.Object);
+			vm.DefineInDocument = true;
+
+			var values = new[] {
+				appSource,
+				!appSource && !applicationSources,
+				applicationSources
+			};
+
+			var defaultOrder = new Func<bool>[] {
+				() => vm.DefineInApplication,
+				() => vm.DefineInDocument,
+				() => vm.DefineInApplicationSource
+			};
+
+			vm.DefineInDocument = false;
+
+			bool hasDefault = false;
+			for (int i = 0; i < values.Length; i++) {
+				if (!hasDefault && values[i]) {
+					hasDefault = true;
+					Assert.That (defaultOrder[i] (), Is.True);
+				} else
+					Assert.That (defaultOrder[i] (), Is.False);
+			}
+		}
+
+		[TestCase (true, true)]
+		[TestCase (false, true)]
+		[TestCase (true, false)]
+		[TestCase (false, false)]
+		public void DontDefineInApplicationFallback (bool documentSource, bool applicationSources)
+		{
+			var target = new object();
+			var property = new Mock<IPropertyInfo>();
+			var provider = new Mock<IResourceProvider>();
+			provider.Setup (p => p.GetResourceSourcesAsync (target, property.Object)).ReturnsAsync (Sources.Where (s => {
+				if (s.Type == ResourceSourceType.Application)
+					return true;
+				if (s.Type == ResourceSourceType.Document)
+					return documentSource;
+				if (s.Type == ResourceSourceType.ResourceDictionary)
+					return applicationSources;
+
+				return false;
+			}).ToArray());
+
+			var vm = new CreateResourceViewModel (provider.Object, new[] { target }, property.Object);
+			vm.DefineInApplication = true;
+
+			var values = new[] {
+				!documentSource && !applicationSources,
+				documentSource,
+				applicationSources
+			};
+
+			var defaultOrder = new Func<bool>[] {
+				() => vm.DefineInApplication,
+				() => vm.DefineInDocument,
+				() => vm.DefineInApplicationSource
+			};
+
+			vm.DefineInApplication = false;
+
+			bool hasDefault = false;
+			for (int i = 0; i < values.Length; i++) {
+				if (!hasDefault && values[i]) {
+					hasDefault = true;
+					Assert.That (defaultOrder[i] (), Is.True);
+				} else
+					Assert.That (defaultOrder[i] (), Is.False);
+			}
+		}
+
+		[TestCase (true, true)]
+		[TestCase (false, true)]
+		[TestCase (true, false)]
+		[TestCase (false, false)]
+		public void DontDefineInResourceDictionaryFallback (bool appSource, bool documentSource)
+		{
+			var target = new object();
+			var property = new Mock<IPropertyInfo>();
+			var provider = new Mock<IResourceProvider>();
+			provider.Setup (p => p.GetResourceSourcesAsync (target, property.Object)).ReturnsAsync (Sources.Where (s => {
+				if (s.Type == ResourceSourceType.Application)
+					return appSource;
+				if (s.Type == ResourceSourceType.Document)
+					return documentSource;
+				if (s.Type == ResourceSourceType.ResourceDictionary)
+					return true;
+
+				return false;
+			}).ToArray());
+
+			var vm = new CreateResourceViewModel (provider.Object, new[] { target }, property.Object);
+			vm.DefineInApplicationSource = true;
+
+			var values = new[] {
+				appSource,
+				documentSource,
+				!appSource && !documentSource
+			};
+
+			var defaultOrder = new Func<bool>[] {
+				() => vm.DefineInApplication,
+				() => vm.DefineInDocument,
+				() => vm.DefineInApplicationSource
+			};
+
+			vm.DefineInApplicationSource = false;
+
+			bool hasDefault = false;
+			for (int i = 0; i < values.Length; i++) {
+				if (!hasDefault && values[i]) {
+					hasDefault = true;
+					Assert.That (defaultOrder[i] (), Is.True);
+				} else
+					Assert.That (defaultOrder[i] (), Is.False);
+			}
 		}
 
 		[Test]
