@@ -612,28 +612,28 @@
 		<local:BrushChoiceTemplateSelector.NoBrushTemplate>
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource BrushChoiceItem}">
-					<ContentControl ContentTemplate="{DynamicResource BrushChoiceNoBrushIcon}"/>
+					<ContentControl ContentTemplate="{DynamicResource BrushChoiceNoBrushIcon}" Focusable="False"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.NoBrushTemplate>
 		<local:BrushChoiceTemplateSelector.SolidBrushTemplate>
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource BrushChoiceItem}">
-					<ContentControl ContentTemplate="{DynamicResource BrushChoiceSolidBrushIcon}"/>
+					<ContentControl ContentTemplate="{DynamicResource BrushChoiceSolidBrushIcon}" Focusable="False"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.SolidBrushTemplate>
 		<local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource BrushChoiceItem}">
-					<ContentControl ContentTemplate="{DynamicResource BrushChoiceMaterialDesignIcon}"/>
+					<ContentControl ContentTemplate="{DynamicResource BrushChoiceMaterialDesignIcon}" Focusable="False"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.MaterialDesignBrushTemplate>
 		<local:BrushChoiceTemplateSelector.ResourceBrushTemplate>
 			<DataTemplate>
 				<RadioButton Style="{DynamicResource BrushChoiceItem}">
-					<ContentControl ContentTemplate="{DynamicResource BrushChoiceResourceBrushIcon}"/>
+					<ContentControl ContentTemplate="{DynamicResource BrushChoiceResourceBrushIcon}" Focusable="False"/>
 				</RadioButton>
 			</DataTemplate>
 		</local:BrushChoiceTemplateSelector.ResourceBrushTemplate>
