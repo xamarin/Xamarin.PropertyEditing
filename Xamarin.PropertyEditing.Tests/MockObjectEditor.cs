@@ -33,15 +33,18 @@ namespace Xamarin.PropertyEditing.Tests
 	{
 		public MockObjectEditor ()
 		{
+			TargetType = Target.GetType ().ToTypeInfo ();
 		}
 
 		public MockObjectEditor (params IPropertyInfo[] properties)
+			: this()
 		{
 			Properties = properties.ToArray ();
 		}
 
 		public MockObjectEditor (IReadOnlyList<IPropertyInfo> properties,
 			IReadOnlyDictionary<IPropertyInfo, IReadOnlyList<ITypeInfo>> assignableTypes)
+			: this ()
 		{
 			Properties = properties;
 			this.assignableTypes = assignableTypes;
@@ -52,7 +55,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Properties = control.Properties.Values.ToArray();
 			Events = control.Events.Values.ToArray();
 			Target = control;
-			TypeName = control.GetType ().Name;
+			TargetType = Target.GetType ().ToTypeInfo ();
 		}
 
 		public object Target
@@ -61,7 +64,7 @@ namespace Xamarin.PropertyEditing.Tests
 			set;
 		} = new object ();
 
-		public string TypeName
+		public ITypeInfo TargetType
 		{
 			get;
 			set;

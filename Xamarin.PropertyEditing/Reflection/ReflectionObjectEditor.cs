@@ -43,7 +43,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public object Target => this.target;
 
-		public string TypeName => this.target.GetType ().Name;
+		public ITypeInfo TargetType => Target.GetType ().ToTypeInfo ();
 
 		public IReadOnlyCollection<IPropertyInfo> Properties => this.properties;
 

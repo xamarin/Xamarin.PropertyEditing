@@ -30,10 +30,9 @@ namespace Xamarin.PropertyEditing
 		object Target { get; }
 
 		/// <summary>
-		/// Gets the real type name for the object.
+		/// Gets the real type of the <see cref="Target"/>.
 		/// </summary>
-		/// <remarks>Also used for iconography.</remarks>
-		string TypeName { get; }
+		ITypeInfo TargetType { get; }
 
 		/// <remarks>
 		/// These properties should be minimally equatable to the same property for another object of the same type. This includes

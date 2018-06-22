@@ -286,19 +286,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return;
 			}
 
+			IObjectEditor editor = this.objEditors[0];
+
 			Task<string> nameQuery = null;
-			INameableObject firstNameable = this.objEditors[0] as INameableObject;
+			INameableObject firstNameable = editor as INameableObject;
 			if (this.objEditors.Count == 1) {
 				nameQuery = firstNameable?.GetNameAsync ();
 			}
 
-			IObjectEventEditor events = this.objEditors[0] as IObjectEventEditor;
+			IObjectEventEditor events = editor as IObjectEventEditor;
 			var newEventSet = new HashSet<IEventInfo> (events?.Events ?? Enumerable.Empty<IEventInfo> ());
 
-			string newTypeName = this.objEditors[0]?.TypeName;
-			var newPropertySet = new HashSet<IPropertyInfo> (this.objEditors[0]?.Properties ?? Enumerable.Empty<IPropertyInfo>());
+			string newTypeName = editor.TargetType.Name;
+			var newPropertySet = new HashSet<IPropertyInfo> (editor.Properties ?? Enumerable.Empty<IPropertyInfo>());
 			for (int i = 1; i < this.objEditors.Count; i++) {
-				IObjectEditor editor = this.objEditors[i];
+				editor = this.objEditors[i];
 				newPropertySet.IntersectWith (editor.Properties);
 
 				if (editor is IObjectEventEditor) {
@@ -309,7 +311,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (firstNameable == null)
 					firstNameable = editor as INameableObject;
 
-				if (newTypeName != editor.TypeName)
+				if (newTypeName != editor.TargetType.Name)
 					newTypeName = String.Format (PropertyEditing.Properties.Resources.MultipleTypesSelected, this.objEditors.Count);
 			}
 

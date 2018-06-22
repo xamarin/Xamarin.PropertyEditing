@@ -24,54 +24,6 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public async Task PropertiesAddedFromEditor ()
-		{
-			var provider = new ReflectionEditorProvider ();
-			var obj = new TestClass ();
-			var editor = await provider.GetObjectEditorAsync (obj);
-			Assume.That (editor.Properties.Count, Is.EqualTo (1));
-
-			var vm = new PanelViewModel (new TargetPlatform (provider));
-			vm.SelectedObjects.Add (obj);
-
-			Assert.That (vm.Properties, Is.Not.Empty);
-			Assert.That (((PropertyViewModel)vm.Properties[0]).Property, Is.EqualTo (editor.Properties.Single ()));
-		}
-
-		[Test]
-		[Description ("When editors of two different types are selected, the properties that are common should be listed")]
-		public void PropertiesFromCommonSubset ()
-		{
-			var obj1 = new TestClass ();
-			var obj2 = new TestClassSub ();
-
-			var sharedPropertyMock = new Mock<IPropertyInfo> ();
-			sharedPropertyMock.SetupGet (pi => pi.Type).Returns (typeof (string));
-			var subPropertyMock = new Mock<IPropertyInfo> ();
-			subPropertyMock.SetupGet (pi => pi.Type).Returns (typeof (int));
-
-			var editor1Mock = new Mock<IObjectEditor> ();
-			editor1Mock.SetupGet (oe => oe.Properties).Returns (new[] { sharedPropertyMock.Object });
-			var editor2Mock = new Mock<IObjectEditor> ();
-			editor2Mock.SetupGet (oe => oe.Properties).Returns (new[] { sharedPropertyMock.Object, subPropertyMock.Object });
-
-			var providerMock = new Mock<IEditorProvider> ();
-			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj1)).ReturnsAsync (editor1Mock.Object);
-			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj2)).ReturnsAsync (editor2Mock.Object);
-
-			var vm = new PanelViewModel (new TargetPlatform (providerMock.Object));
-			vm.SelectedObjects.Add (obj1);
-
-			Assume.That (vm.Properties.Count, Is.EqualTo (1));
-			Assume.That (((PropertyViewModel)vm.Properties[0]).Property, Is.EqualTo (sharedPropertyMock.Object));
-
-			// Reflection property info equate actually fails on the same property across class/subclass
-			vm.SelectedObjects.Add (obj2);
-			Assert.That (vm.Properties.Count, Is.EqualTo (1));
-			Assert.That (((PropertyViewModel)vm.Properties.Single()).Property, Is.EqualTo (sharedPropertyMock.Object));
-		}
-
-		[Test]
 		[Description ("When editors of two different types are selected, the properties that are common should be listed")]
 		public void PropertiesReducesToCommonSubset ()
 		{
@@ -85,8 +37,10 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var editor1Mock = new Mock<IObjectEditor> ();
 			editor1Mock.SetupGet (oe => oe.Properties).Returns (new[] { sharedPropertyMock.Object });
+			editor1Mock.SetTarget (obj1);
 			var editor2Mock = new Mock<IObjectEditor> ();
 			editor2Mock.SetupGet (oe => oe.Properties).Returns (new[] { sharedPropertyMock.Object, subPropertyMock.Object });
+			editor2Mock.SetTarget (obj2);
 
 			var providerMock = new Mock<IEditorProvider> ();
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj1)).ReturnsAsync (editor1Mock.Object);
@@ -160,11 +114,13 @@ namespace Xamarin.PropertyEditing.Tests
 			var mockProperty2 = new Mock<IPropertyInfo> ();
 			mockProperty2.SetupGet (pi => pi.Type).Returns (typeof (string));
 
+			var obj = new object ();
+
 			var properties = new ObservableCollection<IPropertyInfo> { mockProperty1.Object, mockProperty2.Object };
 			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.SetupGet (e => e.Target).Returns (obj);
+			editorMock.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			editorMock.SetupGet (e => e.Properties).Returns (properties);
-
-			var obj = new object ();
 
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
@@ -190,11 +146,13 @@ namespace Xamarin.PropertyEditing.Tests
 			var mockProperty2 = new Mock<IPropertyInfo> ();
 			mockProperty2.SetupGet (pi => pi.Type).Returns (typeof (string));
 
+			var obj = new object ();
+
 			var properties = new ObservableCollection<IPropertyInfo> { mockProperty1.Object };
 			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.SetupGet (oe => oe.Target).Returns (obj);
+			editorMock.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			editorMock.SetupGet (e => e.Properties).Returns (properties);
-
-			var obj = new object ();
 
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
@@ -221,11 +179,13 @@ namespace Xamarin.PropertyEditing.Tests
 			var mockProperty2 = new Mock<IPropertyInfo> ();
 			mockProperty2.SetupGet (pi => pi.Type).Returns (typeof (string));
 
+			var obj = new object ();
+
 			var properties = new ObservableCollection<IPropertyInfo> { mockProperty1.Object };
 			var editorMock = new Mock<IObjectEditor> ();
+			editorMock.SetupGet (e => e.Target).Returns (obj);
+			editorMock.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			editorMock.SetupGet (e => e.Properties).Returns (properties);
-
-			var obj = new object ();
 
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editorMock.Object);
@@ -262,11 +222,11 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var baseEditorMock = new Mock<IObjectEditor> ();
 			baseEditorMock.SetupGet (e => e.Properties).Returns (baseProperties);
-			baseEditorMock.SetupGet (e => e.Target).Returns (baseObj);
+			baseEditorMock.SetTarget (baseObj);
 
 			var derivedEditorMock = new Mock<IObjectEditor> ();
 			derivedEditorMock.SetupGet (e => e.Properties).Returns (derivedProperties);
-			derivedEditorMock.SetupGet (e => e.Target).Returns (derivedObj);
+			derivedEditorMock.SetTarget (derivedObj);
 
 			var providerMock = new Mock<IEditorProvider> ();
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
@@ -296,11 +256,11 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var baseEditorMock = new Mock<IObjectEditor> ();
 			baseEditorMock.SetupGet (e => e.Properties).Returns (baseProperties);
-			baseEditorMock.SetupGet (e => e.Target).Returns (baseObj);
+			baseEditorMock.SetTarget (baseObj);
 
 			var derivedEditorMock = new Mock<IObjectEditor> ();
 			derivedEditorMock.SetupGet (e => e.Properties).Returns (derivedProperties);
-			derivedEditorMock.SetupGet (e => e.Target).Returns (derivedObj);
+			derivedEditorMock.SetTarget (derivedObj);
 
 			var providerMock = new Mock<IEditorProvider> ();
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
@@ -334,11 +294,11 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var baseEditorMock = new Mock<IObjectEditor> ();
 			baseEditorMock.SetupGet (e => e.Properties).Returns (baseProperties);
-			baseEditorMock.SetupGet (e => e.Target).Returns (baseObj);
+			baseEditorMock.SetTarget (baseObj);
 
 			var derivedEditorMock = new Mock<IObjectEditor> ();
 			derivedEditorMock.SetupGet (e => e.Properties).Returns (derivedProperties);
-			derivedEditorMock.SetupGet (e => e.Target).Returns (derivedObj);
+			derivedEditorMock.SetTarget (derivedObj);
 
 			var providerMock = new Mock<IEditorProvider> ();
 			providerMock.Setup (ep => ep.GetObjectEditorAsync (baseObj)).ReturnsAsync (baseEditorMock.Object);
@@ -371,10 +331,12 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var editor1 = new Mock<IObjectEditor> ();
 			editor1.SetupGet (oe => oe.Target).Returns (obj1);
+			editor1.SetupGet (oe => oe.TargetType).Returns (obj1.GetType ().ToTypeInfo ());
 			editor1.SetupGet (oe => oe.Properties).Returns (new[] { property.Object });
 
 			var editor2 = new Mock<IObjectEditor> ();
 			editor2.SetupGet (oe => oe.Target).Returns (obj2);
+			editor2.SetupGet (oe => oe.TargetType).Returns (obj2.GetType ().ToTypeInfo ());
 			editor2.SetupGet (oe => oe.Properties).Returns (new[] { property.Object });
 
 			Task<IObjectEditor> returnObject = null;
@@ -728,9 +690,9 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.GetIsExpanded ("ints"), Is.True);
 		}
 
-		internal override PanelViewModel CreateVm (IEditorProvider provider)
+		internal override PanelViewModel CreateVm (TargetPlatform platform)
 		{
-			return new PanelViewModel (new TargetPlatform (provider));
+			return new PanelViewModel (platform);
 		}
 
 		private TestContext context;

@@ -149,5 +149,11 @@ namespace Xamarin.PropertyEditing
 
 			return new AssignableTypesResult (suggested, all);
 		}
+
+		public static ITypeInfo ToTypeInfo (this Type type, bool isRelevant = true)
+		{
+			var asm = type.Assembly.GetName ().Name;
+			return new TypeInfo (new AssemblyInfo (asm, isRelevant), type.Namespace, type.Name);
+		}
 	}
 }

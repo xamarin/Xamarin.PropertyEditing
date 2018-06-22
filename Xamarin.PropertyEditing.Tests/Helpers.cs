@@ -1,11 +1,18 @@
 using System;
 using System.Drawing;
+using Moq;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Tests
 {
 	static class Helpers
 	{
+		public static void SetTarget (this Mock<IObjectEditor> editor, object target)
+		{
+			editor.SetupGet (e => e.Target).Returns (target);
+			editor.SetupGet (oe => oe.TargetType).Returns (target.GetType ().ToTypeInfo ());
+		}
+
 		public static TEnum Next<TEnum>(this Random rand)
 		{
 			if (!typeof (TEnum).IsEnum) throw new InvalidOperationException ("Can't use GetRandomValue with a non-enum type.");

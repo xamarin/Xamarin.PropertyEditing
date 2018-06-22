@@ -128,6 +128,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			editor.SetupGet (e => e.Target).Returns (obj);
+			editor.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			editor.As<INameableObject> ().Setup (n => n.GetNameAsync ()).ReturnsAsync (name);
 
 			var provider = new Mock<IEditorProvider> ();
@@ -157,6 +158,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			editor.SetupGet (e => e.Target).Returns (obj);
+			editor.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			editor.As<INameableObject> ().Setup (n => n.GetNameAsync ()).ReturnsAsync (name);
 
 			var provider = new Mock<IEditorProvider> ();
@@ -186,6 +188,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			editor.SetupGet (e => e.Target).Returns (obj);
+			editor.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			editor.As<INameableObject> ().Setup (n => n.GetNameAsync ()).ReturnsAsync (name);
 
 			var provider = new Mock<IEditorProvider> ();
@@ -210,6 +213,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			editor.SetupGet (e => e.Target).Returns (obj);
+			editor.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			editor.As<INameableObject> ().Setup (n => n.GetNameAsync ()).ReturnsAsync (name);
 
 			var provider = new Mock<IEditorProvider> ();
@@ -253,7 +257,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
-			editor.SetupGet (e => e.Target).Returns (obj);
+			editor.SetTarget (obj);
 			editor.As<INameableObject> ().Setup (n => n.GetNameAsync ()).ReturnsAsync ((string)null);
 
 			var provider = new Mock<IEditorProvider> ();
@@ -277,10 +281,12 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			editor.SetupGet (e => e.Target).Returns (obj);
+			editor.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			editor.As<INameableObject> ().Setup (n => n.GetNameAsync ()).ReturnsAsync (name);
 
 			var editor2 = new Mock<IObjectEditor> ();
 			editor2.SetupGet (e => e.Target).Returns (obj2);
+			editor2.SetupGet (oe => oe.TargetType).Returns (obj2.GetType ().ToTypeInfo ());
 			editor2.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			
 			var provider = new Mock<IEditorProvider> ();
@@ -311,6 +317,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			editor.SetupGet (e => e.Target).Returns (obj);
+			editor.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			editor.As<INameableObject> ().Setup (n => n.GetNameAsync ()).ReturnsAsync (name);
 
 			var editor2 = new Mock<IObjectEditor> ();
@@ -345,11 +352,13 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			editor.SetupGet (e => e.Target).Returns (obj);
+			editor.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			editor.As<INameableObject> ().Setup (n => n.GetNameAsync ()).ReturnsAsync (name);
 
 			var editor2 = new Mock<IObjectEditor> ();
 			editor2.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			editor2.SetupGet (e => e.Target).Returns (obj2);
+			editor2.SetupGet (oe => oe.TargetType).Returns (obj2.GetType ().ToTypeInfo ());
 			editor2.As<INameableObject> ();
 
 			var provider = new Mock<IEditorProvider> ();
@@ -378,7 +387,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
-			editor.SetupGet (e => e.Target).Returns (obj);
+			editor.SetTarget (obj);
 			var nameable = editor.As<INameableObject> ();
 			nameable.Setup (n => n.GetNameAsync ()).ReturnsAsync ((string)null);
 
@@ -410,6 +419,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
+			editor.SetTarget (obj);
 
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (p => p.GetObjectEditorAsync (obj)).ReturnsAsync (editor.Object);
@@ -431,6 +441,8 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
+			editor.SetupGet (oe => oe.Target).Returns (obj);
+			editor.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			var eeditor = editor.As<IObjectEventEditor> ();
 			eeditor.SetupGet (e => e.Events).Returns (new[] { ev.Object });
 
@@ -465,11 +477,15 @@ namespace Xamarin.PropertyEditing.Tests
 			ev.SetupGet (e => e.Name).Returns ("name");
 
 			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.Target).Returns (obj);
+			editor.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			var eeditor = editor.As<IObjectEventEditor> ();
 			eeditor.SetupGet (e => e.Events).Returns (new[] { ev.Object });
 
 			var editor2 = new Mock<IObjectEditor> ();
+			editor2.SetupGet (oe => oe.Target).Returns (obj2);
+			editor2.SetupGet (oe => oe.TargetType).Returns (obj2.GetType ().ToTypeInfo ());
 			editor2.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			var eeditor2 = editor.As<IObjectEventEditor> ();
 			eeditor2.SetupGet (e => e.Events).Returns (new[] { ev.Object });
@@ -508,6 +524,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var target = new object ();
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.TargetType).Returns (target.GetType ().ToTypeInfo ());
 			editor.SetupGet (oe => oe.Properties).Returns (new[] { property.Object });
 
 			var provider = new Mock<IEditorProvider> ();
@@ -520,6 +537,63 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.Properties.First(), Is.TypeOf<PredefinedValuesViewModel<string>> ());
 		}
 
-		internal abstract TViewModel CreateVm (IEditorProvider provider);
+		[Test]
+		public async Task PropertiesAddedFromEditor ()
+		{
+			var provider = new ReflectionEditorProvider ();
+			var obj = new TestClass ();
+			var editor = await provider.GetObjectEditorAsync (obj);
+			Assume.That (editor.Properties.Count, Is.EqualTo (1));
+
+			var vm = CreateVm (new TargetPlatform (provider));
+			vm.SelectedObjects.Add (obj);
+
+			Assert.That (vm.Properties, Is.Not.Empty);
+			Assert.That (((PropertyViewModel)vm.Properties[0]).Property, Is.EqualTo (editor.Properties.Single ()));
+		}
+
+		[Test]
+		[Description ("When editors of two different types are selected, the properties that are common should be listed")]
+		public void PropertiesFromCommonSubset ()
+		{
+			var obj1 = new TestClass ();
+			var obj2 = new TestClassSub ();
+
+			var sharedPropertyMock = new Mock<IPropertyInfo> ();
+			sharedPropertyMock.SetupGet (pi => pi.Type).Returns (typeof (string));
+			var subPropertyMock = new Mock<IPropertyInfo> ();
+			subPropertyMock.SetupGet (pi => pi.Type).Returns (typeof (int));
+
+			var editor1Mock = new Mock<IObjectEditor> ();
+			editor1Mock.SetupGet (oe => oe.Properties).Returns (new[] { sharedPropertyMock.Object });
+			editor1Mock.SetupGet (oe => oe.Target).Returns (obj1);
+			editor1Mock.SetupGet (oe => oe.TargetType).Returns (obj1.GetType ().ToTypeInfo ());
+			var editor2Mock = new Mock<IObjectEditor> ();
+			editor2Mock.SetupGet (oe => oe.Properties).Returns (new[] { sharedPropertyMock.Object, subPropertyMock.Object });
+			editor2Mock.SetupGet (oe => oe.Target).Returns (obj2);
+			editor2Mock.SetupGet (oe => oe.TargetType).Returns (obj2.GetType ().ToTypeInfo ());
+
+			var providerMock = new Mock<IEditorProvider> ();
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj1)).ReturnsAsync (editor1Mock.Object);
+			providerMock.Setup (ep => ep.GetObjectEditorAsync (obj2)).ReturnsAsync (editor2Mock.Object);
+
+			var vm = CreateVm (new TargetPlatform (providerMock.Object));
+			vm.SelectedObjects.Add (obj1);
+
+			Assume.That (vm.Properties.Count, Is.EqualTo (1));
+			Assume.That (((PropertyViewModel)vm.Properties[0]).Property, Is.EqualTo (sharedPropertyMock.Object));
+
+			// Reflection property info equate actually fails on the same property across class/subclass
+			vm.SelectedObjects.Add (obj2);
+			Assert.That (vm.Properties.Count, Is.EqualTo (1));
+			Assert.That (((PropertyViewModel)vm.Properties.Single ()).Property, Is.EqualTo (sharedPropertyMock.Object));
+		}
+
+		protected TViewModel CreateVm (IEditorProvider provider)
+		{
+			return CreateVm (new TargetPlatform (provider));
+		}
+
+		internal abstract TViewModel CreateVm (TargetPlatform platform);
 	}
 }
