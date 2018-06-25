@@ -1304,7 +1304,7 @@
 												ToolTip="{Binding Label}" AutomationProperties.Name="{Binding Label}" AutomationProperties.HelpText="{Binding Label}"
 												GroupName="MaterialDesignAccentOrNormal">
 												<local:BrushBoxControl Label="{Binding Label}" FontSize="10"
-																	   LightForegroundThreshold="{Binding Path=DataContext.NormalColorScriptureLightnessThreshold, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChoiceControl}}}">
+																	   LightForegroundThreshold="{Binding Path=DataContext.NormalColorScriptureLightnessThreshold, ElementName=normalColorPicker}">
 													<local:BrushBoxControl.Brush>
 														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
 													</local:BrushBoxControl.Brush>
@@ -1332,7 +1332,7 @@
 												ToolTip="{Binding Label}" AutomationProperties.Name="{Binding Label}" AutomationProperties.HelpText="{Binding Label}"
 												GroupName="MaterialDesignAccentOrNormal">
 												<local:BrushBoxControl Label="{Binding Label}" FontSize="10"
-																	   LightForegroundThreshold="{Binding Path=DataContext.AccentColorScriptureLightnessThreshold, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChoiceControl}}}">
+																	   LightForegroundThreshold="{Binding Path=DataContext.AccentColorScriptureLightnessThreshold, ElementName=accentColorPicker}">
 													<local:BrushBoxControl.Brush>
 														<SolidColorBrush Color="{Binding Converter={local:CommonColorToColorConverter}}"/>
 													</local:BrushBoxControl.Brush>
