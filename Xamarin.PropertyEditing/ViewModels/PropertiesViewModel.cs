@@ -297,10 +297,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 			IObjectEventEditor events = editor as IObjectEventEditor;
 			var newEventSet = new HashSet<IEventInfo> (events?.Events ?? Enumerable.Empty<IEventInfo> ());
 
-			string newTypeName = editor.TargetType.Name;
-			var newPropertySet = new HashSet<IPropertyInfo> (editor.Properties ?? Enumerable.Empty<IPropertyInfo>());
+			bool knownProperties = (editor?.KnownProperties?.Count ?? 0) > 0;
+			string newTypeName = editor?.TargetType.Name;
+			var newPropertySet = new HashSet<IPropertyInfo> (editor?.Properties ?? Enumerable.Empty<IPropertyInfo>());
 			for (int i = 1; i < this.objEditors.Count; i++) {
 				editor = this.objEditors[i];
+				if (editor == null)
+					continue;
+
 				newPropertySet.IntersectWith (editor.Properties);
 
 				if (editor is IObjectEventEditor) {

@@ -511,6 +511,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var vm = CreateVm (providerMock.Object);
 			vm.SelectedObjects.Add (null);
+			vm.SelectedObjects.Add (null);
 		}
 
 		[Test]
