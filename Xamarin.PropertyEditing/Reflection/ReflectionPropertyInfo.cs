@@ -41,7 +41,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public Type Type => this.propertyInfo.PropertyType;
 
-		public string TypeName => this.propertyInfo.Name;
+		public ITypeInfo RealType => this.propertyInfo.PropertyType.ToTypeInfo ();
 
 		public string Category => this.category.Value;
 
