@@ -41,11 +41,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			get {
 				// Debug.WriteLine ($"Getting ColorName ({this.colorName})");
-				if (this.colorName != null) return this.colorName;
-				if (Parent.Value is CommonSolidBrush solidBrush) {
-					return (this.colorName = Palette.Name);
-				}
-				return (this.colorName = Strings.MaterialColorGrey);
+				return this.colorName ??
+					(Parent.Value is CommonSolidBrush solidBrush ? (this.colorName = Palette.Name)
+					: (this.colorName = Strings.MaterialColorGrey));
 			}
 			set {
 				// Debug.WriteLine ($"Setting ColorName to {value}");
@@ -251,9 +249,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			Color = new CommonColor (newColor.R, newColor.G, newColor.B, alpha);
 		}
 
-		private static string[] NormalNames = new[] { "50", "100", "200", "300", "400", "500", "600", "700", "800", "900" };
-		private static string[] AccentNames = new[] { "A100", "A200", "A400", "A700" };
-		private static string[] BlackAndWhiteNames = new[] { Strings.White, Strings.Black };
+		private static readonly string[] NormalNames = new[] { "50", "100", "200", "300", "400", "500", "600", "700", "800", "900" };
+		private static readonly string[] AccentNames = new[] { "A100", "A200", "A400", "A700" };
+		private static readonly string[] BlackAndWhiteNames = new[] { Strings.White, Strings.Black };
 
 		private static MaterialColorScale FindPalette (string colorName, bool isAccent = false)
 		{

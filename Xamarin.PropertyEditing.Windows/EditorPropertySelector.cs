@@ -47,8 +47,6 @@ namespace Xamarin.PropertyEditing.Windows
 			return base.TryGetTemplateType (type, out templateType);
 		}
 
-		private static readonly EditorPropertySelector selector;
-
 		private static readonly Dictionary<Type, Type> TypeMap = new Dictionary<Type, Type> {
 			{ typeof(BrushPropertyViewModel), typeof(BrushTabbedEditorControl) }
 		};
