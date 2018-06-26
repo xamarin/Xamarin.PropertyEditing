@@ -241,6 +241,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return this.realProvider.GetObjectEditorAsync (item);
 			}
 
+			public Task<IReadOnlyCollection<IPropertyInfo>> GetPropertiesForTypeAsync (ITypeInfo type)
+			{
+				return this.realProvider.GetPropertiesForTypeAsync (type);
+			}
+
 			public async Task<IObjectEditor> GetAndCacheEditorAsync (object item)
 			{
 				if (!this.editors.TryGetValue (item, out IObjectEditor editor)) {

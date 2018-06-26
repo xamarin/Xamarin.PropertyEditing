@@ -21,6 +21,13 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult (editor);
 		}
 
+		public async Task<IReadOnlyCollection<IPropertyInfo>> GetPropertiesForTypeAsync (ITypeInfo type)
+		{
+			object obj = await CreateObjectAsync (type).ConfigureAwait (false);
+			IObjectEditor editor = ChooseEditor (obj);
+			return editor.Properties;
+		}
+
 		IObjectEditor ChooseEditor (object item)
 		{
 			switch (item) {

@@ -8,6 +8,8 @@ namespace Xamarin.PropertyEditing
 	{
 		Task<IObjectEditor> GetObjectEditorAsync (object item);
 
+		Task<IReadOnlyCollection<IPropertyInfo>> GetPropertiesForTypeAsync (ITypeInfo type);
+
 		/// <summary>
 		/// Creates a representation value of the <paramref name="type"/> and returns it.
 		/// </summary>

@@ -18,21 +18,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			this.target = target;
 			Type targetType = target.GetType ();
 
-			foreach (PropertyInfo property in targetType.GetProperties ()) {
-				DebuggerBrowsableAttribute browsable = property.GetCustomAttribute<DebuggerBrowsableAttribute> ();
-				if (browsable != null && browsable.State == DebuggerBrowsableState.Never) {
-					continue;
-				}
-
-				if (CheckAvailability (property)) {
-					if (property.PropertyType.IsEnum) {
-						this.properties.Add ((ReflectionPropertyInfo)Activator.CreateInstance (typeof (ReflectionEnumPropertyInfo<>).MakeGenericType (Enum.GetUnderlyingType (property.PropertyType)), property));
-					}
-					else {
-						this.properties.Add (new ReflectionPropertyInfo (property));
-					}
-				}
-			}
+			this.properties.AddRange (ReflectionEditorProvider.GetPropertiesForType (targetType));
 
 			foreach (EventInfo ev in targetType.GetEvents ()) {
 				this.events.Add (new ReflectionEventInfo (ev));
@@ -159,39 +145,10 @@ namespace Xamarin.PropertyEditing.Reflection
 		private readonly List<ReflectionEventInfo> events = new List<ReflectionEventInfo> ();
 
 		private static readonly IObjectEditor[] EmptyDirectChildren = new IObjectEditor[0];
-		private static Version OSVersion;
 
 		protected virtual void OnPropertyChanged (IPropertyInfo property)
 		{
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
-		}
-
-		private static bool CheckAvailability (PropertyInfo property)
-		{
-			Attribute availibility = property.GetCustomAttributes ().FirstOrDefault (a => a.GetType ().Name == "IntroducedAttribute");
-			if (availibility == null)
-				return true;
-
-			var versionProperty = availibility.GetType ().GetProperty ("Version");
-			if (versionProperty == null)
-				return false;
-
-			if (OSVersion == null) {
-				Type processInfoType = Type.GetType ("Foundation.NSProcessInfo, Xamarin.Mac");
-				object processInfo = Activator.CreateInstance (processInfoType);
-				object version = processInfoType.GetProperty ("OperatingSystemVersion").GetValue (processInfo);
-
-				Type nsosversionType = version.GetType ();
-				int major = (int)Convert.ChangeType (nsosversionType.GetField ("Major").GetValue (version), typeof(int));
-				int minor = (int)Convert.ChangeType (nsosversionType.GetField ("Minor").GetValue (version), typeof(int));
-				int build = (int)Convert.ChangeType (nsosversionType.GetField ("PatchVersion").GetValue (version), typeof(int));
-
-				OSVersion = new Version (major, minor, build);
-				processInfoType.GetMethod ("Dispose").Invoke (processInfo, null);
-			}
-
-			Version available = (Version)versionProperty.GetValue (availibility);
-			return (OSVersion >= available);
 		}
 	}
 }
