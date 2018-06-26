@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -64,21 +65,31 @@ namespace Xamarin.PropertyEditing.Windows
 				throw new InvalidOperationException ($"{nameof (ColorComponentBox)} is missing a child TextBoxEx named \"innerTextBox\"");
 
 			this.innerTextBox.GotKeyboardFocus += (s, e) => {
-				this.previousValue = Value;
+				this.previousText = this.innerTextBox.Text;
 			};
-			this.innerTextBox.LostFocus += (s, e) => {
-				if (Value != this.previousValue) {
-					RaiseEvent (new RoutedEventArgs (ValueChangedEvent));
-				}
+			this.innerTextBox.LostKeyboardFocus += (s, e) => {
+				UpdateValueIfChanged ();
 			};
-			this.innerTextBox.PreviewKeyDown += (s, e) => {
+			this.innerTextBox.PreviewKeyUp += (s, e) => {
+				this.latestText = this.innerTextBox.Text;
 				if (e.Key == Key.Return) {
-					RaiseEvent (new RoutedEventArgs (ValueChangedEvent));
+					UpdateValueIfChanged ();
 				}
 			};
 		}
 
 		private TextBoxEx innerTextBox;
-		private double previousValue;
+		private string previousText;
+		private string latestText;
+
+		private void UpdateValueIfChanged()
+		{
+			if (this.latestText != this.previousText) {
+				if (double.TryParse (this.latestText, NumberStyles.Float, CultureInfo.CurrentUICulture, out var value)) {
+					Value = value;
+					RaiseEvent (new RoutedEventArgs (ValueChangedEvent));
+				}
+			}
+		}
 	}
 }

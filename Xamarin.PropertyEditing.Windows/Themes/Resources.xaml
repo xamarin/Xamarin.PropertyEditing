@@ -1158,7 +1158,7 @@
 								 AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}" AutomationProperties.HelpText="{TemplateBinding AutomationProperties.Name}">
 							<TextBox.Text>
 								<MultiBinding Converter="{local:DoubleToQuantityConverter}">
-									<Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}"/>
+									<Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}" Mode="OneWay"/>
 									<Binding Path="Unit" RelativeSource="{RelativeSource TemplatedParent}"/>
 								</MultiBinding>
 							</TextBox.Text>
@@ -1170,11 +1170,11 @@
 					</Grid>
 					<ControlTemplate.Triggers>
 						<DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=innerTextBox}" Value="True">
-							<Setter TargetName="innerTextBox" Property="Text" Value="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, StringFormat={}{0:##0.#}}"/>
+							<Setter TargetName="innerTextBox" Property="Text" Value="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, StringFormat={}{0:##0.#}}"/>
 							<Setter TargetName="brushBoxControl" Property="Visibility" Value="Hidden"/>
 						</DataTrigger>
 						<DataTrigger Binding="{Binding IsFocused, ElementName=innerTextBox}" Value="True">
-							<Setter TargetName="innerTextBox" Property="Text" Value="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, StringFormat={}{0:##0.#}}"/>
+							<Setter TargetName="innerTextBox" Property="Text" Value="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, StringFormat={}{0:##0.#}}"/>
 						</DataTrigger>
 						<Trigger Property="GradientBrush" Value="{x:Null}">
 							<Setter Property="Visibility" TargetName="brushBoxControl" Value="Hidden"/>
