@@ -33,6 +33,11 @@ namespace Xamarin.PropertyEditing.Reflection
 			return Task.FromResult (instance);
 		}
 
+		public Task<IReadOnlyList<object>> GetChildrenAsync (object item)
+		{
+			return Task.FromResult ((IReadOnlyList<object>)Array.Empty<object> ());
+		}
+
 		public Task<IReadOnlyDictionary<Type, ITypeInfo>> GetKnownTypesAsync (IReadOnlyCollection<Type> knownTypes)
 		{
 			return Task.FromResult<IReadOnlyDictionary<Type, ITypeInfo>> (new Dictionary<Type, ITypeInfo> ());

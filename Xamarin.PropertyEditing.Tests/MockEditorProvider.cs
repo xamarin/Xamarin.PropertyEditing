@@ -49,11 +49,15 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult (Activator.CreateInstance (realType));
 		}
 
+		public Task<IReadOnlyList<object>> GetChildrenAsync (object item)
+		{
+			return Task.FromResult<IReadOnlyList<object>> (Array.Empty<object> ());
+		}
+
 		public Task<IReadOnlyDictionary<Type, ITypeInfo>> GetKnownTypesAsync (IReadOnlyCollection<Type> knownTypes)
 		{
 			return Task.FromResult<IReadOnlyDictionary<Type, ITypeInfo>> (new Dictionary<Type, ITypeInfo> ());
 		}
-
 
 		private readonly Dictionary<object, IObjectEditor> editorCache = new Dictionary<object, IObjectEditor> ();
 	}

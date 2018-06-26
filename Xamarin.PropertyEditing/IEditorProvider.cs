@@ -16,6 +16,11 @@ namespace Xamarin.PropertyEditing
 		Task<object> CreateObjectAsync (ITypeInfo type);
 
 		/// <summary>
+		/// Gets the children targets of the given target <paramref name="item"/>.
+		/// </summary>
+		Task<IReadOnlyList<object>> GetChildrenAsync (object item);
+
+		/// <summary>
 		/// Gets a mapping of known types (such as CommonSolidBrush) to a real-type analog.
 		/// </summary>
 		/// <remarks>
