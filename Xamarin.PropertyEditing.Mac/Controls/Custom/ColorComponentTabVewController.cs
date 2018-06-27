@@ -23,8 +23,10 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void OnViewModelChanged (SolidBrushViewModel oldModel)
 		{
 			base.OnViewModelChanged (oldModel);
-			var controller = TabView.Item (SelectedTabViewItemIndex).ViewController as ColorComponentViewController;
-			controller.ViewModel = ViewModel;
+			if (ViewLoaded) {
+				var controller = TabView.Item (SelectedTabViewItemIndex).ViewController as ColorComponentViewController;
+				controller.ViewModel = ViewModel;
+			}
 		}
 
 		public override void WillSelect (NSTabView tabView, NSTabViewItem item)
@@ -42,15 +44,5 @@ namespace Xamarin.PropertyEditing.Mac
 			var controller = item.ViewController as ColorComponentViewController;
 			this.EditorType = controller.EditorType;
 		}
-
-		public override void ViewDidLoad ()
-		{
-			base.ViewDidLoad ();
-			//View.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
-			var old = View.Frame;
-			old.Height = 200;
-			View.Frame = old;
-		}
 	}
-
 }

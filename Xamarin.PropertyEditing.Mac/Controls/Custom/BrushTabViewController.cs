@@ -13,6 +13,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public BrushTabViewController ()
 		{
 			PreferredContentSize = new CGSize (300, 230);
+			TransitionOptions = NSViewControllerTransitionOptions.None;
 		}
 
 		Dictionary<CommonBrushType, int> BrushTypeTable = new Dictionary<CommonBrushType, int> ();

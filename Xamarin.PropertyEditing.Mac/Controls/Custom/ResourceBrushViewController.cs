@@ -60,7 +60,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly Dictionary<object, NSObject> groupFacades = new Dictionary<object, NSObject> ();
 	}
 
-	class ResourceBrushPropertyViewDelegate :ResourceOutlineViewDelegate
+	class ResourceBrushPropertyViewDelegate : ResourceOutlineViewDelegate
 	{
 		public BrushPropertyViewModel ViewModel {
 			get;
@@ -79,7 +79,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class ResourceOutlineViewDelegate :NSOutlineViewDelegate
+	class ResourceOutlineViewDelegate : NSOutlineViewDelegate
 	{
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
@@ -115,7 +115,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class ResourceOutlineView :NSOutlineView
+	class ResourceOutlineView : NSOutlineView
 	{
 		public ResourceOutlineView ()
 		{
@@ -162,6 +162,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public ResourceBrushViewController ()
 		{
+			PreferredContentSize = new CGSize (100, 200);
 			viewDelegate = new ResourceBrushPropertyViewDelegate ();
 		}
 

@@ -29,7 +29,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
 		{
-			if (materialEditor != null)
+			if (ViewLoaded && materialEditor != null)
 				materialEditor.ViewModel = ViewModel;
 		}
 

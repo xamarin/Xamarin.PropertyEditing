@@ -65,7 +65,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			grip.Frame = new CGRect (
 				1,
-				clos + colors.Frame.Y - grip.Frame.Height / 2f,
+				clos + colors.Frame.Y - grip.Frame.Height * 0.5f,
 				Frame.Width - 2,
 				2 * GripRadius);
 
