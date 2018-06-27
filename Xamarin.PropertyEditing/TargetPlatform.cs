@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using Xamarin.PropertyEditing.Drawing;
-
 namespace Xamarin.PropertyEditing
 {
 	/// <summary>
@@ -10,12 +8,21 @@ namespace Xamarin.PropertyEditing
 	/// </summary>
 	public sealed class TargetPlatform
 	{
-		public TargetPlatform (IEditorProvider provider)
+		public TargetPlatform (IEditorProvider editorProvider)
 		{
-			if (provider == null)
-				throw new ArgumentNullException (nameof(provider));
+			if (editorProvider == null)
+				throw new ArgumentNullException (nameof(editorProvider));
 
-			EditorProvider = provider;
+			EditorProvider = editorProvider;
+		}
+
+		public TargetPlatform (IEditorProvider editorProvider, IResourceProvider resourceProvider)
+			: this (editorProvider)
+		{
+			if (resourceProvider == null)
+				throw new ArgumentNullException (nameof(resourceProvider));
+
+			ResourceProvider = resourceProvider;
 		}
 
 		/// <summary>
@@ -24,6 +31,12 @@ namespace Xamarin.PropertyEditing
 		public IEditorProvider EditorProvider
 		{
 			get;
+		}
+
+		public IResourceProvider ResourceProvider
+		{
+			get;
+			private set;
 		}
 
 		/// <summary>
@@ -74,6 +87,7 @@ namespace Xamarin.PropertyEditing
 				throw new ArgumentNullException (nameof(provider));
 
 			return new TargetPlatform (provider) {
+				ResourceProvider = ResourceProvider,
 				SupportsMaterialDesign = SupportsMaterialDesign,
 				SupportsCustomExpressions = SupportsCustomExpressions,
 				SupportsBrushOpacity = SupportsBrushOpacity,

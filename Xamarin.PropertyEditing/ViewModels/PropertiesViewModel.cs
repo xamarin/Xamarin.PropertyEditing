@@ -106,8 +106,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool HasErrors => this.errors.IsValueCreated && this.errors.Value.Count > 0;
 
-		protected IEditorProvider EditorProvider => TargetPlatform.EditorProvider;
-
 		protected IReadOnlyList<IObjectEditor> ObjectEditors => this.objEditors;
 
 		public IEnumerable GetErrors (string propertyName)
@@ -401,7 +399,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			Task<IObjectEditor>[] newEditorTasks = new Task<IObjectEditor>[newItems.Count];
 			for (int i = 0; i < newEditorTasks.Length; i++) {
-				newEditorTasks[i] = EditorProvider.GetObjectEditorAsync (newItems[i]);
+				newEditorTasks[i] = TargetPlatform.EditorProvider.GetObjectEditorAsync (newItems[i]);
 			}
 
 			IObjectEditor[] newEditors = await Task.WhenAll (newEditorTasks);
