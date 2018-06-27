@@ -5,13 +5,15 @@ Those manual tests should be performed on the standalone app.
 ## Brush properties are properly displayed in the property grid
 
 1. Select "Mocked Sample 1".
-	- The `ReadOnlySolidBrush` and `SolidBrush` properties are properly labeled and have a property menu button on the right.
+	- The `MaterialDesignBrush`, `ReadOnlySolidBrush` and `SolidBrush` properties are properly labeled and have a property menu button on the right.
 	- The `ReadOnlySolidBrush` should appear as a column-wide yellow solid color, with opacity that shows the checkerboard pattern underneath.
 	- The `SolidBrush` property should show as a column-wide blue solid color, with opacity that shows the checkerboard pattern underneath, but not as visible as for `ReadOnlySolidBrush`.
 
 ## Read-only brush properties are not clickable
 
 1. Click on the `ReadOnlySolidBrush` colored rectangle.
+	- Nothing opens, nothing happens.
+2. Click on the property menu button next to the `ReadOnlySolidBrush` colored rectangle.
 	- Nothing opens, nothing happens.
 
 ## Writable brush properties show a popup on click
@@ -49,6 +51,9 @@ Those manual tests should be performed on the standalone app.
 	- The popup disappears and the focus goes back to the brush preview box.
 7. Hit `space` again to re-open the popup. Inside the popup, `tab` / `shift-tab` between the tab bar, the color space drop-down if there's one, the color component text boxes, and the hex textbox.
 	- Focus travels accordingly inside the popup but doesn't escape it.
+
+The following two tests are currently broken.
+
 8. Tab to the brush types tab bar, then press the 'n' key (shifted or not).
 	- The "nobrush" tab gets selected.
 	- The part of the popup below the brush type tabs disappears (the popup itself might move depending on available screen real estate).
@@ -56,6 +61,9 @@ Those manual tests should be performed on the standalone app.
 9. Press the 's' key (shifted or not).
 	- The solid brush tab gets selected.
 	- The solid brush editor appears back (the popup may move depending on available screen real estate) with the previously selected color.
+
+10. Tab back to the brush type tabs, and select the Material Design tab. Verify that the tints, normal colors, and accents can all be reached
+    with tab or with arrow keys, and that they can be selected.
 
 ## Brush editor popup shows the current brush
 
@@ -106,7 +114,7 @@ Those manual tests should be performed on the standalone app.
 
 1. Open the brush editor for the "Mocked Sample 1" button, change the shade and hue, switch to no brush, then back to solid brush.
 	- The color should be the same as before the switch to no brush.
-2. Repeat the above check with a brush property from "Mocked WPF button".
+2. Repeat the above check with a brush property from "Mocked WPF button"
 
 ## Color component entry mode can be changed
 
@@ -124,11 +132,7 @@ Those manual tests should be performed on the standalone app.
 	- The value gets committed when either `return` or `tab` is pressed, or when focusing out.
 	- The new value causes the rest of the brush editor to update accordingly and register the updated color as the new current selection.
 4. Try invalid values such as non-numerical, or out of range, then focus out.
-	- Validation should kick in and show the textbox with a red outline, and revert to the previous value.
-	- Focusing back shows the invalid value entered before.
-5. Fix the invalid value.
-	- Border should go back to normal
-	- New value should be committed.
+	- The text box should revert to the previous value.
 
 ## Colors can be entered with the hex box
 
@@ -207,7 +211,7 @@ Those manual tests should be performed on the standalone app.
 1. Open the brush editor and check that all UI elements are properly styled.
 2. Switch the theme, and verify again.
 
-## Brush opacity can be edited
+## Brush opacity can be edited [skip, as the advanced editor is not enabled currently]
 
 1. Open the brush editor on a solid brush property, then deploy the advanced pane by clicking on the chevron on the bottom.
 	- The opacity editor deploys and shows the current percentage (including a '%' sign after the value), rounded to the nearest unit.
@@ -228,7 +232,7 @@ Those manual tests should be performed on the standalone app.
 
 ## Reset
 
-1. Open a brush property on the "Mocked WPF button".
+1. Open a brush property on the "Mocked Sample 1".
 	- The property menu indicator is empty and the "Reset" option is disabled.
 2. Switch it to a solid brush and select a shade and hue.
 	- The property menu indicator is filled, and "Reset" is enabled.
@@ -243,4 +247,61 @@ Those manual tests should be performed on the standalone app.
 
 ## Setting a brush property to a resource
 
-TBD
+1. On "Mocked Sample 1", open the property menu next to the `SolidBrush` property, and select "Resource..."
+	- A popup windowopens, that shows four brush resources with a resource name, preview and color code.
+	- The OK button is disabled.
+2. Pick one of the resources.
+	- The large preview on the left is replaced with a preview of the picked resource.
+	- The OK button is now available.
+3. Click OK.
+	- The brush preview is replaced with the selected resource.
+	- The property menu is now filled in green.
+4. Open the property's popup.
+	- The resource tab is selected, and the correct resource is selected under it.
+5. Select another resource.
+	- The new resource is rendered in the brush preview.
+6. Switch to the solid color tab, and choose another color.
+	- The new color replaces the resource in the brush preview.
+	- The property menu is now filled in black.
+7. Switch back to the resource tab, and select a resource.
+	- The resource is rendered in the brush preview.
+	- The property menu is filled in green.
+8. Open the property menu and select "Convert to Local Value".
+	- The property menu is filled in black.
+	- The brush preview doesn't change.
+	- The popup, once opened, is on the solid or material design tab, with the correct color selected.
+
+## Material Design
+
+1. Select the `MaterialDesignBrush` under the "Mocked Sample 1".
+	- The Material Design tab is selected.
+	- The selected tint is "Deep Purple", no normal color is selected, the accent "A400" is selected.
+	- The normal colors have numbers written in black until 200, and white after that.
+	- Accents are written in white, except for A100.
+	- Alpha is set to 78%.
+
+2. Select the "Deep Orange" tint.
+	- The tint is now deep orange.
+	- The accent color "A400" is still selectioned.
+	- Normal colors are written in black until "400", and then white, normal colors are black until "A200", after which they are white.
+
+3. Select "500".
+	- The brush changed accordingly.
+	- The "A400" accent got deselectioned.
+	- The tint is still "Deep Orange".
+
+4. Select the grey tint.
+	- The brush is now grey.
+	- Only normal colors are shown, no accent.
+	- The normal color "500" is still selectioned.
+
+5. Select the "Black and White" tint.
+	- The brush is now white.
+	- The only options are black and white (no other normal color, no accent).
+
+6. Switch to the solid color tab.
+	- The solid color tab is active.
+	- It is possible to select any color.
+
+7. Enter red (255, 0, 0), then switch back to the Material Design tab.
+	- Red, "A700" is selected.

@@ -9,24 +9,41 @@ namespace Xamarin.PropertyEditing.Drawing
 	public struct CommonColor : IEquatable<CommonColor>
 	{
 		public CommonColor (byte r, byte g, byte b, byte a = 255, string label = null)
+			: this ((double)r, g, b, a, label) { }
+		private CommonColor (double r, double g, double b, byte a = 255, string label = null)
 		{
+			this.r = r;
+			this.g = g;
+			this.b = b;
 			A = a;
-			R = r;
-			G = g;
-			B = b;
 			Label = label;
-			c = null;
-			m = null;
-			y = null;
-			k = null;
-			hueR = null;
-			hueG = 0;
-			hueB = 0;
-			hue = null;
-			lightness = null;
-			brightness = null;
-			saturation = null;
+			this.c = null;
+			this.m = null;
+			this.y = null;
+			this.k = null;
+			this.hueR = null;
+			this.hueG = 0;
+			this.hueB = 0;
+			this.hue = null;
+			this.lightness = null;
+			this.brightness = null;
+			this.saturation = null;
 		}
+
+		/// <summary>
+		/// Red component
+		/// </summary>
+		public byte R => DoubleToByte (this.r);
+
+		/// <summary>
+		/// Green component
+		/// </summary>
+		public byte G => DoubleToByte (this.g);
+
+		/// <summary>
+		/// Blue component
+		/// </summary>
+		public byte B => DoubleToByte (this.b);
 
 		/// <summary>
 		/// Alpha channel
@@ -34,62 +51,30 @@ namespace Xamarin.PropertyEditing.Drawing
 		public byte A { get; }
 
 		/// <summary>
-		/// Red component
-		/// </summary>
-		public byte R { get; }
-
-		/// <summary>
-		/// Green component
-		/// </summary>
-		public byte G { get; }
-
-		/// <summary>
-		/// Blue component
-		/// </summary>
-		public byte B { get; }
-
-		/// <summary>
 		/// An optional label for the color, that does not affect equality or anything else.
 		/// </summary>
 		public string Label { get; set; }
 
-		double? k;
 		/// <summary>
 		/// Black component
 		/// </summary>
-		public double K => k ?? (k = (double)(255 - (R >= G ? (R >= B ? R : B) : (G >= B ? G : B))) / 255).Value;
-
-		double Complement(byte component, double k)
-		{
-			if (k == 1) return 0;
-			var val = (1 - k - (double)component / 255) / (1 - k);
-			if (val < 0) return 0;
-			if (val > 1) return 1;
-			return val;
-		}
-
-		double? c;
+		public double K => this.k ?? (this.k =
+			(255 - (this.r >= this.g ? (this.r >= this.b ? this.r : this.b) : (this.g >= this.b ? this.g : this.b))) / 255).Value;
 		/// <summary>
 		/// Cyan component
 		/// </summary>
-		public double C => c ?? (c = Complement(R, K)).Value;
+		public double C => this.c ?? (this.c = Complement(this.r, K)).Value;
 
-		double? m;
 		/// <summary>
 		/// Magenta component
 		/// </summary>
-		public double M => m ?? (m = Complement(G, K)).Value;
+		public double M => this.m ?? (this.m = Complement(this.g, K)).Value;
 
-		double? y;
 		/// <summary>
 		/// Yellow component
 		/// </summary>
-		public double Y => y ?? (y = Complement(B, K)).Value;
+		public double Y => this.y ?? (this.y = Complement(this.b, K)).Value;
 
-		static readonly CommonColor Red = new CommonColor (255, 0, 0);
-
-		byte? hueR;
-		byte hueG, hueB;
 		/// <summary>
 		/// Gets a hue from this color.
 		/// A hue has the highest component of the passed-in color at 255,
@@ -101,103 +86,103 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// </summary>
 		public CommonColor HueColor {
 			get {
-				if (hueR.HasValue) return new CommonColor(hueR.Value, hueG, hueB);
+				if (this.hueR.HasValue)
+					return new CommonColor(this.hueR.Value, this.hueG, this.hueB);
 
 				// Map grey to red
 				if (IsGrey) {
-					hueR = 255;
-					hueG = 0;
-					hueB = 0;
-					hue = 0;
-					return Red;
+					this.hueR = 255;
+					this.hueG = 0;
+					this.hueB = 0;
+					this.hue = 0;
+					return new CommonColor(255, 0, 0);
 				}
 
-				var isRedMax = R >= G && R >= B;
-				var isGreenMax = G >= R && G >= B;
-				var isRedMin = R <= G && R <= B;
-				var isGreenMin = G <= R && G <= B;
+				var isRedMax = this.r >= this.g && this.r >= this.b;
+				var isGreenMax = this.g >= this.r && this.g >= this.b;
+				var isRedMin = this.r <= this.g && this.r <= this.b;
+				var isGreenMin = this.g <= this.r && this.g <= this.b;
 
 				CommonColor hueColor =
 					isRedMax ?
 						// Red is max
 						isGreenMin ?
 							// Green is min
-							new CommonColor (255, 0, InterpolateComponent (B, G, R)) :
+							new CommonColor (255, 0, InterpolateComponent (this.b, this.g, this.r)) :
 							// Blue is min
-							new CommonColor (255, InterpolateComponent (G, B, R), 0) :
+							new CommonColor (255, InterpolateComponent (this.g, this.b, this.r), 0) :
 					isGreenMax ?
 						// Green is max
 						isRedMin ?
 							// Red is min
-							new CommonColor (0, 255, InterpolateComponent (B, R, G)) :
+							new CommonColor (0, 255, InterpolateComponent (this.b, this.r, this.g)) :
 							// Blue is min
-							new CommonColor (InterpolateComponent (R, B, G), 255, 0) :
+							new CommonColor (InterpolateComponent (this.r, this.b, this.g), 255, 0) :
 					// Blue is max
 					isRedMin ?
 						// Red is min
-						new CommonColor (0, InterpolateComponent (G, R, B), 255) :
+						new CommonColor (0, InterpolateComponent (this.g, this.r, this.b), 255) :
 						// Green is min
-						new CommonColor (InterpolateComponent (R, G, B), 0, 255);
+						new CommonColor (InterpolateComponent (this.r, this.g, this.b), 0, 255);
 
-				hueR = hueColor.R;
-				hueG = hueColor.G;
-				hueB = hueColor.B;
+				this.hueR = hueColor.r;
+				this.hueG = hueColor.g;
+				this.hueB = hueColor.b;
 				return hueColor;
 			}
 		}
 
-		double? hue;
 		/// <summary>
 		/// The hue for this color, as an angle between 0 and 360 degrees.
 		/// </summary>
 		public double Hue {
 			get {
-				if (hue.HasValue) return hue.Value;
+				if (this.hue.HasValue) return this.hue.Value;
 
 				// Map grey to 0 degrees
 				if (IsGrey) {
-					hueR = 255;
-					hueG = 0;
-					hueB = 0;
-					hue = 0;
+					this.hueR = 255;
+					this.hueG = 0;
+					this.hueB = 0;
+					this.hue = 0;
 					return 0;
 				}
 
-				var isRedMax = R >= G && R >= B;
-				var isGreenMax = G >= R && G >= B;
-				var isRedMin = R <= G && R <= B;
-				var isGreenMin = G <= R && G < B;
-				var d = ((double)(isRedMax ? R : isGreenMax ? G : B) - (isRedMin ? R : isGreenMin ? G : B));
+				var isRedMax = this.r >= this.g && this.r >= this.b;
+				var isGreenMax = this.g >= this.r && this.g >= this.b;
+				var isRedMin = this.r <= this.g && this.r <= this.b;
+				var isGreenMin = this.g <= this.r && this.g <= this.b;
 
-				hue =
-					isRedMax ? (Mod((G - B) / d, 6)) * 60 :
-					isGreenMax ? (((B - R)/ d) + 2) * 60 :
-					(((R - G) / d) + 4) * 60;
+				var d = (isRedMax ? this.r : isGreenMax ? this.g : this.b) - (isRedMin ? this.r : isGreenMin ? this.g : this.b);
 
-				return hue.Value;
+				this.hue =
+					isRedMax ? (Mod((this.g - this.b) / d, 6)) * 60 :
+					isGreenMax ? (((this.b - this.r)/ d) + 2) * 60 :
+					(((this.r - this.g) / d) + 4) * 60;
+
+				return this.hue.Value;
 			}
 		}
 
-		double? lightness;
 		/// <summary>
 		/// The lightness of the color, where white is 1, black is 0, and primary colors are 0.5.
 		/// </summary>
 		public double Lightness {
 			get {
-				if (lightness.HasValue) return lightness.Value;
+				if (this.lightness.HasValue) return this.lightness.Value;
 
-				var isRedMax = R >= G && R >= B;
-				var isGreenMax = G >= R && G >= B;
-				var isRedMin = R <= G && R <= B;
-				var isGreenMin = G <= R && G <= B;
+				var isRedMax = this.r >= this.g && this.r >= this.b;
+				var isGreenMax = this.g >= this.r && this.g >= this.b;
+				var isRedMin = this.r <= this.g && this.r <= this.b;
+				var isGreenMin = this.g <= this.r && this.g <= this.b;
 
-				lightness = ((double)(isRedMax ? R : isGreenMax ? G : B) + (isRedMin ? R : isGreenMin ? G : B)) / 510;
+				this.lightness =
+					((isRedMax ? this.r : isGreenMax ? this.g : this.b) + (isRedMin ? this.r : isGreenMin ? this.g : this.b)) / 510;
 
-				return lightness.Value;
+				return this.lightness.Value;
 			}
 		}
 
-		double? brightness;
 		/// <summary>
 		/// A brightness between 0 and 1, 1 being the measure for the hue of the color
 		/// (the hue being a fully-saturated version of the same color), and 0 being
@@ -205,20 +190,19 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// </summary>
 		public double Brightness {
 			get {
-				if (brightness.HasValue) return brightness.Value;
+				if (this.brightness.HasValue) return this.brightness.Value;
 
 				CommonColor hue = HueColor;
 				var isRedMaxed = hue.R == 255;
 				var isGreenMaxed = hue.G == 255;
-				return (brightness =
-					isRedMaxed ? (double)R / 255 :
-					isGreenMaxed ? (double)G / 255 :
-					(double)B / 255
+				return (this.brightness =
+					isRedMaxed ? this.r / 255 :
+					isGreenMaxed ? this.g / 255 :
+					this.b / 255
 					).Value;
 			}
 		}
 
-		double? saturation;
 		/// <summary>
 		/// A saturation between 0 and 1, 1 being the measure for the hue of the color
 		/// (the hue being a fully saturated version of the color), and 0 being the
@@ -226,27 +210,48 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// </summary>
 		public double Saturation {
 			get {
-				if (saturation.HasValue) return saturation.Value;
+				if (this.saturation.HasValue) return this.saturation.Value;
 
-				if (IsGrey) return (saturation = 0).Value;
+				if (IsGrey) return (this.saturation = 0).Value;
 
-				var isRedMax = R >= G && R >= B;
-				var isGreenMax = G >= R && G >= B;
-				var isRedMin = R <= G && R <= B;
-				var isGreenMin = G <= R && G <= B;
+				var isRedMax = this.r >= this.g && this.r >= this.b;
+				var isGreenMax = this.g >= this.r && this.g >= this.b;
+				var isRedMin = this.r <= this.g && this.r <= this.b;
+				var isGreenMin = this.g <= this.r && this.g <= this.b;
 
-				var max = (double)(isRedMax ? R : isGreenMax ? G : B);
-				var d = (max - (isRedMin ? R : isGreenMin ? G : B));
+				var max = isRedMax ? this.r : isGreenMax ? this.g : this.b;
+				var d = (max - (isRedMin ? this.r : isGreenMin ? this.g : this.b));
 
-				saturation = d / max;
+				this.saturation = d / max;
 
-				return saturation.Value;
+				return this.saturation.Value;
 			}
 		}
 
-		static readonly int[][] redRanges = new[] { new[] { 0, 60 }, new[] { 300, 360 } };
-		static readonly int[][] greenRanges = new[] { new[] { 60, 180 } };
-		static readonly int[][] blueRanges = new[] { new[] { 180, 300 } };
+		private readonly double r;
+		private readonly double g;
+		private readonly double b;
+		private double? k;
+		private double? c;
+		private double? m;
+		private double? y;
+		private double? hue;
+		private double? hueR;
+		private double hueG, hueB;
+		private double? lightness;
+		private double? brightness;
+		private double? saturation;
+
+		private double Complement (double component, double k)
+		{
+			if (k == 1) return 0;
+			var val = (1 - k - component / 255) / (1 - k);
+			return val < 0 ? 0 : val > 1 ? 1 : val;
+		}
+
+		private static readonly int[][] redRanges = new[] { new[] { 0, 60 }, new[] { 300, 360 } };
+		private static readonly int[][] greenRanges = new[] { new[] { 60, 180 } };
+		private static readonly int[][] blueRanges = new[] { new[] { 180, 300 } };
 
 		/// <summary>
 		/// Finds the hue color from a hue angle between 0 and 360 degrees.
@@ -281,20 +286,20 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <param name="hue">The hue, between 0 and 360</param>
 		/// <param name="intervals">A set of intervals where the component is 255.</param>
 		/// <returns>The value of the component.</returns>
-		static byte GetHueComponent (double hue, int[][] intervals)
+		private static double GetHueComponent (double hue, int[][] intervals)
 		{
 			if (hue < 0 || hue > 360)
 				throw new ArgumentOutOfRangeException (nameof (hue), "Position must be between 0 and 6.");
-			foreach (int[] interval in intervals) {
+			foreach (var interval in intervals) {
 				// Component is 255 inside the interval
 				if (hue >= interval[0] && hue <= interval[1])
 					return 255;
 				// Component linearly grows from 0 to 255 60 degrees left of the interval
 				if (hue >= interval[0] - 60 && hue < interval[0])
-					return (byte)((hue - interval[0] + 60) * 255 / 60);
+					return (hue - interval[0] + 60) * 255 / 60;
 				// Component linearly falls from 255 to 0 60 degrees right of the interval
 				if (hue > interval[1] && hue <= interval[1] + 60)
-					return (byte)(255 - (hue - interval[1]) * 255 / 60);
+					return 255 - (hue - interval[1]) * 255 / 60;
 			}
 			// Otherwise, it's zero
 			return 0;
@@ -311,27 +316,27 @@ namespace Xamarin.PropertyEditing.Drawing
 				// We're between 0 and 120
 				if (hueColor.R == 255) {
 					// We're between 0 and 60, and green is on the rising phase
-					return (double)hueColor.G * 60 / 255;
+					return hueColor.g * 60 / 255;
 				}
 				// We're between 60 and 120, and red is on the declining phase
-				return ((double)(255 - hueColor.R) * 60 / 255 + 60);
+				return ((255 - hueColor.r) * 60 / 255 + 60);
 			}
 			else if (hueColor.R == 0) {
 				// We're between 120 and 240
 				if (hueColor.G == 255) {
 					// We're between 120 and 180, and blue is on the rise
-					return ((double)hueColor.B * 60 / 255 + 120);
+					return (hueColor.b * 60 / 255 + 120);
 				}
 				// We're between 180 and 240, and green is declining
-				return ((double)(255 - hueColor.G) * 60 / 255 + 180);
+				return ((255 - hueColor.g) * 60 / 255 + 180);
 			}
 			// We're between 240 and 360
 			if (hueColor.B == 255) {
 				// We're between 240 and 300, and red is on the rise
-				return ((double)hueColor.R * 60 / 255 + 240);
+				return (hueColor.r * 60 / 255 + 240);
 			}
 			// We're between 300 and 360, and blue is declining
-			return ((double)(255 - hueColor.B) * 60 / 255 + 300);
+			return ((255 - hueColor.b) * 60 / 255 + 300);
 		}
 
 		/// <summary>
@@ -347,11 +352,10 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <param name="lowest">The lowest component value</param>
 		/// <param name="highest">The highest component value</param>
 		/// <returns>The interpolated third component</returns>
-		static byte InterpolateComponent (byte component, byte lowest, byte highest)
+		static double InterpolateComponent (double component, double lowest, double highest)
 		{
 			var delta = highest - lowest;
-			if (delta == 0) return highest;
-			return (byte)((component - lowest) * 255 / delta);
+			return delta == 0 ? highest : (component - lowest) * 255 / delta;
 		}
 
 		/// <summary>
@@ -378,9 +382,9 @@ namespace Xamarin.PropertyEditing.Drawing
 				throw new ArgumentOutOfRangeException (nameof (k));
 			}
 			var color = new CommonColor (
-					   (byte)(255 * (1 - c) * (1 - k)),
-					   (byte)(255 * (1 - m) * (1 - k)),
-					   (byte)(255 * (1 - y) * (1 - k)),
+					   255 * (1 - c) * (1 - k),
+					   255 * (1 - m) * (1 - k),
+					   255 * (1 - y) * (1 - k),
 					   alpha) {
 				// pre-cache CMYK components, since we know them, and it will improve round-tripping
 				c = c,
@@ -428,7 +432,7 @@ namespace Xamarin.PropertyEditing.Drawing
 				hue < 180 || hue >= 300 ? x :
 				c;
 
-			var color = new CommonColor ((byte)(255 * (r + m)), (byte)(255 * (g + m)), (byte)(255 * (b + m)), alpha) {
+			var color = new CommonColor (255 * (r + m), 255 * (g + m), 255 * (b + m), alpha) {
 				// Pre-cache HLS components, since we know them, and it will improve round-tripping
 				hue = hue,
 				lightness = lightness,
@@ -474,7 +478,7 @@ namespace Xamarin.PropertyEditing.Drawing
 				hue < 180 || hue >= 300 ? x :
 				c;
 
-			var color = new CommonColor ((byte)(255 * (r + m)), (byte)(255 * (g + m)), (byte)(255 * (b + m)), alpha) {
+			var color = new CommonColor (255 * (r + m), 255 * (g + m), 255 * (b + m), alpha) {
 				// Pre-cache HLS components, since we know them, and it will improve round-tripping
 				hue = hue,
 				brightness = brightness,
@@ -488,12 +492,15 @@ namespace Xamarin.PropertyEditing.Drawing
 
 		private static double Mod (double a, double b)	=> a - b * Math.Floor (a / b);
 
-		public override bool Equals (object obj)
+		private static byte DoubleToByte(double? d)
 		{
-			if (obj == null) return false;
-			if (!(obj is CommonColor otherColor)) return false;
-			return Equals (otherColor, false);
+			if (!d.HasValue) return 0;
+			var round = Math.Round (d.Value);
+			return (byte)(round < 0 ? 0 : round > 255 ? 255 : round);
 		}
+
+		public override bool Equals (object obj)
+			=> obj == null ? false : !(obj is CommonColor otherColor) ? false : Equals (otherColor, false);
 
 		public bool Equals (CommonColor other) => Equals (other, false);
 
@@ -509,9 +516,9 @@ namespace Xamarin.PropertyEditing.Drawing
 		public static bool operator != (CommonColor left, CommonColor right) => !Equals (left, right);
 
 		public static double SquaredDistance (CommonColor left, CommonColor right)
-			=> (left.R - right.R) * (left.R - right.R)
-			+ (left.G - right.G) * (left.G - right.G)
-			+ (left.B - right.B) * (left.B - right.B);
+			=> (left.r - right.r) * (left.r - right.r)
+			+ (left.g - right.g) * (left.g - right.g)
+			+ (left.b - right.b) * (left.b - right.b);
 
 		public override int GetHashCode ()
 		{
