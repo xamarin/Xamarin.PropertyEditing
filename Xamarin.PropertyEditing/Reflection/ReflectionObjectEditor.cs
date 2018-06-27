@@ -33,7 +33,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public IReadOnlyCollection<IPropertyInfo> Properties => this.properties;
 
-		public IReadOnlyDictionary<KnownProperty, IPropertyInfo> KnownProperties => null;
+		public IReadOnlyDictionary<IPropertyInfo, KnownProperty> KnownProperties => null;
 
 		public IReadOnlyCollection<IEventInfo> Events => this.events;
 

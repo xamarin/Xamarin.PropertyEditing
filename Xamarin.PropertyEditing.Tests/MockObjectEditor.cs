@@ -87,7 +87,7 @@ namespace Xamarin.PropertyEditing.Tests
 			set;
 		} = new IPropertyInfo[0];
 
-		public IReadOnlyDictionary<KnownProperty, IPropertyInfo> KnownProperties
+		public IReadOnlyDictionary<IPropertyInfo, KnownProperty> KnownProperties
 		{
 			get;
 			set;

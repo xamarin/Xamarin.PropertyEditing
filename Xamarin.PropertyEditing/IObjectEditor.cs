@@ -46,7 +46,7 @@ namespace Xamarin.PropertyEditing
 		/// <remarks>
 		/// Should only include known properties present in <see cref="Properties"/>. Can be <c>null</c> if there are none.
 		/// </remarks>
-		IReadOnlyDictionary<KnownProperty, IPropertyInfo> KnownProperties { get; }
+		IReadOnlyDictionary<IPropertyInfo, KnownProperty> KnownProperties { get; }
 
 		/// <summary>
 		/// Gets the parent object editor for the object this editor represents or <c>null</c> if none.
