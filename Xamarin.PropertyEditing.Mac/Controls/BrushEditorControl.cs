@@ -32,7 +32,7 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 
 			if (!Popover.Shown)
-				Popover?.Show (new CGRect (20, this.Frame.Height / 2 - 2.5, 5, 5), this, NSRectEdge.MinYEdge);
+				Popover.Show (new CGRect (20, this.Frame.Height / 2 - 2.5, 5, 5), this, NSRectEdge.MinYEdge);
 		}
 	}
 
@@ -71,7 +71,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 
 		readonly ColorPopUpButton popUpButton;
-		//readonly BrushTabViewController colorEditor;
 		readonly NSPopover popover;
 		readonly BrushTabViewController brushTabViewController;
 		readonly NSMenu popupButtonList;
