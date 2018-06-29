@@ -10,9 +10,9 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		internal TypeSelectorWindow (IEnumerable<ResourceDictionary> mergedResources, AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
 		{
-			Resources.MergedDictionaries.AddItems (mergedResources);
 			DataContext = new TypeSelectorViewModel (assignableTypes);
 			InitializeComponent ();
+			Resources.MergedDictionaries.AddItems (mergedResources);
 		}
 
 		internal static ITypeInfo RequestType (FrameworkElement owner, AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
