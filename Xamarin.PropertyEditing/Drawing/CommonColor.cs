@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 namespace Xamarin.PropertyEditing.Drawing
 {
@@ -6,6 +7,7 @@ namespace Xamarin.PropertyEditing.Drawing
 	/// Describes a color.
 	/// </summary>
 	[Serializable]
+	[TypeConverter(typeof(CommonColorToCommonBrushConverter))]
 	public struct CommonColor : IEquatable<CommonColor>
 	{
 		public CommonColor (byte r, byte g, byte b, byte a = 255, string label = null)
