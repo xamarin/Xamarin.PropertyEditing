@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -38,7 +39,12 @@ namespace Xamarin.PropertyEditing.Windows
 		public static readonly DependencyProperty ValueProperty =
 			DependencyProperty.Register (
 				nameof (Value), typeof (double), typeof (ColorComponentBox),
-				new PropertyMetadata (0d));
+				new PropertyMetadata (0d, OnValueChanged));
+
+		private static void OnValueChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			if (d is ColorComponentBox colorBox && colorBox.innerTextBox != null) colorBox.SetTextFromValueAndUnit ();
+		}
 
 		public double Value {
 			get => (double)GetValue (ValueProperty);
@@ -63,22 +69,39 @@ namespace Xamarin.PropertyEditing.Windows
 			if (this.innerTextBox == null)
 				throw new InvalidOperationException ($"{nameof (ColorComponentBox)} is missing a child TextBoxEx named \"innerTextBox\"");
 
+			SetTextFromValueAndUnit ();
+
 			this.innerTextBox.GotKeyboardFocus += (s, e) => {
-				this.previousValue = Value;
+				var textValue = Value.ToString ("##0.#");
+				this.previousText = this.innerTextBox.Text = textValue;
 			};
-			this.innerTextBox.LostFocus += (s, e) => {
-				if (Value != this.previousValue) {
-					RaiseEvent (new RoutedEventArgs (ValueChangedEvent));
-				}
+			this.innerTextBox.LostKeyboardFocus += (s, e) => {
+				UpdateValueIfChanged ();
 			};
-			this.innerTextBox.PreviewKeyDown += (s, e) => {
+			this.innerTextBox.KeyUp += (s, e) => {
 				if (e.Key == Key.Return) {
-					RaiseEvent (new RoutedEventArgs (ValueChangedEvent));
+					UpdateValueIfChanged ();
 				}
 			};
 		}
 
 		private TextBoxEx innerTextBox;
-		private double previousValue;
+		private string previousText;
+
+		private void UpdateValueIfChanged()
+		{
+			if (this.innerTextBox != null && this.innerTextBox.Text != this.previousText) {
+				if (double.TryParse (this.innerTextBox.Text, NumberStyles.Float, CultureInfo.CurrentUICulture, out var value)) {
+					Value = value;
+					RaiseEvent (new RoutedEventArgs (ValueChangedEvent));
+				}
+			}
+			SetTextFromValueAndUnit ();
+		}
+
+		private void SetTextFromValueAndUnit()
+		{
+			if (this.innerTextBox != null) this.innerTextBox.Text = Value.ToString ("F0") + Unit;
+		}
 	}
 }
