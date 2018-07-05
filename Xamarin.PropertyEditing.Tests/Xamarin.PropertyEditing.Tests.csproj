@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddValueConverterViewModelTests.cs" />
     <Compile Include="AsyncSynchronizationContext.cs" />
     <Compile Include="AsyncValueTests.cs" />
     <Compile Include="AsyncWorkQueueTests.cs" />

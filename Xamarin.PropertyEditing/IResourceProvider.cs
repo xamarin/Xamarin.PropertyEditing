@@ -37,6 +37,11 @@ namespace Xamarin.PropertyEditing
 		Task<string> SuggestResourceNameAsync (IReadOnlyCollection<object> targets, IPropertyInfo property);
 
 		/// <summary>
+		/// Gets an unused type-appropriate resource key for a new resource of <paramref name="resourceType"/>.
+		/// </summary>
+		Task<string> SuggestResourceNameAsync (IReadOnlyCollection<object> targets, ITypeInfo resourceType);
+
+		/// <summary>
 		/// Checks for issues creating a resource in the given <paramref name="source"/> with <paramref name="name"/> such as name in use, or would be overriden.
 		/// </summary>
 		Task<ResourceCreateError> CheckNameErrorsAsync (object target, ResourceSource source, string name);

@@ -113,6 +113,7 @@
     <Compile Include="TargetPlatform.cs" />
     <Compile Include="ValueInfo.cs" />
     <Compile Include="ValueSource.cs" />
+    <Compile Include="ViewModels\AddValueConverterViewModel.cs" />
     <Compile Include="ViewModels\ArrangeModeViewModel.cs" />
     <Compile Include="ViewModels\BrushPropertyViewModel.cs" />
     <Compile Include="ViewModels\CollectionPropertyViewModel.cs" />

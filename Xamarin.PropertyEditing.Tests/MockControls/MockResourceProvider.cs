@@ -59,10 +59,15 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public Task<string> SuggestResourceNameAsync (IReadOnlyCollection<object> targets, IPropertyInfo property)
 		{
+			return SuggestResourceNameAsync (targets, property.RealType);
+		}
+
+		public Task<string> SuggestResourceNameAsync (IReadOnlyCollection<object> targets, ITypeInfo resourceType)
+		{
 			int i = 1;
 			string key;
 			do {
-				key = property.Type.Name + i++;
+				key = resourceType.Name + i++;
 			} while (this.resources[ApplicationResourcesSource].Any (r => r.Name == key));
 
 			return Task.FromResult (key);
