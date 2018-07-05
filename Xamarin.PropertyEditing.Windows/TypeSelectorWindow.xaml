@@ -14,46 +14,11 @@
 	</Window.Resources>
 	<Grid Margin="12">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
-		<local:TextBoxEx Margin="0,4,0,0" Style="{DynamicResource SearchTextBox}" MinHeight="20" Text="{Binding FilterText,UpdateSourceTrigger=PropertyChanged}" ShowClearButton="True" Hint="{x:Static prop:Resources.SearchObjectsTitle}" />
-
-		<ProgressBar Grid.Row="1" IsIndeterminate="True" Height="10" Visibility="{Binding IsLoading,Converter={StaticResource BoolToVisibilityConverter}}" />
-		<local:TreeViewEx x:Name="tree" Grid.Row="1" Margin="0,4,0,0" Style="{DynamicResource SelectionTreeView}" ItemsSource="{Binding Types}" Foreground="{DynamicResource PanelGroupForegroundBrush}" Background="{DynamicResource ListBackgroundBrush}" BorderBrush="{DynamicResource ListBackgroundBrush}" SelectedItemChanged="OnSelectedItemChanged" ItemActivated="OnItemActivated">
-			<local:TreeViewEx.ItemTemplate>
-				<HierarchicalDataTemplate ItemsSource="{Binding Value,Mode=OneTime}">
-					<HierarchicalDataTemplate.ItemTemplate>
-						<HierarchicalDataTemplate ItemsSource="{Binding Value,Mode=OneTime}">
-							<HierarchicalDataTemplate.ItemTemplate>
-								<DataTemplate>
-									<StackPanel Orientation="Horizontal">
-										<!-- Icon -->
-										<TextBlock Margin="8,0,0,0" Text="{Binding Name,Mode=OneTime}" />
-									</StackPanel>
-
-								</DataTemplate>
-							</HierarchicalDataTemplate.ItemTemplate>
-
-							<StackPanel Orientation="Horizontal">
-								<!-- Icon -->
-								<TextBlock Text="{Binding Key}" Margin="8,0,0,0" />
-							</StackPanel>
-						</HierarchicalDataTemplate>
-					</HierarchicalDataTemplate.ItemTemplate>
-
-					<StackPanel Orientation="Horizontal">
-						<!-- Icon -->
-						<TextBlock Margin="8,0,0,0" Text="{Binding Key,Mode=OneTime}" />
-					</StackPanel>
-				</HierarchicalDataTemplate>
-			</local:TreeViewEx.ItemTemplate>
-		</local:TreeViewEx>
-
-		<CheckBox Grid.Row="2" HorizontalAlignment="Left" Margin="0,4,0,0" IsChecked="{Binding ShowAllAssemblies}" Foreground="{DynamicResource PanelGroupForegroundBrush}" Content="{x:Static prop:Resources.ShowAllAssemblies}" />
+		<local:TypeSelectorControl x:Name="typeSelector" Grid.Row="0" SelectedItemChanged="OnSelectedItemChanged" ItemActivated="OnItemActivated" />
 
 		<StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button Name="ok" MinHeight="23" MinWidth="75" IsEnabled="False" Content="{x:Static prop:Resources.OK}" IsDefault="True" Click="OnOkClicked" />

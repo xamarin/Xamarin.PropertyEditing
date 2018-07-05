@@ -85,6 +85,9 @@
       <DependentUpon>CreateResourceWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="DoubleToAngleConverter.cs" />
+    <Compile Include="CreateValueConverterWindow.xaml.cs">
+      <DependentUpon>CreateValueConverterWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EntryPopup.cs" />
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />
@@ -128,6 +131,9 @@
     <Compile Include="StringEditorControl.cs" />
     <Compile Include="Themes\WinThemeManager.cs" />
     <Compile Include="TreeViewItemEx.cs" />
+    <Compile Include="TypeSelectorControl.xaml.cs">
+      <DependentUpon>TypeSelectorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TypeSelectorWindow.xaml.cs">
       <DependentUpon>TypeSelectorWindow.xaml</DependentUpon>
     </Compile>
@@ -140,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CreateResourceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreateValueConverterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -164,6 +174,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\VS.Light.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TypeSelectorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

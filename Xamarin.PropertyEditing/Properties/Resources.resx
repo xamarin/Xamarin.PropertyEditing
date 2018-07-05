@@ -514,4 +514,13 @@
   <data name="ResourceDictionary" xml:space="preserve">
     <value>Resource dictionary</value>
   </data>
+  <data name="AddValueConverterEllipsis" xml:space="preserve">
+    <value>Add value converter…</value>
+  </data>
+  <data name="AddValueConverterTitle" xml:space="preserve">
+    <value>Add Value Converter</value>
+  </data>
+  <data name="ValueConverterName" xml:space="preserve">
+    <value>Value converter name</value>
+  </data>
 </root>

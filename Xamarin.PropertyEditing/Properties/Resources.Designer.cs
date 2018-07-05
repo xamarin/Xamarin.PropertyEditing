@@ -61,6 +61,24 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add value converter….
+        /// </summary>
+        public static string AddValueConverterEllipsis {
+            get {
+                return ResourceManager.GetString("AddValueConverterEllipsis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Value Converter.
+        /// </summary>
+        public static string AddValueConverterTitle {
+            get {
+                return ResourceManager.GetString("AddValueConverterTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alpha.
         /// </summary>
         public static string Alpha {
@@ -1074,6 +1092,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string Unset {
             get {
                 return ResourceManager.GetString("Unset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value converter name.
+        /// </summary>
+        public static string ValueConverterName {
+            get {
+                return ResourceManager.GetString("ValueConverterName", resourceCulture);
             }
         }
         
