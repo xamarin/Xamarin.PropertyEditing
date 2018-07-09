@@ -178,6 +178,14 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 		}
 
+		protected override void OnUnselected (RoutedEventArgs e)
+		{
+			TreeViewEx parent = GetParentTree ();
+			if (parent.SelectedTreeItem == this) {
+				parent.SelectedTreeItem = null;
+			}
+		}
+
 		protected override DependencyObject GetContainerForItemOverride ()
 		{
 			return new TreeViewItemEx();
