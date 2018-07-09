@@ -124,6 +124,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Binding type.
+        /// </summary>
+        public static string BindingType {
+            get {
+                return ResourceManager.GetString("BindingType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Black.
         /// </summary>
         public static string Black {
@@ -250,6 +259,24 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create New Binding….
+        /// </summary>
+        public static string CreateDataBindingMenuItem {
+            get {
+                return ResourceManager.GetString("CreateDataBindingMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Data Binding for {0}.
+        /// </summary>
+        public static string CreateDataBindingTitle {
+            get {
+                return ResourceManager.GetString("CreateDataBindingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create {0} Resource.
         /// </summary>
         public static string CreateResourceTitle {
@@ -264,6 +291,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string CurrentColor {
             get {
                 return ResourceManager.GetString("CurrentColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom.
+        /// </summary>
+        public static string Custom {
+            get {
+                return ResourceManager.GetString("Custom", resourceCulture);
             }
         }
         
@@ -817,6 +853,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No value converter.
+        /// </summary>
+        public static string NoValueConverter {
+            get {
+                return ResourceManager.GetString("NoValueConverter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string OK {
@@ -840,6 +885,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string OtherTypeAction {
             get {
                 return ResourceManager.GetString("OtherTypeAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path.
+        /// </summary>
+        public static string Path {
+            get {
+                return ResourceManager.GetString("Path", resourceCulture);
             }
         }
         
@@ -948,6 +1002,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string ResourceNameLabel {
             get {
                 return ResourceManager.GetString("ResourceNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resources.
+        /// </summary>
+        public static string ResourcePlural {
+            get {
+                return ResourceManager.GetString("ResourcePlural", resourceCulture);
             }
         }
         

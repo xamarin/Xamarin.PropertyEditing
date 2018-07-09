@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +18,15 @@ namespace Xamarin.PropertyEditing.Windows
 
 		public event EventHandler ItemActivated;
 
+		public static readonly DependencyProperty SelectedDataItemProperty = DependencyProperty.Register (
+			"SelectedDataItem", typeof(object), typeof(TreeViewEx), new PropertyMetadata (default(object), (o, args) => ((TreeViewEx)o).OnSelectedDataItemChanged()));
+
+		public object SelectedDataItem
+		{
+			get { return GetValue (SelectedDataItemProperty); }
+			set { SetValue (SelectedDataItemProperty, value); }
+		}
+
 		protected override DependencyObject GetContainerForItemOverride ()
 		{
 			return new TreeViewItemEx();
@@ -29,11 +39,14 @@ namespace Xamarin.PropertyEditing.Windows
 
 		protected override void OnMouseDoubleClick (MouseButtonEventArgs e)
 		{
-			var inputElement = InputHitTest (e.GetPosition (this)) as UIElement;
-			if (inputElement != null) {
+			if (InputHitTest (e.GetPosition (this)) is UIElement inputElement) {
 				var item = inputElement.FindParentOrSelf<TreeViewItemEx>();
-				if (item != null && item.IsSelectable)
-					ItemActivated?.Invoke (this, EventArgs.Empty);
+				if (item != null) {
+					if (item.IsSelectable)
+						ItemActivated?.Invoke (this, EventArgs.Empty);
+					else if (item.HasItems)
+						item.IsExpanded = !item.IsExpanded;
+				}
 			}
 
 			base.OnMouseDoubleClick (e);
@@ -44,6 +57,9 @@ namespace Xamarin.PropertyEditing.Windows
 			get { return this.selectedTreeItem; }
 			set
 			{
+				if (value != null && !value.IsSelectable)
+					return;
+
 				if (this.selectedTreeItem != null) {
 					if (this.selectedTreeItem != value)
 						this.selectedTreeItem.IsSelected = false;
@@ -59,10 +75,60 @@ namespace Xamarin.PropertyEditing.Windows
 				}
 
 				SetSelectedItem (oldItem, value?.DataContext);
+				this.fromTreeItem = true;
+				SetCurrentValue (SelectedDataItemProperty, value?.DataContext);
+				this.fromTreeItem = false;
 			}
 		}
 
 		private TreeViewItemEx selectedTreeItem;
+		private bool fromTreeItem;
+
+		private void OnSelectedDataItemChanged ()
+		{
+			if (this.fromTreeItem)
+				return;
+
+			object item = SelectedDataItem;
+			if (item == null) {
+				SelectedTreeItem = null;
+				return;
+			}
+
+			SelectedTreeItem = FindItem (ItemContainerGenerator, item);
+		}
+
+		private TreeViewItemEx FindItem (ItemContainerGenerator generator, object item)
+		{
+			TreeViewItemEx treeItem;
+			if (DataContext is IProvidePath pathProvider) {
+				var path = pathProvider.GetItemParents (item);
+
+				for (int i = 0; i < path.Count; i++) {
+					treeItem = (TreeViewItemEx)generator.ContainerFromItem (path[i]);
+					treeItem.IsExpanded = true;
+
+					generator = treeItem.ItemContainerGenerator;
+				}
+			}
+
+			// This is a fallback that will fail if virtualized away
+			treeItem = generator.ContainerFromItem (item) as TreeViewItemEx;
+			if (treeItem != null)
+				return treeItem;
+
+			foreach (object element in generator.Items) {
+				treeItem = generator.ContainerFromItem (element) as TreeViewItemEx;
+				if (treeItem == null)
+					continue;
+
+				treeItem = FindItem (treeItem.ItemContainerGenerator, item);
+				if (treeItem != null)
+					return treeItem;
+			}
+
+			return null;
+		}
 
 		private void SetSelectedItem (object oldItem, object item)
 		{

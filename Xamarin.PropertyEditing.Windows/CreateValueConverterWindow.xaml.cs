@@ -16,7 +16,7 @@ namespace Xamarin.PropertyEditing.Windows
 			Resources.MergedDictionaries.AddItems (mergedResources);
 	    }
 
-	    internal static Tuple<string, ITypeInfo> RequestConverter (FrameworkElement owner, TargetPlatform platform, object target, AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
+	    internal static Tuple<string, ITypeInfo, ResourceSource> RequestConverter (FrameworkElement owner, TargetPlatform platform, object target, AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
 	    {
 		    Window hostWindow = Window.GetWindow (owner);
 		    var w = new CreateValueConverterWindow (owner.Resources.MergedDictionaries, platform, target, assignableTypes) {
@@ -26,7 +26,9 @@ namespace Xamarin.PropertyEditing.Windows
 		    if (!w.ShowDialog () ?? false)
 			    return null;
 
-		    return new Tuple<string, ITypeInfo> (w.converterName.Text, w.typeSelector.SelectedItem as ITypeInfo);
+		    var vm = (AddValueConverterViewModel) w.DataContext;
+
+		    return new Tuple<string, ITypeInfo, ResourceSource> (w.converterName.Text, vm.SelectedType, vm.Source);
 	    }
 
 		private void OnSelectedItemChanged (object sender, RoutedPropertyChangedEventArgs<object> e)

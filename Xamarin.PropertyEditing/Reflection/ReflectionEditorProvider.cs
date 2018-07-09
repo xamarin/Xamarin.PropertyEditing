@@ -10,6 +10,13 @@ namespace Xamarin.PropertyEditing.Reflection
 	public class ReflectionEditorProvider
 		: IEditorProvider
 	{
+		public IReadOnlyDictionary<Type, ITypeInfo> KnownTypes
+		{
+			get;
+		} = new Dictionary<Type, ITypeInfo> {
+
+		};
+
 		public Task<IObjectEditor> GetObjectEditorAsync (object item)
 		{
 			return Task.FromResult<IObjectEditor> (new ReflectionObjectEditor (item));
@@ -33,6 +40,11 @@ namespace Xamarin.PropertyEditing.Reflection
 			return Task.FromResult (instance);
 		}
 
+		public Task<AssignableTypesResult> GetAssignableTypesAsync (ITypeInfo type, bool childTypes)
+		{
+			return ReflectionObjectEditor.GetAssignableTypes (type, childTypes);
+		}
+
 		public Task<IReadOnlyList<object>> GetChildrenAsync (object item)
 		{
 			return Task.FromResult ((IReadOnlyList<object>)Array.Empty<object> ());
@@ -41,6 +53,11 @@ namespace Xamarin.PropertyEditing.Reflection
 		public Task<IReadOnlyDictionary<Type, ITypeInfo>> GetKnownTypesAsync (IReadOnlyCollection<Type> knownTypes)
 		{
 			return Task.FromResult<IReadOnlyDictionary<Type, ITypeInfo>> (new Dictionary<Type, ITypeInfo> ());
+		}
+
+		public ITypeInfo GetRealType<T> (T item)
+		{
+			return item?.GetType ().ToTypeInfo ();
 		}
 
 		public static Type GetRealType (ITypeInfo type)

@@ -15,7 +15,7 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 		public MainWindow ()
 		{
 			InitializeComponent ();
-			this.panel.TargetPlatform = new TargetPlatform (new MockEditorProvider()) {
+			this.panel.TargetPlatform = new TargetPlatform (new MockEditorProvider(), new MockResourceProvider(), new MockBindingProvider()) {
 				SupportsCustomExpressions = true,
 				SupportsMaterialDesign = true,
 				SupportsBrushOpacity = false,

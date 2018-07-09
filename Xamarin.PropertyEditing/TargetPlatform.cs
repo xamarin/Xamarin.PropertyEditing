@@ -25,6 +25,24 @@ namespace Xamarin.PropertyEditing
 			ResourceProvider = resourceProvider;
 		}
 
+		public TargetPlatform (IEditorProvider editorProvider, IBindingProvider bindingProvider)
+			: this (editorProvider)
+		{
+			if (bindingProvider == null)
+				throw new ArgumentNullException (nameof (bindingProvider));
+
+			BindingProvider = bindingProvider;
+		}
+
+		public TargetPlatform (IEditorProvider editorProvider, IResourceProvider resourceProvider, IBindingProvider bindingProvider)
+			: this (editorProvider, resourceProvider)
+		{
+			if (bindingProvider == null)
+				throw new ArgumentNullException (nameof(bindingProvider));
+
+			BindingProvider = bindingProvider;
+		}
+
 		/// <summary>
 		/// Gets the <see cref="IEditorProvider"/> associated with this platform.
 		/// </summary>
@@ -34,6 +52,12 @@ namespace Xamarin.PropertyEditing
 		}
 
 		public IResourceProvider ResourceProvider
+		{
+			get;
+			private set;
+		}
+
+		public IBindingProvider BindingProvider
 		{
 			get;
 			private set;
@@ -88,6 +112,7 @@ namespace Xamarin.PropertyEditing
 
 			return new TargetPlatform (provider) {
 				ResourceProvider = ResourceProvider,
+				BindingProvider = BindingProvider,
 				SupportsMaterialDesign = SupportsMaterialDesign,
 				SupportsCustomExpressions = SupportsCustomExpressions,
 				SupportsBrushOpacity = SupportsBrushOpacity,

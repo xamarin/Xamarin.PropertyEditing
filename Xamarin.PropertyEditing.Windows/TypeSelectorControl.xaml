@@ -20,7 +20,7 @@
 		<local:TextBoxEx Margin="0,4,0,0" Style="{DynamicResource SearchTextBox}" MinHeight="20" Text="{Binding FilterText,UpdateSourceTrigger=PropertyChanged}" ShowClearButton="True" Hint="{x:Static prop:Resources.SearchObjectsTitle}" />
 
 		<ProgressBar Grid.Row="1" IsIndeterminate="True" Height="10" Visibility="{Binding IsLoading,Converter={StaticResource BoolToVisibilityConverter}}" />
-		<local:TreeViewEx x:Name="tree" Grid.Row="1" Margin="0,4,0,0" Style="{DynamicResource TypeTreeView}" ItemsSource="{Binding Types}" />
+		<local:TreeViewEx x:Name="tree" Grid.Row="1" Margin="0,4,0,0" Style="{DynamicResource TypeTreeView}" ItemsSource="{Binding Types}" SelectedDataItem="{Binding SelectedType,Mode=TwoWay}" />
 
 		<CheckBox Grid.Row="2" HorizontalAlignment="Left" Margin="0,4,0,0" IsChecked="{Binding ShowAllAssemblies}" Foreground="{DynamicResource PanelGroupForegroundBrush}" Content="{x:Static prop:Resources.ShowAllAssemblies}" />
 	</Grid>

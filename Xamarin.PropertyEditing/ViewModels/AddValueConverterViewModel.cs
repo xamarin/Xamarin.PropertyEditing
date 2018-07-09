@@ -19,6 +19,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			this.platform = platform;
 			this.target = target;
+			this.source = GetDefaultResourceSourceAsync ();
+		}
+
+		public ResourceSource Source
+		{
+			get { return this.source.Result; }
 		}
 
 		public string ConverterName
@@ -52,8 +58,34 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		private readonly Task<ResourceSource> source;
 		private readonly TargetPlatform platform;
 		private readonly object target;
 		private string converterName;
+
+		private async Task<ResourceSource> GetDefaultResourceSourceAsync ()
+		{
+			var sources = new List<ResourceSource> (await this.platform.ResourceProvider.GetResourceSourcesAsync (this.target));
+			sources.Sort (new SourcePrioritySorter ());
+			return sources.FirstOrDefault (s => s.Type != ResourceSourceType.System);
+		}
+
+		private class SourcePrioritySorter
+			: IComparer<ResourceSource>
+		{
+			public int Compare (ResourceSource x, ResourceSource y)
+			{
+				if (x.Type == y.Type)
+					return 0;
+				if (x.Type == ResourceSourceType.Document)
+					return -1;
+				if (x.Type == ResourceSourceType.Application)
+					return -1;
+				if (x.Type == ResourceSourceType.ResourceDictionary)
+					return -1;
+
+				return 1;
+			}
+		}
 	}
 }

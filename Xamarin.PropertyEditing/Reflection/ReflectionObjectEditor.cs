@@ -82,7 +82,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public Task<AssignableTypesResult> GetAssignableTypesAsync (IPropertyInfo property, bool childTypes)
 		{
-			return GetAssignableTypes (property, childTypes);
+			return GetAssignableTypes (property.RealType, childTypes);
 		}
 
 		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
@@ -96,6 +96,18 @@ namespace Xamarin.PropertyEditing.Reflection
 
 			await info.SetValueAsync (this.target, value.Value);
 			OnPropertyChanged (info);
+		}
+
+		public Task<ITypeInfo> GetValueTypeAsync (IPropertyInfo property, PropertyVariation variation = null)
+		{
+			if (property == null)
+				throw new ArgumentNullException (nameof (property));
+			
+			ReflectionPropertyInfo info = property as ReflectionPropertyInfo;
+			if (info == null)
+				throw new ArgumentException();
+
+			return Task.FromResult (info.GetValueType (Target));
 		}
 
 		public async Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null)
@@ -115,23 +127,23 @@ namespace Xamarin.PropertyEditing.Reflection
 			};
 		}
 
-		internal static Task<AssignableTypesResult> GetAssignableTypes (IPropertyInfo property, bool childTypes)
+		internal static Task<AssignableTypesResult> GetAssignableTypes (ITypeInfo type, bool childTypes)
 		{
 			return Task.Run (() => {
 				var types = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (a => a.GetTypes ()).AsParallel ()
 					.Where (t => t.Namespace != null && !t.IsAbstract && !t.IsInterface && t.IsPublic && t.GetConstructor (Type.EmptyTypes) != null);
 
-				Type type = property.Type;
+				Type realType = ReflectionEditorProvider.GetRealType (type);
 				if (childTypes) {
-					var generic = property.Type.GetInterface ("ICollection`1");
+					var generic = realType.GetInterface ("ICollection`1");
 					if (generic != null) {
-						type = generic.GetGenericArguments()[0];
+						realType = generic.GetGenericArguments()[0];
 					} else {
-						type = typeof(object);
+						realType = typeof(object);
 					}
 				}
 
-				types = types.Where (t => type.IsAssignableFrom (t));
+				types = types.Where (t => realType.IsAssignableFrom (t));
 
 				return new AssignableTypesResult (types.Select (t => {
 					string asmName = t.Assembly.GetName ().Name;

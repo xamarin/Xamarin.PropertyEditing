@@ -26,7 +26,7 @@ namespace Xamarin.PropertyEditing.Windows
 			if (!w.ShowDialog () ?? false)
 				return null;
 
-			return w.typeSelector.SelectedItem as ITypeInfo;
+			return ((TypeSelectorViewModel)w.DataContext).SelectedType;
 		}
 
 		private void OnSelectedItemChanged (object sender, RoutedPropertyChangedEventArgs<object> e)

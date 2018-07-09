@@ -7,7 +7,7 @@
 				xmlns:prop="clr-namespace:Xamarin.PropertyEditing.Properties;assembly=Xamarin.PropertyEditing"
 				mc:Ignorable="d" Title="{x:Static prop:Resources.AddValueConverterTitle}" x:ClassModifier="internal"
 				Background="{DynamicResource DialogBackgroundBrush}" Foreground="{DynamicResource DialogForegroundBrush}"
-				d:DesignHeight="450" d:DesignWidth="400" ShowMaximize="False" ShowIcon="False" ShowMinimize="False">
+				Height="500" Width="450" ShowMaximize="False" ShowIcon="False" ShowMinimize="False" WindowStartupLocation="CenterOwner">
 	<Window.Resources>
 		<ResourceDictionary Source="Themes/DialogResources.xaml" />
 	</Window.Resources>
@@ -22,7 +22,7 @@
 		<TextBlock Text="{x:Static prop:Resources.ValueConverterName}" Grid.Row="0" />
 		<local:TextBoxEx x:Name="converterName" Text="{Binding ConverterName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="0,4,0,0" />
 
-		<local:TypeSelectorControl x:Name="typeSelector" Grid.Row="2" SelectedItem="{Binding SelectedType,Mode=OneWayToSource}" SelectedItemChanged="OnSelectedItemChanged" ItemActivated="OnItemActivated" />
+		<local:TypeSelectorControl x:Name="typeSelector" Grid.Row="2" SelectedItemChanged="OnSelectedItemChanged" ItemActivated="OnItemActivated" />
 
 		<StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button Name="ok" MinHeight="23" MinWidth="75" IsEnabled="False" Content="{x:Static prop:Resources.OK}" IsDefault="True" Click="OnOkClicked" />

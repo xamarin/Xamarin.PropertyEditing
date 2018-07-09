@@ -84,6 +84,15 @@ namespace Xamarin.PropertyEditing.Reflection
 		}
 #pragma warning restore CS1998
 
+		public ITypeInfo GetValueType (object target)
+		{
+			object value = this.propertyInfo.GetValue (target);
+			Type type = value?.GetType () ?? Type;
+
+			var asm = new AssemblyInfo (type.Assembly.FullName, true);
+			return new TypeInfo (asm, type.Namespace, type.Name);
+		}
+
 		public bool Equals (ReflectionPropertyInfo other)
 		{
 			if (ReferenceEquals (null, other))

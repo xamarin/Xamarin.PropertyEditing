@@ -29,6 +29,11 @@ namespace Xamarin.PropertyEditing
 		/// <summary>
 		/// Gets resource sources relative to the provided <paramref name="target"/>.
 		/// </summary>
+		Task<IReadOnlyList<ResourceSource>> GetResourceSourcesAsync (object target);
+
+		/// <summary>
+		/// Gets resource sources relative to the provided <paramref name="target"/> and <paramref name="property"/>.
+		/// </summary>
 		Task<IReadOnlyList<ResourceSource>> GetResourceSourcesAsync (object target, IPropertyInfo property);
 
 		/// <summary>

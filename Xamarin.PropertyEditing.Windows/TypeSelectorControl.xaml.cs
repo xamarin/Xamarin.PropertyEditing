@@ -25,25 +25,22 @@ namespace Xamarin.PropertyEditing.Windows
 			remove { this.tree.ItemActivated -= value; }
 		}
 
-		public override void OnApplyTemplate ()
-		{
-			base.OnApplyTemplate ();
+		public static readonly DependencyProperty ShowTypeLevelProperty = DependencyProperty.Register (
+			"ShowTypeLevel", typeof(bool), typeof(TypeSelectorControl), new PropertyMetadata (default(bool)));
 
-			this.tree.SelectedItemChanged += OnSelectedItemChanged;
+		public bool ShowTypeLevel
+		{
+			get { return (bool) GetValue (ShowTypeLevelProperty); }
+			set { SetValue (ShowTypeLevelProperty, value); }
 		}
 
-		public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register (
-			"SelectedItem", typeof(object), typeof(TypeSelectorControl), new PropertyMetadata (default(object)));
+		public static readonly DependencyProperty TypeLevelProperty = DependencyProperty.Register (
+			"TypeLevel", typeof(int), typeof(TypeSelectorControl), new PropertyMetadata (default(int)));
 
-		public object SelectedItem
+		public int TypeLevel
 		{
-			get { return (object) GetValue (SelectedItemProperty); }
-			set { SetValue (SelectedItemProperty, value); }
-		}
-
-		private void OnSelectedItemChanged (object sender, RoutedPropertyChangedEventArgs<object> e)
-		{
-			SetCurrentValue (SelectedItemProperty, e.NewValue);
+			get { return (int) GetValue (TypeLevelProperty); }
+			set { SetValue (TypeLevelProperty, value); }
 		}
 	}
 }

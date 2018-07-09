@@ -153,11 +153,8 @@ namespace Xamarin.PropertyEditing.Windows
 				this.vm.PropertyChanged -= OnVmPropertyChanged;
 
 			PanelViewModel newVm = null;
-			if (TargetPlatform != null) {
-				newVm = new PanelViewModel (TargetPlatform) {
-					ResourceProvider = ResourceProvider
-				};
-			}
+			if (TargetPlatform != null)
+				newVm = new PanelViewModel (TargetPlatform);
 
 			this.root.DataContext = this.vm = newVm;
 			

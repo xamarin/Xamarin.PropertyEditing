@@ -1,6 +1,11 @@
 namespace Xamarin.PropertyEditing
 {
-	public class KnownProperty
+	public abstract class KnownProperty
+	{
+	}
+
+	public class KnownProperty<T>
+		: KnownProperty
 	{
 	}
 }

@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Cadenza.Collections;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.ViewModels
@@ -24,20 +25,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-		public IResourceProvider ResourceProvider
-		{
-			get { return this.resourceProvider; }
-			set
-			{
-				if (this.resourceProvider == value)
-					return;
-
-				this.resourceProvider = value;
-				UpdateResourceProvider();
-				OnPropertyChanged();
-			}
-		}
 
 		/// <remarks>Consumers should check for <see cref="INotifyCollectionChanged"/> and hook appropriately.</remarks>
 		public IReadOnlyList<EditorViewModel> Properties => this.editors;
@@ -106,8 +93,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool HasErrors => this.errors.IsValueCreated && this.errors.Value.Count > 0;
 
-		protected IReadOnlyList<IObjectEditor> ObjectEditors => this.objEditors;
-
 		public IEnumerable GetErrors (string propertyName)
 		{
 			if (!this.errors.IsValueCreated)
@@ -119,6 +104,24 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			return Enumerable.Empty<string> ();
 		}
+
+		public PropertyViewModel<T> GetKnownPropertyViewModel<T> (KnownProperty<T> property)
+		{
+			if (property == null)
+				throw new ArgumentNullException (nameof (property));
+			if (this.knownEditors == null)
+				throw new InvalidOperationException ("Querying for known properties before they've been setup");
+			if (!this.knownEditors.TryGetValue (property, out EditorViewModel model))
+				throw new KeyNotFoundException ();
+
+			var vm = model as PropertyViewModel<T>;
+			if (vm == null)
+				throw new InvalidOperationException ("KnownProperty doesn't return expected property view model type");
+
+			return vm;
+		}
+
+		protected IReadOnlyList<IObjectEditor> ObjectEditors => this.objEditors;
 
 		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
 		protected void SetError (string property, string newError)
@@ -206,11 +209,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 		}
 
-		private IResourceProvider resourceProvider;
 		private INameableObject nameable;
 		private bool nameReadOnly;
 		private bool eventsEnabled;
 		private string typeName, objectName;
+		private BidirectionalDictionary<KnownProperty, EditorViewModel> knownEditors;
 		private readonly List<IObjectEditor> objEditors = new List<IObjectEditor> ();
 		private readonly ObservableCollectionEx<EditorViewModel> editors = new ObservableCollectionEx<EditorViewModel> ();
 		private readonly ObservableCollectionEx<object> selectedObjects = new ObservableCollectionEx<object> ();
@@ -224,12 +227,34 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void AddProperties (IEnumerable<EditorViewModel> newEditors)
 		{
+			if (this.knownEditors != null) {
+				// Only properties common across obj editors will be listed, so knowns should also be common
+				var knownProperties = newEditors.First ().Editors.First().KnownProperties;
+				if (knownProperties != null && knownProperties.Count > 0) {
+					foreach (var editorvm in newEditors) {
+						var prop = editorvm as PropertyViewModel;
+						if (prop == null)
+							continue;
+
+						if (knownProperties.TryGetValue (prop.Property, out KnownProperty known)) {
+							this.knownEditors[known] = editorvm;
+						}
+					}
+				}
+			}
+
 			this.editors.AddRange (newEditors);
 			OnAddEditors (newEditors);
 		}
 
 		private void RemoveProperties (IEnumerable<EditorViewModel> oldEditors)
 		{
+			if (this.knownEditors != null) {
+				foreach (EditorViewModel old in oldEditors) {
+					this.knownEditors.Inverse.Remove (old);
+				}
+			}
+
 			this.editors.RemoveRange (oldEditors);
 			OnRemoveEditors (oldEditors);
 		}
@@ -315,9 +340,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				if (newTypeName != editor.TargetType.Name)
 					newTypeName = String.Format (PropertyEditing.Properties.Resources.MultipleTypesSelected, this.objEditors.Count);
+
+				if (!knownProperties)
+					knownProperties = (editor.KnownProperties?.Count ?? 0) > 0;
 			}
 
 			TypeName = newTypeName;
+
+			if (knownProperties && this.knownEditors == null)
+				this.knownEditors = new BidirectionalDictionary<KnownProperty, EditorViewModel> ();
 
 			UpdateProperties (newPropertySet, removedEditors, newEditors);
 
@@ -417,13 +448,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return newEditors;
 		}
 
-		private void UpdateResourceProvider()
-		{
-			foreach (PropertyViewModel vm in this.editors) {
-				vm.ResourceProvider = this.resourceProvider;
-			}
-		}
-
 		private void OnObjectEditorPropertiesChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
 			UpdateMembers();
@@ -431,9 +455,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private PropertyViewModel GetViewModel (IPropertyInfo property)
 		{
-			var vm = GetViewModelCore (property);
-			vm.ResourceProvider = ResourceProvider;
-			return vm;
+			return GetViewModelCore (property);
 		}
 
 		private PropertyViewModel GetViewModelCore (IPropertyInfo property)
@@ -473,7 +495,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(CommonRectangle), (tp,p,e) => new RectanglePropertyViewModel (tp, p, e) },
 			{ typeof(CommonThickness), (tp,p,e) => new ThicknessPropertyViewModel (tp, p, e) },
 			{ typeof(IList), (tp,p,e) => new CollectionPropertyViewModel (tp,p,e) },
-			{ typeof(object), (tp,p,e) => new ObjectPropertyViewModel (tp,p,e) },
+			{ typeof(BindingSource), (tp,p,e) => new PropertyViewModel<BindingSource> (tp, p, e) },
+			{ typeof(Resource), (tp,p,e) => new PropertyViewModel<Resource> (tp, p, e) },
+			{ typeof(object), (tp,p,e) => new ObjectPropertyViewModel (tp, p, e) },
 		};
 	}
 }

@@ -674,7 +674,6 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (property.Editors.Count, Is.EqualTo (1));
 		}
 
-
 		[Test]
 		public void PropertiesListItemRemoved ()
 		{

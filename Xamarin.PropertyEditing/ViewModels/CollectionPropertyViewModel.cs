@@ -218,6 +218,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.realProvider = realProvider;
 			}
 
+			public IReadOnlyDictionary<Type, ITypeInfo> KnownTypes => this.realProvider.KnownTypes;
+
 			public void Add (IObjectEditor editor)
 			{
 				this.editors.Add (editor.Target, editor);
@@ -256,14 +258,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return editor;
 			}
 
+			public Task<AssignableTypesResult> GetAssignableTypesAsync (ITypeInfo type, bool childTypes)
+			{
+				return this.realProvider.GetAssignableTypesAsync (type, childTypes);
+			}
+
 			public Task<IReadOnlyList<object>> GetChildrenAsync (object item)
 			{
 				return this.realProvider.GetChildrenAsync (item);
-			}
-
-			public Task<IReadOnlyDictionary<Type, ITypeInfo>> GetKnownTypesAsync (IReadOnlyCollection<Type> knownTypes)
-			{
-				return this.realProvider.GetKnownTypesAsync (knownTypes);
 			}
 
 			public Task<object> CreateObjectAsync (ITypeInfo type)
