@@ -815,9 +815,15 @@ namespace Xamarin.PropertyEditing.Properties {
             }
         }
         
-        public static string GradientBrush {
+        public static string AllResources {
             get {
-                return ResourceManager.GetString("GradientBrush", resourceCulture);
+                return ResourceManager.GetString("AllResources", resourceCulture);
+            }
+        }
+        
+        public static string Shared {
+            get {
+                return ResourceManager.GetString("Shared", resourceCulture);
             }
         }
     }

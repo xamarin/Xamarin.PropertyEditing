@@ -155,6 +155,30 @@ namespace Xamarin.PropertyEditing.Mac.Resources {
             }
         }
         
+        internal static string ResourceTableImageColumnTitle {
+            get {
+                return ResourceManager.GetString("ResourceTableImageColumnTitle", resourceCulture);
+            }
+        }
+        
+        internal static string ResourceTableTypeColumnTitle {
+            get {
+                return ResourceManager.GetString("ResourceTableTypeColumnTitle", resourceCulture);
+            }
+        }
+        
+        internal static string ResourceTableNameColumnTitle {
+            get {
+                return ResourceManager.GetString("ResourceTableNameColumnTitle", resourceCulture);
+            }
+        }
+        
+        internal static string ResourceTableValueColumnTitle {
+            get {
+                return ResourceManager.GetString("ResourceTableValueColumnTitle", resourceCulture);
+            }
+        }
+        
         internal static string CommonBrushTitleUnknown {
             get {
                 return ResourceManager.GetString("CommonBrushTitleUnknown", resourceCulture);

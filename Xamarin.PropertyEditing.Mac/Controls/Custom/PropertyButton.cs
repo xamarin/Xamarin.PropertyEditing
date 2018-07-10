@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.ComponentModel;
 using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.Mac.Resources;
@@ -38,7 +40,6 @@ namespace Xamarin.PropertyEditing.Mac
 			Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-10");
 			ImageScaling = NSImageScale.None;
 			ToolTip = Properties.Resources.Default;
-			TranslatesAutoresizingMaskIntoConstraints = false;
 
 			OnMouseEntered += (sender, e) => {
 				ToggleFocusImage (true);
@@ -62,7 +63,7 @@ namespace Xamarin.PropertyEditing.Mac
 					var mi = new NSMenuItem (Properties.Resources.CustomExpressionEllipsis) {
 						AttributedTitle = new Foundation.NSAttributedString (
 						Properties.Resources.CustomExpressionEllipsis,
-						new CoreText.CTStringAttributes () {
+						new CoreText.CTStringAttributes {
 							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
 						})
 					};
@@ -73,11 +74,28 @@ namespace Xamarin.PropertyEditing.Mac
 					this.popUpContextMenu.AddItem (NSMenuItem.SeparatorItem);
 				}
 
+				if (this.viewModel.SupportsResources) {
+					this.popUpContextMenu.AddItem (NSMenuItem.SeparatorItem);
+
+					var mi2 = new NSMenuItem (Properties.Resources.ResourceEllipsis) {
+						AttributedTitle = new Foundation.NSAttributedString (
+						Properties.Resources.ResourceEllipsis,
+						new CoreText.CTStringAttributes {
+							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
+						})
+					};
+
+					mi2.Activated += OnResourceRequested;
+					this.popUpContextMenu.AddItem (mi2);
+				}
+
+				this.popUpContextMenu.AddItem (NSMenuItem.SeparatorItem);
+
 				// TODO If we add more menu items consider making the Label/Command a dictionary that we can iterate over to populate everything.
 				this.popUpContextMenu.AddItem (new CommandMenuItem (Properties.Resources.Reset, viewModel.ClearValueCommand) {
 					AttributedTitle = new Foundation.NSAttributedString (
 						Properties.Resources.Reset,
-						new CoreText.CTStringAttributes () {
+						new CoreText.CTStringAttributes {
 							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
 						})
 				});
@@ -186,6 +204,19 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			customExpressionPopOver.Show (customExpressionView.Frame, (NSView)this, NSRectEdge.MinYEdge);
+		}
+
+		private void OnResourceRequested (object sender, EventArgs e)
+		{
+			var requestResourceView = new RequestResourceView (this.viewModel);
+
+			var resourceSelectorPopOver = new AutoClosePopOver {
+				ContentViewController = new NSViewController (null, null) { View = requestResourceView },
+			};
+
+			requestResourceView.PopOver = resourceSelectorPopOver;
+
+			resourceSelectorPopOver.Show (requestResourceView.Frame, (NSView)this, NSRectEdge.MinYEdge);
 		}
 	}
 }

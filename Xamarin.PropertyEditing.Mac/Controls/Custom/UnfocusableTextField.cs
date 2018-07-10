@@ -21,14 +21,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 		void SetDefaultProperties ()
 		{
+			AccessibilityElement = false;
 			Bordered = false;
-			Editable = false;
-			Selectable = false;
-			ControlSize = NSControlSize.Small;
-			Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultPropertyLabelFontSize);
 			Cell.LineBreakMode = NSLineBreakMode.TruncatingTail;
 			Cell.UsesSingleLineMode = true;
-			AccessibilityElement = false;
+			ControlSize = NSControlSize.Small;
+			Editable = false;
+			Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultPropertyLabelFontSize);
+			Selectable = false;
 		}
 
 		public override void DrawRect (CGRect dirtyRect)

@@ -129,6 +129,11 @@
     <Compile Include="Controls\Custom\ShadeLayer.cs" />
     <Compile Include="Controls\Custom\SolidColorBrushEditor.cs" />
     <Compile Include="Controls\Custom\SolidColorBrushEditorViewController.cs" />
+    <Compile Include="Controls\RequestResource\RequestResourcePanel.cs" />
+    <Compile Include="Controls\RequestResource\RequestResourceView.cs" />
+    <Compile Include="Controls\RequestResource\ResourceTableDataSource.cs" />
+    <Compile Include="Controls\RequestResource\ResourceTableDelegate.cs" />
+    <Compile Include="Controls\RequestResource\RequestResourcePreviewPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
@@ -137,6 +142,7 @@
     <Compile Include="Themes\MacThemeManager.cs" />
     <Compile Include="Controls\BaseEditorControl.cs" />
     <Compile Include="Controls\ErrorMessageView.cs" />
+    <Folder Include="Controls\RequestResource\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

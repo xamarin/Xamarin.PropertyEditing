@@ -6,7 +6,7 @@ using Foundation;
 using AppKit;
 using Xamarin.PropertyEditing.ViewModels;
 using Xamarin.PropertyEditing.Mac.Resources;
-using Xamarin.PropertyEditing.Drawing;
+using System.ComponentModel;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -57,8 +57,10 @@ namespace Xamarin.PropertyEditing.Mac
 			get { return this.targetPlatform; }
 			set
 			{
-				if (this.viewModel != null)
+				if (this.viewModel != null) {
 					this.viewModel.ArrangedPropertiesChanged -= OnPropertiesChanged;
+					this.viewModel.PropertyChanged -= OnVmPropertyChanged;
+				}
 
 				this.targetPlatform = value;
 				this.viewModel = new PanelViewModel (value);
@@ -66,8 +68,10 @@ namespace Xamarin.PropertyEditing.Mac
 				this.propertyTable.Delegate = new PropertyTableDelegate (this.dataSource);
 				this.propertyTable.DataSource = this.dataSource;
 
-				if (this.viewModel != null)
+				if (this.viewModel != null) {
 					this.viewModel.ArrangedPropertiesChanged += OnPropertiesChanged;
+					this.viewModel.PropertyChanged += OnVmPropertyChanged;
+				}
 			}
 		}
 
@@ -208,12 +212,12 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			PropertyArrangeMode filterMode;
 			Enum.TryParse<PropertyArrangeMode> (propertyArrangeMode.GetItemObject (propertyArrangeMode.SelectedIndex).ToString (), out filterMode);
-			viewModel.ArrangeMode = filterMode;
+			this.viewModel.ArrangeMode = filterMode;
 		}
 
 		private void OnPropertyFilterChanged (object sender, EventArgs e)
 		{
-			viewModel.FilterText = propertyFilter.Cell.Title;
+			this.viewModel.FilterText = propertyFilter.Cell.Title;
 
 			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
 		}
@@ -221,6 +225,12 @@ namespace Xamarin.PropertyEditing.Mac
 		void UpdateTheme ()
 		{
 			this.Appearance = ThemeManager.CurrentAppearance;
+		}
+
+		private void OnVmPropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == nameof (PanelViewModel.ArrangeMode))
+				OnArrageModeChanged (sender, e);
 		}
 
 		class FirstResponderOutlineView : NSOutlineView

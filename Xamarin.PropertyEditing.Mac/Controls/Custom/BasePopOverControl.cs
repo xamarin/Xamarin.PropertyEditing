@@ -20,6 +20,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			var iconView = new NSImageView {
 				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme (imageNamed),
+				ImageScaling = NSImageScale.None,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 

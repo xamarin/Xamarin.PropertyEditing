@@ -547,8 +547,11 @@
   </data>
   <data name="InvalidRatio" xml:space="preserve">
     <value>Invalid Ratio</value>
-  </data>  
-  <data name="GradientBrush" xml:space="preserve">
-    <value>Gradient brush</value>
+  </data>
+  <data name="AllResources" xml:space="preserve">
+    <value>All Resources</value>
+  </data>
+  <data name="Shared" xml:space="preserve">
+    <value>Shared</value>
   </data>
 </root>
