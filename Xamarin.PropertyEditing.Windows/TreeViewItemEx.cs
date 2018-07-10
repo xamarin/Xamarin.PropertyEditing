@@ -137,11 +137,14 @@ namespace Xamarin.PropertyEditing.Windows
 
 		protected override void OnMouseDown (MouseButtonEventArgs e)
 		{
-			if (IsSelectable) {
-				if (Keyboard.IsKeyDown (Key.LeftCtrl) || Keyboard.IsKeyDown (Key.RightCtrl)) {
-					IsSelected = !IsSelected;
-					e.Handled = true;
-				}
+			if (!IsSelectable) {
+				e.Handled = true;
+				return;
+			}
+
+			if (Keyboard.IsKeyDown (Key.LeftCtrl) || Keyboard.IsKeyDown (Key.RightCtrl)) {
+				IsSelected = !IsSelected;
+				e.Handled = true;
 			}
 
 			base.OnMouseDown (e);
