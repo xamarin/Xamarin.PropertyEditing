@@ -7,44 +7,73 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	abstract class ColorEditorView : NSView, INotifyingListner<SolidBrushViewModel>
+	internal class NotifyingView<TViewModel> : NSView, INotifyingListner<TViewModel> where TViewModel : NotifyingObject
 	{
-		protected const float padding = 3;
-		protected NotifyingViewAdaptor<SolidBrushViewModel> adaptor { get; }
-
-		public ColorEditorView (IntPtr handle) : base (handle)
+		internal TViewModel ViewModel
 		{
-			adaptor = new NotifyingViewAdaptor<SolidBrushViewModel> (this);
+			get => Adaptor.ViewModel;
+			set => Adaptor.ViewModel = value;
+		}
+
+		public NotifyingView ()
+		{
+			Adaptor = new NotifyingViewAdaptor<TViewModel> (this);
+		}
+
+		public NotifyingView (CGRect frame) : base (frame)
+		{
+			Adaptor = new NotifyingViewAdaptor<TViewModel> (this);
+		}
+
+		public NotifyingView (IntPtr handle) : base (handle)
+		{
 		}
 
 		[Export ("initWithCoder:")]
+		public NotifyingView (NSCoder coder) : base (coder)
+		{
+		}
+
+		protected NotifyingViewAdaptor<TViewModel> Adaptor { get; }
+
+		public virtual void OnViewModelChanged (TViewModel oldModel)
+		{
+		}
+
+		public virtual void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+		}
+	}
+
+	internal abstract class ColorEditorView : NotifyingView<SolidBrushViewModel>
+	{
+		protected const float padding = 3;
+
+		public ColorEditorView (IntPtr handle) : base (handle)
+		{
+		}
+
+
 		public ColorEditorView (NSCoder coder) : base (coder)
 		{
-			adaptor = new NotifyingViewAdaptor<SolidBrushViewModel> (this);
 		}
 
 		public ColorEditorView (CGRect frame) : base (frame)
 		{
-			adaptor = new NotifyingViewAdaptor<SolidBrushViewModel> (this);
 		}
 
-		public ColorEditorView () : base ()
+		public ColorEditorView ()
 		{
-			adaptor = new NotifyingViewAdaptor<SolidBrushViewModel> (this);
 		}
 
-		public SolidBrushViewModel ViewModel {
-			get => adaptor.ViewModel;
-			set => adaptor.ViewModel = value;
+		public new SolidBrushViewModel ViewModel {
+			get => Adaptor.ViewModel;
+			set => Adaptor.ViewModel = value;
 		}
 
-		protected virtual void OnViewModelChanged (SolidBrushViewModel oldModel)
+		public override void OnViewModelChanged (SolidBrushViewModel oldModel)
 		{
 			OnPropertyChanged (ViewModel, new PropertyChangedEventArgs (nameof (SolidBrushViewModel.Color)));
-		}
-
-		protected virtual void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
-		{
 		}
 
 		public override void MouseDragged (NSEvent theEvent)
@@ -70,17 +99,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (!disposing)
 				return;
 
-			adaptor.Disconnect ();
-		}
-
-		void INotifyingListner<SolidBrushViewModel>.OnViewModelChanged (SolidBrushViewModel oldModel)
-		{
-			OnViewModelChanged (oldModel);
-		}
-
-		void INotifyingListner<SolidBrushViewModel>.OnPropertyChanged (object sender, PropertyChangedEventArgs e)
-		{
-			OnPropertyChanged (sender, e);
+			Adaptor.Disconnect ();
 		}
 	}
 }

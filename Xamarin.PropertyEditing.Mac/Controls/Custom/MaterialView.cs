@@ -8,7 +8,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class MaterialView : NSView
+	internal class MaterialView : NSView
 	{
 		public override bool IsFlipped => true;
 
@@ -17,12 +17,12 @@ namespace Xamarin.PropertyEditing.Mac
 			Initialize ();
 		}
 
-		void Initialize ()
+		private void Initialize ()
 		{
 			WantsLayer = true;
 		}
 
-		BrushPropertyViewModel viewModel;
+		private BrushPropertyViewModel viewModel;
 		public BrushPropertyViewModel ViewModel {
 			get => viewModel;
 			set {

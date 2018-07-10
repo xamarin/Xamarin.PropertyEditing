@@ -7,7 +7,7 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public abstract class ChannelEditor
+	internal abstract class ChannelEditor
 	{
 		public string Name { get; }
 		public double MinimumValue { get; }
@@ -88,7 +88,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public abstract double ValueFromColor (CommonColor color);
 	}
 
-	class RedChannelEditor : ChannelEditor
+	internal class RedChannelEditor : ChannelEditor
 	{
 		public RedChannelEditor () : base ("R", 0d, 255d, 1d)
 		{
@@ -101,7 +101,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateRGB (r: (byte)Clamp (value));
 	}
 
-	class GreenChannelEditor : ChannelEditor
+	internal class GreenChannelEditor : ChannelEditor
 	{
 		public GreenChannelEditor () : base ("G", 0d, 255d, 1d)
 		{
@@ -114,7 +114,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateRGB (g: (byte)Clamp (value));
 	}
 
-	class BlueChannelEditor : ChannelEditor
+	internal class BlueChannelEditor : ChannelEditor
 	{
 		public BlueChannelEditor () : base ("B", 0d, 255d, 1d)
 		{
@@ -127,7 +127,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateRGB (b: (byte)Clamp (value));
 	}
 
-	class AlphaChannelEditor : ChannelEditor
+	internal class AlphaChannelEditor : ChannelEditor
 	{
 		public AlphaChannelEditor () : base ("A", 0d, 255d, 1d)
 		{
@@ -140,7 +140,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateRGB (a: (byte)Clamp (value));
 	}
 
-	class CyanChannelEditor : ChannelEditor
+	internal class CyanChannelEditor : ChannelEditor
 	{
 		public CyanChannelEditor () : base ("C", 0d, 1d, .001d)
 		{
@@ -153,7 +153,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateCMYK (c: Clamp (value));
 	}
 
-	class MagentaChannelEditor : ChannelEditor
+	internal class MagentaChannelEditor : ChannelEditor
 	{
 		public MagentaChannelEditor () : base ("M", 0d, 1d, .001d)
 		{
@@ -166,7 +166,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateCMYK (m: Clamp (value));
 	}
 
-	class YellowChannelEditor : ChannelEditor
+	internal class YellowChannelEditor : ChannelEditor
 	{
 		public YellowChannelEditor () : base ("Y", 0d, 1d, .001d)
 		{
@@ -179,7 +179,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateCMYK (y: Clamp (value));
 	}
 
-	class BlackChannelEditor : ChannelEditor
+	internal class BlackChannelEditor : ChannelEditor
 	{
 		public BlackChannelEditor () : base ("K", 0d, 1d, .001d)
 		{
@@ -192,7 +192,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateCMYK (k: Clamp (value));
 	}
 
-	class HsbHueChannelEditor : ChannelEditor
+	internal class HsbHueChannelEditor : ChannelEditor
 	{
 		public HsbHueChannelEditor () : base ("H", 0d, 360d, 1d)
 		{
@@ -205,7 +205,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateHSB (hue: Clamp (value));
 	}
 
-	class HsbSaturationChannelEditor : ChannelEditor
+	internal class HsbSaturationChannelEditor : ChannelEditor
 	{
 		public HsbSaturationChannelEditor () : base ("S", 0d, 1d, .001d)
 		{
@@ -218,7 +218,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateHSB (saturation: Clamp (value));
 	}
 
-	class HsbBrightnessChannelEditor : ChannelEditor
+	internal class HsbBrightnessChannelEditor : ChannelEditor
 	{
 		public HsbBrightnessChannelEditor () : base ("B", 0d, 1d, .001d)
 		{
@@ -231,7 +231,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateHSB (brightness: Clamp (value));
 	}
 
-	class HsbAlphaChannelEditor : ChannelEditor
+	internal class HsbAlphaChannelEditor : ChannelEditor
 	{
 		public HsbAlphaChannelEditor () : base ("A", 0d, 255d, 1d)
 		{
@@ -244,7 +244,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateHSB (alpha: (byte)Clamp (value));
 	}
 
-	class HlsHueChannelEditor : ChannelEditor
+	internal class HlsHueChannelEditor : ChannelEditor
 	{
 		public HlsHueChannelEditor () : base ("H", 0d, 360d, 1d)
 		{
@@ -257,7 +257,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateHLS (hue: Clamp (value));
 	}
 
-	class HlsLightnessChannelEditor : ChannelEditor
+	internal class HlsLightnessChannelEditor : ChannelEditor
 	{
 		public HlsLightnessChannelEditor () : base ("L", 0d, 1d, .001d)
 		{
@@ -270,7 +270,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateHLS (lightness: Clamp (value));
 	}
 
-	class HlsSaturationChannelEditor : ChannelEditor
+	internal class HlsSaturationChannelEditor : ChannelEditor
 	{
 		public HlsSaturationChannelEditor () : base ("S", 0d, 1d, .001d)
 		{
@@ -283,7 +283,7 @@ namespace Xamarin.PropertyEditing.Mac
 		=> color.UpdateHLS (saturation: Clamp (value));
 	}
 
-	class HlsAlphaChannelEditor : ChannelEditor
+	internal class HlsAlphaChannelEditor : ChannelEditor
 	{
 		public HlsAlphaChannelEditor () : base ("A", 0d, 255d, 1d)
 		{

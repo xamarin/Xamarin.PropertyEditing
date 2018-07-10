@@ -8,38 +8,38 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public MaterialColorLayer ()
 		{
-			AddSublayer (selection);
+			AddSublayer (this.selection);
 		}
 
-		readonly CATextLayer selection = new CATextLayer () {
+		private readonly CATextLayer selection = new CATextLayer () {
 			CornerRadius = 3
 		};
 
-		string text;
+		private string text;
 		public string Text {
-			get => text;
+			get => this.text;
 			set {
-				text = value;
+				this.text = value;
 				SetNeedsLayout ();
 			}
 		}
 
-		CommonColor backgroundColor;
+		private CommonColor backgroundColor;
 		public new CommonColor BackgroundColor {
-			get => backgroundColor;
+			get => this.backgroundColor;
 			set {
-				backgroundColor = value;
-				base.BackgroundColor = backgroundColor.ToCGColor ();
+				this.backgroundColor = value;
+				base.BackgroundColor = this.backgroundColor.ToCGColor ();
 			}
 		}
 
-		bool isSelected;
+		private bool isSelected;
 		public bool IsSelected {
-			get => isSelected;
+			get => this.isSelected;
 			set {
-				if (isSelected == value)
+				if (this.isSelected == value)
 					return;
-				isSelected = value;
+				this.isSelected = value;
 				SetNeedsLayout ();
 			}
 		}
@@ -48,14 +48,14 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.LayoutSublayers ();
 
-			selection.String = text;
-			selection.Frame = Bounds.Inset (3, 3);
-			selection.BorderWidth = isSelected ? 2 : 0;
-			selection.BorderColor = ForegroundColor;
-			selection.ForegroundColor = ForegroundColor;
-			selection.FontSize = FontSize;
-			selection.ContentsScale = ContentsScale;
-			selection.TextAlignmentMode = TextAlignmentMode;
+			this.selection.String = this.text;
+			this.selection.Frame = Bounds.Inset (3, 3);
+			this.selection.BorderWidth = this.isSelected ? 2 : 0;
+			this.selection.BorderColor = ForegroundColor;
+			this.selection.ForegroundColor = ForegroundColor;
+			this.selection.FontSize = FontSize;
+			this.selection.ContentsScale = ContentsScale;
+			this.selection.TextAlignmentMode = TextAlignmentMode;
 		}
 	}
 }

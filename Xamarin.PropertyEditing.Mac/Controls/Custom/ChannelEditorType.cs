@@ -1,6 +1,6 @@
 ﻿namespace Xamarin.PropertyEditing.Mac
 {
-	public enum ChannelEditorType
+	internal enum ChannelEditorType
 	{
 		RGB,
 		HLS,

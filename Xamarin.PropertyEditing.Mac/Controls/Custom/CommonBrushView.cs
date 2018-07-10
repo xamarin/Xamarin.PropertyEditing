@@ -5,7 +5,7 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class CommonBrushView : NSView
+	internal class CommonBrushView : NSView
 	{
 		public CommonBrush Brush {
 			get => (Layer as CommonBrushLayer)?.Brush;
@@ -26,7 +26,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		void Initialize () {
+		private void Initialize () {
 			WantsLayer = true;
 			Layer = new CommonBrushLayer
 			{

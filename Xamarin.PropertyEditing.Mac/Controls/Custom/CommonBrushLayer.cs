@@ -6,7 +6,7 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class CommonBrushLayer : CALayer
+	internal class CommonBrushLayer : CALayer
 	{
 		public CommonBrushLayer ()
 		{
@@ -16,8 +16,8 @@ namespace Xamarin.PropertyEditing.Mac
 			MasksToBounds = true;
 		}
 
-		CALayer brushLayer;
-		CALayer BrushLayer {
+		private CALayer brushLayer;
+		private CALayer BrushLayer {
 			get => brushLayer;
 			set {
 				if (brushLayer != null)
@@ -30,7 +30,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		CommonBrush brush;
+		private CommonBrush brush;
 		public CommonBrush Brush {
 			get => brush;
 			set {

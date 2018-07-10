@@ -7,7 +7,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	class SolidColorBrushEditorViewController : NotifyingViewController<BrushPropertyViewModel>
 	{
-		SolidColorBrushEditor brushEditor;
+		private SolidColorBrushEditor brushEditor;
 
 		public SolidColorBrushEditorViewController ()
 		{
@@ -18,20 +18,20 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			switch (e.PropertyName) {
 				case nameof (BrushPropertyViewModel.Solid):
-					if (brushEditor != null)
-						brushEditor.ViewModel = ViewModel.Solid;
+					if (this.brushEditor != null)
+						this.brushEditor.ViewModel = ViewModel.Solid;
 					break;
 				case nameof (BrushPropertyViewModel.Value):
-					if (brushEditor != null)
-						brushEditor.ViewModel = ViewModel.Solid;
+					if (this.brushEditor != null)
+						this.brushEditor.ViewModel = ViewModel.Solid;
 					break;
 			}
 		}
 
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
 		{
-			if (brushEditor != null)
-				brushEditor.ViewModel = ViewModel?.Solid;
+			if (this.brushEditor != null)
+				this.brushEditor.ViewModel = ViewModel?.Solid;
 		}
 
 		public override void ViewDidLoad ()
@@ -39,12 +39,12 @@ namespace Xamarin.PropertyEditing.Mac
 			base.ViewDidLoad ();
 
 			if (ViewModel != null)
-				brushEditor.ViewModel = ViewModel?.Solid;
+				this.brushEditor.ViewModel = ViewModel?.Solid;
 		}
 
 		public override void LoadView ()
 		{
-			View = brushEditor = new SolidColorBrushEditor {
+			View = this.brushEditor = new SolidColorBrushEditor {
 				ViewModel = ViewModel?.Solid
 			};
 		}

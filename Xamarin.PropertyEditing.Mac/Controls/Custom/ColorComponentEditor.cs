@@ -9,14 +9,14 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class ColorComponentEditor : ColorEditorView
+	internal class ColorComponentEditor : ColorEditorView
 	{
-		const int DefaultPropertyButtonSize = 10;
-		const int DefaultActioButtonSize = 16;
-		const int DefaultControlHeight = 22;
-		const int DefaultGradientHeight = 4;
+		private const int DefaultPropertyButtonSize = 10;
+		private const int DefaultActioButtonSize = 16;
+		private const int DefaultControlHeight = 22;
+		private const int DefaultGradientHeight = 4;
 
-		ChannelEditorType EditorType { get; }
+		private ChannelEditorType EditorType { get; }
 
 		public bool ClickableGradients { get; set; } = true;
 
@@ -32,9 +32,9 @@ namespace Xamarin.PropertyEditing.Mac
 			Initialize ();
 		}
 
-		ChannelGroup [] Editors { get; set; }
-		UnfocusableTextField hexLabel;
-		NSTextField hexEditor;
+		private ChannelGroup [] Editors { get; set; }
+		private UnfocusableTextField hexLabel;
+		private NSTextField hexEditor;
 
 		class ChannelGroup
 		{
@@ -43,7 +43,7 @@ namespace Xamarin.PropertyEditing.Mac
 			public CAGradientLayer Gradient { get; set; }
 		}
 
-		ChannelGroup CreateEditor (ChannelEditor editor)
+		private ChannelGroup CreateEditor (ChannelEditor editor)
 		{
 			var ce = new ChannelGroup {
 				Label = new UnfocusableTextField {
@@ -70,9 +70,8 @@ namespace Xamarin.PropertyEditing.Mac
 			return ce;
 		}
 
-		ChannelGroup [] CreateEditors (ChannelEditorType type)
+		private ChannelGroup [] CreateEditors (ChannelEditorType type)
 		{
-
 			switch (type) {
 				case ChannelEditorType.HSB:
 					return new [] {
@@ -107,28 +106,28 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		void Initialize ()
+		private void Initialize ()
 		{
 			WantsLayer = true;
 			Editors = CreateEditors (EditorType);
 
-			hexLabel = new UnfocusableTextField {
+			this.hexLabel = new UnfocusableTextField {
 				StringValue = "#:",
 				Alignment = NSTextAlignment.Right,
 				BackgroundColor = NSColor.Clear
 			};
-			AddSubview (hexLabel);
+			AddSubview (this.hexLabel);
 
-			hexEditor = new NSTextField {
+			this.hexEditor = new NSTextField {
 				Alignment = NSTextAlignment.Right,
 				BackgroundColor = NSColor.Clear
 			};
-			AddSubview (hexEditor);
+			AddSubview (this.hexEditor);
 
-			hexEditor.EditingEnded += (o, e) => {
-				if (CommonColor.TryParseArgbHex (hexEditor.StringValue, out CommonColor c)) {
+			this.hexEditor.EditingEnded += (o, e) => {
+				if (CommonColor.TryParseArgbHex (this.hexEditor.StringValue, out CommonColor c)) {
 					ViewModel.Color = c;
-					hexEditor.StringValue = c.ToString ();
+					this.hexEditor.StringValue = c.ToString ();
 				}
 			};
 		}
@@ -146,7 +145,7 @@ namespace Xamarin.PropertyEditing.Mac
 			ViewModel.CommitLastColor ();
 		}
 
-		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			base.OnPropertyChanged (sender, e);
 
@@ -160,7 +159,7 @@ namespace Xamarin.PropertyEditing.Mac
 						editor.Value = editor.ComponentEditor.ValueFromColor (ViewModel.Color);
 						editor.ComponentEditor.UpdateGradientLayer (channelGroup.Gradient, ViewModel.Color);
 					}
-					hexEditor.StringValue = ViewModel.Color.ToString ();
+					this.hexEditor.StringValue = ViewModel.Color.ToString ();
 					break;
 			}
 		}
@@ -170,11 +169,11 @@ namespace Xamarin.PropertyEditing.Mac
 			base.UpdateConstraints ();
 		}
 
-		ChannelGroup activeChannel;
+		private ChannelGroup activeChannel;
 		public override void MouseDown (NSEvent theEvent)
 		{
 			if (!ClickableGradients) {
-				activeChannel = null;
+				this.activeChannel = null;
 				base.MouseDown (theEvent);
 				return;
 			}
@@ -186,10 +185,10 @@ namespace Xamarin.PropertyEditing.Mac
 				var hit = layer.PresentationLayer.HitTest (location) ?? layer.PresentationLayer.HitTest (new CGPoint (location.X, location.Y + 4));
 
 				for (var currentLayer = hit; currentLayer != null; currentLayer = currentLayer.SuperLayer) {
-					activeChannel = Editors.FirstOrDefault (ce => ce.Gradient == currentLayer.ModelLayer);
-					if (activeChannel != null) {
-						var channel = activeChannel.Editor.ComponentEditor;
-						var grad = activeChannel.Gradient;
+					this.activeChannel = Editors.FirstOrDefault (ce => ce.Gradient == currentLayer.ModelLayer);
+					if (this.activeChannel != null) {
+						var channel = this.activeChannel.Editor.ComponentEditor;
+						var grad = this.activeChannel.Gradient;
 						ViewModel.Color = channel.UpdateColorFromLocation (
 							grad,
 							ViewModel.Color,
@@ -206,9 +205,9 @@ namespace Xamarin.PropertyEditing.Mac
 			var location = ConvertPointFromView (theEvent.LocationInWindow, null);
 			location = ConvertPointToLayer (location);
 
-			if (activeChannel != null) {
-				var channel = activeChannel.Editor.ComponentEditor;
-				var grad = activeChannel.Gradient;
+			if (this.activeChannel != null) {
+				var channel = this.activeChannel.Editor.ComponentEditor;
+				var grad = this.activeChannel.Gradient;
 				ViewModel.Color = channel.UpdateColorFromLocation (
 					grad,
 					ViewModel.Color,
@@ -220,10 +219,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void MouseUp (NSEvent theEvent)
 		{
-			if (activeChannel != null)
+			if (this.activeChannel != null)
 				ViewModel.CommitLastColor ();
 
-			activeChannel = null;
+			this.activeChannel = null;
 			base.MouseUp (theEvent);
 		}
 
@@ -250,8 +249,8 @@ namespace Xamarin.PropertyEditing.Mac
 				editorFrame = editorFrame.Translate (0, -yOffset);
 			}
 
-			hexLabel.Frame = new CGRect (frame.X, padding, 20, DefaultControlHeight);
-			hexEditor.Frame = new CGRect (
+			this.hexLabel.Frame = new CGRect (frame.X, padding, 20, DefaultControlHeight);
+			this.hexEditor.Frame = new CGRect (
 				labelFrame.Right,
 				padding,
 				frame.Width - labelFrame.Right - 16,

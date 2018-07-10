@@ -13,16 +13,16 @@ namespace Xamarin.PropertyEditing.Mac
 	class NotifyingViewController<T> : NSViewController, INotifyingListner<T> where T : NotifyingObject
 	{
 		internal T ViewModel {
-			get => adaptor.ViewModel;
-			set => adaptor.ViewModel = value;
+			get => Adaptor.ViewModel;
+			set => Adaptor.ViewModel = value;
 		}
 
 		public NotifyingViewController ()
 		{
-			adaptor = new NotifyingViewAdaptor<T> (this);
+			Adaptor = new NotifyingViewAdaptor<T> (this);
 		}
 
-		protected NotifyingViewAdaptor<T> adaptor { get; }
+		protected NotifyingViewAdaptor<T> Adaptor { get; }
 
 		public virtual void OnViewModelChanged (T oldModel)
 		{

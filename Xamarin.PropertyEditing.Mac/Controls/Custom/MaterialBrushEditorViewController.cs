@@ -14,15 +14,15 @@ namespace Xamarin.PropertyEditing.Mac
 			PreferredContentSize = new CGSize (200, 230);
 		}
 
-		MaterialView materialEditor;
+		private MaterialView materialEditor;
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			switch (e.PropertyName) {
 				case nameof (BrushPropertyViewModel.Value):
 				case nameof (BrushPropertyViewModel.MaterialDesign):
-					if (materialEditor != null)
-						materialEditor.ViewModel = ViewModel;
+					if (this.materialEditor != null)
+						this.materialEditor.ViewModel = ViewModel;
 					break;
 			}
 		}
@@ -30,7 +30,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
 		{
 			if (ViewLoaded && materialEditor != null)
-				materialEditor.ViewModel = ViewModel;
+				this.materialEditor.ViewModel = ViewModel;
 		}
 
 		public override void LoadView ()

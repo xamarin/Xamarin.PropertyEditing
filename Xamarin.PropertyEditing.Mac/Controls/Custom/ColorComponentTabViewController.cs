@@ -5,7 +5,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class ColorComponentTabViewController : NotifyingTabViewController<SolidBrushViewModel>
+	internal class ColorComponentTabViewController : NotifyingTabViewController<SolidBrushViewModel>
 	{
 		public ColorComponentTabViewController ()
 		{
@@ -35,14 +35,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 			base.WillSelect (tabView, item);
 			controller.ViewModel = ViewModel;
-			this.EditorType = controller.EditorType;
+			EditorType = controller.EditorType;
 		}
 
 		public override void DidSelect (NSTabView tabView, NSTabViewItem item)
 		{
 			base.DidSelect (tabView, item);
 			var controller = item.ViewController as ColorComponentViewController;
-			this.EditorType = controller.EditorType;
+			EditorType = controller.EditorType;
 		}
 	}
 }

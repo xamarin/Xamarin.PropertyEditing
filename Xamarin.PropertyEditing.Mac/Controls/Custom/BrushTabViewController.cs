@@ -8,7 +8,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class BrushTabViewController : NotifyingTabViewController<BrushPropertyViewModel>
+	internal class BrushTabViewController : NotifyingTabViewController<BrushPropertyViewModel>
 	{
 		public BrushTabViewController ()
 		{
@@ -21,7 +21,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
 		{
-			inhibitSelection = true;
+			this.inhibitSelection = true;
 			base.OnViewModelChanged (oldModel);
 
 			foreach (var item in TabViewItems) {
@@ -74,7 +74,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (BrushTypeTable.TryGetValue (ViewModel.SelectedBrushType, out var index)) {
 				SelectedTabViewItemIndex = index;
 			}
-			inhibitSelection = false;
+			this.inhibitSelection = false;
 		}
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs args)
@@ -94,8 +94,8 @@ namespace Xamarin.PropertyEditing.Mac
 			var brushController = item.ViewController as NotifyingViewController<BrushPropertyViewModel>;
 			if (brushController != null)
 				brushController.ViewModel = ViewModel;
-
-			if (inhibitSelection)
+			
+			if (this.inhibitSelection)
 				return;
 
 			base.WillSelect (tabView, item);
@@ -103,7 +103,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void DidSelect (NSTabView tabView, NSTabViewItem item)
 		{
-			if (inhibitSelection)
+			if (this.inhibitSelection)
 				return;
 
 			base.DidSelect (tabView, item);
@@ -116,9 +116,9 @@ namespace Xamarin.PropertyEditing.Mac
 			old.Height = 230;
 			View.Frame = old;
 
-			inhibitSelection = true;
+			this.inhibitSelection = true;
 			base.ViewDidLoad ();
-			inhibitSelection = false;
+			this.inhibitSelection = false;
 		}
 	}
 }

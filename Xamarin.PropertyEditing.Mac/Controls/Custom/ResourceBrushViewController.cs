@@ -9,7 +9,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class ResourceDataSource : NSOutlineViewDataSource
+	internal class ResourceDataSource : NSOutlineViewDataSource
 	{
 		public ResourceDataSource (ResourceSelectorViewModel viewModel) : base ()
 		{
@@ -60,7 +60,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly Dictionary<object, NSObject> groupFacades = new Dictionary<object, NSObject> ();
 	}
 
-	class ResourceBrushPropertyViewDelegate : ResourceOutlineViewDelegate
+	internal class ResourceBrushPropertyViewDelegate : ResourceOutlineViewDelegate
 	{
 		public BrushPropertyViewModel ViewModel {
 			get;
@@ -79,7 +79,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class ResourceOutlineViewDelegate : NSOutlineViewDelegate
+	internal class ResourceOutlineViewDelegate : NSOutlineViewDelegate
 	{
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
@@ -115,7 +115,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class ResourceOutlineView : NSOutlineView
+	internal class ResourceOutlineView : NSOutlineView
 	{
 		public ResourceOutlineView ()
 		{
@@ -155,10 +155,10 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class ResourceBrushViewController : NotifyingViewController<BrushPropertyViewModel>
+	internal class ResourceBrushViewController : NotifyingViewController<BrushPropertyViewModel>
 	{
-		ResourceOutlineView resourceSelector;
-		ResourceBrushPropertyViewDelegate viewDelegate;
+		private ResourceOutlineView resourceSelector;
+		private ResourceBrushPropertyViewDelegate viewDelegate;
 
 		public ResourceBrushViewController ()
 		{
@@ -166,7 +166,7 @@ namespace Xamarin.PropertyEditing.Mac
 			viewDelegate = new ResourceBrushPropertyViewDelegate ();
 		}
 
-		Resource resource;
+		private Resource resource;
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			switch (e.PropertyName) {
@@ -186,7 +186,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		void UpdateSelection ()
+		private void UpdateSelection ()
 		{
 			if (resourceSelector == null)
 				return;

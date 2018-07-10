@@ -5,7 +5,7 @@ using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	abstract class ColorEditorLayer : CALayer
+	abstract internal class ColorEditorLayer : CALayer
 	{
 		public ColorEditorLayer ()
 		{
@@ -25,7 +25,7 @@ namespace Xamarin.PropertyEditing.Mac
 		abstract public void UpdateFromLocation (EditorInteraction interaction, CGPoint location);
 	}
 
-	class UnanimatedGradientLayer : CAGradientLayer
+	internal class UnanimatedGradientLayer : CAGradientLayer
 	{
 		public UnanimatedGradientLayer ()
 		{
@@ -41,7 +41,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class UnanimatedLayer : CALayer
+	internal class UnanimatedLayer : CALayer
 	{
 		public UnanimatedLayer ()
 		{

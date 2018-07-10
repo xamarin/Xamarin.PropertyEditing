@@ -3,22 +3,22 @@ using System.ComponentModel;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	interface INotifyingListner<T> where T : NotifyingObject
+	internal interface INotifyingListner<T> where T : NotifyingObject
 	{
 		void OnViewModelChanged (T oldModel);
 		void OnPropertyChanged (object sender, PropertyChangedEventArgs e);
 	}
 
-	class NotifyingViewAdaptor<T> where T : NotifyingObject
+	internal class NotifyingViewAdaptor<T> where T : NotifyingObject
 	{
 		public NotifyingViewAdaptor (INotifyingListner<T> listener)
 		{
 			this.listener = listener;
 		}
 
-		INotifyingListner<T> listener;
+		private INotifyingListner<T> listener;
 
-		T viewModel;
+		private T viewModel;
 		internal T ViewModel {
 			get => viewModel;
 			set {
@@ -41,18 +41,18 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public void OnViewModelChanged (T oldModel)
 		{
-			listener.OnViewModelChanged (oldModel);
+			this.listener.OnViewModelChanged (oldModel);
 		}
 
 		public void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
-			listener.OnPropertyChanged (sender, e);
+			this.listener.OnPropertyChanged (sender, e);
 		}
 
 		public void Disconnect ()
 		{
-			if (viewModel != null)
-				viewModel.PropertyChanged -= OnPropertyChanged;
+			if (this.viewModel != null)
+				this.viewModel.PropertyChanged -= OnPropertyChanged;
 		}
 	}
 }

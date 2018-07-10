@@ -1,6 +1,6 @@
 ﻿namespace Xamarin.PropertyEditing.Mac
 {
-	class ComponentSpinEditor : NumericSpinEditor
+	internal class ComponentSpinEditor : NumericSpinEditor
 	{
 		public ComponentSpinEditor (ChannelEditor component)
 		{

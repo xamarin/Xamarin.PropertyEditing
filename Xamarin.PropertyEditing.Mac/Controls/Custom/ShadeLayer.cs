@@ -9,11 +9,11 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	class ShadeLayer : ColorEditorLayer
 	{
-		const float GripRadius = 4;
-		const float BorderRadius = 3;
-		const float Margin = 3;
-		ChannelEditor saturationEditor = new HsbSaturationChannelEditor ();
-		ChannelEditor brightnessEditor = new HsbBrightnessChannelEditor ();
+		private const float GripRadius = 4;
+		private const float BorderRadius = 3;
+		private const float Margin = 3;
+		private readonly ChannelEditor saturationEditor = new HsbSaturationChannelEditor ();
+		private readonly ChannelEditor brightnessEditor = new HsbBrightnessChannelEditor ();
 
 		public ShadeLayer ()
 		{
@@ -38,13 +38,13 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		readonly CALayer grip = new UnanimatedLayer {
+		private readonly CALayer grip = new UnanimatedLayer {
 			BorderColor = new CGColor (1, 1, 1),
 			BorderWidth = 1,
 			CornerRadius = GripRadius,
 		};
 
-		readonly CAGradientLayer brightnessLayer = new UnanimatedGradientLayer {
+		private readonly CAGradientLayer brightnessLayer = new UnanimatedGradientLayer {
 			Colors = new [] {
 					new CGColor (0f, 0f, 0f, 1f),
 					new CGColor (0f, 0f, 0f, 0f)
@@ -52,7 +52,7 @@ namespace Xamarin.PropertyEditing.Mac
 			CornerRadius = BorderRadius,
 		};
 
-		readonly CAGradientLayer saturationLayer = new UnanimatedGradientLayer {
+		private readonly CAGradientLayer saturationLayer = new UnanimatedGradientLayer {
 			Colors = new [] {
 					new CGColor (1f, 1f, 1f),
 					new CGColor (1f, .3f, 0f)
@@ -68,10 +68,10 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.LayoutSublayers ();
 
-			saturationLayer.Frame = Bounds.Inset (Margin, Margin);
-			brightnessLayer.Frame = saturationLayer.Bounds;
-			saturationLayer.StartPoint = new CGPoint (0, .5);
-			saturationLayer.EndPoint = new CGPoint (1, .5);
+			this.saturationLayer.Frame = Bounds.Inset (Margin, Margin);
+			this.brightnessLayer.Frame = this.saturationLayer.Bounds;
+			this.saturationLayer.StartPoint = new CGPoint (0, .5);
+			this.saturationLayer.EndPoint = new CGPoint (1, .5);
 		}
 
 		public override void UpdateFromModel (EditorInteraction interaction)
@@ -79,16 +79,16 @@ namespace Xamarin.PropertyEditing.Mac
 			LayoutIfNeeded ();
 			var color = interaction.Color;
 
-			var sat = saturationEditor.LocationFromColor (saturationLayer, color);
-			var bright = brightnessEditor.LocationFromColor (brightnessLayer, color);
+			var sat = this.saturationEditor.LocationFromColor (this.saturationLayer, color);
+			var bright = this.brightnessEditor.LocationFromColor (this.brightnessLayer, color);
 
 			var x = sat.X;
-			var y = bright.Y + saturationLayer.Frame.Y;
+			var y = bright.Y + this.saturationLayer.Frame.Y;
 
 			grip.Frame = new CGRect (x - GripRadius, y - GripRadius, GripRadius * 2, GripRadius * 2);
 
 			var hueColor = interaction.Color.HueColor;
-			saturationEditor.UpdateGradientLayer (saturationLayer, hueColor);
+			this.saturationEditor.UpdateGradientLayer (this.saturationLayer, hueColor);
 		}
 
 		public override void UpdateFromLocation (EditorInteraction interaction, CGPoint location)
@@ -98,15 +98,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 			if (interaction.ViewModel == null)
 				return;
-
+			
 			var color = interaction.Color;
-			var saturation = saturationEditor.ValueFromLocation (saturationLayer, loc);
-			var brightness = saturationEditor.ValueFromLocation (
-				brightnessLayer,
+			var saturation = this.saturationEditor.ValueFromLocation (this.saturationLayer, loc);
+			var brightness = this.saturationEditor.ValueFromLocation (
+				this.brightnessLayer,
 				new CGPoint (loc.X + brightnessLayer.Frame.X, loc.Y + brightnessLayer.Frame.Y));
-
+			
 			interaction.Color = interaction.Color.UpdateHSB (saturation: saturation, brightness: brightness);
-			//interaction.Shade = shade;
 		}
 
 		public override void Commit (EditorInteraction interaction)

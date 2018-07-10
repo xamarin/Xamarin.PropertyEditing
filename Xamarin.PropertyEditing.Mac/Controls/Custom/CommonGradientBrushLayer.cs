@@ -6,7 +6,7 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class CommonGradientBrushLayer : CALayer
+	internal class CommonGradientBrushLayer : CALayer
 	{
 		public CommonGradientBrushLayer ()
 		{
@@ -16,7 +16,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		CommonGradientBrush brush;
+		private CommonGradientBrush brush;
 		public CommonGradientBrush Brush {
 			get => brush;
 			set {

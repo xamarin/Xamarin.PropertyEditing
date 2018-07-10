@@ -12,7 +12,7 @@ namespace Xamarin.PropertyEditing.Mac
 			PreferredContentSize = new CGSize (100, 100);
 		}
 
-		NSButton brushEditor;
+		private NSButton brushEditor;
 
 		public override void LoadView ()
 		{

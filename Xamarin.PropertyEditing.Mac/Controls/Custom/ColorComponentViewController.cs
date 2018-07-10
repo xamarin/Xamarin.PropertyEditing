@@ -6,14 +6,14 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class ColorComponentViewController : NotifyingViewController<SolidBrushViewModel>
+	internal class ColorComponentViewController : NotifyingViewController<SolidBrushViewModel>
 	{
-		ColorComponentEditor editor;
+		private ColorComponentEditor editor;
 
 		public ColorComponentViewController (ChannelEditorType type) : base ()
 		{
 			PreferredContentSize = new CGSize (200, 220);
-			this.EditorType = type;
+			EditorType = type;
 		}
 
 		public ChannelEditorType EditorType { get; }
@@ -21,24 +21,24 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void OnViewModelChanged (SolidBrushViewModel oldModel)
 		{
 			base.OnViewModelChanged (oldModel);
-			editor.ViewModel = ViewModel;
+			this.editor.ViewModel = ViewModel;
 		}
 
 		public override void ViewWillDisappear ()
 		{
 			base.ViewWillDisappear ();
-			editor.ViewModel = null;
+			this.editor.ViewModel = null;
 		}
 
 		public override void ViewWillAppear ()
 		{
 			base.ViewWillAppear ();
-			editor.ViewModel = ViewModel;
+			this.editor.ViewModel = ViewModel;
 		}
 
 		public override void LoadView ()
 		{
-			View = editor = new ColorComponentEditor (this.EditorType);
+			View = this.editor = new ColorComponentEditor (this.EditorType);
 		}
 	}
 }

@@ -8,10 +8,10 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	class HueLayer : ColorEditorLayer
 	{
-		const float BorderRadius = 3;
-		const float GripRadius = 3;
+		private const float BorderRadius = 3;
+		private const float GripRadius = 3;
 
-		ChannelEditor hueEditor = new HsbHueChannelEditor ();
+		private readonly ChannelEditor hueEditor = new HsbHueChannelEditor ();
 
 		public CGColor GripColor {
 			get => grip.BorderColor;
@@ -27,14 +27,14 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		void Initialize ()
+		private void Initialize ()
 		{
-			hueEditor.UpdateGradientLayer (colors, new CommonColor (0, 255, 0));
+			this.hueEditor.UpdateGradientLayer (this.colors, new CommonColor (0, 255, 0));
 			AddSublayer (colors);
 			AddSublayer (grip);
 		}
 
-		readonly CAGradientLayer colors = new CAGradientLayer {
+		private readonly CAGradientLayer colors = new CAGradientLayer {
 			BorderColor = new CGColor (.5f, .5f, .5f, .5f),
 			StartPoint = new CGPoint (0, 1),
 			EndPoint = new CGPoint (0, 0),
@@ -42,30 +42,29 @@ namespace Xamarin.PropertyEditing.Mac
 			CornerRadius = BorderRadius,
 		};
 
-		readonly CALayer grip = new UnanimatedLayer {
+		private readonly CALayer grip = new UnanimatedLayer {
 			BorderColor = NSColor.Text.CGColor,
 			BorderWidth = 2,
 			CornerRadius = GripRadius,
 		};
 
-		CommonColor c;
 		public override void UpdateFromModel (EditorInteraction interaction)
 		{
 			LayoutIfNeeded ();
 
 			var color = interaction.Color;
 
-			var loc = hueEditor.LocationFromColor (colors, color);
-			grip.Frame = new CGRect (1, loc.Y - grip.Frame.Height / 2f, grip.Frame.Width, grip.Frame.Height);
+			var loc = this.hueEditor.LocationFromColor (this.colors, color);
+			this.grip.Frame = new CGRect (1, loc.Y - this.grip.Frame.Height / 2f, this.Frame.Width, this.grip.Frame.Height);
 		}
 
 		public override void UpdateFromLocation (EditorInteraction interaction, CGPoint location)
 		{
-			var clos = Math.Min (colors.Frame.Height, Math.Max (0, location.Y - colors.Frame.Y));
+			var clos = Math.Min (this.colors.Frame.Height, Math.Max (0, location.Y - this.colors.Frame.Y));
 
-			grip.Frame = new CGRect (
+			this.grip.Frame = new CGRect (
 				1,
-				clos + colors.Frame.Y - grip.Frame.Height * 0.5f,
+				clos + this.colors.Frame.Y - this.grip.Frame.Height * 0.5f,
 				Frame.Width - 2,
 				2 * GripRadius);
 
@@ -73,24 +72,24 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 
 			var color = interaction.Color;
-			c = interaction.Color = hueEditor.UpdateColorFromLocation (
-				colors,
+			interaction.Color = this.hueEditor.UpdateColorFromLocation (
+				this.colors,
 				color,
 				location);
 		}
 
-		public override void Commit (EditorInteraction viewModel)
+		public override void Commit (EditorInteraction interaction)
 		{
-			viewModel.ViewModel.CommitLastColor ();
+			interaction.ViewModel.CommitLastColor ();
 		}
 
 		public override void LayoutSublayers ()
 		{
 			base.LayoutSublayers ();
-			colors.Frame = Bounds.Inset (2, 2);
-			grip.Frame = new CGRect (
-				grip.Frame.X,
-				grip.Frame.Y,
+			this.colors.Frame = Bounds.Inset (2, 2);
+			this.grip.Frame = new CGRect (
+				this.grip.Frame.X,
+				this.grip.Frame.Y,
 				Frame.Width - 2,
 				2 * GripRadius);
 		}
