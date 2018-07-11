@@ -12,7 +12,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class EditorInteraction : NotifyingObject
+	internal class EditorInteraction
 	{
 		public EditorInteraction (SolidBrushViewModel viewModel, ColorEditorLayer layer)
 		{

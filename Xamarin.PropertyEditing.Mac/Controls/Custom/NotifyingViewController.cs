@@ -10,7 +10,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class NotifyingViewController<T> : NSViewController, INotifyingListner<T> where T : NotifyingObject
+	internal class NotifyingViewController<T> : NSViewController, INotifyingListner<T> where T : NotifyingObject
 	{
 		internal T ViewModel {
 			get => Adaptor.ViewModel;

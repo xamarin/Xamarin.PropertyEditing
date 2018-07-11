@@ -126,6 +126,8 @@
     <Compile Include="Controls\Custom\ColorEditorView.cs" />
     <Compile Include="Controls\Custom\ColorEditorLayer.cs" />
     <Compile Include="Controls\Custom\ComponentSpinEditor.cs" />
+    <Compile Include="Controls\Custom\UnderlinedTabViewController.cs" />
+    <Compile Include="Controls\Custom\UnderlinedTextField.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Themes\MacThemeManager.cs" />

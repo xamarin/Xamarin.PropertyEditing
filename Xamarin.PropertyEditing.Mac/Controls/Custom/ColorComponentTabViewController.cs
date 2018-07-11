@@ -1,14 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using AppKit;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class ColorComponentTabViewController : NotifyingTabViewController<SolidBrushViewModel>
+	internal class ColorComponentTabViewController : UnderlinedTabViewController<SolidBrushViewModel>
 	{
 		public ColorComponentTabViewController ()
-		{
+		{          
 			foreach (var value in Enum.GetValues (typeof (ChannelEditorType))) {
 				var editorType = (ChannelEditorType)value;
 				AddTabViewItem (new NSTabViewItem {
@@ -34,6 +35,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var controller = item.ViewController as ColorComponentViewController;
 
 			base.WillSelect (tabView, item);
+
 			controller.ViewModel = ViewModel;
 			EditorType = controller.EditorType;
 		}

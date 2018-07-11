@@ -8,7 +8,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class BrushTabViewController : NotifyingTabViewController<BrushPropertyViewModel>
+	internal class BrushTabViewController : UnderlinedTabViewController<BrushPropertyViewModel>
 	{
 		public BrushTabViewController ()
 		{
