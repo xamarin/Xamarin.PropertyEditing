@@ -9,7 +9,9 @@ namespace Xamarin.PropertyEditing.Mac
 		void OnPropertyChanged (object sender, PropertyChangedEventArgs e);
 	}
 
-	internal class NotifyingViewAdaptor<T> where T : NotifyingObject
+	internal class NotifyingViewAdaptor<T> 
+		: IDisposable
+		where T : NotifyingObject
 	{
 		public NotifyingViewAdaptor (INotifyingListner<T> listener)
 		{
@@ -49,7 +51,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.listener.OnPropertyChanged (sender, e);
 		}
 
-		public void Disconnect ()
+		public void Dispose ()
 		{
 			if (this.viewModel != null)
 				this.viewModel.PropertyChanged -= OnPropertyChanged;

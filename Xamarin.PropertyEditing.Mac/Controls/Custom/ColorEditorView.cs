@@ -99,7 +99,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (!disposing)
 				return;
 
-			Adaptor.Disconnect ();
+			Adaptor.Dispose ();
 		}
 	}
 }
