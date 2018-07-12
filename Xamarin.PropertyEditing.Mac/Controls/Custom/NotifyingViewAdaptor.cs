@@ -22,22 +22,22 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private T viewModel;
 		internal T ViewModel {
-			get => viewModel;
+			get => this.viewModel;
 			set {
-				var oldModel = viewModel;
-				if (viewModel == value)
+				var oldModel = this.viewModel;
+				if (this.viewModel == value)
 					return;
 
 				if (oldModel != null)
 					oldModel.PropertyChanged -= OnPropertyChanged;
 
-				viewModel = value;
+				this.viewModel = value;
 
 				OnViewModelChanged (oldModel);
-				if (viewModel == null)
+				if (this.viewModel == null)
 					return;
-				
-				viewModel.PropertyChanged += OnPropertyChanged;
+
+				this.viewModel.PropertyChanged += OnPropertyChanged;
 			}
 		}
 
