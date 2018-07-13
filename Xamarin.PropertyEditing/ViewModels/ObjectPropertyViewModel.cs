@@ -24,7 +24,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 	}
 
 	internal class ObjectPropertyViewModel
-		: PropertyViewModel
+		: PropertyViewModel<object>
 	{
 		public ObjectPropertyViewModel (TargetPlatform targetPlatform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (targetPlatform, property, editors)
@@ -34,24 +34,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			ValueModel = new ObjectViewModel (targetPlatform);
 			RequestCurrentValueUpdate();
-
-			QueryTypes();
 			CreateInstanceCommand = new RelayCommand (CreateInstance, () => IsAvailable && !IsCreateInstancePending);
-			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
 		}
 
 		public event EventHandler<TypeRequestedEventArgs> TypeRequested;
 
 		public AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> AssignableTypes
 		{
-			get { return this.assignableTypes; }
-			private set
+			get
 			{
-				if (this.assignableTypes == value)
-					return;
+				if (this.assignableTypes == null)
+					this.assignableTypes = new AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> (GetAssignableTypesAsync());
 
-				this.assignableTypes = value;
-				OnPropertyChanged();
+				return this.assignableTypes;
 			}
 		}
 
@@ -65,30 +60,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return this.canDelve; }
 		}
 
-		public override Resource Resource
-		{
-			// TODO: WPF can support this
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
-		}
-
 		public ObjectViewModel ValueModel
 		{
 			get;
-		}
-
-		public string CustomExpression
-		{
-			get { return this.customExpression; }
-			set
-			{
-				if (this.customExpression == value)
-					return;
-
-				SetValue (new ValueInfo<object> {
-					CustomExpression = value
-				});
-			}
 		}
 
 		public ITypeInfo ValueType
@@ -102,11 +76,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.valueType = value;
 				OnPropertyChanged();
 			}
-		}
-
-		public override ValueSource ValueSource
-		{
-			get { return this.valueSource; }
 		}
 
 		protected override void OnPropertyChanged ([CallerMemberName] string propertyName = null)
@@ -126,52 +95,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				ValueModel.SelectedObjects.Clear();
 
-				bool multipleValues = false, multipleSources = false;
-				ValueSource? source = null;
-				ITypeInfo type = null;
-				string expression = null;
+				await base.UpdateCurrentValueAsync ();
+				ValueType = CurrentValue?.ValueDescriptor as ITypeInfo;
 
-				ValueInfo<object>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<object> (Property)));
-				for (int i = 0; i < values.Length; i++) {
-					ValueInfo<object> info = values[i];
-					if (source == null)
-						source = info.Source;
-					else if (source.Value != info.Source)
-						multipleSources = true;
+				if (CurrentValue?.Value != null)
+					ValueModel.SelectedObjects.Add (CurrentValue.Value);
 
-					if (type == null)
-						type = info.ValueDescriptor as ITypeInfo;
-					else if (!multipleValues && !Equals (type, info.ValueDescriptor as ITypeInfo))
-						multipleValues = true;
-
-					if (i == 0)
-						expression = info.CustomExpression;
-					else if (info.CustomExpression != expression) {
-						expression = null;
-						multipleValues = true;
-					}
-
-					if (info.Value != null)
-						ValueModel.SelectedObjects.Add (info.Value);
-				}
-
-				this.customExpression = expression;
-				MultipleValues = multipleValues;
-				ValueType = (!multipleValues) ? type : null;
-				if (multipleSources)
-					SetValueSource (ValueSource.Unknown);
-				else
-					SetValueSource (source ?? ValueSource.Default);
-
-				SetCanDelve (values.Length > 0);
-				OnPropertyChanged (nameof(CustomExpression));
+				SetCanDelve (Editors.Any (e => e != null));
 			}
 		}
 
 		private AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes;
 		private bool createInstancePending;
-		private string customExpression;
-		private ValueSource valueSource;
 		private ITypeInfo valueType;
 		private bool canDelve;
 
@@ -195,40 +130,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			this.canDelve = value;
 			OnPropertyChanged (nameof(CanDelve));
-		}
-
-		private async void OnClearValue ()
-		{
-			await SetValueAsync (new ValueInfo<object> {
-				Source = ValueSource.Default,
-				Value = null
-			});
-		}
-
-		private bool CanClearValue ()
-		{
-			return (Property.ValueSources.HasFlag (ValueSources.Local) && Property.ValueSources.HasFlag (ValueSources.Default) && ValueSource == ValueSource.Local);
-		}
-
-		private async void SetValue (ValueInfo<object> valueInfo)
-		{
-			await SetValueAsync (valueInfo);
-		}
-
-		private Task SetValueAsync (ValueInfo<object> valueInfo)
-		{
-			Task[] setValues = new Task[Editors.Count];
-			int i = 0;
-			foreach (IObjectEditor editors in Editors) {
-				setValues[i++] = editors.SetValueAsync (Property, valueInfo);
-			}
-
-			return Task.WhenAll (setValues);
-		}
-
-		private void QueryTypes ()
-		{
-			AssignableTypes = new AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> (GetAssignableTypesAsync());
 		}
 
 		private async Task<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> GetAssignableTypesAsync ()
@@ -275,15 +176,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			} finally {
 				IsCreateInstancePending = false;
 			}
-		}
-
-		private void SetValueSource (ValueSource value)
-		{
-			if (this.valueSource == value)
-				return;
-
-			this.valueSource = value;
-			OnPropertyChanged (nameof (ValueSource));
 		}
 	}
 }

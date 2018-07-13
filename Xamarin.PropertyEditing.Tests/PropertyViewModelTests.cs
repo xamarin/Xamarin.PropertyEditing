@@ -253,7 +253,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (vm.Value, Is.EqualTo (default (TValue)));
 			Assume.That (vm.MultipleValues, Is.True);
 
-			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Default));
+			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Unknown));
 		}
 
 		[Test]

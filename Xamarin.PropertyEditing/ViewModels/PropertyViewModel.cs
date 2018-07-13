@@ -94,6 +94,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public override bool SupportsValueSourceNavigation => this.valueNavigator != null;
 
+		protected ValueInfo<TValue> CurrentValue
+		{
+			get { return this.value; }
+		}
+
 		protected virtual TValue CoerceValue (TValue validationValue)
 		{
 			if (!this.isNullable && validationValue == null) {
@@ -126,7 +131,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				bool disagree = false;
-				ValueInfo<TValue>[] values = await Task.WhenAll (Editors.Select (ed => ed.GetValueAsync<TValue> (Property, Variation)).ToArray ());
+				ValueInfo<TValue>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<TValue> (Property, Variation)).ToArray ());
 				foreach (ValueInfo<TValue> valueInfo in values) {
 					if (currentValue == null)
 						currentValue = valueInfo;
