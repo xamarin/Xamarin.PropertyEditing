@@ -104,7 +104,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		internal static readonly ResourceSource SystemResourcesSource = new ResourceSource ("System Resources", ResourceSourceType.System);
-		private static readonly ResourceSource ApplicationResourcesSource = new ResourceSource ("App resources", ResourceSourceType.Application);
+		internal static readonly ResourceSource ApplicationResourcesSource = new ResourceSource ("App resources", ResourceSourceType.Application);
 		private static readonly ResourceSource Resources = new ResourceSource ("Resources.xaml", ResourceSourceType.ResourceDictionary);
 		private static readonly ResourceSource Window = new ResourceSource ("Window: <no name>", ResourceSourceType.Document);
 

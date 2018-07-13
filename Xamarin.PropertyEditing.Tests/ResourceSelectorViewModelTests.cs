@@ -73,5 +73,49 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.Resources, Contains.Item (resource));
 			Assert.That (vm.Resources, Contains.Item (resource2));
 		}
+
+		[Test]
+		public void OnlyLocal ()
+		{
+			var tests = new StringViewModelTests ();
+			var mproperty = tests.GetPropertyMock ("Property");
+
+			var target = new object ();
+			var resource = new Resource<string> (MockResourceProvider.SystemResourcesSource, "@android:string/foo_bar", "value");
+			var resource2 = new Resource<string> (MockResourceProvider.ApplicationResourcesSource, "@android:string/foo_baz", "value");
+
+			var mprovider = new Mock<IResourceProvider> ();
+			mprovider.Setup (r => r.GetResourcesAsync (target, mproperty.Object, CancellationToken.None)).ReturnsAsync (new[] { resource, resource2 });
+
+			var vm = new ResourceSelectorViewModel (mprovider.Object, new[] { target }, mproperty.Object);
+			Assume.That (vm.Resources, Contains.Item (resource));
+			Assume.That (vm.Resources, Contains.Item (resource2));
+
+			vm.ShowOnlyLocalResources = true;
+			Assert.That (vm.Resources, Does.Not.Contain (resource));
+			Assert.That (vm.Resources, Contains.Item (resource2));
+		}
+
+		[Test]
+		public void OnlyShared ()
+		{
+			var tests = new StringViewModelTests ();
+			var mproperty = tests.GetPropertyMock ("Property");
+
+			var target = new object ();
+			var resource = new Resource<string> (MockResourceProvider.SystemResourcesSource, "@android:string/foo_bar", "value");
+			var resource2 = new Resource<string> (MockResourceProvider.ApplicationResourcesSource, "@android:string/foo_baz", "value");
+
+			var mprovider = new Mock<IResourceProvider> ();
+			mprovider.Setup (r => r.GetResourcesAsync (target, mproperty.Object, CancellationToken.None)).ReturnsAsync (new[] { resource, resource2 });
+
+			var vm = new ResourceSelectorViewModel (mprovider.Object, new[] { target }, mproperty.Object);
+			Assume.That (vm.Resources, Contains.Item (resource));
+			Assume.That (vm.Resources, Contains.Item (resource2));
+
+			vm.ShowOnlySystemResources = true;
+			Assert.That (vm.Resources, Does.Not.Contain (resource2));
+			Assert.That (vm.Resources, Contains.Item (resource));
+		}
 	}
 }
