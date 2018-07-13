@@ -261,7 +261,7 @@ namespace Xamarin.PropertyEditing.Tests
 			await mockEditor.SetValueAsync (mockProperty.Object, new ValueInfo<CommonSolidBrush> {
 				Source = ValueSource.Resource,
 				Value = resource.Value,
-				ValueDescriptor = resource
+				SourceDescriptor = resource
 			});
 
 			var vm = new BrushPropertyViewModel (platform, mockProperty.Object, new[] { mockEditor });

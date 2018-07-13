@@ -552,6 +552,7 @@ namespace Xamarin.PropertyEditing.Tests
 				return new ValueInfo<IReadOnlyList<int>> {
 					Value = setValues,
 					Source = valueInfo.Source,
+					SourceDescriptor = valueInfo.SourceDescriptor,
 					CustomExpression = valueInfo.CustomExpression,
 					ValueDescriptor = valueInfo.ValueDescriptor
 				};

@@ -88,7 +88,7 @@ namespace Xamarin.PropertyEditing
 		/// For XML based backings this usually means removing the attribute altogether. Implementers should not simply set
 		/// the value to its default value as this would still be a local value and override inheritance, styles, etc.</para>
 		/// <para>When <paramref name="value"/>'s <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Resource"/>,
-		/// the <see cref="ValueInfo{T}.ValueDescriptor"/> will be set to a <see cref="Resource"/> instance. Implementers
+		/// the <see cref="ValueInfo{T}.SourceDescriptor"/> will be set to a <see cref="Resource"/> instance. Implementers
 		/// need not see whether the resource contains a value itself.</para>
 		/// <para>When the <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Local"/> and <see cref="ValueInfo{T}.Value"/>
 		/// is the same as the default value, implementers should consider unsetting the value such that the subsequent

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 namespace Xamarin.PropertyEditing
 {
-	/// <remarks>
-	/// <para>The <see cref="Source"/> and <see cref="ValueDescriptor"/> for the value must match for two ValueInfos to be considered equal.</para>
-	/// </remarks>
 	public class ValueInfo<T> : IEquatable<ValueInfo<T>>
 	{
 		public T Value
@@ -15,7 +12,7 @@ namespace Xamarin.PropertyEditing
 		}
 
 		/// <summary>
-		/// Gets or sets a descriptor of the value source, such as a resource reference or binding description.
+		/// Gets or sets a descriptor of the value, such as a string value name or <see cref="ITypeInfo"/>.
 		/// </summary>
 		public object ValueDescriptor
 		{
@@ -24,6 +21,15 @@ namespace Xamarin.PropertyEditing
 		}
 
 		public ValueSource Source
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets a descriptor for the source, such as a <see cref="Resource"/> or binding.
+		/// </summary>
+		public object SourceDescriptor
 		{
 			get;
 			set;
@@ -42,7 +48,11 @@ namespace Xamarin.PropertyEditing
 			if (ReferenceEquals (this, other))
 				return true;
 
-			return EqualityComparer<T>.Default.Equals (Value, other.Value) && Equals (ValueDescriptor, other.ValueDescriptor) && Source == other.Source && CustomExpression == other.CustomExpression;
+			return EqualityComparer<T>.Default.Equals (Value, other.Value) &&
+					Equals (ValueDescriptor, other.ValueDescriptor) &&
+					Source == other.Source &&
+					Equals (SourceDescriptor, other.SourceDescriptor) &&
+					CustomExpression == other.CustomExpression;
 		}
 
 		public override bool Equals (object obj)
@@ -62,7 +72,8 @@ namespace Xamarin.PropertyEditing
 				var hashCode = EqualityComparer<T>.Default.GetHashCode (Value);
 				hashCode = (hashCode * 397) ^ (ValueDescriptor?.GetHashCode () ?? 0);
 				hashCode = (hashCode * 397) ^ (int) Source;
-				hashCode = (hashCode * 397) ^ (CustomExpression?.GetHashCode() ?? 0);
+				hashCode = (hashCode * 397) ^ (SourceDescriptor?.GetHashCode () ?? 0);
+				hashCode = (hashCode * 397) ^ (CustomExpression?.GetHashCode () ?? 0);
 				return hashCode;
 			}
 		}
