@@ -86,7 +86,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 	}
 
 	internal class SimpleCollectionView
-		: NotifyingObject, IEnumerable, INotifyCollectionChanged
+		: NotifyingObject, IList, INotifyCollectionChanged
 	{
 		public SimpleCollectionView (IEnumerable source, SimpleCollectionViewOptions options)
 			: this (source, options, null, null)
@@ -107,9 +107,44 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public int Count
+		{
+			get { return this.filtered.Count; }
+		}
+
+		public object this[int index]
+		{
+			get {
+				if (Options.ChildOptions == null)
+					return this.filtered[index].Item;
+
+				Element e = this.filtered[index];
+				return new KeyValuePair<string, SimpleCollectionView> (GetKey (e.Item), e.ChildrenView);
+			}
+
+			set { throw new NotSupportedException (); }
+		}
+
 		public bool HasChildElements => (this.filtered.Count > 0);
 
 		public bool IsFiltering => Options?.Filter != null;
+
+		public bool Contains (object value)
+		{
+			return IndexOf (value) != -1;
+		}
+
+		public int IndexOf (object value)
+		{
+			if (value == null)
+				return -1;
+			if (value is KeyValuePair<string, SimpleCollectionView> group)
+				return this.filtered.IndexOf (group.Key);
+			else if (value is Element e)
+				value = e.Item;
+
+			return this.filtered.IndexOf (GetKey (value));
+		}
 
 		public IEnumerator GetEnumerator ()
 		{
@@ -122,6 +157,46 @@ namespace Xamarin.PropertyEditing.ViewModels
 					yield return new KeyValuePair<string, SimpleCollectionView> (kvp.Key, kvp.Value.ChildrenView);
 			}
 		}
+
+		#region IList Unsupported
+		void ICollection.CopyTo (Array array, int index)
+		{
+			throw new NotImplementedException ();
+		}
+
+		object ICollection.SyncRoot => throw new NotImplementedException ();
+
+		bool ICollection.IsSynchronized => false;
+
+		int IList.Add (object value)
+		{
+			throw new NotSupportedException ();
+		}
+
+		void IList.Clear ()
+		{
+			throw new NotSupportedException ();
+		}
+
+		void IList.Insert (int index, object value)
+		{
+			throw new NotSupportedException ();
+		}
+
+		void IList.Remove (object value)
+		{
+			throw new NotSupportedException ();
+		}
+
+		void IList.RemoveAt (int index)
+		{
+			throw new NotSupportedException ();
+		}
+
+		bool IList.IsReadOnly => true;
+
+		bool IList.IsFixedSize => false;
+		#endregion
 
 		private class Element
 		{
@@ -207,6 +282,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 				Reset();
 		}
 
+		private string GetKey (object element)
+		{
+			return Options.DisplaySelector (element);
+		}
+
 		private bool MatchesFilter (Element element)
 		{
 			if (!IsFiltering)
@@ -252,6 +332,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				AddFiltered (toAdd, notify);
 			}
 
+			OnPropertyChanged (nameof(Count));
 			if (hadChildren != HasChildElements)
 				OnPropertyChanged (nameof(HasChildElements));
 		}
@@ -300,7 +381,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void RemoveFilteredRange (object firstElement, int sourceIndex, int count)
 		{
-			string key = Options.DisplaySelector (firstElement);
+			string key = GetKey (firstElement);
 
 			// Filtered is always a subset of arranged so if we know where we were in the original
 			// the most out of place we can be is the difference.
@@ -368,7 +449,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			bool filtering = IsFiltering;
 
-			foreach (var sourceItem in this.source.Cast<object>().Select (o => new { Item = o, Key = this.options.DisplaySelector (o) }).OrderBy (e => e.Key, Comparer)) {
+			foreach (var sourceItem in this.source.Cast<object>().Select (o => new { Item = o, Key = GetKey (o) }).OrderBy (e => e.Key, Comparer)) {
 				Element e = new Element {
 					Item = sourceItem.Item
 				};
