@@ -26,9 +26,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (item.Image != null)
 				return;
 
-			item.View = new UnderlinedImageView (image.Name) {
-			//	Image = image
-			};
+			item.View = new UnderlinedImageView (image.Name);
 			this.stackView.AddView (item.View, NSStackViewGravity.Leading);
 		}
 
@@ -76,6 +74,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var items = this.tabStack.Views.ToList ();
 			foreach (var view in items) {
 				this.tabStack.RemoveView (view);
+				view.Dispose ();
 			}
 			var i = 0;
 			foreach (var item in TabViewItems) {
@@ -103,7 +102,7 @@ namespace Xamarin.PropertyEditing.Mac
 			Spacing = 4f,
 		};
 
-		private NSEdgeInsets edgeInsets = new NSEdgeInsets (0, 12, 12, 12);
+		private NSEdgeInsets edgeInsets = new NSEdgeInsets (0, 0, 0, 0);
 		public NSEdgeInsets EdgeInsets {
 			get => this.edgeInsets;
 			set {

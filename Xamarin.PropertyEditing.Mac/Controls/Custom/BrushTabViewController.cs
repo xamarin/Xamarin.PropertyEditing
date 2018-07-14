@@ -14,6 +14,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			PreferredContentSize = new CGSize (430, 230);
 			TransitionOptions = NSViewControllerTransitionOptions.None;
+			EdgeInsets = new NSEdgeInsets (0, 12, 12, 12);
 		}
 
 		Dictionary<CommonBrushType, int> BrushTypeTable = new Dictionary<CommonBrushType, int> ();
@@ -26,6 +27,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			foreach (var item in TabViewItems) {
 				RemoveTabViewItem (item);
+				item.Dispose ();
 			}
 
 			BrushTypeTable.Clear ();
