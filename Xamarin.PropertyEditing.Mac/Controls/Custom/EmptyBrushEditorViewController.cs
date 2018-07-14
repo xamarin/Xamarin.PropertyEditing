@@ -9,7 +9,7 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public EmptyBrushEditorViewController ()
 		{
-			PreferredContentSize = new CGSize (100, 100);
+			PreferredContentSize = new CGSize (430, 230);
 		}
 
 		private NSButton brushEditor;

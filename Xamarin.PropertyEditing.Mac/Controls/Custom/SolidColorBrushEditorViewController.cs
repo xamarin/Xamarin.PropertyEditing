@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public SolidColorBrushEditorViewController ()
 		{
-			PreferredContentSize = new CGSize (300, 230);
+			PreferredContentSize = new CGSize (430, 230);
 		}
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)

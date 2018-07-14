@@ -19,7 +19,6 @@ namespace Xamarin.PropertyEditing.Mac
 		public static NSImage CreateSwatch (this CommonColor color, CGSize size, CIColor c0, CIColor c1)
 			=> new NSImage (GenerateCheckerboard (new CGRect (0, 0, size.Width, size.Height), c0, c1), size);
 
-
 		public static CGImage GenerateCheckerboard (CGRect frame)
 			=> GenerateCheckerboard (frame, CIColor.WhiteColor, CIColor.BlackColor);
 

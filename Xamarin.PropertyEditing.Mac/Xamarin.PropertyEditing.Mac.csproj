@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -25,18 +24,14 @@
     <EnablePackageSigning>false</EnablePackageSigning>
     <IncludeMonoRuntime>false</IncludeMonoRuntime>
     <UseSGen>false</UseSGen>
-    <HttpClientHandler>
-    </HttpClientHandler>
-    <LinkMode>
-    </LinkMode>
-    <XamMacArch>
-    </XamMacArch>
+    <HttpClientHandler></HttpClientHandler>
+    <LinkMode></LinkMode>
+    <XamMacArch></XamMacArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -44,12 +39,9 @@
     <EnablePackageSigning>false</EnablePackageSigning>
     <IncludeMonoRuntime>false</IncludeMonoRuntime>
     <UseSGen>false</UseSGen>
-    <HttpClientHandler>
-    </HttpClientHandler>
-    <LinkMode>
-    </LinkMode>
-    <XamMacArch>
-    </XamMacArch>
+    <HttpClientHandler></HttpClientHandler>
+    <LinkMode></LinkMode>
+    <XamMacArch></XamMacArch>
   </PropertyGroup>
   <!-- Build with strong naming if built as part of some Xamarin VSIX, normally referencing this project as a git submodule under external\Xamarin.PropertyEditing -->
   <PropertyGroup Condition="Exists('../../../xamarin.snk')">
@@ -208,6 +200,46 @@
     <BundleResource Include="Resources\custom-expression-32%402x.png" />
     <BundleResource Include="Resources\custom-expression-32~dark.png" />
     <BundleResource Include="Resources\custom-expression-32~dark%402x.png" />
+    <BundleResource Include="Resources\property-brush-gradient-16.png" />
+    <BundleResource Include="Resources\property-brush-gradient-16%402x.png" />
+    <BundleResource Include="Resources\property-brush-gradient-16~dark.png" />
+    <BundleResource Include="Resources\property-brush-gradient-16~dark%402x.png" />
+    <BundleResource Include="Resources\property-brush-gradient-16~dark~sel.png" />
+    <BundleResource Include="Resources\property-brush-gradient-16~dark~sel%402x.png" />
+    <BundleResource Include="Resources\property-brush-gradient-16~sel.png" />
+    <BundleResource Include="Resources\property-brush-gradient-16~sel%402x.png" />
+    <BundleResource Include="Resources\property-brush-image-16.png" />
+    <BundleResource Include="Resources\property-brush-image-16%402x.png" />
+    <BundleResource Include="Resources\property-brush-image-16~dark.png" />
+    <BundleResource Include="Resources\property-brush-image-16~dark%402x.png" />
+    <BundleResource Include="Resources\property-brush-image-16~dark~sel.png" />
+    <BundleResource Include="Resources\property-brush-image-16~dark~sel%402x.png" />
+    <BundleResource Include="Resources\property-brush-image-16~sel.png" />
+    <BundleResource Include="Resources\property-brush-image-16~sel%402x.png" />
+    <BundleResource Include="Resources\property-brush-none-16.png" />
+    <BundleResource Include="Resources\property-brush-none-16%402x.png" />
+    <BundleResource Include="Resources\property-brush-none-16~dark.png" />
+    <BundleResource Include="Resources\property-brush-none-16~dark%402x.png" />
+    <BundleResource Include="Resources\property-brush-none-16~dark~sel.png" />
+    <BundleResource Include="Resources\property-brush-none-16~dark~sel%402x.png" />
+    <BundleResource Include="Resources\property-brush-none-16~sel.png" />
+    <BundleResource Include="Resources\property-brush-none-16~sel%402x.png" />
+    <BundleResource Include="Resources\property-brush-resources-16.png" />
+    <BundleResource Include="Resources\property-brush-resources-16%402x.png" />
+    <BundleResource Include="Resources\property-brush-resources-16~dark.png" />
+    <BundleResource Include="Resources\property-brush-resources-16~dark%402x.png" />
+    <BundleResource Include="Resources\property-brush-resources-16~dark~sel.png" />
+    <BundleResource Include="Resources\property-brush-resources-16~dark~sel%402x.png" />
+    <BundleResource Include="Resources\property-brush-resources-16~sel.png" />
+    <BundleResource Include="Resources\property-brush-resources-16~sel%402x.png" />
+    <BundleResource Include="Resources\property-brush-solid-16.png" />
+    <BundleResource Include="Resources\property-brush-solid-16%402x.png" />
+    <BundleResource Include="Resources\property-brush-solid-16~dark.png" />
+    <BundleResource Include="Resources\property-brush-solid-16~dark%402x.png" />
+    <BundleResource Include="Resources\property-brush-solid-16~dark~sel.png" />
+    <BundleResource Include="Resources\property-brush-solid-16~dark~sel%402x.png" />
+    <BundleResource Include="Resources\property-brush-solid-16~sel.png" />
+    <BundleResource Include="Resources\property-brush-solid-16~sel%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

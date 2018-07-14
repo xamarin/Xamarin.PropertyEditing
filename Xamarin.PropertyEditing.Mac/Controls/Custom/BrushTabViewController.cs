@@ -12,7 +12,7 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public BrushTabViewController ()
 		{
-			PreferredContentSize = new CGSize (300, 230);
+			PreferredContentSize = new CGSize (430, 230);
 			TransitionOptions = NSViewControllerTransitionOptions.None;
 		}
 
@@ -42,28 +42,32 @@ namespace Xamarin.PropertyEditing.Mac
 						var solid = new SolidColorBrushEditorViewController ();
 						solid.ViewModel = ViewModel;
 						item.ViewController = solid;
+						item.Image = NSImage.ImageNamed ("property-brush-solid-16");
 						break;
 					case CommonBrushType.MaterialDesign:
 						var material = new MaterialBrushEditorViewController ();
 						material.ViewModel = ViewModel;
 						item.ViewController = material;
+						item.Image = NSImage.ImageNamed ("property-brush-none-16");
 						break;
 					case CommonBrushType.Resource:
 						var resource = new ResourceBrushViewController ();
 						resource.ViewModel = ViewModel;
 						item.ViewController = resource;
+						item.Image = NSImage.ImageNamed ("property-brush-resources-16");
 						break;
 					case CommonBrushType.Gradient:
 						var gradient = new EmptyBrushEditorViewController ();
 						gradient.ViewModel = ViewModel;
 						item.ViewController = gradient;
+						item.Image = NSImage.ImageNamed ("property-brush-gradient-16");
 						break;
 					case CommonBrushType.NoBrush:
 						var none = new EmptyBrushEditorViewController ();
 						none.ViewModel = ViewModel;
 						item.ViewController = none;
+						item.Image = NSImage.ImageNamed ("property-brush-none-16");
 						break;
-
 				}
 				if (item.ViewController != null) {
 					BrushTypeTable [brushType] = TabViewItems.Length;
@@ -112,9 +116,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ViewDidLoad ()
 		{
-			var old = View.Frame;
-			old.Height = 230;
-			View.Frame = old;
+			View.Frame = new CGRect (0, 0, 430,230);
 
 			this.inhibitSelection = true;
 			base.ViewDidLoad ();

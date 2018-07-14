@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public MaterialBrushEditorViewController ()
 		{
-			PreferredContentSize = new CGSize (200, 230);
+			PreferredContentSize = new CGSize (430, 230);
 		}
 
 		private MaterialView materialEditor;

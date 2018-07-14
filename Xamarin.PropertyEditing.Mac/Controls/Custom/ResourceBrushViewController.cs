@@ -145,11 +145,11 @@ namespace Xamarin.PropertyEditing.Mac
 			AddColumn (previewColumn);
 		}
 
-		ResourceSelectorViewModel viewModel;
+		private ResourceSelectorViewModel viewModel;
 		public ResourceSelectorViewModel ViewModel {
-			get => viewModel;
+			get => this.viewModel;
 			set {
-				viewModel = value;
+				this.viewModel = value;
 				DataSource = new ResourceDataSource (viewModel);
 			}
 		}
@@ -162,7 +162,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public ResourceBrushViewController ()
 		{
-			PreferredContentSize = new CGSize (100, 200);
+			PreferredContentSize = new CGSize (430, 230);
 			viewDelegate = new ResourceBrushPropertyViewDelegate ();
 		}
 
