@@ -48,7 +48,7 @@ namespace Xamarin.PropertyEditing.Mac
 						var material = new MaterialBrushEditorViewController ();
 						material.ViewModel = ViewModel;
 						item.ViewController = material;
-						item.Image = NSImage.ImageNamed ("property-brush-none-16");
+						item.Image = NSImage.ImageNamed ("property-brush-palette-16");
 						break;
 					case CommonBrushType.Resource:
 						var resource = new ResourceBrushViewController ();

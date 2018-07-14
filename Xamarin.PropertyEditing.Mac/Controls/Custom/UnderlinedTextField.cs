@@ -3,12 +3,11 @@ using CoreGraphics;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-
-	internal interface ISelectable {
+	internal interface IUnderliningTabView {
 		bool Selected { get; set; }
 	}
 
-	internal class UnderlinedImageView : NSImageView, ISelectable
+	internal class UnderlinedImageView : NSImageView, IUnderliningTabView
 	{
 		public UnderlinedImageView (string name)
 		{
@@ -22,14 +21,13 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			get => selected;
 			set {
-				//if (selected == value)
-				//	return;
+				if (selected == value && Image != null)
+					return;
 				selected = value;
 
 				var version = PropertyEditorPanel.ThemeManager.Theme == Themes.PropertyEditorTheme.Dark ? $"{name}~dark" : name;
 				Image = NSImage.ImageNamed (selected ? $"{version}~sel" : version);
 
-				//Enabled = value;
 				NeedsDisplay = true;
 			}
 		}
@@ -55,7 +53,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class UnderlinedTextField : NSTextField, ISelectable
+	internal class UnderlinedTextField : NSTextField, IUnderliningTabView
 	{
 		public UnderlinedTextField ()
 		{
@@ -70,12 +68,9 @@ namespace Xamarin.PropertyEditing.Mac
 			get => selected;
 			set
 			{
-				//if (selected == value)
-				//	return;
 				selected = value;
 				TextColor = selected ? NSColor.Text : NSColor.DisabledControlText;
                
-				//Enabled = value;
 				NeedsDisplay = true;
 			}
 		}

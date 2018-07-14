@@ -70,10 +70,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class UnderlinedTabViewController<TViewModel> : NotifyingTabViewController<TViewModel> where TViewModel : NotifyingObject
 	{
-		private NSStackView tabStack = new NSStackView () {
-			Spacing = 4f,
-		};
-
 		public override void NumberOfItemsChanged (NSTabView tabView)
 		{
 			base.NumberOfItemsChanged (tabView);
@@ -85,7 +81,8 @@ namespace Xamarin.PropertyEditing.Mac
 			foreach (var item in TabViewItems) {
 				if (item.Image != null) {
 					this.tabStack.AddView (new UnderlinedImageView (item.Image.Name) {
-						Selected = i == SelectedTabViewItemIndex
+						Selected = i == SelectedTabViewItemIndex,
+						ToolTip = item.Label,
 					}, NSStackViewGravity.Leading);
 				} else {
 					this.tabStack.AddView (new UnderlinedTextField () {
@@ -100,10 +97,28 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+		private NSStackView outerStack;
+		private NSStackView innerStack;
+		private NSStackView tabStack = new NSStackView () {
+			Spacing = 4f,
+		};
+
+		private NSEdgeInsets edgeInsets = new NSEdgeInsets (0, 12, 12, 12);
+		public NSEdgeInsets EdgeInsets {
+			get => this.edgeInsets;
+			set {
+				this.edgeInsets = value;
+				if (this.outerStack != null) {
+					this.outerStack.EdgeInsets = value;
+					this.innerStack.EdgeInsets = value;
+				}
+			}
+		}
+
 		public override void MouseDown (NSEvent theEvent)
 		{
 			NSView hit = View.HitTest (View.Superview.ConvertPointFromView (theEvent.LocationInWindow, null));
-			if (!(hit is ISelectable))
+			if (!(hit is IUnderliningTabView))
 				return;
 
 			int i = 0;
@@ -120,7 +135,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.DidSelect (tabView, item);
 			for (int i = 0; i < this.tabStack.Views.Length; i++) {
-				var tabItem = this.tabStack.Views[i] as ISelectable;
+				var tabItem = this.tabStack.Views[i] as IUnderliningTabView;
 				if (tabItem != null)
 					tabItem.Selected = SelectedTabViewItemIndex == i;
 			}
@@ -128,15 +143,22 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void LoadView ()
 		{
-			var stack = new NSStackView () {
-				Spacing = 0,
-				Alignment = NSLayoutAttribute.Left,
-				Orientation = NSUserInterfaceLayoutOrientation.Vertical
+			this.outerStack = new NSStackView () {
+				Orientation = NSUserInterfaceLayoutOrientation.Horizontal,
+				EdgeInsets = EdgeInsets
 			};
 
-			stack.AddView (this.tabStack, NSStackViewGravity.Top);
-			stack.AddView (TabView, NSStackViewGravity.Bottom);
-			View = stack;
+			this.innerStack = new NSStackView () {
+				Spacing = 0,
+				Alignment = NSLayoutAttribute.Left,
+				Orientation = NSUserInterfaceLayoutOrientation.Vertical,
+				EdgeInsets = EdgeInsets
+			};
+
+			this.outerStack.AddView (this.innerStack, NSStackViewGravity.Leading);
+			this.innerStack.AddView (this.tabStack, NSStackViewGravity.Top);
+			this.innerStack.AddView (TabView, NSStackViewGravity.Bottom);
+			View = this.outerStack;
 		}
 	}
 }
