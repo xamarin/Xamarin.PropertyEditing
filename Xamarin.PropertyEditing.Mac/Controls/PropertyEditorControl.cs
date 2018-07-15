@@ -24,17 +24,18 @@ namespace Xamarin.PropertyEditing.Mac
 		public const string DefaultFontName = ".AppleSystemUIFont";
 		public virtual bool TriggerRowChange => false;
 
-		PropertyViewModel viewModel;
-		public PropertyViewModel ViewModel {
+		EditorViewModel viewModel;
+		public EditorViewModel ViewModel {
 			get { return viewModel; }
 			set {
 				if (viewModel == value)
 					return;
 
-				PropertyViewModel oldModel = this.viewModel;
+				EditorViewModel oldModel = this.viewModel;
 				if (oldModel != null) {
 					oldModel.PropertyChanged -= OnPropertyChanged;
-					oldModel.ErrorsChanged -= HandleErrorsChanged;
+					if (viewModel is PropertyViewModel)
+						((PropertyViewModel)oldModel).ErrorsChanged -= HandleErrorsChanged;
 				}
 
 				this.viewModel = value;
@@ -42,7 +43,8 @@ namespace Xamarin.PropertyEditing.Mac
 				viewModel.PropertyChanged += OnPropertyChanged;
 
 				// FIXME: figure out what we want errors to display as (tooltip, etc.)
-				viewModel.ErrorsChanged += HandleErrorsChanged;
+				if (viewModel is PropertyViewModel)
+					((PropertyViewModel)viewModel).ErrorsChanged += HandleErrorsChanged;
 			}
 		}
 
@@ -75,21 +77,21 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		/// <remarks>You should treat the implementation of this as static.</remarks>
-		public virtual nint GetHeight (PropertyViewModel vm)
+		public virtual nint GetHeight (EditorViewModel vm)
 		{
 			return DefaultControlHeight;
 		}
-
+		
 		protected abstract void UpdateValue ();
 
-		protected virtual void OnViewModelChanged (PropertyViewModel oldModel)
+		protected virtual void OnViewModelChanged (EditorViewModel oldModel)
 		{
 			SetEnabled ();
 			UpdateValue ();
 			UpdateAccessibilityValues ();
 
 			// Hook this up so we know when to reset values 
-			PropertyButton.ViewModel = viewModel;
+			PropertyButton.ViewModel = viewModel as PropertyViewModel;
 		}
 
 		protected virtual void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -113,7 +115,7 @@ namespace Xamarin.PropertyEditing.Mac
 	}
 
 	internal abstract class PropertyEditorControl<TViewModel> : PropertyEditorControl
-		where TViewModel : PropertyViewModel
+		where TViewModel : EditorViewModel
 	{
 		internal new TViewModel ViewModel
 		{

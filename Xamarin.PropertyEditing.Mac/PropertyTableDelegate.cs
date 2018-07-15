@@ -41,7 +41,7 @@ namespace Xamarin.PropertyEditing.Mac
 		// the table is looking for this method, picks it up automagically
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
-			PropertyViewModel vm;
+			EditorViewModel vm;
 			IGroupingList<string, EditorViewModel> group;
 			string cellIdentifier;
 			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
@@ -67,12 +67,12 @@ namespace Xamarin.PropertyEditing.Mac
 						};
 					}
 
-					view.StringValue = ((group == null) ? vm.Property.Name + ":" : group.Key) ?? String.Empty;
+					view.StringValue = ((group == null) ? vm.Name + ":" : group.Key) ?? String.Empty;
 
 					// Set tooltips only for truncated strings
 					var stringWidth = view.AttributedStringValue.Size.Width + 30;
 					if (stringWidth > tableColumn.Width) {
-						view.ToolTip = vm.Property.Name;
+						view.ToolTip = vm.Name;
 					}
 
 					return view;
@@ -91,7 +91,7 @@ namespace Xamarin.PropertyEditing.Mac
 						return new NSView ();
 
 					// we must reset these every time, as the view may have been reused
-					editor.TableRow = outlineView.RowForItem (item);
+					editor.TableRow = outlineView.RowForItem (item); 
 					editor.ViewModel = vm;
 
 					// Force a row update due to new height, but only when we are non-default
@@ -133,7 +133,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
 		{
-			PropertyViewModel vm;
+			EditorViewModel vm;
 			IGroupingList<string, EditorViewModel> group;
 			string cellIdentifier;
 			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
@@ -172,7 +172,7 @@ namespace Xamarin.PropertyEditing.Mac
 			public nint RowSize;
 			public PropertyEditorControl SizingInstance;
 
-			public nint GetHeight (PropertyViewModel vm)
+			public nint GetHeight (EditorViewModel vm)
 			{
 				if (SizingInstance != null)
 					return SizingInstance.GetHeight (vm);
@@ -224,10 +224,10 @@ namespace Xamarin.PropertyEditing.Mac
 			return view;
 		}
 
-		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out PropertyViewModel vm, out IGroupingList<string, EditorViewModel> group, out string cellIdentifier)
+		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out EditorViewModel vm, out IGroupingList<string, EditorViewModel> group, out string cellIdentifier)
 		{
 			var facade = (NSObjectFacade)item;
-			vm = facade.Target as PropertyViewModel;
+			vm = facade.Target as EditorViewModel;
 			group = facade.Target as IGroupingList<string, EditorViewModel>;
 			cellIdentifier = (group == null) ? vm.GetType ().FullName : group.Key;
 		}
@@ -247,6 +247,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (PropertyViewModel<Point>), typeof (SystemPointEditorControl)},
 			{typeof (PropertyViewModel<Size>), typeof (SystemSizeEditorControl)},
 			{typeof (PropertyViewModel<Rectangle>), typeof (SystemRectangleEditorControl)},
-			{typeof (BrushPropertyViewModel), typeof (BrushEditorControl) }};
+			{typeof (BrushPropertyViewModel), typeof (BrushEditorControl)},
+			{typeof (PropertyGroupViewModel), typeof (GroupEditorControl)}};
 	}
 }

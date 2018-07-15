@@ -29,7 +29,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override bool TriggerRowChange => true;
 
-		public override nint GetHeight (PropertyViewModel vm)
+		public override nint GetHeight (EditorViewModel vm)
 		{
 			var realVm = (CombinablePropertyViewModel<T>)vm;
 			return checkHeight * realVm.Choices.Count;
@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		protected override void OnViewModelChanged (PropertyViewModel oldModel)
+		protected override void OnViewModelChanged (EditorViewModel oldModel)
 		{
 			nint rowHeight = GetHeight (ViewModel);
 

@@ -71,6 +71,7 @@
     <Compile Include="Controls\BaseRectangleEditorControl.cs" />
     <Compile Include="Controls\CGRectEditorControl.cs" />
     <Compile Include="Controls\CGPointEditorControl.cs" />
+    <Compile Include="Controls\GroupEditorControl.cs" />
     <Compile Include="NSObjectFacade.cs" />
     <Compile Include="Controls\PredefinedValuesEditor.cs" />
     <Compile Include="Controls\BasePointEditorControl.cs" />

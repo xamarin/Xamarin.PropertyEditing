@@ -20,6 +20,9 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 
 				viewModel = value;
+				if (viewModel == null)
+					return;
+				
 				viewModel.PropertyChanged += OnPropertyChanged;
 
 				// No point showing myself if you can't do anything with me.
