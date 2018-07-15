@@ -5,6 +5,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal interface IUnderliningTabView {
 		bool Selected { get; set; }
+		int LineWidth { get; set; }
 	}
 
 	internal class UnderlinedImageView : NSImageView, IUnderliningTabView
@@ -23,23 +24,47 @@ namespace Xamarin.PropertyEditing.Mac
 			set {
 				if (selected == value && Image != null)
 					return;
+
 				selected = value;
-
-				var version = PropertyEditorPanel.ThemeManager.Theme == Themes.PropertyEditorTheme.Dark ? $"{name}~dark" : name;
-				Image = NSImage.ImageNamed (selected ? $"{version}~sel" : version);
-
 				NeedsDisplay = true;
+			}
+		}
+
+		private int lineWidth = 2;
+		public int LineWidth
+		{
+			get => lineWidth;
+			set {
+				if (lineWidth == value)
+					return;
+
+				lineWidth = value;
+				NeedsLayout = true;
+			}
+		}
+
+
+		private string VersionName {
+			get {
+				var version = PropertyEditorPanel.ThemeManager.Theme == Themes.PropertyEditorTheme.Dark ? $"{name}~dark" : name;
+				return selected ? $"{version}~sel" : version;
 			}
 		}
 
 		public override void DrawRect (CGRect dirtyRect)
 		{
+			if (Image?.Name != VersionName) {
+				var oldImage = Image;
+				Image = NSImage.ImageNamed (VersionName);
+				oldImage?.Dispose ();
+			}
+
 			base.DrawRect (dirtyRect);
 			if (!Selected)
 				return;
 			
 			NSBezierPath path = new NSBezierPath ();
-			path.AppendPathWithRect (new CGRect (Bounds.X + 1, Bounds.Top + 3, Bounds.Width - 2, 3));
+			path.AppendPathWithRect (new CGRect (Bounds.X + 1, Bounds.Top + lineWidth, Bounds.Width - 2, lineWidth));
 			(selected? NSColor.Text: NSColor.DisabledControlText).Set ();
 			path.Fill ();
 		}
@@ -48,7 +73,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			get {
 				var size = base.IntrinsicContentSize;
-				return new CGSize (size.Width + 2, size.Height + 12);
+				return new CGSize (size.Width + lineWidth + 10, size.Height + lineWidth + 22);
 			}
 		}
 	}
@@ -75,6 +100,18 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+		private int lineWidth = 2;
+		public int LineWidth {
+			get => lineWidth;
+			set {
+				if (lineWidth == value)
+					return;
+
+				lineWidth = value;
+				NeedsLayout = true;
+			}
+		}
+
 		public override void DrawRect (CGRect dirtyRect)
 		{
 			base.DrawRect (dirtyRect);
@@ -82,8 +119,8 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 
 			NSBezierPath path = new NSBezierPath ();
-			path.AppendPathWithRect (new CGRect (Bounds.X + 1, Bounds.Bottom - 3, Bounds.Width - 2, 3.5));
-			NSColor.Text.Set ();
+			path.AppendPathWithRect (new CGRect (Bounds.X + 1, Bounds.Bottom - lineWidth, Bounds.Width - 2, lineWidth));
+			TextColor.Set ();
 			path.Fill ();
 		}
 
@@ -92,7 +129,7 @@ namespace Xamarin.PropertyEditing.Mac
 			get
 			{
 				var size = base.IntrinsicContentSize;
-				return new CGSize (size.Width + 2, size.Height + 5);
+				return new CGSize (size.Width + 2, size.Height + lineWidth + 3);
 			}
 		}
 	}
