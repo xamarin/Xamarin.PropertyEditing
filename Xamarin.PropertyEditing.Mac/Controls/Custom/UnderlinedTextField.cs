@@ -64,7 +64,7 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 			
 			NSBezierPath path = new NSBezierPath ();
-			path.AppendPathWithRect (new CGRect (Bounds.X + 1, Bounds.Top + lineWidth, Bounds.Width - 2, lineWidth));
+			path.AppendPathWithRect (new CGRect (Bounds.X, Bounds.Top + lineWidth, Bounds.Width, lineWidth));
 			(selected? NSColor.Text: NSColor.DisabledControlText).Set ();
 			path.Fill ();
 		}
@@ -85,6 +85,7 @@ namespace Xamarin.PropertyEditing.Mac
 			TranslatesAutoresizingMaskIntoConstraints = false;
 			AutoresizingMask = NSViewResizingMask.MaxXMargin;
 			UsesSingleLineMode = true;
+			Alignment = NSTextAlignment.Center;
 		}
 
 		private bool selected;
@@ -96,7 +97,7 @@ namespace Xamarin.PropertyEditing.Mac
 				selected = value;
 				TextColor = selected ? NSColor.Text : NSColor.DisabledControlText;
                
-				NeedsDisplay = true;
+				///NeedsDisplay = true;
 			}
 		}
 
@@ -119,7 +120,7 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 
 			NSBezierPath path = new NSBezierPath ();
-			path.AppendPathWithRect (new CGRect (Bounds.X + 1, Bounds.Bottom - lineWidth, Bounds.Width - 2, lineWidth));
+			path.AppendPathWithRect (new CGRect (Bounds.X, Bounds.Bottom - lineWidth, Bounds.Width, lineWidth));
 			TextColor.Set ();
 			path.Fill ();
 		}
@@ -129,7 +130,7 @@ namespace Xamarin.PropertyEditing.Mac
 			get
 			{
 				var size = base.IntrinsicContentSize;
-				return new CGSize (size.Width + 2, size.Height + lineWidth + 3);
+				return new CGSize (size.Width, size.Height + lineWidth + 3);
 			}
 		}
 	}

@@ -3,69 +3,6 @@ using AppKit;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class SegmentStack : NSView
-	{
-		class SegmentItem
-		{
-			public NSImage Image { get; set; }
-			public string Label { get; set; }
-			public NSView View { get; set; }
-		}
-
-
-		private SegmentItem[] segments = new SegmentItem[0];
-		private NSStackView stackView = new NSStackView () {
-			Spacing = 3
-		};
-
-		public void SetImage (NSImage image, int segment)
-		{
-			var item = this.segments[segment];
-
-			item.Image = image;
-			if (item.Image != null)
-				return;
-
-			item.View = new UnderlinedImageView (image.Name);
-			this.stackView.AddView (item.View, NSStackViewGravity.Leading);
-		}
-
-		public NSImage GetImage (int segment)
-		{
-			return this.segments[segment].Image;
-		}
-
-		public void SetLabel (string label, int segment)
-		{
-			var item = this.segments[segment];
-			item.Label = label;
-			if (item.Image != null)
-				return;
-			
-			item.View = new UnderlinedTextField () {
-				BackgroundColor = NSColor.Clear,
-				Editable = false,
-				Bezeled = false,
-				StringValue = label
-			};
-			this.stackView.AddView (item.View, NSStackViewGravity.Leading);
-		}
-
-		public string GetLabel (int segment)
-		{
-			return this.segments[segment].Label;
-		}
-
-		public int SegmentCount
-		{
-			get => this.segments.Length;
-			set
-			{
-				this.segments = new SegmentItem[value];
-			}
-		}
-	}
-
 	internal class UnderlinedTabViewController<TViewModel> : NotifyingTabViewController<TViewModel> where TViewModel : NotifyingObject
 	{
 		public override void NumberOfItemsChanged (NSTabView tabView)
@@ -99,7 +36,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private NSStackView outerStack;
 		private NSStackView innerStack;
 		private NSStackView tabStack = new NSStackView () {
-			Spacing = 4f,
+			Spacing = 2f,
 		};
 
 		private NSEdgeInsets edgeInsets = new NSEdgeInsets (0, 0, 0, 0);
@@ -144,6 +81,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.outerStack = new NSStackView () {
 				Orientation = NSUserInterfaceLayoutOrientation.Horizontal,
+				Spacing = 0,
 				EdgeInsets = EdgeInsets
 			};
 
