@@ -26,7 +26,7 @@ namespace Xamarin.PropertyEditing.Mac
 					if (this.materialEditor != null)
 						this.materialEditor.ViewModel = ViewModel;
 					if (this.alphaSpinEditor != null)
-						alphaSpinEditor.Value = alphaSpinEditor.ComponentEditor.ValueFromColor (ViewModel.Solid.Color);
+						alphaSpinEditor.Value = ViewModel.MaterialDesign.Alpha;
 					break;
 			}
 		}
@@ -42,10 +42,8 @@ namespace Xamarin.PropertyEditing.Mac
 			if (ViewModel == null)
 				return;
 			
-			var color = ViewModel.Solid.Color;
-			var editor = sender as ComponentSpinEditor;
-			ViewModel.Solid.Color = editor.ComponentEditor.UpdateColorFromValue (color, editor.Value);
-			ViewModel.Solid.CommitLastColor ();
+			var editor = sender as NumericSpinEditor;
+			ViewModel.MaterialDesign.Alpha = (byte)editor.Value;
 		}
 
 		public override void LoadView ()
@@ -60,8 +58,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.alphaChannelEditor = new AlphaChannelEditor ();
 			this.alphaSpinEditor = new ComponentSpinEditor (this.alphaChannelEditor) {
-				BackgroundColor = NSColor.Clear,
-				TranslatesAutoresizingMaskIntoConstraints = true
+				BackgroundColor = NSColor.Clear
 			};
 			this.alphaSpinEditor.ValueChanged += UpdateComponent;
 
