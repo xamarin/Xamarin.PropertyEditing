@@ -40,9 +40,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void Layout ()
 		{
-			if (Layer?.Sublayers != null)
-				foreach (var l in Layer.Sublayers)
+			if (Layer?.Sublayers != null) {
+				foreach (var l in Layer.Sublayers) {
 					l.RemoveFromSuperLayer ();
+					l.Dispose ();
+				}
+			}
 
 			if (MaterialDesign == null)
 				return;
@@ -78,7 +81,7 @@ namespace Xamarin.PropertyEditing.Mac
 					CornerRadius = 3,
 					BorderColor = new CGColor (.5f, .5f, .5f, .5f),
 					MasksToBounds = false,
-					IsSelected = MaterialDesign.Color == p.Color
+					IsSelected = MaterialDesign.Color == p.Color || MaterialDesign.ColorName == p.Name
 				};
 
 				l.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
