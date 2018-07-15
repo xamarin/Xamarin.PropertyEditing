@@ -67,7 +67,6 @@ namespace Xamarin.PropertyEditing.Mac
 					FontSize = 12,
 					ContentsScale = NSScreen.MainScreen.BackingScaleFactor,
 					TextAlignmentMode = CATextLayerAlignmentMode.Center,
-					IsSelected = MaterialDesign.Color == color
 				};
 			}
 
@@ -117,6 +116,8 @@ namespace Xamarin.PropertyEditing.Mac
 			Layer.AddSublayer (normal);
 			foreach (var color in MaterialDesign.NormalColorScale) {
 				var l = CreateLayer (color.Value);
+				l.ColorType = MaterialColorType.Normal;
+				l.IsSelected = color.Value == MaterialDesign.NormalColor;
 				l.Frame = new CGRect (x, 0, width, height);
 				normal.AddSublayer (l);
 				x += width;
@@ -139,6 +140,8 @@ namespace Xamarin.PropertyEditing.Mac
 			width = Frame.Width / MaterialDesign.AccentColorScale.Count ();
 			foreach (var color in MaterialDesign.AccentColorScale) {
 				var l = CreateLayer (color.Value);
+				l.ColorType = MaterialColorType.Accent;
+				l.IsSelected = color.Value == MaterialDesign.AccentColor;
 				l.Frame = new CGRect (x, 0, width, height);
 				accent.AddSublayer (l);
 				x += width;
@@ -159,7 +162,14 @@ namespace Xamarin.PropertyEditing.Mac
 				for (var c = hit; c != null; c = c.SuperLayer) {
 					var editor = c as MaterialColorLayer;
 					if (editor != null) {
-						ViewModel.Solid.Color = editor.BackgroundColor;
+						switch (editor.ColorType) {
+						case MaterialColorType.Accent:
+							MaterialDesign.AccentColor = editor.BackgroundColor;
+							break;
+						default:
+							MaterialDesign.NormalColor = editor.BackgroundColor;
+							break;
+						}
 						NeedsLayout = true;
 					}
 				}

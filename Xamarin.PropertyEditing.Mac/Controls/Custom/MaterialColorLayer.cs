@@ -4,6 +4,13 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
+	public enum MaterialColorType
+	{
+		Palette,
+		Normal,
+		Accent
+	}
+
 	class MaterialColorLayer : CATextLayer
 	{
 		public MaterialColorLayer ()
@@ -14,6 +21,8 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly CATextLayer selection = new CATextLayer () {
 			CornerRadius = 3
 		};
+
+		public MaterialColorType ColorType { get; set; } = MaterialColorType.Palette;
 
 		private string text;
 		public string Text {
