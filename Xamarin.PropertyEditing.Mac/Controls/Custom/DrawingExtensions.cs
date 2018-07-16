@@ -10,8 +10,12 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public static NSImage CreateSwatch (this CommonColor color, CGSize size)
 		{
-			var c0 = CIColor.FromCGColor (color.Blend (CommonColor.White).ToCGColor ());
-			var c1 = CIColor.FromCGColor (color.Blend (CommonColor.Black).ToCGColor ());
+			bool dark = PropertyEditorPanel.ThemeManager.Theme == Themes.PropertyEditorTheme.Dark;
+			byte c0c = (byte)(dark ? 0x26: 0xff);
+			byte c1c = (byte)(dark ? 0x00 : 0xd9);
+
+			var c0 = CIColor.FromCGColor (color.Blend (new CommonColor (c0c, c0c, c0c)).ToCGColor ());
+			var c1 = CIColor.FromCGColor (color.Blend (new CommonColor (c1c, c1c, c1c)).ToCGColor ());
 
 			return CreateSwatch (color, size, c0, c1);
 		}
@@ -20,7 +24,16 @@ namespace Xamarin.PropertyEditing.Mac
 			=> new NSImage (GenerateCheckerboard (new CGRect (0, 0, size.Width, size.Height), c0, c1), size);
 
 		public static CGImage GenerateCheckerboard (CGRect frame)
-			=> GenerateCheckerboard (frame, CIColor.WhiteColor, CIColor.BlackColor);
+		{
+			bool dark = PropertyEditorPanel.ThemeManager.Theme == Themes.PropertyEditorTheme.Dark;
+			float c1 = dark ? 0x26 / 255f : 1;
+			float c2 = dark ? 0 : 0xd9 / 255f;
+
+			return DrawingExtensions.GenerateCheckerboard (
+				frame,
+				CoreImage.CIColor.FromRgb (c1, c1, c1),
+				CoreImage.CIColor.FromRgb (c2, c2, c2));
+		}
 
 		public static CGImage GenerateCheckerboard (CGRect frame, CIColor c0, CIColor c1)
 		{
