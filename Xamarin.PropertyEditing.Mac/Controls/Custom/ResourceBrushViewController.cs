@@ -31,7 +31,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			object element;
 
-			element = (this.vm.Resources.ElementAt ((int)childIndex));
+			element = this.vm.Resources[(int)childIndex];
 
 			return GetFacade (element);
 		}

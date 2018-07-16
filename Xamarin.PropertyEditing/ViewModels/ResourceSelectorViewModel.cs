@@ -40,7 +40,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		public IEnumerable Resources => this.resourcesView;
+		public IList Resources => this.resourcesView;
 
 		public bool IsLoading
 		{
