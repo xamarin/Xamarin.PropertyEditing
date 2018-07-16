@@ -1,6 +1,5 @@
 using AppKit;
 using CoreGraphics;
-using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -17,11 +16,9 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void LoadView ()
 		{
 			View = brushEditor = new NSButton {
-				Title = "Edit"
-			};
-
-			brushEditor.Activated += (o, e) => {
-				ViewModel.SelectedBrushType = CommonBrushType.Solid;
+				Bordered = false,
+				Title = Properties.Resources.NoBrush,
+				Enabled = false
 			};
 		}
 	}

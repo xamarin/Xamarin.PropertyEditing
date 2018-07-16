@@ -73,7 +73,7 @@ namespace Xamarin.PropertyEditing.Mac
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultPropertyLabelFontSize),
 				AccessibilityElement = false,
-				StringValue = $"Alpha:",
+				StringValue = $"{Properties.Resources.Alpha}:",
 				Alignment = NSTextAlignment.Left,
 				BackgroundColor = NSColor.Clear,
 			};

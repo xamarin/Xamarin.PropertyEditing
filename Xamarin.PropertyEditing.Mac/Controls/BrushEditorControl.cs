@@ -108,7 +108,7 @@ namespace Xamarin.PropertyEditing.Mac
 					break;
 				default:
 					if (ViewModel.Value == null)
-						title = "null";
+						title = Properties.Resources.NoBrush;
 					break;
 			}
 
