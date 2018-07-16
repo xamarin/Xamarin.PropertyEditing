@@ -82,18 +82,18 @@ namespace Xamarin.PropertyEditing.Mac
 			this.outerStack = new NSStackView () {
 				Orientation = NSUserInterfaceLayoutOrientation.Horizontal,
 				Spacing = 0,
-				EdgeInsets = EdgeInsets
+				EdgeInsets = new NSEdgeInsets (0, edgeInsets.Left, 0, edgeInsets.Right)
 			};
 
 			this.innerStack = new NSStackView () {
 				Spacing = 0,
 				Alignment = NSLayoutAttribute.Left,
 				Orientation = NSUserInterfaceLayoutOrientation.Vertical,
-				EdgeInsets = EdgeInsets
+				EdgeInsets = new NSEdgeInsets (edgeInsets.Top, 0, edgeInsets.Bottom, 0)
 			};
 
 			this.outerStack.AddView (this.innerStack, NSStackViewGravity.Leading);
-			this.innerStack.AddView (this.tabStack, NSStackViewGravity.Top);
+			this.innerStack.AddView (this.tabStack, NSStackViewGravity.Leading);
 			this.innerStack.AddView (TabView, NSStackViewGravity.Bottom);
 			View = this.outerStack;
 		}

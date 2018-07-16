@@ -117,7 +117,7 @@ namespace Xamarin.PropertyEditing.Mac
 			foreach (var color in MaterialDesign.NormalColorScale) {
 				var l = CreateLayer (color.Value);
 				l.ColorType = MaterialColorType.Normal;
-				l.IsSelected = color.Value == MaterialDesign.NormalColor;
+				l.IsSelected = color.Value == MaterialDesign.NormalColor || color.Value == MaterialDesign.Color || color.Value == ViewModel.Solid.Color;
 				l.Frame = new CGRect (x, 0, width, height);
 				normal.AddSublayer (l);
 				x += width;
@@ -141,7 +141,7 @@ namespace Xamarin.PropertyEditing.Mac
 			foreach (var color in MaterialDesign.AccentColorScale) {
 				var l = CreateLayer (color.Value);
 				l.ColorType = MaterialColorType.Accent;
-				l.IsSelected = color.Value == MaterialDesign.AccentColor;
+				l.IsSelected = color.Value == MaterialDesign.AccentColor || color.Value == MaterialDesign.Color || color.Value == ViewModel.Solid.Color;
 				l.Frame = new CGRect (x, 0, width, height);
 				accent.AddSublayer (l);
 				x += width;
