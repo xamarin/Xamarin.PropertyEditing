@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using AppKit;
-using CoreAnimation;
 using CoreGraphics;
-using CoreImage;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -45,7 +43,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.popover = new NSPopover ();
 			popover.Behavior = NSPopoverBehavior.Transient;
 			popover.ContentViewController = brushTabViewController = new BrushTabViewController {
-				PreferredContentSize = new CGSize (250, 300)
+				PreferredContentSize = new CGSize (430, 263)
 			};
 
 			this.popUpButton = new ColorPopUpButton {
