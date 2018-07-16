@@ -688,6 +688,72 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (view, Does.Not.Contain (nodes[2]));
 		}
 
+		[Test]
+		public void IndexOf ()
+		{
+			var nodes = new ObservableCollection<TestNode> {
+				new TestNode ("A"),
+				new TestNode ("Baz"),
+				new TestNode ("Bar"),
+			};
+
+			var view = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector
+			});
+
+			Assume.That (view, Contains.Item (nodes[0]));
+			Assume.That (view, Contains.Item (nodes[1]));
+			Assume.That (view, Contains.Item (nodes[2]));
+
+			Assert.That (view.IndexOf (nodes[0]), Is.EqualTo (0), "IndexOf didn't return the re-sorted order index");
+			Assert.That (view.IndexOf (nodes[1]), Is.EqualTo (2), "IndexOf didn't return the re-sorted order index");
+			Assert.That (view.IndexOf (nodes[2]), Is.EqualTo (1), "IndexOf didn't return the re-sorted order index");
+
+			string textFilter = "B";
+			view.Options.Filter = o => ((TestNode)o).Key.StartsWith (textFilter, StringComparison.OrdinalIgnoreCase);
+
+			Assume.That (view, Does.Not.Contain (nodes[0]));
+			Assume.That (view, Contains.Item (nodes[1]));
+			Assume.That (view, Contains.Item (nodes[2]));
+
+			Assert.That (view.IndexOf (nodes[0]), Is.EqualTo (-1), "IndexOf didn't return not-found for filtered out item");
+			Assert.That (view.IndexOf (nodes[1]), Is.EqualTo (1), "IndexOf didn't return the filtred order index");
+			Assert.That (view.IndexOf (nodes[2]), Is.EqualTo (0), "IndexOf didn't return the filtered order index");
+		}
+
+		[Test]
+		public void Indexer ()
+		{
+			var nodes = new ObservableCollection<TestNode> {
+				new TestNode ("A"),
+				new TestNode ("Baz"),
+				new TestNode ("Bar"),
+			};
+
+			var view = new SimpleCollectionView (nodes, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector
+			});
+
+			Assume.That (view, Contains.Item (nodes[0]));
+			Assume.That (view, Contains.Item (nodes[1]));
+			Assume.That (view, Contains.Item (nodes[2]));
+
+			Assert.That (view[0], Is.EqualTo (nodes[0]), "this[] didn't return the re-sorted order index");
+			Assert.That (view[2], Is.EqualTo (nodes[1]), "this[] didn't return the re-sorted order index");
+			Assert.That (view[1], Is.EqualTo (nodes[2]), "this[] didn't return the re-sorted order index");
+
+			string textFilter = "B";
+			view.Options.Filter = o => ((TestNode)o).Key.StartsWith (textFilter, StringComparison.OrdinalIgnoreCase);
+
+			Assume.That (view, Does.Not.Contain (nodes[0]));
+			Assume.That (view, Contains.Item (nodes[1]));
+			Assume.That (view, Contains.Item (nodes[2]));
+
+			Assert.That (view[0], Is.EqualTo (nodes[2]));
+			Assert.That (view[1], Is.EqualTo (nodes[1]));
+			Assert.Throws<ArgumentOutOfRangeException> (() => view[2].ToString(), "this[] didn't throw out of range on filtered out item");
+		}
+
 		private IEnumerable TestNodeChildrenSelector (object o)
 		{
 			return ((TestNode)o).Children;
