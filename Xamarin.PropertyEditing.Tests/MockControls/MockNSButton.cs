@@ -11,6 +11,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<string> ("AlternateTitle");
 			AddProperty<NotImplemented> ("AttributedAlternateTitle");
 			AddProperty<NotImplemented> ("AttributedTitle");
+			AddProperty<CommonBrush> ("BackgroundColor");
 			AddProperty<NSBezelStyle> ("BezelStyle");
 			AddProperty<bool> ("Bordered");
 			AddProperty<NotImplemented> ("Cell");
@@ -23,7 +24,6 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<NSCellStateValue> ("State");
 			AddProperty<string> ("Title");
 			AddProperty<bool> ("Transparent");
-			AddProperty<CommonBrush> ("BackgroundColor");
 		}
 
 		public enum NSBezelStyle
