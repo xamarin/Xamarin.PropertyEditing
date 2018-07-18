@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 using AppKit;
 using CoreAnimation;
@@ -8,7 +9,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class MaterialView : NSView
+	internal class MaterialView : NotifyingView<BrushPropertyViewModel>
 	{
 		public override bool IsFlipped => true;
 
@@ -22,16 +23,14 @@ namespace Xamarin.PropertyEditing.Mac
 			WantsLayer = true;
 		}
 
-		private BrushPropertyViewModel viewModel;
-		public BrushPropertyViewModel ViewModel {
-			get => viewModel;
-			set {
-				if (viewModel == value)
-					return;
+		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
+		{
+			NeedsLayout = true;
+		}
 
-				viewModel = value;
-				NeedsLayout = true;
-			}
+		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+			NeedsLayout = true;
 		}
 
 		public MaterialDesignColorViewModel MaterialDesign {
