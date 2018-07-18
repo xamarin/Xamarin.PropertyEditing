@@ -24,7 +24,7 @@ namespace Xamarin.PropertyEditing.Mac
 				case nameof (BrushPropertyViewModel.Value):
 				case nameof (BrushPropertyViewModel.MaterialDesign):
 					if (this.materialEditor != null)
-						this.materialEditor.ViewModel = ViewModel;
+						this.materialEditor.ViewModel = ViewModel?.MaterialDesign;
 					if (this.alphaSpinEditor != null)
 						alphaSpinEditor.Value = ViewModel.MaterialDesign.Alpha;
 					break;
@@ -34,7 +34,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
 		{
 			if (ViewLoaded && materialEditor != null)
-				this.materialEditor.ViewModel = ViewModel;
+				this.materialEditor.ViewModel = ViewModel?.MaterialDesign;
 		}
 
 		void UpdateComponent (object sender, EventArgs args)
@@ -53,7 +53,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			this.materialEditor = new MaterialView {
-				ViewModel = ViewModel
+				ViewModel = ViewModel?.MaterialDesign
 			};
 
 			this.alphaChannelEditor = new AlphaChannelEditor ();

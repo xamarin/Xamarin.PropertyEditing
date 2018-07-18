@@ -9,7 +9,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class MaterialView : NotifyingView<BrushPropertyViewModel>
+	internal class MaterialView : NotifyingView<MaterialDesignColorViewModel>
 	{
 		public override bool IsFlipped => true;
 
@@ -23,18 +23,20 @@ namespace Xamarin.PropertyEditing.Mac
 			WantsLayer = true;
 		}
 
-		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
+		public override void OnViewModelChanged (MaterialDesignColorViewModel oldModel)
 		{
 			NeedsLayout = true;
 		}
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
-			NeedsLayout = true;
-		}
-
-		public MaterialDesignColorViewModel MaterialDesign {
-			get => ViewModel?.MaterialDesign;
+			switch (e.PropertyName) {
+			case nameof (ViewModel.ColorName):
+			case nameof (ViewModel.AccentColor):
+			case nameof (ViewModel.NormalColor):
+				NeedsLayout = true;
+				break;
+			}
 		}
 
 		public override void Layout ()
@@ -46,10 +48,10 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			}
 
-			if (MaterialDesign == null)
+			if (ViewModel == null)
 				return;
 
-			var colors = MaterialDesign.Palettes.Select (p => new { p.Name, Color = p.MainColor }).ToArray ();
+			var colors = ViewModel.Palettes.Select (p => new { p.Name, Color = p.MainColor }).ToArray ();
 			int col = 0;
 			nfloat x = 0;
 			nfloat y = 6;
@@ -79,7 +81,7 @@ namespace Xamarin.PropertyEditing.Mac
 					CornerRadius = 3,
 					BorderColor = new CGColor (.5f, .5f, .5f, .5f),
 					MasksToBounds = false,
-					IsSelected = MaterialDesign.Color == p.Color || MaterialDesign.ColorName == p.Name
+					IsSelected = ViewModel.Color == p.Color || ViewModel.ColorName == p.Name
 				};
 
 				l.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
@@ -97,14 +99,14 @@ namespace Xamarin.PropertyEditing.Mac
 			Layer.AddSublayer (new CATextLayer {
 				ForegroundColor = NSColor.ControlText.CGColor,
 				Frame = new CGRect (x, y + 6, Frame.Width, 25),
-				String = MaterialDesign.ColorName,
+				String = ViewModel.ColorName,
 				FontSize = NSFont.SmallSystemFontSize,
 				ContentsScale = Window?.Screen?.BackingScaleFactor ?? NSScreen.MainScreen.BackingScaleFactor
 			});
 
 			y += 25;
 			x = 0;
-			width = Frame.Width / MaterialDesign.NormalColorScale.Count ();
+			width = Frame.Width / ViewModel.NormalColorScale.Count ();
 			var normal = new CALayer {
 				CornerRadius = 3,
 				MasksToBounds = true,
@@ -113,16 +115,16 @@ namespace Xamarin.PropertyEditing.Mac
 				BorderWidth = 1
 			};
 			Layer.AddSublayer (normal);
-			foreach (var color in MaterialDesign.NormalColorScale) {
+			foreach (var color in ViewModel.NormalColorScale) {
 				var l = CreateLayer (color.Value);
 				l.ColorType = MaterialColorType.Normal;
-				l.IsSelected = color.Value == MaterialDesign.NormalColor || color.Value == MaterialDesign.Color || color.Value == ViewModel.Solid.Color;
+				l.IsSelected = color.Value == ViewModel.NormalColor || color.Value == ViewModel.Color;
 				l.Frame = new CGRect (x, 0, width, height);
 				normal.AddSublayer (l);
 				x += width;
 			}
 
-			if (MaterialDesign.AccentColorScale.Count () <= 0)
+			if (ViewModel.AccentColorScale.Count () <= 0)
 				return;
 
 			y += height + 6;
@@ -136,11 +138,11 @@ namespace Xamarin.PropertyEditing.Mac
 				BorderWidth = 1
 			};
 			Layer.AddSublayer (accent);
-			width = Frame.Width / MaterialDesign.AccentColorScale.Count ();
-			foreach (var color in MaterialDesign.AccentColorScale) {
+			width = Frame.Width / ViewModel.AccentColorScale.Count ();
+			foreach (var color in ViewModel.AccentColorScale) {
 				var l = CreateLayer (color.Value);
 				l.ColorType = MaterialColorType.Accent;
-				l.IsSelected = color.Value == MaterialDesign.AccentColor || color.Value == MaterialDesign.Color || color.Value == ViewModel.Solid.Color;
+				l.IsSelected = color.Value == ViewModel.AccentColor || color.Value == ViewModel.Color;
 				l.Frame = new CGRect (x, 0, width, height);
 				accent.AddSublayer (l);
 				x += width;
@@ -163,14 +165,14 @@ namespace Xamarin.PropertyEditing.Mac
 					if (editor != null) {
 						switch (editor.ColorType) {
 						case MaterialColorType.Accent:
-							MaterialDesign.AccentColor = editor.BackgroundColor;
+							ViewModel.AccentColor = editor.BackgroundColor;
 							break;
 						case MaterialColorType.Normal:
-							MaterialDesign.NormalColor = editor.BackgroundColor;
+							ViewModel.NormalColor = editor.BackgroundColor;
 							break;
 						case MaterialColorType.Palette:
-							var match = MaterialDesign.Palettes.First (palette => palette.MainColor == editor.BackgroundColor);
-							MaterialDesign.ColorName = match.Name;
+							var match = ViewModel.Palettes.First (palette => palette.MainColor == editor.BackgroundColor);
+							ViewModel.ColorName = match.Name;
 							break;
 						}
 						NeedsLayout = true;
