@@ -14,6 +14,8 @@ namespace Xamarin.PropertyEditing
 		/// <summary>
 		/// Gets or sets a descriptor of the value, such as a string value name or <see cref="ITypeInfo"/>.
 		/// </summary>
+		/// <seealso cref="IObjectEditor.SetValueAsync{T}"/>
+		/// <seealso cref="IObjectEditor.GetValueAsync{T}"/>
 		public object ValueDescriptor
 		{
 			get;
@@ -29,6 +31,8 @@ namespace Xamarin.PropertyEditing
 		/// <summary>
 		/// Gets or sets a descriptor for the source, such as a <see cref="Resource"/> or binding.
 		/// </summary>
+		/// <seealso cref="IObjectEditor.SetValueAsync{T}"/>
+		/// <seealso cref="IObjectEditor.GetValueAsync{T}"/>
 		public object SourceDescriptor
 		{
 			get;

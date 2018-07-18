@@ -69,6 +69,9 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
 
+		/// <summary>
+		/// Test helper for non-local values, passes in the property, <see cref="ValueInfo{T}.ValueDescriptor"/>, <see cref="ValueInfo{T}.SourceDescriptor"/>
+		/// </summary>
 		public Func<IPropertyInfo, object, object, object> ValueEvaluator
 		{
 			get;
