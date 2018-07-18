@@ -3,7 +3,7 @@ using AppKit;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class AutoClosePopOver : NSPopover
+	internal class AutoClosePopOver : NSPopover
 	{
 		public AutoClosePopOver () : base ()
 		{

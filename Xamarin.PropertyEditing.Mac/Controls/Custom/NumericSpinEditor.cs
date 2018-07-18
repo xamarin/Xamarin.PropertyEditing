@@ -5,7 +5,11 @@ using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class NumericSpinEditor<T> : NSView, INSAccessibilityGroup
+	internal class NumericSpinEditor<T> : NumericSpinEditor
+	{
+	}
+
+	internal class NumericSpinEditor : NSView, INSAccessibilityGroup
 	{
 		NumericTextField numericEditor;
 		NSStepper stepper;
@@ -17,7 +21,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public ValidationType NumericMode {
 			get { return numericEditor.NumericMode; }
 			set {
-				numericEditor.NumericMode = value;
+				this.numericEditor.NumericMode = value;
 				Reset ();
 			}
 		}
@@ -31,10 +35,14 @@ namespace Xamarin.PropertyEditing.Mac
 			get { return stepper; }
 		}
 
+		public NSTextField TextField {
+			get { return numericEditor; }
+		}
+
 		public override CGSize IntrinsicContentSize {
 			get {
 				var baseSize = stepper.IntrinsicContentSize;
-				return new CGSize (baseSize.Width + 20, baseSize.Height);
+				return new CGSize (baseSize.Width + 40, baseSize.Height);
 			}
 		}
 

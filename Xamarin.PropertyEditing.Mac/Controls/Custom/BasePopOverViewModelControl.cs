@@ -14,7 +14,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (viewModel == null)
 				throw new ArgumentNullException (nameof (viewModel));
 
-			this.ViewModel = viewModel;
+			ViewModel = viewModel;
 		}
 	}
 }

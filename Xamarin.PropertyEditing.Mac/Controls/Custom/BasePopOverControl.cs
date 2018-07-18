@@ -30,7 +30,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var viewTitle = new UnfocusableTextField () {
 				StringValue = title,
 				TranslatesAutoresizingMaskIntoConstraints = false,
-				Font = NSFont.BoldSystemFontOfSize(11)
+				Font = NSFont.BoldSystemFontOfSize (11)
 			};
 
 			AddSubview (viewTitle);
@@ -47,7 +47,7 @@ namespace Xamarin.PropertyEditing.Mac
 				viewTitle.ConstraintTo (this, (vt, c) => vt.Height == 24),
 			});
 
-			this.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
+			Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
 		}
 	}
 }

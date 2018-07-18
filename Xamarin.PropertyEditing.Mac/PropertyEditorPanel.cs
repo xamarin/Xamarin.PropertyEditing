@@ -6,6 +6,7 @@ using Foundation;
 using AppKit;
 using Xamarin.PropertyEditing.ViewModels;
 using Xamarin.PropertyEditing.Mac.Resources;
+using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -60,13 +61,28 @@ namespace Xamarin.PropertyEditing.Mac
 					this.viewModel.ArrangedPropertiesChanged -= OnPropertiesChanged;
 
 				this.targetPlatform = value;
-				this.viewModel = new PanelViewModel (value);
+				this.viewModel = new PanelViewModel (value) {
+					ResourceProvider = this.ResourceProvider
+				};
 				this.dataSource = new PropertyTableDataSource (this.viewModel);
 				this.propertyTable.Delegate = new PropertyTableDelegate (this.dataSource);
 				this.propertyTable.DataSource = this.dataSource;
 
 				if (this.viewModel != null)
 					this.viewModel.ArrangedPropertiesChanged += OnPropertiesChanged;
+			}
+		}
+
+		public IResourceProvider ResourceProvider
+		{
+			get { return resourceProvider; }
+			set
+			{
+				resourceProvider = value;
+				if (this.viewModel == null)
+					return;
+				
+				this.viewModel.ResourceProvider = value;
 			}
 		}
 
@@ -77,6 +93,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private bool isArrangeEnabled = true;
 		// when this property changes, need to create new datasource
 		private TargetPlatform targetPlatform;
+		private IResourceProvider resourceProvider;
 		private NSOutlineView propertyTable;
 		private PropertyTableDataSource dataSource;
 		private PanelViewModel viewModel;

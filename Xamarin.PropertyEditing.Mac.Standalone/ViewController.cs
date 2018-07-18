@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AppKit;
 using Foundation;
 using Xamarin.PropertyEditing.Drawing;
@@ -26,6 +27,7 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 					{ typeof(CommonBrush), "Brush" }
 				}
 			};
+			PropertyPanel.ResourceProvider = new MockResourceProvider ();
 		}
 
 		public override NSObject RepresentedObject {
@@ -43,6 +45,9 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 		{
 			var clickedButton = sender as NSButton;
 			var mockedButton = clickedButton?.Cell as IMockedControl;
+
+			SetInitialValuesAsync (mockedButton as MockedSampleControlButton).Wait ();
+
 			var inspectedObject = (mockedButton == null || mockedButton.MockedControl == null)
 				? (object)sender : mockedButton.MockedControl;
 			if (PropertyPanel.SelectedItems.Contains (inspectedObject)) {
@@ -50,6 +55,17 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 			} else {
 				PropertyPanel.SelectedItems.Add (inspectedObject);
 			}
+		}
+
+		async Task SetInitialValuesAsync (MockedSampleControlButton mocked)
+		{
+			if (mocked == null)
+				return;
+
+			IObjectEditor editor = await PropertyPanel.TargetPlatform.EditorProvider.GetObjectEditorAsync (mocked.MockedControl);
+			await mocked.MockedControl.SetBrushInitialValueAsync (editor, new CommonSolidBrush (20, 120, 220, 240, "sRGB"));
+			await mocked.MockedControl.SetMaterialDesignBrushInitialValueAsync (editor, new CommonSolidBrush (0x65, 0x1F, 0xFF, 200));
+			await mocked.MockedControl.SetReadOnlyBrushInitialValueAsync (editor, new CommonSolidBrush (240, 220, 15, 190));
 		}
 
 		// If theme toggled, then notify our manager

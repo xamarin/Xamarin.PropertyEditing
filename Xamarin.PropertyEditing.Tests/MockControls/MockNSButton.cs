@@ -1,4 +1,6 @@
-﻿namespace Xamarin.PropertyEditing.Tests.MockControls
+﻿using Xamarin.PropertyEditing.Drawing;
+
+namespace Xamarin.PropertyEditing.Tests.MockControls
 {
 	public class MockNSButton : MockNSControl
 	{
@@ -9,6 +11,7 @@
 			AddProperty<string> ("AlternateTitle");
 			AddProperty<NotImplemented> ("AttributedAlternateTitle");
 			AddProperty<NotImplemented> ("AttributedTitle");
+			AddProperty<CommonBrush> ("BackgroundColor");
 			AddProperty<NSBezelStyle> ("BezelStyle");
 			AddProperty<bool> ("Bordered");
 			AddProperty<NotImplemented> ("Cell");

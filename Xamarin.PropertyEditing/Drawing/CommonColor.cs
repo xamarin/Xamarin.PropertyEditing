@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace Xamarin.PropertyEditing.Drawing
 {
@@ -88,6 +89,9 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// </summary>
 		public CommonColor HueColor {
 			get {
+				if (this.hue.HasValue)
+					return CommonColor.FromHSB (this.hue.Value, 1, 1);
+				
 				if (this.hueR.HasValue)
 					return new CommonColor(this.hueR.Value, this.hueG, this.hueB);
 
@@ -314,6 +318,8 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <returns>The hue between 0 and 360 degrees</returns>
 		public static double GetHueFromHueColor (CommonColor hueColor)
 		{
+			if (hueColor.hue.HasValue) return hueColor.hue.Value;
+			
 			if (hueColor.B == 0) {
 				// We're between 0 and 120
 				if (hueColor.R == 255) {
@@ -358,6 +364,40 @@ namespace Xamarin.PropertyEditing.Drawing
 		{
 			var delta = highest - lowest;
 			return delta == 0 ? highest : (component - lowest) * 255 / delta;
+		}
+
+		public string ToRgbaHex ()
+		{
+			return $"#{R:X2}{G:X2}{B:X2}{A:X2}";
+		}
+
+		public static bool TryParseArgbHex (string value, out CommonColor color)
+		{
+			if (Regex.IsMatch (value, @"^#(([A-Fa-f0-9]{2}){3}|[A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|([A-Fa-f0-9]{2}){4})$")) {
+				var hex = value.Substring (1);
+				switch (hex.Length) {
+				case 3:
+					hex = $"{hex[0]}{hex[0]}{hex[1]}{hex[1]}{hex[2]}{hex[2]}";
+					goto case 6;
+				case 6:
+					hex = "FF" + hex;
+					goto case 8;
+				case 4:
+					hex = $"{hex[0]}{hex[0]}{hex[1]}{hex[1]}{hex[2]}{hex[2]}{hex[3]}{hex[3]}";
+					goto case 8;
+				case 8:
+					var v = Convert.ToInt32 (hex, 16);
+					color = new CommonColor (
+						a: (byte)(v >> 24),
+						r: (byte)(v >> 16),
+						g: (byte)(v >> 8),
+						b: (byte)v);
+
+					return true;
+				}
+			}
+			color = CommonColor.Black;
+			return false;
 		}
 
 		/// <summary>
@@ -460,7 +500,7 @@ namespace Xamarin.PropertyEditing.Drawing
 				throw new ArgumentOutOfRangeException (nameof (saturation));
 			}
 			if (brightness < 0 || brightness > 1) {
-				throw new ArgumentOutOfRangeException (nameof (lightness));
+				throw new ArgumentOutOfRangeException (nameof (brightness));
 			}
 
 			var c = brightness * saturation;
@@ -522,6 +562,8 @@ namespace Xamarin.PropertyEditing.Drawing
 			+ (left.g - right.g) * (left.g - right.g)
 			+ (left.b - right.b) * (left.b - right.b);
 
+
+
 		public override int GetHashCode ()
 		{
 			var hashCode = 466501756;
@@ -536,7 +578,7 @@ namespace Xamarin.PropertyEditing.Drawing
 
 		public override string ToString ()
 		{
-			return $"#{A:X2}{R:X2}{G:X2}{B:X2}";
+			return (A == 255) ? $"#{R:X2}{G:X2}{B:X2}" : $"#{A:X2}{R:X2}{G:X2}{B:X2}";
 		}
 	}
 }
