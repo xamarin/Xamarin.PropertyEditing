@@ -9,13 +9,30 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class ColorComponentTabViewController : UnderlinedTabViewController<SolidBrushViewModel>
 	{
 		public ColorComponentTabViewController ()
-		{          
+		{
 			foreach (var value in Enum.GetValues (typeof (ChannelEditorType))) {
 				var editorType = (ChannelEditorType)value;
 				AddTabViewItem (new NSTabViewItem {
 					Label = value.ToString (),
+					ToolTip = GetToolTip (editorType),
 					ViewController = new ColorComponentViewController (editorType)
 				});
+			}
+		}
+
+		private string GetToolTip (ChannelEditorType editorType)
+		{
+			switch (editorType) {
+			case ChannelEditorType.CMYK:
+				return Properties.Resources.CMYK;
+			case ChannelEditorType.HLS:
+				return Properties.Resources.HLS;
+			case ChannelEditorType.HSB:
+				return Properties.Resources.HSB;
+			case ChannelEditorType.RGB:
+				return Properties.Resources.RGB;
+			default:
+				return String.Empty;
 			}
 		}
 

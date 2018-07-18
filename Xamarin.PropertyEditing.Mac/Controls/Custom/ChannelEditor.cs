@@ -13,6 +13,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public double MinimumValue { get; }
 		public double MaximumValue { get; }
 		public double IncrementValue { get; }
+		public string ToolTip { get; }
 
 		static IEnumerable<double> LerpSteps (double min, double max, int steps)
 			=> Enumerable.Range (0, steps).Select (v => {
@@ -20,12 +21,13 @@ namespace Xamarin.PropertyEditing.Mac
 				return max * pos - min * (1 - pos);
 			});
 
-		public ChannelEditor (string name, double min, double max, double increment)
+		public ChannelEditor (string name, string toolTip, double min, double max, double increment)
 		{
 			MinimumValue = min;
 			MaximumValue = max;
 			IncrementValue = increment;
 			Name = name;
+			ToolTip = toolTip;
 		}
 
 		public void UpdateGradientLayer (CAGradientLayer layer, CommonColor color)
@@ -90,7 +92,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class RedChannelEditor : ChannelEditor
 	{
-		public RedChannelEditor () : base ("R", 0d, 255d, 1d)
+		public RedChannelEditor () : base ("R", Properties.Resources.Red, 0d, 255d, 1d)
 		{
 		}
 
@@ -103,7 +105,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class GreenChannelEditor : ChannelEditor
 	{
-		public GreenChannelEditor () : base ("G", 0d, 255d, 1d)
+		public GreenChannelEditor () : base ("G", Properties.Resources.Green, 0d, 255d, 1d)
 		{
 		}
 
@@ -116,7 +118,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class BlueChannelEditor : ChannelEditor
 	{
-		public BlueChannelEditor () : base ("B", 0d, 255d, 1d)
+		public BlueChannelEditor () : base ("B", Properties.Resources.Blue, 0d, 255d, 1d)
 		{
 		}
 
@@ -129,7 +131,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class AlphaChannelEditor : ChannelEditor
 	{
-		public AlphaChannelEditor () : base ("A", 0d, 255d, 1d)
+		public AlphaChannelEditor () : base ("A", Properties.Resources.Alpha, 0d, 255d, 1d)
 		{
 		}
 
@@ -142,7 +144,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class CyanChannelEditor : ChannelEditor
 	{
-		public CyanChannelEditor () : base ("C", 0d, 1d, .001d)
+		public CyanChannelEditor () : base ("C", Properties.Resources.Cyan, 0d, 1d, .001d)
 		{
 		}
 
@@ -155,7 +157,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class MagentaChannelEditor : ChannelEditor
 	{
-		public MagentaChannelEditor () : base ("M", 0d, 1d, .001d)
+		public MagentaChannelEditor () : base ("M", Properties.Resources.Magenta, 0d, 1d, .001d)
 		{
 		}
 
@@ -168,7 +170,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class YellowChannelEditor : ChannelEditor
 	{
-		public YellowChannelEditor () : base ("Y", 0d, 1d, .001d)
+		public YellowChannelEditor () : base ("Y", Properties.Resources.Yellow, 0d, 1d, .001d)
 		{
 		}
 
@@ -181,7 +183,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class BlackChannelEditor : ChannelEditor
 	{
-		public BlackChannelEditor () : base ("K", 0d, 1d, .001d)
+		public BlackChannelEditor () : base ("K", Properties.Resources.Black, 0d, 1d, .001d)
 		{
 		}
 
@@ -194,7 +196,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class HsbHueChannelEditor : ChannelEditor
 	{
-		public HsbHueChannelEditor () : base ("H", 0d, 360d, 1d)
+		public HsbHueChannelEditor () : base ("H", Properties.Resources.Hue, 0d, 360d, 1d)
 		{
 		}
 
@@ -207,7 +209,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class HsbSaturationChannelEditor : ChannelEditor
 	{
-		public HsbSaturationChannelEditor () : base ("S", 0d, 1d, .001d)
+		public HsbSaturationChannelEditor () : base ("S", Properties.Resources.Saturation, 0d, 1d, .001d)
 		{
 		}
 
@@ -220,7 +222,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class HsbBrightnessChannelEditor : ChannelEditor
 	{
-		public HsbBrightnessChannelEditor () : base ("B", 0d, 1d, .001d)
+		public HsbBrightnessChannelEditor () : base ("B", Properties.Resources.Brightness, 0d, 1d, .001d)
 		{
 		}
 
@@ -233,7 +235,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class HsbAlphaChannelEditor : ChannelEditor
 	{
-		public HsbAlphaChannelEditor () : base ("A", 0d, 255d, 1d)
+		public HsbAlphaChannelEditor () : base ("A", Properties.Resources.Alpha, 0d, 255d, 1d)
 		{
 		}
 
@@ -246,7 +248,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class HlsHueChannelEditor : ChannelEditor
 	{
-		public HlsHueChannelEditor () : base ("H", 0d, 360d, 1d)
+		public HlsHueChannelEditor () : base ("H", Properties.Resources.Hue, 0d, 360d, 1d)
 		{
 		}
 
@@ -259,7 +261,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class HlsLightnessChannelEditor : ChannelEditor
 	{
-		public HlsLightnessChannelEditor () : base ("L", 0d, 1d, .001d)
+		public HlsLightnessChannelEditor () : base ("L", Properties.Resources.Lightness, 0d, 1d, .001d)
 		{
 		}
 
@@ -272,7 +274,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class HlsSaturationChannelEditor : ChannelEditor
 	{
-		public HlsSaturationChannelEditor () : base ("S", 0d, 1d, .001d)
+		public HlsSaturationChannelEditor () : base ("S", Properties.Resources.Saturation, 0d, 1d, .001d)
 		{
 		}
 
@@ -285,7 +287,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class HlsAlphaChannelEditor : ChannelEditor
 	{
-		public HlsAlphaChannelEditor () : base ("A", 0d, 255d, 1d)
+		public HlsAlphaChannelEditor () : base ("A", Properties.Resources.Alpha, 0d, 255d, 1d)
 		{
 		}
 

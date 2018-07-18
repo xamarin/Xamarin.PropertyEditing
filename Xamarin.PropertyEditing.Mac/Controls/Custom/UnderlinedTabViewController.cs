@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Mac
 				if (item.Image != null) {
 					this.tabStack.AddView (new UnderlinedImageView (item.Image.Name) {
 						Selected = i == SelectedTabViewItemIndex,
-						ToolTip = item.Label,
+						ToolTip = item.ToolTip,
 					}, NSStackViewGravity.Leading);
 				} else {
 					this.tabStack.AddView (new UnderlinedTextField () {
@@ -27,6 +27,7 @@ namespace Xamarin.PropertyEditing.Mac
 						Bezeled = false,
 						StringValue = item.Label,
 						Selected = i == SelectedTabViewItemIndex,
+						ToolTip = item.ToolTip,
 					}, NSStackViewGravity.Leading);
 				}
 				i++;

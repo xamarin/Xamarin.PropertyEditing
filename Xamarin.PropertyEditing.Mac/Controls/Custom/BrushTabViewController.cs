@@ -44,30 +44,35 @@ namespace Xamarin.PropertyEditing.Mac
 						var solid = new SolidColorBrushEditorViewController ();
 						solid.ViewModel = ViewModel;
 						item.ViewController = solid;
+						item.ToolTip = Properties.Resources.SolidBrush;
 						item.Image = NSImage.ImageNamed ("property-brush-solid-16");
 						break;
 					case CommonBrushType.MaterialDesign:
 						var material = new MaterialBrushEditorViewController ();
 						material.ViewModel = ViewModel;
 						item.ViewController = material;
+						item.ToolTip = Properties.Resources.MaterialDesignColorBrush;
 						item.Image = NSImage.ImageNamed ("property-brush-palette-16");
 						break;
 					case CommonBrushType.Resource:
 						var resource = new ResourceBrushViewController ();
 						resource.ViewModel = ViewModel;
 						item.ViewController = resource;
+						item.ToolTip = Properties.Resources.ResourceBrush;
 						item.Image = NSImage.ImageNamed ("property-brush-resources-16");
 						break;
 					case CommonBrushType.Gradient:
 						var gradient = new EmptyBrushEditorViewController ();
 						gradient.ViewModel = ViewModel;
 						item.ViewController = gradient;
+						item.ToolTip = item.Label;
 						item.Image = NSImage.ImageNamed ("property-brush-gradient-16");
 						break;
 					case CommonBrushType.NoBrush:
 						var none = new EmptyBrushEditorViewController ();
 						none.ViewModel = ViewModel;
 						item.ViewController = none;
+						item.ToolTip = Properties.Resources.NoBrush;
 						item.Image = NSImage.ImageNamed ("property-brush-none-16");
 						break;
 				}
