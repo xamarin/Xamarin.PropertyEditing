@@ -166,8 +166,12 @@ namespace Xamarin.PropertyEditing.Mac
 						case MaterialColorType.Accent:
 							MaterialDesign.AccentColor = editor.BackgroundColor;
 							break;
-						default:
+						case MaterialColorType.Normal:
 							MaterialDesign.NormalColor = editor.BackgroundColor;
+							break;
+						case MaterialColorType.Palette:
+							var match = MaterialDesign.Palettes.First (palette => palette.MainColor == editor.BackgroundColor);
+							MaterialDesign.ColorName = match.Name;
 							break;
 						}
 						NeedsLayout = true;
