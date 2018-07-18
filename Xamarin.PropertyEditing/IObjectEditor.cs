@@ -118,7 +118,7 @@ namespace Xamarin.PropertyEditing
 		/// source. If the platform only knows that the value is unset, use <see cref="ValueSource.Unset"/> instead.</para>
 		///<para>When the property's value <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Resource"/>,
 		/// the <see cref="ValueInfo{T}.SourceDescriptor"/> should be set to a <see cref="Resource"/> instance. Implementers should
-		/// strive to retrieve the resource's value and use <see cref="Resource{T}"/> isntead. For a source of
+		/// strive to retrieve the resource's value and use <see cref="Resource{T}"/> instead. For a source of
 		/// <see cref="ValueSource.Binding"/>, the <see cref="ValueInfo{T}.SourceDescriptor"/> will be the binding object created.</para>
 		/// <para>When the <paramref name="property"/>'s <see cref="IPropertyInfo.Type"/> is an <c>object</c>
 		/// <see cref="ValueInfo{T}.ValueDescriptor"/> should contain an <see cref="ITypeInfo"/> representing the real type
