@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Xamarin.PropertyEditing.Drawing
@@ -378,13 +377,13 @@ namespace Xamarin.PropertyEditing.Drawing
 				var hex = value.Substring (1);
 				switch (hex.Length) {
 				case 3:
-					hex = hex.Select (c => $"{c}{c}").Aggregate ((a, b) => (a + b));
+					hex = $"{hex[0]}{hex[0]}{hex[1]}{hex[1]}{hex[2]}{hex[2]}";
 					goto case 6;
 				case 6:
 					hex = "FF" + hex;
 					goto case 8;
 				case 4:
-					hex = hex.Select (c => $"{c}{c}").Aggregate ((a, b) => (a + b));
+					hex = $"{hex[0]}{hex[0]}{hex[1]}{hex[1]}{hex[2]}{hex[2]}{hex[3]}{hex[3]}";
 					goto case 8;
 				case 8:
 					var v = Convert.ToInt32 (hex, 16);
