@@ -69,7 +69,10 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
 
-		public Func<IPropertyInfo, object, object> ValueEvaluator
+		/// <summary>
+		/// Test helper for non-local values, passes in the property, <see cref="ValueInfo{T}.ValueDescriptor"/>, <see cref="ValueInfo{T}.SourceDescriptor"/>
+		/// </summary>
+		public Func<IPropertyInfo, object, object, object> ValueEvaluator
 		{
 			get;
 			set;
@@ -150,11 +153,12 @@ namespace Xamarin.PropertyEditing.Tests
 				CustomExpression = value.CustomExpression,
 				Source = value.Source,
 				ValueDescriptor = value.ValueDescriptor,
+				SourceDescriptor = value.SourceDescriptor,
 				Value = value.Value
 			};
 
 			if (value.Source != ValueSource.Local && ValueEvaluator != null) {
-				value.Value = (T)ValueEvaluator (property, value.ValueDescriptor);
+				value.Value = (T)ValueEvaluator (property, value.ValueDescriptor, value.SourceDescriptor);
 			} else if (value.Source == ValueSource.Unset || (property.ValueSources.HasFlag (ValueSources.Default) && Equals (value.Value, default(T))) && value.ValueDescriptor == null) {
 				this.values.Remove (property);
 				PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
@@ -171,7 +175,9 @@ namespace Xamarin.PropertyEditing.Tests
 					var softType = typeof(ValueInfo<>).MakeGenericType (property.Type);
 					softValue = Activator.CreateInstance (softType);
 					softType.GetProperty ("Value").SetValue (softValue, v);
+					softType.GetProperty ("ValueDescriptor").SetValue (softValue, value.ValueDescriptor);
 					softType.GetProperty ("Source").SetValue (softValue, value.Source);
+					softType.GetProperty ("SourceDescriptor").SetValue (softValue, value.SourceDescriptor);
 				}
 
 				if (typeof(T).Name == "IReadOnlyList`1") {
@@ -189,18 +195,18 @@ namespace Xamarin.PropertyEditing.Tests
 			}
 
 			// Set to resource won't pass values so we will store it on the info since we just pass it back in GetValue
-			if (value.Source == ValueSource.Resource && value.ValueDescriptor is Resource) {
-				Type rt = value.ValueDescriptor.GetType();
+			if (value.Source == ValueSource.Resource && value.SourceDescriptor is Resource) {
+				Type rt = value.SourceDescriptor.GetType();
 				if (rt.IsGenericType) {
 					Type ta = rt.GetGenericArguments ()[0];
 					if (typeof (T).IsAssignableFrom (ta)) {
 						PropertyInfo pi = rt.GetProperty ("Value");
-						value.Value = (T)pi.GetValue (value.ValueDescriptor);
+						value.Value = (T)pi.GetValue (value.SourceDescriptor);
 					} else {
 						TypeConverter converter = TypeDescriptor.GetConverter (ta);
 						if (converter != null && converter.CanConvertTo(typeof(T))) {
 							PropertyInfo pi = rt.GetProperty ("Value");
-							value.Value = (T)converter.ConvertTo (pi.GetValue (value.ValueDescriptor), typeof (T));
+							value.Value = (T)converter.ConvertTo (pi.GetValue (value.SourceDescriptor), typeof (T));
 						}
 					}
 				}
@@ -225,6 +231,7 @@ namespace Xamarin.PropertyEditing.Tests
 						CustomExpression = info.CustomExpression,
 						Source = info.Source,
 						ValueDescriptor = info.ValueDescriptor,
+						SourceDescriptor = info.SourceDescriptor,
 						Value = info.Value
 					};
 				} else if (value == null || value is T) {
@@ -258,12 +265,13 @@ namespace Xamarin.PropertyEditing.Tests
 						Source = underlyingInfo?.Source ?? ValueSource.Local
 					}, typeof(ValueInfo<T>));
 				} else {
-					object descriptor = null;
+					object sourceDescriptor = null, valueDescriptor = null;
 					ValueSource source = ValueSource.Local;
 					Type valueType = value.GetType ();
 					if (valueType.IsConstructedGenericType && valueType.GetGenericTypeDefinition () == typeof(ValueInfo<>)) {
 						source = (ValueSource)valueType.GetProperty ("Source").GetValue (value);
-						descriptor = valueType.GetProperty (nameof (ValueInfo<T>.ValueDescriptor)).GetValue (value);
+						sourceDescriptor = valueType.GetProperty (nameof (ValueInfo<T>.SourceDescriptor)).GetValue (value);
+						valueDescriptor = valueType.GetProperty (nameof (ValueInfo<T>.ValueDescriptor)).GetValue (value);
 						value = valueType.GetProperty ("Value").GetValue (value);
 						valueType = valueType.GetGenericArguments ()[0];
 					}
@@ -274,13 +282,15 @@ namespace Xamarin.PropertyEditing.Tests
 						return new ValueInfo<T> {
 							Source = source,
 							Value = (T)newValue,
-							ValueDescriptor = descriptor
+							ValueDescriptor = valueDescriptor,
+							SourceDescriptor = sourceDescriptor
 						};
 					} else if (typeof(T).IsAssignableFrom (valueType)) {
 						return new ValueInfo<T> {
 							Source = source,
 							Value = (T)value,
-							ValueDescriptor = descriptor
+							ValueDescriptor = valueDescriptor,
+							SourceDescriptor = sourceDescriptor
 						};
 					}
 				}

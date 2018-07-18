@@ -253,7 +253,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assume.That (vm.Value, Is.EqualTo (default (TValue)));
 			Assume.That (vm.MultipleValues, Is.True);
 
-			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Default));
+			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Unknown));
 		}
 
 		[Test]
@@ -434,8 +434,8 @@ namespace Xamarin.PropertyEditing.Tests
 			var resourcesMock = new Mock<IResourceProvider> ();
 			resourcesMock.Setup (rp => rp.GetResourcesAsync (editor.Target, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
-			editor.ValueEvaluator = (info, o) => {
-				if (o == resource)
+			editor.ValueEvaluator = (info, val, source) => {
+				if (source == resource)
 					return value;
 
 				return default(TValue);
@@ -464,7 +464,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new MockObjectEditor (mockProperty.Object);
 			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
 				Source = ValueSource.Resource,
-				ValueDescriptor = resource,
+				SourceDescriptor = resource,
 				Value = value
 			});
 
@@ -490,7 +490,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new MockObjectEditor (mockProperty.Object);
 			await editor.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
 				Source = ValueSource.Resource,
-				ValueDescriptor = resource,
+				SourceDescriptor = resource,
 				Value = value
 			});
 

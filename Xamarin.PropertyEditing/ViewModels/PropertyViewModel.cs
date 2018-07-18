@@ -62,7 +62,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public override Resource Resource
 		{
-			get => this.value?.ValueDescriptor as Resource;
+			get => this.value?.SourceDescriptor as Resource;
 			set {
 				if (Resource == value)
 					return;
@@ -93,6 +93,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		public override bool SupportsValueSourceNavigation => this.valueNavigator != null;
+
+		protected ValueInfo<TValue> CurrentValue
+		{
+			get { return this.value; }
+		}
 
 		protected virtual TValue CoerceValue (TValue validationValue)
 		{
@@ -126,37 +131,56 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				bool disagree = false;
-				ValueInfo<TValue>[] values = await Task.WhenAll (Editors.Select (ed => ed.GetValueAsync<TValue> (Property, Variation)).ToArray ());
+				ValueInfo<TValue>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<TValue> (Property, Variation)).ToArray ());
 				foreach (ValueInfo<TValue> valueInfo in values) {
 					if (currentValue == null)
 						currentValue = valueInfo;
-					else {
-						if (valueInfo == null) {
-							currentValue.Value = default (TValue);
-							disagree = true;
-							continue;
-						}
-
-						if (currentValue.Source != valueInfo.Source) {
-							currentValue.Source = ValueSource.Default;
-							disagree = true;
-						}
-
-						if (!Equals (currentValue.Value, valueInfo.Value)) {
-							currentValue.Value = default(TValue);
-							disagree = true;
-						}
-
-						if (!Equals (currentValue.ValueDescriptor, valueInfo.ValueDescriptor)) {
-							currentValue.ValueDescriptor = null;
-							disagree = true;
-						}
-					}
+					else
+						disagree = CompareValues (currentValue, valueInfo);
 				}
 
 				// The public setter for Value is a local set for binding
 				SetCurrentValue (currentValue, disagree);
 			}
+		}
+
+		/// <summary>
+		/// Compares and updates the <paramref name="currentValue"/> based on multiple-value differences.
+		/// </summary>
+		/// <returns><c>true</c> if the values differ, <c>false</c> if they match.</returns>
+		/// <remarks>
+		/// It is expected here that <paramref name="currentValue"/> properties are returned to a neutral
+		/// state when they are found to disagree with the existing values of those properties.
+		/// </remarks>
+		protected virtual bool CompareValues (ValueInfo<TValue> currentValue, ValueInfo<TValue> valueInfo)
+		{
+			if (valueInfo == null) {
+				currentValue.Value = default (TValue);
+				return true;
+			}
+
+			bool disagree = false;
+			if (currentValue.Source != valueInfo.Source) {
+				currentValue.Source = ValueSource.Unknown;
+				disagree = true;
+			}
+
+			if (!Equals (currentValue.SourceDescriptor, valueInfo.SourceDescriptor)) {
+				currentValue.SourceDescriptor = null;
+				disagree = true;
+			}
+
+			if (!Equals (currentValue.Value, valueInfo.Value)) {
+				currentValue.Value = default (TValue);
+				disagree = true;
+			}
+
+			if (!Equals (currentValue.ValueDescriptor, valueInfo.ValueDescriptor)) {
+				currentValue.ValueDescriptor = null;
+				disagree = true;
+			}
+
+			return disagree;
 		}
 
 		protected override ResourceRequestedEventArgs CreateRequestResourceArgs ()
@@ -255,7 +279,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			
 			SetValue (new ValueInfo<TValue> {
 				Source = ValueSource.Resource,
-				ValueDescriptor = resource
+				SourceDescriptor = resource
 			});
 		}
 

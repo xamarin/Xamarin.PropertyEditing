@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -81,15 +81,19 @@ namespace Xamarin.PropertyEditing
 		 * them or become invalid as a result of a prior pending change.
 		 */
 
-			
+
 		/// <remarks>
 		/// <para>For the <see cref="ValueSource.Default"/> or <see cref="ValueSource.Unset"/> sources, implementers should
 		/// ignore <paramref name="value"/>'s <see cref="ValueInfo{T}.Value"/> property and unset the value completely.
 		/// For XML based backings this usually means removing the attribute altogether. Implementers should not simply set
 		/// the value to its default value as this would still be a local value and override inheritance, styles, etc.</para>
 		/// <para>When <paramref name="value"/>'s <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Resource"/>,
-		/// the <see cref="ValueInfo{T}.ValueDescriptor"/> will be set to a <see cref="Resource"/> instance. Implementers
-		/// need not see whether the resource contains a value itself.</para>
+		/// the <see cref="ValueInfo{T}.SourceDescriptor"/> will be set to a <see cref="Resource"/> instance. Implementers
+		/// need not see whether the resource contains a value itself. For a source of <see cref="ValueSource.Binding"/>,
+		/// the <see cref="ValueInfo{T}.SourceDescriptor"/> will be the binding object created.</para>
+		/// <para>When the <paramref name="property"/>'s <see cref="IPropertyInfo.Type"/> is an <c>object</c>
+		/// <see cref="ValueInfo{T}.ValueDescriptor"/> will contain an <see cref="ITypeInfo"/> representing the real type
+		/// of the value.</para>
 		/// <para>When the <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Local"/> and <see cref="ValueInfo{T}.Value"/>
 		/// is the same as the default value, implementers should consider unsetting the value such that the subsequent
 		/// <see cref="GetValueAsync{T}(IPropertyInfo, PropertyVariation)"/> would return <see cref="ValueSource.Default"/>
@@ -112,6 +116,13 @@ namespace Xamarin.PropertyEditing
 		/// whereever possible.</para>
 		/// <para>If the platform can know the value of a property when unset, it should return that value and the <see cref="ValueSource.Default"/>
 		/// source. If the platform only knows that the value is unset, use <see cref="ValueSource.Unset"/> instead.</para>
+		///<para>When the property's value <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Resource"/>,
+		/// the <see cref="ValueInfo{T}.SourceDescriptor"/> should be set to a <see cref="Resource"/> instance. Implementers should
+		/// strive to retrieve the resource's value and use <see cref="Resource{T}"/> instead. For a source of
+		/// <see cref="ValueSource.Binding"/>, the <see cref="ValueInfo{T}.SourceDescriptor"/> will be the binding object created.</para>
+		/// <para>When the <paramref name="property"/>'s <see cref="IPropertyInfo.Type"/> is an <c>object</c>
+		/// <see cref="ValueInfo{T}.ValueDescriptor"/> should contain an <see cref="ITypeInfo"/> representing the real type
+		/// of the value.</para>
 		/// </remarks>
 		/// <exception cref="ArgumentNullException"><paramref name="property"/> is <c>null</c>.</exception>
 		Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null);
