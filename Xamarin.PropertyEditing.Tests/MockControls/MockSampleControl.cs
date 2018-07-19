@@ -60,6 +60,13 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 				canWrite: false);
 			AddProperty<CommonBrush> (this.readOnlyBrushPropertyInfo);
 
+			this.colorPropertyInfo = new MockPropertyInfo<CommonColor> (
+				name: "ColorNoBrush",
+				category: "Windows Only",
+				canWrite: true,
+				valueSources: ValueSources.Default | ValueSources.Local | ValueSources.Resource);
+			AddProperty<CommonColor> (this.colorPropertyInfo);
+
 			AddEvents ("Click", "Hover", "Focus");
 
 		}
@@ -117,6 +124,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		private IPropertyInfo brushPropertyInfo;
 		private IPropertyInfo materialDesignBrushPropertyInfo;
 		private IPropertyInfo readOnlyBrushPropertyInfo;
+		private IPropertyInfo colorPropertyInfo;
 		private bool brushSet = false;
 		private bool materialDesignBrushSet = false;
 		private bool readOnlyBrushSet = false;
