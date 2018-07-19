@@ -20,14 +20,13 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 			base.ViewDidLoad ();
 
 			// Do any additional setup after loading the view.
-			PropertyPanel.TargetPlatform = new TargetPlatform (new MockEditorProvider ()) {
+			PropertyPanel.TargetPlatform = new TargetPlatform (new MockEditorProvider (), new MockResourceProvider(), new MockBindingProvider()) {
 				SupportsCustomExpressions = true,
 				SupportsMaterialDesign = true,
 				GroupedTypes = new Dictionary<Type, string> {
 					{ typeof(CommonBrush), "Brush" }
 				}
 			};
-			PropertyPanel.ResourceProvider = new MockResourceProvider ();
 		}
 
 		public override NSObject RepresentedObject {
