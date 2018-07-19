@@ -73,7 +73,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			get {
 				var size = base.IntrinsicContentSize;
-				return new CGSize (size.Width + lineWidth + 10, size.Height + lineWidth + 22);
+				return new CGSize (size.Width + lineWidth + 10, size.Height + lineWidth + 10);
 			}
 		}
 	}
