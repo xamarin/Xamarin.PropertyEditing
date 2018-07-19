@@ -1,4 +1,4 @@
-﻿//
+//
 // BidirectionalDictionary.cs
 //
 // Author:
@@ -32,7 +32,7 @@ using System.Collections.Generic;
 
 namespace Cadenza.Collections
 {
-	internal class BidirectionalDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+	internal class BidirectionalDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
 	{
 		private readonly IEqualityComparer<TKey> keyComparer;
 		private readonly IEqualityComparer<TValue> valueComparer;
@@ -101,6 +101,10 @@ namespace Cadenza.Collections
 		public ICollection<TKey> Keys {
 			get { return keysToValues.Keys; }
 		}
+
+		IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
+
+		IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
 
 		public ICollection<TValue> Values {
 			get { return keysToValues.Values; }

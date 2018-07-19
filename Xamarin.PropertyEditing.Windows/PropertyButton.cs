@@ -101,12 +101,14 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			if (e.OldValue is PropertyViewModel pvm) {
 				pvm.ResourceRequested -= OnResourceRequested;
+				pvm.CreateBindingRequested -= OnCreateBindingRequested;
 				pvm.CreateResourceRequested -= OnCreateResourceRequested;
 			}
 
 			this.vm = e.NewValue as PropertyViewModel;
 			if (this.vm != null) {
 				this.vm.ResourceRequested += OnResourceRequested;
+				this.vm.CreateBindingRequested += OnCreateBindingRequested;
 				this.vm.CreateResourceRequested += OnCreateResourceRequested;
 			}
 		}
@@ -121,6 +123,7 @@ namespace Xamarin.PropertyEditing.Windows
 					ToolTip = Properties.Resources.Local;
 					break;
 				case ValueSource.Binding:
+					ToolTip = Properties.Resources.Binding;
 					break;
 				case ValueSource.Inherited:
 					ToolTip = Properties.Resources.Inherited;
@@ -140,6 +143,14 @@ namespace Xamarin.PropertyEditing.Windows
 					ToolTip = Properties.Resources.Unset;
 					return;
 			}
+		}
+
+		private void OnCreateBindingRequested (object sender, CreateBindingRequestedEventArgs e)
+		{
+			var panel = this.FindPropertiesHost ();
+			var pvm = (PropertyViewModel) DataContext;
+
+			e.BindingObject = CreateBindingWindow.CreateBinding (panel, pvm.TargetPlatform, pvm.Editors.Single(), pvm.Property);
 		}
 
 		private void OnResourceRequested (object sender, ResourceRequestedEventArgs e)

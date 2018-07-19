@@ -29,12 +29,22 @@ namespace Xamarin.PropertyEditing
 		/// <summary>
 		/// Gets resource sources relative to the provided <paramref name="target"/>.
 		/// </summary>
+		Task<IReadOnlyList<ResourceSource>> GetResourceSourcesAsync (object target);
+
+		/// <summary>
+		/// Gets resource sources relative to the provided <paramref name="target"/> and <paramref name="property"/>.
+		/// </summary>
 		Task<IReadOnlyList<ResourceSource>> GetResourceSourcesAsync (object target, IPropertyInfo property);
 
 		/// <summary>
 		/// Gets an unused type-appropriate resource key for a value of the <paramref name="property"/> being turned into a resource.
 		/// </summary>
 		Task<string> SuggestResourceNameAsync (IReadOnlyCollection<object> targets, IPropertyInfo property);
+
+		/// <summary>
+		/// Gets an unused type-appropriate resource key for a new resource of <paramref name="resourceType"/>.
+		/// </summary>
+		Task<string> SuggestResourceNameAsync (IReadOnlyCollection<object> targets, ITypeInfo resourceType);
 
 		/// <summary>
 		/// Checks for issues creating a resource in the given <paramref name="source"/> with <paramref name="name"/> such as name in use, or would be overriden.

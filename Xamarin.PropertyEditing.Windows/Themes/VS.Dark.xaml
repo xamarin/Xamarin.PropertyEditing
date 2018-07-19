@@ -13,6 +13,9 @@
 	<SolidColorBrush x:Key="PanelHeaderBackgroundBrush">#252526</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertiesPanelIconBackgroundBrush">#252526</SolidColorBrush>
 
+	<SolidColorBrush x:Key="GroupBackgroundBrush">#252526</SolidColorBrush>
+	<SolidColorBrush x:Key="GroupBorderBrush">#434346</SolidColorBrush>
+
 	<SolidColorBrush x:Key="AdvancedExpanderCollapsedForegroundBrush">#F1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverForegroundBrush">#007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBorderBrush">#3E3E40</SolidColorBrush>

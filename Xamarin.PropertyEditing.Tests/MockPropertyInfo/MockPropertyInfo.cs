@@ -30,7 +30,9 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		public string Name { get; }
 		public string Description { get; }
 		public virtual Type Type => typeof (T);
-		public string TypeName => Type.Name;
+
+		public virtual ITypeInfo RealType => typeof(T).ToTypeInfo ();
+
 		public string Category { get; }
 		public bool CanWrite { get; }
 		public ValueSources ValueSources { get; }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +29,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.valueNavigator = property as ICanNavigateToSource;
 			this.isNullable = (!property.ValueSources.HasFlag (ValueSources.Default) || property.Type.Name == NullableName);
 
+			RequestCreateBindingCommand = new RelayCommand (OnCreateBinding, CanCreateBinding);
 			RequestCreateResourceCommand = new RelayCommand (OnCreateResource, CanCreateResource);
 			NavigateToValueSourceCommand = new RelayCommand (OnNavigateToSource, CanNavigateToSource);
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
@@ -340,6 +342,23 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnSetValueToResource (resource);
 		}
 
+		private bool CanCreateBinding ()
+		{
+			return SupportsBindings && Editors.Count == 1;
+		}
+
+		private async void OnCreateBinding ()
+		{
+			var e = RequestCreateBinding ();
+			if (e.BindingObject == null)
+				return;
+
+			await SetValueAsync (new ValueInfo<TValue> {
+				Source = ValueSource.Binding,
+				ValueDescriptor = e.BindingObject
+			});
+		}
+
 		private static TValue DefaultValue;
 	}
 
@@ -356,10 +375,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			SetupConstraints ();
 
 			this.requestResourceCommand = new RelayCommand (OnRequestResource, CanRequestResource);
+			
 		}
 
 		public event EventHandler<ResourceRequestedEventArgs> ResourceRequested;
 		public event EventHandler<CreateResourceRequestedEventArgs> CreateResourceRequested;
+		public event EventHandler<CreateBindingRequestedEventArgs> CreateBindingRequested;
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
 		public IPropertyInfo Property
@@ -393,6 +414,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public bool CanCreateResources
 		{
 			get { return SupportsResources && (ResourceProvider?.CanCreateResources ?? false); }
+		}
+
+		public bool SupportsBindings
+		{
+			get { return Property.CanWrite && TargetPlatform.BindingProvider != null && Property.ValueSources.HasFlag (ValueSources.Binding); }
 		}
 
 		public abstract Resource Resource
@@ -437,6 +463,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		public ICommand RequestResourceCommand => this.requestResourceCommand;
+
+		public ICommand RequestCreateBindingCommand
+		{
+			get;
+			protected set;
+		}
 
 		public ICommand RequestCreateResourceCommand
 		{
@@ -521,6 +553,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		protected override void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			base.OnEditorsChanged (sender, e);
+			((RelayCommand)RequestCreateBindingCommand)?.ChangeCanExecute();
+		}
+
 		protected override void SetupEditor (IObjectEditor editor)
 		{
 			if (editor == null)
@@ -537,6 +575,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			base.TeardownEditor (editor);
 			editor.PropertyChanged -= OnEditorPropertyChanged;
+		}
+
+		protected CreateBindingRequestedEventArgs RequestCreateBinding ()
+		{
+			var e = new CreateBindingRequestedEventArgs ();
+			CreateBindingRequested?.Invoke (this, e);
+			return e;
 		}
 
 		protected CreateResourceRequestedEventArgs RequestCreateResource ()

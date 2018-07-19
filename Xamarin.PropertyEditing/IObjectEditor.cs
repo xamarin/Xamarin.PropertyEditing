@@ -30,16 +30,23 @@ namespace Xamarin.PropertyEditing
 		object Target { get; }
 
 		/// <summary>
-		/// Gets the real type name for the object.
+		/// Gets the real type of the <see cref="Target"/>.
 		/// </summary>
-		/// <remarks>Also used for iconography.</remarks>
-		string TypeName { get; }
+		ITypeInfo TargetType { get; }
 
 		/// <remarks>
 		/// These properties should be minimally equatable to the same property for another object of the same type. This includes
 		/// for base class properties for two different derived types.
 		/// </remarks>
 		IReadOnlyCollection<IPropertyInfo> Properties { get; }
+
+		/// <summary>
+		/// Gets a mapping between known properties (such as CommonBrush.Opacity) and their provider counterparts.
+		/// </summary>
+		/// <remarks>
+		/// Should only include known properties present in <see cref="Properties"/>. Can be <c>null</c> if there are none.
+		/// </remarks>
+		IReadOnlyDictionary<IPropertyInfo, KnownProperty> KnownProperties { get; }
 
 		/// <summary>
 		/// Gets the parent object editor for the object this editor represents or <c>null</c> if none.

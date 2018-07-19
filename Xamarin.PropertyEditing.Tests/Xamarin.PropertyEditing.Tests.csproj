@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddValueConverterViewModelTests.cs" />
     <Compile Include="AsyncSynchronizationContext.cs" />
     <Compile Include="AsyncValueTests.cs" />
     <Compile Include="AsyncWorkQueueTests.cs" />
@@ -64,11 +65,15 @@
     <Compile Include="BrushPropertyViewModelTests.cs" />
     <Compile Include="BytePropertyViewModelTests.cs" />
     <Compile Include="CollectionPropertyViewModelTests.cs" />
+    <Compile Include="CreateBindingViewModelTests.cs" />
     <Compile Include="CreateResourceViewModelTests.cs" />
     <Compile Include="MaterialDesignColorViewModelTests.cs" />
     <Compile Include="CombinablePredefinedViewModelTests.cs" />
+    <Compile Include="MockBindingEditor.cs" />
+    <Compile Include="MockBindingProvider.cs" />
     <Compile Include="MockControls\MockResourceProvider.cs" />
     <Compile Include="MockPropertyInfo\MockBrushPropertyInfo.cs" />
+    <Compile Include="MockValueConverter.cs" />
     <Compile Include="NumericTests.cs" />
     <Compile Include="NumericViewModelTests.cs" />
     <Compile Include="ResourceSelectorViewModelTests.cs" />

@@ -454,7 +454,7 @@
   <data name="ResourceWithName" xml:space="preserve">
     <value>Resource ({0})</value>
     <comment>Resource with the raw embedded resource name</comment>
-  </data> 
+  </data>
   <data name="Binding" xml:space="preserve">
     <value>Binding</value>
   </data>
@@ -513,5 +513,36 @@
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
     <value>Resource dictionary</value>
+  </data>
+  <data name="CreateDataBindingMenuItem" xml:space="preserve">
+    <value>Create New Binding…</value>
+  </data>
+  <data name="AddValueConverterEllipsis" xml:space="preserve">
+    <value>Add value converter…</value>
+  </data>
+  <data name="AddValueConverterTitle" xml:space="preserve">
+    <value>Add Value Converter</value>
+  </data>
+  <data name="NoValueConverter" xml:space="preserve">
+    <value>No value converter</value>
+  </data>
+  <data name="ValueConverterName" xml:space="preserve">
+    <value>Value converter name</value>
+  </data>
+  <data name="CreateDataBindingTitle" xml:space="preserve">
+    <value>Create Data Binding for {0}</value>
+    <comment>Create Data Binding for Object.Property</comment>
+  </data>
+  <data name="BindingType" xml:space="preserve">
+    <value>Binding type</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="ResourcePlural" xml:space="preserve">
+    <value>Resources</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Custom</value>
   </data>
 </root>

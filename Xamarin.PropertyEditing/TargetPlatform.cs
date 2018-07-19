@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using Xamarin.PropertyEditing.Drawing;
-
 namespace Xamarin.PropertyEditing
 {
 	/// <summary>
@@ -10,12 +8,39 @@ namespace Xamarin.PropertyEditing
 	/// </summary>
 	public sealed class TargetPlatform
 	{
-		public TargetPlatform (IEditorProvider provider)
+		public TargetPlatform (IEditorProvider editorProvider)
 		{
-			if (provider == null)
-				throw new ArgumentNullException (nameof(provider));
+			if (editorProvider == null)
+				throw new ArgumentNullException (nameof(editorProvider));
 
-			EditorProvider = provider;
+			EditorProvider = editorProvider;
+		}
+
+		public TargetPlatform (IEditorProvider editorProvider, IResourceProvider resourceProvider)
+			: this (editorProvider)
+		{
+			if (resourceProvider == null)
+				throw new ArgumentNullException (nameof(resourceProvider));
+
+			ResourceProvider = resourceProvider;
+		}
+
+		public TargetPlatform (IEditorProvider editorProvider, IBindingProvider bindingProvider)
+			: this (editorProvider)
+		{
+			if (bindingProvider == null)
+				throw new ArgumentNullException (nameof (bindingProvider));
+
+			BindingProvider = bindingProvider;
+		}
+
+		public TargetPlatform (IEditorProvider editorProvider, IResourceProvider resourceProvider, IBindingProvider bindingProvider)
+			: this (editorProvider, resourceProvider)
+		{
+			if (bindingProvider == null)
+				throw new ArgumentNullException (nameof(bindingProvider));
+
+			BindingProvider = bindingProvider;
 		}
 
 		/// <summary>
@@ -24,6 +49,18 @@ namespace Xamarin.PropertyEditing
 		public IEditorProvider EditorProvider
 		{
 			get;
+		}
+
+		public IResourceProvider ResourceProvider
+		{
+			get;
+			private set;
+		}
+
+		public IBindingProvider BindingProvider
+		{
+			get;
+			private set;
 		}
 
 		/// <summary>
@@ -74,6 +111,8 @@ namespace Xamarin.PropertyEditing
 				throw new ArgumentNullException (nameof(provider));
 
 			return new TargetPlatform (provider) {
+				ResourceProvider = ResourceProvider,
+				BindingProvider = BindingProvider,
 				SupportsMaterialDesign = SupportsMaterialDesign,
 				SupportsCustomExpressions = SupportsCustomExpressions,
 				SupportsBrushOpacity = SupportsBrushOpacity,

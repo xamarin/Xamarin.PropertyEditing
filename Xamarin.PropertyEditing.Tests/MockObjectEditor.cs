@@ -33,15 +33,18 @@ namespace Xamarin.PropertyEditing.Tests
 	{
 		public MockObjectEditor ()
 		{
+			TargetType = Target.GetType ().ToTypeInfo ();
 		}
 
 		public MockObjectEditor (params IPropertyInfo[] properties)
+			: this()
 		{
 			Properties = properties.ToArray ();
 		}
 
 		public MockObjectEditor (IReadOnlyList<IPropertyInfo> properties,
 			IReadOnlyDictionary<IPropertyInfo, IReadOnlyList<ITypeInfo>> assignableTypes)
+			: this ()
 		{
 			Properties = properties;
 			this.assignableTypes = assignableTypes;
@@ -52,7 +55,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Properties = control.Properties.Values.ToArray();
 			Events = control.Events.Values.ToArray();
 			Target = control;
-			TypeName = control.GetType ().Name;
+			TargetType = Target.GetType ().ToTypeInfo ();
 		}
 
 		public object Target
@@ -61,7 +64,7 @@ namespace Xamarin.PropertyEditing.Tests
 			set;
 		} = new object ();
 
-		public string TypeName
+		public ITypeInfo TargetType
 		{
 			get;
 			set;
@@ -83,6 +86,12 @@ namespace Xamarin.PropertyEditing.Tests
 			get;
 			set;
 		} = new IPropertyInfo[0];
+
+		public IReadOnlyDictionary<IPropertyInfo, KnownProperty> KnownProperties
+		{
+			get;
+			set;
+		}
 
 		public IReadOnlyCollection<IEventInfo> Events
 		{
@@ -135,12 +144,14 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public Task<AssignableTypesResult> GetAssignableTypesAsync (IPropertyInfo property, bool childTypes)
 		{
-			if (this.assignableTypes == null) {
-				return ReflectionObjectEditor.GetAssignableTypes (property, childTypes);
-			} else if (!this.assignableTypes.TryGetValue (property, out IReadOnlyList<ITypeInfo> types))
-				return Task.FromResult (new AssignableTypesResult (Enumerable.Empty<ITypeInfo> ().ToArray ()));
-			else
-				return Task.FromResult (new AssignableTypesResult (types));
+			if (this.assignableTypes != null) {
+				if (!this.assignableTypes.TryGetValue (property, out IReadOnlyList<ITypeInfo> types))
+					return Task.FromResult (new AssignableTypesResult (Enumerable.Empty<ITypeInfo> ().ToArray ()));
+				else
+					return Task.FromResult (new AssignableTypesResult (types));
+			}
+
+			return ReflectionObjectEditor.GetAssignableTypes (property.RealType, childTypes);
 		}
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -300,6 +311,25 @@ namespace Xamarin.PropertyEditing.Tests
 				Source = (property.ValueSources.HasFlag (ValueSources.Default)) ? ValueSource.Default : ValueSource.Unset,
 				Value = default(T)
 			};
+		}
+
+		public Task<ITypeInfo> GetValueTypeAsync (IPropertyInfo property, PropertyVariation variation = null)
+		{
+			if (variation != null)
+				throw new NotImplementedException();
+
+			Type type = property.Type;
+			if (this.values.TryGetValue (property, out object value)) {
+				Type valueType = value.GetType ();
+				if (valueType.IsConstructedGenericType && valueType.GetGenericTypeDefinition () == typeof(ValueInfo<>)) {
+					value = valueType.GetProperty ("Value").GetValue (value);
+					type = value.GetType ();
+				} else
+					type = valueType;
+			}
+
+			var asm = new AssemblyInfo (type.Assembly.FullName, true);
+			return Task.FromResult<ITypeInfo> (new TypeInfo (asm, type.Namespace, type.Name));
 		}
 #pragma warning restore CS1998
 

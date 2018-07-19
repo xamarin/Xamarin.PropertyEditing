@@ -81,24 +81,33 @@
     <Compile Include="ColorEditorControlBase.cs" />
     <Compile Include="ColorHelper.cs" />
     <Compile Include="CommonColorToColorConverter.cs" />
+    <Compile Include="CreateBindingWindow.xaml.cs">
+      <DependentUpon>CreateBindingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CreateResourceWindow.xaml.cs">
       <DependentUpon>CreateResourceWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="DoubleToAngleConverter.cs" />
+    <Compile Include="CreateValueConverterWindow.xaml.cs">
+      <DependentUpon>CreateValueConverterWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EntryPopup.cs" />
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />
     <Compile Include="DoubleToQuantityConverter.cs" />
     <Compile Include="HasItemsToVisibilityConverter.cs" />
+    <Compile Include="InvertedVisibilityConverter.cs" />
     <Compile Include="IPropertiesHost.cs" />
     <Compile Include="MaterialDesignColorEditorControl.cs" />
     <Compile Include="MultiplyMarginConverter.cs" />
+    <Compile Include="NullVisibilityConverter.cs" />
     <Compile Include="ObjectEditorControl.cs" />
     <Compile Include="PreviewTemplateSelector.cs" />
     <Compile Include="ResourceBrushEditorControl.cs" />
     <Compile Include="ResourceSelectorWindow.xaml.cs">
       <DependentUpon>ResourceSelectorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Spinner.cs" />
     <Compile Include="TextBoxEx.cs" />
     <Compile Include="ToggleButtonEx.cs" />
     <Compile Include="EditorPropertySelector.cs" />
@@ -128,6 +137,9 @@
     <Compile Include="StringEditorControl.cs" />
     <Compile Include="Themes\WinThemeManager.cs" />
     <Compile Include="TreeViewItemEx.cs" />
+    <Compile Include="TypeSelectorControl.xaml.cs">
+      <DependentUpon>TypeSelectorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TypeSelectorWindow.xaml.cs">
       <DependentUpon>TypeSelectorWindow.xaml</DependentUpon>
     </Compile>
@@ -139,11 +151,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="CreateBindingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CreateResourceWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="CreateValueConverterWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ResourceSelectorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\DialogResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -160,6 +184,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\VS.Light.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TypeSelectorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -45,6 +45,13 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult<Resource> (r);
 		}
 
+		public Task<IReadOnlyList<Resource>> GetResourcesAsync (object target, CancellationToken cancelToken)
+		{
+			return Task.FromResult<IReadOnlyList<Resource>> (this.resources.SelectMany (g => g)
+				.Where (r => !(r.Source is ObjectResourceSource ors) || ReferenceEquals (target, ors.Target))
+				.ToList ());
+		}
+
 		public Task<IReadOnlyList<Resource>> GetResourcesAsync (object target, IPropertyInfo property, CancellationToken cancelToken)
 		{
 			return Task.FromResult<IReadOnlyList<Resource>> (this.resources.SelectMany (g => g)
@@ -52,17 +59,32 @@ namespace Xamarin.PropertyEditing.Tests
 				.ToList());
 		}
 
+		Task<IReadOnlyList<ResourceSource>> IResourceProvider.GetResourceSourcesAsync (object target)
+		{
+			return MockResourceProvider.GetResourceSourcesAsync (target);
+		}
+
 		public Task<IReadOnlyList<ResourceSource>> GetResourceSourcesAsync (object target, IPropertyInfo property)
+		{
+			return GetResourceSourcesAsync (target);
+		}
+
+		public static Task<IReadOnlyList<ResourceSource>> GetResourceSourcesAsync (object target)
 		{
 			return Task.FromResult<IReadOnlyList<ResourceSource>> (new[] { SystemResourcesSource, ApplicationResourcesSource, Resources, Window, new ObjectResourceSource (target, target.GetType ().Name, ResourceSourceType.Document) });
 		}
 
 		public Task<string> SuggestResourceNameAsync (IReadOnlyCollection<object> targets, IPropertyInfo property)
 		{
+			return SuggestResourceNameAsync (targets, property.RealType);
+		}
+
+		public Task<string> SuggestResourceNameAsync (IReadOnlyCollection<object> targets, ITypeInfo resourceType)
+		{
 			int i = 1;
 			string key;
 			do {
-				key = property.Type.Name + i++;
+				key = resourceType.Name + i++;
 			} while (this.resources[ApplicationResourcesSource].Any (r => r.Name == key));
 
 			return Task.FromResult (key);
@@ -113,6 +135,15 @@ namespace Xamarin.PropertyEditing.Tests
 				new Resource<CommonSolidBrush> (SystemResourcesSource, "ControlTextBrush", new CommonSolidBrush (0, 0, 0)),
 				new Resource<CommonSolidBrush> (SystemResourcesSource, "HighlightBrush", new CommonSolidBrush (51, 153, 255)),
 				new Resource<CommonSolidBrush> (SystemResourcesSource, "TransparentBrush", new CommonSolidBrush (0, 0, 0, 0)),
+				new Resource<CommonSolidBrush> (SystemResourcesSource, "ATextBrush", new CommonSolidBrush (0, 0, 0)),
+				new Resource<CommonSolidBrush> (SystemResourcesSource, "ATransparentBrush", new CommonSolidBrush (51, 153, 255)),
+				new Resource<CommonSolidBrush> (SystemResourcesSource, "AHighlightBrush", new CommonSolidBrush (0, 0, 0, 0)),
+				new Resource<CommonSolidBrush> (SystemResourcesSource, "BTextBrush", new CommonSolidBrush (0, 0, 0)),
+				new Resource<CommonSolidBrush> (SystemResourcesSource, "BHighlightBrush", new CommonSolidBrush (51, 153, 255)),
+				new Resource<CommonSolidBrush> (SystemResourcesSource, "BTransparentBrush", new CommonSolidBrush (0, 0, 0, 0)),
+				new Resource<CommonSolidBrush> (SystemResourcesSource, "CTextBrush", new CommonSolidBrush (0, 0, 0)),
+				new Resource<CommonSolidBrush> (SystemResourcesSource, "CHighlightBrush", new CommonSolidBrush (51, 153, 255)),
+				new Resource<CommonSolidBrush> (SystemResourcesSource, "CTransparentBrush", new CommonSolidBrush (0, 0, 0, 0)),
 				new Resource<CommonColor> (SystemResourcesSource, "ControlTextColor", new CommonColor (0, 0, 0)),
 				new Resource<CommonColor> (SystemResourcesSource, "HighlightColor", new CommonColor (51, 153, 255))
 			},

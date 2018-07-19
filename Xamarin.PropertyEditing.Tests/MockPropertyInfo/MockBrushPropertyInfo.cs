@@ -29,7 +29,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 		public Type Type => typeof(CommonBrush);
 
-		public string TypeName => Type.Name;
+		public ITypeInfo RealType => Type.ToTypeInfo ();
 
 		public string Category { get; }
 

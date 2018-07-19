@@ -21,9 +21,9 @@ namespace Xamarin.PropertyEditing
 		Type Type { get; }
 
 		/// <summary>
-		/// Gets the name of the real type of this property, not the representative type (<see cref="Type"/>).
+		/// Gets the real type for the property (ex. Drawable instead of CommonBrush).
 		/// </summary>
-		string TypeName { get; }
+		ITypeInfo RealType { get; }
 
 		/// <summary>
 		/// A resource-name of the category the property belongs to.

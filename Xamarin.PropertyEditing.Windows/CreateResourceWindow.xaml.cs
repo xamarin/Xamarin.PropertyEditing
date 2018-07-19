@@ -11,9 +11,9 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public CreateResourceWindow (IEnumerable<ResourceDictionary> merged, IResourceProvider provider, IEnumerable<object> targets, IPropertyInfo property)
 		{
+			InitializeComponent ();
 			Resources.MergedDictionaries.AddItems (merged);
 			DataContext = new CreateResourceViewModel (provider, targets, property);
-			InitializeComponent ();
 			SetupResourceKey ();
 		}
 
@@ -40,7 +40,7 @@ namespace Xamarin.PropertyEditing.Windows
 			var window = new CreateResourceWindow (owner.Resources.MergedDictionaries, provider, targets, property) {
 				Owner = ownerWindow
 			};
-			window.Resources.MergedDictionaries.AddItems (owner.Resources.MergedDictionaries);
+
 			bool? result = window.ShowDialog();
 
 			var vm = (CreateResourceViewModel)window.DataContext;

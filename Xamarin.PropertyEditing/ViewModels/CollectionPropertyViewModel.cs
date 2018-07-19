@@ -12,15 +12,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class CollectionPropertyItemViewModel
 		: NotifyingObject
 	{
-		public CollectionPropertyItemViewModel (object item, string typeName)
+		public CollectionPropertyItemViewModel (object item, ITypeInfo targetType)
 		{
 			if (item == null)
 				throw new ArgumentNullException (nameof(item));
-			if (typeName == null)
-				throw new ArgumentNullException (nameof(typeName));
+			if (targetType == null)
+				throw new ArgumentNullException (nameof(targetType));
 
 			Item = item;
-			TypeName = typeName;
+			TypeName = targetType.Name;
 		}
 
 		public object Item
@@ -218,6 +218,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.realProvider = realProvider;
 			}
 
+			public IReadOnlyDictionary<Type, ITypeInfo> KnownTypes => this.realProvider.KnownTypes;
+
 			public void Add (IObjectEditor editor)
 			{
 				this.editors.Add (editor.Target, editor);
@@ -241,6 +243,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return this.realProvider.GetObjectEditorAsync (item);
 			}
 
+			public Task<IReadOnlyCollection<IPropertyInfo>> GetPropertiesForTypeAsync (ITypeInfo type)
+			{
+				return this.realProvider.GetPropertiesForTypeAsync (type);
+			}
+
 			public async Task<IObjectEditor> GetAndCacheEditorAsync (object item)
 			{
 				if (!this.editors.TryGetValue (item, out IObjectEditor editor)) {
@@ -249,6 +256,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 				}
 
 				return editor;
+			}
+
+			public Task<AssignableTypesResult> GetAssignableTypesAsync (ITypeInfo type, bool childTypes)
+			{
+				return this.realProvider.GetAssignableTypesAsync (type, childTypes);
+			}
+
+			public Task<IReadOnlyList<object>> GetChildrenAsync (object item)
+			{
+				return this.realProvider.GetChildrenAsync (item);
 			}
 
 			public Task<object> CreateObjectAsync (ITypeInfo type)
@@ -283,7 +300,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			for (int i = 0; i < Value.Count; i++) {
 				object target = Value[i];
 				IObjectEditor editor = await this.cachedProvider.GetAndCacheEditorAsync (target);
-				items.Add (new CollectionPropertyItemViewModel (target, editor.TypeName) {
+				items.Add (new CollectionPropertyItemViewModel (target, editor.TargetType) {
 					Row = i
 				});
 			}
@@ -381,7 +398,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			IObjectEditor editor = await TargetPlatform.EditorProvider.GetObjectEditorAsync (target);
 			this.cachedProvider.Add (editor);
 
-			var vm = new CollectionPropertyItemViewModel (target, editor.TypeName);
+			var vm = new CollectionPropertyItemViewModel (target, editor.TargetType);
 
 			if (SelectedTarget != null) {
 				this.collectionView.Insert (SelectedTarget.Row + 1, vm);

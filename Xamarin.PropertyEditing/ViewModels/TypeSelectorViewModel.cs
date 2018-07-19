@@ -35,6 +35,32 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}, TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
+		public ITypeInfo SelectedType
+		{
+			get { return this.selectedType; }
+			set
+			{
+				if (this.selectedType == value)
+					return;
+
+				this.selectedType = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public int TypeLevel
+		{
+			get { return this.typeLevel; }
+			set
+			{
+				if (this.typeLevel == value)
+					return;
+
+				this.typeLevel = value;
+				OnPropertyChanged();
+			}
+		}
+
 		public IEnumerable Types
 		{
 			get { return this.assemblyView; }
@@ -80,7 +106,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.filterText = value;
 				OnPropertyChanged();
 				this.typeOptions.Filter = (!String.IsNullOrWhiteSpace (FilterText))
-					? (o => ((ITypeInfo)o).Name.StartsWith (FilterText, StringComparison.OrdinalIgnoreCase))
+					? (o => ((ITypeInfo)o).Name.Contains (FilterText, StringComparison.OrdinalIgnoreCase))
 					: (Predicate<object>)null;
 			}
 		}
@@ -90,6 +116,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private bool isLoading;
 		private bool showAllAssemblies;
 		private SimpleCollectionView assemblyView;
+		private ITypeInfo selectedType;
+		private int typeLevel = 1;
 
 		private bool AssemblyFilter (object item)
 		{

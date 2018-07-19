@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -71,10 +72,14 @@ namespace Xamarin.PropertyEditing.Windows
 		public override void OnApplyTemplate ()
 		{
 			base.OnApplyTemplate ();
-
+			
 			var clear = GetTemplateChild ("PART_Clear") as Button;
-			if (clear == null)
-				throw new InvalidOperationException ("PART_Clear must be present as a button");
+			if (clear == null) {
+				if (!DesignerProperties.GetIsInDesignMode (this))
+					throw new InvalidOperationException ("PART_Clear must be present as a button");
+
+				return;
+			}
 
 			clear.Click += (sender, e) => {
 				Clear();

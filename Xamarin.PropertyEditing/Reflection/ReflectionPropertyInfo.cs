@@ -41,7 +41,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public Type Type => this.propertyInfo.PropertyType;
 
-		public string TypeName => this.propertyInfo.Name;
+		public ITypeInfo RealType => this.propertyInfo.PropertyType.ToTypeInfo ();
 
 		public string Category => this.category.Value;
 
@@ -83,6 +83,15 @@ namespace Xamarin.PropertyEditing.Reflection
 			return (T)value;
 		}
 #pragma warning restore CS1998
+
+		public ITypeInfo GetValueType (object target)
+		{
+			object value = this.propertyInfo.GetValue (target);
+			Type type = value?.GetType () ?? Type;
+
+			var asm = new AssemblyInfo (type.Assembly.FullName, true);
+			return new TypeInfo (asm, type.Namespace, type.Name);
+		}
 
 		public bool Equals (ReflectionPropertyInfo other)
 		{

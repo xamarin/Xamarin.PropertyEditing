@@ -14,6 +14,7 @@
 	<Color x:Key="DropShadowBackgroundColor">#72000000</Color>
 	<SolidColorBrush x:Key="LiteralMarkerBrush">#55000000</SolidColorBrush>
 	<SolidColorBrush x:Key="ResourceMarkerBrush">#FF8BD44A</SolidColorBrush>
+	<SolidColorBrush x:Key="BindingMarkerBrush">#FFFFCF00</SolidColorBrush>
 
 	<Style x:Key="GenericVisualFocusStyle" TargetType="Control">
 		<Setter Property="Margin" Value="1" />
@@ -65,6 +66,30 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:EnumEditorControl}">
 					<ComboBox x:Name="ComboBox" ItemsSource="{Binding PossibleValues,Mode=OneTime}" SelectedItem="{Binding ValueName}" IsEditable="{Binding IsConstrainedToPredefined,Mode=OneTime,Converter={StaticResource OppositeBoolConverter}}" VerticalContentAlignment="Center" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="{x:Type local:Spinner}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:Spinner">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+						<TextBlock Name="display"  Grid.Column="0" />
+						<StackPanel Grid.Column="1" Orientation="Vertical" Margin="4,0,4,0">
+							<RepeatButton Name="up" Style="{DynamicResource SpinnerButton}">
+								<Geometry>M0,5L9,5 9,4 8,4 8,3 7,3 7,2 6,2 6,1 5,1 5,0 4,0 4,1 3,1 3,2 2,2 2,3 1,3 1,4 0,4z</Geometry>
+							</RepeatButton>
+							<RepeatButton Name="down" Style="{DynamicResource SpinnerButton}">
+								<Geometry>M0,0L9,0 9,1 8,1 8,2 8,2 7,2 7,3 6,3 6,4 5,4 5,5 4,5 4,4 3,4 3,3 2,3 2,2 1,2 1,1 0,1z</Geometry>
+							</RepeatButton>
+						</StackPanel>
+					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -392,6 +417,7 @@
 
 	<Rectangle x:Shared="False" x:Key="LiteralMarker" Style="{StaticResource MarkerStyle}" Fill="{DynamicResource LiteralMarkerBrush}" />
 	<Rectangle x:Shared="False" x:Key="ResourceMarker" Style="{StaticResource MarkerStyle}" Fill="{DynamicResource ResourceMarkerBrush}" />
+	<Rectangle x:Shared="False" x:Key="BindingMarker" Style="{StaticResource MarkerStyle}" Fill="{DynamicResource BindingMarkerBrush}" />
 	<Rectangle x:Shared="False" x:Key="SourceMarker" Style="{StaticResource MarkerStyle}" Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=local:PropertyButton,Mode=FindAncestor}}" />
 
 	<Style TargetType="local:PropertyButton">
@@ -412,9 +438,9 @@
 						<Separator Visibility="{Binding SupportsResources,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<MenuItem Header="{x:Static prop:Resources.ResourceEllipsis}" Command="{Binding RequestResourceCommand,Mode=OneTime}" Icon="{StaticResource ResourceMarker}" Visibility="{Binding SupportsResources,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<MenuItem Header="{x:Static prop:Resources.ConvertToNewResourceEllipsis}" Command="{Binding RequestCreateResourceCommand}" Icon="{StaticResource ResourceMarker}" Visibility="{Binding CanCreateResources,Converter={StaticResource BoolToVisibilityConverter}}" />
-						<!--<Separator />
-						<MenuItem Header="{x:Static prop:Resources.CreateDataBindingEllipse}" />
-						<MenuItem Header="{x:Static prop:Resources.TemplateBinding}" />!-->
+						<Separator Visibility="{Binding SupportsBindings,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
+						<MenuItem Header="{x:Static prop:Resources.CreateDataBindingMenuItem}" Command="{Binding RequestCreateBindingCommand,Mode=OneTime}" Icon="{StaticResource BindingMarker}" Visibility="{Binding SupportsBindings,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
+						<!--<MenuItem Header="{x:Static prop:Resources.TemplateBinding}" />!-->
 						<Separator Visibility="{Binding SupportsValueSourceNavigation,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<!--<MenuItem Header="{x:Static prop:Resources.RecordCurrentValue}" />!-->
 						<MenuItem Header="{x:Static prop:Resources.GoToSource}" Command="{Binding NavigateToValueSourceCommand,Mode=OneTime}" Icon="{StaticResource SourceMarker}" Visibility="{Binding SupportsValueSourceNavigation,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
@@ -1783,6 +1809,56 @@
 		<Setter Property="IsChecked" Value="{Binding IsChecked,Mode=TwoWay}" />
 	</Style>
 
+	<Style x:Key="IconRepeatButton" TargetType="RepeatButton">
+		<Setter Property="Height" Value="16" />
+		<Setter Property="Width" Value="16" />
+		<Setter Property="Background" Value="{DynamicResource IconButtonSimpleBackgroundBrush}" />
+		<Setter Property="Foreground" Value="{DynamicResource IconButtonForegroundBrush}" />
+		<Setter Property="BorderBrush" Value="Transparent" />
+		<Setter Property="ContentTemplate">
+			<Setter.Value>
+				<DataTemplate>
+					<Rectangle VerticalAlignment="Center" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
+						<Rectangle.Fill>
+							<DrawingBrush Stretch="Uniform">
+								<DrawingBrush.Drawing>
+									<GeometryDrawing Brush="{Binding Foreground,RelativeSource={RelativeSource AncestorType=RepeatButton}}" Geometry="{Binding Content,RelativeSource={RelativeSource AncestorType=RepeatButton}}" />
+								</DrawingBrush.Drawing>
+							</DrawingBrush>
+						</Rectangle.Fill>
+					</Rectangle>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- Assumed inline shown during selection !-->
+	<Style x:Key="SpinnerButton" TargetType="RepeatButton" BasedOn="{StaticResource IconRepeatButton}">
+		<Setter Property="Foreground" Value="{DynamicResource ListItemSelectedForegroundBrush}" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Height" Value="9" />
+		<Setter Property="Width" Value="7" />
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type RepeatButton}">
+					<ContentPresenter x:Name="contentPresenter" Focusable="False" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="true">
+							<Setter Property="Foreground" Value="{DynamicResource ListItemMouseOverForegroundBrush}" />
+						</Trigger>
+						<Trigger Property="IsPressed" Value="true">
+							<Setter Property="Foreground" Value="{DynamicResource ListItemHighlightForegroundBrush}" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="Foreground" Value="{DynamicResource ListItemDisabledForegroundBrush}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style x:Key="IconButton" TargetType="Button">
 		<Setter Property="Background" Value="{DynamicResource IconButtonSimpleBackgroundBrush}" />
 		<Setter Property="Foreground" Value="{DynamicResource IconButtonForegroundBrush}" />
@@ -1826,11 +1902,6 @@
 							<Setter Property="Background" TargetName="border" Value="{DynamicResource SearchControlButtonPressedBackgroundBrush}" />
 							<Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource SearchControlButtonPressedBorderBrush}" />
 						</Trigger>
-						<!--<Trigger Property="IsEnabled" Value="false">
-							<Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
-							<Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
-							<Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
-						</Trigger>!-->
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
@@ -2109,7 +2180,6 @@
 		<Setter Property="Foreground" Value="{DynamicResource ListItemForegroundBrush}" />
 		<Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
 		<Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-		<Setter Property="Padding" Value="1,0,0,0"/>
 		<Setter Property="FocusVisualStyle">
 			<Setter.Value>
 				<Style BasedOn="{StaticResource GenericVisualFocusStyle}" TargetType="Control">
@@ -2135,8 +2205,8 @@
 								</Grid.Margin>
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition MinWidth="19" Width="Auto"/>
-									<ColumnDefinition Width="Auto"/>
 									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="Auto"/>
 								</Grid.ColumnDefinitions>
 
 								<ToggleButton x:Name="Expander" ClickMode="Press" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ExpandCollapseToggleStyle}"/>
@@ -2191,8 +2261,64 @@
 		</Style.Triggers>
 	</Style>
 
+	<Style x:Key="AutoExpandSelectionTreeViewItem" TargetType="local:TreeViewItemEx" BasedOn="{StaticResource SelectionTreeViewItem}">
+		<Setter Property="IsExpanded" Value="True" />
+	</Style>
+
 	<Style x:Key="SelectionTreeView" TargetType="local:TreeViewEx">
 		<Setter Property="ItemContainerStyle" Value="{StaticResource SelectionTreeViewItem}" />
+		<Setter Property="Background" Value="{DynamicResource ListBackgroundBrush}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource ListBackgroundBrush}" />
+		<Setter Property="Foreground" Value="{DynamicResource PanelGroupForegroundBrush}" />
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+	</Style>
+
+	<Style x:Key="AutoExpandSelectionTreeView" TargetType="local:TreeViewEx" BasedOn="{StaticResource SelectionTreeView}">
+		<Setter Property="ItemContainerStyle" Value="{StaticResource AutoExpandSelectionTreeViewItem}" />
+	</Style>
+
+	<Style x:Key="TypeTreeView" TargetType="local:TreeViewEx" BasedOn="{StaticResource SelectionTreeView}">
+		<Setter Property="ItemTemplate">
+			<Setter.Value>
+				<HierarchicalDataTemplate ItemsSource="{Binding Value,Mode=OneTime}">
+					<HierarchicalDataTemplate.ItemTemplate>
+						<HierarchicalDataTemplate ItemsSource="{Binding Value,Mode=OneTime}">
+							<HierarchicalDataTemplate.ItemTemplate>
+								<DataTemplate>
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="Auto" />
+											<ColumnDefinition Width="*" />
+											<ColumnDefinition Width="Auto" />
+										</Grid.ColumnDefinitions>
+										<!-- Icon -->
+										<TextBlock Grid.Column="1" Margin="8,0,0,0" Text="{Binding Name,Mode=OneTime}" />
+										<local:Spinner Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Value="{Binding RelativeSource={RelativeSource AncestorType=local:TypeSelectorControl},Path=TypeLevel,Mode=TwoWay}" MinimumValue="1">
+											<local:Spinner.Visibility>
+												<MultiBinding Converter="{StaticResource BoolsToVisibilityConverter}">
+													<Binding RelativeSource="{RelativeSource AncestorType=local:TreeViewItemEx}" Path="IsSelected" />
+													<Binding RelativeSource="{RelativeSource AncestorType=local:TypeSelectorControl}" Path="ShowTypeLevel" />
+												</MultiBinding>
+											</local:Spinner.Visibility>
+										</local:Spinner>
+									</Grid>
+								</DataTemplate>
+							</HierarchicalDataTemplate.ItemTemplate>
+
+							<StackPanel Orientation="Horizontal">
+								<!-- Icon -->
+								<TextBlock Text="{Binding Key}" Margin="8,0,0,0" />
+							</StackPanel>
+						</HierarchicalDataTemplate>
+					</HierarchicalDataTemplate.ItemTemplate>
+
+					<StackPanel Orientation="Horizontal">
+						<!-- Icon -->
+						<TextBlock Margin="8,0,0,0" Text="{Binding Key,Mode=OneTime}" />
+					</StackPanel>
+				</HierarchicalDataTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 
 	<Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
