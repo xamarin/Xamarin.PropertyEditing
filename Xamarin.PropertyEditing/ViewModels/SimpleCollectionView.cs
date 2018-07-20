@@ -422,23 +422,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			if (oldItems.Count > 0) {
-				List<object> currentSet = new List<object>();
-				int currentIndex = 0;
 				for (int i = 0; i < oldItems.Count; i++) {
 					var t = oldItems[i];
-					if (t.Item2 != currentIndex) {
-						if (notify && currentSet.Count > 0)
-							OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, currentSet.ToArray(), currentIndex));
-
-						currentSet.Clear();
-						currentIndex = t.Item2;
-					}
-
-					currentSet.Add (t.Item1);
+					if (notify)
+						OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, new[] { t.Item1 }, t.Item2));
 				}
-
-				if (notify && currentSet.Count > 0)
-					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Remove, currentSet, currentIndex));
 			}
 		}
 

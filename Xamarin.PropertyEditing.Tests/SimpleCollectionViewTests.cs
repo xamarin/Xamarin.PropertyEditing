@@ -137,13 +137,15 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (view, Contains.Item (nodes[3]));
 			Assert.That (view.Cast<object>().Count(), Is.EqualTo (2));
 
-			Assert.That (args.Count, Is.EqualTo (2));
+			Assert.That (args.Count, Is.EqualTo (4));
 			Assert.That (args[0].OldItems, Contains.Item (nodes[1]));
-			Assert.That (args[0].OldItems, Contains.Item (nodes[2]));
 			Assert.That (args[0].OldStartingIndex, Is.EqualTo (1));
-			Assert.That (args[1].OldItems, Contains.Item (nodes[4]));
-			Assert.That (args[1].OldItems, Contains.Item (nodes[5]));
-			Assert.That (args[1].OldStartingIndex, Is.EqualTo (2));
+			Assert.That (args[1].OldItems, Contains.Item (nodes[2]));
+			Assert.That (args[1].OldStartingIndex, Is.EqualTo (1));
+			Assert.That (args[2].OldItems, Contains.Item (nodes[4]));
+			Assert.That (args[2].OldStartingIndex, Is.EqualTo (2));
+			Assert.That (args[3].OldItems, Contains.Item (nodes[5]));
+			Assert.That (args[3].OldStartingIndex, Is.EqualTo (2));
 		}
 
 		[Test]
@@ -493,13 +495,9 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var kvp = view.Cast<KeyValuePair<string, SimpleCollectionView>>().First();
 
-			NotifyCollectionChangedAction? childAction = null;
-			int childIndex = -1;
-			IList childItems = null;
+			var childArgs = new List<NotifyCollectionChangedEventArgs> ();
 			kvp.Value.CollectionChanged += (o, e) => {
-				childAction = e.Action;
-				childIndex = e.OldStartingIndex;
-				childItems = e.OldItems;
+				childArgs.Add (e);
 			};
 
 			var childItem = nodes[0].Children[0];
@@ -512,11 +510,15 @@ namespace Xamarin.PropertyEditing.Tests
 				Assert.That (items, Contains.Item (kvp));
 			}
 
-			Assert.That (childAction, Is.EqualTo (NotifyCollectionChangedAction.Remove).Or.EqualTo (NotifyCollectionChangedAction.Reset));
-			if (childAction != NotifyCollectionChangedAction.Reset) {
-				Assert.That (childIndex, Is.EqualTo (0));
-				Assert.That (childItems, Contains.Item (childItem));
-				Assert.That (childItems, Contains.Item (childItem2));
+			if (childArgs.Count == 1) {
+				Assert.That (childArgs[0].Action, Is.EqualTo (NotifyCollectionChangedAction.Reset));
+			} else {
+				Assert.That (childArgs.Count, Is.EqualTo (2));
+				for (int i = 0; i < childArgs.Count; i++) {
+					Assert.That (childArgs[i].Action, Is.EqualTo (NotifyCollectionChangedAction.Remove));
+					Assert.That (childArgs[i].OldStartingIndex, Is.EqualTo (0));
+					Assert.That (childArgs[i].OldItems, Contains.Item ((i == 0) ? childItem : childItem2));
+				}
 			}
 
 			Assert.That (view, Is.Empty);
