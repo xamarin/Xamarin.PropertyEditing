@@ -11,8 +11,15 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class NumericSpinEditor : NSView, INSAccessibilityGroup
 	{
+		const int stepperSpace = 2;
+		const int stepperWidth = 11;
+		const int stepperTopHeight = 9;
+		const int stepperBotHeight = 10;
+
 		NumericTextField numericEditor;
-		NSStepper stepper;
+		public NumericTextField NumericEditor {
+			get { return numericEditor; }
+		}
 		bool editing;
 
 		public event EventHandler ValueChanged;
@@ -20,7 +27,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public ValidationType NumericMode {
 			get { return numericEditor.NumericMode; }
-			set {
+			set
+			{
 				this.numericEditor.NumericMode = value;
 				Reset ();
 			}
@@ -31,28 +39,26 @@ namespace Xamarin.PropertyEditing.Mac
 			set { ((NSTextFieldCell)numericEditor.Cell).PlaceholderString = value; }
 		}
 
-		NSStepper Stepper {
-			get { return stepper; }
+		UpSpinnerButton incrementButton;
+		public UpSpinnerButton IncrementButton {
+			get { return incrementButton; }
 		}
 
-		public NSTextField TextField {
-			get { return numericEditor; }
+		DownSpinnerButton decrementButton;
+		public DownSpinnerButton DecrementButton {
+			get { return decrementButton; }
 		}
 
 		public override CGSize IntrinsicContentSize {
 			get {
-				var baseSize = stepper.IntrinsicContentSize;
-				return new CGSize (baseSize.Width + 40, baseSize.Height);
+				var baseSize = numericEditor.IntrinsicContentSize;
+				return new CGSize (baseSize.Width + 20, baseSize.Height);
 			}
 		}
 
 		public NSColor BackgroundColor {
-			get {
-				return numericEditor.BackgroundColor;
-			}
-			set {
-				numericEditor.BackgroundColor = value;
-			}
+			get { return numericEditor.BackgroundColor; }
+			set { numericEditor.BackgroundColor = value; }
 		}
 
 		public override nfloat BaselineOffsetFromBottom {
@@ -64,59 +70,44 @@ namespace Xamarin.PropertyEditing.Mac
 			set { formatter.MaximumFractionDigits = value; }
 		}
 
-
 		public double Value {
-			get { return stepper.DoubleValue; }
+			get { return numericEditor.DoubleValue; }
 			set { SetValue (value); }
 		}
 
-		public string StringValue
-		{
+		public string StringValue {
 			get { return numericEditor.StringValue; }
 			set { SetValue (value); }
 		}
 
-		public bool Wrap {
-			get { return stepper.ValueWraps; }
-			set { stepper.ValueWraps = value; }
-		}
-
 		public double MinimumValue {
-			get { return stepper.MinValue; }
-			set {
-				stepper.MinValue = value;
-				formatter.Minimum = new NSNumber (value);
-			}
+			get { return formatter.Minimum.DoubleValue; }
+			set { formatter.Minimum = new NSNumber (value); }
 		}
 
 		public double MaximumValue {
-			get { return stepper.MaxValue; }
-			set {
-				stepper.MaxValue = value;
-				formatter.Maximum = new NSNumber (value);
-			}
+			get { return formatter.Maximum.DoubleValue; }
+			set { formatter.Maximum = new NSNumber (value); }
 		}
 
+		double incrementValue = 1.0f;
 		public double IncrementValue {
-			get { return stepper.Increment; }
-			set { stepper.Increment = value; }
+			get { return incrementValue; }
+			set { incrementValue = value; }
 		}
 
 		public bool Enabled {
-			get {
-				return numericEditor.Enabled;
-			}
+			get { return numericEditor.Enabled; }
 			set {
 				numericEditor.Enabled = value;
-				stepper.Enabled = value;
+				incrementButton.Enabled = value;
+				decrementButton.Enabled = value;
 			}
 		}
 
 		NSNumberFormatter formatter;
 		public NSNumberFormatter Formatter {
-			get {
-				return formatter;
-			}
+			get { return formatter; }
 			set {
 				formatter = value;
 				numericEditor.Formatter = formatter;
@@ -124,24 +115,19 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		public bool IsIndeterminate {
-			get {
-				return !string.IsNullOrEmpty (numericEditor.StringValue);
-			}
+			get { return !string.IsNullOrEmpty (numericEditor.StringValue); }
 			set {
 				if (value)
 					numericEditor.StringValue = string.Empty;
-				else
-					numericEditor.DoubleValue = stepper.DoubleValue;
 			}
 		}
 
 		public bool Editable {
-			get {
-				return numericEditor.Editable;
-			}
+			get { return numericEditor.Editable; }
 			set {
 				numericEditor.Editable = value;
-				stepper.Enabled = value;
+				incrementButton.Enabled = value;
+				decrementButton.Enabled = value;
 			}
 		}
 
@@ -150,6 +136,11 @@ namespace Xamarin.PropertyEditing.Mac
 			set {
 				formatter.NumberStyle = value;
 			}
+		}
+
+		public bool AllowNegativeValues {
+			get { return numericEditor.AllowNegativeValues; }
+			set { numericEditor.AllowNegativeValues = value; }
 		}
 
 		protected virtual void OnConfigureNumericTextField ()
@@ -166,16 +157,16 @@ namespace Xamarin.PropertyEditing.Mac
 			TranslatesAutoresizingMaskIntoConstraints = false;
 			var controlSize = NSControlSize.Small;
 
-			stepper = new NSStepper {
-				TranslatesAutoresizingMaskIntoConstraints = false,
-				ValueWraps = false,
-				ControlSize = controlSize,
-			};
+			incrementButton = new UpSpinnerButton ();
+
+			decrementButton = new DownSpinnerButton ();
 
 			formatter = new NSNumberFormatter {
 				FormatterBehavior = NSNumberFormatterBehavior.Version_10_4,
 				Locale = NSLocale.CurrentLocale,
 				MaximumFractionDigits = 15,
+				Maximum = double.MaxValue,
+				Minimum = double.MinValue,
 				NumberStyle = NSNumberFormatterStyle.Decimal,
 				UsesGroupingSeparator = false,
 			};
@@ -188,9 +179,8 @@ namespace Xamarin.PropertyEditing.Mac
 				ControlSize = controlSize,
 			};
 
-			stepper.Activated += (s, e) => {
-				OnStepperActivated (s, e);
-			};
+			incrementButton.OnMouseLeftDown += (sender, e) => { IncrementNumericValue (); };
+			decrementButton.OnMouseLeftDown += (sender, e) => { DecrementNumericValue (); };
 
 			numericEditor.KeyArrowUp += (sender, e) => { IncrementNumericValue (); };
 			numericEditor.KeyArrowDown += (sender, e) => { DecrementNumericValue (); };
@@ -199,32 +189,48 @@ namespace Xamarin.PropertyEditing.Mac
 				OnEditingEnded (s, e);
 			};
 
-			AddSubview (stepper);
 			AddSubview (numericEditor);
 
+			AddSubview (incrementButton);
+			AddSubview (decrementButton);
+
 			this.DoConstraints (new[] {
-				numericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - 16),
-				numericEditor.ConstraintTo (this, (n, c) => n.Height == 19),
-				stepper.ConstraintTo (numericEditor, (s, n) => s.Left == n.Right + 4),
-				stepper.ConstraintTo (numericEditor, (s, n) => s.Top == n.Top),
+				numericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - (stepperWidth + stepperSpace + 1)),
+				numericEditor.ConstraintTo (this, (n, c) => n.Height == PropertyEditorControl.DefaultControlHeight - 3),
+
+				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Left == n.Right + stepperSpace),
+				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Top == n.Top),
+				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Width == stepperWidth),
+				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Height == stepperTopHeight),
+
+				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Left == n.Right + stepperSpace),
+				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Top == n.Top + stepperTopHeight),
+				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Width == stepperWidth),
+				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Height == stepperBotHeight),
 			});
+
+			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
+
+			UpdateTheme ();
 		}
 
-		protected virtual void SetStepperActivated ()
+		protected override void Dispose (bool disposing)
 		{
-			SetValue (stepper.DoubleValue);
-		}
-
-		protected void OnStepperActivated (object sender, EventArgs e)
-		{
-			if (!editing) {
-				editing = true;
-				SetStepperActivated ();
-				if (ValueChanged != null)
-					ValueChanged (this, EventArgs.Empty);
-				editing = false;
+			if (disposing) {
+				PropertyEditorPanel.ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
 			}
 		}
+
+		void ThemeManager_ThemeChanged (object sender, EventArgs e)
+		{
+			UpdateTheme ();
+		}
+
+		protected void UpdateTheme ()
+		{
+			this.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
+		}
+
 
 		protected void OnValueChanged (object sender, EventArgs e)
 		{
@@ -237,28 +243,21 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		protected void OnEditingEnded (object sender, EventArgs e)
+		virtual protected void OnEditingEnded (object sender, EventArgs e)
 		{
 			if (!editing) {
 				editing = true;
 				SetValue (numericEditor.StringValue);
-				if (EditingEnded != null)
-					EditingEnded (this, EventArgs.Empty);
-				if (ValueChanged != null)
-					ValueChanged (this, EventArgs.Empty);
+				EditingEnded?.Invoke (this, EventArgs.Empty);
 				editing = false;
 			}
 		}
 
 		void SetValue (string value)
 		{
-			//Regulates maximun and minium out of range
-			if (!string.IsNullOrEmpty (value)) {
-				stepper.DoubleValue = CoerceValue (FieldValidation.FixInitialValue (value, Value.ToEditorString ()).ToEditorDouble ());
-				numericEditor.StringValue = FieldValidation.RoundDoubleValue (stepper.DoubleValue.ToEditorString (), NumericMode == ValidationType.Decimal ? FieldValidation.DefaultXcodeMaxRoundDigits : 0);
-			} else {
-				stepper.StringValue = value;
+			if (numericEditor.StringValue != value) {
 				numericEditor.StringValue = value;
+				ValueChanged?.Invoke (this, EventArgs.Empty);
 			}
 		}
 
@@ -267,21 +266,35 @@ namespace Xamarin.PropertyEditing.Mac
 			SetValue (value.ToString ());
 		}
 
-		protected double CoerceValue (double val)
+		public void IncrementNumericValue (bool shiftPressed = false)
 		{
-			return FieldValidation.CoerceValue (val, MinimumValue, MaximumValue);
+			if (!editing) {
+				editing = true;
+				SetIncrementOrDecrementValue (shiftPressed ? 10 * incrementValue : incrementValue);
+				editing = false;
+			}
 		}
 
-		public void IncrementNumericValue ()
+		public void DecrementNumericValue (bool shiftPressed = false)
 		{
-			SetValue (stepper.DoubleValue + IncrementValue);
-			OnStepperActivated (stepper, EventArgs.Empty);
+			if (!editing) {
+				editing = true;
+				SetIncrementOrDecrementValue (-(shiftPressed ? 10 * incrementValue : incrementValue));
+				editing = false;
+			}
 		}
 
-		public void DecrementNumericValue ()
+		virtual protected void SetIncrementOrDecrementValue (double incDevValue)
 		{
-			SetValue (stepper.DoubleValue - IncrementValue);
-			OnStepperActivated (stepper, EventArgs.Empty);
+			// Constrain our value to our Min/Max before we set it
+			var newValue = Clamp (numericEditor.DoubleValue + incDevValue);
+
+			SetValue (newValue);
+		}
+
+		public double Clamp (double value)
+		{
+			return (double)Decimal.Round ((decimal)(value < MinimumValue ? MinimumValue : value > MaximumValue ? MaximumValue : value), Digits);
 		}
 	}
 }

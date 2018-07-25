@@ -54,7 +54,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public void UpdateKeyViews (bool backward = true, bool forward = true)
+		public void UpdateKeyViews ()
 		{
 			if (TableRow < 0)
 				return;
@@ -62,15 +62,17 @@ namespace Xamarin.PropertyEditing.Mac
 			PropertyEditorControl ctrl = null;
 
 			//FIXME: don't hardcode column
-			if (backward && TableRow > 0 && (ctrl = TableView.GetView (1, TableRow - 1, false) as PropertyEditorControl) != null) {
-				ctrl.LastKeyView.NextKeyView = FirstKeyView;
-				ctrl.UpdateKeyViews (forward: false);
-			}
+			var tr = TableRow;
+			if (tr > 0) {
+				do {
+					tr--;
+					ctrl = TableView.GetView (1, tr, false) as PropertyEditorControl;
+				} while (tr > 0 && ctrl == null);
 
-			//FIXME: don't hardcode column
-			if (forward && TableRow < TableView.RowCount - 1 && (ctrl = TableView.GetView (1, TableRow + 1, false) as PropertyEditorControl) != null) {
-				LastKeyView.NextKeyView = ctrl.FirstKeyView;
-				ctrl.UpdateKeyViews (backward: false);
+				if (ctrl != null) {
+					ctrl.LastKeyView.NextKeyView = FirstKeyView;
+					ctrl.UpdateKeyViews ();
+				}
 			}
 		}
 
