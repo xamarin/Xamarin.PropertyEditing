@@ -17,16 +17,12 @@ namespace Xamarin.PropertyEditing.Mac
 			get; set;
 		}
 
-		public bool AllowRatios {
-			get; set;
-		}
-
 		public ValidationType NumericMode {
 			get; set;
 		}
 
-		public event EventHandler KeyArrowUp;
-		public event EventHandler KeyArrowDown;
+		public event EventHandler<bool> KeyArrowUp;
+		public event EventHandler<bool> KeyArrowDown;
 		public event EventHandler ValidatedEditingEnded;
 
 		public NumericTextField ()
@@ -34,45 +30,34 @@ namespace Xamarin.PropertyEditing.Mac
 			AllowNegativeValues = true;
 
 			var keyUpDownDelegate = new KeyUpDownDelegate ();
-			keyUpDownDelegate.KeyArrowUp += (sender, e) => { OnKeyArrowUp (); };
-			keyUpDownDelegate.KeyArrowDown += (sender, e) => { OnKeyArrowDown (); };
+			keyUpDownDelegate.KeyArrowUp += (sender, e) => { OnKeyArrowUp (e); };
+			keyUpDownDelegate.KeyArrowDown += (sender, e) => { OnKeyArrowDown (e); };
 			Delegate = keyUpDownDelegate;
 		}
 
-		public override bool ShouldBeginEditing (NSText fieldEditor)
+		public override bool ShouldBeginEditing (NSText textObject)
 		{
-			CachedCurrentEditor = fieldEditor;
-			cachedValueString = fieldEditor.Value;
+			CachedCurrentEditor = textObject;
+			cachedValueString = textObject.Value;
 
-			if (AllowRatios)
-				CachedCurrentEditor.Delegate = new RatioValidateDelegate (this);
-			else {
-				CachedCurrentEditor.Delegate = new NumericValidationDelegate (this);
-			}
+			CachedCurrentEditor.Delegate = new NumericValidationDelegate (this);
+
 			return true;
 		}
 
-		protected virtual void OnKeyArrowUp ()
+		protected virtual void OnKeyArrowUp (bool shiftPressed)
 		{
-			var handler = KeyArrowUp;
-			if (handler != null) {
-				handler (this, EventArgs.Empty);
-			}
+			KeyArrowUp?.Invoke (this, shiftPressed);
 		}
 
-		protected virtual void OnKeyArrowDown ()
+		protected virtual void OnKeyArrowDown (bool shiftPressed)
 		{
-			var handler = KeyArrowDown;
-			if (handler != null) {
-				handler (this, EventArgs.Empty);
-			}
+			KeyArrowDown?.Invoke (this, shiftPressed);
 		}
 
-		public virtual void RaiseValidatedEditingEnded ()
+		public virtual void NotifyValidatedEditingEnded ()
 		{
-			var handler = ValidatedEditingEnded;
-			if (handler != null)
-				handler (this, EventArgs.Empty);
+			ValidatedEditingEnded?.Invoke (this, EventArgs.Empty);
 		}
 
 		public virtual void ResetInvalidInput ()
@@ -80,12 +65,44 @@ namespace Xamarin.PropertyEditing.Mac
 			this.StringValue = cachedValueString;
 		}
 
+		public static bool CheckIfNumber (string finalString, ValidationType mode, bool allowNegativeValues)
+		{
+			return mode == ValidationType.Decimal ?
+				ValidateDecimal (finalString, allowNegativeValues) :
+				ValidateInteger (finalString, allowNegativeValues);
+		}
+
+		public static bool ValidateDecimal (string finalString, bool allowNegativeValues)
+		{
+			double value;
+			//Checks parsing to number
+			if (!double.TryParse (finalString, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentUICulture, out value))
+				return false;
+			//Checks if needs to be possitive value
+			if (!allowNegativeValues && value < 0)
+				return false;
+
+			return true;
+		}
+
+		public static bool ValidateInteger (string finalString, bool allowNegativeValues)
+		{
+			int value;
+			//Checks parsing to number
+			if (!int.TryParse (finalString, out value))
+				return false;
+			//Checks if needs to be possitive value
+			if (!allowNegativeValues && value < 0)
+				return false;
+
+			return true;
+		}
 	}
 
 	class KeyUpDownDelegate : NSTextFieldDelegate
 	{
-		public event EventHandler KeyArrowUp;
-		public event EventHandler KeyArrowDown;
+		public event EventHandler<bool> KeyArrowUp;
+		public event EventHandler<bool> KeyArrowDown;
 
 		public override bool DoCommandBySelector (NSControl control, NSTextView textView, Selector commandSelector)
 		{
@@ -96,27 +113,27 @@ namespace Xamarin.PropertyEditing.Mac
 				case "moveDown:":
 					OnKeyArrowDown ();
 					break;
+				case "moveUpAndModifySelection:":
+					OnKeyArrowUp (true);
+					break;
+				case "moveDownAndModifySelection:":
+					OnKeyArrowDown (true);
+					break;
 				default:
 					return false;
 			}
 
-			return false;
+			return true;
 		}
 
-		protected virtual void OnKeyArrowUp ()
+		protected virtual void OnKeyArrowUp (bool shiftPressed = false)
 		{
-			var handler = KeyArrowUp;
-			if (handler != null) {
-				handler (this, EventArgs.Empty);
-			}
+			KeyArrowUp?.Invoke (this, shiftPressed);
 		}
 
-		protected virtual void OnKeyArrowDown ()
+		protected virtual void OnKeyArrowDown (bool shiftPressed = false)
 		{
-			var handler = KeyArrowDown;
-			if (handler != null) {
-				handler (this, EventArgs.Empty);
-			}
+			KeyArrowDown?.Invoke (this, shiftPressed);
 		}
 	}
 
@@ -138,17 +155,22 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override bool TextShouldEndEditing (NSText textObject)
 		{
-			if (!ValidateFinalString (TextField.StringValue)) {
+			bool shouldEndEditing = false;
+			if (!ValidateFinalString (textObject.Value)) {
 				TextField.ResetInvalidInput ();
 				AppKitFramework.NSBeep ();
-				return false;
+				TextField.ShouldEndEditing (textObject);
+			} else {
+				shouldEndEditing = TextField.ShouldEndEditing (textObject);
 			}
-			return TextField.ShouldEndEditing (textObject);
+
+			return shouldEndEditing;
 		}
 
 		public override void TextDidEndEditing (NSNotification notification)
 		{
-			TextField.RaiseValidatedEditingEnded ();
+			TextField.NotifyValidatedEditingEnded ();
+			TextField.DidEndEditing (notification);
 		}
 
 		protected abstract bool ValidateFinalString (string value);
@@ -165,22 +187,8 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override bool ValidateFinalString (string value)
 		{
 			return TextField.NumericMode == ValidationType.Decimal ?
-				FieldValidation.ValidateDecimal (value, TextField.AllowNegativeValues) :
-				FieldValidation.ValidateInteger (value, TextField.AllowNegativeValues);
-		}
-	}
-
-	public class RatioValidateDelegate : TextViewValidationDelegate
-	{
-		public RatioValidateDelegate (NumericTextField textField)
-			: base (textField)
-		{
-
-		}
-
-		protected override bool ValidateFinalString (string value)
-		{
-			return FieldValidation.ValidateRatio (value, ValidationType.Decimal, TextField.AllowNegativeValues);
+				NumericTextField.ValidateDecimal (value, TextField.AllowNegativeValues) :
+				NumericTextField.ValidateInteger (value, TextField.AllowNegativeValues);
 		}
 	}
 }
