@@ -271,7 +271,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool CanSetValueToResource (Resource resource)
 		{
-			return (ResourceProvider != null && resource != null && SupportsResources);
+			return (TargetPlatform.ResourceProvider != null && resource != null && SupportsResources);
 		}
 
 		private void OnSetValueToResource (Resource resource)
@@ -329,7 +329,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool CanCreateResource ()
 		{
-			return SupportsResources && ResourceProvider != null && !MultipleValues;
+			return SupportsResources && TargetPlatform.ResourceProvider != null && !MultipleValues;
 		}
 
 		private async void OnCreateResource ()
@@ -338,7 +338,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (e.Source == null)
 				return;
 
-			Resource resource =  await ResourceProvider.CreateResourceAsync (e.Source, e.Name, Value);
+			Resource resource =  await TargetPlatform.ResourceProvider.CreateResourceAsync (e.Source, e.Name, Value);
 			OnSetValueToResource (resource);
 		}
 
@@ -413,7 +413,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool CanCreateResources
 		{
-			get { return SupportsResources && (ResourceProvider?.CanCreateResources ?? false); }
+			get { return SupportsResources && (TargetPlatform.ResourceProvider?.CanCreateResources ?? false); }
 		}
 
 		public bool SupportsBindings
@@ -425,22 +425,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			get;
 			set;
-		}
-
-		public IResourceProvider ResourceProvider
-		{
-			get { return this.resourceProvider; }
-			set
-			{
-				if (this.resourceProvider == value)
-					return;
-
-				this.resourceProvider = value;
-				OnPropertyChanged ();
-
-				if (SetValueResourceCommand is RelayCommand<Resource> r)
-					r.ChangeCanExecute();
-			}
 		}
 
 		public ICommand SetValueResourceCommand
@@ -658,7 +642,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool CanRequestResource ()
 		{
-			return SupportsResources && ResourceProvider != null && SetValueResourceCommand != null;
+			return SupportsResources && TargetPlatform.ResourceProvider != null && SetValueResourceCommand != null;
 		}
 
 		private void OnRequestResource ()

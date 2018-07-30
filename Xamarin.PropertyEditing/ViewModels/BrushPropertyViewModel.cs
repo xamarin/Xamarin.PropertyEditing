@@ -72,10 +72,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (this.resourceSelector != null)
 					return this.resourceSelector;
 
-				if (ResourceProvider == null || Editors == null)
+				if (TargetPlatform.ResourceProvider == null || Editors == null)
 					return null;
 
-				return this.resourceSelector = new ResourceSelectorViewModel (ResourceProvider, Editors.Select (ed => ed.Target), Property);
+				return this.resourceSelector = new ResourceSelectorViewModel (TargetPlatform.ResourceProvider, Editors.Select (ed => ed.Target), Property);
 			}
 		}
 		
@@ -154,7 +154,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		protected override void OnPropertyChanged ([CallerMemberName] string propertyName = null)
 		{
 			base.OnPropertyChanged (propertyName);
-			if (propertyName == nameof (PropertyViewModel.ResourceProvider)) {
+			if (propertyName == nameof (TargetPlatform)) {
 				ResetResourceSelector ();
 			}
 		}
