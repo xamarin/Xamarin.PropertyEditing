@@ -288,7 +288,6 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False);
 		}
 
-		/*
 		[Test]
 		public void CanSetValueToResource ()
 		{
@@ -303,12 +302,11 @@ namespace Xamarin.PropertyEditing.Tests
 			var resourcesMock = new Mock<IResourceProvider> ();
 			resourcesMock.Setup (rp => rp.GetResourcesAsync (editor.Target, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
-			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourcesMock.Object), mockProperty.Object, new[] { editor });
 			Assume.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False);
 
 			bool changed = false;
 			vm.SetValueResourceCommand.CanExecuteChanged += (o,e) => changed = true;
-			vm.ResourceProvider = resourcesMock.Object;
 			Assume.That (changed, Is.True);
 			Assume.That (vm.SetValueResourceCommand, Is.Not.Null);
 			Assert.That (vm.SetValueResourceCommand.CanExecute (resource), Is.True, "Could not set value to resource");
@@ -326,8 +324,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resourcesMock = new Mock<IResourceProvider> ();
 			resourcesMock.Setup (rp => rp.GetResourcesAsync (editor.Target, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
-			var vm = GetViewModel (mockProperty.Object, new[] { editor });
-			vm.ResourceProvider = resourcesMock.Object;
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourcesMock.Object), mockProperty.Object, new[] { editor });
 			Assume.That (vm.SetValueResourceCommand, Is.Not.Null);
 
 			Assert.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False, "Could set value to readonly resource");
@@ -343,8 +340,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var resourcesMock = new Mock<IResourceProvider>();
 
-			var vm = GetViewModel (mockProperty.Object, new[] { GetBasicEditor (mockProperty.Object) });
-			vm.ResourceProvider = resourcesMock.Object;
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourcesMock.Object), mockProperty.Object, new[] { GetBasicEditor (mockProperty.Object) });
 
 			Assert.That (vm.RequestResourceCommand.CanExecute (null), Is.True);
 		}
@@ -363,7 +359,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resourcesMock = new Mock<IResourceProvider> ();
 			resourcesMock.Setup (rp => rp.GetResourcesAsync (editor.Target, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
-			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourcesMock.Object), mockProperty.Object, new[] { editor });
 			Assume.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False);
 
 			bool setChanged = false;
@@ -371,12 +367,10 @@ namespace Xamarin.PropertyEditing.Tests
 
 			Assume.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False);
 
-			vm.ResourceProvider = resourcesMock.Object;
-
 			Assert.That (setChanged, Is.True);
 			Assert.That	(vm.SetValueResourceCommand.CanExecute (resource), Is.True);
 		}
-		*/
+		
 		[Test]
 		public void CanRequestResourceNoProvider()
 		{
@@ -393,7 +387,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var vm = GetViewModel (mockProperty.Object, new[] { editor });
 			Assert.That (vm.RequestResourceCommand.CanExecute (null), Is.False);
 		}
-		/*
+		
 		[Test]
 		[Description ("RequestResourceCommand's CanExecuteChanged should fire when SetValueResourceCommand's does")]
 		public void CanRequestResourceSetValueChanges()
@@ -407,7 +401,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resourcesMock = new Mock<IResourceProvider> ();
 			resourcesMock.Setup (rp => rp.GetResourcesAsync (editor.Target, mockProperty.Object, It.IsAny<CancellationToken> ())).ReturnsAsync (new[] { resource });
 
-			var vm = GetViewModel (mockProperty.Object, new[] { editor });
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourcesMock.Object), mockProperty.Object, new[] { editor });
 			Assume.That (vm.SetValueResourceCommand.CanExecute (resource), Is.False);
 			Assume.That (vm.RequestResourceCommand.CanExecute (null), Is.False);
 
@@ -415,8 +409,6 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SetValueResourceCommand.CanExecuteChanged += (o,e) => setChanged = true;
 			bool requestChanged = false;
 			vm.RequestResourceCommand.CanExecuteChanged += (o, e) => requestChanged = true;
-
-			vm.ResourceProvider = resourcesMock.Object;
 
 			Assume.That (setChanged, Is.True);
 			Assert.That (requestChanged, Is.True);
@@ -443,8 +435,7 @@ namespace Xamarin.PropertyEditing.Tests
 				return default(TValue);
 			};
 
-			var vm = GetViewModel (mockProperty.Object, new[] { editor });
-			vm.ResourceProvider = resourcesMock.Object;
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourcesMock.Object), mockProperty.Object, new[] { editor });
 			Assume.That (vm.Value, Is.EqualTo (default(TValue)));
 
 			vm.SetValueResourceCommand.Execute (resource);
@@ -470,9 +461,8 @@ namespace Xamarin.PropertyEditing.Tests
 				Value = value
 			});
 
-			var vm = GetViewModel (mockProperty.Object, new[] { editor });
-			vm.ResourceProvider = resourcesMock.Object;
-
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourcesMock.Object), mockProperty.Object, new[] { editor });
+			
 			Assert.That (vm.Value, Is.EqualTo (value));
 			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Resource));
 		}
@@ -496,8 +486,7 @@ namespace Xamarin.PropertyEditing.Tests
 				Value = value
 			});
 
-			var vm = GetViewModel (mockProperty.Object, new[] { editor });
-			vm.ResourceProvider = resourcesMock.Object;
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourcesMock.Object), mockProperty.Object, new[] { editor });
 			Assume.That (vm.Value, Is.EqualTo (value));
 			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Resource));
 
@@ -511,7 +500,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
 			Assert.That (changed, Is.True, "CanExecuteChanged didn't fire"); // Converitng to local should make the command unexecutable because its now already local
 		}
-*/
+
 		[Test]
 		public async Task ConvertToLocalValueAlreadyLocal ()
 		{
@@ -1053,7 +1042,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (changed, Is.True, "CanExecuteChanged did not fire");
 			Assert.That (vm.NavigateToValueSourceCommand.CanExecute (null), Is.True, "Navigate not enabled once value source became valid");
 		}
-		/*
+
 		[Test]
 		public void CanCreateResource ()
 		{
@@ -1064,8 +1053,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resourceProvider = new Mock<IResourceProvider> ();
 			resourceProvider.SetupGet (rp => rp.CanCreateResources).Returns (true);
 
-			var vm = GetViewModel (mockProperty.Object, new[] { editor });
-			vm.ResourceProvider = resourceProvider.Object;
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourceProvider.Object), mockProperty.Object, new[] { editor });
 			Assert.That (vm.CanCreateResources, Is.True);
 		}
 
@@ -1085,8 +1073,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resourceProvider = new Mock<IResourceProvider> ();
 			resourceProvider.SetupGet (rp => rp.CanCreateResources).Returns (true);
 
-			var vm = GetViewModel (mockProperty.Object, new[] { editor });
-			vm.ResourceProvider = resourceProvider.Object;
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourceProvider.Object), mockProperty.Object, new[] { editor });
 			Assert.That (vm.RequestCreateResourceCommand.CanExecute (null), Is.True, "Can't create resources");
 		}
 
@@ -1112,8 +1099,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resourceProvider = new Mock<IResourceProvider> ();
 			resourceProvider.SetupGet (rp => rp.CanCreateResources).Returns (true);
 
-			var vm = GetViewModel (mockProperty.Object, new[] { editor });
-			vm.ResourceProvider = resourceProvider.Object;
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourceProvider.Object), mockProperty.Object, new[] { editor });
 			Assume.That (vm.RequestCreateResourceCommand.CanExecute (null), Is.True, "Can't create resources initially");
 
 			bool changed = false;
@@ -1143,8 +1129,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var resourceProvider = new Mock<IResourceProvider> ();
 			resourceProvider.SetupGet (rp => rp.CanCreateResources).Returns (true);
 
-			var vm = GetViewModel (mockProperty.Object, new[] { editor });
-			vm.ResourceProvider = resourceProvider.Object;
+			var vm = GetViewModel (new TargetPlatform (new MockEditorProvider (), resourceProvider.Object), mockProperty.Object, new[] { editor });
 			Assume.That (vm.RequestCreateResourceCommand.CanExecute (null), Is.True, "Can't create resources");
 
 			bool requested = false;
@@ -1155,7 +1140,7 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.RequestCreateResourceCommand.Execute (null);
 			Assert.That (requested, Is.True, "CreateResourceRequested did not fire");
 		}
-*/
+
 		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
 		{
 			return GetViewModel (property, new[] { editor });
