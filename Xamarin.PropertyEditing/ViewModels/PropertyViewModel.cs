@@ -281,6 +281,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			
 			SetValue (new ValueInfo<TValue> {
 				Source = ValueSource.Resource,
+				Value = Value,
 				SourceDescriptor = resource
 			});
 		}
