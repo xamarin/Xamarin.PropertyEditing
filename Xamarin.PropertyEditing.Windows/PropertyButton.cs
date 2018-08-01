@@ -157,7 +157,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			var panel = this.FindPropertiesHost();
 			var pvm = (PropertyViewModel) DataContext;
-			e.Resource = ResourceSelectorWindow.RequestResource (panel, pvm.ResourceProvider, pvm.Editors.Select (ed => ed.Target), pvm.Property, e.Resource);
+			e.Resource = ResourceSelectorWindow.RequestResource (panel, pvm.TargetPlatform.ResourceProvider, pvm.Editors.Select (ed => ed.Target), pvm.Property, e.Resource);
 		}
 
 		private void OnCreateResourceRequested (object sender, CreateResourceRequestedEventArgs e)
@@ -165,7 +165,7 @@ namespace Xamarin.PropertyEditing.Windows
 			var panel = this.FindPropertiesHost();
 			var pvm = (PropertyViewModel) DataContext;
 
-			var result = CreateResourceWindow.CreateResource (panel, pvm.ResourceProvider, pvm.Editors.Select (oe => oe.Target), pvm.Property);
+			var result = CreateResourceWindow.CreateResource (panel, pvm.TargetPlatform.ResourceProvider, pvm.Editors.Select (oe => oe.Target), pvm.Property);
 			e.Source = result.Item1;
 			e.Name = result.Item2;
 		}

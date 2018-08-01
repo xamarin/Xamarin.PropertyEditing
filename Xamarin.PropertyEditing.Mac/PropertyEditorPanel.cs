@@ -78,7 +78,6 @@ namespace Xamarin.PropertyEditing.Mac
 		private bool isArrangeEnabled = true;
 		// when this property changes, need to create new datasource
 		private TargetPlatform targetPlatform;
-		private IResourceProvider resourceProvider;
 		private NSOutlineView propertyTable;
 		private PropertyTableDataSource dataSource;
 		private PanelViewModel viewModel;

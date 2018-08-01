@@ -37,8 +37,9 @@ namespace Xamarin.PropertyEditing.Tests
 			var mockProperty = new Mock<IPropertyInfo> ();
 			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (CommonBrush));
 			var mockEditor = new MockObjectEditor (mockProperty.Object);
-			var vm = new BrushPropertyViewModel (MockEditorProvider.MockPlatform, mockProperty.Object, new [] { mockEditor });
-			vm.ResourceProvider = new MockResourceProvider ();
+
+			var vm = new BrushPropertyViewModel (new TargetPlatform (new MockEditorProvider(), new MockResourceProvider()), mockProperty.Object, new [] { mockEditor });
+
 			var changed = false;
 			vm.PropertyChanged += (s, e) => {
 				if (e.PropertyName == nameof (BrushPropertyViewModel.ResourceSelector)) {
@@ -49,28 +50,6 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.Editors.Add (new MockObjectEditor ());
 			var rs2 = vm.ResourceSelector;
 			Assert.IsTrue (changed);
-			Assert.AreNotEqual (rs1, rs2);
-		}
-
-		[Test]
-		public void ChangingResourceProviderUpdatesResources ()
-		{
-			var mockProperty = new Mock<IPropertyInfo> ();
-			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (CommonBrush));
-			var mockEditor = new MockObjectEditor (mockProperty.Object);
-			var vm = new BrushPropertyViewModel (MockEditorProvider.MockPlatform, mockProperty.Object, new [] { mockEditor });
-			
-			var changed = false;
-			vm.PropertyChanged += (s, e) => {
-				if (e.PropertyName == nameof (BrushPropertyViewModel.ResourceSelector)) {
-					changed = true;
-				}
-			};
-			var rs1 = vm.ResourceSelector;
-			vm.ResourceProvider = new MockResourceProvider ();
-			var rs2 = vm.ResourceSelector;
-			Assert.IsTrue (changed);
-			Assert.IsNull (rs1);
 			Assert.AreNotEqual (rs1, rs2);
 		}
 	}
