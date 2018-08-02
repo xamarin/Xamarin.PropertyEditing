@@ -46,7 +46,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private string VersionName {
 			get {
-				var version = PropertyEditorPanel.ThemeManager.Theme == Themes.PropertyEditorTheme.Dark ? $"{name}~dark" : name;
+				var version = PropertyEditorPanel.ThemeManager.GetImageNameForTheme (name);
 				return selected ? $"{version}~sel" : version;
 			}
 		}

@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 #if DESIGNER_DEBUG
-			actionButton.Image = NSImage.ImageNamed ("action-warning-16");
+			actionButton.Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("action-warning-16");
 #endif
 
 			actionButton.Activated += (object sender, EventArgs e) => {
@@ -104,7 +104,7 @@ namespace Xamarin.PropertyEditing.Mac
 			actionButton.Hidden = !actionButton.Enabled;
 
 			// Using NSImageName.Caution for now, we can change this later at the designers behest
-			actionButton.Image = actionButton.Enabled ? NSImage.ImageNamed ("action-warning-16") : null;
+			actionButton.Image = actionButton.Enabled ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("action-warning-16") : null;
 		}
 
 		void NotifyActionButtonClicked ()

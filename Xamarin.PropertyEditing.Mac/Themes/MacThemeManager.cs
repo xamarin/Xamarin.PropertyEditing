@@ -27,5 +27,15 @@ namespace Xamarin.PropertyEditing.Themes
 					break;
 			}
 		}
+
+		public string GetImageNameForTheme (string imageNamed)
+		{
+			return Theme == PropertyEditorTheme.Dark ? imageNamed + "~dark" : imageNamed;
+		}
+
+		public NSImage GetImageForTheme (string imageNamed)
+		{
+			return NSImage.ImageNamed (GetImageNameForTheme (imageNamed));
+		}
 	}
 }
