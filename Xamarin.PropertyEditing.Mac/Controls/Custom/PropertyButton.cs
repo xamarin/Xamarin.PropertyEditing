@@ -34,7 +34,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AccessibilityTitle = LocalizationResources.AccessibilityPropertiesButton;
 			AccessibilityHelp = LocalizationResources.AccessibilityPropertiesButtonDescription;
 			Enabled = true;
-			Image = NSImage.ImageNamed ("property-button-default-mac-10");
+			Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-10");
 			ImageScaling = NSImageScale.AxesIndependently;
 			ToolTip = Properties.Resources.Default;
 			TranslatesAutoresizingMaskIntoConstraints = false;
@@ -108,27 +108,27 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			switch (valueSource) {
 				case ValueSource.Binding:
-					Image = activeImage ? NSImage.ImageNamed ("property-button-bound-mac-active-10") : NSImage.ImageNamed ("property-button-bound-mac-10");
+					Image = activeImage ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-bound-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-bound-mac-10");
 					break;
 
 				case ValueSource.Default:
-					Image = activeImage ? NSImage.ImageNamed ("property-button-default-mac-active-10") : NSImage.ImageNamed ("property-button-default-mac-10");
+					Image = activeImage ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-10");
 					return;
 
 				case ValueSource.Local:
-					Image = activeImage ? NSImage.ImageNamed ("property-button-local-mac-active-10") : NSImage.ImageNamed ("property-button-local-mac-10");
+					Image = activeImage ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-local-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-local-mac-10");
 					break;
 
 				case ValueSource.Inherited:
-					Image = activeImage ? NSImage.ImageNamed ("property-button-inherited-mac-active-10") : NSImage.ImageNamed ("property-button-inherited-mac-10");
+					Image = activeImage ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-10");
 					break;
 
 				case ValueSource.Resource:
-					Image = activeImage ? NSImage.ImageNamed ("property-button-inherited-mac-active-10") : NSImage.ImageNamed ("property-button-inherited-resource-mac-10");
+					Image = activeImage ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-10");
 					break;
 
 				case ValueSource.Unset:
-					Image = activeImage ? NSImage.ImageNamed ("property-button-default-mac-active-10") : NSImage.ImageNamed ("property-button-default-mac-10");
+				Image = activeImage ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-10");
 					break;
 
 				default:
