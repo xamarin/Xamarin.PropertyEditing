@@ -19,11 +19,9 @@ namespace Xamarin.PropertyEditing.Mac
 			WantsLayer = true;
 
 			var iconView = new NSImageView {
-				Image = NSImage.ImageNamed (imageNamed),
+				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme (imageNamed),
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
-
-			iconView.Image = NSImage.ImageNamed (PropertyEditorPanel.ThemeManager.Theme == Themes.PropertyEditorTheme.Dark ? imageNamed + "~dark" : imageNamed);
 
 			AddSubview (iconView);
 

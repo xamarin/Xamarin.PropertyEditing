@@ -46,17 +46,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private string VersionName {
 			get {
-				var version = PropertyEditorPanel.ThemeManager.Theme == Themes.PropertyEditorTheme.Dark ? $"{name}~dark" : name;
-				return selected ? $"{version}~sel" : version;
+				return PropertyEditorPanel.ThemeManager.GetImageNameForTheme (name, selected ? "~sel" : string.Empty);
 			}
 		}
 
 		public override void DrawRect (CGRect dirtyRect)
 		{
 			if (Image?.Name != VersionName) {
-				var oldImage = Image;
-				Image = NSImage.ImageNamed (VersionName);
-				oldImage?.Dispose ();
+				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme (name, selected ? "~sel" : string.Empty);
 			}
 
 			base.DrawRect (dirtyRect);
