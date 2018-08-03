@@ -814,5 +814,11 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("InvalidRatio", resourceCulture);
             }
         }
+        
+        public static string GradientBrush {
+            get {
+                return ResourceManager.GetString("GradientBrush", resourceCulture);
+            }
+        }
     }
 }

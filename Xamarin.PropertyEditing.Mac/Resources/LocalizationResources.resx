@@ -71,4 +71,16 @@
   <data name="AccessibilityActionButtonDescription" xml:space="preserve">
     <value>Display warnings.</value>>
   </data>
+  <data name="ColumnResourceName" xml:space="preserve">
+    <value>Name</value>>
+  </data>
+  <data name="ColumnResourcePreview" xml:space="preserve">
+    <value>Preview</value>>
+  </data>
+  <data name="CommonBrushTitleUnknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="CommonBrushTitleGradient" xml:space="preserve">
+    <value>Gradient</value>>
+  </data>
 </root>

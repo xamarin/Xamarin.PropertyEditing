@@ -95,36 +95,40 @@
     <Compile Include="Controls\RatioEditorControl.cs" />
     <Compile Include="Controls\Custom\RatioEditor.cs" />
     <Compile Include="Controls\BrushEditorControl.cs" />
-    <Compile Include="Controls\Custom\BrushTabViewController.cs" />
-    <Compile Include="Controls\Custom\CommonBrushLayer.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\BrushTabViewController.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ChannelEditor.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ChannelEditorType.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ColorComponentEditor.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ColorComponentTabViewController.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ColorComponentViewController.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ColorEditorLayer.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ColorEditorView.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\CommonBrushLayer.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\CommonBrushView.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\CommonGradientBrushLayer.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ComponentSpinEditor.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\EmptyBrushEditorViewController.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\HistoryLayer.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\HueLayer.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\MaterialBrushEditorViewController.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\MaterialColorLayer.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\MaterialView.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ResourceBrushViewController.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ShadeLayer.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\SolidColorBrushEditor.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\SolidColorBrushEditorViewController.cs" />
     <Compile Include="Controls\Custom\UnderlinedTabViewController.cs" />
     <Compile Include="Controls\Custom\NotifyingTabViewController.cs" />
     <Compile Include="Controls\Custom\NotifyingViewAdaptor.cs" />
-    <Compile Include="Controls\Custom\CommonGradientBrushLayer.cs" />
     <Compile Include="Controls\Custom\DrawingExtensions.cs" />
-    <Compile Include="Controls\Custom\SolidColorBrushEditorViewController.cs" />
-    <Compile Include="Controls\Custom\EmptyBrushEditorViewController.cs" />
-    <Compile Include="Controls\Custom\MaterialBrushEditorViewController.cs" />
-    <Compile Include="Controls\Custom\ResourceBrushViewController.cs" />
     <Compile Include="Controls\Custom\NotifyingViewController.cs" />
-    <Compile Include="Controls\Custom\ChannelEditor.cs" />
-    <Compile Include="Controls\Custom\ComponentSpinEditor.cs" />
-    <Compile Include="Controls\Custom\MaterialView.cs" />
-    <Compile Include="Controls\Custom\MaterialColorLayer.cs" />
-    <Compile Include="Controls\Custom\ColorEditorView.cs" />
-    <Compile Include="Controls\Custom\SolidColorBrushEditor.cs" />
-    <Compile Include="Controls\Custom\ColorEditorLayer.cs" />
-    <Compile Include="Controls\Custom\ColorComponentTabViewController.cs" />
-    <Compile Include="Controls\Custom\HistoryLayer.cs" />
-    <Compile Include="Controls\Custom\HueLayer.cs" />
-    <Compile Include="Controls\Custom\ShadeLayer.cs" />
-    <Compile Include="Controls\Custom\ChannelEditorType.cs" />
-    <Compile Include="Controls\Custom\ColorComponentViewController.cs" />
-    <Compile Include="Controls\Custom\ColorComponentEditor.cs" />
     <Compile Include="Controls\Custom\UnderlinedTextField.cs" />
-    <Compile Include="Controls\Custom\CommonBrushView.cs" />
     <Compile Include="Controls\Custom\UnfocusableButton.cs" />
     <Compile Include="Controls\Custom\SpinnerButton.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ResourceDataSource.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ResourceBrushPropertyViewDelegate.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ResourceOutlineViewDelegate.cs" />
+    <Compile Include="Controls\Custom\CommonBrush\ResourceOutlineView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
@@ -283,6 +287,9 @@
     <BundleResource Include="Resources\stepper-up-focus-graphite%402x.png" />
     <BundleResource Include="Resources\stepper-up-focus-graphite~dark.png" />
     <BundleResource Include="Resources\stepper-up-focus-graphite~dark%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\Custom\CommonBrush\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>
