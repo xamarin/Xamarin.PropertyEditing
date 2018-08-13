@@ -154,8 +154,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return ReflectionObjectEditor.GetAssignableTypes (property.RealType, childTypes);
 		}
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
+		public Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
 		{
 			if (variation != null)
 				throw new NotSupportedException(); // TODO
@@ -173,7 +172,7 @@ namespace Xamarin.PropertyEditing.Tests
 			} else if (value.Source == ValueSource.Unset || (property.ValueSources.HasFlag (ValueSources.Default) && Equals (value.Value, default(T))) && value.ValueDescriptor == null) {
 				this.values.Remove (property);
 				PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
-				return;
+				return Task.CompletedTask;
 			}
 
 			object softValue = value;
@@ -225,9 +224,10 @@ namespace Xamarin.PropertyEditing.Tests
 			
 			this.values[property] = softValue;
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
+			return Task.CompletedTask;
 		}
 
-		public async Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null)
+		public Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null)
 		{
 			if (variation != null)
 				throw new NotSupportedException (); // TODO
@@ -238,18 +238,18 @@ namespace Xamarin.PropertyEditing.Tests
 			if (this.values.TryGetValue (property, out value)) {
 				var info = value as ValueInfo<T>;
 				if (info != null) {
-					return new ValueInfo<T> {
+					return Task.FromResult (new ValueInfo<T> {
 						CustomExpression = info.CustomExpression,
 						Source = info.Source,
 						ValueDescriptor = info.ValueDescriptor,
 						SourceDescriptor = info.SourceDescriptor,
 						Value = info.Value
-					};
+					});
 				} else if (value == null || value is T) {
-					return new ValueInfo<T> {
+					return Task.FromResult (new ValueInfo<T> {
 						Value = (T) value,
 						Source = ValueSource.Local
-					};
+					});
 				} else if (tType.Name == "IReadOnlyList`1") {
 					// start with just supporting ints for now
 					var predefined = (IReadOnlyDictionary<string, int>)property.GetType().GetProperty(nameof(IHavePredefinedValues<int>.PredefinedValues)).GetValue(property);
@@ -271,10 +271,10 @@ namespace Xamarin.PropertyEditing.Tests
 							flags.Add (v);
 					}
 
-					return (ValueInfo<T>)Convert.ChangeType(new ValueInfo<IReadOnlyList<int>> {
+					return Task.FromResult ((ValueInfo<T>)Convert.ChangeType (new ValueInfo<IReadOnlyList<int>> {
 						Value = flags,
 						Source = underlyingInfo?.Source ?? ValueSource.Local
-					}, typeof(ValueInfo<T>));
+					}, typeof(ValueInfo<T>)));
 				} else {
 					object sourceDescriptor = null, valueDescriptor = null;
 					ValueSource source = ValueSource.Local;
@@ -290,27 +290,27 @@ namespace Xamarin.PropertyEditing.Tests
 					object newValue;
 					IPropertyConverter converter = property as IPropertyConverter;
 					if (converter != null && converter.TryConvert (value, tType, out newValue)) {
-						return new ValueInfo<T> {
+						return Task.FromResult (new ValueInfo<T> {
 							Source = source,
 							Value = (T)newValue,
 							ValueDescriptor = valueDescriptor,
 							SourceDescriptor = sourceDescriptor
-						};
+						});
 					} else if (typeof(T).IsAssignableFrom (valueType)) {
-						return new ValueInfo<T> {
+						return Task.FromResult (new ValueInfo<T> {
 							Source = source,
 							Value = (T)value,
 							ValueDescriptor = valueDescriptor,
 							SourceDescriptor = sourceDescriptor
-						};
+						});
 					}
 				}
 			}
 
-			return new ValueInfo<T> {
+			return Task.FromResult (new ValueInfo<T> {
 				Source = (property.ValueSources.HasFlag (ValueSources.Default)) ? ValueSource.Default : ValueSource.Unset,
 				Value = default(T)
-			};
+			});
 		}
 
 		public Task<ITypeInfo> GetValueTypeAsync (IPropertyInfo property, PropertyVariation variation = null)
@@ -331,7 +331,6 @@ namespace Xamarin.PropertyEditing.Tests
 			var asm = new AssemblyInfo (type.Assembly.FullName, true);
 			return Task.FromResult<ITypeInfo> (new TypeInfo (asm, type.Namespace, type.Name));
 		}
-#pragma warning restore CS1998
 
 		internal readonly IDictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
 		internal readonly IDictionary<IEventInfo, string> events = new Dictionary<IEventInfo, string> ();
