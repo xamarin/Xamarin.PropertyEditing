@@ -56,7 +56,7 @@ namespace Xamarin.PropertyEditing
 		/// <remarks>
 		/// These are children that do not participate in the standard element hierarchy, such as segments in a segmented control.
 		/// Note that objects defined by editors do not need to match real objects in the real hierarchy, they can be faked. An existing
-		/// iOS property chooser itself can be maped to having an object editor for its actual object.
+		/// iOS property chooser itself can be mapped to having an object editor for its actual object.
 		/// </remarks>
 		IReadOnlyList<IObjectEditor> DirectChildren { get; }
 
@@ -120,7 +120,7 @@ namespace Xamarin.PropertyEditing
 
 		/// <remarks>
 		/// <para>Implementers should strive to include the actual value of resources or bindings for <see cref="ValueInfo{T}.Value"/>
-		/// whereever possible.</para>
+		/// wherever possible.</para>
 		/// <para>If the platform can know the value of a property when unset, it should return that value and the <see cref="ValueSource.Default"/>
 		/// source. If the platform only knows that the value is unset, use <see cref="ValueSource.Unset"/> instead.</para>
 		///<para>When the property's value <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Resource"/>,

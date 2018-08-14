@@ -238,7 +238,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		[Description ("When passing along strings in the value desciprtor, we should ensure they are empty and not null for differentiation")]
+		[Description ("When passing along strings in the value descriptor, we should ensure they are empty and not null for differentiation")]
 		public void ValueDescriptorEmptyNotNullConstrained ()
 		{
 			var property = GetPropertyMock ();
@@ -265,7 +265,7 @@ namespace Xamarin.PropertyEditing.Tests
 		None = 0,
 		First = 1,
 		Second = 2,
-		Eigth = 8
+		Eighth = 8
 	}
 
 	[TestFixture]
@@ -320,7 +320,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		[Description ("When passing along strings in the value desciprtor, we should ensure they are empty and not null for differentiation")]
+		[Description ("When passing along strings in the value descriptor, we should ensure they are empty and not null for differentiation")]
 		public void ValueDescriptorEmptyNotNullUnconstrained ()
 		{
 			var property = GetPropertyMock ();
