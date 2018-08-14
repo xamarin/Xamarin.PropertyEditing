@@ -151,14 +151,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			ResetResourceSelector ();
 		}
 
-		protected override void OnPropertyChanged ([CallerMemberName] string propertyName = null)
-		{
-			base.OnPropertyChanged (propertyName);
-			if (propertyName == nameof (TargetPlatform)) {
-				ResetResourceSelector ();
-			}
-		}
-
 		private ResourceSelectorViewModel resourceSelector;
 		private CommonBrushType selectedBrushType;
 
