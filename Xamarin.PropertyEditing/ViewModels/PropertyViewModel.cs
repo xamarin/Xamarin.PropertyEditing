@@ -271,7 +271,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool CanSetValueToResource (Resource resource)
 		{
-			return (TargetPlatform.ResourceProvider != null && resource != null && SupportsResources);
+			return (resource != null && SupportsResources);
 		}
 
 		private void OnSetValueToResource (Resource resource)
@@ -408,7 +408,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool SupportsResources
 		{
-			get { return Property.CanWrite && Property.ValueSources.HasFlag (ValueSources.Resource); }
+			get { return TargetPlatform.ResourceProvider != null && Property.CanWrite && Property.ValueSources.HasFlag (ValueSources.Resource); }
 		}
 
 		public bool CanCreateResources
