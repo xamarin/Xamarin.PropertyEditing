@@ -8,15 +8,24 @@ namespace Xamarin.PropertyEditing
 		: EventArgs
 	{
 		/// <param name="property">The property that was updated, or <c>null</c> if a full refresh is required.</param>
-		public EditorPropertyChangedEventArgs (IPropertyInfo property)
+		public EditorPropertyChangedEventArgs (IPropertyInfo property, PropertyVariationSet variations = null)
 		{
 			Property = property;
+			Variations = variations;
 		}
 
 		/// <summary>
 		/// Gets the property that was changed, or <c>null</c> for a full refresh.
 		/// </summary>
 		public IPropertyInfo Property
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the variation that was changed, if any.
+		/// </summary>
+		public PropertyVariationSet Variations
 		{
 			get;
 		}
@@ -88,6 +97,15 @@ namespace Xamarin.PropertyEditing
 		 * them or become invalid as a result of a prior pending change.
 		 */
 
+		/// <summary>
+		/// Gets set variations of <paramref name="property"/> values.
+		/// </summary>
+		/// <param name="property"></param>
+		/// <returns>
+		/// Each <see cref="PropertyVariationSet"/> that has a value defined for the given <paramref name="property"/>.
+		/// No variation set should be returned for a neutral value, it's assumed there is one.
+		/// </returns>
+		Task<IReadOnlyCollection<PropertyVariationSet>> GetPropertyVariantsAsync (IPropertyInfo property);
 
 		/// <remarks>
 		/// <para>For the <see cref="ValueSource.Default"/> or <see cref="ValueSource.Unset"/> sources, implementers should
@@ -103,11 +121,11 @@ namespace Xamarin.PropertyEditing
 		/// of the value.</para>
 		/// <para>When the <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Local"/> and <see cref="ValueInfo{T}.Value"/>
 		/// is the same as the default value, implementers should consider unsetting the value such that the subsequent
-		/// <see cref="GetValueAsync{T}(IPropertyInfo, PropertyVariation)"/> would return <see cref="ValueSource.Default"/>
+		/// <see cref="GetValueAsync{T}(IPropertyInfo, PropertyVariationSet)"/> would return <see cref="ValueSource.Default"/>
 		/// for <see cref="ValueInfo{T}.Source"/>. This allows users to clear the value for a property and have it remove
 		/// the attribute for XML backed platforms without having to issue an <see cref="ValueSource.Unset"/>.</para>
 		/// <para>Before the returned task completes, in order:
-		/// 1. <see cref="GetValueAsync{T}(IPropertyInfo, PropertyVariation)"/> must be able to retrieve the new value.
+		/// 1. <see cref="GetValueAsync{T}(IPropertyInfo, PropertyVariationSet)"/> must be able to retrieve the new value.
 		/// 2. <see cref="PropertyChanged"/> should fire with the appropriate property.
 		/// For defensive purposes, consumers will not assume the <paramref name="value"/> they pass in will be the same
 		/// as the new value and as a result will re-query the value upon the assumed <see cref="PropertyChanged"/> firing.
@@ -115,8 +133,13 @@ namespace Xamarin.PropertyEditing
 		/// will do basic verification before calling. Even <see cref="ValueInfo{T}.Source"/> changes with the value staying the
 		/// same is a change in the property.
 		/// </para>
+		/// <para>
+		/// For <paramref name="variations"/>, a set call for a <see cref="PropertyVariationSet"/> that is not yet set should be
+		/// considered a "create new variation" call. Similarly, a call in which <paramref name="value"/>'s source is <see cref="ValueSource.Unset"/>
+		/// should be considered a "delete variation" call when <paramref name="variations"/> is set.
+		/// </para>
 		/// </remarks>
-		Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null);
+		Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariationSet variations = null);
 
 		/// <remarks>
 		/// <para>Implementers should strive to include the actual value of resources or bindings for <see cref="ValueInfo{T}.Value"/>
@@ -132,6 +155,6 @@ namespace Xamarin.PropertyEditing
 		/// of the value.</para>
 		/// </remarks>
 		/// <exception cref="ArgumentNullException"><paramref name="property"/> is <c>null</c>.</exception>
-		Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null);
+		Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariationSet variations = null);
 	}
 }

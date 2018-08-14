@@ -193,7 +193,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				bool disagree = false;
-				ValueInfo<TValue>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<TValue> (Property, Variation)).ToArray ());
+				ValueInfo<TValue>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<TValue> (Property, Variations)).ToArray ());
 				foreach (ValueInfo<TValue> valueInfo in values) {
 					if (currentValue == null)
 						currentValue = valueInfo;
@@ -561,6 +561,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return Property.CanWrite && TargetPlatform.BindingProvider != null && Property.ValueSources.HasFlag (ValueSources.Binding); }
 		}
 
+		public bool HasVariations => (Property.Variations?.Count ?? 0) > 0;
+
 		public abstract Resource Resource
 		{
 			get;
@@ -635,16 +637,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 		/// <summary>
 		/// Gets or sets the current <see cref="PropertyVariation"/> that the value is currently looking at.
 		/// </summary>
-		public PropertyVariation Variation
+		public PropertyVariationSet Variations
 		{
-			get { return this.variation; }
+			get { return this.variations; }
 			set
 			{
-				if (this.variation == value)
+				if (this.variations == value)
 					return;
 
-				this.variation = value;
+				this.variations = value;
 				OnPropertyChanged ();
+				RequestCurrentValueUpdate();
 			}
 		}
 
@@ -715,10 +718,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return e;
 		}
 
+		protected CreateVariantEventArgs RequestCreateVariant ()
+		{
+			var e = new CreateVariantEventArgs ();
+			CreateVariantRequested?.Invoke (this, e);
+			return e;
+		}
+
 		private readonly RelayCommand requestResourceCommand;
 		private ICommand setValueResourceCommand;
 		private HashSet<IPropertyInfo> constraintProperties;
-		private PropertyVariation variation;
+		private PropertyVariationSet variations;
 		private string error;
 		private Task<bool> isAvailable;
 

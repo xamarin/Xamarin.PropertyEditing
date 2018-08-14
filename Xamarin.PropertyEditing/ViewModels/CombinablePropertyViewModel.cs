@@ -80,7 +80,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				var newValues = new Dictionary<string, bool?> (this.predefinedValues.PredefinedValues.Count);
 
-				ValueInfo<IReadOnlyList<TValue>>[] values = await Task.WhenAll (Editors.Select (ed => ed.GetValueAsync<IReadOnlyList<TValue>> (Property, Variation)).ToArray ());
+				ValueInfo<IReadOnlyList<TValue>>[] values = await Task.WhenAll (Editors.Select (ed => ed.GetValueAsync<IReadOnlyList<TValue>> (Property, Variations)).ToArray ());
 				foreach (ValueInfo<IReadOnlyList<TValue>> valueInfo in values) {
 					if (valueInfo == null || valueInfo.Value == null || valueInfo.Source == ValueSource.Unset) {
 						foreach (var kvp in this.predefinedValues.PredefinedValues) {
@@ -138,7 +138,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					var currentChoices = Choices.ToDictionary (c => c, c => c.IsFlagged);
 
 					foreach (IObjectEditor editor in Editors) {
-						ValueInfo<IReadOnlyList<TValue>> value = await editor.GetValueAsync<IReadOnlyList<TValue>> (Property, Variation);
+						ValueInfo<IReadOnlyList<TValue>> value = await editor.GetValueAsync<IReadOnlyList<TValue>> (Property, Variations);
 						HashSet<TValue> current;
 						if (value.Value == null || value.Source == ValueSource.Unset)
 							current = new HashSet<TValue> ();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Xamarin.PropertyEditing
@@ -37,6 +37,15 @@ namespace Xamarin.PropertyEditing
 		/// </summary>
 		ValueSources ValueSources { get; }
 
+		/// <summary>
+		/// Gets a list of possible variations of the property.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// These are essentially conditions that can be applied for when a specific value for a property is used.
+		/// They should not include a neutral state.
+		/// </para>
+		/// </remarks>
 		IReadOnlyList<PropertyVariation> Variations { get; }
 
 		IReadOnlyList<IAvailabilityConstraint> AvailabilityConstraints { get; }

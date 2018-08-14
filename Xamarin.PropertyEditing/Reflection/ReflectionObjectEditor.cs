@@ -85,7 +85,12 @@ namespace Xamarin.PropertyEditing.Reflection
 			return GetAssignableTypes (property.RealType, childTypes);
 		}
 
-		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
+		public Task<IReadOnlyCollection<PropertyVariationSet>> GetPropertyVariantsAsync (IPropertyInfo property)
+		{
+			return Task.FromResult<IReadOnlyCollection<PropertyVariationSet>> (new PropertyVariationSet[0]);
+		}
+
+		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariationSet variations = null)
 		{
 			if (property == null)
 				throw new ArgumentNullException (nameof (property));
@@ -98,7 +103,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			OnPropertyChanged (info);
 		}
 
-		public Task<ITypeInfo> GetValueTypeAsync (IPropertyInfo property, PropertyVariation variation = null)
+		public Task<ITypeInfo> GetValueTypeAsync (IPropertyInfo property, PropertyVariationSet variations = null)
 		{
 			if (property == null)
 				throw new ArgumentNullException (nameof (property));
@@ -110,7 +115,7 @@ namespace Xamarin.PropertyEditing.Reflection
 			return Task.FromResult (info.GetValueType (Target));
 		}
 
-		public async Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null)
+		public async Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariationSet variations = null)
 		{
 			if (property == null)
 				throw new ArgumentNullException (nameof (property));

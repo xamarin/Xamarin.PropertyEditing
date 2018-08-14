@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Cadenza.Collections;
 using Xamarin.PropertyEditing.Reflection;
 using Xamarin.PropertyEditing.Tests.MockControls;
 
@@ -161,11 +162,20 @@ namespace Xamarin.PropertyEditing.Tests
 			return ReflectionObjectEditor.GetAssignableTypes (property.RealType, childTypes);
 		}
 
-		public Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
+		public Task<IReadOnlyCollection<PropertyVariationSet>> GetPropertyVariantsAsync (IPropertyInfo property)
 		{
-			if (variation != null)
-				throw new NotSupportedException(); // TODO
+			if (property == null)
+				throw new ArgumentNullException (nameof(property));
 
+			if (!this.values.TryGetValue (property, out IDictionary<PropertyVariationSet, object> propertyValues)) {
+				return Task.FromResult<IReadOnlyCollection<PropertyVariationSet>> (new PropertyVariationSet[0]);
+			}
+
+			return Task.FromResult<IReadOnlyCollection<PropertyVariationSet>> (propertyValues.Keys.ToList ());
+		}
+
+		public Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariationSet variations = null)
+		{
 			value = new ValueInfo<T> {
 				CustomExpression = value.CustomExpression,
 				Source = value.Source,
@@ -174,12 +184,17 @@ namespace Xamarin.PropertyEditing.Tests
 				Value = value.Value
 			};
 
+			if (!this.values.TryGetValue (property, out IDictionary<PropertyVariationSet, object> propertyValues)) {
+				this.values[property] = propertyValues = new Dictionary<PropertyVariationSet, object> ();
+			}
+
 			if (value.Source != ValueSource.Local && ValueEvaluator != null) {
 				value.Value = (T)ValueEvaluator (property, value.ValueDescriptor, value.SourceDescriptor);
 			} else if (value.Source == ValueSource.Unset || (property.ValueSources.HasFlag (ValueSources.Default) && Equals (value.Value, default(T))) && value.ValueDescriptor == null && value.SourceDescriptor == null) {
-				this.values.Remove (property);
-				PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
-				return Task.CompletedTask;
+				if (propertyValues.Remove (variations ?? NeutralVariations)) {
+					PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property, variations));
+					return Task.CompletedTask;
+				}
 			}
 
 			object softValue = value;
@@ -239,89 +254,93 @@ namespace Xamarin.PropertyEditing.Tests
 					}
 				}
 			}
-			
-			this.values[property] = softValue;
-			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
+
+			propertyValues[variations ?? NeutralVariations] = softValue;
+			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property, variations));
 			return Task.CompletedTask;
 		}
 
-		public Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null)
+		public Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariationSet variations = null)
 		{
-			if (variation != null)
-				throw new NotSupportedException (); // TODO
-
 			Type tType = typeof(T);
 
-			object value;
-			if (this.values.TryGetValue (property, out value)) {
-				var info = value as ValueInfo<T>;
-				if (info != null) {
+			IDictionary<PropertyVariationSet, object> propertyValues;
+			if (!this.values.TryGetValue (property, out propertyValues) || !propertyValues.TryGetValue (variations ?? NeutralVariations, out object value)) {
+				return Task.FromResult (new ValueInfo<T> {
+					Source = (property.ValueSources.HasFlag (ValueSources.Default))
+						? ValueSource.Default
+						: ValueSource.Unset,
+					Value = default(T)
+				});
+			}
+
+			var info = value as ValueInfo<T>;
+			if (info != null) {
+				return Task.FromResult (new ValueInfo<T> {
+					CustomExpression = info.CustomExpression,
+					Source = info.Source,
+					ValueDescriptor = info.ValueDescriptor,
+					SourceDescriptor = info.SourceDescriptor,
+					Value = info.Value
+				});
+			} else if (value == null || value is T) {
+				return Task.FromResult (new ValueInfo<T> {
+					Value = (T) value,
+					Source = ValueSource.Local
+				});
+			} else if (tType.Name == "IReadOnlyList`1") {
+				// start with just supporting ints for now
+				var predefined = (IReadOnlyDictionary<string, int>)property.GetType().GetProperty(nameof(IHavePredefinedValues<int>.PredefinedValues)).GetValue(property);
+
+				var underlyingInfo = value as ValueInfo<int>;
+
+				int realValue;
+				if (value is int i) {
+					realValue = i;
+				} else
+					realValue = ((ValueInfo<int>) value).Value;
+
+				var flags = new List<int> ();
+				foreach (int v in predefined.Values) {
+					if (v == 0 && realValue != 0)
+						continue;
+
+					if ((realValue & v) == v)
+						flags.Add (v);
+				}
+
+				return Task.FromResult ((ValueInfo<T>)Convert.ChangeType (new ValueInfo<IReadOnlyList<int>> {
+					Value = flags,
+					Source = underlyingInfo?.Source ?? ValueSource.Local
+				}, typeof(ValueInfo<T>)));
+			} else {
+				object sourceDescriptor = null, valueDescriptor = null;
+				ValueSource source = ValueSource.Local;
+				Type valueType = value.GetType ();
+				if (valueType.IsConstructedGenericType && valueType.GetGenericTypeDefinition () == typeof(ValueInfo<>)) {
+					source = (ValueSource)valueType.GetProperty ("Source").GetValue (value);
+					sourceDescriptor = valueType.GetProperty (nameof (ValueInfo<T>.SourceDescriptor)).GetValue (value);
+					valueDescriptor = valueType.GetProperty (nameof (ValueInfo<T>.ValueDescriptor)).GetValue (value);
+					value = valueType.GetProperty ("Value").GetValue (value);
+					valueType = valueType.GetGenericArguments ()[0];
+				}
+
+				object newValue;
+				IPropertyConverter converter = property as IPropertyConverter;
+				if (converter != null && converter.TryConvert (value, tType, out newValue)) {
 					return Task.FromResult (new ValueInfo<T> {
-						CustomExpression = info.CustomExpression,
-						Source = info.Source,
-						ValueDescriptor = info.ValueDescriptor,
-						SourceDescriptor = info.SourceDescriptor,
-						Value = info.Value
+						Source = source,
+						Value = (T)newValue,
+						ValueDescriptor = valueDescriptor,
+						SourceDescriptor = sourceDescriptor
 					});
-				} else if (value == null || value is T) {
+				} else if (typeof(T).IsAssignableFrom (valueType)) {
 					return Task.FromResult (new ValueInfo<T> {
-						Value = (T) value,
-						Source = ValueSource.Local
+						Source = source,
+						Value = (T)value,
+						ValueDescriptor = valueDescriptor,
+						SourceDescriptor = sourceDescriptor
 					});
-				} else if (tType.Name == "IReadOnlyList`1") {
-					// start with just supporting ints for now
-					var predefined = (IReadOnlyDictionary<string, int>)property.GetType().GetProperty(nameof(IHavePredefinedValues<int>.PredefinedValues)).GetValue(property);
-
-					var underlyingInfo = value as ValueInfo<int>;
-
-					int realValue;
-					if (value is int i) {
-						realValue = i;
-					} else
-						realValue = ((ValueInfo<int>) value).Value;
-
-					var flags = new List<int> ();
-					foreach (int v in predefined.Values) {
-						if (v == 0 && realValue != 0)
-							continue;
-
-						if ((realValue & v) == v)
-							flags.Add (v);
-					}
-
-					return Task.FromResult ((ValueInfo<T>)Convert.ChangeType (new ValueInfo<IReadOnlyList<int>> {
-						Value = flags,
-						Source = underlyingInfo?.Source ?? ValueSource.Local
-					}, typeof(ValueInfo<T>)));
-				} else {
-					object sourceDescriptor = null, valueDescriptor = null;
-					ValueSource source = ValueSource.Local;
-					Type valueType = value.GetType ();
-					if (valueType.IsConstructedGenericType && valueType.GetGenericTypeDefinition () == typeof(ValueInfo<>)) {
-						source = (ValueSource)valueType.GetProperty ("Source").GetValue (value);
-						sourceDescriptor = valueType.GetProperty (nameof (ValueInfo<T>.SourceDescriptor)).GetValue (value);
-						valueDescriptor = valueType.GetProperty (nameof (ValueInfo<T>.ValueDescriptor)).GetValue (value);
-						value = valueType.GetProperty ("Value").GetValue (value);
-						valueType = valueType.GetGenericArguments ()[0];
-					}
-
-					object newValue;
-					IPropertyConverter converter = property as IPropertyConverter;
-					if (converter != null && converter.TryConvert (value, tType, out newValue)) {
-						return Task.FromResult (new ValueInfo<T> {
-							Source = source,
-							Value = (T)newValue,
-							ValueDescriptor = valueDescriptor,
-							SourceDescriptor = sourceDescriptor
-						});
-					} else if (typeof(T).IsAssignableFrom (valueType)) {
-						return Task.FromResult (new ValueInfo<T> {
-							Source = source,
-							Value = (T)value,
-							ValueDescriptor = valueDescriptor,
-							SourceDescriptor = sourceDescriptor
-						});
-					}
 				}
 			}
 
@@ -331,13 +350,10 @@ namespace Xamarin.PropertyEditing.Tests
 			});
 		}
 
-		public Task<ITypeInfo> GetValueTypeAsync (IPropertyInfo property, PropertyVariation variation = null)
+		public Task<ITypeInfo> GetValueTypeAsync (IPropertyInfo property, PropertyVariationSet variations = null)
 		{
-			if (variation != null)
-				throw new NotImplementedException();
-
 			Type type = property.Type;
-			if (this.values.TryGetValue (property, out object value)) {
+			if (this.values.TryGetValue (property, out IDictionary<PropertyVariationSet, object> propertyValues) && propertyValues.TryGetValue (variations ?? NeutralVariations, out object value)) {
 				Type valueType = value.GetType ();
 				if (valueType.IsConstructedGenericType && valueType.GetGenericTypeDefinition () == typeof(ValueInfo<>)) {
 					value = valueType.GetProperty ("Value").GetValue (value);
@@ -368,7 +384,9 @@ namespace Xamarin.PropertyEditing.Tests
 				.Select (r => "@" + r.Name).ToList ();
 		}
 
-		internal readonly IDictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();
+		private static readonly PropertyVariationSet NeutralVariations = new PropertyVariationSet();
+
+		private readonly IDictionary<IPropertyInfo,IDictionary<PropertyVariationSet, object>> values = new Dictionary<IPropertyInfo, IDictionary<PropertyVariationSet, object>> ();
 		internal readonly IDictionary<IEventInfo, string> events = new Dictionary<IEventInfo, string> ();
 		internal readonly IReadOnlyDictionary<IPropertyInfo, IReadOnlyList<ITypeInfo>> assignableTypes;
 	}

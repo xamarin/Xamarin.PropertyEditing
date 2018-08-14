@@ -110,6 +110,7 @@
     </Compile>
     <Compile Include="PropertyBinding.cs" />
     <Compile Include="PropertyVariation.cs" />
+    <Compile Include="PropertyVariationSet.cs" />
     <Compile Include="Reflection\ReflectionEditorProvider.cs" />
     <Compile Include="Reflection\ReflectionEnumPropertyInfo.cs" />
     <Compile Include="Reflection\ReflectionEventInfo.cs" />
