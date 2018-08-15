@@ -498,6 +498,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(BindingSource), (tp,p,e) => new PropertyViewModel<BindingSource> (tp, p, e) },
 			{ typeof(Resource), (tp,p,e) => new PropertyViewModel<Resource> (tp, p, e) },
 			{ typeof(object), (tp,p,e) => new ObjectPropertyViewModel (tp, p, e) },
+			{ typeof(CommonRatio), (tp, p, e) => new RatioViewModel (tp, p, e) },
 		};
 	}
 }

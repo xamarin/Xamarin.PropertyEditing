@@ -18,8 +18,9 @@ namespace Xamarin.PropertyEditing.Tests
 		: PropertiesViewModelTests<PanelViewModel>
 	{
 		[SetUp]
-		public void Setup ()
+		public override void Setup ()
 		{
+			base.Setup ();
 			SynchronizationContext.SetSynchronizationContext (this.context = new TestContext ());
 		}
 

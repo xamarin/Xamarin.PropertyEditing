@@ -545,4 +545,7 @@
   <data name="Custom" xml:space="preserve">
     <value>Custom</value>
   </data>
+  <data name="InvalidRatio" xml:space="preserve">
+    <value>Invalid Ratio</value>
+  </data>  
 </root>

@@ -56,7 +56,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var grouping = lookup[key];
 			((INotifyCollectionChanged) grouping).CollectionChanged += (sender, args) => {
 				if (args.Action == NotifyCollectionChangedAction.Remove) {
-					if (args.OldItems[0] == value)
+					if ((string)args.OldItems[0] == value)
 						itemRemoved = true;
 				}
 			};

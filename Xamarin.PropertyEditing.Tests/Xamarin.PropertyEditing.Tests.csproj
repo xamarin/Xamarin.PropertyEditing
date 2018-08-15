@@ -119,6 +119,7 @@
     <Compile Include="ValueInfoTests.cs" />
     <Compile Include="MockControls\MockNSControl.cs" />
     <Compile Include="MockControls\MockNSButton.cs" />
+    <Compile Include="RatioViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Manual\BrushEditor.md" />

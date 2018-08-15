@@ -247,6 +247,8 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (PropertyViewModel<Point>), typeof (SystemPointEditorControl)},
 			{typeof (PropertyViewModel<Size>), typeof (SystemSizeEditorControl)},
 			{typeof (PropertyViewModel<Rectangle>), typeof (SystemRectangleEditorControl)},
-			{typeof (BrushPropertyViewModel), typeof (BrushEditorControl) }};
+			{typeof (BrushPropertyViewModel), typeof (BrushEditorControl)},
+			{typeof (RatioViewModel), typeof (RatioEditorControl<CommonRatio>)},
+		};
 	}
 }

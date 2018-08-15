@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -91,42 +92,52 @@
     <Compile Include="Controls\Custom\BasePopOverViewModelControl.cs" />
     <Compile Include="Controls\CustomExpressionView.cs" />
     <Compile Include="Controls\Custom\AutoClosePopOver.cs" />
+    <Compile Include="Controls\RatioEditorControl.cs" />
+    <Compile Include="Controls\Custom\RatioEditor.cs" />
     <Compile Include="Controls\BrushEditorControl.cs" />
-    <Compile Include="Controls\Custom\SolidColorBrushEditor.cs" />
     <Compile Include="Controls\Custom\BrushTabViewController.cs" />
+    <Compile Include="Controls\Custom\CommonBrushLayer.cs" />
+    <Compile Include="Controls\Custom\UnderlinedTabViewController.cs" />
     <Compile Include="Controls\Custom\NotifyingTabViewController.cs" />
-    <Compile Include="Controls\Custom\NotifyingViewController.cs" />
-    <Compile Include="Controls\Custom\SolidColorBrushEditorViewController.cs" />
-    <Compile Include="Controls\Custom\DrawingExtensions.cs" />
-    <Compile Include="Controls\Custom\ResourceBrushViewController.cs" />
-    <Compile Include="Controls\Custom\CommonBrushView.cs" />
-    <Compile Include="Controls\Custom\ColorComponentEditor.cs" />
-    <Compile Include="Controls\Custom\ColorComponentTabViewController.cs" />
-    <Compile Include="Controls\Custom\ColorComponentViewController.cs" />
     <Compile Include="Controls\Custom\NotifyingViewAdaptor.cs" />
+    <Compile Include="Controls\Custom\CommonGradientBrushLayer.cs" />
+    <Compile Include="Controls\Custom\DrawingExtensions.cs" />
+    <Compile Include="Controls\Custom\SolidColorBrushEditorViewController.cs" />
+    <Compile Include="Controls\Custom\EmptyBrushEditorViewController.cs" />
     <Compile Include="Controls\Custom\MaterialBrushEditorViewController.cs" />
+    <Compile Include="Controls\Custom\ResourceBrushViewController.cs" />
+    <Compile Include="Controls\Custom\NotifyingViewController.cs" />
+    <Compile Include="Controls\Custom\ChannelEditor.cs" />
+    <Compile Include="Controls\Custom\ComponentSpinEditor.cs" />
     <Compile Include="Controls\Custom\MaterialView.cs" />
     <Compile Include="Controls\Custom\MaterialColorLayer.cs" />
-    <Compile Include="Controls\Custom\EmptyBrushEditorViewController.cs" />
-    <Compile Include="Controls\Custom\ChannelEditorType.cs" />
-    <Compile Include="Controls\Custom\ChannelEditor.cs" />
-    <Compile Include="Controls\Custom\CommonBrushLayer.cs" />
-    <Compile Include="Controls\Custom\CommonGradientBrushLayer.cs" />
+    <Compile Include="Controls\Custom\ColorEditorView.cs" />
+    <Compile Include="Controls\Custom\SolidColorBrushEditor.cs" />
+    <Compile Include="Controls\Custom\ColorEditorLayer.cs" />
+    <Compile Include="Controls\Custom\ColorComponentTabViewController.cs" />
+    <Compile Include="Controls\Custom\HistoryLayer.cs" />
     <Compile Include="Controls\Custom\HueLayer.cs" />
     <Compile Include="Controls\Custom\ShadeLayer.cs" />
-    <Compile Include="Controls\Custom\HistoryLayer.cs" />
-    <Compile Include="Controls\Custom\ColorEditorView.cs" />
-    <Compile Include="Controls\Custom\ColorEditorLayer.cs" />
-    <Compile Include="Controls\Custom\ComponentSpinEditor.cs" />
-    <Compile Include="Controls\Custom\UnderlinedTabViewController.cs" />
+    <Compile Include="Controls\Custom\ChannelEditorType.cs" />
+    <Compile Include="Controls\Custom\ColorComponentViewController.cs" />
+    <Compile Include="Controls\Custom\ColorComponentEditor.cs" />
     <Compile Include="Controls\Custom\UnderlinedTextField.cs" />
+    <Compile Include="Controls\Custom\CommonBrushView.cs" />
+    <Compile Include="Controls\Custom\UnfocusableButton.cs" />
+    <Compile Include="Controls\Custom\SpinnerButton.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controls\" />
+    <Folder Include="Controls\Custom\" />
+    <Folder Include="Resources\" />
     <Compile Include="Themes\MacThemeManager.cs" />
     <Compile Include="Controls\BaseEditorControl.cs" />
     <Compile Include="Controls\ErrorMessageView.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Controls\" />
+    <Folder Include="Themes\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">
       <Project>{A0B6FE73-D046-4E1C-BA9D-F20683889C5A}</Project>
@@ -200,6 +211,10 @@
     <BundleResource Include="Resources\custom-expression-32%402x.png" />
     <BundleResource Include="Resources\custom-expression-32~dark.png" />
     <BundleResource Include="Resources\custom-expression-32~dark%402x.png" />
+    <BundleResource Include="Resources\stepper-down.png" />
+    <BundleResource Include="Resources\stepper-down%402x.png" />
+    <BundleResource Include="Resources\stepper-up.png" />
+    <BundleResource Include="Resources\stepper-up%402x.png" />
     <BundleResource Include="Resources\property-brush-gradient-16.png" />
     <BundleResource Include="Resources\property-brush-gradient-16%402x.png" />
     <BundleResource Include="Resources\property-brush-gradient-16~dark.png" />
@@ -224,6 +239,14 @@
     <BundleResource Include="Resources\property-brush-none-16~dark~sel%402x.png" />
     <BundleResource Include="Resources\property-brush-none-16~sel.png" />
     <BundleResource Include="Resources\property-brush-none-16~sel%402x.png" />
+    <BundleResource Include="Resources\property-brush-palette-16.png" />
+    <BundleResource Include="Resources\property-brush-palette-16%402x.png" />
+    <BundleResource Include="Resources\property-brush-palette-16~dark.png" />
+    <BundleResource Include="Resources\property-brush-palette-16~dark%402x.png" />
+    <BundleResource Include="Resources\property-brush-palette-16~dark~sel.png" />
+    <BundleResource Include="Resources\property-brush-palette-16~dark~sel%402x.png" />
+    <BundleResource Include="Resources\property-brush-palette-16~sel.png" />
+    <BundleResource Include="Resources\property-brush-palette-16~sel%402x.png" />
     <BundleResource Include="Resources\property-brush-resources-16.png" />
     <BundleResource Include="Resources\property-brush-resources-16%402x.png" />
     <BundleResource Include="Resources\property-brush-resources-16~dark.png" />
@@ -240,14 +263,26 @@
     <BundleResource Include="Resources\property-brush-solid-16~dark~sel%402x.png" />
     <BundleResource Include="Resources\property-brush-solid-16~sel.png" />
     <BundleResource Include="Resources\property-brush-solid-16~sel%402x.png" />
-    <BundleResource Include="Resources\property-brush-palette-16.png" />
-    <BundleResource Include="Resources\property-brush-palette-16%402x.png" />
-    <BundleResource Include="Resources\property-brush-palette-16~dark.png" />
-    <BundleResource Include="Resources\property-brush-palette-16~dark%402x.png" />
-    <BundleResource Include="Resources\property-brush-palette-16~sel.png" />
-    <BundleResource Include="Resources\property-brush-palette-16~sel%402x.png" />
-    <BundleResource Include="Resources\property-brush-palette-16~dark~sel.png" />
-    <BundleResource Include="Resources\property-brush-palette-16~dark~sel%402x.png" />
+    <BundleResource Include="Resources\stepper-down~dark.png" />
+    <BundleResource Include="Resources\stepper-down~dark%402x.png" />
+    <BundleResource Include="Resources\stepper-up~dark.png" />
+    <BundleResource Include="Resources\stepper-up~dark%402x.png" />
+    <BundleResource Include="Resources\stepper-down-focus-blue.png" />
+    <BundleResource Include="Resources\stepper-down-focus-blue%402x.png" />
+    <BundleResource Include="Resources\stepper-down-focus-blue~dark.png" />
+    <BundleResource Include="Resources\stepper-down-focus-blue~dark%402x.png" />
+    <BundleResource Include="Resources\stepper-down-focus-graphite.png" />
+    <BundleResource Include="Resources\stepper-down-focus-graphite%402x.png" />
+    <BundleResource Include="Resources\stepper-down-focus-graphite~dark.png" />
+    <BundleResource Include="Resources\stepper-down-focus-graphite~dark%402x.png" />
+    <BundleResource Include="Resources\stepper-up-focus-blue.png" />
+    <BundleResource Include="Resources\stepper-up-focus-blue%402x.png" />
+    <BundleResource Include="Resources\stepper-up-focus-blue~dark.png" />
+    <BundleResource Include="Resources\stepper-up-focus-blue~dark%402x.png" />
+    <BundleResource Include="Resources\stepper-up-focus-graphite.png" />
+    <BundleResource Include="Resources\stepper-up-focus-graphite%402x.png" />
+    <BundleResource Include="Resources\stepper-up-focus-graphite~dark.png" />
+    <BundleResource Include="Resources\stepper-up-focus-graphite~dark%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>
