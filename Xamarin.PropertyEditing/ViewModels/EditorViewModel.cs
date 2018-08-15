@@ -55,10 +55,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		protected static AsyncWorkQueue AsyncWork
-		{
-			get;
-		} = new AsyncWorkQueue ();
+		protected static AsyncWorkQueue AsyncWork => PropertiesViewModel.AsyncWork;
 
 		public TargetPlatform TargetPlatform
 		{

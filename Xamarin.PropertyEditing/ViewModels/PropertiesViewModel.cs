@@ -480,6 +480,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private Task busyTask;
 
+		protected internal static AsyncWorkQueue AsyncWork
+		{
+			get;
+		} = new AsyncWorkQueue();
+
 		private static readonly Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
 			{ typeof(string), (tp,p,e) => new StringPropertyViewModel (tp, p, e) },
 			{ typeof(bool), (tp,p,e) => new PropertyViewModel<bool?> (tp, p, e) },
