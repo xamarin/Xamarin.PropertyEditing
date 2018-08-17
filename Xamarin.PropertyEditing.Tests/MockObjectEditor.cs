@@ -171,7 +171,7 @@ namespace Xamarin.PropertyEditing.Tests
 				return Task.FromResult<IReadOnlyCollection<PropertyVariationSet>> (new PropertyVariationSet[0]);
 			}
 
-			return Task.FromResult<IReadOnlyCollection<PropertyVariationSet>> (propertyValues.Keys.ToList ());
+			return Task.FromResult<IReadOnlyCollection<PropertyVariationSet>> (propertyValues.Keys.Except (new[] { NeutralVariations }).ToList ());
 		}
 
 		public Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariationSet variations = null)
