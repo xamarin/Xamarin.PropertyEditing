@@ -104,7 +104,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (!String.IsNullOrWhiteSpace (FilterText))
 				props = props.Where (MatchesFilter);
 
-			props = props.OrderBy (vm => vm.Name);
+			props = props.OrderBy (vm => vm);
 
 			Dictionary<string, List<PropertyViewModel>> groupedTypeProperties = null;
 
