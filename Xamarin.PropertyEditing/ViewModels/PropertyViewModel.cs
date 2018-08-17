@@ -22,8 +22,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				DefaultValue = default(TValue);
 		}
 
-		public PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (platform, property, editors)
+		public PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant = null)
+			: base (platform, property, editors, variant)
 		{
 			if (property is IHaveInputModes inputModes) {
 				InputModes = inputModes.InputModes.ToArray ();
@@ -193,7 +193,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				bool disagree = false;
-				ValueInfo<TValue>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<TValue> (Property, Variations)).ToArray ());
+				ValueInfo<TValue>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<TValue> (Property, Variant)).ToArray ());
 				foreach (ValueInfo<TValue> valueInfo in values) {
 					if (currentValue == null)
 						currentValue = valueInfo;
@@ -270,7 +270,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					Task[] setValues = new Task[Editors.Count];
 					int i = 0;
 					foreach (IObjectEditor editor in Editors) {
-						setValues[i++] = editor.SetValueAsync (Property, newValue);
+						setValues[i++] = editor.SetValueAsync (Property, newValue, Variant);
 					}
 
 					await Task.WhenAll (setValues);
@@ -504,13 +504,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal abstract class PropertyViewModel
 		: EditorViewModel, INotifyDataErrorInfo
 	{
-		protected PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant = null)
 			: base (platform, editors)
 		{
 			if (property == null)
 				throw new ArgumentNullException (nameof (property));
 
 			Property = property;
+			Variant = variant;
 			SetupConstraints ();
 
 			this.requestResourceCommand = new RelayCommand (OnRequestResource, CanRequestResource);
@@ -634,21 +635,24 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return (this.error != null) ? new [] { this.error } : Enumerable.Empty<string> ();
 		}
 
-		/// <summary>
-		/// Gets or sets the current <see cref="PropertyVariation"/> that the value is currently looking at.
-		/// </summary>
-		public PropertyVariationSet Variations
+		public PropertyVariationSet Variant
 		{
-			get { return this.variations; }
-			set
-			{
-				if (this.variations == value)
-					return;
+			get;
+		}
 
-				this.variations = value;
-				OnPropertyChanged ();
-				RequestCurrentValueUpdate();
+		public override int CompareTo (EditorViewModel other)
+		{
+			int compare = base.CompareTo (other);
+			if (compare == 0 && other is PropertyViewModel pvm) {
+				if (ReferenceEquals (Variant, pvm.Variant))
+					return 0;
+				if (Variant == null)
+					return -1;
+				if (pvm.Variant == null)
+					return 1;
 			}
+
+			return compare;
 		}
 
 		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
@@ -728,7 +732,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private readonly RelayCommand requestResourceCommand;
 		private ICommand setValueResourceCommand;
 		private HashSet<IPropertyInfo> constraintProperties;
-		private PropertyVariationSet variations;
+		private PropertyVariationSet variant;
 		private string error;
 		private Task<bool> isAvailable;
 

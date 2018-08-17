@@ -458,8 +458,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return GetViewModelCore (property);
 		}
 
-		private PropertyViewModel GetViewModelCore (IPropertyInfo property)
+		private PropertyViewModel GetViewModelCore (IPropertyInfo property, PropertyVariationSet variant = null)
 		{
+			PropertyViewModel vm;
 			Type[] interfaces = property.GetType ().GetInterfaces ();
 
 			Type hasPredefinedValues = interfaces.FirstOrDefault (t => t.IsGenericType && t.GetGenericTypeDefinition () == typeof(IHavePredefinedValues<>));
@@ -469,13 +470,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 					? typeof(CombinablePropertyViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0])
 					: typeof(PredefinedValuesViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0]);
 
-				return (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors);
-			}
+				vm = (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors, variant);
+			} else if (ViewModelMap.TryGetValue (property.Type, out var vmFactory))
+				vm = vmFactory (TargetPlatform, property, this.objEditors, variant);
+			else
+				vm = new StringPropertyViewModel (TargetPlatform, property, this.objEditors, variant);
 
-			if (ViewModelMap.TryGetValue (property.Type, out var vmFactory))
-				return vmFactory (TargetPlatform, property, this.objEditors);
-			
-			return new StringPropertyViewModel (TargetPlatform, property, this.objEditors);
+			return vm;
 		}
 
 		private Task busyTask;
@@ -485,25 +486,25 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		} = new AsyncWorkQueue();
 
-		private static readonly Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
-			{ typeof(string), (tp,p,e) => new StringPropertyViewModel (tp, p, e) },
-			{ typeof(bool), (tp,p,e) => new PropertyViewModel<bool?> (tp, p, e) },
-			{ typeof(float), (tp,p,e) => new NumericPropertyViewModel<float?> (tp, p, e) },
-			{ typeof(double), (tp,p,e) => new NumericPropertyViewModel<double?> (tp, p, e) },
-			{ typeof(int), (tp,p,e) => new NumericPropertyViewModel<int?> (tp, p, e) },
-			{ typeof(long), (tp,p,e) => new NumericPropertyViewModel<long?> (tp, p, e) },
-			{ typeof(CommonSolidBrush), (tp,p,e) => new BrushPropertyViewModel(tp, p, e, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
-			{ typeof(CommonColor), (tp,p,e) => new BrushPropertyViewModel(tp, p, e, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
-			{ typeof(CommonBrush), (tp,p,e) => new BrushPropertyViewModel(tp, p, e) },
-			{ typeof(CommonPoint), (tp,p,e) => new PointPropertyViewModel (tp, p, e) },
-			{ typeof(CommonSize), (tp,p,e) => new SizePropertyViewModel (tp, p, e) },
-			{ typeof(CommonRectangle), (tp,p,e) => new RectanglePropertyViewModel (tp, p, e) },
-			{ typeof(CommonThickness), (tp,p,e) => new ThicknessPropertyViewModel (tp, p, e) },
-			{ typeof(IList), (tp,p,e) => new CollectionPropertyViewModel (tp,p,e) },
-			{ typeof(BindingSource), (tp,p,e) => new PropertyViewModel<BindingSource> (tp, p, e) },
-			{ typeof(Resource), (tp,p,e) => new PropertyViewModel<Resource> (tp, p, e) },
-			{ typeof(object), (tp,p,e) => new ObjectPropertyViewModel (tp, p, e) },
-			{ typeof(CommonRatio), (tp, p, e) => new RatioViewModel (tp, p, e) },
+		private static readonly Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyVariationSet, PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyVariationSet, PropertyViewModel>> {
+			{ typeof(string), (tp,p,e,v) => new StringPropertyViewModel (tp, p, e, v) },
+			{ typeof(bool), (tp,p,e,v) => new PropertyViewModel<bool?> (tp, p, e, v) },
+			{ typeof(float), (tp,p,e,v) => new NumericPropertyViewModel<float?> (tp, p, e, v) },
+			{ typeof(double), (tp,p,e,v) => new NumericPropertyViewModel<double?> (tp, p, e, v) },
+			{ typeof(int), (tp,p,e,v) => new NumericPropertyViewModel<int?> (tp, p, e, v) },
+			{ typeof(long), (tp,p,e,v) => new NumericPropertyViewModel<long?> (tp, p, e, v) },
+			{ typeof(CommonSolidBrush), (tp,p,e,v) => new BrushPropertyViewModel (tp, p, e, v, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
+			{ typeof(CommonColor), (tp,p,e,v) => new BrushPropertyViewModel (tp, p, e, v, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
+			{ typeof(CommonBrush), (tp,p,e,v) => new BrushPropertyViewModel (tp, p, e, v) },
+			{ typeof(CommonPoint), (tp,p,e,v) => new PointPropertyViewModel (tp, p, e, v) },
+			{ typeof(CommonSize), (tp,p,e,v) => new SizePropertyViewModel (tp, p, e, v) },
+			{ typeof(CommonRectangle), (tp,p,e,v) => new RectanglePropertyViewModel (tp, p, e, v) },
+			{ typeof(CommonThickness), (tp,p,e,v) => new ThicknessPropertyViewModel (tp, p, e, v) },
+			{ typeof(IList), (tp,p,e,v) => new CollectionPropertyViewModel (tp, p ,e, v) },
+			{ typeof(BindingSource), (tp,p,e,v) => new PropertyViewModel<BindingSource> (tp, p, e, v) },
+			{ typeof(Resource), (tp,p,e,v) => new PropertyViewModel<Resource> (tp, p, e, v) },
+			{ typeof(object), (tp,p,e,v) => new ObjectPropertyViewModel (tp, p, e, v) },
+			{ typeof(CommonRatio), (tp, p, e, v) => new RatioViewModel (tp, p, e, v) },
 		};
 	}
 }
