@@ -7,6 +7,15 @@ namespace Xamarin.PropertyEditing
 	public class PropertyVariationSet
 		: IList<PropertyVariation>
 	{
+		public PropertyVariationSet (params PropertyVariation[] variations)
+		{
+			if (variations == null)
+				throw new ArgumentNullException (nameof(variations));
+
+			for (int i = 0; i < variations.Length; i++)
+				Add (variations[i]);
+		}
+
 		public int Count => this.variations.Count;
 		bool ICollection<PropertyVariation>.IsReadOnly => false;
 
