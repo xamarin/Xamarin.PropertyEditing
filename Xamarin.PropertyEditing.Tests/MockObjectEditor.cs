@@ -169,7 +169,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			if (value.Source != ValueSource.Local && ValueEvaluator != null) {
 				value.Value = (T)ValueEvaluator (property, value.ValueDescriptor, value.SourceDescriptor);
-			} else if (value.Source == ValueSource.Unset || (property.ValueSources.HasFlag (ValueSources.Default) && Equals (value.Value, default(T))) && value.ValueDescriptor == null) {
+			} else if (value.Source == ValueSource.Unset || (property.ValueSources.HasFlag (ValueSources.Default) && Equals (value.Value, default(T))) && value.ValueDescriptor == null && value.SourceDescriptor == null) {
 				this.values.Remove (property);
 				PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
 				return Task.CompletedTask;
