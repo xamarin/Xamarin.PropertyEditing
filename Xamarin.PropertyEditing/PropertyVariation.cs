@@ -1,60 +1,41 @@
-﻿using System;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Xamarin.PropertyEditing
 {
 	public class PropertyVariation
-		: IEquatable<PropertyVariation>
+		: IList<PropertyVariationOption>
 	{
-		public PropertyVariation (string category, string name)
+		public PropertyVariation (params PropertyVariationOption[] options)
 		{
-			if (category == null)
-				throw new ArgumentNullException (nameof (category));
-			if (name == null)
-				throw new ArgumentNullException (nameof (name));
+			if (options == null)
+				throw new ArgumentNullException (nameof(options));
 
-			Category = category;
-			Name = name;
+			for (int i = 0; i < options.Length; i++)
+				Add (options[i]);
 		}
 
-		public string Category
+		public int Count => this.variations.Count;
+		bool ICollection<PropertyVariationOption>.IsReadOnly => false;
+
+		public PropertyVariationOption this[int index]
 		{
-			get;
+			get => this.variations[index];
+			set => this.variations[index] = value;
 		}
 
-		public string Name
-		{
-			get;
-		}
+		public IEnumerator<PropertyVariationOption> GetEnumerator () => this.variations.GetEnumerator ();
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+		public void Add (PropertyVariationOption item) => this.variations.Add (item);
+		public void Clear () => this.variations.Clear ();
+		public bool Contains (PropertyVariationOption item) => this.variations.Contains (item);
+		public void CopyTo (PropertyVariationOption[] array, int arrayIndex) => this.variations.CopyTo (array, arrayIndex);
+		public bool Remove (PropertyVariationOption item) => this.variations.Remove (item);
+		public int IndexOf (PropertyVariationOption item) => this.variations.IndexOf (item);
+		public void Insert (int index, PropertyVariationOption item) => this.variations.Insert (index, item);
+		public void RemoveAt (int index) => this.variations.RemoveAt (index);
 
-		public virtual bool Equals (PropertyVariation other)
-		{
-			if (ReferenceEquals (null, other))return false;
-			if (ReferenceEquals (this, other)) return true;
-			return String.Equals (Category, other.Category) && String.Equals (Name, other.Name);
-		}
-
-		public override bool Equals (object obj)
-		{
-			if (ReferenceEquals (null, obj)) return false;
-			if (ReferenceEquals (this, obj)) return true;
-			return Equals (obj as PropertyVariation);
-		}
-
-		public override int GetHashCode ()
-		{
-			unchecked {
-				return ((Category != null ? Category.GetHashCode () : 0) * 397) ^ (Name != null ? Name.GetHashCode () : 0);
-			}
-		}
-
-		public static bool operator == (PropertyVariation left, PropertyVariation right)
-		{
-			return Equals (left, right);
-		}
-
-		public static bool operator != (PropertyVariation left, PropertyVariation right)
-		{
-			return !Equals (left, right);
-		}
+		private readonly List<PropertyVariationOption> variations = new List<PropertyVariationOption> ();
 	}
 }

@@ -12,8 +12,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class BrushPropertyViewModel : PropertyViewModel<CommonBrush>
 	{
-		public BrushPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant = null, IEnumerable<CommonBrushType> allowedBrushTypes = null)
-			: base (platform, property, editors, variant)
+		public BrushPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null, IEnumerable<CommonBrushType> allowedBrushTypes = null)
+			: base (platform, property, editors, variation)
 		{
 			if (property.Type.IsAssignableFrom (typeof (CommonSolidBrush))
 				|| property.Type.IsAssignableFrom (typeof (CommonColor))) {

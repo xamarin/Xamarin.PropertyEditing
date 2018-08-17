@@ -26,8 +26,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class ObjectPropertyViewModel
 		: PropertyViewModel<object>
 	{
-		public ObjectPropertyViewModel (TargetPlatform targetPlatform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant = null)
-			: base (targetPlatform, property, editors, variant)
+		public ObjectPropertyViewModel (TargetPlatform targetPlatform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
+			: base (targetPlatform, property, editors, variation)
 		{
 			if (targetPlatform == null)
 				throw new ArgumentNullException (nameof(targetPlatform));

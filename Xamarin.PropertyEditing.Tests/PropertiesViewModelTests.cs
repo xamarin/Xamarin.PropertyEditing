@@ -882,6 +882,359 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (d, Is.Null);
 		}
 
+		[Test]
+		public void SetVariantsAreIncluded ()
+		{
+			var variations = new[] {
+				new PropertyVariationOption ("Width", "Compact"),
+				new PropertyVariationOption ("Width", "Regular"),
+				new PropertyVariationOption ("Gamut", "P3"),
+				new PropertyVariationOption ("Gamut", "sRGB"),
+			};
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.Name).Returns ("Variation");
+			property.SetupGet (p => p.Type).Returns (typeof(string));
+			property.SetupGet (p => p.RealType).Returns (typeof(string).ToTypeInfo ());
+			property.SetupGet (p => p.CanWrite).Returns (true);
+			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
+			property.SetupGet (p => p.Variations).Returns (variations);
+
+			var variants = new[] {
+				new PropertyVariation (variations[0]),
+				new PropertyVariation (variations[0], variations[2])
+			};
+
+			var target = new object();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.TargetType).Returns (typeof(object).ToTypeInfo ());
+			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.Properties).Returns (new[] { property.Object });
+			editor.Setup (oe => oe.GetPropertyVariantsAsync (property.Object)).ReturnsAsync (variants);
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, null)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Any",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[0])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[1])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact+P3",
+					Source = ValueSource.Local
+				});
+			
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target)).ReturnsAsync (editor.Object);
+
+			var vm = CreateVm (provider.Object);
+			vm.SelectedObjects.Add (target);
+
+			var stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList();
+			Assert.That (stringVms.Count, Is.EqualTo (3), "Not including correct number of properties with variants");
+			Assert.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assert.That (stringVms.Count (svm => svm.Variation == variants[0]), Is.EqualTo (1), "Missing variant property");
+			Assert.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
+		}
+
+		[Test]
+		public void SetVariantsAreIncludedMultiSelect ()
+		{
+			var variations = new[] {
+				new PropertyVariationOption ("Width", "Compact"),
+				new PropertyVariationOption ("Width", "Regular"),
+				new PropertyVariationOption ("Gamut", "P3"),
+				new PropertyVariationOption ("Gamut", "sRGB"),
+			};
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.Name).Returns ("Variation");
+			property.SetupGet (p => p.Type).Returns (typeof (string));
+			property.SetupGet (p => p.RealType).Returns (typeof (string).ToTypeInfo ());
+			property.SetupGet (p => p.CanWrite).Returns (true);
+			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
+			property.SetupGet (p => p.Variations).Returns (variations);
+
+			var variants = new[] {
+				new PropertyVariation (variations[0]),
+				new PropertyVariation (variations[0], variations[2])
+			};
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.TargetType).Returns (typeof (object).ToTypeInfo ());
+			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.Properties).Returns (new[] { property.Object });
+			editor.Setup (oe => oe.GetPropertyVariantsAsync (property.Object)).ReturnsAsync (new[] { variants[1] });
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, null)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Any",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[1])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact+P3",
+					Source = ValueSource.Local
+				});
+
+			var target2 = new object ();
+			var editor2 = new Mock<IObjectEditor> ();
+			editor2.SetupGet (oe => oe.TargetType).Returns (typeof (object).ToTypeInfo ());
+			editor2.SetupGet (oe => oe.Target).Returns (target2);
+			editor2.SetupGet (oe => oe.Properties).Returns (new[] { property.Object });
+			editor2.Setup (oe => oe.GetPropertyVariantsAsync (property.Object)).ReturnsAsync (new[] { variants[0] });
+			editor2.Setup (oe => oe.GetValueAsync<string> (property.Object, null)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Any",
+					Source = ValueSource.Local
+				});
+			editor2.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[0])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact",
+					Source = ValueSource.Local
+				});
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target)).ReturnsAsync (editor.Object);
+			provider.Setup (p => p.GetObjectEditorAsync (target2)).ReturnsAsync (editor2.Object);
+
+			var vm = CreateVm (provider.Object);
+			vm.SelectedObjects.Add (target);
+
+			var stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList ();
+			Assume.That (stringVms.Count, Is.EqualTo (2), "Not including correct number of properties with variants");
+			Assume.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assume.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
+
+			vm.SelectedObjects.Add (target2);
+
+			stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList ();
+			Assert.That (stringVms.Count, Is.EqualTo (3), "Not including correct number of properties with variants");
+			var neutralVm = stringVms.FirstOrDefault (svm => svm.Variation == null);
+			Assert.That (neutralVm, Is.Not.Null, "Did not include neutral property");
+			Assert.That (neutralVm.Editors.Count, Is.EqualTo (2), "Did not add second editor to VM");
+
+			var variant1Vm = stringVms.FirstOrDefault (svm => svm.Variation == variants[0]);
+			Assert.That (variant1Vm, Is.Not.Null, "Missing variant property");
+			Assert.That (variant1Vm.Editors.Count, Is.EqualTo (2), "Did not add second editor to VM");
+
+			var variant2Vm = stringVms.FirstOrDefault (svm => svm.Variation == variants[1]);
+			Assert.That (variant2Vm, Is.Not.Null, "Missing variant property");
+			Assert.That (variant2Vm.Editors.Count, Is.EqualTo (2), "Did not add second editor to VM");
+
+			vm.SelectedObjects.Remove (target);
+
+			stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList ();
+			Assert.That (stringVms.Count, Is.EqualTo (2), "Not including correct number of properties with variants after remove");
+			neutralVm = stringVms.FirstOrDefault (svm => svm.Variation == null);
+			Assert.That (neutralVm, Is.Not.Null, "Did not include neutral property");
+			Assert.That (neutralVm.Editors.Count, Is.EqualTo (1), "Did not remove second editor to VM");
+
+			variant1Vm = stringVms.FirstOrDefault (svm => svm.Variation == variants[0]);
+			Assert.That (variant1Vm, Is.Not.Null, "Missing variant property");
+			Assert.That (variant1Vm.Editors.Count, Is.EqualTo (1), "Did not remove second editor to VM");
+
+			variant2Vm = stringVms.FirstOrDefault (svm => svm.Variation == variants[1]);
+			Assert.That (variant2Vm, Is.Null, "Variation property wasn't removed");
+		}
+
+		[Test]
+		public void VariantsRemovedWhenPropertyIs ()
+		{
+			var variations = new[] {
+				new PropertyVariationOption ("Width", "Compact"),
+				new PropertyVariationOption ("Width", "Regular"),
+				new PropertyVariationOption ("Gamut", "P3"),
+				new PropertyVariationOption ("Gamut", "sRGB"),
+			};
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.Name).Returns ("Variation");
+			property.SetupGet (p => p.Type).Returns (typeof (string));
+			property.SetupGet (p => p.RealType).Returns (typeof (string).ToTypeInfo ());
+			property.SetupGet (p => p.CanWrite).Returns (true);
+			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
+			property.SetupGet (p => p.Variations).Returns (variations);
+
+			var properties = new ObservableCollection<IPropertyInfo> { property.Object };
+
+			var variants = new[] {
+				new PropertyVariation (variations[0]),
+				new PropertyVariation (variations[0], variations[2])
+			};
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.TargetType).Returns (typeof (object).ToTypeInfo ());
+			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.Properties).Returns (properties);
+			editor.Setup (oe => oe.GetPropertyVariantsAsync (property.Object)).ReturnsAsync (variants);
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, null)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Any",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[0])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[1])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact+P3",
+					Source = ValueSource.Local
+				});
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target)).ReturnsAsync (editor.Object);
+
+			var vm = CreateVm (provider.Object);
+			vm.SelectedObjects.Add (target);
+
+			var stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList ();
+			Assume.That (stringVms.Count, Is.EqualTo (3), "Not including correct number of properties with variants");
+			Assume.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assume.That (stringVms.Count (svm => svm.Variation == variants[0]), Is.EqualTo (1), "Missing variant property");
+			Assume.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
+
+			properties.RemoveAt (0);
+			Assert.That (vm.Properties, Is.Empty);
+		}
+
+		[Test]
+		public void VariantsAddedWhenPropertyIs ()
+		{
+			var variations = new[] {
+				new PropertyVariationOption ("Width", "Compact"),
+				new PropertyVariationOption ("Width", "Regular"),
+				new PropertyVariationOption ("Gamut", "P3"),
+				new PropertyVariationOption ("Gamut", "sRGB"),
+			};
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.Name).Returns ("Variation");
+			property.SetupGet (p => p.Type).Returns (typeof (string));
+			property.SetupGet (p => p.RealType).Returns (typeof (string).ToTypeInfo ());
+			property.SetupGet (p => p.CanWrite).Returns (true);
+			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
+			property.SetupGet (p => p.Variations).Returns (variations);
+
+			var properties = new ObservableCollection<IPropertyInfo>();
+
+			var variants = new[] {
+				new PropertyVariation (variations[0]),
+				new PropertyVariation (variations[0], variations[2])
+			};
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.TargetType).Returns (typeof (object).ToTypeInfo ());
+			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.Properties).Returns (properties);
+			editor.Setup (oe => oe.GetPropertyVariantsAsync (property.Object)).ReturnsAsync (variants);
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, null)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Any",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[0])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[1])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact+P3",
+					Source = ValueSource.Local
+				});
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target)).ReturnsAsync (editor.Object);
+
+			var vm = CreateVm (provider.Object);
+			vm.SelectedObjects.Add (target);
+			Assume.That (vm.Properties, Is.Empty);
+
+			properties.Add (property.Object);
+
+			var stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList ();
+			Assert.That (stringVms.Count, Is.EqualTo (3), "Not including correct number of properties with variants");
+			Assert.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assert.That (stringVms.Count (svm => svm.Variation == variants[0]), Is.EqualTo (1), "Missing variant property");
+			Assert.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
+		}
+
+		[Test]
+		public void VariantsUpdateWhenPropertyReplaced ()
+		{
+			var variations = new[] {
+				new PropertyVariationOption ("Width", "Compact"),
+				new PropertyVariationOption ("Width", "Regular"),
+				new PropertyVariationOption ("Gamut", "P3"),
+				new PropertyVariationOption ("Gamut", "sRGB"),
+			};
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.Name).Returns ("Variation");
+			property.SetupGet (p => p.Type).Returns (typeof (string));
+			property.SetupGet (p => p.RealType).Returns (typeof (string).ToTypeInfo ());
+			property.SetupGet (p => p.CanWrite).Returns (true);
+			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
+			property.SetupGet (p => p.Variations).Returns (variations);
+
+			var properties = new ObservableCollection<IPropertyInfo> { property.Object };
+
+			var secondSet = new PropertyVariation (variations[0], variations[2]);
+			var variants = new List<PropertyVariation> {
+				new PropertyVariation (variations[0]),
+			};
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.TargetType).Returns (typeof (object).ToTypeInfo ());
+			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.Properties).Returns (properties);
+			editor.Setup (oe => oe.GetPropertyVariantsAsync (property.Object)).ReturnsAsync (() => variants);
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, null)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Any",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[0])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, secondSet)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact+P3",
+					Source = ValueSource.Local
+				});
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target)).ReturnsAsync (editor.Object);
+
+			var vm = CreateVm (provider.Object);
+			vm.SelectedObjects.Add (target);
+
+			var stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList ();
+			Assume.That (stringVms.Count, Is.EqualTo (2), "Not including correct number of properties with variants");
+			Assume.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assume.That (stringVms.Count (svm => svm.Variation == variants[0]), Is.EqualTo (1), "Missing variant property");
+
+			variants.Add (secondSet);
+
+			properties[0] = property.Object;
+			stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList ();
+			Assert.That (stringVms.Count, Is.EqualTo (3), "Not including correct number of properties with variants");
+			Assert.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assert.That (stringVms.Count (svm => svm.Variation == variants[0]), Is.EqualTo (1), "Missing variant property");
+			Assert.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
+		}
+
 		protected TViewModel CreateVm (IEditorProvider provider)
 		{
 			return CreateVm (new TargetPlatform (provider));

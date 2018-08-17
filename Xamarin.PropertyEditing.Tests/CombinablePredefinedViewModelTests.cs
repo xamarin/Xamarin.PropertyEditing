@@ -125,7 +125,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			ValueInfo<IReadOnlyList<int>> setValue = null;
 			editorMock.Setup (oe => oe.SetValueAsync (p.Object, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
-				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariationSet> ((pi, v, variation) => {
+				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((pi, v, variation) => {
 					setValue = v;
 					editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (v);
 
@@ -172,7 +172,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			ValueInfo<IReadOnlyList<int>> setValue = null;
 			editorMock.Setup (oe => oe.SetValueAsync (p.Object, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
-				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariationSet> ((pi, v, variation) => {
+				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((pi, v, variation) => {
 					setValue = v;
 					editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (v);
 
@@ -280,7 +280,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			ValueInfo<IReadOnlyList<int>> setValue = null;
 			editorMock.Setup (oe => oe.SetValueAsync (p.Object, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
-				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariationSet> ((pi, v, variation) => {
+				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((pi, v, variation) => {
 					setValue = v;
 					editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (v);
 
@@ -332,7 +332,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			ValueInfo<IReadOnlyList<int>> setValue = null;
 			editorMock.Setup (oe => oe.SetValueAsync (p.Object, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
-				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariationSet> ((pi, v, variation) => {
+				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((pi, v, variation) => {
 					setValue = v;
 					editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (v);
 
@@ -426,7 +426,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			ValueInfo<IReadOnlyList<int>> setValue = null;
 			editorMock.Setup (oe => oe.SetValueAsync (p.Object, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
-				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariationSet> ((pi, v, variation) => {
+				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((pi, v, variation) => {
 					setValue = v;
 					editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (v);
 
@@ -473,7 +473,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			ValueInfo<IReadOnlyList<int>> setValue = null;
 			editorMock.Setup (oe => oe.SetValueAsync (p.Object, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
-				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariationSet> ((pi, v, variation) => {
+				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((pi, v, variation) => {
 					setValue = v;
 					editorMock.Setup (e => e.GetValueAsync<IReadOnlyList<int>> (p.Object, null)).ReturnsAsync (v);
 
@@ -597,7 +597,7 @@ namespace Xamarin.PropertyEditing.Tests
 			};
 
 			editorMock.Setup (oe => oe.SetValueAsync (property, It.IsAny<ValueInfo<IReadOnlyList<int>>> (), null))
-				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariationSet> ((p, vi, v) => {
+				.Callback<IPropertyInfo, ValueInfo<IReadOnlyList<int>>, PropertyVariation> ((p, vi, v) => {
 					valueInfo = vi;
 					editorMock.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property));
 				})

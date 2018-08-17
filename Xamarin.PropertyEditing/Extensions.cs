@@ -155,5 +155,10 @@ namespace Xamarin.PropertyEditing
 			var asm = type.Assembly.GetName ().Name;
 			return new TypeInfo (new AssemblyInfo (asm, isRelevant), type.Namespace, type.Name);
 		}
+
+		public static bool HasVariations (this IPropertyInfo property)
+		{
+			return (property.Variations?.Count ?? 0) > 0;
+		}
 	}
 }

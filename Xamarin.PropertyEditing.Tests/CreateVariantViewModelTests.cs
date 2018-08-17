@@ -15,18 +15,18 @@ namespace Xamarin.PropertyEditing.Tests
 		[Test]
 		public void AnySelectedByDefault ()
 		{
-			var property = GetTestProperty (out PropertyVariation[] variations);
+			var property = GetTestProperty (out PropertyVariationOption[] variations);
 			var vm = new VariationViewModel ("Width", new[] { variations[0], variations[1] });
-			Assert.That (vm.SelectedVariation, Is.Not.Null);
+			Assert.That (vm.SelectedOption, Is.Not.Null);
 			Assert.That (vm.IsAnySelected, Is.True);
 		}
 
 		[Test]
 		public void IsAnySelectedUpdates ()
 		{
-			var property = GetTestProperty (out PropertyVariation[] variations);
+			var property = GetTestProperty (out PropertyVariationOption[] variations);
 			var vm = new VariationViewModel ("Width", new[] { variations[0], variations[1] });
-			Assume.That (vm.SelectedVariation, Is.Not.Null);
+			Assume.That (vm.SelectedOption, Is.Not.Null);
 			Assume.That (vm.IsAnySelected, Is.True);
 
 			bool changed = false;
@@ -35,12 +35,12 @@ namespace Xamarin.PropertyEditing.Tests
 					changed = true;
 			};
 
-			vm.SelectedVariation = variations[0];
+			vm.SelectedOption = variations[0];
 			Assert.That (vm.IsAnySelected, Is.False, "IsAnySelected did not switch to false");
 			Assert.That (changed, Is.True, "PropertyChanged did not fire for IsAnySelected");
 
 			changed = false;
-			vm.SelectedVariation = vm.Variations[0];
+			vm.SelectedOption = vm.Variations[0];
 			Assert.That (vm.IsAnySelected, Is.True, "IsAnySelected did not switch to back to true");
 			Assert.That (changed, Is.True, "PropertyChanged did not fire for IsAnySelected");
 		}
@@ -48,9 +48,9 @@ namespace Xamarin.PropertyEditing.Tests
 		[Test]
 		public void VariantCategories ()
 		{
-			var property = GetTestProperty (out PropertyVariation[] variations);
+			var property = GetTestProperty (out PropertyVariationOption[] variations);
 			var categories = variations.Select (v => v.Category).Distinct ().ToArray();
-			var vm = new CreateVariantViewModel (property.Object);
+			var vm = new CreateVariationViewModel (property.Object);
 			Assert.That (vm.VariationCategories.Count, Is.EqualTo (categories.Length));
 			CollectionAssert.AreEqual (vm.VariationCategories.Select (v => v.Name), categories);
 		}
@@ -58,15 +58,15 @@ namespace Xamarin.PropertyEditing.Tests
 		[Test]
 		public void WhenAllAnyCommandDisabledEnabled ()
 		{
-			var property = GetTestProperty (out PropertyVariation[] variations);
-			var vm = new CreateVariantViewModel (property.Object);
+			var property = GetTestProperty (out PropertyVariationOption[] variations);
+			var vm = new CreateVariationViewModel (property.Object);
 			Assume.That (vm.VariationCategories.All (vvm => vvm.IsAnySelected), Is.True);
 			Assert.That (vm.CreateVariantCommand.CanExecute (null), Is.False);
 
 			bool changed = false;
 			vm.CreateVariantCommand.CanExecuteChanged += (sender, args) => changed = true;
 
-			vm.VariationCategories[0].SelectedVariation = vm.VariationCategories[0].Variations[1];
+			vm.VariationCategories[0].SelectedOption = vm.VariationCategories[0].Variations[1];
 			Assert.That (changed, Is.True, "CanExecuteChanged did not fire");
 			Assert.That (vm.CreateVariantCommand.CanExecute (null), Is.True);
 		}
@@ -74,44 +74,44 @@ namespace Xamarin.PropertyEditing.Tests
 		[Test]
 		public void CreateVariant ()
 		{
-			var property = GetTestProperty (out PropertyVariation[] variations);
-			var vm = new CreateVariantViewModel (property.Object);
+			var property = GetTestProperty (out PropertyVariationOption[] variations);
+			var vm = new CreateVariationViewModel (property.Object);
 			Assume.That (vm.Variant, Is.Null);
 
 			bool changed = false;
 			vm.PropertyChanged += (sender, args) => {
-				if (args.PropertyName == nameof (CreateVariantViewModel.Variant))
+				if (args.PropertyName == nameof (CreateVariationViewModel.Variant))
 					changed = true;
 			};
 
-			vm.VariationCategories[0].SelectedVariation = vm.VariationCategories[0].Variations[1];
-			vm.VariationCategories[1].SelectedVariation = vm.VariationCategories[1].Variations[2];
+			vm.VariationCategories[0].SelectedOption = vm.VariationCategories[0].Variations[1];
+			vm.VariationCategories[1].SelectedOption = vm.VariationCategories[1].Variations[2];
 			vm.CreateVariantCommand.Execute (null);
 
-			Assert.That (changed, Is.True, "Variant did not fire PropertyChanged");
+			Assert.That (changed, Is.True, "Variation did not fire PropertyChanged");
 			Assert.That (vm.Variant, Is.Not.Null);
 			Assert.That (vm.Variant.Count, Is.EqualTo (2));
 			Assert.That (vm.Variant, Contains.Item (vm.VariationCategories[0].Variations[1]));
 			Assert.That (vm.Variant, Contains.Item (vm.VariationCategories[1].Variations[2]));
 		}
 
-		private Mock<IPropertyInfo> GetTestProperty (out PropertyVariation[] variations)
+		private Mock<IPropertyInfo> GetTestProperty (out PropertyVariationOption[] options)
 		{
-			variations = new[] {
-				new PropertyVariation ("Width", "Compact"),
-				new PropertyVariation ("Width", "Regular"),
-				new PropertyVariation ("Gamut", "P3"),
-				new PropertyVariation ("Gamut", "sRGB"),
-				new PropertyVariation ("Other", "Other"),
+			options = new[] {
+				new PropertyVariationOption ("Width", "Compact"),
+				new PropertyVariationOption ("Width", "Regular"),
+				new PropertyVariationOption ("Gamut", "P3"),
+				new PropertyVariationOption ("Gamut", "sRGB"),
+				new PropertyVariationOption ("Other", "Other"),
 			};
 
 			var property = new Mock<IPropertyInfo> ();
-			property.SetupGet (p => p.Name).Returns ("Variant");
+			property.SetupGet (p => p.Name).Returns ("Variation");
 			property.SetupGet (p => p.Type).Returns (typeof (string));
 			property.SetupGet (p => p.RealType).Returns (typeof (string).ToTypeInfo ());
 			property.SetupGet (p => p.CanWrite).Returns (true);
 			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
-			property.SetupGet (p => p.Variations).Returns (variations);
+			property.SetupGet (p => p.Variations).Returns (options);
 			return property;
 		}
 	}

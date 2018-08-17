@@ -51,17 +51,22 @@ namespace Xamarin.PropertyEditing.Tests
 			return this.editor.GetAssignableTypesAsync (property, childTypes);
 		}
 
-		public Task<IReadOnlyCollection<PropertyVariationSet>> GetPropertyVariantsAsync (IPropertyInfo property)
+		public Task<IReadOnlyCollection<PropertyVariation>> GetPropertyVariantsAsync (IPropertyInfo property)
 		{
 			throw new NotSupportedException();
 		}
 
-		public Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariationSet variations = null)
+		public Task RemovePropertyVariantAsync (IPropertyInfo property, PropertyVariation variant)
+		{
+			throw new NotSupportedException();
+		}
+
+		public Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variations = null)
 		{
 			return this.editor.SetValueAsync (property, value, variations);
 		}
 
-		public Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariationSet variations = null)
+		public Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variations = null)
 		{
 			return this.editor.GetValueAsync<T> (property, variations);
 		}

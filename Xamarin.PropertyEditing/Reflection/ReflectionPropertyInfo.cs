@@ -49,7 +49,7 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public ValueSources ValueSources => ValueSources.Local;
 
-		public IReadOnlyList<PropertyVariation> Variations => EmtpyVariations;
+		public IReadOnlyList<PropertyVariationOption> Variations => EmtpyVariationOptions;
 
 		public IReadOnlyList<IAvailabilityConstraint> AvailabilityConstraints => EmptyConstraints;
 
@@ -138,7 +138,7 @@ namespace Xamarin.PropertyEditing.Reflection
 		private readonly PropertyInfo propertyInfo;
 
 		private static readonly IAvailabilityConstraint[] EmptyConstraints = new IAvailabilityConstraint[0];
-		private static readonly PropertyVariation[] EmtpyVariations = new PropertyVariation[0];
+		private static readonly PropertyVariationOption[] EmtpyVariationOptions = new PropertyVariationOption[0];
 
 		private bool TryConvertToValue<T> (object value, out T converted)
 		{

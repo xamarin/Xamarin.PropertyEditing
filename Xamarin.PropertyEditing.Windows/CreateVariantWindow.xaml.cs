@@ -11,12 +11,12 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public CreateVariantWindow (IEnumerable<ResourceDictionary> merged, IPropertyInfo property)
 		{
-			DataContext = new CreateVariantViewModel (property);
+			DataContext = new CreateVariationViewModel (property);
 			InitializeComponent ();
 			Resources.MergedDictionaries.AddItems (merged);
 		}
 
-		internal static PropertyVariationSet RequestVariant (FrameworkElement owner, IPropertyInfo property)
+		internal static PropertyVariation RequestVariant (FrameworkElement owner, IPropertyInfo property)
 		{
 			Window hostWindow = Window.GetWindow (owner);
 			var w = new CreateVariantWindow (owner.Resources.MergedDictionaries, property) {
@@ -26,7 +26,7 @@ namespace Xamarin.PropertyEditing.Windows
 			if (!w.ShowDialog () ?? false)
 				return null;
 
-			var vm = (CreateVariantViewModel)w.DataContext;
+			var vm = (CreateVariationViewModel)w.DataContext;
 			return vm.Variant;
 		}
 

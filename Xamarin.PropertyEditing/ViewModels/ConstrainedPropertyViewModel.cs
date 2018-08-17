@@ -20,8 +20,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			NullableConverter = new NullableConverter (t);
 		}
 
-		protected ConstrainedPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant = null)
-			: base (platform, property, editors, variant)
+		protected ConstrainedPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
+			: base (platform, property, editors, variation)
 		{
 			this.selfConstraint = property as ISelfConstrainedPropertyInfo<T>;
 			this.clampProperties = property as IClampedPropertyInfo;

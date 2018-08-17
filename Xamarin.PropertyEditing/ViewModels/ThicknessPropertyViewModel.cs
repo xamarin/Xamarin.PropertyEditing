@@ -10,8 +10,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class ThicknessPropertyViewModel
 		:PropertyViewModel<CommonThickness>
 	{
-		public ThicknessPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant = null)
-			: base (platform, property, editors, variant)
+		public ThicknessPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
+			: base (platform, property, editors, variation)
 		{
 		}
 

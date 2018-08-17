@@ -2,10 +2,10 @@ using System;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
-	internal class CreateVariantEventArgs
+	internal class CreateVariationEventArgs
 		:  EventArgs
 	{
-		public PropertyVariationSet Variant
+		public PropertyVariation Variation
 		{
 			get;
 			set;

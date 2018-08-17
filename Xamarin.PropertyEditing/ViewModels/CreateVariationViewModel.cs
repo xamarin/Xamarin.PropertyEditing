@@ -10,7 +10,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class VariationViewModel
 		: NotifyingObject
 	{
-		public VariationViewModel (string category, IEnumerable<PropertyVariation> variations)
+		public VariationViewModel (string category, IEnumerable<PropertyVariationOption> variations)
 		{
 			if (category == null)
 				throw new ArgumentNullException (nameof(category));
@@ -19,10 +19,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			Name = category;
 			var vs = variations.ToList ();
-			vs.Insert (0, new PropertyVariation (category, Resources.Any));
+			vs.Insert (0, new PropertyVariationOption (category, Resources.Any));
 			Variations = vs;
 
-			this.selectedVariation = vs[0];
+			this.selectedOption = vs[0];
 		}
 
 		public string Name
@@ -30,34 +30,34 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		public IReadOnlyList<PropertyVariation> Variations
+		public IReadOnlyList<PropertyVariationOption> Variations
 		{
 			get;
 		}
 
-		public bool IsAnySelected => SelectedVariation == Variations[0];
+		public bool IsAnySelected => SelectedOption == Variations[0];
 
-		public PropertyVariation SelectedVariation
+		public PropertyVariationOption SelectedOption
 		{
-			get { return this.selectedVariation; }
+			get { return this.selectedOption; }
 			set
 			{
-				if (this.selectedVariation == value)
+				if (this.selectedOption == value)
 					return;
 
-				this.selectedVariation = value;
+				this.selectedOption = value;
 				OnPropertyChanged();
 				OnPropertyChanged (nameof(IsAnySelected));
 			}
 		}
 
-		private PropertyVariation selectedVariation;
+		private PropertyVariationOption selectedOption;
 	}
 
-	internal class CreateVariantViewModel
+	internal class CreateVariationViewModel
 		: NotifyingObject
 	{
-		public CreateVariantViewModel (IPropertyInfo property)
+		public CreateVariationViewModel (IPropertyInfo property)
 		{
 			if (property == null)
 				throw new ArgumentNullException (nameof (property));
@@ -85,7 +85,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		public PropertyVariationSet Variant
+		public PropertyVariation Variant
 		{
 			get { return this.variant; }
 			private set
@@ -99,19 +99,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private readonly IPropertyInfo property;
-		private PropertyVariationSet variant;
+		private PropertyVariation variant;
 
 		private void OnCategoryPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == nameof (VariationViewModel.SelectedVariation))
+			if (e.PropertyName == nameof (VariationViewModel.SelectedOption))
 				((RelayCommand)CreateVariantCommand).ChangeCanExecute ();
 		}
 
 		private void OnCreateVariant ()
 		{
-			Variant = new PropertyVariationSet (VariationCategories
+			Variant = new PropertyVariation (VariationCategories
 				.Where (vm => !vm.IsAnySelected)
-				.Select (vm => vm.SelectedVariation)
+				.Select (vm => vm.SelectedOption)
 				.ToArray ());
 		}
 

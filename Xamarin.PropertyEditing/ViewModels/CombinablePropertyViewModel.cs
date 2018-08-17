@@ -44,8 +44,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class CombinablePropertyViewModel<TValue>
 		: PropertyViewModel<TValue>
 	{
-		public CombinablePropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant = null)
-			: base (platform, property, editors, variant)
+		public CombinablePropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
+			: base (platform, property, editors, variation)
 		{
 			this.predefinedValues = property as IHavePredefinedValues<TValue>;
 			if (this.predefinedValues == null)
@@ -80,7 +80,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				var newValues = new Dictionary<string, bool?> (this.predefinedValues.PredefinedValues.Count);
 
-				ValueInfo<IReadOnlyList<TValue>>[] values = await Task.WhenAll (Editors.Select (ed => ed.GetValueAsync<IReadOnlyList<TValue>> (Property, Variant)).ToArray ());
+				ValueInfo<IReadOnlyList<TValue>>[] values = await Task.WhenAll (Editors.Select (ed => ed.GetValueAsync<IReadOnlyList<TValue>> (Property, Variation)).ToArray ());
 				foreach (ValueInfo<IReadOnlyList<TValue>> valueInfo in values) {
 					if (valueInfo == null || valueInfo.Value == null || valueInfo.Source == ValueSource.Unset) {
 						foreach (var kvp in this.predefinedValues.PredefinedValues) {
@@ -138,7 +138,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					var currentChoices = Choices.ToDictionary (c => c, c => c.IsFlagged);
 
 					foreach (IObjectEditor editor in Editors) {
-						ValueInfo<IReadOnlyList<TValue>> value = await editor.GetValueAsync<IReadOnlyList<TValue>> (Property, Variant);
+						ValueInfo<IReadOnlyList<TValue>> value = await editor.GetValueAsync<IReadOnlyList<TValue>> (Property, Variation);
 						HashSet<TValue> current;
 						if (value.Value == null || value.Source == ValueSource.Unset)
 							current = new HashSet<TValue> ();

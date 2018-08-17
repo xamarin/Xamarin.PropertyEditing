@@ -8,8 +8,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class NumericPropertyViewModel<T>
 		: ConstrainedPropertyViewModel<T>
 	{
-		public NumericPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant = null)
-			: base (platform, property, editors, variant)
+		public NumericPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
+			: base (platform, property, editors, variation)
 		{
 			this.raiseValue = new RelayCommand (() => {
 				Value = Numeric<T>.Increment (Value);

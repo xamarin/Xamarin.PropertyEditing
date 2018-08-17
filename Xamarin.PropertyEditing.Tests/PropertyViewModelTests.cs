@@ -1396,11 +1396,40 @@ namespace Xamarin.PropertyEditing.Tests
 		public void HasVariations ()
 		{
 			var mockProperty = GetPropertyMock ();
-			mockProperty.SetupGet (v => v.Variations).Returns (new[] { new PropertyVariation ("Category", "Value") });
+			mockProperty.SetupGet (v => v.Variations).Returns (new[] { new PropertyVariationOption ("Category", "Value") });
 			var editor = new MockObjectEditor (mockProperty.Object);
 
 			var vm = GetViewModel (mockProperty.Object, editor);
 			Assert.That (vm.HasVariations, Is.True);
+		}
+
+		[Test]
+		public void CreateBinding ()
+		{
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local | ValueSources.Binding);
+
+			var editor = new Mock<IObjectEditor> ();
+			SetupPropertySetAndGet (editor, mockProperty.Object);
+
+			var vm = GetViewModel (mockProperty.Object, editor.Object);
+
+			var bindObject = new object ();
+
+			bool requested = false;
+			vm.CreateBindingRequested += (o, e) => {
+				requested = true;
+				e.BindingObject = bindObject;
+			};
+
+			vm.RequestCreateBindingCommand.Execute (null);
+			Assert.That (requested, Is.True, "Binding wasn't requested");
+			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Binding));
+
+			editor.Verify (oe => oe.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Binding,
+				SourceDescriptor = bindObject
+			}, It.IsAny<PropertyVariation> ()));
 		}
 
 		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
@@ -1435,7 +1464,7 @@ namespace Xamarin.PropertyEditing.Tests
 			};
 
 			editorMock.Setup (oe => oe.SetValueAsync (property, It.IsAny<ValueInfo<TValue>> (), null))
-				.Callback<IPropertyInfo, ValueInfo<TValue>, PropertyVariationSet> ((p, vi, v) => {
+				.Callback<IPropertyInfo, ValueInfo<TValue>, PropertyVariation> ((p, vi, v) => {
 					valueInfo = vi;
 					editorMock.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property));
 				})
@@ -1542,4 +1571,3 @@ namespace Xamarin.PropertyEditing.Tests
 		private TestContext syncContext;
 	}
 }
- 

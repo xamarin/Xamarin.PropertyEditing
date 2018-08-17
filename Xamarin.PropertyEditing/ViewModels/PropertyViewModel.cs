@@ -22,8 +22,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				DefaultValue = default(TValue);
 		}
 
-		public PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant = null)
-			: base (platform, property, editors, variant)
+		public PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
+			: base (platform, property, editors, variation)
 		{
 			if (property is IHaveInputModes inputModes) {
 				InputModes = inputModes.InputModes.ToArray ();
@@ -36,6 +36,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			RequestCreateBindingCommand = new RelayCommand (OnCreateBinding, CanCreateBinding);
 			RequestCreateResourceCommand = new RelayCommand (OnCreateResource, CanCreateResource);
+			RequestCreateVariationCommand = new RelayCommand (OnCreateVariation, CanCreateVariation);
+			RemoveVariationCommand = new RelayCommand (OnRemoveVariant, () => Variation != null);
 			NavigateToValueSourceCommand = new RelayCommand (OnNavigateToSource, CanNavigateToSource);
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
 			ClearValueCommand = new RelayCommand (OnClearValue, CanClearValue);
@@ -193,7 +195,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				bool disagree = false;
-				ValueInfo<TValue>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<TValue> (Property, Variant)).ToArray ());
+				ValueInfo<TValue>[] values = await Task.WhenAll (Editors.Where (e => e != null).Select (ed => ed.GetValueAsync<TValue> (Property, Variation)).ToArray ());
 				foreach (ValueInfo<TValue> valueInfo in values) {
 					if (currentValue == null)
 						currentValue = valueInfo;
@@ -252,25 +254,30 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return args;
 		}
 
-		protected async Task SetValueAsync (ValueInfo<TValue> newValue)
+		protected Task SetValueAsync (ValueInfo<TValue> newValue)
 		{
 			if (this.value == newValue)
-				return;
+				return Task.CompletedTask;
 
 			SetError (null);
 
 			// We may need to be more careful about value sources here
 			if (this.validator != null && !this.validator.IsValid (newValue.Value)) {
 				SignalValueChange(); // Ensure UI refresh its own value
-				return;
+				return Task.CompletedTask;
 			}
 
+			return SetValueAsyncCore (newValue);
+		}
+
+		private async Task SetValueAsyncCore (ValueInfo<TValue> newValue, PropertyVariation variant = null)
+		{
 			using (await AsyncWork.RequestAsyncWork (this)) {
 				try {
 					Task[] setValues = new Task[Editors.Count];
 					int i = 0;
 					foreach (IObjectEditor editor in Editors) {
-						setValues[i++] = editor.SetValueAsync (Property, newValue, Variant);
+						setValues[i++] = editor.SetValueAsync (Property, newValue, variant ?? Variation);
 					}
 
 					await Task.WhenAll (setValues);
@@ -283,7 +290,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 						ex = aggregate.InnerExceptions[0];
 					}
 
-					SetError (ex.ToString ());
+					if (variant == null)
+						SetError (ex.ToString ());
+					else
+						throw;
 				}
 			}
 		}
@@ -431,7 +441,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (e.Source == null)
 				return;
 
-			Resource resource =  await TargetPlatform.ResourceProvider.CreateResourceAsync (e.Source, e.Name, Value);
+			Resource resource = await TargetPlatform.ResourceProvider.CreateResourceAsync (e.Source, e.Name, Value);
 			OnSetValueToResource (resource);
 		}
 
@@ -498,20 +508,51 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		private bool CanCreateVariation ()
+		{
+			return HasVariations;
+		}
+
+		private async void OnCreateVariation ()
+		{
+			var args = RequestCreateVariant ();
+			if (args.Variation == null)
+				return;
+
+			try {
+				await SetValueAsyncCore (CurrentValue, args.Variation);
+				OnVariationsChanged ();
+			} catch (Exception ex) {
+				throw; // TODO: Display
+			}
+		}
+
+		private async void OnRemoveVariant ()
+		{
+			if (Variation == null)
+				throw new InvalidOperationException();
+
+			using (await AsyncWork.RequestAsyncWork (this)) {
+				await Task.WhenAll (Editors.Select (oe => oe.RemovePropertyVariantAsync (Property, Variation)));
+			}
+
+			OnVariationsChanged ();
+		}
+
 		private static TValue DefaultValue;
 	}
 
 	internal abstract class PropertyViewModel
 		: EditorViewModel, INotifyDataErrorInfo
 	{
-		protected PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant = null)
+		protected PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
 			: base (platform, editors)
 		{
 			if (property == null)
 				throw new ArgumentNullException (nameof (property));
 
 			Property = property;
-			Variant = variant;
+			Variation = variation;
 			SetupConstraints ();
 
 			this.requestResourceCommand = new RelayCommand (OnRequestResource, CanRequestResource);
@@ -520,6 +561,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public event EventHandler<ResourceRequestedEventArgs> ResourceRequested;
 		public event EventHandler<CreateResourceRequestedEventArgs> CreateResourceRequested;
 		public event EventHandler<CreateBindingRequestedEventArgs> CreateBindingRequested;
+		public event EventHandler<CreateVariationEventArgs> CreateVariationRequested;
+		public event EventHandler VariationsChanged;
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
 		public IPropertyInfo Property
@@ -562,7 +605,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return Property.CanWrite && TargetPlatform.BindingProvider != null && Property.ValueSources.HasFlag (ValueSources.Binding); }
 		}
 
-		public bool HasVariations => (Property.Variations?.Count ?? 0) > 0;
+		public bool HasVariations => Property.HasVariations();
 
 		public abstract Resource Resource
 		{
@@ -621,6 +664,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 			protected set;
 		}
 
+		public ICommand RequestCreateVariationCommand
+		{
+			get;
+			protected set;
+		}
+
+		public ICommand RemoveVariationCommand
+		{
+			get;
+			protected set;
+		}
+
 		public virtual bool SupportsValueSourceNavigation => false;
 
 		public abstract ValueSource ValueSource
@@ -635,7 +690,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return (this.error != null) ? new [] { this.error } : Enumerable.Empty<string> ();
 		}
 
-		public PropertyVariationSet Variant
+		public PropertyVariation Variation
 		{
 			get;
 		}
@@ -644,11 +699,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			int compare = base.CompareTo (other);
 			if (compare == 0 && other is PropertyViewModel pvm) {
-				if (ReferenceEquals (Variant, pvm.Variant))
+				if (ReferenceEquals (Variation, pvm.Variation))
 					return 0;
-				if (Variant == null)
+				if (Variation == null)
 					return -1;
-				if (pvm.Variant == null)
+				if (pvm.Variation == null)
 					return 1;
 			}
 
@@ -722,17 +777,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return e;
 		}
 
-		protected CreateVariantEventArgs RequestCreateVariant ()
+		protected CreateVariationEventArgs RequestCreateVariant ()
 		{
-			var e = new CreateVariantEventArgs ();
-			CreateVariantRequested?.Invoke (this, e);
+			var e = new CreateVariationEventArgs ();
+			CreateVariationRequested?.Invoke (this, e);
 			return e;
+		}
+
+		protected void OnVariationsChanged ()
+		{
+			VariationsChanged?.Invoke (this, EventArgs.Empty);
 		}
 
 		private readonly RelayCommand requestResourceCommand;
 		private ICommand setValueResourceCommand;
 		private HashSet<IPropertyInfo> constraintProperties;
-		private PropertyVariationSet variant;
 		private string error;
 		private Task<bool> isAvailable;
 

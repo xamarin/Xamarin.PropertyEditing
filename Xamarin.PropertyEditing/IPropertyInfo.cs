@@ -46,7 +46,7 @@ namespace Xamarin.PropertyEditing
 		/// They should not include a neutral state.
 		/// </para>
 		/// </remarks>
-		IReadOnlyList<PropertyVariation> Variations { get; }
+		IReadOnlyList<PropertyVariationOption> Variations { get; }
 
 		IReadOnlyList<IAvailabilityConstraint> AvailabilityConstraints { get; }
 	}

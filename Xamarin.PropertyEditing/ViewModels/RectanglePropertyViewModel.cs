@@ -6,8 +6,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class RectanglePropertyViewModel
 		: PropertyViewModel<CommonRectangle>
 	{
-		public RectanglePropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant = null)
-			: base (platform, property, editors, variant)
+		public RectanglePropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
+			: base (platform, property, editors, variation)
 		{
 		}
 

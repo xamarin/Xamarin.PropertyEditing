@@ -34,7 +34,7 @@
 							</Grid.ColumnDefinitions>
 
 							<TextBlock Grid.Column="0" Text="{Binding Name,Mode=OneTime}" />
-							<ComboBox Grid.Column="1" ItemsSource="{Binding Variations,Mode=OneTime}" SelectedItem="{Binding SelectedVariation,Mode=TwoWay}" DisplayMemberPath="Name" />
+							<ComboBox Grid.Column="1" ItemsSource="{Binding Variations,Mode=OneTime}" SelectedItem="{Binding SelectedOption,Mode=TwoWay}" DisplayMemberPath="Name" />
 						</Grid>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>

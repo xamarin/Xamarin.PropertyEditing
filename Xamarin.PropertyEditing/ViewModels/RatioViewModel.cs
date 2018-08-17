@@ -79,8 +79,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public static char[] Separators = { ':', '/' };
 		public static char[] SplitSeparators = { ':', '/', ' ' };
 
-		public RatioViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariationSet variant)
-			: base (platform, property, editors, variant)
+		public RatioViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
+			: base (platform, property, editors, variation)
 		{
 		}
 
