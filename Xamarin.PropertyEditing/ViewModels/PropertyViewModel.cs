@@ -458,7 +458,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			await SetValueAsync (new ValueInfo<TValue> {
 				Source = ValueSource.Binding,
-				ValueDescriptor = e.BindingObject
+				SourceDescriptor = e.BindingObject
 			});
 		}
 

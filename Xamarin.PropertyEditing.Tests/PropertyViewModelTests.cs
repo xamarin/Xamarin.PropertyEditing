@@ -1426,10 +1426,9 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (requested, Is.True, "Binding wasn't requested");
 			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Binding));
 
-			editor.Verify (oe => oe.SetValueAsync (mockProperty.Object, new ValueInfo<TValue> {
-				Source = ValueSource.Binding,
-				SourceDescriptor = bindObject
-			}, It.IsAny<PropertyVariation> ()));
+			editor.Verify (oe => oe.SetValueAsync (mockProperty.Object, It.Is<ValueInfo<TValue>> (vi =>
+				vi.Source == ValueSource.Binding && vi.SourceDescriptor == bindObject
+			), It.IsAny<PropertyVariation> ()));
 		}
 
 		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
