@@ -290,6 +290,15 @@ namespace Xamarin.PropertyEditing.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Error creating variant: {0}. If this error continues, please report it..
+        /// </summary>
+        public static string ErrorCreatingVariant {
+            get {
+                return ResourceManager.GetString("ErrorCreatingVariant", resourceCulture);
+            }
+        }
+        
         public static string MultipleTypesSelected {
             get {
                 return ResourceManager.GetString("MultipleTypesSelected", resourceCulture);
