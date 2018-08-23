@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using Xamarin.PropertyEditing.Properties;
 using Xamarin.PropertyEditing.Reflection;
 using Xamarin.PropertyEditing.Tests.MockControls;
 using Xamarin.PropertyEditing.ViewModels;
@@ -14,8 +16,24 @@ namespace Xamarin.PropertyEditing.Tests
 	[TestFixture]
 	internal class CollectionPropertyViewModelTests
 	{
+		private AsyncSynchronizationContext syncContext;
+
+		[SetUp]
+		public void Setup ()
+		{
+			this.syncContext = new AsyncSynchronizationContext ();
+			SynchronizationContext.SetSynchronizationContext (this.syncContext);
+		}
+
+		[TearDown]
+		public void TearDown ()
+		{
+			this.syncContext.WaitForPendingOperationsToComplete ();
+			SynchronizationContext.SetSynchronizationContext (null);
+		}
+
 		[Test]
-		public async Task AddType ()
+		public void AddType ()
 		{
 			TargetPlatform platform = new TargetPlatform (new MockEditorProvider());
 			var obj = new {
@@ -30,14 +48,14 @@ namespace Xamarin.PropertyEditing.Tests
 				e.SelectedType = buttonType;
 			};
 
-			await vm.AssignableTypes.Task;
+			vm.AssignableTypes.Task.Wait();
 			vm.SelectedType = vm.SuggestedTypes.First ();
 
 			Assert.That (vm.SuggestedTypes, Contains.Item (buttonType));
 		}
 
 		[Test]
-		public async Task AddTarget ()
+		public void AddTarget ()
 		{
 			TargetPlatform platform = new TargetPlatform (new MockEditorProvider());
 
@@ -48,13 +66,70 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new ReflectionObjectEditor (obj);
 			
 			var vm = new CollectionPropertyViewModel (platform, editor.Properties.First(), new[] { editor });
-			await vm.AssignableTypes.Task;
+			vm.AssignableTypes.Task.Wait();
 
 			vm.SelectedType = GetTypeInfo (typeof(MockWpfButton));
 			vm.AddTargetCommand.Execute (null);
 
 			Assert.That (vm.Targets, Is.Not.Empty, "Adding a target failed");
 			Assume.That (vm.Targets.Single ().Item, Is.InstanceOf (typeof(MockWpfButton)));
+		}
+
+		[Test]
+		public async Task AddTargetCanAdd ()
+		{
+			TargetPlatform platform = new TargetPlatform (new MockEditorProvider ());
+
+			var obj = new {
+				Collection = new ArrayList ()
+			};
+
+			var editor = new ReflectionObjectEditor (obj);
+
+			var vm = new CollectionPropertyViewModel (platform, editor.Properties.First (), new[] { editor });
+			await vm.AssignableTypes.Task;
+
+			Assume.That (vm.SelectedType, Is.Null);
+			Assert.That (vm.AddTargetCommand.CanExecute (null), Is.False);
+
+			bool changed = false;
+			vm.AddTargetCommand.CanExecuteChanged += (o, e) => { changed = true; };
+			vm.SelectedType = GetTypeInfo (typeof (MockWpfButton));
+			Assert.That (vm.AddTargetCommand.CanExecute (null), Is.True);
+			Assert.That (changed, Is.True, "CanExecuteChanged did not fire");
+
+			changed = false;
+			vm.SelectedType = null;
+			Assert.That (vm.AddTargetCommand.CanExecute (null), Is.False);
+			Assert.That (changed, Is.True, "CanExecuteChanged did not fire");
+		}
+
+		[Test]
+		[Description ("When selecting a new type, if it's canceled the suggested type should return to something else")]
+		public void AddTypeCanceled ()
+		{
+			TargetPlatform platform = new TargetPlatform (new MockEditorProvider ());
+
+			var obj = new {
+				Collection = new ArrayList ()
+			};
+
+			var editor = new ReflectionObjectEditor (obj);
+
+			var vm = new CollectionPropertyViewModel (platform, editor.Properties.First (), new[] { editor });
+			vm.AssignableTypes.Task.Wait();
+
+			var buttonType = GetTypeInfo (typeof (MockWpfButton));
+			vm.TypeRequested += (o, e) => {
+				e.SelectedType = buttonType;
+			};
+
+			vm.SelectedType = vm.SuggestedTypes.Last ();
+			Assume.That (vm.SuggestedTypes, Contains.Item (buttonType));
+
+			buttonType = null;
+			vm.SelectedType = vm.SuggestedTypes.Last ();
+			Assert.That (vm.SelectedType, Is.EqualTo (vm.SuggestedTypes.First ()));
 		}
 
 		[Test]
