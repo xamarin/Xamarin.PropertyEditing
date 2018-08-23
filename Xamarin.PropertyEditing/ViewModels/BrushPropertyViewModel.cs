@@ -172,18 +172,36 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			StorePreviousBrush();
 
-			switch(type) {
-			case CommonBrushType.NoBrush:
-				Value = null;
-				break;
-			case CommonBrushType.Solid:
-				Value = Solid?.PreviousSolidBrush ?? new CommonSolidBrush (CommonColor.Black);
-				Solid?.CommitLastColor ();
-				Solid?.CommitHue ();
-				break;
-			case CommonBrushType.MaterialDesign:
-				MaterialDesign.SetToClosest ();
-				break;
+			switch (type) {
+				case CommonBrushType.MaterialDesign:
+					MaterialDesign.SetToClosest ();
+					break;
+
+				case CommonBrushType.NoBrush:
+					Value = null;
+					break;
+
+				case CommonBrushType.Solid:
+					Value = Solid?.PreviousSolidBrush ?? new CommonSolidBrush (CommonColor.Black);
+					Solid?.CommitLastColor ();
+					Solid?.CommitHue ();
+					break;
+			}
+		}
+
+		public static CommonBrush GetCommonBrushForResource (Resource resource)
+		{
+			switch (resource) {
+				case Resource<CommonColor> colour:
+					return new CommonSolidBrush (colour.Value);
+
+				case Resource<CommonGradientBrush> gradient:
+					return gradient.Value;
+
+				case Resource<CommonSolidBrush> solid:
+					return solid.Value;
+				default:
+					return null;
 			}
 		}
 	}

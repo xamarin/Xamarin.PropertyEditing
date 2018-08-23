@@ -548,4 +548,7 @@
   <data name="InvalidRatio" xml:space="preserve">
     <value>Invalid Ratio</value>
   </data>  
+  <data name="GradientBrush" xml:space="preserve">
+    <value>Gradient brush</value>
+  </data>
 </root>
