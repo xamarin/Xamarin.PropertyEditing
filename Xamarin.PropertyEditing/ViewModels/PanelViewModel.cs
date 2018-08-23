@@ -1,6 +1,8 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+ using System.IO;
+ using System.Linq;
+ using System.Threading.Tasks;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -86,6 +88,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public void SetIsExpanded (string group, bool isExpanded)
 		{
 			SetIsExpanded (ArrangeMode, group, isExpanded);
+		}
+
+		public Task<Stream> GetIconAsync ()
+		{
+			if (TargetPlatform.IconProvider == null)
+				return Task.FromResult<Stream> (null);
+
+			return TargetPlatform.IconProvider.GetTypeIconAsync (ObjectEditors.Select (oe => oe.TargetType).ToArray ());
 		}
 
 		protected override void OnAddEditors (IEnumerable<EditorViewModel> editors)
