@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -100,6 +101,7 @@ namespace Xamarin.PropertyEditing.Windows
 		private void OnDataContextChanged (object sender, DependencyPropertyChangedEventArgs e)
 		{
 			if (e.OldValue is PropertyViewModel pvm) {
+				pvm.PropertyChanged -= OnPropertyChanged;
 				pvm.ResourceRequested -= OnResourceRequested;
 				pvm.CreateBindingRequested -= OnCreateBindingRequested;
 				pvm.CreateResourceRequested -= OnCreateResourceRequested;
@@ -107,9 +109,19 @@ namespace Xamarin.PropertyEditing.Windows
 
 			this.vm = e.NewValue as PropertyViewModel;
 			if (this.vm != null) {
+				this.vm.PropertyChanged += OnPropertyChanged;
 				this.vm.ResourceRequested += OnResourceRequested;
 				this.vm.CreateBindingRequested += OnCreateBindingRequested;
 				this.vm.CreateResourceRequested += OnCreateResourceRequested;
+			}
+		}
+
+		private void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+			switch (e.PropertyName) {
+			case nameof(PropertyViewModel.Resource):
+				OnValueSourceChanged (this.vm.ValueSource);
+				break;
 			}
 		}
 
