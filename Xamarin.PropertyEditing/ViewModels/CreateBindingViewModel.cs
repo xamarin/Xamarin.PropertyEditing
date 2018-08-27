@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Properties;
 
@@ -375,7 +376,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			set
 			{
 				var vm = GetKnownPropertyViewModel (PropertyBinding.ConverterProperty);
-				if (vm.Value == value)
+				var previous = vm.Value;
+				if (previous == value)
 					return;
 
 				if (value == NoValueConverter)
@@ -385,11 +387,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				OnPropertyChanged();
 
 				if (value == AddValueConverter) {
-					var request = RequestCreateValueConverter ();
-					if (request.ConverterType != null)
-						RequestCreateRequestedValueConverter (request);
-					else
-						SelectedValueConverter = NoValueConverter;
+					RequestCreateValueConverter (previous);
 				}
 			}
 		}
@@ -636,27 +634,23 @@ namespace Xamarin.PropertyEditing.ViewModels
 			Path = newPath;
 		}
 
-		private CreateValueConverterEventArgs RequestCreateValueConverter ()
+		private async void RequestCreateValueConverter (Resource previous)
 		{
-			var e = new CreateValueConverterEventArgs();
-			CreateValueConverterRequested?.Invoke (this, e);
-			return e;
-		}
+			var request = new CreateValueConverterEventArgs ();
+			CreateValueConverterRequested?.Invoke (this, request);
 
-		private async void RequestCreateRequestedValueConverter (CreateValueConverterEventArgs e)
-		{
-			if (e.ConverterType == null || e.Name == null) {
-				SelectedValueConverter = NoValueConverter;
+			if (request.ConverterType == null || request.Name == null) {
+				SynchronizationContext.Current.Post (p => SelectedValueConverter = (Resource)p, previous);
 				return;
 			}
 
-			object converter = await TargetPlatform.EditorProvider.CreateObjectAsync (e.ConverterType);
-			if (e.Source == null) {
+			object converter = await TargetPlatform.EditorProvider.CreateObjectAsync (request.ConverterType);
+			if (request.Source == null) {
 				// TODO: Set directly outside of a resource
 				return;
 			}
 
-			Resource resource = await TargetPlatform.ResourceProvider.CreateResourceAsync (e.Source, e.Name, converter);
+			Resource resource = await TargetPlatform.ResourceProvider.CreateResourceAsync (request.Source, request.Name, converter);
 			this.valueConverters.Insert (this.valueConverters.Count - 1, resource);
 			SelectedValueConverter = resource;
 		}

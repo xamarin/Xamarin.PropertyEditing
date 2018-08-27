@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.PropertyEditing.Properties;
@@ -67,7 +68,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				AutoExpand = true
 			};
 
-			AddTargetCommand = new RelayCommand (OnAddTarget);
+			AddTargetCommand = new RelayCommand (OnAddTarget, CanAddTarget);
 			RemoveTargetCommand = new RelayCommand (OnRemoveTarget, CanAffectTarget);
 			MoveUpCommand = new RelayCommand (() => MoveTarget (up: true), () => CanMoveTarget (up: true));
 			MoveDownCommand = new RelayCommand (() => MoveTarget (up: false), () => CanMoveTarget (up: false));
@@ -144,11 +145,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (this.selectedType == value)
 					return;
 
+				ITypeInfo previousType = this.selectedType;
 				this.selectedType = value;
 				OnPropertyChanged();
 
 				if (value == OtherType)
-					RequestOtherType ();
+					RequestOtherType (previousType);
+
+				((RelayCommand)AddTargetCommand).ChangeCanExecute();
 			}
 		}
 
@@ -340,22 +344,22 @@ namespace Xamarin.PropertyEditing.ViewModels
 			await PushValueAsync ();
 		}
 
-		private void RequestOtherType ()
+		private void RequestOtherType (ITypeInfo previousType)
 		{
 			var args = new TypeRequestedEventArgs();
 			TypeRequested?.Invoke (this, args);
 
-			if (args.SelectedType == null) {
-				// We know we have OtherType because we're in this method, and we know its at the bottom
-				SelectedType = SuggestedTypes.Count > 1 ? SuggestedTypes[0] : null;
-				return;
+			ITypeInfo st = args.SelectedType;
+			if (args.SelectedType != null) {
+				if (!this.suggestedTypes.Contains (args.SelectedType))
+					this.suggestedTypes.Insert (0, args.SelectedType);
+			} else {
+				st = previousType;
 			}
 
-			if (!this.suggestedTypes.Contains (args.SelectedType)) {
-				this.suggestedTypes.Insert (0, args.SelectedType);
-			}
-
-			SelectedType = args.SelectedType;
+			// Fixes an issue in Windows where ComboBox won't recognize inline selection changes without modifying the list.
+			SynchronizationContext.Current.Post (o =>
+				SelectedType = (ITypeInfo) o, st);
 		}
 
 		private void OnCollectionViewContentsChanged (object sender, NotifyCollectionChangedEventArgs e)
@@ -390,6 +394,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.collectionView.Move (index, index + ((up) ? -1 : 1));
 
 			ReIndex();
+		}
+
+		private bool CanAddTarget ()
+		{
+			return SelectedType != null && SelectedType != OtherType;
 		}
 
 		private async void OnAddTarget ()
