@@ -70,17 +70,26 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public new ResourceOutlineView View {
-			get => base.View as ResourceOutlineView;
-			set => base.View = (value as ResourceOutlineView);
+		public new NSScrollView View {
+			get => base.View as NSScrollView;
+			set => base.View = (value as NSScrollView);
 		}
 
 		public override void LoadView ()
 		{
 			viewDelegate.ViewModel = ViewModel;
-			View = resourceSelector = new ResourceOutlineView {
-				Delegate = viewDelegate
+			resourceSelector = new ResourceOutlineView {
+				Delegate = viewDelegate,
 			};
+
+			// create a table view and a scroll view
+			var tableContainer = new NSScrollView (new CGRect (10, PreferredContentSize.Height - 210, PreferredContentSize.Width, PreferredContentSize.Height)) {
+				TranslatesAutoresizingMaskIntoConstraints = false,
+			};
+
+			// add the panel to the window
+			tableContainer.DocumentView = resourceSelector;
+			View = tableContainer;
 
 			if (ViewModel != null) {
 				resourceSelector.ViewModel = ViewModel?.ResourceSelector;
