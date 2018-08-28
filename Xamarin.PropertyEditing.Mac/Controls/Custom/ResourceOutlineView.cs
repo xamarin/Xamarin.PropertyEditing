@@ -34,11 +34,14 @@ namespace Xamarin.PropertyEditing.Mac
 				Width = 150,
 			};
 			AddColumn (nameColumn);
+
 			var previewColumn = new NSTableColumn (ResourcePreviewColId) {
 				Title = LocalizationResources.ColumnResourcePreview,
 				Width = 150,
 			};
 			AddColumn (previewColumn);
+
+			HeaderView = null;
 		}
 
 		[Export ("validateProposedFirstResponder:forEvent:")]
