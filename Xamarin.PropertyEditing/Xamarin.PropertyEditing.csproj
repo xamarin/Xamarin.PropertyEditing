@@ -91,6 +91,7 @@
     <Compile Include="IProvidePath.cs" />
     <Compile Include="IResourceProvider.cs" />
     <Compile Include="ISelfConstrainedPropertyInfo.cs" />
+    <Compile Include="IIconProvider.cs" />
     <Compile Include="ITypeInfo.cs" />
     <Compile Include="IValidator.cs" />
     <Compile Include="KnownProperty.cs" />

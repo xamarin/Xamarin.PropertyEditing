@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media.Imaging;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -82,6 +84,7 @@ namespace Xamarin.PropertyEditing.Windows
 			base.OnApplyTemplate ();
 
 			this.root = (FrameworkElement) GetTemplateChild ("root");
+			this.typeIcon = (Image) GetTemplateChild ("typeIcon");
 			this.items = (ItemsControl) GetTemplateChild ("propertyItems");
 			this.propertiesPane = (FrameworkElement) GetTemplateChild ("propertiesPane");
 			this.eventsPane = (FrameworkElement) GetTemplateChild ("eventsPane");
@@ -99,6 +102,7 @@ namespace Xamarin.PropertyEditing.Windows
 		private ItemsControl items;
 		private ChoiceControl paneSelector;
 		private FrameworkElement propertiesPane, eventsPane;
+		private Image typeIcon;
 
 		private void OnPaneChanged (object sender, EventArgs e)
 		{
@@ -142,6 +146,28 @@ namespace Xamarin.PropertyEditing.Windows
 
 			if (ArrangeMode == PropertyArrangeMode.Name)
 				OnArrangeModeChanged (ArrangeMode);
+
+			UpdateIcon ();
+		}
+
+		private async void UpdateIcon ()
+		{
+			if (this.typeIcon == null)
+				return;
+
+			Stream icon = await this.vm.GetIconAsync ();
+			if (icon == null) {
+				this.typeIcon.Source = null;
+				this.typeIcon.Visibility = Visibility.Collapsed;
+			} else {
+				var source = new BitmapImage();
+				source.BeginInit();
+				source.StreamSource = icon;
+				source.EndInit();
+
+				this.typeIcon.Source = source;
+				this.typeIcon.Visibility = Visibility.Visible;
+			}
 		}
 
 		private void OnTargetPlatformChanged ()

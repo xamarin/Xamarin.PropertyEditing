@@ -112,8 +112,8 @@
 										<ColumnDefinition Width="Auto" />
 									</Grid.ColumnDefinitions>
 
-									<Border Visibility="Collapsed" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Height="32" Width="32" Margin="1,6,5,2" Background="{DynamicResource PropertiesPanelIconBackgroundBrush}" VerticalAlignment="Center">
-										<!-- type icon -->
+									<Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Margin="1,6,5,2" Background="{DynamicResource PropertiesPanelIconBackgroundBrush}" VerticalAlignment="Center">
+										<Image Name="typeIcon" Height="32" Width="32" Visibility="Collapsed" />
 									</Border>
 
 									<TextBlock Visibility="{Binding IsObjectNameable, Converter={StaticResource BoolToVisibilityConverter}}" Name="nameLabel" Grid.Row="0" Grid.Column="1" Margin="0,2,0,2" Text="{x:Static prop:Resources.Name}" />

@@ -63,6 +63,12 @@ namespace Xamarin.PropertyEditing
 			private set;
 		}
 
+		public IIconProvider IconProvider
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Gets or sets whether the platform supports custom expressions (default false).
 		/// </summary>
