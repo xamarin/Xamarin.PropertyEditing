@@ -317,6 +317,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (Property == null)
 				return;
 
+			if (Editors.Count == 0) {
+				SuggestedTypes = new ObservableCollectionEx<ITypeInfo> ();
+				AssignableTypes = new AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> (
+					Task.FromResult<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> (
+						new Dictionary<IAssemblyInfo, ILookup<string, ITypeInfo>> ()));
+				SelectedType = null;
+				return;
+			}
+
 			var types = Editors.GetCommonAssignableTypes (Property, childTypes: true);
 			var assignableTypesTask = types.ContinueWith (t => t.Result.GetTypeTree (), TaskScheduler.Default);
 			AssignableTypes = new AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> (assignableTypesTask);
