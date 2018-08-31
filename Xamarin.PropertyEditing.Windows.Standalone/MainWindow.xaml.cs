@@ -15,7 +15,8 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 		public MainWindow ()
 		{
 			InitializeComponent ();
-			this.panel.TargetPlatform = new TargetPlatform (new MockEditorProvider(), new MockResourceProvider(), new MockBindingProvider()) {
+			var resources = new MockResourceProvider();
+			this.panel.TargetPlatform = new TargetPlatform (new MockEditorProvider (resources), resources, new MockBindingProvider()) {
 				SupportsCustomExpressions = true,
 				SupportsMaterialDesign = true,
 				SupportsBrushOpacity = false,
@@ -24,7 +25,6 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 				}
 			};
 
-			this.panel.ResourceProvider = new MockResourceProvider ();
 #if USE_VS_ICONS
 			this.panel.Resources.MergedDictionaries.Add (new ResourceDictionary {
 				Source = new Uri ("pack://application:,,,/ProppyIcons.xaml", UriKind.RelativeOrAbsolute)
