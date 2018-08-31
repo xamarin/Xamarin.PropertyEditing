@@ -16,24 +16,25 @@ namespace Xamarin.PropertyEditing.Windows
 			DataContextChanged += OnDataContextChanged;
 		}
 
+		private ObjectPropertyViewModel vm;
+
 		private void OnDataContextChanged (object sender, DependencyPropertyChangedEventArgs e)
 		{
-			var vm = e.OldValue as ObjectPropertyViewModel;
-			if (vm != null)
-				vm.TypeRequested -= OnTypeRequested;
+			if (this.vm != null)
+				this.vm.TypeRequested -= OnTypeRequested;
 
-			vm = e.NewValue as ObjectPropertyViewModel;
-			if (vm != null)
-				vm.TypeRequested += OnTypeRequested;
+			this.vm = e.NewValue as ObjectPropertyViewModel;
+			if (this.vm != null)
+				this.vm.TypeRequested += OnTypeRequested;
 		}
 
 		private void OnTypeRequested (object sender, TypeRequestedEventArgs e)
 		{
-			var vm = (ObjectPropertyViewModel)sender;
+			var vsender = (ObjectPropertyViewModel)sender;
 
 			var panel = this.FindPropertiesHost ();
 
-			ITypeInfo type = TypeSelectorWindow.RequestType (panel, vm.AssignableTypes);
+			ITypeInfo type = TypeSelectorWindow.RequestType (panel, vsender.AssignableTypes);
 			e.SelectedType = type;
 		}
 	}
