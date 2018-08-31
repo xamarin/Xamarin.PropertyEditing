@@ -158,6 +158,28 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public async Task RemoveEditor ()
+		{
+			TargetPlatform platform = new TargetPlatform (new MockEditorProvider ());
+
+			var obj = new {
+				Collection = new ArrayList ()
+			};
+
+			var editor = new ReflectionObjectEditor (obj);
+
+			var vm = new CollectionPropertyViewModel (platform, editor.Properties.First (), new[] { editor });
+			await vm.AssignableTypes.Task;
+
+			vm.Editors.Remove (editor);
+			await vm.AssignableTypes.Task;
+
+			Assert.That (vm.AssignableTypes.Value, Is.Empty);
+			Assert.That (vm.SuggestedTypes, Is.Empty);
+			Assert.That (vm.SelectedType, Is.Null);
+		}
+
+		[Test]
 		public async Task MoveUpCommand ()
 		{
 			TargetPlatform platform = new TargetPlatform (new MockEditorProvider());
