@@ -31,7 +31,7 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			var vm = (ObjectPropertyViewModel)sender;
 
-			var panel = this.FindParent<PropertyEditorPanel> ();
+			var panel = this.FindPropertiesHost ();
 
 			ITypeInfo type = TypeSelectorWindow.RequestType (panel, vm.AssignableTypes);
 			e.SelectedType = type;
