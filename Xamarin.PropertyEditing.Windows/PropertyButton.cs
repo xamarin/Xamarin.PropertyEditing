@@ -100,11 +100,11 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnDataContextChanged (object sender, DependencyPropertyChangedEventArgs e)
 		{
-			if (e.OldValue is PropertyViewModel pvm) {
-				pvm.PropertyChanged -= OnPropertyChanged;
-				pvm.ResourceRequested -= OnResourceRequested;
-				pvm.CreateBindingRequested -= OnCreateBindingRequested;
-				pvm.CreateResourceRequested -= OnCreateResourceRequested;
+			if (this.vm != null) {
+				this.vm.PropertyChanged -= OnPropertyChanged;
+				this.vm.ResourceRequested -= OnResourceRequested;
+				this.vm.CreateBindingRequested -= OnCreateBindingRequested;
+				this.vm.CreateResourceRequested -= OnCreateResourceRequested;
 			}
 
 			this.vm = e.NewValue as PropertyViewModel;
