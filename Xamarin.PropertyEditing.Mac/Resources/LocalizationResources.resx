@@ -95,4 +95,11 @@
   <data name="CommonBrushTitleGradient" xml:space="preserve">
     <value>Gradient</value>>
   </data>
+  <data name="AccessibilityObjectName" xml:space="preserve">
+    <value>{0} Object Name Editor</value>
+    <comment>Editor for Object Name Value</comment>
+  </data>
+  <data name="ObjectNamePlaceholder" xml:space="preserve">
+    <value>No Name</value>>
+  </data>
 </root>

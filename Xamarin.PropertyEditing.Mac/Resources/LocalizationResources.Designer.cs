@@ -190,5 +190,17 @@ namespace Xamarin.PropertyEditing.Mac.Resources {
                 return ResourceManager.GetString("CommonBrushTitleGradient", resourceCulture);
             }
         }
+        
+        internal static string AccessibilityObjectName {
+            get {
+                return ResourceManager.GetString("AccessibilityObjectName", resourceCulture);
+            }
+        }
+        
+        internal static string ObjectNamePlaceholder {
+            get {
+                return ResourceManager.GetString("ObjectNamePlaceholder", resourceCulture);
+            }
+        }
     }
 }
