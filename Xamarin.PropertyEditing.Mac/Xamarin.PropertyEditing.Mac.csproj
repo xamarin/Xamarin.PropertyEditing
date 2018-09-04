@@ -129,6 +129,11 @@
     <Compile Include="Controls\Custom\ShadeLayer.cs" />
     <Compile Include="Controls\Custom\SolidColorBrushEditor.cs" />
     <Compile Include="Controls\Custom\SolidColorBrushEditorViewController.cs" />
+    <Compile Include="Controls\RequestResource\RequestResourcePanel.cs" />
+    <Compile Include="Controls\RequestResource\RequestResourceView.cs" />
+    <Compile Include="Controls\RequestResource\ResourceTableDataSource.cs" />
+    <Compile Include="Controls\RequestResource\ResourceTableDelegate.cs" />
+    <Compile Include="Controls\RequestResource\RequestResourcePreviewPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
@@ -137,6 +142,7 @@
     <Compile Include="Themes\MacThemeManager.cs" />
     <Compile Include="Controls\BaseEditorControl.cs" />
     <Compile Include="Controls\ErrorMessageView.cs" />
+    <Folder Include="Controls\RequestResource\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
@@ -287,6 +293,22 @@
     <BundleResource Include="Resources\stepper-up-focus-graphite%402x.png" />
     <BundleResource Include="Resources\stepper-up-focus-graphite~dark.png" />
     <BundleResource Include="Resources\stepper-up-focus-graphite~dark%402x.png" />
+    <BundleResource Include="Resources\resource-editor-16.png" />
+    <BundleResource Include="Resources\resource-editor-16%402x.png" />
+    <BundleResource Include="Resources\resource-editor-16~dark.png" />
+    <BundleResource Include="Resources\resource-editor-16~dark%402x.png" />
+    <BundleResource Include="Resources\resource-editor-16~sel.png" />
+    <BundleResource Include="Resources\resource-editor-16~sel%402x.png" />
+    <BundleResource Include="Resources\resource-editor-16~dark~sel.png" />
+    <BundleResource Include="Resources\resource-editor-16~dark~sel%402x.png" />
+    <BundleResource Include="Resources\resource-editor-32.png" />
+    <BundleResource Include="Resources\resource-editor-32%402x.png" />
+    <BundleResource Include="Resources\resource-editor-32~dark.png" />
+    <BundleResource Include="Resources\resource-editor-32~dark%402x.png" />
+    <BundleResource Include="Resources\resource-editor-32~sel.png" />
+    <BundleResource Include="Resources\resource-editor-32~sel%402x.png" />
+    <BundleResource Include="Resources\resource-editor-32~dark~sel.png" />
+    <BundleResource Include="Resources\resource-editor-32~dark~sel%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

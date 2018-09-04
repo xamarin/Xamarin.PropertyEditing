@@ -77,6 +77,18 @@
   <data name="ColumnResourcePreview" xml:space="preserve">
     <value>Preview</value>>
   </data>
+  <data name="ResourceTableImageColumnTitle" xml:space="preserve">
+    <value>Icon</value>
+  </data>
+  <data name="ResourceTableTypeColumnTitle" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="ResourceTableNameColumnTitle" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ResourceTableValueColumnTitle" xml:space="preserve">
+    <value>Value</value>>
+  </data>
   <data name="CommonBrushTitleUnknown" xml:space="preserve">
     <value>Unknown</value>
   </data>
