@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -25,7 +26,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 			Resources.MergedDictionaries.Add (new ResourceDictionary { Source = new Uri ("pack://application:,,,/Xamarin.PropertyEditing.Windows;component/Themes/Resources.xaml") });
 
-			var selectedItems = new ObservableCollection<object> ();
+			var selectedItems = new ObservableCollectionEx<object> ();
 			selectedItems.CollectionChanged += OnSelectedItemsChanged;
 			SelectedItems = selectedItems;
 		}
@@ -78,6 +79,14 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		public static PropertyEditing.Themes.WinThemeManager ThemeManager = new PropertyEditing.Themes.WinThemeManager();
+
+		public void Select (IEnumerable<object> selectedItems)
+		{
+			if (selectedItems == null)
+				throw new ArgumentNullException (nameof(selectedItems));
+
+			((ObservableCollectionEx<object>)SelectedItems).Reset (selectedItems);
+		}
 
 		public override void OnApplyTemplate ()
 		{
