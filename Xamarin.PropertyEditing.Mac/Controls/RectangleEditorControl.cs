@@ -37,7 +37,7 @@ namespace Xamarin.PropertyEditing.Mac
 			HeightEditor.Frame = new CGRect (132, 13, 90, 20);
 		}
 
-		public override nint GetHeight (PropertyViewModel vm)
+		public override nint GetHeight (EditorViewModel vm)
 		{
 			return 66;
 		}
