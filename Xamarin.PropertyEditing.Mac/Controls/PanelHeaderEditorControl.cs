@@ -186,7 +186,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public override nint GetHeight (PropertyViewModel vm)
+		public override nint GetHeight (EditorViewModel vm)
 		{
 			return 44;
 		}
