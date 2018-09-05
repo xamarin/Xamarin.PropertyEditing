@@ -13,8 +13,9 @@ namespace Xamarin.PropertyEditing.Tests
 	{
 		public static readonly TargetPlatform MockPlatform = new TargetPlatform (new MockEditorProvider ());
 
-		public MockEditorProvider ()
+		public MockEditorProvider (IResourceProvider resources = null)
 		{
+			this.resources = resources;
 		}
 
 		public MockEditorProvider (IObjectEditor editor)
@@ -70,9 +71,9 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			switch (item) {
 			case MockWpfControl msc:
-				return new MockObjectEditor (msc);
+				return new MockObjectEditor (msc) { Resources = this.resources };
 			case MockControl mc:
-				return new MockNameableEditor (mc);
+				return new MockNameableEditor (mc) { Resources = this.resources };
 			case MockBinding mb:
 				return new MockBindingEditor (mb);
 			default:
@@ -99,6 +100,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return Task.FromResult<IReadOnlyDictionary<Type, ITypeInfo>> (new Dictionary<Type, ITypeInfo> ());
 		}
 
+		private readonly IResourceProvider resources;
 		private readonly Dictionary<object, IObjectEditor> editorCache = new Dictionary<object, IObjectEditor> ();
 	}
 }

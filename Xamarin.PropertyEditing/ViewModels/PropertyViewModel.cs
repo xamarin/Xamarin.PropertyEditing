@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -75,6 +76,32 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (SetValueResourceCommand.CanExecute (value))
 					SetValueResourceCommand.Execute (value);
 			}
+		}
+
+		public bool SupportsAutocomplete
+		{
+			get { return this.supportsAutocomplete; }
+			private set
+			{
+				if (this.supportsAutocomplete == value)
+					return;
+
+				this.supportsAutocomplete = value;
+				OnPropertyChanged();
+
+				if (!value) {
+					this.autocomplete = null;
+					this.autocompleteCancel?.Cancel();
+					this.autocompleteCancel = null;
+				}
+			}
+		}
+
+		public IReadOnlyList<string> AutocompleteItems => this.autocomplete;
+
+		public string PreviewCustomExpression
+		{
+			set { UpdateAutocomplete (value); }
 		}
 
 		public string CustomExpression
@@ -228,12 +255,33 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		protected override void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
+		{
+			base.OnEditorsChanged (sender, e);
+
+			if (e.Action == NotifyCollectionChangedAction.Add && SupportsAutocomplete)
+				return;
+
+			if (TargetPlatform.SupportsCustomExpressions) {
+				foreach (IObjectEditor editor in Editors) {
+					if (editor is ICompleteValues) {
+						SupportsAutocomplete = true;
+						break;
+					}
+				}
+			}
+		}
+
 		private readonly ICoerce<TValue> coerce;
 		private readonly IValidator<TValue> validator;
 		private readonly ICanNavigateToSource valueNavigator;
 		internal const string NullableName = "Nullable`1";
 		private bool isNullable;
 		private ValueInfo<TValue> value;
+
+		private bool supportsAutocomplete;
+		private ObservableCollectionEx<string> autocomplete;
+		private CancellationTokenSource autocompleteCancel;
 
 		private void SignalValueChange ()
 		{
@@ -357,6 +405,49 @@ namespace Xamarin.PropertyEditing.ViewModels
 				Source = ValueSource.Binding,
 				ValueDescriptor = e.BindingObject
 			});
+		}
+
+		private async void UpdateAutocomplete (string value)
+		{
+			if (!SupportsAutocomplete)
+				return;
+
+			if (this.autocomplete == null) {
+				this.autocomplete = new ObservableCollectionEx<string> ();
+				OnPropertyChanged (nameof(AutocompleteItems));
+			} else {
+				this.autocompleteCancel.Cancel();
+			}
+
+			this.autocompleteCancel = new CancellationTokenSource ();
+			CancellationToken cancel = this.autocompleteCancel.Token;
+
+			try {
+				HashSet<string> common = null;
+				List<Task<IReadOnlyList<string>>> tasks = new List<Task<IReadOnlyList<string>>> ();
+
+				foreach (IObjectEditor editor in Editors) {
+					if (!(editor is ICompleteValues complete))
+						continue;
+
+					tasks.Add (complete.GetCompletionsAsync (Property, value, cancel));
+				}
+
+				IReadOnlyList<string> list = null;
+				do {
+					Task<IReadOnlyList<string>> results = await Task.WhenAny (tasks);
+					tasks.Remove (results);
+
+					if (list == null) {
+						list = results.Result;
+						common = new HashSet<string> (list);
+					} else
+						common.IntersectWith (results.Result);
+				} while (tasks.Count > 0 && !cancel.IsCancellationRequested);
+
+				this.autocomplete.Reset (list.Where (common.Contains));
+			} catch (OperationCanceledException) {
+			}
 		}
 
 		private static TValue DefaultValue;

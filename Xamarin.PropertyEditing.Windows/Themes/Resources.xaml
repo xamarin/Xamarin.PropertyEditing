@@ -497,7 +497,8 @@
 	<Style x:Key="CustomExpressionPopup" TargetType="local:EntryPopup">
 		<Setter Property="Placement" Value="Bottom" />
 		<Setter Property="Width" Value="400" />
-		<Setter Property="StaysOpen" Value="False" />
+		<Setter Property="StaysOpen" Value="True" />
+		<Setter Property="Value" Value="{Binding CustomExpression,Mode=TwoWay,UpdateSourceTrigger=Explicit}" />
 		<Setter Property="ContentTemplate">
 			<Setter.Value>
 				<DataTemplate>
@@ -509,7 +510,7 @@
 							</Grid.RowDefinitions>
 
 							<TextBlock Name="label" Grid.Row="0" Margin="5,5,0,5" FontWeight="Bold" Text="{x:Static prop:Resources.CustomExpression}" />
-							<local:TextBoxEx x:Name="entry" Grid.Row="1" Margin="5,0,5,5" AutomationProperties.LabeledBy="{Binding Mode=OneTime,ElementName=label}" FocusSelectsAll="True" Text="{Binding CustomExpression,Mode=TwoWay,UpdateSourceTrigger=Explicit}" />
+							<local:TextBoxEx x:Name="entry" Grid.Row="1" Margin="5,0,5,5" AutomationProperties.LabeledBy="{Binding Mode=OneTime,ElementName=label}" FocusSelectsAll="True" EnableClear="False" EnableSubmit="False" Text="{Binding PreviewCustomExpression,Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding AutocompleteItems}" />
 						</Grid>
 					</Border>
 				</DataTemplate>
@@ -1631,8 +1632,6 @@
 	<Style TargetType="ListBoxItem">
 		<Setter Property="SnapsToDevicePixels" Value="True"/>
 		<Setter Property="Padding" Value="4,1"/>
-		<Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-		<Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
 		<Setter Property="Foreground" Value="{DynamicResource ListItemForegroundBrush}" />
 		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="BorderBrush" Value="Transparent"/>
@@ -1942,21 +1941,26 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:TextBoxEx}">
-					<Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-						<Grid>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="*" />
-								<ColumnDefinition Width="Auto" />
-							</Grid.ColumnDefinitions>
+					<Grid>
+						<Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
 
-							<ContentPresenter Grid.Column="0" Name="hintContent" Margin="2,0,2,0" Visibility="Collapsed" ContentSource="Hint" />
-							<ScrollViewer x:Name="PART_ContentHost" Grid.Column="0" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+								<ContentPresenter Grid.Column="0" Name="hintContent" Margin="2,0,2,0" Visibility="Collapsed" ContentSource="Hint" />
+								<ScrollViewer x:Name="PART_ContentHost" Grid.Column="0" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
 
-							<Button Name="PART_Clear" Grid.Column="1" Style="{TemplateBinding ClearButtonStyle}" Visibility="{TemplateBinding ShowClearButton,Converter={StaticResource BoolToVisibilityConverter}}" />
-							<Button Name="PART_Submit" Grid.Column="1" Style="{TemplateBinding SubmitButtonStyle}" Visibility="Collapsed" />
-						</Grid>
-					</Border>
-					<ControlTemplate.Triggers>
+								<Button Name="PART_Clear" Grid.Column="1" Style="{TemplateBinding ClearButtonStyle}" Visibility="{TemplateBinding ShowClearButton,Converter={StaticResource BoolToVisibilityConverter}}" />
+								<Button Name="PART_Submit" Grid.Column="1" Style="{TemplateBinding SubmitButtonStyle}" Visibility="Collapsed" />
+							</Grid>
+						</Border>
+						<Popup Name="PART_CompletePopup" Placement="Bottom" StaysOpen="True" Focusable="False" Width="{Binding ElementName=border,Path=ActualWidth}">
+							<ListBox Name="PART_CompleteList" Focusable="False" MaxHeight="200" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding ItemTemplate}" />
+						</Popup>
+					</Grid>
+						<ControlTemplate.Triggers>
 						<Trigger Property="IsEnabled" Value="false">
 							<Setter Property="Opacity" TargetName="border" Value="0.56"/>
 						</Trigger>

@@ -81,6 +81,7 @@
     <Compile Include="IClampedPropertyInfo.cs" />
     <Compile Include="IColorSpaced.cs" />
     <Compile Include="ICoerce.cs" />
+    <Compile Include="ICompleteValues.cs" />
     <Compile Include="IEditorProvider.cs" />
     <Compile Include="IObjectEventEditor.cs" />
     <Compile Include="IEventInfo.cs" />

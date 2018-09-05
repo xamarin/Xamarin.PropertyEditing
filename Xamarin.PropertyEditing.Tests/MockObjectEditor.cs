@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.PropertyEditing.Reflection;
 using Xamarin.PropertyEditing.Tests.MockControls;
@@ -29,7 +30,7 @@ namespace Xamarin.PropertyEditing.Tests
 	}
 
 	internal class MockObjectEditor
-		: IObjectEditor, IObjectEventEditor
+		: IObjectEditor, IObjectEventEditor, ICompleteValues
 	{
 		public MockObjectEditor ()
 		{
@@ -106,6 +107,12 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		public IReadOnlyList<IObjectEditor> DirectChildren
+		{
+			get;
+			set;
+		}
+
+		public IResourceProvider Resources
 		{
 			get;
 			set;
@@ -330,6 +337,24 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var asm = new AssemblyInfo (type.Assembly.FullName, true);
 			return Task.FromResult<ITypeInfo> (new TypeInfo (asm, type.Namespace, type.Name));
+		}
+
+		public bool CanAutocomplete (string input)
+		{
+			return (input != null && input.Trim ().StartsWith ("@"));
+		}
+
+		public async Task<IReadOnlyList<string>> GetCompletionsAsync (IPropertyInfo property, string input, CancellationToken cancellationToken)
+		{
+			if (Resources == null)
+				return Array.Empty<string> ();
+
+			input = input.Trim ().TrimStart('@');
+			var resources = await Resources.GetResourcesAsync (Target, property, cancellationToken);
+			return resources.Where (r =>
+					r.Name.IndexOf (input, StringComparison.OrdinalIgnoreCase) != -1
+					&& r.Name.Length > input.Length) // Skip exact matches
+				.Select (r => "@" + r.Name).ToList ();
 		}
 
 		internal readonly IDictionary<IPropertyInfo, object> values = new Dictionary<IPropertyInfo, object> ();

@@ -1085,6 +1085,96 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (requested, Is.True, "CreateResourceRequested did not fire");
 		}
 
+		[TestCase (true, true, true)]
+		[TestCase (false, true, false)]
+		[TestCase (true, false, false)]
+		public void AutocompleteEnabled (bool customExpressions, bool hasInterface, bool expected)
+		{
+			var target = new object ();
+			var property = GetPropertyMock ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (e => e.Target).Returns (target);
+			SetupPropertySetAndGet (editor, property.Object);
+
+			if (hasInterface) {
+				string[] results = { "Foo", "Bar", "Baz" };
+				var complete = editor.As<ICompleteValues> ();
+				complete.Setup (c => c.GetCompletionsAsync (property.Object, It.IsAny<string> (), It.IsAny<CancellationToken> ()))
+					.ReturnsAsync (results);
+			}
+
+			var mockProvider = new MockEditorProvider (editor.Object);
+			var resources = new MockResourceProvider ();
+			var platform = new TargetPlatform (mockProvider, resources) {
+				SupportsCustomExpressions = customExpressions
+			};
+
+			var vm = GetViewModel (platform, property.Object, new[] { editor.Object });
+			Assert.That (vm.SupportsAutocomplete, Is.EqualTo (expected));
+		}
+
+		[Test]
+		public void AutocompleteResults ()
+		{
+			var target = new object ();
+			var property = GetPropertyMock ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (e => e.Target).Returns (target);
+			SetupPropertySetAndGet (editor, property.Object);
+
+			string[] results = new[] { "Foo", "Bar", "Baz" };
+			var complete = editor.As<ICompleteValues> ();
+			complete.Setup (c => c.GetCompletionsAsync (property.Object, It.IsAny<string> (), It.IsAny<CancellationToken> ())).ReturnsAsync (results);
+
+			var mockProvider = new MockEditorProvider (editor.Object);
+			var resources = new MockResourceProvider();
+			var platform = new TargetPlatform (mockProvider, resources) {
+				SupportsCustomExpressions = true
+			};
+
+			var vm = GetViewModel (platform, property.Object, new[] { editor.Object });
+			Assume.That (vm.SupportsAutocomplete, Is.True);
+			vm.PreviewCustomExpression = "preview";
+
+			CollectionAssert.AreEqual (vm.AutocompleteItems, results);
+			complete.Verify (c => c.GetCompletionsAsync (property.Object, "preview", It.IsAny<CancellationToken> ()));
+		}
+
+		[Test]
+		public void AutocompleteCancels ()
+		{
+			var target = new object ();
+			var property = GetPropertyMock ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (e => e.Target).Returns (target);
+			SetupPropertySetAndGet (editor, property.Object);
+
+			string[] results = new[] { "Foo", "Bar", "Baz" };
+			var tcs = new TaskCompletionSource<IReadOnlyList<string>> ();
+
+			var complete = editor.As<ICompleteValues> ();
+			complete.Setup (c => c.GetCompletionsAsync (property.Object, It.IsAny<string> (), It.IsAny<CancellationToken> ()))
+				.Returns<IPropertyInfo,string,CancellationToken> ((a,b,c) => {
+					c.Register (() => {
+						tcs.TrySetCanceled ();
+					});
+					return tcs.Task;
+				});
+
+			var mockProvider = new MockEditorProvider (editor.Object);
+			var resources = new MockResourceProvider ();
+			var platform = new TargetPlatform (mockProvider, resources) {
+				SupportsCustomExpressions = true
+			};
+
+			var vm = GetViewModel (platform, property.Object, new[] { editor.Object });
+			Assume.That (vm.SupportsAutocomplete, Is.True);
+			vm.PreviewCustomExpression = "preview";
+
+			vm.PreviewCustomExpression = "attempt2";
+			Assert.That (tcs.Task.IsCanceled, Is.True);
+		}
+
 		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
 		{
 			return GetViewModel (property, new[] { editor });
