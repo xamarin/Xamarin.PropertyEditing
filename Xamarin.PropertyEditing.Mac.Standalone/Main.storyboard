@@ -710,17 +710,6 @@
                                     <action selector="OnClickEvent:" target="XfG-lQ-9wD" id="CqZ-JO-awR"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fbd-bO-O5O">
-                                <rect key="frame" x="331" y="236" width="110" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="AppKit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ttv-Om-Ige">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="OnClickEvent:" target="XfG-lQ-9wD" id="qIM-lS-1EG"/>
-                                </connections>
-                            </button>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Iru-Rx-5Kw" customClass="PropertyEditorPanel">
                                 <rect key="frame" x="0.0" y="0.0" width="648" height="233"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -740,6 +729,17 @@
                                     <action selector="OnThemeChanged:" target="XfG-lQ-9wD" id="NPt-Hc-LCb"/>
                                 </connections>
                             </segmentedControl>
+                            <button identifier="selectMode" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z5z-Qc-Eab">
+                                <rect key="frame" x="331" y="245" width="121" height="18"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="check" title="Add to selection" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="JcR-tG-jDO">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="OnSelectionModeChanged:" target="XfG-lQ-9wD" id="2Rt-ro-wUX"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>

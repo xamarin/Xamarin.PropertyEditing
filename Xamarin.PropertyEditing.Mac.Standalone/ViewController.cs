@@ -39,6 +39,8 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 			}
 		}
 
+		private bool addToSelection = true;
+
 		// load panel from active designer item, clear it if none selected
 		partial void OnClickEvent (NSObject sender)
 		{
@@ -49,11 +51,21 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 
 			var inspectedObject = (mockedButton == null || mockedButton.MockedControl == null)
 				? (object)sender : mockedButton.MockedControl;
-			if (PropertyPanel.SelectedItems.Contains (inspectedObject)) {
-				PropertyPanel.SelectedItems.Remove (inspectedObject);
+
+			if (this.addToSelection) {
+				if (PropertyPanel.SelectedItems.Contains (inspectedObject)) {
+					PropertyPanel.SelectedItems.Remove (inspectedObject);
+				} else {
+					PropertyPanel.SelectedItems.Add (inspectedObject);
+				}
 			} else {
-				PropertyPanel.SelectedItems.Add (inspectedObject);
+				PropertyPanel.Select (new[] { inspectedObject });
 			}
+		}
+
+		partial void OnSelectionModeChanged (NSObject sender)
+		{
+			this.addToSelection = ((NSButton)sender).State == NSCellStateValue.On;
 		}
 
 		async Task SetInitialValuesAsync (MockedSampleControlButton mocked)

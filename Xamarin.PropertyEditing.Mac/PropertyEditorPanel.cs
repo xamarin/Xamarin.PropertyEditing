@@ -79,6 +79,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public static Themes.MacThemeManager ThemeManager = new Themes.MacThemeManager ();
 
+		public void Select (IEnumerable<object> selectedItems)
+		{
+			if (selectedItems == null)
+				throw new ArgumentNullException (nameof (selectedItems));
+
+			((ObservableCollectionEx<object>)SelectedItems).Reset (selectedItems);
+		}
+
 		private bool isArrangeEnabled = true;
 		// when this property changes, need to create new datasource
 		private TargetPlatform targetPlatform;
