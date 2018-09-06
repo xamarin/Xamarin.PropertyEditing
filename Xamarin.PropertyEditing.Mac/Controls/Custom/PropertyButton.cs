@@ -205,9 +205,12 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			var customExpressionPopOver = new AutoClosePopOver {
+				CloseOnEnter = false,
 				ContentViewController = new NSViewController (null, null) { View = customExpressionView },
 			};
 			customExpressionPopOver.SetAppearance (this.hostResources.GetVibrantAppearance (EffectiveAppearance));
+
+			customExpressionView.PopOver = customExpressionPopOver;
 
 			customExpressionPopOver.Show (customExpressionView.Frame, (NSView)this, NSRectEdge.MinYEdge);
 		}
