@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AppKit;
 using CoreGraphics;
 
@@ -7,6 +7,7 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class BasePopOverControl : NSView
 	{
 		const int DefaultIconButtonSize = 32;
+		private readonly UnfocusableTextField viewTitle;
 
 		public BasePopOverControl (IHostResourceProvider hostResources, string title, string imageNamed) : base ()
 		{
@@ -30,13 +31,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (iconView);
 
-			var viewTitle = new UnfocusableTextField {
+			this.viewTitle = new UnfocusableTextField {
 				Font = NSFont.BoldSystemFontOfSize (11),
 				StringValue = title,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
-			AddSubview (viewTitle);
+			AddSubview (this.viewTitle);
 
 			this.AddConstraints (new[] {
 				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 5f),
@@ -44,18 +45,26 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, DefaultIconButtonSize),
 				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultIconButtonSize),
 
-				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 7f),
-				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Left, NSLayoutRelation.Equal, iconView,  NSLayoutAttribute.Right, 1f, 5f),
-				//NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 38f),
-				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 120),
-				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 24),
+				NSLayoutConstraint.Create (this.viewTitle, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 7f),
+				NSLayoutConstraint.Create (this.viewTitle, NSLayoutAttribute.Left, NSLayoutRelation.Equal, iconView,  NSLayoutAttribute.Right, 1f, 5f),
+				NSLayoutConstraint.Create (this.viewTitle, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 120),
+				NSLayoutConstraint.Create (this.viewTitle, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight),
 			});
+
+			this.SetAppearance (hostResources.GetVibrantAppearance (EffectiveAppearance));
+
+			ViewDidChangeEffectiveAppearance ();
 		}
 
 		protected IHostResourceProvider HostResources
 		{
 			get;
 			private set;
+		}
+
+		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			this.viewTitle.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
 		}
 	}
 }

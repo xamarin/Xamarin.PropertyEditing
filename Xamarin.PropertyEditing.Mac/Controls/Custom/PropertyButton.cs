@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.ViewModels;
@@ -212,10 +212,12 @@ namespace Xamarin.PropertyEditing.Mac
 				Appearance = EffectiveAppearance
 			};
 
-			var customExpressionPopOver = new AutoClosePopOver {
+			var customExpressionPopOver = new AutoClosePopOver(this.hostResources) {
+				CloseOnEnter = false,
 				ContentViewController = new NSViewController (null, null) { View = customExpressionView },
 			};
-			customExpressionPopOver.SetAppearance (this.hostResources.GetVibrantAppearance (EffectiveAppearance));
+
+			customExpressionView.PopOver = customExpressionPopOver;
 
 			customExpressionPopOver.Show (customExpressionView.Frame, (NSView)this, NSRectEdge.MinYEdge);
 		}
@@ -226,10 +228,9 @@ namespace Xamarin.PropertyEditing.Mac
 				Appearance = EffectiveAppearance
 			};
 
-			var resourceSelectorPopOver = new AutoClosePopOver {
+			var resourceSelectorPopOver = new AutoClosePopOver(this.hostResources) {
 				ContentViewController = new NSViewController (null, null) { View = requestResourceView },
 			};
-			resourceSelectorPopOver.SetAppearance (this.hostResources.GetVibrantAppearance (EffectiveAppearance));
 
 			requestResourceView.PopOver = resourceSelectorPopOver;
 
