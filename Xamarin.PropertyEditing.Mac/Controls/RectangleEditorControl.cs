@@ -47,10 +47,22 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		protected override void UpdateValue ()
 		{
+			XEditor.IsUpdatingMultiple = true;
+			YEditor.IsUpdatingMultiple = true;
+			WidthEditor.IsUpdatingMultiple = true;
+			HeightEditor.IsUpdatingMultiple = true;
+
 			XEditor.Value = ViewModel.Value.X;
 			YEditor.Value = ViewModel.Value.Y;
 			WidthEditor.Value = ViewModel.Value.Width;
 			HeightEditor.Value = ViewModel.Value.Height;
+
+			XEditor.IsUpdatingMultiple = false;
+			YEditor.IsUpdatingMultiple = false;
+			WidthEditor.IsUpdatingMultiple = false;
+			HeightEditor.IsUpdatingMultiple = false;
+
+			OnInputUpdated (null, null);
 		}
 	}
 
@@ -58,10 +70,22 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		protected override void UpdateValue ()
 		{
+			XEditor.IsUpdatingMultiple = true;
+			YEditor.IsUpdatingMultiple = true;
+			WidthEditor.IsUpdatingMultiple = true;
+			HeightEditor.IsUpdatingMultiple = true;
+
 			XEditor.Value = ViewModel.Value.X;
 			YEditor.Value = ViewModel.Value.Y;
 			WidthEditor.Value = ViewModel.Value.Width;
 			HeightEditor.Value = ViewModel.Value.Height;
+
+			XEditor.IsUpdatingMultiple = false;
+			YEditor.IsUpdatingMultiple = false;
+			WidthEditor.IsUpdatingMultiple = false;
+			HeightEditor.IsUpdatingMultiple = false;
+
+			OnInputUpdated (null, null);
 		}
 	}
 }

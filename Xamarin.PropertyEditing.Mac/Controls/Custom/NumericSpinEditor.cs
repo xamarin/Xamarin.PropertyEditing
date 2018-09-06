@@ -161,6 +161,8 @@ namespace Xamarin.PropertyEditing.Mac
 			set { numericEditor.AllowNegativeValues = value; }
 		}
 
+		public bool IsUpdatingMultiple { get; set; }
+
 		public virtual void Reset ()
 		{
 		}
@@ -197,9 +199,7 @@ namespace Xamarin.PropertyEditing.Mac
 			numericEditor.KeyArrowUp += (sender, e) => { IncrementNumericValue (e); };
 			numericEditor.KeyArrowDown += (sender, e) => { DecrementNumericValue (e); };
 
-			numericEditor.ValidatedEditingEnded += (s, e) => {
-				OnEditingEnded (s, e);
-			};
+			numericEditor.ValidatedEditingEnded += OnEditingEnded;
 
 			AddSubview (numericEditor);
 			AddSubview (incrementButton);
@@ -267,7 +267,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected void NotifyingValueChanged (EventArgs eventArgs)
 		{
-			ValueChanged?.Invoke (this, eventArgs);
+			if (!IsUpdatingMultiple) {
+				ValueChanged?.Invoke (this, eventArgs);
+			}
 		}
 
 		public void IncrementNumericValue (bool shiftPressed = false)
