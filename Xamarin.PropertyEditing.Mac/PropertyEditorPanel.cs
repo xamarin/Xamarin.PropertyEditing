@@ -105,48 +105,48 @@ namespace Xamarin.PropertyEditing.Mac
 
 			NSControlSize controlSize = NSControlSize.Small;
 
-			propertyFilter = new NSSearchField (new CGRect (10, Frame.Height - 25, 170, 24)) {
-				TranslatesAutoresizingMaskIntoConstraints = false,
-				PlaceholderString = LocalizationResources.PropertyFilterLabel,
+			this.propertyArrangeModeLabel = new NSTextField {
 				ControlSize = controlSize,
-				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
-			};
-			AddSubview (propertyFilter);
-
-			this.propertyArrangeModeLabel = new NSTextField (new CGRect (245, Frame.Height - 28, 150, 24)) {
-				TranslatesAutoresizingMaskIntoConstraints = false,
 				BackgroundColor = NSColor.Clear,
-				TextColor = NSColor.Black,
-				Editable = false,
 				Bezeled = false,
+				Editable = false,
 				StringValue = LocalizationResources.ArrangeByLabel,
-				ControlSize = controlSize,
+				TextColor = NSColor.Black,
+				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
-			propertyArrangeMode = new NSComboBox (new CGRect (320, Frame.Height - 25, 153, 24)) {
-				TranslatesAutoresizingMaskIntoConstraints = false,
-				Editable = false,
+			this.propertyArrangeMode = new NSComboBox {
 				ControlSize = controlSize,
+				Editable = false,
 				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
+				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
 			var enumValues = Enum.GetValues (typeof (PropertyArrangeMode));
 
 			foreach (var item in enumValues) {
-				propertyArrangeMode.Add (new NSString (item.ToString ())); // TODO May need translating
+				this.propertyArrangeMode.Add (new NSString (item.ToString ())); // TODO May need translating
 			}
-			propertyArrangeMode.SelectItem (0);
+			this.propertyArrangeMode.SelectItem (0);
 
 			if (IsArrangeEnabled) {
 				AddSubview (this.propertyArrangeMode);
 				AddSubview (this.propertyArrangeModeLabel);
 			}
 
-			// If either the Filter Mode or PropertySearchFilter Change Filter the Data
-			propertyArrangeMode.SelectionChanged += OnArrageModeChanged;
-			propertyFilter.Changed += OnPropertyFilterChanged;
+			this.propertyFilter = new NSSearchField {
+				ControlSize = controlSize,
+				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
+				PlaceholderString = LocalizationResources.PropertyFilterLabel,
+				TranslatesAutoresizingMaskIntoConstraints = false,
+			};
+			AddSubview (this.propertyFilter);
 
-			propertyTable = new FirstResponderOutlineView {
+			// If either the Filter Mode or PropertySearchFilter Change Filter the Data
+			this.propertyArrangeMode.SelectionChanged += OnArrageModeChanged;
+			this.propertyFilter.Changed += OnPropertyFilterChanged;
+
+			this.propertyTable = new FirstResponderOutlineView {
 				RefusesFirstResponder = true,
 				AutoresizingMask = NSViewResizingMask.WidthSizable,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
@@ -157,37 +157,39 @@ namespace Xamarin.PropertyEditing.Mac
 			propertyTable.GridStyleMask = NSTableViewGridStyle.SolidHorizontalLine | NSTableViewGridStyle.SolidVerticalLine;
 #endif
 
-			NSTableColumn propertiesList = new NSTableColumn (PropertyListColId) { Title = LocalizationResources.PropertyColumnTitle };
-			NSTableColumn propertyEditors = new NSTableColumn (PropertyEditorColId) { Title = LocalizationResources.ValueColumnTitle };
+			var propertiesList = new NSTableColumn (PropertyListColId) { Title = LocalizationResources.PropertyColumnTitle };
+			var propertyEditors = new NSTableColumn (PropertyEditorColId) { Title = LocalizationResources.ValueColumnTitle };
 			propertiesList.Width = 158;
 			propertyEditors.Width = 250;
-			propertyTable.AddColumn (propertiesList);
-			propertyTable.AddColumn (propertyEditors);
+			this.propertyTable.AddColumn (propertiesList);
+			this.propertyTable.AddColumn (propertyEditors);
 
 			// Set OutlineTableColumn or the arrows showing children/expansion will not be drawn
-			propertyTable.OutlineTableColumn = propertiesList;
+			this.propertyTable.OutlineTableColumn = propertiesList;
 
 			// create a table view and a scroll view
-			var tableContainer = new NSScrollView (new CGRect (10, Frame.Height - 210, propertiesList.Width + propertyEditors.Width, Frame.Height - 55)) {
+			var tableContainer = new NSScrollView {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
 			// add the panel to the window
-			tableContainer.DocumentView = propertyTable;
+			tableContainer.DocumentView = this.propertyTable;
 			AddSubview (tableContainer);
 
-			this.DoConstraints (new NSLayoutConstraint[] { 
-				propertyFilter.ConstraintTo(this, (pf, c) => pf.Top == c.Top + 3),
-				propertyFilter.ConstraintTo(this, (pf, c) => pf.Left == c.Left + 10),
+			this.DoConstraints (new NSLayoutConstraint[] {
+				this.propertyArrangeModeLabel.ConstraintTo(this, (pl, c) => pl.Top == c.Top + 5),
+				this.propertyArrangeModeLabel.ConstraintTo(this, (pl, c) => pl.Left == c.Left + 10),
 
-				propertyArrangeModeLabel.ConstraintTo(this, (pl, c) => pl.Top == c.Top + 5),
-				propertyArrangeModeLabel.ConstraintTo(propertyArrangeMode, (pl, pa) => pl.Left == pa.Left - 71),
+				this.propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Top == c.Top + 4),
+				this.propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Left == c.Left + 90),
+				this.propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Width == 130),
 
-				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Top == c.Top + 4),
-				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Left == c.Left + 280),
-				propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Width == c.Width - 291),
+				this.propertyFilter.ConstraintTo(this, (pf, c) => pf.Top == c.Top + 3),
+				this.propertyFilter.ConstraintTo(this, (pf, c) => pf.Left == c.Left + 255),
+				this.propertyFilter.ConstraintTo(this, (pa, c) => pa.Width == c.Width - 265),
 
 				tableContainer.ConstraintTo(this, (t, c) => t.Top == c.Top + 30),
+				tableContainer.ConstraintTo(this, (t, c) => t.Left == c.Left + 10),
 				tableContainer.ConstraintTo(this, (t, c) => t.Width == c.Width - 20),
 				tableContainer.ConstraintTo(this, (t, c) => t.Height == c.Height - 40),
 			});
@@ -218,21 +220,20 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnArrageModeChanged (object sender, EventArgs e)
 		{
-			PropertyArrangeMode filterMode;
-			Enum.TryParse<PropertyArrangeMode> (propertyArrangeMode.GetItemObject (propertyArrangeMode.SelectedIndex).ToString (), out filterMode);
+			Enum.TryParse<PropertyArrangeMode> (this.propertyArrangeMode.GetItemObject (this.propertyArrangeMode.SelectedIndex).ToString (), out PropertyArrangeMode filterMode);
 			this.viewModel.ArrangeMode = filterMode;
 		}
 
 		private void OnPropertyFilterChanged (object sender, EventArgs e)
 		{
-			this.viewModel.FilterText = propertyFilter.Cell.Title;
+			this.viewModel.FilterText = this.propertyFilter.Cell.Title;
 
 			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
 		}
 
 		void UpdateTheme ()
 		{
-			this.Appearance = ThemeManager.CurrentAppearance;
+			Appearance = ThemeManager.CurrentAppearance;
 		}
 
 		private void OnVmPropertyChanged (object sender, PropertyChangedEventArgs e)
