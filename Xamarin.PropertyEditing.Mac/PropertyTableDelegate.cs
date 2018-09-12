@@ -85,7 +85,7 @@ namespace Xamarin.PropertyEditing.Mac
 					} else {
 						var view = (PanelHeaderLabelControl)outlineView.MakeView (PanelHeaderLabelControl.PanelHeaderLabelIdentifierString, this);
 						if (view == null) {
-							view = new PanelHeaderLabelControl ();
+							view = new PanelHeaderLabelControl (dataSource.DataContext);
 						}
 						return view;
 					}
@@ -247,7 +247,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out PropertyViewModel vm, out IGroupingList<string, EditorViewModel> group, out string cellIdentifier)
 		{
 			var facade = (NSObjectFacade)item;
-			vm = facade.Target as PropertyViewModel; 
+			vm = facade.Target as PropertyViewModel;
 			group = facade.Target as IGroupingList<string, EditorViewModel>;
 			cellIdentifier = facade.Target is PanelHeaderEditorControl pvh
 								   ? nameof (PanelHeaderEditorControl)
