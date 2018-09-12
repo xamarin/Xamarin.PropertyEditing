@@ -33,7 +33,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void MouseDown (NSEvent theEvent)
 		{
-			switch (theEvent.Type) {
+			if (Enabled) {
+				switch (theEvent.Type) {
 				case NSEventType.LeftMouseDown:
 					NotifyMouseLeftDown ();
 					break;
@@ -41,17 +42,22 @@ namespace Xamarin.PropertyEditing.Mac
 				case NSEventType.RightMouseDown:
 					NotifyMouseRightDown ();
 					break;
+				}
 			}
 		}
 
 		public override void MouseEntered (NSEvent theEvent)
 		{
-			NotifyMouseEntered ();
+			if (Enabled) {
+				NotifyMouseEntered ();
+			}
 		}
 
 		public override void MouseExited (NSEvent theEvent)
 		{
-			NotifyMouseExited ();
+			if (Enabled) {
+				NotifyMouseExited ();
+			}
 		}
 
 		public override void UpdateTrackingAreas ()
