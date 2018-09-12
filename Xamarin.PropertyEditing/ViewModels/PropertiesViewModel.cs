@@ -350,6 +350,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (knownProperties && this.knownEditors == null)
 				this.knownEditors = new BidirectionalDictionary<KnownProperty, EditorViewModel> ();
 
+			UpdateProperties (newPropertySet, removedEditors, newEditors);
+
+			EventsEnabled = events != null;
+			UpdateEvents (newEventSet, removedEditors, newEditors);
+
 			string name = (this.objEditors.Count > 1) ? String.Format (PropertyEditing.Properties.Resources.MultipleObjectsSelected, this.objEditors.Count) : PropertyEditing.Properties.Resources.NoName;
 			if (this.objEditors.Count == 1) {
 				string tname = nameQuery?.Result;
@@ -359,11 +364,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			SetNameable (firstNameable);
 			SetCurrentObjectName (name, this.objEditors.Count > 1);
-
-			UpdateProperties (newPropertySet, removedEditors, newEditors);
-
-			EventsEnabled = events != null;
-			UpdateEvents (newEventSet, removedEditors, newEditors);
 		}
 
 		private void UpdateEvents (HashSet<IEventInfo> newSet, IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
