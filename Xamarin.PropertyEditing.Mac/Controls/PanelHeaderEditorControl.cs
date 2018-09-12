@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.IO;
 using AppKit;
 using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
@@ -10,8 +11,19 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class PanelHeaderLabelControl : NSView
 	{
 		public const string PanelHeaderLabelIdentifierString = "PanelHeaderLabelIdentifier";
-		public PanelHeaderLabelControl ()
+
+		private NSImageView propertyIcon;
+
+		private PanelViewModel viewModel;
+
+		public PanelHeaderLabelControl (PanelViewModel viewModel)
 		{
+			if (viewModel == null)
+				throw new ArgumentNullException (nameof (viewModel));
+
+			this.viewModel = viewModel;
+			this.viewModel.PropertyChanged += ViewModel_PropertyChanged;
+
 			Identifier = PanelHeaderLabelIdentifierString;
 
 			var propertyObjectNameLabel = new UnfocusableTextField {
@@ -28,6 +40,12 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (propertyTypeNameLabel);
 
+			this.propertyIcon = new NSImageView {
+				ImageScaling = NSImageScale.AxesIndependently,
+				TranslatesAutoresizingMaskIntoConstraints = false,
+			};
+			AddSubview (this.propertyIcon);
+
 			this.DoConstraints (new NSLayoutConstraint[] {
 				propertyObjectNameLabel.ConstraintTo(this, (ol, c) => ol.Top == c.Top),
 				propertyObjectNameLabel.ConstraintTo(this, (ol, c) => ol.Left == c.Left + 182),
@@ -38,13 +56,38 @@ namespace Xamarin.PropertyEditing.Mac
 				propertyTypeNameLabel.ConstraintTo(this, (tl, c) => tl.Left == c.Left + 182),
 				propertyTypeNameLabel.ConstraintTo(this, (tl, c) => tl.Width == 40),
 				propertyTypeNameLabel.ConstraintTo(this, (tl, c) => tl.Height == PropertyEditorControl.DefaultControlHeight),
+
+				this.propertyIcon.ConstraintTo(this, (ico, c) => ico.Top == c.Top + 5),
+				this.propertyIcon.ConstraintTo(this, (ico, c) => ico.Left == c.Left + 32),
+				this.propertyIcon.ConstraintTo(this, (ico, c) => ico.Width == 32),
+				this.propertyIcon.ConstraintTo(this, (ico, c) => ico.Height == 32),
 			});
+
+			UpdateIcon ();
+		}
+
+		private async void UpdateIcon ()
+		{
+			Stream icon = await this.viewModel.GetIconAsync ();
+
+			if (icon != null)
+				this.propertyIcon.Image = NSImage.FromStream (icon);
+
+			this.propertyIcon.Hidden = (icon == null);
+		}
+
+		void ViewModel_PropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == nameof (PanelViewModel.TypeName)) {
+				UpdateIcon ();
+			}
 		}
 	}
 
 	internal class PanelHeaderEditorControl : PropertyEditorControl
 	{
 		private NSTextField propertyObjectName;
+
 		private PanelViewModel viewModel;
 
 		public PanelHeaderEditorControl (PanelViewModel viewModel)
