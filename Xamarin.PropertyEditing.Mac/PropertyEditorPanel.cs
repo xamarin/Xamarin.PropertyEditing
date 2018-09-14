@@ -220,8 +220,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnArrangeModeChanged (object sender, EventArgs e)
 		{
-			Enum.TryParse<PropertyArrangeMode> (this.propertyArrangeMode.GetItemObject (this.propertyArrangeMode.SelectedIndex).ToString (), out PropertyArrangeMode filterMode);
-			this.viewModel.ArrangeMode = filterMode;
+			this.viewModel.ArrangeMode = this.viewModel.ArrangeModes[(int)this.propertyArrangeMode.SelectedIndex].ArrangeMode;
 		}
 
 		private void OnPropertyFilterChanged (object sender, EventArgs e)
