@@ -213,10 +213,11 @@ namespace Xamarin.PropertyEditing.Mac
 			var view = (PropertyEditorControl)outlineView.MakeView (identifier, this);
 			if (view != null)
 				return view;
-
+				
 			if (vm != null) {
-				view = this.editorSelector.GetEditor (vm);
-				if (view != null) {
+				IEditorView editor = this.editorSelector.GetEditor (vm);
+				if (editor != null) {
+					view = (PropertyEditorControl)editor.NativeView;
 					view.Identifier = identifier;
 					view.TableView = outlineView;
 				}

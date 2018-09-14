@@ -137,6 +137,7 @@
     <Compile Include="Controls\PanelHeaderEditorControl.cs" />
     <Compile Include="Controls\ThicknessEditorControl.cs" />
     <Compile Include="PropertyEditorSelector.cs" />
+    <Compile Include="Controls\IEditorView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

@@ -7,7 +7,8 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal abstract class PropertyEditorControl : BaseEditorControl
+	internal abstract class PropertyEditorControl
+		: BaseEditorControl, IEditorView
 	{
 		public string Label { get; set; }
 
@@ -45,6 +46,14 @@ namespace Xamarin.PropertyEditing.Mac
 				viewModel.ErrorsChanged += HandleErrorsChanged;
 			}
 		}
+
+		EditorViewModel IEditorView.ViewModel
+		{
+			get { return this.ViewModel; }
+			set { ViewModel = (PropertyViewModel)value; }
+		}
+
+		NSView IEditorView.NativeView => this;
 
 		[Export ("_primitiveSetDefaultNextKeyView:")]
 		public void SetDefaultNextKeyView (NSView child)
