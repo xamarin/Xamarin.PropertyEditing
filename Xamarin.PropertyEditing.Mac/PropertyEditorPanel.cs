@@ -237,7 +237,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnVmPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == nameof (PanelViewModel.ArrangeMode))
+			if (e.PropertyName == nameof (PanelViewModel.ArrangeMode) || String.IsNullOrEmpty (e.PropertyName))
 				OnArrangeModeChanged (sender, e);
 		}
 
