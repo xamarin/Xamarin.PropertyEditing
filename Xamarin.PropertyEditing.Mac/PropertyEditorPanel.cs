@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using CoreGraphics;
 using Foundation;
 using AppKit;
+
 using Xamarin.PropertyEditing.ViewModels;
 using Xamarin.PropertyEditing.Mac.Resources;
-using System.ComponentModel;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -68,6 +69,7 @@ namespace Xamarin.PropertyEditing.Mac
 				this.propertyTable.Delegate = new PropertyTableDelegate (this.dataSource);
 				this.propertyTable.DataSource = this.dataSource;
 
+				OnVmPropertyChanged (this.viewModel, new PropertyChangedEventArgs (null));
 				if (this.viewModel != null) {
 					this.viewModel.ArrangedPropertiesChanged += OnPropertiesChanged;
 					this.viewModel.PropertyChanged += OnVmPropertyChanged;
@@ -127,7 +129,6 @@ namespace Xamarin.PropertyEditing.Mac
 			foreach (var item in enumValues) {
 				this.propertyArrangeMode.Add (new NSString (item.ToString ())); // TODO May need translating
 			}
-			this.propertyArrangeMode.SelectItem (0);
 
 			if (IsArrangeEnabled) {
 				AddSubview (this.propertyArrangeMode);
@@ -238,7 +239,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private void OnVmPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == nameof (PanelViewModel.ArrangeMode) || String.IsNullOrEmpty (e.PropertyName))
-				OnArrangeModeChanged (sender, e);
+				this.propertyArrangeMode.Select (new NSString (this.viewModel.ArrangeMode.ToString ()));
 		}
 
 		class FirstResponderOutlineView : NSOutlineView
