@@ -42,6 +42,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 		NSView IEditorView.NativeView => View;
 
+		public bool IsDynamicallySized => false;
+
+		public nint GetHeight (EditorViewModel viewModel)
+		{
+			return (int)(PreferredContentSize.Height + EdgeInsets.Top + EdgeInsets.Bottom);
+		}
+
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
 		{
 			this.inhibitSelection = true;

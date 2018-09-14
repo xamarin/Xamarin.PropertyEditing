@@ -23,7 +23,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public const int DefaultPropertyLabelFontSize = 11;
 		public const int DefaultDescriptionLabelFontSize = 10;
 		public const string DefaultFontName = ".AppleSystemUIFont";
-		public virtual bool TriggerRowChange => false;
+		public virtual bool IsDynamicallySized => false;
 
 		PropertyViewModel viewModel;
 		public PropertyViewModel ViewModel {

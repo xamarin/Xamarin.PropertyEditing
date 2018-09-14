@@ -1,3 +1,4 @@
+using System;
 using AppKit;
 
 using Xamarin.PropertyEditing.ViewModels;
@@ -13,5 +14,8 @@ namespace Xamarin.PropertyEditing.Mac
 		NSView NativeView { get; }
 
 		EditorViewModel ViewModel { get; set; }
+
+		bool IsDynamicallySized { get; }
+		nint GetHeight (EditorViewModel vm);
 	}
 }
