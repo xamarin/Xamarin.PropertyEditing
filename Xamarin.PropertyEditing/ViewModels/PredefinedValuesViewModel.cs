@@ -84,9 +84,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				});
 			} else
 				Value = realValue;
-
-			this.valueName = value;
-			OnPropertyChanged ();
 		}
 
 		private bool IsValueDefined (TValue value)
