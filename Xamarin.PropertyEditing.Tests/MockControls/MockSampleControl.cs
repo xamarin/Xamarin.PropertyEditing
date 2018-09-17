@@ -16,7 +16,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<int> ("UnsetInteger", ReadWrite, valueSources: ValueSources.Local);
 			AddProperty<float> ("FloatingPoint", ReadWrite);
 			AddProperty<string> ("String", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
-			AddProperty<Enumeration> ("Enumeration", ReadWrite);
+			AddProperty<Enumeration> ("Enumeration", ReadWrite, constrained: false);
 			AddProperty<FlagsNoValues> ("FlagsNoValues", ReadWrite, canWrite: true, flag: true);
 			AddProperty<FlagsWithValues> ("FlagsWithValues", ReadWrite, canWrite: true, flag: true);
 			AddProperty<CommonPoint> ("Point", ReadWrite);
