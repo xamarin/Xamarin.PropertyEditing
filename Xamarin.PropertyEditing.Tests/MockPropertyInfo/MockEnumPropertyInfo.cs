@@ -15,7 +15,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		where TUnderlying : struct
 		where TEnum : struct
 	{
-		public MockEnumPropertyInfo (string name, string description = null, string category = "", bool canWrite = true, bool flag = false, IEnumerable<Type> converterTypes = null)
+		public MockEnumPropertyInfo (string name, string description = null, string category = "", bool canWrite = true, bool flag = false, IEnumerable<Type> converterTypes = null, bool constrained = true)
 			: base (name, description, category, canWrite, converterTypes)
 		{
 			var names = Enum.GetNames (typeof (TEnum));
@@ -33,12 +33,13 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 				PredefinedValues = predefinedValues;
 			}
 
+			IsConstrainedToPredefined = constrained;
 			IsValueCombinable = flag;
 		}
 
 		public override Type Type => typeof (TEnum);
 
-		public bool IsConstrainedToPredefined => true;
+		public bool IsConstrainedToPredefined { get; }
 
 		public bool IsValueCombinable { get; }
 
