@@ -71,6 +71,7 @@
       <DependentUpon>CollectionEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="CombinablePredefinedValuesEditorControl.cs" />
+    <Compile Include="ComboBoxEx.cs" />
     <Compile Include="CommonBrushToBrushConverter.cs" />
     <Compile Include="ByteToPercentageConverter.cs" />
     <Compile Include="ChoiceControl.cs" />
