@@ -270,14 +270,38 @@ namespace Xamarin.PropertyEditing.Tests
 
 	[TestFixture]
 	internal class UnconstrainedPredefinedViewModelTests
-		: PredefinedValuesViewModelTests<string>
+		: PredefinedValuesViewModelTests<int>
 	{
+		[Test]
+		public async Task ValueNameRepresentsValueDescriptor ()
+		{
+			var value = GetNonDefaultRandomTestValue ();
+
+			var property = GetPropertyMock ();
+			var predefined = property.As<IHavePredefinedValues<int>> ();
+			predefined.SetupGet (p => p.PredefinedValues).Returns (new Dictionary<string, int> {
+				{ "Value", 0 },
+			});
+			predefined.SetupGet (p => p.IsConstrainedToPredefined).Returns (false);
+
+			var outOfBounds = "random";
+
+			var editor = GetBasicEditor (property.Object);
+			await editor.SetValueAsync (property.Object, new ValueInfo<int> {
+				Source = ValueSource.Local,
+				ValueDescriptor = outOfBounds
+			});
+
+			var vm = GetViewModel (property.Object, new[] { editor });
+			Assert.That (vm.ValueName, Is.EqualTo (outOfBounds));
+		}
+
 		[Test]
 		public void ValueDescriptorForUnconstrained ()
 		{
 			var property = GetPropertyMock ();
-			var predefined = property.As<IHavePredefinedValues<string>> ();
-			predefined.SetupGet (p => p.PredefinedValues).Returns (new Dictionary<string, string> {
+			var predefined = property.As<IHavePredefinedValues<int>> ();
+			predefined.SetupGet (p => p.PredefinedValues).Returns (new Dictionary<string, int> {
 				{ "Value", GetNonDefaultRandomTestValue () },
 			});
 			predefined.SetupGet (p => p.IsConstrainedToPredefined).Returns (false);
@@ -289,7 +313,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			vm.ValueName = "test";
 
-			var info = editor.values[property.Object] as ValueInfo<string>;
+			var info = editor.values[property.Object] as ValueInfo<int>;
 			Assert.That (info, Is.Not.Null);
 			Assert.That (info.ValueDescriptor, Is.EqualTo ("test"));
 			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
@@ -300,8 +324,8 @@ namespace Xamarin.PropertyEditing.Tests
 		public void ValueDescriptorEmptyNotNullUnconstrained ()
 		{
 			var property = GetPropertyMock ();
-			var predefined = property.As<IHavePredefinedValues<string>> ();
-			predefined.SetupGet (p => p.PredefinedValues).Returns (new Dictionary<string, string> {
+			var predefined = property.As<IHavePredefinedValues<int>> ();
+			predefined.SetupGet (p => p.PredefinedValues).Returns (new Dictionary<string, int> {
 				{ "Value", GetNonDefaultRandomTestValue () },
 			});
 			predefined.SetupGet (p => p.IsConstrainedToPredefined).Returns (false);
@@ -314,28 +338,39 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.ValueName = "test";
 			vm.ValueName = null;
 
-			var info = editor.values[property.Object] as ValueInfo<string>;
+			var info = editor.values[property.Object] as ValueInfo<int>;
 			Assert.That (info, Is.Not.Null);
 			Assert.That (info.ValueDescriptor, Is.EqualTo (String.Empty));
 			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
 		}
 
-		protected override string GetRandomTestValue (Random rand)
+		protected override int GetRandomTestValue (Random rand)
 		{
-			string[] names = Enum.GetNames (typeof(PredefinedEnumTest));
-			int index = rand.Next (0, names.Length);
-			return names[index];
+			int[] values = (int[])Enum.GetValues (typeof(PredefinedEnumTest));
+			int index = rand.Next (0, values.Length);
+			return values[index];
 		}
 
-		protected override PredefinedValuesViewModel<string> GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
+		protected override PredefinedValuesViewModel<int> GetViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 		{
-			return new PredefinedValuesViewModel<string> (platform, property, editors);
+			return new PredefinedValuesViewModel<int> (platform, property, editors);
 		}
 
 		protected override bool IsConstrained => false;
 
-		protected override IReadOnlyDictionary<string, string> Values =>
-			Enum.GetNames (typeof(PredefinedEnumTest)).ToDictionary (s => s, s => s);
+		protected override IReadOnlyDictionary<string, int> Values
+		{
+			get
+			{
+				string[] names = Enum.GetNames (typeof (PredefinedEnumTest));
+				int[] values = (int[])Enum.GetValues (typeof(PredefinedEnumTest));
+				var dict = new Dictionary<string, int> ();
+				for (int i = 0; i < names.Length; i++)
+					dict.Add (names[i], values[i]);
+
+				return dict;
+			}
+		}	
 	}
 
 	[TestFixture]

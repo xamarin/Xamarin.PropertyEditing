@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public string ValueName
 		{
 			get { return this.valueName; }
-			set { SetValue (value); }
+			set { SetValueName (value); }
 		}
 
 		public bool IsConstrainedToPredefined => this.predefinedValues.IsConstrainedToPredefined;
@@ -64,7 +64,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private string valueName;
 		private readonly IHavePredefinedValues<TValue> predefinedValues;
 
-		private async void SetValue (string value)
+		private async void SetValueName (string value)
 		{
 			if (value == this.valueName)
 				return;
@@ -110,6 +110,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (ValueSource == ValueSource.Unset) {
 				this.valueName = String.Empty;
 				OnPropertyChanged (nameof(ValueName));
+			// Order relevant: Value may default() to a valid value, so ValueDescriptor takes precedence
+			} else if (!IsConstrainedToPredefined && CurrentValue != null && CurrentValue.ValueDescriptor is string custom) {
+				this.valueName = custom;
+				OnPropertyChanged (nameof (ValueName));
 			} else if (TryGetValueName (Value, out string newValueName)) {
 				this.valueName = newValueName;
 				OnPropertyChanged (nameof(ValueName));
