@@ -65,7 +65,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:EnumEditorControl}">
-					<ComboBox x:Name="ComboBox" ItemsSource="{Binding PossibleValues,Mode=OneTime}" SelectedItem="{Binding ValueName}" IsEditable="{Binding IsConstrainedToPredefined,Mode=OneTime,Converter={StaticResource OppositeBoolConverter}}" VerticalContentAlignment="Center" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+					<local:ComboBoxEx x:Name="ComboBox" ItemsSource="{Binding PossibleValues,Mode=OneTime}" IsEditable="{Binding IsConstrainedToPredefined,Mode=OneTime,Converter={StaticResource OppositeBoolConverter}}" Text="{Binding ValueName,Mode=TwoWay,UpdateSourceTrigger=LostFocus}" VerticalContentAlignment="Center" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -2863,5 +2863,8 @@
 				<Setter Property="Template" Value="{StaticResource ComboBoxEditableTemplate}"/>
 			</Trigger>
 		</Style.Triggers>
+	</Style>
+
+	<Style TargetType="{x:Type local:ComboBoxEx}" BasedOn="{StaticResource {x:Type ComboBox}}">
 	</Style>
 </ResourceDictionary>
