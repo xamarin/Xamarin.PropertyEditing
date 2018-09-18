@@ -1,37 +1,45 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AppKit;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class UnderlinedTabViewController<TViewModel> : NotifyingTabViewController<TViewModel> where TViewModel : NotifyingObject
+	internal class UnderlinedTabViewController<TViewModel>
+		: NotifyingTabViewController<TViewModel>
+		where TViewModel : NotifyingObject
 	{
-		public override void NumberOfItemsChanged (NSTabView tabView)
+		public override void AddTabViewItem (NSTabViewItem item)
 		{
-			base.NumberOfItemsChanged (tabView);
-			var items = this.tabStack.Views.ToList ();
-			foreach (var view in items) {
-				this.tabStack.RemoveView (view);
-				view.Dispose ();
+			base.AddTabViewItem (item);
+
+			NSView tabView;
+			if (item.Image != null) {
+				tabView = new UnderlinedImageView (item.Image.Name) {
+					Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex,
+					ToolTip = item.ToolTip
+				};
+			} else {
+				tabView = new UnderlinedTextField {
+					BackgroundColor = NSColor.Clear,
+					Editable = false,
+					Bezeled = false,
+					StringValue = item.Label,
+					Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex,
+					ToolTip = item.ToolTip
+				};
 			}
-			var i = 0;
-			foreach (var item in TabViewItems) {
-				if (item.Image != null) {
-					this.tabStack.AddView (new UnderlinedImageView (item.Image.Name) {
-						Selected = i == SelectedTabViewItemIndex,
-						ToolTip = item.ToolTip,
-					}, NSStackViewGravity.Leading);
-				} else {
-					this.tabStack.AddView (new UnderlinedTextField () {
-						BackgroundColor = NSColor.Clear,
-						Editable = false,
-						Bezeled = false,
-						StringValue = item.Label,
-						Selected = i == SelectedTabViewItemIndex,
-						ToolTip = item.ToolTip,
-					}, NSStackViewGravity.Leading);
-				}
-				i++;
-			}
+
+			this.tabStack.AddView (tabView, NSStackViewGravity.Leading);
+		}
+
+		public override void RemoveTabViewItem (NSTabViewItem tabViewItem)
+		{
+			int index = (int)TabView.IndexOf (tabViewItem);
+			NSView tabView = this.tabStack.Views[index];
+			this.tabStack.RemoveView (tabView);
+			tabView.Dispose ();
+
+			base.RemoveTabViewItem (tabViewItem);
 		}
 
 		private NSStackView outerStack;
@@ -58,14 +66,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (!(hit is IUnderliningTabView))
 				return;
 
-			int i = 0;
-			foreach (var label in tabStack.Views) {
-				if (hit == label) {
-					SelectedTabViewItemIndex = i;
-					break;
-				}
-				i++;
-			}
+			SelectedTabViewItemIndex = Array.IndexOf (this.tabStack.Views, hit);
 		}
 
 		public override void DidSelect (NSTabView tabView, NSTabViewItem item)
