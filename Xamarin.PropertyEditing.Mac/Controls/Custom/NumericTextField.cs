@@ -1,5 +1,6 @@
 ﻿using System;
 using AppKit;
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
@@ -38,6 +39,8 @@ namespace Xamarin.PropertyEditing.Mac
 			keyUpDownDelegate.KeyArrowDown += (sender, e) => { OnKeyArrowDown (e); };
 			Delegate = keyUpDownDelegate;
 		}
+
+		public override CGSize IntrinsicContentSize => new CGSize(30, 20);
 
 		public override bool ShouldBeginEditing (NSText textObject)
 		{
