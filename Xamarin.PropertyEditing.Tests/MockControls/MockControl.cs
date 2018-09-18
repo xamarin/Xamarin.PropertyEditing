@@ -14,14 +14,14 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		public void AddProperty<T> (string name, string category = null,
 			bool canWrite = true, bool flag = false,
 			IEnumerable<Type> converterTypes = null,
-			string description = null, ValueSources valueSources = ValueSources.Local | ValueSources.Default | ValueSources.Binding)
+			string description = null, bool constrained = true, ValueSources valueSources = ValueSources.Local | ValueSources.Default | ValueSources.Binding)
 		{
 			IPropertyInfo propertyInfo;
 			if (typeof(T).IsEnum) {
 				var underlyingType = typeof (T).GetEnumUnderlyingType ();
 				var enumPropertyInfoType = typeof (MockEnumPropertyInfo<,>)
 					.MakeGenericType (underlyingType, typeof (T));
-				propertyInfo = (IPropertyInfo)Activator.CreateInstance (enumPropertyInfoType, name, description, category, canWrite, flag, converterTypes);
+				propertyInfo = (IPropertyInfo)Activator.CreateInstance (enumPropertyInfoType, name, description, category, canWrite, flag, converterTypes, constrained);
 			} else {
 				propertyInfo = new MockPropertyInfo<T> (name, description, category, canWrite, converterTypes, valueSources);
 			}
