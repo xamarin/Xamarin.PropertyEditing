@@ -8,28 +8,16 @@ namespace Xamarin.PropertyEditing.Mac
 		: NotifyingTabViewController<TViewModel>
 		where TViewModel : NotifyingObject
 	{
-		public override void AddTabViewItem (NSTabViewItem item)
+		public override void AddTabViewItem (NSTabViewItem tabViewItem)
 		{
-			base.AddTabViewItem (item);
+			base.AddTabViewItem (tabViewItem);
+			this.tabStack.AddView (GetView (tabViewItem), NSStackViewGravity.Leading);
+		}
 
-			NSView tabView;
-			if (item.Image != null) {
-				tabView = new UnderlinedImageView (item.Image.Name) {
-					Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex,
-					ToolTip = item.ToolTip
-				};
-			} else {
-				tabView = new UnderlinedTextField {
-					BackgroundColor = NSColor.Clear,
-					Editable = false,
-					Bezeled = false,
-					StringValue = item.Label,
-					Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex,
-					ToolTip = item.ToolTip
-				};
-			}
-
-			this.tabStack.AddView (tabView, NSStackViewGravity.Leading);
+		public override void InsertTabViewItem (NSTabViewItem tabViewItem, nint index)
+		{
+			base.InsertTabViewItem (tabViewItem, index);
+			this.tabStack.InsertView (GetView (tabViewItem), (nuint)index, NSStackViewGravity.Leading);
 		}
 
 		public override void RemoveTabViewItem (NSTabViewItem tabViewItem)
@@ -42,13 +30,6 @@ namespace Xamarin.PropertyEditing.Mac
 			base.RemoveTabViewItem (tabViewItem);
 		}
 
-		private NSStackView outerStack;
-		private NSStackView innerStack;
-		private NSStackView tabStack = new NSStackView () {
-			Spacing = 2f,
-		};
-
-		private NSEdgeInsets edgeInsets = new NSEdgeInsets (0, 0, 0, 0);
 		public NSEdgeInsets EdgeInsets {
 			get => this.edgeInsets;
 			set {
@@ -98,6 +79,36 @@ namespace Xamarin.PropertyEditing.Mac
 			this.innerStack.AddView (this.tabStack, NSStackViewGravity.Leading);
 			this.innerStack.AddView (TabView, NSStackViewGravity.Bottom);
 			View = this.outerStack;
+		}
+
+		private NSStackView outerStack;
+		private NSStackView innerStack;
+		private NSStackView tabStack = new NSStackView () {
+			Spacing = 2f,
+		};
+
+		private NSEdgeInsets edgeInsets = new NSEdgeInsets (0, 0, 0, 0);
+
+		private NSView GetView (NSTabViewItem item)
+		{
+			NSView tabView;
+			if (item.Image != null) {
+				tabView = new UnderlinedImageView (item.Image.Name) {
+					Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex,
+					ToolTip = item.ToolTip
+				};
+			} else {
+				tabView = new UnderlinedTextField {
+					BackgroundColor = NSColor.Clear,
+					Editable = false,
+					Bezeled = false,
+					StringValue = item.Label,
+					Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex,
+					ToolTip = item.ToolTip
+				};
+			}
+
+			return tabView;
 		}
 	}
 }
