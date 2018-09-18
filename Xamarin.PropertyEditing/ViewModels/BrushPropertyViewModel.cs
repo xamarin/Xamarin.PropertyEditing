@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			RequestCurrentValueUpdate ();
 		}
 
-		public IReadOnlyDictionary<string, CommonBrushType> BrushTypes
+		public IReadOnlyOrderedDictionary<string, CommonBrushType> BrushTypes
 		{
 			get;
 		}
