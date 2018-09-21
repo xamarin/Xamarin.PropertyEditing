@@ -182,10 +182,42 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void ColorToString()
+		public void ColorToRgba()
 		{
-			var color = new CommonColor (0x34, 0x56, 0x78, 0x12);
-			Assert.AreEqual ("#12345678", color.ToString ());
+			Assert.AreEqual ("#12345678", new CommonColor (0x12, 0x34, 0x56, 0x78).ToRgbaHex ());
+		}
+
+		[Test]
+		public void ColorToArgb ()
+		{
+			Assert.AreEqual ("#12345678", new CommonColor (0x34, 0x56, 0x78, 0x12).ToArgbHex ());
+			Assert.AreEqual ("#123456", new CommonColor (0x12, 0x34, 0x56).ToArgbHex ());
+		}
+
+		[Test]
+		public void ColorToString ()
+		{
+			Assert.AreEqual ("#12345678", new CommonColor (0x34, 0x56, 0x78, 0x12).ToString ());
+		}
+
+		[Test]
+		public void ColorParseArgb ()
+		{
+			CommonColor parsed;
+			Assert.IsTrue (CommonColor.TryParseArgbHex ("#123", out parsed));
+			Assert.AreEqual (new CommonColor (0x11, 0x22, 0x33), parsed);
+
+			Assert.IsTrue (CommonColor.TryParseArgbHex ("#123456", out parsed));
+			Assert.AreEqual (new CommonColor (0x12, 0x34, 0x56), parsed);
+
+			Assert.IsTrue (CommonColor.TryParseArgbHex ("#1234", out parsed));
+			Assert.AreEqual (new CommonColor (0x22, 0x33, 0x44, 0x11), parsed);
+
+			Assert.IsTrue (CommonColor.TryParseArgbHex ("#12345678", out parsed));
+			Assert.AreEqual (new CommonColor (0x34, 0x56, 0x78, 0x12), parsed);
+
+			Assert.IsFalse (CommonColor.TryParseArgbHex ("not a color", out parsed));
+			Assert.AreEqual (CommonColor.Black, parsed);
 		}
 
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
