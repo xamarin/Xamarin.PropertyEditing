@@ -64,6 +64,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			ce.Editor.ValueChanged += UpdateComponent;
+			ce.Editor.EditingEnded += UpdateComponent;
 			AddSubview (ce.Label);
 			AddSubview (ce.Editor);
 
