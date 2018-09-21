@@ -26,6 +26,15 @@ namespace Xamarin.PropertyEditing.Mac
 			get; set;
 		}
 
+		public string FocusedFormat {
+			get; set;
+		}
+
+		public string DisplayFormat
+		{
+			get; set;
+		}
+
 		public event EventHandler<bool> KeyArrowUp;
 		public event EventHandler<bool> KeyArrowDown;
 		public event EventHandler ValidatedEditingEnded;
@@ -128,6 +137,22 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			}
 			return false;
+		}
+
+		public override bool BecomeFirstResponder ()
+		{
+			if (FocusedFormat != null && Formatter is NSNumberFormatter numberFormatter) {
+				numberFormatter.PositiveFormat = FocusedFormat;
+			}
+			return base.BecomeFirstResponder ();
+		}
+
+		public override void DidEndEditing (NSNotification notification)
+		{
+			if (DisplayFormat != null && Formatter is NSNumberFormatter numberFormatter) {
+				numberFormatter.PositiveFormat = DisplayFormat;
+			}
+			base.DidEndEditing (notification);
 		}
 	}
 
