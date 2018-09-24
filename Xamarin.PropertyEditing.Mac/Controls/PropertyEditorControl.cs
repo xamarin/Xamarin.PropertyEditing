@@ -77,7 +77,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		/// <remarks>You should treat the implementation of this as static.</remarks>
-		public virtual nint GetHeight (PropertyViewModel vm)
+		public virtual nint GetHeight (EditorViewModel vm)
 		{
 			return DefaultControlHeight;
 		}

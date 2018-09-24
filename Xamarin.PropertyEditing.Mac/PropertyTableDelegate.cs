@@ -41,10 +41,14 @@ namespace Xamarin.PropertyEditing.Mac
 		// the table is looking for this method, picks it up automagically
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
-			PropertyViewModel vm;
+			EditorViewModel evm;
 			IGroupingList<string, EditorViewModel> group;
 			string cellIdentifier;
-			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
+			GetVMGroupCellItendifiterFromFacade (item, out evm, out group, out cellIdentifier);
+
+			if (!(evm is PropertyViewModel vm)) {
+				return null;
+			}
 
 			// Let's make the columns look pretty
 			if (!goldenRatioApplied) {
@@ -133,7 +137,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
 		{
-			PropertyViewModel vm;
+			EditorViewModel vm;
 			IGroupingList<string, EditorViewModel> group;
 			string cellIdentifier;
 			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
@@ -172,7 +176,7 @@ namespace Xamarin.PropertyEditing.Mac
 			public nint RowSize;
 			public PropertyEditorControl SizingInstance;
 
-			public nint GetHeight (PropertyViewModel vm)
+			public nint GetHeight (EditorViewModel vm)
 			{
 				if (SizingInstance != null)
 					return SizingInstance.GetHeight (vm);
@@ -224,10 +228,10 @@ namespace Xamarin.PropertyEditing.Mac
 			return view;
 		}
 
-		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out PropertyViewModel vm, out IGroupingList<string, EditorViewModel> group, out string cellIdentifier)
+		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out EditorViewModel vm, out IGroupingList<string, EditorViewModel> group, out string cellIdentifier)
 		{
 			var facade = (NSObjectFacade)item;
-			vm = facade.Target as PropertyViewModel;
+			vm = facade.Target as EditorViewModel;
 			group = facade.Target as IGroupingList<string, EditorViewModel>;
 			cellIdentifier = (group == null) ? vm.GetType ().FullName : group.Key;
 		}
