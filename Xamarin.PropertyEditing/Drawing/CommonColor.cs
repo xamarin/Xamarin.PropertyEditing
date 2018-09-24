@@ -366,10 +366,9 @@ namespace Xamarin.PropertyEditing.Drawing
 			return delta == 0 ? highest : (component - lowest) * 255 / delta;
 		}
 
-		public string ToRgbaHex ()
-		{
-			return $"#{R:X2}{G:X2}{B:X2}{A:X2}";
-		}
+		public string ToRgbaHex () => $"#{R:X2}{G:X2}{B:X2}{A:X2}";
+
+		public string ToArgbHex () => (A == 255) ? $"#{R:X2}{G:X2}{B:X2}" : $"#{A:X2}{R:X2}{G:X2}{B:X2}";
 
 		public static bool TryParseArgbHex (string value, out CommonColor color)
 		{
@@ -377,8 +376,8 @@ namespace Xamarin.PropertyEditing.Drawing
 				var hex = value.Substring (1);
 				switch (hex.Length) {
 				case 3:
-					hex = $"{hex[0]}{hex[0]}{hex[1]}{hex[1]}{hex[2]}{hex[2]}";
-					goto case 6;
+					hex = $"FF{hex[0]}{hex[0]}{hex[1]}{hex[1]}{hex[2]}{hex[2]}";
+					goto case 8;
 				case 6:
 					hex = "FF" + hex;
 					goto case 8;
@@ -576,9 +575,6 @@ namespace Xamarin.PropertyEditing.Drawing
 			return hashCode;
 		}
 
-		public override string ToString ()
-		{
-			return (A == 255) ? $"#{R:X2}{G:X2}{B:X2}" : $"#{A:X2}{R:X2}{G:X2}{B:X2}";
-		}
+		public override string ToString () => ToArgbHex ();
 	}
 }
