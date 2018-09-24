@@ -11,6 +11,8 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	public class PropertyButton : UnfocusableButton
 	{
+		public const int DefaultSize = 20;
+
 		NSMenu popUpContextMenu;
 
 		PropertyViewModel viewModel;

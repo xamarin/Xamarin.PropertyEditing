@@ -12,7 +12,6 @@ namespace Xamarin.PropertyEditing.Mac
 	internal abstract class BaseEditorControl : NSView
 	{
 		IEnumerable errorList;
-		const int DefaultPropertyButtonSize = 20;
 		const int DefaultActioButtonSize = 16;
 
 		public event EventHandler ActionButtonClicked;
@@ -66,13 +65,13 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (actionButton);
 
 			this.DoConstraints (new[] {
-				propertyButton.ConstraintTo (this, (ab, c) => ab.Width == DefaultPropertyButtonSize),
-				propertyButton.ConstraintTo (this, (ab, c) => ab.Height == DefaultPropertyButtonSize),
+				propertyButton.ConstraintTo (this, (ab, c) => ab.Width == PropertyButton.DefaultSize),
+				propertyButton.ConstraintTo (this, (ab, c) => ab.Height == PropertyButton.DefaultSize),
 				propertyButton.ConstraintTo (this, (ab, c) => ab.Top == c.Top + 1),
 				propertyButton.ConstraintTo (this, (ab, c) => ab.Left == c.Right - 33),
 				actionButton.ConstraintTo (this, (eb, c) => eb.Width == DefaultActioButtonSize),
 				actionButton.ConstraintTo (this, (eb, c) => eb.Height == DefaultActioButtonSize),
-				actionButton.ConstraintTo (propertyButton, (eb, ab) => eb.Left == ab.Left + DefaultPropertyButtonSize),
+				actionButton.ConstraintTo (propertyButton, (eb, ab) => eb.Left == ab.Left + PropertyButton.DefaultSize),
 				actionButton.ConstraintTo (this, (eb, c) => eb.Top == c.Top + 3), // TODO: Better centering based on the icon height
 			});
 
