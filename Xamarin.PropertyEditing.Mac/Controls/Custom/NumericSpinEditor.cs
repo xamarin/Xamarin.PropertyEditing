@@ -256,7 +256,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (numericEditor.StringValue != value) {
 				numericEditor.StringValue = value;
-				NotifyingValueChanged (EventArgs.Empty);
 			}
 		}
 
@@ -294,6 +293,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var newValue = Clamp (numericEditor.DoubleValue + incDevValue);
 
 			SetValue (newValue);
+			NotifyingValueChanged (EventArgs.Empty);
 		}
 
 		public double Clamp (double value)
