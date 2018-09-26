@@ -152,7 +152,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (value == OtherType)
 					RequestOtherType (previousType);
 
-				((RelayCommand)AddTargetCommand).ChangeCanExecute();
+				((RelayCommand)AddTargetCommand)?.ChangeCanExecute();
 			}
 		}
 

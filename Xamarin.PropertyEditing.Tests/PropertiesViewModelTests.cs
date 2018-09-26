@@ -231,6 +231,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Target).Returns (obj);
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
+			editor.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (p => p.GetObjectEditorAsync (obj)).ReturnsAsync (editor.Object);
@@ -318,6 +319,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor2 = new Mock<IObjectEditor> ();
 			editor2.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			editor2.SetupGet (e => e.Target).Returns (obj2);
+			editor2.SetupGet (oe => oe.TargetType).Returns (obj2.GetType ().ToTypeInfo ());
 			editor2.As<INameableObject> ();
 
 			var provider = new Mock<IEditorProvider> ();

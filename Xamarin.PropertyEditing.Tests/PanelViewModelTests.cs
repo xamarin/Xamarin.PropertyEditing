@@ -58,7 +58,6 @@ namespace Xamarin.PropertyEditing.Tests
 			await Task.Yield ();
 
 			Assert.That (vm.Properties, Is.Empty);
-			this.context.ThrowPendingExceptions ();
 		}
 
 		[Test]
