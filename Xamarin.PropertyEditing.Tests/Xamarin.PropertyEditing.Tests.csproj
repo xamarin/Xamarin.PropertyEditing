@@ -58,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddValueConverterViewModelTests.cs" />
-    <Compile Include="AsyncSynchronizationContext.cs" />
     <Compile Include="AsyncValueTests.cs" />
     <Compile Include="AsyncWorkQueueTests.cs" />
     <Compile Include="BoolViewModelTests.cs" />

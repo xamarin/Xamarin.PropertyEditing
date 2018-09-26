@@ -17,13 +17,6 @@ namespace Xamarin.PropertyEditing.Tests
 	internal class PanelViewModelTests
 		: PropertiesViewModelTests<PanelViewModel>
 	{
-		[SetUp]
-		public override void Setup ()
-		{
-			base.Setup ();
-			SynchronizationContext.SetSynchronizationContext (this.context = new TestContext ());
-		}
-
 		[Test]
 		[Description ("We must be sure that if the selected objects list changes while the provider is still retrieving that we end up with the right result")]
 		public async Task InteruptedEditorRetrievalResolvesCorrectlyItemAdded ()

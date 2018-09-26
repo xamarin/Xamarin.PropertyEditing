@@ -16,20 +16,20 @@ namespace Xamarin.PropertyEditing.Tests
 	[TestFixture]
 	internal class CollectionPropertyViewModelTests
 	{
-		private AsyncSynchronizationContext syncContext;
+		private TestContext syncContext;
 
 		[SetUp]
 		public void Setup ()
 		{
-			this.syncContext = new AsyncSynchronizationContext ();
+			this.syncContext = new TestContext ();
 			SynchronizationContext.SetSynchronizationContext (this.syncContext);
 		}
 
 		[TearDown]
 		public void TearDown ()
 		{
-			this.syncContext.WaitForPendingOperationsToComplete ();
 			SynchronizationContext.SetSynchronizationContext (null);
+			this.syncContext.ThrowPendingExceptions ();
 		}
 
 		[Test]
