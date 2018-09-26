@@ -484,12 +484,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 					tasks.Remove (results);
 
 					if (list == null) {
-						list = results.Result;
+						list = await results;
 						common = new HashSet<string> (list);
 					} else
-						common.IntersectWith (results.Result);
+						common.IntersectWith (await results);
 				} while (tasks.Count > 0 && !cancel.IsCancellationRequested);
 
+				cancel.ThrowIfCancellationRequested ();
 				this.autocomplete.Reset (list.Where (common.Contains));
 			} catch (OperationCanceledException) {
 			}
