@@ -83,6 +83,7 @@
     <Compile Include="ICoerce.cs" />
     <Compile Include="ICompleteValues.cs" />
     <Compile Include="IEditorProvider.cs" />
+    <Compile Include="IHaveInputModes.cs" />
     <Compile Include="IObjectEventEditor.cs" />
     <Compile Include="IEventInfo.cs" />
     <Compile Include="INameableObject.cs" />

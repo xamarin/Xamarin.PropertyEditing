@@ -25,6 +25,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
 			: base (platform, property, editors)
 		{
+			if (property is IHaveInputModes inputModes) {
+				InputModes = inputModes.InputModes.ToArray ();
+			}
+
 			this.coerce = property as ICoerce<TValue>;
 			this.validator = property as IValidator<TValue>;
 			this.valueNavigator = property as ICanNavigateToSource;
@@ -58,7 +62,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				SetValue (new ValueInfo<TValue> {
 					Source = ValueSource.Local,
-					Value = value
+					Value = value,
+					ValueDescriptor = InputMode
 				});
 			}
 		}
@@ -121,7 +126,39 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public override bool IsInputEnabled => base.IsInputEnabled && (InputMode == null || !InputMode.IsSingleValue);
+
 		public override bool SupportsValueSourceNavigation => this.valueNavigator != null;
+
+		public bool HasInputModes => InputModes != null && InputModes.Count > 0;
+
+		public IReadOnlyList<InputMode> InputModes
+		{
+			get;
+		}
+
+		public InputMode InputMode
+		{
+			get { return this.inputMode; }
+			set
+			{
+				if (this.inputMode == value)
+					return;
+
+				bool enabled = IsInputEnabled;
+
+				this.inputMode = value;
+				OnPropertyChanged ();
+				if (enabled != IsInputEnabled)
+					OnPropertyChanged (nameof (IsInputEnabled));
+
+				SetValue (new ValueInfo<TValue> {
+					Source = ValueSource.Local,
+					Value = (CurrentValue != null && !value.IsSingleValue) ? CurrentValue.Value : default(TValue),
+					ValueDescriptor = value
+				});
+			}
+		}
 
 		protected ValueInfo<TValue> CurrentValue
 		{
@@ -276,6 +313,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private readonly IValidator<TValue> validator;
 		private readonly ICanNavigateToSource valueNavigator;
 		internal const string NullableName = "Nullable`1";
+		private InputMode inputMode;
 		private bool isNullable;
 		private ValueInfo<TValue> value;
 
@@ -302,7 +340,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return false;
 
 			this.value = newValue;
+			if (newValue != null && newValue.ValueDescriptor is InputMode newMode) {
+				this.inputMode = newMode;
+			} else if (HasInputModes) {
+				this.inputMode = InputModes.FirstOrDefault ();
+			}
+
 			OnValueChanged ();
+			if (HasInputModes)
+				OnPropertyChanged (nameof(InputMode));
+
 			SignalValueChange();
 
 			((RelayCommand) ConvertToLocalValueCommand)?.ChangeCanExecute ();
@@ -466,7 +513,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			SetupConstraints ();
 
 			this.requestResourceCommand = new RelayCommand (OnRequestResource, CanRequestResource);
-			
 		}
 
 		public event EventHandler<ResourceRequestedEventArgs> ResourceRequested;
@@ -496,6 +542,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		public virtual bool CanDelve => false;
+
+		public virtual bool IsInputEnabled => Property.CanWrite;
 
 		public bool SupportsResources
 		{

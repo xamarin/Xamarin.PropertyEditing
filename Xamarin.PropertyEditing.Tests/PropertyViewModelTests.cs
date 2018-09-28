@@ -1175,6 +1175,124 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (tcs.Task.IsCanceled, Is.True);
 		}
 
+		[Test]
+		public void DoesntHaveInputModes ()
+		{
+			var vm = GetBasicTestModel ();
+			Assert.That (vm.HasInputModes, Is.False);
+		}
+
+		[Test]
+		public void HasInputModes ()
+		{
+			var modes = new[] { new InputMode ("TestMode") };
+
+			var property = GetPropertyMock ();
+			var input = property.As<IHaveInputModes> ();
+			input.SetupGet (im => im.InputModes).Returns (modes);
+
+			var vm = GetViewModel (property.Object, new MockObjectEditor (property.Object));
+
+			Assert.That (vm.HasInputModes, Is.True, "HasInputModes was false");
+			Assert.That (vm.InputModes, Contains.Item (modes[0]));
+			Assert.That (vm.InputModes.Count, Is.EqualTo (1));
+			Assert.That (vm.InputMode, Is.EqualTo (modes[0]), "InputMode not set to a default on no value set for it");
+		}
+
+		[Test]
+		public void InputModeCommits ()
+		{
+			var modes = new[] { new InputMode ("TestMode"), new InputMode("TestMode2"),  };
+
+			var property = GetPropertyMock ();
+			var input = property.As<IHaveInputModes> ();
+			input.SetupGet (im => im.InputModes).Returns (modes);
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (e => e.Target).Returns (target);
+			editor.SetupGet (e => e.Properties).Returns (new[] { property.Object });
+			SetupPropertySetAndGet (editor, property.Object);
+
+			var vm = GetViewModel (property.Object, editor.Object);
+			Assume.That (vm.InputMode, Is.EqualTo (modes[0]));
+
+			vm.InputMode = modes[1];
+			editor.Verify (oe => oe.SetValueAsync (property.Object, It.Is<ValueInfo<TValue>> (vi => vi.ValueDescriptor == modes[1]), It.IsAny<PropertyVariation> ()));
+		}
+
+		[Test]
+		public async Task InputModeRestores ()
+		{
+			var modes = new[] { new InputMode ("TestMode"), new InputMode ("TestMode2"), };
+
+			var property = GetPropertyMock ();
+			var input = property.As<IHaveInputModes> ();
+			input.SetupGet (im => im.InputModes).Returns (modes);
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (e => e.Target).Returns (target);
+			editor.SetupGet (e => e.Properties).Returns (new[] { property.Object });
+			SetupPropertySetAndGet (editor, property.Object);
+
+			TValue value = GetRandomTestValue ();
+
+			await editor.Object.SetValueAsync (property.Object, new ValueInfo<TValue> {
+				Value = value,
+				ValueDescriptor = modes[1]
+			});
+
+			var vm = GetViewModel (property.Object, editor.Object);
+			Assert.That (vm.InputMode, Is.EqualTo (modes[1]));
+		}
+
+		[TestCase (true)]
+		[TestCase (false)]
+		public void InputEnabled (bool writeEnabled)
+		{
+			var property = GetPropertyMock ();
+			property.SetupGet (pi => pi.CanWrite).Returns (writeEnabled);
+
+			var vm = GetViewModel (property.Object, new MockObjectEditor (property.Object));
+			Assert.That (vm.IsInputEnabled, Is.EqualTo (writeEnabled));
+		}
+
+		[TestCase (true, false, true)]
+		[TestCase (true, true, false)]
+		[TestCase (false, true, false)]
+		[TestCase (false, false, false)]
+		public void InputEnabledSingleValueInputMode (bool writeEnabled, bool singleValue, bool expectation)
+		{
+			var modes = new[] { new InputMode ("TestMode"), new InputMode ("TestMode2", singleValue), };
+
+			var property = GetPropertyMock ();
+			property.SetupGet (pi => pi.CanWrite).Returns (writeEnabled);
+			var input = property.As<IHaveInputModes> ();
+			input.SetupGet (im => im.InputModes).Returns (modes);
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (e => e.Target).Returns (target);
+			editor.SetupGet (e => e.Properties).Returns (new[] { property.Object });
+			SetupPropertySetAndGet (editor, property.Object);
+
+			var vm = GetViewModel (property.Object, editor.Object);
+			Assume.That (vm.InputMode, Is.EqualTo (modes[0]));
+			Assume.That (vm.IsInputEnabled, Is.EqualTo (writeEnabled), "Initial state didn't match property");
+
+			bool changed = false;
+			vm.PropertyChanged += (o, e) => {
+				if (e.PropertyName == nameof(PropertyViewModel<TValue>.IsInputEnabled))
+					changed = true;
+			};
+
+			vm.InputMode = modes[1];
+
+			Assert.That (changed, Is.EqualTo (writeEnabled != expectation));
+			Assert.That (vm.IsInputEnabled, Is.EqualTo (expectation));
+		}
+
 		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
 		{
 			return GetViewModel (property, new[] { editor });
