@@ -277,7 +277,15 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:StringEditorControl">
-					<local:TextBoxEx x:Name="TextBox" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Text="{Binding Value,UpdateSourceTrigger=Explicit}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalContentAlignment="Center" />
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<local:TextBoxEx x:Name="TextBox" Grid.Column="0" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Text="{Binding Value,UpdateSourceTrigger=Explicit}" VerticalContentAlignment="Center" IsEnabled="{Binding IsInputEnabled}" />
+						<ComboBox Grid.Column="1" Visibility="{Binding HasInputModes,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" ItemsSource="{Binding InputModes,Mode=OneTime}" SelectedItem="{Binding InputMode,Mode=TwoWay}" DisplayMemberPath="Identifier" />
+					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -2022,17 +2030,17 @@
 	<local:NumericTemplateSelector x:Key="NumericTemplateSelector">
 		<local:NumericTemplateSelector.FloatingTemplate>
 			<DataTemplate DataType="vm:FloatingPropertyViewModel">
-				<local:DoubleUpDownControl Value="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+				<local:DoubleUpDownControl Value="{Binding Value}" IsEnabled="{Binding IsInputEnabled}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.FloatingTemplate>
 		<local:NumericTemplateSelector.IntegerTemplate>
 			<DataTemplate DataType="vm:IntegerPropertyViewModel">
-				<local:IntegerUpDownControl Value="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+				<local:IntegerUpDownControl Value="{Binding Value}" IsEnabled="{Binding IsInputEnabled}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.IntegerTemplate>
 		<local:NumericTemplateSelector.ByteTemplate>
 			<DataTemplate DataType="vm:BytePropertyViewModel">
-				<local:ByteUpDownControl Value="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
+				<local:ByteUpDownControl Value="{Binding Value}" IsEnabled="{Binding IsInputEnabled}" AutomationProperties.LabeledBy="{TemplateBinding AutomationProperties.LabeledBy}" />
 			</DataTemplate>
 		</local:NumericTemplateSelector.ByteTemplate>
 	</local:NumericTemplateSelector>
@@ -2042,7 +2050,16 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:NumericEditorControl">
-					<ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource NumericTemplateSelector}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<ContentPresenter Grid.Column="0" Content="{Binding}" ContentTemplateSelector="{StaticResource NumericTemplateSelector}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
+						<ComboBox Grid.Column="1" Visibility="{Binding HasInputModes,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" ItemsSource="{Binding InputModes,Mode=OneTime}" SelectedItem="{Binding InputMode,Mode=TwoWay}" DisplayMemberPath="Identifier" />
+					</Grid>
+					
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

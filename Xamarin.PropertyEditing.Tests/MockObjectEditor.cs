@@ -187,9 +187,20 @@ namespace Xamarin.PropertyEditing.Tests
 			if (typeof(T) != property.Type) {
 				IPropertyConverter converter = property as IPropertyConverter;
 
-				object v;
-				if (converter != null && converter.TryConvert (value.Value, property.Type, out v)) {
-					var softType = typeof(ValueInfo<>).MakeGenericType (property.Type);
+				bool changeValueInfo = false;
+
+				object v = value.Value;
+				if (ReferenceEquals (value.Value, null) && property.Type.IsValueType) {
+					if ((property.ValueSources & ValueSources.Default) == ValueSources.Default) {
+						v = Activator.CreateInstance (property.Type);
+						changeValueInfo = true;
+					}
+				} else if (converter != null && converter.TryConvert (value.Value, property.Type, out v)) {
+					changeValueInfo = true;
+				}
+
+				if (changeValueInfo) {
+					var softType = typeof (ValueInfo<>).MakeGenericType (property.Type);
 					softValue = Activator.CreateInstance (softType);
 					softType.GetProperty ("Value").SetValue (softValue, v);
 					softType.GetProperty ("ValueDescriptor").SetValue (softValue, value.ValueDescriptor);

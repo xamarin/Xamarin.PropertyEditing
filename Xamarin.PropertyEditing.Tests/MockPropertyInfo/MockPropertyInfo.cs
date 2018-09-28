@@ -6,6 +6,21 @@ using Xamarin.PropertyEditing.Tests.MockControls;
 
 namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 {
+	public class MockPropertyInfoWithInputTypes<T>
+		: MockPropertyInfo<T>, IHaveInputModes
+	{
+		public MockPropertyInfoWithInputTypes (string name, IReadOnlyList<InputMode> inputModes, string description = null, string category = null, bool canWrite = true, IEnumerable<Type> converterTypes = null, ValueSources valueSources = ValueSources.Default | ValueSources.Local)
+			: base (name, description, category, canWrite, converterTypes, valueSources)
+		{
+			InputModes = inputModes.ToArray ();
+		}
+
+		public IReadOnlyList<InputMode> InputModes
+		{
+			get;
+		}
+	}
+
 	public class MockPropertyInfo<T> : IPropertyInfo, IPropertyConverter, IEquatable<MockPropertyInfo<T>>
 	{
 		public MockPropertyInfo (string name, string description = null, string category = null, bool canWrite = true, IEnumerable<Type> converterTypes = null, ValueSources valueSources = ValueSources.Local | ValueSources.Default)
