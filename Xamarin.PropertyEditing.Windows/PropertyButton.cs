@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -53,6 +54,15 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			get { return (DataTemplate)GetValue (MenuTemplateProperty); }
 			set { SetValue (MenuTemplateProperty, value); }
+		}
+
+		public static readonly DependencyProperty WarningMessageProperty = DependencyProperty.Register (
+			"WarningMessage", typeof(string), typeof(PropertyButton), new PropertyMetadata (default(string), (o, args) => ((PropertyButton)o).UpdateWarningMessage()));
+
+		public string WarningMessage
+		{
+			get { return (string) GetValue (WarningMessageProperty); }
+			set { SetValue (WarningMessageProperty, value); }
 		}
 
 		public override void OnApplyTemplate ()
@@ -125,6 +135,12 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 		}
 
+		private void UpdateWarningMessage ()
+		{
+			RenderTransform = (WarningMessage != null) ? new RotateTransform (45) : null;
+			OnValueSourceChanged (ValueSource);
+		}
+
 		private void OnValueSourceChanged (ValueSource source)
 		{
 			if (this.indicator == null)
@@ -150,11 +166,24 @@ namespace Xamarin.PropertyEditing.Windows
 					break;
 				case ValueSource.Default:
 					ToolTip = Properties.Resources.Default;
-					return;
+					break;
 				case ValueSource.Unset:
 					ToolTip = Properties.Resources.Unset;
-					return;
+					break;
 			}
+
+			string resourceName = null;
+			SourceResources.TryGetValue (source, out resourceName);
+
+			if (WarningMessage != null) {
+				ToolTip += Environment.NewLine + Environment.NewLine + WarningMessage;
+				resourceName = "PropertyWarningBrush";
+			}
+
+			if (resourceName != null)
+				SetResourceReference (ForegroundProperty, resourceName);
+			else
+				Foreground = Brushes.Transparent;
 		}
 
 		private void OnCreateBindingRequested (object sender, CreateBindingRequestedEventArgs e)
@@ -194,5 +223,15 @@ namespace Xamarin.PropertyEditing.Windows
 			popup.SetResourceReference (Popup.StyleProperty, "CustomExpressionPopup");
 			popup.IsOpen = true;
 		}
+
+		private static readonly Dictionary<ValueSource,string> SourceResources = new Dictionary<ValueSource, string> {
+			{ ValueSource.Local, "PropertyLocalValueBrush" },
+			{ ValueSource.Binding, "PropertyBoundValueBrush" },
+			{ ValueSource.Inherited, "PropertyResourceBrush" },
+			{ ValueSource.DefaultStyle, "PropertyResourceBrush" },
+			{ ValueSource.Style, "PropertyResourceBrush" },
+			{ ValueSource.Resource, "PropertyResourceBrush" },
+		};
 	}
 }
+ 

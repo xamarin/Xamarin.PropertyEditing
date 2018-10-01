@@ -58,6 +58,7 @@
 	<SolidColorBrush x:Key="PropertyLocalValueBrush">#F1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyBoundValueBrush">#FFCF00</SolidColorBrush>
 	<SolidColorBrush x:Key="PropertyResourceBrush">#00FF00</SolidColorBrush>
+	<SolidColorBrush x:Key="PropertyWarningBrush">Red</SolidColorBrush>
 
 	<SolidColorBrush x:Key="SearchControlBackgroundBrush">#333337</SolidColorBrush>
 	<SolidColorBrush x:Key="SearchControlBorderBrush">#3F3F46</SolidColorBrush>
