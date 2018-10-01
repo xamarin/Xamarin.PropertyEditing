@@ -468,7 +468,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			CancellationToken cancel = this.autocompleteCancel.Token;
 
 			try {
-				HashSet<string> common = null;
 				List<Task<IReadOnlyList<string>>> tasks = new List<Task<IReadOnlyList<string>>> ();
 
 				foreach (IObjectEditor editor in Editors) {
@@ -478,9 +477,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 					tasks.Add (complete.GetCompletionsAsync (Property, value, cancel));
 				}
 
+				HashSet<string> common = null;
+
 				IReadOnlyList<string> list = null;
 				do {
-					Task<IReadOnlyList<string>> results = await Task.WhenAny (tasks);
+					var results = await Task.WhenAny (tasks);
 					tasks.Remove (results);
 
 					if (list == null) {
@@ -488,6 +489,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 						common = new HashSet<string> (list);
 					} else
 						common.IntersectWith (await results);
+
 				} while (tasks.Count > 0 && !cancel.IsCancellationRequested);
 
 				cancel.ThrowIfCancellationRequested ();
