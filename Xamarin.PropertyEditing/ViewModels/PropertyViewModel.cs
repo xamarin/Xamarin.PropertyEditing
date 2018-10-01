@@ -160,6 +160,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public string WarningMessage => CurrentValue?.Warning;
+
 		protected ValueInfo<TValue> CurrentValue
 		{
 			get { return this.value; }
@@ -327,6 +329,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof (ValueSource));
 			OnPropertyChanged (nameof (CustomExpression));
 			OnPropertyChanged (nameof (Resource));
+			OnPropertyChanged (nameof (WarningMessage));
 		}
 
 		private bool SetCurrentValue (ValueInfo<TValue> newValue, bool multipleValues)

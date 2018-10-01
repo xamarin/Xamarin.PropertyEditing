@@ -171,7 +171,8 @@ namespace Xamarin.PropertyEditing.Tests
 				Source = value.Source,
 				ValueDescriptor = value.ValueDescriptor,
 				SourceDescriptor = value.SourceDescriptor,
-				Value = value.Value
+				Value = value.Value,
+				Warning = value.Warning
 			};
 
 			if (value.Source != ValueSource.Local && ValueEvaluator != null) {
@@ -206,6 +207,7 @@ namespace Xamarin.PropertyEditing.Tests
 					softType.GetProperty ("ValueDescriptor").SetValue (softValue, value.ValueDescriptor);
 					softType.GetProperty ("Source").SetValue (softValue, value.Source);
 					softType.GetProperty ("SourceDescriptor").SetValue (softValue, value.SourceDescriptor);
+					softType.GetProperty (nameof(ValueInfo<T>.Warning)).SetValue (softValue, value.Warning);
 				}
 
 				if (typeof(T).Name == "IReadOnlyList`1") {
@@ -261,7 +263,8 @@ namespace Xamarin.PropertyEditing.Tests
 						Source = info.Source,
 						ValueDescriptor = info.ValueDescriptor,
 						SourceDescriptor = info.SourceDescriptor,
-						Value = info.Value
+						Value = info.Value,
+						Warning = info.Warning
 					});
 				} else if (value == null || value is T) {
 					return Task.FromResult (new ValueInfo<T> {
@@ -295,6 +298,7 @@ namespace Xamarin.PropertyEditing.Tests
 					}, typeof(ValueInfo<T>)));
 				} else {
 					object sourceDescriptor = null, valueDescriptor = null;
+					string warning = null;
 					ValueSource source = ValueSource.Local;
 					Type valueType = value.GetType ();
 					if (valueType.IsConstructedGenericType && valueType.GetGenericTypeDefinition () == typeof(ValueInfo<>)) {
@@ -302,6 +306,7 @@ namespace Xamarin.PropertyEditing.Tests
 						sourceDescriptor = valueType.GetProperty (nameof (ValueInfo<T>.SourceDescriptor)).GetValue (value);
 						valueDescriptor = valueType.GetProperty (nameof (ValueInfo<T>.ValueDescriptor)).GetValue (value);
 						value = valueType.GetProperty ("Value").GetValue (value);
+						warning = (string)valueType.GetProperty (nameof(ValueInfo<T>.Warning)).GetValue (value);
 						valueType = valueType.GetGenericArguments ()[0];
 					}
 
@@ -312,14 +317,16 @@ namespace Xamarin.PropertyEditing.Tests
 							Source = source,
 							Value = (T)newValue,
 							ValueDescriptor = valueDescriptor,
-							SourceDescriptor = sourceDescriptor
+							SourceDescriptor = sourceDescriptor,
+							Warning = warning
 						});
 					} else if (typeof(T).IsAssignableFrom (valueType)) {
 						return Task.FromResult (new ValueInfo<T> {
 							Source = source,
 							Value = (T)value,
 							ValueDescriptor = valueDescriptor,
-							SourceDescriptor = sourceDescriptor
+							SourceDescriptor = sourceDescriptor,
+							Warning = warning
 						});
 					}
 				}

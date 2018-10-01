@@ -45,6 +45,15 @@ namespace Xamarin.PropertyEditing
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets a warning message regarding the value.
+		/// </summary>
+		public string Warning
+		{
+			get;
+			set;
+		}
+
 		public bool Equals (ValueInfo<T> other)
 		{
 			if (ReferenceEquals (null, other))
@@ -56,7 +65,8 @@ namespace Xamarin.PropertyEditing
 					Equals (ValueDescriptor, other.ValueDescriptor) &&
 					Source == other.Source &&
 					Equals (SourceDescriptor, other.SourceDescriptor) &&
-					CustomExpression == other.CustomExpression;
+					CustomExpression == other.CustomExpression &&
+					Warning == other.Warning;
 		}
 
 		public override bool Equals (object obj)
@@ -78,6 +88,7 @@ namespace Xamarin.PropertyEditing
 				hashCode = (hashCode * 397) ^ (int) Source;
 				hashCode = (hashCode * 397) ^ (SourceDescriptor?.GetHashCode () ?? 0);
 				hashCode = (hashCode * 397) ^ (CustomExpression?.GetHashCode () ?? 0);
+				hashCode = (hashCode * 397) ^ (Warning?.GetHashCode () ?? 0);
 				return hashCode;
 			}
 		}
