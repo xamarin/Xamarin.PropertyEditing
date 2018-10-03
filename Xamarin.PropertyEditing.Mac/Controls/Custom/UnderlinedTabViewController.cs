@@ -10,14 +10,15 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public override void AddTabViewItem (NSTabViewItem tabViewItem)
 		{
-			base.AddTabViewItem (tabViewItem);
 			this.tabStack.AddView (GetView (tabViewItem), NSStackViewGravity.Leading);
+			base.AddTabViewItem (tabViewItem);
 		}
 
 		public override void InsertTabViewItem (NSTabViewItem tabViewItem, nint index)
 		{
-			base.InsertTabViewItem (tabViewItem, index);
+
 			this.tabStack.InsertView (GetView (tabViewItem), (nuint)index, NSStackViewGravity.Leading);
+			base.InsertTabViewItem (tabViewItem, index);
 		}
 
 		public override void RemoveTabViewItem (NSTabViewItem tabViewItem)
@@ -53,10 +54,18 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void DidSelect (NSTabView tabView, NSTabViewItem item)
 		{
 			base.DidSelect (tabView, item);
-			for (int i = 0; i < this.tabStack.Views.Length; i++) {
-				var tabItem = this.tabStack.Views[i] as IUnderliningTabView;
-				if (tabItem != null)
-					tabItem.Selected = SelectedTabViewItemIndex == i;
+
+			int i = (int)TabView.IndexOf (item);
+			SetSelected (i);
+		}
+
+		public override nint SelectedTabViewItemIndex
+		{
+			get => base.SelectedTabViewItemIndex;
+			set
+			{
+				base.SelectedTabViewItemIndex = value;
+				SetSelected ((int)value);
 			}
 		}
 
@@ -81,6 +90,7 @@ namespace Xamarin.PropertyEditing.Mac
 			View = this.outerStack;
 		}
 
+		private IUnderliningTabView selected;
 		private NSStackView outerStack;
 		private NSStackView innerStack;
 		private NSStackView tabStack = new NSStackView () {
@@ -88,6 +98,17 @@ namespace Xamarin.PropertyEditing.Mac
 		};
 
 		private NSEdgeInsets edgeInsets = new NSEdgeInsets (0, 0, 0, 0);
+
+		private void SetSelected (int index)
+		{
+			if (this.selected != null) {
+				this.selected.Selected = false;
+			}
+
+			this.selected = this.tabStack.Views[index] as IUnderliningTabView;
+			if (this.selected != null)
+				this.selected.Selected = true;
+		}
 
 		private NSView GetView (NSTabViewItem item)
 		{
