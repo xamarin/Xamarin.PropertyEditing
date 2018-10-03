@@ -72,7 +72,6 @@ namespace Xamarin.PropertyEditing.Mac
 			set { formatter.MaximumFractionDigits = value; }
 		}
 
-
 		public double Value {
 			get { return numericEditor.DoubleValue; }
 			set { SetValue (value); }
@@ -102,6 +101,18 @@ namespace Xamarin.PropertyEditing.Mac
 		public double IncrementValue {
 			get { return incrementValue; }
 			set { incrementValue = value; }
+		}
+
+		public string FocusedFormat
+		{
+			get { return numericEditor?.FocusedFormat; }
+			set { numericEditor.FocusedFormat = value; }
+		}
+
+		public string DisplayFormat
+		{
+			get { return numericEditor?.DisplayFormat; }
+			set { numericEditor.DisplayFormat = value; }
 		}
 
 		public bool Enabled {
@@ -150,11 +161,6 @@ namespace Xamarin.PropertyEditing.Mac
 			set { numericEditor.AllowRatios = value; }
 		}
 
-		protected virtual void OnConfigureNumericTextField ()
-		{
-			numericEditor.Formatter = formatter;
-		}
-
 		public bool AllowNegativeValues
 		{
 			get { return numericEditor.AllowNegativeValues; }
@@ -181,14 +187,16 @@ namespace Xamarin.PropertyEditing.Mac
 				Maximum = double.MaxValue,
 				Minimum = double.MinValue,
 				NumberStyle = NSNumberFormatterStyle.Decimal,
-				UsesGroupingSeparator = false,
+				UsesGroupingSeparator = false 
 			};
+			if (DisplayFormat != null) formatter.PositiveFormat = DisplayFormat;
 
 			numericEditor = new NumericTextField {
 				Alignment = NSTextAlignment.Right,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
 				ControlSize = controlSize,
+				Formatter = formatter
 			};
 
 			incrementButton.OnMouseLeftDown += (sender, e) => { IncrementNumericValue (); };
@@ -197,9 +205,7 @@ namespace Xamarin.PropertyEditing.Mac
 			numericEditor.KeyArrowUp += (sender, e) => { IncrementNumericValue (e); };
 			numericEditor.KeyArrowDown += (sender, e) => { DecrementNumericValue (e); };
 
-			numericEditor.ValidatedEditingEnded += (s, e) => {
-				OnEditingEnded (s, e);
-			};
+			numericEditor.ValidatedEditingEnded += OnEditingEnded;
 
 			AddSubview (numericEditor);
 			AddSubview (incrementButton);

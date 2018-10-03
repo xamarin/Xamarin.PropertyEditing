@@ -64,6 +64,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			ce.Editor.ValueChanged += UpdateComponent;
+			ce.Editor.EditingEnded += UpdateComponent;
 			AddSubview (ce.Label);
 			AddSubview (ce.Editor);
 
@@ -158,7 +159,7 @@ namespace Xamarin.PropertyEditing.Mac
 				case nameof (SolidBrushViewModel.Color):
 					foreach (var channelGroup in Editors) {
 						var editor = channelGroup.Editor;
-						editor.Value = editor.ComponentEditor.ValueFromColor (ViewModel.Color);
+						editor.Value = editor.ComponentEditor.ValueFromColor (ViewModel.Color) * editor.ComponentEditor.Scale;
 						editor.ComponentEditor.UpdateGradientLayer (channelGroup.Gradient, ViewModel.Color);
 					}
 					this.hexEditor.StringValue = ViewModel.Color.ToString ();
