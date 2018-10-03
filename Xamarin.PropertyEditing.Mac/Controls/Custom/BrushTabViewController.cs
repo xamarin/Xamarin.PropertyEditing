@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using AppKit;
@@ -17,29 +19,39 @@ namespace Xamarin.PropertyEditing.Mac
 			EdgeInsets = new NSEdgeInsets (0, 12, 12, 12);
 		}
 
-		Dictionary<CommonBrushType, int> BrushTypeTable = new Dictionary<CommonBrushType, int> ();
-		bool inhibitSelection;
-
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
 		{
 			this.inhibitSelection = true;
 			base.OnViewModelChanged (oldModel);
 
-			foreach (var item in TabViewItems) {
-				RemoveTabViewItem (item);
-				item.Dispose ();
+			var existing = new HashSet<CommonBrushType> (ViewModel?.BrushTypes?.Values ?? Array.Empty<CommonBrushType> ());
+			existing.IntersectWith (this.brushTypeTable.Keys);
+
+			var removed = new HashSet<CommonBrushType> (this.brushTypeTable.Keys);
+			removed.ExceptWith (existing);
+
+			foreach (var item in removed.Select (t => new { Type = t, Tab = TabView.Items[this.brushTypeTable[t]] }).ToArray()) {
+				RemoveTabViewItem (item.Tab);
+				item.Tab.Dispose ();
+				this.brushTypeTable.Remove (item.Type);
 			}
 
-			BrushTypeTable.Clear ();
 			if (ViewModel == null)
 				return;
 
-			foreach (var key in ViewModel.BrushTypes.Keys) {
-				var item = new NSTabViewItem ();
-				item.Label = key;
-				var brushType = ViewModel.BrushTypes [key];
+			int i = -1;
+			foreach (var kvp in ViewModel.BrushTypes) {
+				i++;
+				this.brushTypeTable[kvp.Value] = i;
+				if (existing.Contains (kvp.Value)) {
+					((NotifyingViewController<BrushPropertyViewModel>)TabViewItems[i].ViewController).ViewModel = ViewModel;
+					continue;
+				}
 
-				switch (brushType) {
+				var item = new NSTabViewItem ();
+				item.Label = kvp.Key;
+
+				switch (kvp.Value) {
 					case CommonBrushType.Solid:
 						var solid = new SolidColorBrushEditorViewController ();
 						solid.ViewModel = ViewModel;
@@ -68,6 +80,7 @@ namespace Xamarin.PropertyEditing.Mac
 						item.ToolTip = item.Label;
 						item.Image = NSImage.ImageNamed ("property-brush-gradient-16");
 						break;
+					default:
 					case CommonBrushType.NoBrush:
 						var none = new EmptyBrushEditorViewController ();
 						none.ViewModel = ViewModel;
@@ -76,15 +89,14 @@ namespace Xamarin.PropertyEditing.Mac
 						item.Image = NSImage.ImageNamed ("property-brush-none-16");
 						break;
 				}
-				if (item.ViewController != null) {
-					BrushTypeTable [brushType] = TabViewItems.Length;
-					AddTabViewItem (item);
-				}
+
+				InsertTabViewItem (item, i);
 			}
 
-			if (BrushTypeTable.TryGetValue (ViewModel.SelectedBrushType, out var index)) {
+			if (this.brushTypeTable.TryGetValue (ViewModel.SelectedBrushType, out int index)) {
 				SelectedTabViewItemIndex = index;
 			}
+
 			this.inhibitSelection = false;
 		}
 
@@ -93,8 +105,8 @@ namespace Xamarin.PropertyEditing.Mac
 			base.OnPropertyChanged (sender, args);
 			switch (args.PropertyName) {
 				case nameof (BrushPropertyViewModel.SelectedBrushType):
-					if (BrushTypeTable.TryGetValue (ViewModel.SelectedBrushType, out var index)) {
-						this.SelectedTabViewItemIndex = index;
+					if (this.brushTypeTable.TryGetValue (ViewModel.SelectedBrushType, out int index)) {
+						SelectedTabViewItemIndex = index;
 					}
 					break;
 			}
@@ -129,5 +141,8 @@ namespace Xamarin.PropertyEditing.Mac
 			base.ViewDidLoad ();
 			this.inhibitSelection = false;
 		}
+
+		private readonly Dictionary<CommonBrushType, int> brushTypeTable = new Dictionary<CommonBrushType, int> ();
+		private bool inhibitSelection;
 	}
 }
