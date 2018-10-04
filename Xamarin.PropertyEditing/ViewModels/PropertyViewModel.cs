@@ -145,12 +145,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (this.inputMode == value)
 					return;
 
-				bool enabled = IsInputEnabled;
-
 				this.inputMode = value;
 				OnPropertyChanged ();
-				if (enabled != IsInputEnabled)
-					OnPropertyChanged (nameof (IsInputEnabled));
 
 				SetValue (new ValueInfo<TValue> {
 					Source = ValueSource.Local,
@@ -327,6 +323,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof (ValueSource));
 			OnPropertyChanged (nameof (CustomExpression));
 			OnPropertyChanged (nameof (Resource));
+
+			if (HasInputModes) {
+				OnPropertyChanged (nameof(InputMode));
+				OnPropertyChanged (nameof(IsInputEnabled));
+			}
 		}
 
 		private bool SetCurrentValue (ValueInfo<TValue> newValue, bool multipleValues)
@@ -347,9 +348,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			OnValueChanged ();
-			if (HasInputModes)
-				OnPropertyChanged (nameof(InputMode));
-
 			SignalValueChange();
 
 			((RelayCommand) ConvertToLocalValueCommand)?.ChangeCanExecute ();
