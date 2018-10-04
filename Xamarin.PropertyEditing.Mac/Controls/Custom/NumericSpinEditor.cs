@@ -254,6 +254,7 @@ namespace Xamarin.PropertyEditing.Mac
 				editing = true;
 				SetValue (numericEditor.StringValue);
 				EditingEnded?.Invoke (this, EventArgs.Empty);
+				NotifyingValueChanged (EventArgs.Empty);
 				editing = false;
 			}
 		}
