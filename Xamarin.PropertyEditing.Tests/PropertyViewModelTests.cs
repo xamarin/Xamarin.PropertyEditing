@@ -1285,7 +1285,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.InputMode, Is.EqualTo (modes[mode]));
 			Assert.That (modeChanged, Is.True);
 			Assert.That (vm.IsInputEnabled, Is.EqualTo (!modes[mode].IsSingleValue));
-			Assert.That (enabledChanged, Is.EqualTo (modes[mode].IsSingleValue));
+			Assert.That (enabledChanged, Is.True);
 		}
 
 		[TestCase (true)]
@@ -1330,7 +1330,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			vm.InputMode = modes[1];
 
-			Assert.That (changed, Is.EqualTo (writeEnabled != expectation));
+			Assert.That (changed, Is.True);
 			Assert.That (vm.IsInputEnabled, Is.EqualTo (expectation));
 		}
 
