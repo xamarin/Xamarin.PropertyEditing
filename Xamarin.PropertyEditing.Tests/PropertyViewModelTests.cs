@@ -1221,10 +1221,11 @@ namespace Xamarin.PropertyEditing.Tests
 			editor.Verify (oe => oe.SetValueAsync (property.Object, It.Is<ValueInfo<TValue>> (vi => vi.ValueDescriptor == modes[1]), It.IsAny<PropertyVariation> ()));
 		}
 
-		[Test]
-		public async Task InputModeRestores ()
+		[TestCase (1)]
+		[TestCase (2)]
+		public async Task InputModeRestores (int mode)
 		{
-			var modes = new[] { new InputMode ("TestMode"), new InputMode ("TestMode2"), };
+			var modes = new[] { new InputMode ("TestMode"), new InputMode ("TestMode2"), new InputMode ("TestMode3", true) };
 
 			var property = GetPropertyMock ();
 			var input = property.As<IHaveInputModes> ();
@@ -1240,11 +1241,51 @@ namespace Xamarin.PropertyEditing.Tests
 
 			await editor.Object.SetValueAsync (property.Object, new ValueInfo<TValue> {
 				Value = value,
-				ValueDescriptor = modes[1]
+				ValueDescriptor = modes[mode]
 			});
 
 			var vm = GetViewModel (property.Object, editor.Object);
-			Assert.That (vm.InputMode, Is.EqualTo (modes[1]));
+			Assert.That (vm.InputMode, Is.EqualTo (modes[mode]));
+			Assert.That (vm.IsInputEnabled, Is.EqualTo (!modes[mode].IsSingleValue));
+		}
+
+		[TestCase (1)]
+		[TestCase (2)]
+		public async Task InputModeUpdates (int mode)
+		{
+			var modes = new[] { new InputMode ("TestMode"), new InputMode ("TestMode2"), new InputMode ("TestMode3", true) };
+
+			var property = GetPropertyMock ();
+			var input = property.As<IHaveInputModes> ();
+			input.SetupGet (im => im.InputModes).Returns (modes);
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (e => e.Target).Returns (target);
+			editor.SetupGet (e => e.Properties).Returns (new[] { property.Object });
+			SetupPropertySetAndGet (editor, property.Object);
+
+			TValue value = GetRandomTestValue ();
+
+			var vm = GetViewModel (property.Object, editor.Object);
+
+			bool modeChanged = false, enabledChanged = false;
+			vm.PropertyChanged += (o, e) => {
+				if (e.PropertyName == nameof(PropertyViewModel<TValue>.InputMode))
+					modeChanged = true;
+				else if (e.PropertyName == nameof(PropertyViewModel<TValue>.IsInputEnabled))
+					enabledChanged = true;
+			};
+
+			await editor.Object.SetValueAsync (property.Object, new ValueInfo<TValue> {
+				Value = value,
+				ValueDescriptor = modes[mode]
+			});
+
+			Assert.That (vm.InputMode, Is.EqualTo (modes[mode]));
+			Assert.That (modeChanged, Is.True);
+			Assert.That (vm.IsInputEnabled, Is.EqualTo (!modes[mode].IsSingleValue));
+			Assert.That (enabledChanged, Is.True);
 		}
 
 		[TestCase (true)]
@@ -1289,7 +1330,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			vm.InputMode = modes[1];
 
-			Assert.That (changed, Is.EqualTo (writeEnabled != expectation));
+			Assert.That (changed, Is.True);
 			Assert.That (vm.IsInputEnabled, Is.EqualTo (expectation));
 		}
 
