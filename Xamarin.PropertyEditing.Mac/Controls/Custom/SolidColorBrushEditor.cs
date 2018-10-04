@@ -188,8 +188,9 @@ namespace Xamarin.PropertyEditing.Mac
 			this.componentBackground.BackgroundColor = NSColor.ControlBackground.CGColor;
 			this.componentBackground.Frame = new CGRect (0, 0, Frame.Height, Frame.Height);
 
-			var x = Frame.Height + 4 * padding;
-			this.componentBackground.Frame = new CGRect (Frame.Height + 4 * padding, 0, Frame.Width - x, Frame.Height);
+			var x = firstStop + secondarySpan + 4 * padding;
+			var backgroundFrame = new CGRect (x, 0, Math.Max(Frame.Width - x, 180), Frame.Height);
+			this.componentBackground.Frame = backgroundFrame;
 
 			this.hueLayer.Frame = new CGRect (firstStop, secondBase, secondarySpan, primarySpan);
 			this.hueLayer.GripColor = NSColor.Text.CGColor;
@@ -201,7 +202,8 @@ namespace Xamarin.PropertyEditing.Mac
 				editor.UpdateFromModel (inter);
 			}
 
-			this.componentTabs.View.Frame = this.componentBackground.Frame.Inset (4 * padding, 2 * padding);
+			var inset = backgroundFrame.Inset (4 * padding, 2 * padding);
+			this.componentTabs.View.Frame = inset;
 		}
 	}
 }

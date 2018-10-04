@@ -233,6 +233,9 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.Layout ();
 
+			if (Frame.IsEmpty || Frame.IsInfinite () || double.IsNaN (Frame.X) || double.IsInfinity (Frame.X))
+				return;
+
 			var frame = Bounds.Inset (padding, padding);
 			var labelFrame = new CGRect (frame.X, frame.Height - DefaultControlHeight, 20, DefaultControlHeight);
 			var editorFrame = new CGRect (labelFrame.Right, labelFrame.Y, frame.Width - labelFrame.Right, DefaultControlHeight);
