@@ -8,15 +8,8 @@ namespace Xamarin.PropertyEditing.Mac
 		: NotifyingTabViewController<TViewModel>
 		where TViewModel : NotifyingObject
 	{
-		public override void AddTabViewItem (NSTabViewItem tabViewItem)
-		{
-			this.tabStack.AddView (GetView (tabViewItem), NSStackViewGravity.Leading);
-			base.AddTabViewItem (tabViewItem);
-		}
-
 		public override void InsertTabViewItem (NSTabViewItem tabViewItem, nint index)
 		{
-
 			this.tabStack.InsertView (GetView (tabViewItem), (nuint)index, NSStackViewGravity.Leading);
 			base.InsertTabViewItem (tabViewItem, index);
 		}
