@@ -138,6 +138,7 @@
     <Compile Include="Controls\ThicknessEditorControl.cs" />
     <Compile Include="PropertyEditorSelector.cs" />
     <Compile Include="Controls\IEditorView.cs" />
+    <Compile Include="PropertyInlinePreviewSelector.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
