@@ -18,4 +18,11 @@ namespace Xamarin.PropertyEditing.Mac
 		bool IsDynamicallySized { get; }
 		nint GetHeight (EditorViewModel vm);
 	}
+
+	internal interface IValueView
+	{
+		NSView NativeView { get; }
+
+		void SetValue (object value);
+	}
 }
