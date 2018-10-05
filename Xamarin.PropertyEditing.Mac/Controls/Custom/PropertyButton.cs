@@ -27,9 +27,6 @@ namespace Xamarin.PropertyEditing.Mac
 				viewModel = value;
 				viewModel.PropertyChanged += OnPropertyChanged;
 
-				// No point showing myself if you can't do anything with me.
-				Hidden = !viewModel.Property.CanWrite;
-
 				ValueSourceChanged (viewModel.ValueSource);
 			}
 		}
