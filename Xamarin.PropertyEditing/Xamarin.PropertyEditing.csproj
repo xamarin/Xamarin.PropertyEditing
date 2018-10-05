@@ -170,6 +170,7 @@
     <Compile Include="Drawing\CommonRatio.cs" />
     <Compile Include="IReadOnlyOrderedDictionary.cs" />
     <Compile Include="ViewModels\CreateVariationEventArgs.cs" />
+    <Compile Include="ViewModels\IPropertyValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Themes\BaseThemeManager.cs" />

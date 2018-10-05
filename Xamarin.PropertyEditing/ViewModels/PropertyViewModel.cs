@@ -12,7 +12,7 @@ using Xamarin.PropertyEditing.Properties;
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class PropertyViewModel<TValue>
-		: PropertyViewModel
+		: PropertyViewModel, IPropertyValue
 	{
 		static PropertyViewModel ()
 		{
@@ -69,6 +69,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 					ValueDescriptor = InputMode
 				});
 			}
+		}
+
+		object IPropertyValue.Value {
+			get => Value;
+			set => Value = (TValue)value;
 		}
 
 		public override Resource Resource
