@@ -78,7 +78,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void LoadView ()
 		{
 			viewDelegate.ViewModel = ViewModel;
-			resourceSelector = new ResourceOutlineView {
+			this.resourceSelector = new ResourceOutlineView {
 				Delegate = viewDelegate,
 			};
 
@@ -88,12 +88,17 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			// add the panel to the window
-			tableContainer.DocumentView = resourceSelector;
+			tableContainer.DocumentView = this.resourceSelector;
 			View = tableContainer;
 
 			if (ViewModel != null) {
 				resourceSelector.ViewModel = ViewModel?.ResourceSelector;
 			}
+		}
+
+		public void ReloadData()
+		{
+			this.resourceSelector.ReloadData ();
 		}
 	}
 }

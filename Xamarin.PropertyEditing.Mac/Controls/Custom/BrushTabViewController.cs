@@ -17,6 +17,21 @@ namespace Xamarin.PropertyEditing.Mac
 			PreferredContentSize = new CGSize (430, 230);
 			TransitionOptions = NSViewControllerTransitionOptions.None;
 			EdgeInsets = new NSEdgeInsets (0, 12, 12, 12);
+
+			this.filterResource = new NSSearchField {
+				ControlSize = NSControlSize.Mini,
+				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
+				PlaceholderString = Properties.Resources.SearchResourcesTitle,
+			};
+
+			this.filterResource.Changed += (sender, e) => {
+				ViewModel.ResourceSelector.FilterText = this.filterResource.Cell.Title;
+				this.resource.ReloadData ();
+			};
+
+			this.filterResource.Hidden = true;
+
+			TabStack.AddView (this.filterResource, NSStackViewGravity.Leading);
 		}
 
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
@@ -30,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var removed = new HashSet<CommonBrushType> (this.brushTypeTable.Keys);
 			removed.ExceptWith (existing);
 
-			foreach (var item in removed.Select (t => new { Type = t, Tab = TabView.Items[this.brushTypeTable[t]] }).ToArray()) {
+			foreach (var item in removed.Select (t => new { Type = t, Tab = TabView.Items[this.brushTypeTable[t]] }).ToArray ()) {
 				RemoveTabViewItem (item.Tab);
 				item.Tab.Dispose ();
 				this.brushTypeTable.Remove (item.Type);
@@ -67,9 +82,9 @@ namespace Xamarin.PropertyEditing.Mac
 						item.Image = NSImage.ImageNamed ("property-brush-palette-16");
 						break;
 					case CommonBrushType.Resource:
-						var resource = new ResourceBrushViewController ();
-						resource.ViewModel = ViewModel;
-						item.ViewController = resource;
+						this.resource = new ResourceBrushViewController ();
+						this.resource.ViewModel = ViewModel;
+						item.ViewController = this.resource;
 						item.ToolTip = Properties.Resources.ResourceBrush;
 						item.Image = NSImage.ImageNamed ("property-brush-resources-16");
 						break;
@@ -114,10 +129,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void WillSelect (NSTabView tabView, NSTabViewItem item)
 		{
-			var brushController = item.ViewController as NotifyingViewController<BrushPropertyViewModel>;
-			if (brushController != null)
+			if (item.ViewController is NotifyingViewController<BrushPropertyViewModel> brushController)
 				brushController.ViewModel = ViewModel;
-			
+
 			if (this.inhibitSelection)
 				return;
 
@@ -129,13 +143,15 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.inhibitSelection)
 				return;
 
+			ViewModel.SelectedBrushType = ViewModel.BrushTypes[item.Label];
+			this.filterResource.Hidden = ViewModel.SelectedBrushType != CommonBrushType.Resource;
+
 			base.DidSelect (tabView, item);
-			ViewModel.SelectedBrushType = ViewModel.BrushTypes [item.Label];
 		}
 
 		public override void ViewDidLoad ()
 		{
-			View.Frame = new CGRect (0, 0, 430,230);
+			View.Frame = new CGRect (0, 0, 430, 230);
 
 			this.inhibitSelection = true;
 			base.ViewDidLoad ();
@@ -144,5 +160,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private readonly Dictionary<CommonBrushType, int> brushTypeTable = new Dictionary<CommonBrushType, int> ();
 		private bool inhibitSelection;
+
+		private NSSearchField filterResource;
+		private ResourceBrushViewController resource;
 	}
 }
