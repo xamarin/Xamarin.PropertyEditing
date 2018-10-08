@@ -134,6 +134,7 @@
     <Compile Include="Controls\RequestResource\ResourceTableDataSource.cs" />
     <Compile Include="Controls\RequestResource\ResourceTableDelegate.cs" />
     <Compile Include="Controls\RequestResource\RequestResourcePreviewPanel.cs" />
+    <Compile Include="Controls\PanelHeaderEditorControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

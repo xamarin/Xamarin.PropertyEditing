@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public partial class PropertyEditorPanel : AppKit.NSView
+	public partial class PropertyEditorPanel : NSView
 	{
 		internal const string PropertyListColId = "PropertiesList";
 		internal const string PropertyEditorColId = "PropertyEditors";
@@ -143,7 +143,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.propertyFilter);
 
 			// If either the Filter Mode or PropertySearchFilter Change Filter the Data
-			this.propertyArrangeMode.SelectionChanged += OnArrageModeChanged;
+			this.propertyArrangeMode.SelectionChanged += OnArrangeModeChanged;
 			this.propertyFilter.Changed += OnPropertyFilterChanged;
 
 			this.propertyTable = new FirstResponderOutlineView {
@@ -191,7 +191,7 @@ namespace Xamarin.PropertyEditing.Mac
 				tableContainer.ConstraintTo(this, (t, c) => t.Top == c.Top + 30),
 				tableContainer.ConstraintTo(this, (t, c) => t.Left == c.Left + 10),
 				tableContainer.ConstraintTo(this, (t, c) => t.Width == c.Width - 20),
-				tableContainer.ConstraintTo(this, (t, c) => t.Height == c.Height - 40),
+				tableContainer.ConstraintTo(this, (t, c) => t.Height == c.Height - 37),
 			});
 
 			ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
@@ -218,7 +218,7 @@ namespace Xamarin.PropertyEditing.Mac
 			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
 		}
 
-		private void OnArrageModeChanged (object sender, EventArgs e)
+		private void OnArrangeModeChanged (object sender, EventArgs e)
 		{
 			Enum.TryParse<PropertyArrangeMode> (this.propertyArrangeMode.GetItemObject (this.propertyArrangeMode.SelectedIndex).ToString (), out PropertyArrangeMode filterMode);
 			this.viewModel.ArrangeMode = filterMode;
@@ -239,7 +239,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private void OnVmPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == nameof (PanelViewModel.ArrangeMode))
-				OnArrageModeChanged (sender, e);
+				OnArrangeModeChanged (sender, e);
 		}
 
 		class FirstResponderOutlineView : NSOutlineView

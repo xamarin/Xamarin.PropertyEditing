@@ -10,6 +10,8 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class PropertyTableDataSource
 		: NSOutlineViewDataSource
 	{
+		bool Filtering => !string.IsNullOrEmpty (this.vm.FilterText);
+
 		internal PropertyTableDataSource (PanelViewModel panelVm)
 		{
 			if (panelVm == null)
@@ -25,26 +27,36 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.vm.ArrangedEditors.Count == 0)
 				return 0;
 
-			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
-				return this.vm.ArrangedEditors[0].Count;
+			var childCount = 0;
 
-			if (item == null)
-				return this.vm.ArrangedEditors.Count;
+			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
+				childCount = Filtering ? this.vm.ArrangedEditors[0].Count : this.vm.ArrangedEditors[0].Count + 1;
 			else {
-				return ((IGroupingList<string, EditorViewModel>)((NSObjectFacade)item).Target).Count;
+				if (item == null)
+					childCount = Filtering ? this.vm.ArrangedEditors.Count : this.vm.ArrangedEditors.Count + 1;
+				else
+					childCount = ((IGroupingList<string, EditorViewModel>)((NSObjectFacade)item).Target).Count;
 			}
+
+			return childCount;
 		}
 
 		public override NSObject GetChild (NSOutlineView outlineView, nint childIndex, NSObject item)
 		{
 			object element;
-			if (this.vm.ArrangeMode == PropertyArrangeMode.Name) {
-				element = (this.vm.ArrangedEditors[0][(int)childIndex]);
-			} else {
-				if (item == null)
-					element = this.vm.ArrangedEditors[(int)childIndex];
+
+			// We only want the Header to appear at the top of both Category and Name Modes, which means item is null in both.
+			if (childIndex == 0 && item == null && !Filtering)
+				element = new PanelHeaderEditorControl (this.vm);
+			else {
+				if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
+					element = Filtering ? this.vm.ArrangedEditors[0][(int)childIndex] : this.vm.ArrangedEditors[0][(int)childIndex - 1];
 				else {
-					element = ((IGroupingList<string, EditorViewModel>)((NSObjectFacade)item).Target)[(int)childIndex];
+					if (item == null)
+						element = Filtering ? this.vm.ArrangedEditors[(int)childIndex] : this.vm.ArrangedEditors[(int)childIndex - 1];
+					else {
+						element = ((IGroupingList<string, EditorViewModel>)((NSObjectFacade)item).Target)[(int)childIndex];
+					}
 				}
 			}
 
