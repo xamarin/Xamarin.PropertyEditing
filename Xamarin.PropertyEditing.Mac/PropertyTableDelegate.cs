@@ -85,7 +85,7 @@ namespace Xamarin.PropertyEditing.Mac
 					} else {
 						var view = (PanelHeaderLabelControl)outlineView.MakeView (PanelHeaderLabelControl.PanelHeaderLabelIdentifierString, this);
 						if (view == null) {
-							view = new PanelHeaderLabelControl ();
+							view = new PanelHeaderLabelControl (dataSource.DataContext);
 						}
 						return view;
 					}
