@@ -29,7 +29,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public BaseEditorControl ()
 		{
-			propertyButton = new PropertyButton ();
+			propertyButton = new PropertyButton {
+				TranslatesAutoresizingMaskIntoConstraints = false
+			};
 
 			AddSubview (propertyButton);
 
