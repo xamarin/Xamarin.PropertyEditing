@@ -102,4 +102,20 @@
   <data name="ObjectNamePlaceholder" xml:space="preserve">
     <value>No Name</value>>
   </data>
+  <data name="AccessibilityLeftEditor" xml:space="preserve">
+    <value>{0} Left Editor</value>
+    <comment>Editor for LEft Value</comment>
+  </data>
+  <data name="AccessibilityTopEditor" xml:space="preserve">
+    <value>{0} Top Editor</value>
+    <comment>Editor for Top Value</comment>
+  </data>
+  <data name="AccessibilityRightEditor" xml:space="preserve">
+    <value>{0} Right Editor</value>
+    <comment>Editor for Right Value</comment>
+  </data>
+  <data name="AccessibilityBottomEditor" xml:space="preserve">
+    <value>{0} Bottom Editor</value>
+    <comment>Editor for Bottom Value</comment>
+  </data>
 </root>

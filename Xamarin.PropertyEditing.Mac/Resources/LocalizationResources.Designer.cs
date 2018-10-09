@@ -202,5 +202,29 @@ namespace Xamarin.PropertyEditing.Mac.Resources {
                 return ResourceManager.GetString("ObjectNamePlaceholder", resourceCulture);
             }
         }
+        
+        internal static string AccessibilityLeftEditor {
+            get {
+                return ResourceManager.GetString("AccessibilityLeftEditor", resourceCulture);
+            }
+        }
+        
+        internal static string AccessibilityTopEditor {
+            get {
+                return ResourceManager.GetString("AccessibilityTopEditor", resourceCulture);
+            }
+        }
+        
+        internal static string AccessibilityRightEditor {
+            get {
+                return ResourceManager.GetString("AccessibilityRightEditor", resourceCulture);
+            }
+        }
+        
+        internal static string AccessibilityBottomEditor {
+            get {
+                return ResourceManager.GetString("AccessibilityBottomEditor", resourceCulture);
+            }
+        }
     }
 }

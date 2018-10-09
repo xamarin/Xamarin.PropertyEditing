@@ -271,6 +271,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (PropertyViewModel<Rectangle>), typeof (SystemRectangleEditorControl)},
 			{typeof (BrushPropertyViewModel), typeof (BrushEditorControl)},
 			{typeof (RatioViewModel), typeof (RatioEditorControl<CommonRatio>)},
+			{typeof (ThicknessPropertyViewModel), typeof (CommonThicknessEditorControl) },
 		};
 	}
 }
