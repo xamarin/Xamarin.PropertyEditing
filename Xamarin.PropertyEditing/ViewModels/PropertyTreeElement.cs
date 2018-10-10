@@ -88,7 +88,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private readonly IEditorProvider provider;
-		private readonly PropertyVariation variation;
 		private readonly Task<IReadOnlyCollection<IPropertyInfo>> properties;
 		private AsyncValue<IReadOnlyCollection<PropertyTreeElement>> children;
 	}
