@@ -713,7 +713,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private readonly RelayCommand requestResourceCommand;
-		private IResourceProvider resourceProvider;
 		private ICommand setValueResourceCommand;
 		private HashSet<IPropertyInfo> constraintProperties;
 		private PropertyVariation variation;
