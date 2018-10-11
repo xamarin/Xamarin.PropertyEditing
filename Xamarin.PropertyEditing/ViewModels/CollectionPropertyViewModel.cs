@@ -61,8 +61,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (this.cachedProvider == null)
 				this.cachedProvider = new CachedEditorProvider (platform.EditorProvider);
 
-			RequestTypes ();
-
 			Panel = new PanelViewModel (platform.WithProvider (this.cachedProvider)) {
 				ArrangeMode = PropertyArrangeMode.Category,
 				AutoExpand = true
@@ -74,6 +72,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			MoveDownCommand = new RelayCommand (() => MoveTarget (up: false), () => CanMoveTarget (up: false));
 			CommitCommand = new RelayCommand (OnCommitCommand);
 			CancelCommand = new RelayCommand(RequestCurrentValueUpdate);
+
+			RequestTypes ();
 
 			this.collectionView.CollectionChanged += OnCollectionViewContentsChanged;
 		}

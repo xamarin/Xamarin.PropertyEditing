@@ -81,8 +81,8 @@ namespace Xamarin.PropertyEditing.Tests
 			var property = GetPropertyMock ();
 			var editor = GetBasicEditor (property.Object);
 			var vm = GetViewModel (property.Object, new[] { editor });
-			Assume.That (vm.Numerator, Is.EqualTo (0));
-			Assume.That (vm.Denominator, Is.EqualTo (0));
+			Assume.That (vm.Numerator, Is.EqualTo (1));
+			Assume.That (vm.Denominator, Is.EqualTo (1));
 
 			bool nChanged = false, dChanged = false, sChanged = false, valueChanged = false;
 			vm.PropertyChanged += (sender, args) => {

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -35,28 +36,19 @@ namespace Xamarin.PropertyEditing.Tests
 			}
 		}
 
-		private Exception unhandled;
+		private TestContext syncContext;
 		[SetUp]
-		public virtual void Setup ()
+		public void Setup ()
 		{
-			AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+			this.syncContext = new TestContext ();
+			SynchronizationContext.SetSynchronizationContext (this.syncContext);
 		}
 
 		[TearDown]
 		public void TearDown ()
 		{
-			AppDomain.CurrentDomain.UnhandledException -= CurrentDomainOnUnhandledException;
-
-			if (this.unhandled != null) {
-				var ex = this.unhandled;
-				this.unhandled = null;
-				Assert.Fail ("Unhandled exception: {0}", ex);
-			}
-		}
-
-		private void CurrentDomainOnUnhandledException (object sender, UnhandledExceptionEventArgs e)
-		{
-			this.unhandled = e.ExceptionObject as Exception;
+			SynchronizationContext.SetSynchronizationContext (null);
+			this.syncContext.ThrowPendingExceptions ();
 		}
 
 		[Test]
@@ -239,6 +231,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new Mock<IObjectEditor> ();
 			editor.SetupGet (e => e.Target).Returns (obj);
 			editor.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
+			editor.SetupGet (oe => oe.TargetType).Returns (obj.GetType ().ToTypeInfo ());
 
 			var provider = new Mock<IEditorProvider> ();
 			provider.Setup (p => p.GetObjectEditorAsync (obj)).ReturnsAsync (editor.Object);
@@ -326,6 +319,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor2 = new Mock<IObjectEditor> ();
 			editor2.SetupGet (e => e.Properties).Returns (new IPropertyInfo[0]);
 			editor2.SetupGet (e => e.Target).Returns (obj2);
+			editor2.SetupGet (oe => oe.TargetType).Returns (obj2.GetType ().ToTypeInfo ());
 			editor2.As<INameableObject> ();
 
 			var provider = new Mock<IEditorProvider> ();

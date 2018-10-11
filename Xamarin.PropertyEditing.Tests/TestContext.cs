@@ -15,7 +15,14 @@ namespace Xamarin.PropertyEditing.Tests
 			} catch (Exception ex) {
 				var info = ExceptionDispatchInfo.Capture (ex);
 				this.exceptions.Add (info);
-				throw;
+
+				// If we throw exceptions here we will crash out the test runner process when
+				// running tests from VSM.
+				//
+				// As part of our `Teardown` method we manually rethrow the exceptions so they
+				// propagate to NUnit and cause the test to fail.
+
+				//throw;
 			}
 		}
 
@@ -26,7 +33,14 @@ namespace Xamarin.PropertyEditing.Tests
 			} catch (Exception ex) {
 				var info = ExceptionDispatchInfo.Capture (ex);
 				this.exceptions.Add (info);
-				throw;
+
+				// If we throw exceptions here we will crash out the test runner process when
+				// running tests from VSM.
+				//
+				// As part of our `Teardown` method we manually rethrow the exceptions so they
+				// propagate to NUnit and cause the test to fail.
+
+				//throw;
 			}
 		}
 

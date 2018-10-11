@@ -24,15 +24,15 @@ namespace Xamarin.PropertyEditing.Tests
 		[SetUp]
 		public void Setup ()
 		{
-			this.syncContext = new AsyncSynchronizationContext();
+			this.syncContext = new TestContext ();
 			SynchronizationContext.SetSynchronizationContext (this.syncContext);
 		}
 
 		[TearDown]
 		public void TearDown ()
 		{
-			this.syncContext.WaitForPendingOperationsToComplete ();
 			SynchronizationContext.SetSynchronizationContext (null);
+			this.syncContext.ThrowPendingExceptions ();
 		}
 
 		[Test]
@@ -1176,6 +1176,66 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public void AutocompleteResults1NotUpdatedWhen2ndSearchCancelled ()
+		{
+			var target = new object ();
+			var property = GetPropertyMock ();
+
+			var editor1 = new Mock<IObjectEditor> ();
+			editor1.SetupGet (e => e.Target).Returns (target);
+			SetupPropertySetAndGet (editor1, property.Object);
+
+			var tcs = new TaskCompletionSource<IReadOnlyList<string>> ();
+
+			string[] results = new[] { "Foo", "Bar", "Baz" };
+			string[] results2 = new[] { "Foo2", "Bar2", "Baz2" };
+			var changeResultSet = false;
+			var complete1 = editor1.As<ICompleteValues> ();
+			complete1.Setup (c => c.GetCompletionsAsync (property.Object, It.IsAny<string> (), It.IsAny<CancellationToken> ()))
+				.Returns<IPropertyInfo, string, CancellationToken> ((a, b, c) => {
+					if (!changeResultSet) {
+						tcs.TrySetResult (results);
+					} else {
+						tcs.TrySetResult (results2);
+					}
+					return tcs.Task;
+				 });
+
+			var editor2 = new Mock<IObjectEditor> ();
+			editor2.SetupGet (e => e.Target).Returns (target);
+			SetupPropertySetAndGet (editor2, property.Object);
+
+			var complete2 = editor2.As<ICompleteValues> ();
+			complete2.Setup (c => c.GetCompletionsAsync (property.Object, It.IsAny<string> (), It.IsAny<CancellationToken> ()))
+				.Returns<IPropertyInfo, string, CancellationToken> ((a, b, c) => {
+					c.Register (() => {
+						tcs.TrySetCanceled ();
+					});
+					return tcs.Task;
+				});
+
+			var mockProvider = new MockEditorProvider (editor1.Object);
+			var resources = new MockResourceProvider ();
+			var platform = new TargetPlatform (mockProvider, resources) {
+				SupportsCustomExpressions = true,
+			};
+
+			var vm = GetViewModel (platform, property.Object, new[] { editor1.Object, editor2.Object });
+			Assume.That (vm.SupportsAutocomplete, Is.True);
+
+			vm.PreviewCustomExpression = "preview";
+
+			changeResultSet = true;
+			Assume.That (vm.AutocompleteItems[0] == results[0], Is.True);
+			Assume.That (vm.AutocompleteItems[1] == results[1], Is.True);
+			Assume.That (vm.AutocompleteItems[2] == results[2], Is.True);
+
+			vm.PreviewCustomExpression = "preview2";
+
+			CollectionAssert.AreEqual (vm.AutocompleteItems, results);
+		}
+
+		[Test]
 		public void DoesntHaveInputModes ()
 		{
 			var vm = GetBasicTestModel ();
@@ -1467,6 +1527,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		private readonly Random rand = new Random (42);
-		private AsyncSynchronizationContext syncContext;
+		private TestContext syncContext;
 	}
 }
+ 

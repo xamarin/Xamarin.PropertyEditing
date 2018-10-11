@@ -17,15 +17,15 @@ namespace Xamarin.PropertyEditing.Tests
 		[SetUp]
 		public void Setup ()
 		{
-			this.syncContext = new AsyncSynchronizationContext();
+			this.syncContext = new TestContext ();
 			SynchronizationContext.SetSynchronizationContext (this.syncContext);
 		}
 
 		[TearDown]
 		public void TearDown ()
 		{
-			this.syncContext.WaitForPendingOperationsToComplete ();
 			SynchronizationContext.SetSynchronizationContext (null);
+			syncContext.ThrowPendingExceptions ();
 		}
 
 		[Test]
@@ -255,7 +255,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.ValueType, Is.Null);
 		}
 
-		private AsyncSynchronizationContext syncContext;
+		private TestContext syncContext;
 
 		private Mock<IEditorProvider> CreateProviderMock (object value, IObjectEditor editor)
 		{

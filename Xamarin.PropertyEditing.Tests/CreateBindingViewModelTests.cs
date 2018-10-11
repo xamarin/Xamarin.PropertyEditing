@@ -22,31 +22,15 @@ namespace Xamarin.PropertyEditing.Tests
 		[SetUp]
 		public void Setup ()
 		{
-			AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
-			this.syncContext = new AsyncSynchronizationContext ();
+			this.syncContext = new TestContext ();
 			SynchronizationContext.SetSynchronizationContext (this.syncContext);
-		}
-
-		private Exception unhandled;
-
-		private void CurrentDomainOnUnhandledException (object sender, UnhandledExceptionEventArgs e)
-		{
-			this.unhandled = e.ExceptionObject as Exception;
 		}
 
 		[TearDown]
 		public void TearDown ()
 		{
-			this.syncContext.WaitForPendingOperationsToComplete ();
 			SynchronizationContext.SetSynchronizationContext (null);
-
-			AppDomain.CurrentDomain.UnhandledException -= CurrentDomainOnUnhandledException;
-
-			if (this.unhandled != null) {
-				var ex = this.unhandled;
-				this.unhandled = null;
-				Assert.Fail ("Unhandled exception: {0}", ex);
-			}
+			this.syncContext.ThrowPendingExceptions ();
 		}
 
 		[Test]
@@ -630,7 +614,7 @@ namespace Xamarin.PropertyEditing.Tests
 				vm.BindingProperties.Cast<PropertyViewModel> ().Select (pvm => pvm.Property));
 		}
 
-		private AsyncSynchronizationContext syncContext;
+		private TestContext syncContext;
 		private static readonly ResourceSource[] DefaultResourceSources = new[] { MockResourceProvider.SystemResourcesSource, MockResourceProvider.ApplicationResourcesSource };
 
 		private Mock<IPropertyInfo> GetBasicProperty (string name = "propertyName")

@@ -14,15 +14,15 @@ namespace Xamarin.PropertyEditing.Tests
 		[SetUp]
 		public void Setup ()
 		{
-			this.syncContext = new AsyncSynchronizationContext ();
+			this.syncContext = new TestContext ();
 			SynchronizationContext.SetSynchronizationContext (this.syncContext);
 		}
 
 		[TearDown]
 		public void TearDown ()
 		{
-			this.syncContext.WaitForPendingOperationsToComplete ();
 			SynchronizationContext.SetSynchronizationContext (null);
+			this.syncContext.ThrowPendingExceptions ();
 		}
 
 		[Test]
@@ -75,6 +75,6 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.ConverterName, Is.EqualTo (type.Name));
 		}
 
-		private AsyncSynchronizationContext syncContext;
+		private TestContext syncContext;
 	}
 }
