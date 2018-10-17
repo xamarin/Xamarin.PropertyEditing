@@ -13,7 +13,6 @@ using Xamarin.PropertyEditing.Mac.Resources;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class PredefinedValuesEditor<T> : PropertyEditorControl<PredefinedValuesViewModel<T>>
-		where T : struct
 	{
 		public PredefinedValuesEditor ()
 		{
