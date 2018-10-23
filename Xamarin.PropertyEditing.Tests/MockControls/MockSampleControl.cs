@@ -48,13 +48,15 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 				name: "SolidBrush",
 				category: null,
 				canWrite: true,
-				colorSpaces: new[] { "RGB", "sRGB" });
+				colorSpaces: new[] { "RGB", "sRGB" },
+				valueSources: ValueSources.Binding | ValueSources.Local | ValueSources.Resource);
 			AddProperty<CommonBrush> (this.brushPropertyInfo);
 
 			this.materialDesignBrushPropertyInfo = new MockBrushPropertyInfo (
 				name: "MaterialDesignBrush",
 				category: null,
-				canWrite: true);
+				canWrite: true,
+				valueSources: ValueSources.Binding | ValueSources.Local | ValueSources.Resource);
 			AddProperty<CommonBrush> (this.materialDesignBrushPropertyInfo);
 
 			this.readOnlyBrushPropertyInfo = new MockBrushPropertyInfo (
@@ -67,7 +69,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 				name: "ColorNoBrush",
 				category: "Windows Only",
 				canWrite: true,
-				valueSources: ValueSources.Default | ValueSources.Local | ValueSources.Resource);
+				valueSources: ValueSources.Binding | ValueSources.Local | ValueSources.Resource);
 			AddProperty<CommonColor> (this.colorPropertyInfo);
 
 			AddEvents ("Click", "Hover", "Focus");
