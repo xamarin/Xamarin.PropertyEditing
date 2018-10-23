@@ -66,34 +66,37 @@ namespace Xamarin.PropertyEditing.Mac
 				var item = new NSTabViewItem ();
 				item.Label = kvp.Key;
 
+				var themeManager = PropertyEditorPanel.ThemeManager;
+				NSImage image;
+
 				switch (kvp.Value) {
 					case CommonBrushType.Solid:
 						var solid = new SolidColorBrushEditorViewController ();
 						solid.ViewModel = ViewModel;
 						item.ViewController = solid;
 						item.ToolTip = Properties.Resources.SolidBrush;
-						item.Image = NSImage.ImageNamed ("property-brush-solid-16");
+						image = themeManager.GetImageForTheme ("property-brush-solid-16");
 						break;
 					case CommonBrushType.MaterialDesign:
 						var material = new MaterialBrushEditorViewController ();
 						material.ViewModel = ViewModel;
 						item.ViewController = material;
 						item.ToolTip = Properties.Resources.MaterialDesignColorBrush;
-						item.Image = NSImage.ImageNamed ("property-brush-palette-16");
+						image = themeManager.GetImageForTheme ("property-brush-palette-16");
 						break;
 					case CommonBrushType.Resource:
 						this.resource = new ResourceBrushViewController ();
 						this.resource.ViewModel = ViewModel;
 						item.ViewController = this.resource;
 						item.ToolTip = Properties.Resources.ResourceBrush;
-						item.Image = NSImage.ImageNamed ("property-brush-resources-16");
+						image = themeManager.GetImageForTheme ("property-brush-resources-16");
 						break;
 					case CommonBrushType.Gradient:
 						var gradient = new EmptyBrushEditorViewController ();
 						gradient.ViewModel = ViewModel;
 						item.ViewController = gradient;
 						item.ToolTip = item.Label;
-						item.Image = NSImage.ImageNamed ("property-brush-gradient-16");
+						image = themeManager.GetImageForTheme ("property-brush-gradient-16");
 						break;
 					default:
 					case CommonBrushType.NoBrush:
@@ -101,8 +104,11 @@ namespace Xamarin.PropertyEditing.Mac
 						none.ViewModel = ViewModel;
 						item.ViewController = none;
 						item.ToolTip = Properties.Resources.NoBrush;
-						item.Image = NSImage.ImageNamed ("property-brush-none-16");
+						image = themeManager.GetImageForTheme ("property-brush-none-16");
 						break;
+				}
+				if (image != null) {
+					item.Image = image;
 				}
 
 				InsertTabViewItem (item, i);
