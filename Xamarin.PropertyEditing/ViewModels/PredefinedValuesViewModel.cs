@@ -8,8 +8,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class PredefinedValuesViewModel<TValue>
 		: PropertyViewModel<TValue>
 	{
-		public PredefinedValuesViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (platform, property, editors)
+		public PredefinedValuesViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
+			: base (platform, property, editors, variation)
 		{
 			this.predefinedValues = property as IHavePredefinedValues<TValue>;
 			if (this.predefinedValues == null)

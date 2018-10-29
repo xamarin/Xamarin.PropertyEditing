@@ -193,7 +193,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				}
 			}
 
-			UpdateMembers (removedEditors, newEditors);
+			await UpdateMembersAsync (removedEditors, newEditors);
 			tcs.SetResult (true);
 		}
 
@@ -225,11 +225,42 @@ namespace Xamarin.PropertyEditing.ViewModels
 			ErrorsChanged?.Invoke (this, e);
 		}
 
-		private void AddProperties (IEnumerable<EditorViewModel> newEditors)
+		private async void OnVariationsChanged (object sender, EventArgs e)
+		{
+			using (await AsyncWork.RequestAsyncWork (this)) {
+				PropertyViewModel pvm = (PropertyViewModel) sender;
+				var variations = (await GetVariationsAsync (pvm.Property)).SelectMany (vs => vs).Distinct ();
+				var properties = this.editors
+					.OfType<PropertyViewModel> ()
+					.Where (evm => Equals (evm.Property, pvm.Property) && evm.Variation != null)
+					.ToDictionary (evm => evm.Variation);
+
+				List<PropertyViewModel> toAdd = new List<PropertyViewModel> ();
+				foreach (PropertyVariation variation in variations) {
+					if (!properties.Remove (variation)) {
+						toAdd.Add (GetViewModel (pvm.Property, variation));
+					}
+				}
+
+				if (properties.Count > 0) {
+					var toRemove = new List<PropertyViewModel> ();
+					foreach (var kvp in properties) {
+						toRemove.Add (kvp.Value);
+					}
+
+					RemoveProperties (toRemove);
+				}
+
+				if (toAdd.Count > 0)
+					AddProperties (toAdd);
+			}
+		}
+
+		private void AddProperties (IReadOnlyList<EditorViewModel> newEditors)
 		{
 			if (this.knownEditors != null) {
 				// Only properties common across obj editors will be listed, so knowns should also be common
-				var knownProperties = newEditors.First ().Editors.First().KnownProperties;
+				var knownProperties = newEditors[0].Editors.First().KnownProperties;
 				if (knownProperties != null && knownProperties.Count > 0) {
 					foreach (var editorvm in newEditors) {
 						var prop = editorvm as PropertyViewModel;
@@ -247,7 +278,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnAddEditors (newEditors);
 		}
 
-		private void RemoveProperties (IEnumerable<EditorViewModel> oldEditors)
+		private void RemoveProperties (IReadOnlyList<EditorViewModel> oldEditors)
 		{
 			if (this.knownEditors != null) {
 				foreach (EditorViewModel old in oldEditors) {
@@ -302,7 +333,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnClearProperties ();
 		}
 
-		private void UpdateMembers (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
+		private async Task UpdateMembersAsync (IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
 		{
 			if (this.objEditors.Count == 0) {
 				ClearMembers ();
@@ -350,7 +381,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (knownProperties && this.knownEditors == null)
 				this.knownEditors = new BidirectionalDictionary<KnownProperty, EditorViewModel> ();
 
-			UpdateProperties (newPropertySet, removedEditors, newEditors);
+			await UpdatePropertiesAsync (newPropertySet, removedEditors, newEditors);
 
 			EventsEnabled = events != null;
 			UpdateEvents (newEventSet, removedEditors, newEditors);
@@ -399,14 +430,26 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		private void UpdateProperties (HashSet<IPropertyInfo> newSet, IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
+		private async Task UpdatePropertiesAsync (HashSet<IPropertyInfo> newSet, IObjectEditor[] removedEditors = null, IObjectEditor[] newEditors = null)
 		{
+			Dictionary<IPropertyInfo, Dictionary<PropertyVariation, PropertyViewModel>> variations = null;
 			List<PropertyViewModel> toRemove = new List<PropertyViewModel> ();
 			foreach (PropertyViewModel vm in this.editors.ToArray ()) {
-				if (!newSet.Remove (vm.Property)) {
+				if (!newSet.Contains (vm.Property)) {
 					toRemove.Add (vm);
 					vm.Editors.Clear ();
 					continue;
+				}
+
+				if (!vm.HasVariations) {
+					newSet.Remove (vm.Property);
+				} else if (vm.Variation != null) {
+					if (variations == null)
+						variations = new Dictionary<IPropertyInfo, Dictionary<PropertyVariation, PropertyViewModel>> ();
+					if (!variations.TryGetValue (vm.Property, out Dictionary<PropertyVariation, PropertyViewModel> variantVms))
+						variations[vm.Property] = variantVms = new Dictionary<PropertyVariation, PropertyViewModel> ();
+
+					variantVms.Add (vm.Variation, vm);
 				}
 
 				if (removedEditors != null) {
@@ -422,8 +465,36 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			if (toRemove.Count > 0)
 				RemoveProperties (toRemove);
-			if (newSet.Count > 0)
-				AddProperties (newSet.Select (GetViewModel));
+			if (newSet.Count > 0) {
+				toRemove = new List<PropertyViewModel> ();
+
+				List<EditorViewModel> newVms = new List<EditorViewModel> ();
+				foreach (IPropertyInfo property in newSet) {
+					if (variations != null && variations.TryGetValue (property, out Dictionary<PropertyVariation, PropertyViewModel> propertyVariations)) {
+						var setVariations = (await GetVariationsAsync (property)).SelectMany (vs => vs).Distinct ();
+						foreach (PropertyVariation variation in setVariations) {
+							if (propertyVariations.Remove (variation))
+								continue;
+
+							newVms.Add (GetViewModel (property, variation));
+						}
+
+						foreach (var kvp in propertyVariations) {
+							toRemove.Add (kvp.Value);
+						}
+					} else if (property.HasVariations()) {
+						newVms.AddRange (await GetViewModelsAsync (property));
+					} else {
+						newVms.Add (GetViewModel (property));
+					}
+				}
+
+				if (toRemove.Count > 0) {
+					RemoveProperties (toRemove);
+				}
+
+				AddProperties (newVms);
+			}
 		}
 
 		private async Task<IObjectEditor[]> AddEditorsAsync (IList newItems)
@@ -448,18 +519,57 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return newEditors;
 		}
 
-		private void OnObjectEditorPropertiesChanged (object sender, NotifyCollectionChangedEventArgs e)
+		private async void OnObjectEditorPropertiesChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
-			UpdateMembers();
+			var tcs = new TaskCompletionSource<bool> ();
+			var existingTask = Interlocked.Exchange (ref this.busyTask, tcs.Task);
+			if (existingTask != null)
+				await existingTask;
+
+			await UpdateMembersAsync ();
+
+			tcs.SetResult (true);
 		}
 
-		private PropertyViewModel GetViewModel (IPropertyInfo property)
+		private Task<IReadOnlyCollection<PropertyVariation>[]> GetVariationsAsync (IPropertyInfo property)
 		{
-			return GetViewModelCore (property);
+			var variantTasks = new List<Task<IReadOnlyCollection<PropertyVariation>>> (ObjectEditors.Count);
+			for (int i = 0; i < ObjectEditors.Count; i++) {
+				variantTasks.Add (ObjectEditors[i].GetPropertyVariantsAsync (property));
+			}
+
+			return Task.WhenAll (variantTasks);
 		}
 
-		private PropertyViewModel GetViewModelCore (IPropertyInfo property)
+		private async Task<IReadOnlyList<PropertyViewModel>> GetViewModelsAsync (IPropertyInfo property, IEnumerable<PropertyVariation> variantsToSkip = null)
 		{
+			PropertyViewModel baseVm = GetViewModel (property);
+			List<PropertyViewModel> vms = new List<PropertyViewModel> ();
+			vms.Add (baseVm);
+
+			HashSet<PropertyVariation> skipped =
+				(variantsToSkip != null) ? new HashSet<PropertyVariation> (variantsToSkip) : null;
+
+			if (baseVm.HasVariations) {
+				using (await AsyncWork.RequestAsyncWork (this)) {
+					var variants = await GetVariationsAsync (property);
+					for (int i = 0; i < variants.Length; i++) {
+						foreach (PropertyVariation variant in variants[i]) {
+							if (skipped != null && skipped.Contains (variant))
+								continue;
+
+							vms.Add (GetViewModel (property, variant));
+						}
+					}
+				}
+			}
+
+			return vms;
+		}
+
+		private PropertyViewModel GetViewModel (IPropertyInfo property, PropertyVariation variant = null)
+		{
+			PropertyViewModel vm;
 			Type[] interfaces = property.GetType ().GetInterfaces ();
 
 			Type hasPredefinedValues = interfaces.FirstOrDefault (t => t.IsGenericType && t.GetGenericTypeDefinition () == typeof(IHavePredefinedValues<>));
@@ -469,36 +579,42 @@ namespace Xamarin.PropertyEditing.ViewModels
 					? typeof(CombinablePropertyViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0])
 					: typeof(PredefinedValuesViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0]);
 
-				return (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors);
-			}
+				vm = (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors, variant);
+			} else if (ViewModelMap.TryGetValue (property.Type, out var vmFactory))
+				vm = vmFactory (TargetPlatform, property, this.objEditors, variant);
+			else
+				vm = new StringPropertyViewModel (TargetPlatform, property, this.objEditors, variant);
 
-			if (ViewModelMap.TryGetValue (property.Type, out var vmFactory))
-				return vmFactory (TargetPlatform, property, this.objEditors);
-			
-			return new StringPropertyViewModel (TargetPlatform, property, this.objEditors);
+			vm.VariationsChanged += OnVariationsChanged;
+			return vm;
 		}
 
 		private Task busyTask;
 
-		private static readonly Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel>> {
-			{ typeof(string), (tp,p,e) => new StringPropertyViewModel (tp, p, e) },
-			{ typeof(bool), (tp,p,e) => new PropertyViewModel<bool?> (tp, p, e) },
-			{ typeof(float), (tp,p,e) => new NumericPropertyViewModel<float?> (tp, p, e) },
-			{ typeof(double), (tp,p,e) => new NumericPropertyViewModel<double?> (tp, p, e) },
-			{ typeof(int), (tp,p,e) => new NumericPropertyViewModel<int?> (tp, p, e) },
-			{ typeof(long), (tp,p,e) => new NumericPropertyViewModel<long?> (tp, p, e) },
-			{ typeof(CommonSolidBrush), (tp,p,e) => new BrushPropertyViewModel(tp, p, e, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
-			{ typeof(CommonColor), (tp,p,e) => new BrushPropertyViewModel(tp, p, e, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
-			{ typeof(CommonBrush), (tp,p,e) => new BrushPropertyViewModel(tp, p, e) },
-			{ typeof(CommonPoint), (tp,p,e) => new PointPropertyViewModel (tp, p, e) },
-			{ typeof(CommonSize), (tp,p,e) => new SizePropertyViewModel (tp, p, e) },
-			{ typeof(CommonRectangle), (tp,p,e) => new RectanglePropertyViewModel (tp, p, e) },
-			{ typeof(CommonThickness), (tp,p,e) => new ThicknessPropertyViewModel (tp, p, e) },
-			{ typeof(IList), (tp,p,e) => new CollectionPropertyViewModel (tp,p,e) },
-			{ typeof(BindingSource), (tp,p,e) => new PropertyViewModel<BindingSource> (tp, p, e) },
-			{ typeof(Resource), (tp,p,e) => new PropertyViewModel<Resource> (tp, p, e) },
-			{ typeof(object), (tp,p,e) => new ObjectPropertyViewModel (tp, p, e) },
-			{ typeof(CommonRatio), (tp, p, e) => new RatioViewModel (tp, p, e) },
+		protected internal static AsyncWorkQueue AsyncWork
+		{
+			get;
+		} = new AsyncWorkQueue();
+
+		private static readonly Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyVariation, PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyVariation, PropertyViewModel>> {
+			{ typeof(string), (tp,p,e,v) => new StringPropertyViewModel (tp, p, e, v) },
+			{ typeof(bool), (tp,p,e,v) => new PropertyViewModel<bool?> (tp, p, e, v) },
+			{ typeof(float), (tp,p,e,v) => new NumericPropertyViewModel<float?> (tp, p, e, v) },
+			{ typeof(double), (tp,p,e,v) => new NumericPropertyViewModel<double?> (tp, p, e, v) },
+			{ typeof(int), (tp,p,e,v) => new NumericPropertyViewModel<int?> (tp, p, e, v) },
+			{ typeof(long), (tp,p,e,v) => new NumericPropertyViewModel<long?> (tp, p, e, v) },
+			{ typeof(CommonSolidBrush), (tp,p,e,v) => new BrushPropertyViewModel (tp, p, e, v, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
+			{ typeof(CommonColor), (tp,p,e,v) => new BrushPropertyViewModel (tp, p, e, v, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
+			{ typeof(CommonBrush), (tp,p,e,v) => new BrushPropertyViewModel (tp, p, e, v) },
+			{ typeof(CommonPoint), (tp,p,e,v) => new PointPropertyViewModel (tp, p, e, v) },
+			{ typeof(CommonSize), (tp,p,e,v) => new SizePropertyViewModel (tp, p, e, v) },
+			{ typeof(CommonRectangle), (tp,p,e,v) => new RectanglePropertyViewModel (tp, p, e, v) },
+			{ typeof(CommonThickness), (tp,p,e,v) => new ThicknessPropertyViewModel (tp, p, e, v) },
+			{ typeof(IList), (tp,p,e,v) => new CollectionPropertyViewModel (tp, p ,e, v) },
+			{ typeof(BindingSource), (tp,p,e,v) => new PropertyViewModel<BindingSource> (tp, p, e, v) },
+			{ typeof(Resource), (tp,p,e,v) => new PropertyViewModel<Resource> (tp, p, e, v) },
+			{ typeof(object), (tp,p,e,v) => new ObjectPropertyViewModel (tp, p, e, v) },
+			{ typeof(CommonRatio), (tp, p, e, v) => new RatioViewModel (tp, p, e, v) },
 		};
 	}
 }

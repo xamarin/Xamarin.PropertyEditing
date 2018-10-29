@@ -554,4 +554,16 @@
   <data name="Shared" xml:space="preserve">
     <value>Shared</value>
   </data>
+  <data name="AddVariationHelpText" xml:space="preserve">
+    <value>Introduce variation based on:</value>
+  </data>
+  <data name="AddVariationTitle" xml:space="preserve">
+    <value>Add a Variation</value>
+  </data>
+  <data name="Any" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="ErrorCreatingVariant" xml:space="preserve">
+    <value>Error creating variant: {0}. If this error continues, please report it.</value>
+  </data>
 </root>

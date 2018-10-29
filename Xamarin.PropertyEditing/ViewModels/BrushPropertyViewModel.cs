@@ -12,9 +12,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class BrushPropertyViewModel : PropertyViewModel<CommonBrush>
 	{
-		public BrushPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors,
-		                               IEnumerable<CommonBrushType> allowedBrushTypes = null)
-			: base (platform, property, editors)
+		public BrushPropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null, IEnumerable<CommonBrushType> allowedBrushTypes = null)
+			: base (platform, property, editors, variation)
 		{
 			if (property.Type.IsAssignableFrom (typeof (CommonSolidBrush))
 				|| property.Type.IsAssignableFrom (typeof (CommonColor))) {
@@ -149,14 +148,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			base.OnEditorsChanged (sender, e);
 			ResetResourceSelector ();
-		}
-
-		protected override void OnPropertyChanged ([CallerMemberName] string propertyName = null)
-		{
-			base.OnPropertyChanged (propertyName);
-			if (propertyName == nameof (TargetPlatform)) {
-				ResetResourceSelector ();
-			}
 		}
 
 		private ResourceSelectorViewModel resourceSelector;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -238,24 +238,22 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		[Description ("When passing along strings in the value desciprtor, we should ensure they are empty and not null for differentiation")]
+		[Description ("When passing along strings in the value descriptor, we should ensure they are empty and not null for differentiation")]
 		public void ValueDescriptorEmptyNotNullConstrained ()
 		{
 			var property = GetPropertyMock ();
 			property.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Local);
 
-			var editor = GetBasicEditor (property.Object);
+			var editor = new Mock<IObjectEditor> ();
+			SetupPropertySetAndGet (editor, property.Object);
 
-			var vm = GetViewModel (property.Object, new[] { editor });
+			var vm = GetViewModel (property.Object, new[] { editor.Object });
 			Assume.That (vm.ValueName, Is.EqualTo (String.Empty));
 
 			vm.ValueName = GetRandomValueName();
 			vm.ValueName = null;
 
-			var info = editor.values[property.Object] as ValueInfo<T>;
-			Assert.That (info, Is.Not.Null);
-			Assert.That (info.ValueDescriptor, Is.EqualTo (String.Empty));
-			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
+			editor.Verify (oe => oe.SetValueAsync (property.Object, It.Is<ValueInfo<string>> (f => Equals (f.ValueDescriptor, String.Empty)), It.IsAny<PropertyVariation> ()));
 		}
 	}
 
@@ -265,7 +263,7 @@ namespace Xamarin.PropertyEditing.Tests
 		None = 0,
 		First = 1,
 		Second = 2,
-		Eigth = 8
+		Eighth = 8
 	}
 
 	[TestFixture]
@@ -306,21 +304,19 @@ namespace Xamarin.PropertyEditing.Tests
 			});
 			predefined.SetupGet (p => p.IsConstrainedToPredefined).Returns (false);
 
-			var editor = GetBasicEditor (property.Object);
+			var editor = new Mock<IObjectEditor> ();
+			SetupPropertySetAndGet (editor, property.Object);
 
-			var vm = GetViewModel (property.Object, new[] { editor });
+			var vm = GetViewModel (property.Object, new[] { editor.Object });
 			Assume.That (vm.ValueName, Is.EqualTo (String.Empty));
 
 			vm.ValueName = "test";
 
-			var info = editor.values[property.Object] as ValueInfo<int>;
-			Assert.That (info, Is.Not.Null);
-			Assert.That (info.ValueDescriptor, Is.EqualTo ("test"));
-			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
+			editor.Verify (oe => oe.SetValueAsync (property.Object, It.Is<ValueInfo<int>> (f => Equals (f.ValueDescriptor, "test") && f.Source == ValueSource.Local), It.IsAny<PropertyVariation> ()));
 		}
 
 		[Test]
-		[Description ("When passing along strings in the value desciprtor, we should ensure they are empty and not null for differentiation")]
+		[Description ("When passing along strings in the value descriptor, we should ensure they are empty and not null for differentiation")]
 		public void ValueDescriptorEmptyNotNullUnconstrained ()
 		{
 			var property = GetPropertyMock ();
@@ -330,18 +326,16 @@ namespace Xamarin.PropertyEditing.Tests
 			});
 			predefined.SetupGet (p => p.IsConstrainedToPredefined).Returns (false);
 
-			var editor = GetBasicEditor (property.Object);
+			var editor = new Mock<IObjectEditor> ();
+			SetupPropertySetAndGet (editor, property.Object);
 
-			var vm = GetViewModel (property.Object, new[] { editor });
+			var vm = GetViewModel (property.Object, new[] { editor.Object });
 			Assume.That (vm.ValueName, Is.EqualTo (String.Empty));
 
 			vm.ValueName = "test";
 			vm.ValueName = null;
 
-			var info = editor.values[property.Object] as ValueInfo<int>;
-			Assert.That (info, Is.Not.Null);
-			Assert.That (info.ValueDescriptor, Is.EqualTo (String.Empty));
-			Assert.That (info.Source, Is.EqualTo (ValueSource.Local));
+			editor.Verify (oe => oe.SetValueAsync (property.Object, It.Is<ValueInfo<int>> (vi => Equals (vi.ValueDescriptor, String.Empty) && vi.Source == ValueSource.Local), It.IsAny<PropertyVariation> ()));
 		}
 
 		protected override int GetRandomTestValue (Random rand)

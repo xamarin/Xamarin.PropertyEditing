@@ -66,6 +66,7 @@
     <Compile Include="CollectionPropertyViewModelTests.cs" />
     <Compile Include="CreateBindingViewModelTests.cs" />
     <Compile Include="CreateResourceViewModelTests.cs" />
+    <Compile Include="CreateVariantViewModelTests.cs" />
     <Compile Include="MaterialDesignColorViewModelTests.cs" />
     <Compile Include="CombinablePredefinedViewModelTests.cs" />
     <Compile Include="MockBindingEditor.cs" />

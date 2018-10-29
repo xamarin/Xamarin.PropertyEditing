@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal abstract class EditorViewModel
-		: NotifyingObject
+		: NotifyingObject, IComparable<EditorViewModel>
 	{
 		public EditorViewModel (TargetPlatform platform, IEnumerable<IObjectEditor> editors)
 		{
@@ -55,14 +55,23 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
-		protected static AsyncWorkQueue AsyncWork
-		{
-			get;
-		} = new AsyncWorkQueue ();
+		protected static AsyncWorkQueue AsyncWork => PropertiesViewModel.AsyncWork;
 
 		public TargetPlatform TargetPlatform
 		{
 			get;
+		}
+
+		public virtual int CompareTo (EditorViewModel other)
+		{
+			if (other == null)
+				return -1;
+			if (Name == other.Name)
+				return 0;
+			if (Name == null)
+				return 1;
+
+			return Name.CompareTo (other.Name);
 		}
 
 		protected virtual void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)

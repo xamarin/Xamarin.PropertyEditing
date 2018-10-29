@@ -47,6 +47,9 @@ namespace Xamarin.PropertyEditing.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Alpha.
+        /// </summary>
         public static string Alpha {
             get {
                 return ResourceManager.GetString("Alpha", resourceCulture);
@@ -56,6 +59,24 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string AlphaInitial {
             get {
                 return ResourceManager.GetString("AlphaInitial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Introduce variation based on:.
+        /// </summary>
+        public static string AddVariationHelpText {
+            get {
+                return ResourceManager.GetString("AddVariationHelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a Variation.
+        /// </summary>
+        public static string AddVariationTitle {
+            get {
+                return ResourceManager.GetString("AddVariationTitle", resourceCulture);
             }
         }
         
@@ -71,6 +92,24 @@ namespace Xamarin.PropertyEditing.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Any.
+        /// </summary>
+        public static string Any {
+            get {
+                return ResourceManager.GetString("Any", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application.
+        /// </summary>
+        public static string Application {
+            get {
+                return ResourceManager.GetString("Application", resourceCulture);
+            }
+        }
+
         public static string Blue {
             get {
                 return ResourceManager.GetString("Blue", resourceCulture);
@@ -248,6 +287,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string MultipleObjectsSelected {
             get {
                 return ResourceManager.GetString("MultipleObjectsSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error creating variant: {0}. If this error continues, please report it..
+        /// </summary>
+        public static string ErrorCreatingVariant {
+            get {
+                return ResourceManager.GetString("ErrorCreatingVariant", resourceCulture);
             }
         }
         
@@ -704,12 +752,6 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string DefineIn {
             get {
                 return ResourceManager.GetString("DefineIn", resourceCulture);
-            }
-        }
-        
-        public static string Application {
-            get {
-                return ResourceManager.GetString("Application", resourceCulture);
             }
         }
         

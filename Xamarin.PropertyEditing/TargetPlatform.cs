@@ -111,6 +111,26 @@ namespace Xamarin.PropertyEditing
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets a callback for errors that should be edge cases and/or don't have a defined way of displaying in the UI.
+		/// </summary>
+		/// <remarks>
+		/// The string parameter contains a message that typically prefixes an exception message with context (ex. "Error creating variant: [exception message]")
+		/// </remarks>
+		public Action<string, Exception> ErrorHandler
+		{
+			get;
+			set;
+		}
+
+		internal void ReportError (string message, Exception exception)
+		{
+			if (ErrorHandler != null)
+				ErrorHandler (message, exception);
+			else
+				throw new Exception (message, exception);
+		}
+
 		internal TargetPlatform WithProvider (IEditorProvider provider)
 		{
 			if (provider == null)

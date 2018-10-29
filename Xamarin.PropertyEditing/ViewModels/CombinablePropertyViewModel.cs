@@ -44,8 +44,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class CombinablePropertyViewModel<TValue>
 		: PropertyViewModel<TValue>
 	{
-		public CombinablePropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors)
-			: base (platform, property, editors)
+		public CombinablePropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
+			: base (platform, property, editors, variation)
 		{
 			this.predefinedValues = property as IHavePredefinedValues<TValue>;
 			if (this.predefinedValues == null)

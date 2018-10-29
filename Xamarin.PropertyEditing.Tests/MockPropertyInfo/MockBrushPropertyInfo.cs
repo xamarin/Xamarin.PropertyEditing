@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 	{
 		public MockBrushPropertyInfo (string name, string category, bool canWrite, string description = null,
 			IReadOnlyList<string> colorSpaces = null, ValueSources valueSources = ValueSources.Default | ValueSources.Local  |  ValueSources.Resource,
-			IReadOnlyList<PropertyVariation> variations = null,
+			IReadOnlyList<PropertyVariationOption> variations = null,
 			IReadOnlyList<IAvailabilityConstraint> availabilityConstraints = null)
 		{
 			Name = name;
@@ -37,7 +37,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 		public ValueSources ValueSources { get; }
 
-		public IReadOnlyList<PropertyVariation> Variations { get; }
+		public IReadOnlyList<PropertyVariationOption> Variations { get; }
 
 		public IReadOnlyList<IAvailabilityConstraint> AvailabilityConstraints { get; }
 

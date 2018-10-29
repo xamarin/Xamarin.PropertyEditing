@@ -51,14 +51,24 @@ namespace Xamarin.PropertyEditing.Tests
 			return this.editor.GetAssignableTypesAsync (property, childTypes);
 		}
 
-		public Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null)
+		public Task<IReadOnlyCollection<PropertyVariation>> GetPropertyVariantsAsync (IPropertyInfo property)
 		{
-			return this.editor.SetValueAsync (property, value, variation);
+			throw new NotSupportedException();
 		}
 
-		public Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null)
+		public Task RemovePropertyVariantAsync (IPropertyInfo property, PropertyVariation variant)
 		{
-			return this.editor.GetValueAsync<T> (property, variation);
+			throw new NotSupportedException();
+		}
+
+		public Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variations = null)
+		{
+			return this.editor.SetValueAsync (property, value, variations);
+		}
+
+		public Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variations = null)
+		{
+			return this.editor.GetValueAsync<T> (property, variations);
 		}
 
 		private readonly ReflectionObjectEditor editor;

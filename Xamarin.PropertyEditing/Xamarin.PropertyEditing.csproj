@@ -109,6 +109,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="PropertyBinding.cs" />
+    <Compile Include="PropertyVariationOption.cs" />
     <Compile Include="PropertyVariation.cs" />
     <Compile Include="Reflection\ReflectionEditorProvider.cs" />
     <Compile Include="Reflection\ReflectionEnumPropertyInfo.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="ViewModels\CreateBindingViewModel.cs" />
     <Compile Include="ViewModels\CreateResourceRequestedEventArgs.cs" />
     <Compile Include="ViewModels\CreateResourceViewModel.cs" />
+    <Compile Include="ViewModels\CreateVariationViewModel.cs" />
     <Compile Include="ViewModels\MaterialColorScale.cs" />
     <Compile Include="ViewModels\MaterialDesignColorViewModel.cs" />
     <Compile Include="ViewModels\CombinablePropertyViewModel.cs" />
@@ -167,6 +169,7 @@
     <Compile Include="ViewModels\RatioViewModel.cs" />
     <Compile Include="Drawing\CommonRatio.cs" />
     <Compile Include="IReadOnlyOrderedDictionary.cs" />
+    <Compile Include="ViewModels\CreateVariationEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Themes\BaseThemeManager.cs" />

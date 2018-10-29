@@ -88,6 +88,9 @@
     <Compile Include="CreateResourceWindow.xaml.cs">
       <DependentUpon>CreateResourceWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CreateVariantWindow.xaml.cs">
+      <DependentUpon>CreateVariantWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DoubleToAngleConverter.cs" />
     <Compile Include="CreateValueConverterWindow.xaml.cs">
       <DependentUpon>CreateValueConverterWindow.xaml</DependentUpon>
@@ -162,6 +165,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CreateValueConverterWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreateVariantWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

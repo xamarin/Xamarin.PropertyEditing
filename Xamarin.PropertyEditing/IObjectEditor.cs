@@ -8,15 +8,24 @@ namespace Xamarin.PropertyEditing
 		: EventArgs
 	{
 		/// <param name="property">The property that was updated, or <c>null</c> if a full refresh is required.</param>
-		public EditorPropertyChangedEventArgs (IPropertyInfo property)
+		public EditorPropertyChangedEventArgs (IPropertyInfo property, PropertyVariation variation = null)
 		{
 			Property = property;
+			Variation = variation;
 		}
 
 		/// <summary>
 		/// Gets the property that was changed, or <c>null</c> for a full refresh.
 		/// </summary>
 		public IPropertyInfo Property
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the variation that was changed, if any.
+		/// </summary>
+		public PropertyVariation Variation
 		{
 			get;
 		}
@@ -56,7 +65,7 @@ namespace Xamarin.PropertyEditing
 		/// <remarks>
 		/// These are children that do not participate in the standard element hierarchy, such as segments in a segmented control.
 		/// Note that objects defined by editors do not need to match real objects in the real hierarchy, they can be faked. An existing
-		/// iOS property chooser itself can be maped to having an object editor for its actual object.
+		/// iOS property chooser itself can be mapped to having an object editor for its actual object.
 		/// </remarks>
 		IReadOnlyList<IObjectEditor> DirectChildren { get; }
 
@@ -88,6 +97,20 @@ namespace Xamarin.PropertyEditing
 		 * them or become invalid as a result of a prior pending change.
 		 */
 
+		/// <summary>
+		/// Gets or sets variations of <paramref name="property"/> values.
+		/// </summary>
+		/// <param name="property"></param>
+		/// <returns>
+		/// Each <see cref="PropertyVariation"/> that has a value defined for the given <paramref name="property"/>.
+		/// No variation set should be returned for a neutral value, it's assumed there is one.
+		/// </returns>
+		Task<IReadOnlyCollection<PropertyVariation>> GetPropertyVariantsAsync (IPropertyInfo property);
+
+		/// <summary>
+		/// Removes a variant version of a property.
+		/// </summary>
+		Task RemovePropertyVariantAsync (IPropertyInfo property, PropertyVariation variant);
 
 		/// <remarks>
 		/// <para>For the <see cref="ValueSource.Default"/> or <see cref="ValueSource.Unset"/> sources, implementers should
@@ -115,12 +138,17 @@ namespace Xamarin.PropertyEditing
 		/// will do basic verification before calling. Even <see cref="ValueInfo{T}.Source"/> changes with the value staying the
 		/// same is a change in the property.
 		/// </para>
+		/// <para>
+		/// For <paramref name="variations"/>, a set call for a <see cref="PropertyVariation"/> that is not yet set should be
+		/// considered a "create new variation" call. Similarly, a call in which <paramref name="value"/>'s source is <see cref="ValueSource.Unset"/>
+		/// should be considered a "delete variation" call when <paramref name="variations"/> is set.
+		/// </para>
 		/// </remarks>
-		Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variation = null);
+		Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variations = null);
 
 		/// <remarks>
 		/// <para>Implementers should strive to include the actual value of resources or bindings for <see cref="ValueInfo{T}.Value"/>
-		/// whereever possible.</para>
+		/// wherever possible.</para>
 		/// <para>If the platform can know the value of a property when unset, it should return that value and the <see cref="ValueSource.Default"/>
 		/// source. If the platform only knows that the value is unset, use <see cref="ValueSource.Unset"/> instead.</para>
 		///<para>When the property's value <see cref="ValueInfo{T}.Source"/> is <see cref="ValueSource.Resource"/>,
@@ -132,6 +160,6 @@ namespace Xamarin.PropertyEditing
 		/// of the value.</para>
 		/// </remarks>
 		/// <exception cref="ArgumentNullException"><paramref name="property"/> is <c>null</c>.</exception>
-		Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variation = null);
+		Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variations = null);
 	}
 }
