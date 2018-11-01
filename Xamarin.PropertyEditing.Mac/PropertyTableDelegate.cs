@@ -199,6 +199,7 @@ namespace Xamarin.PropertyEditing.Mac
 					editorControl.TableView = outlineView;
 				} else if (editor?.NativeView != null) {
 					editor.NativeView.Identifier = identifier;
+					return editor.NativeView;
 				}
 
 				return new EditorContainer (editor) { Identifier = identifier };

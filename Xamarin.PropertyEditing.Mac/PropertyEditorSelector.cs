@@ -53,6 +53,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (BrushPropertyViewModel), typeof (BrushEditorControl)},
 			{typeof (RatioViewModel), typeof (RatioEditorControl<CommonRatio>)},
 			{typeof (ThicknessPropertyViewModel), typeof (CommonThicknessEditorControl) },
+			{typeof (PropertyGroupViewModel), typeof (GroupEditorControl)},
 		};
 	}
 }
