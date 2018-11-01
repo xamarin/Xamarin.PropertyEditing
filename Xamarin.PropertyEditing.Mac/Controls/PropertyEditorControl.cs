@@ -70,12 +70,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 			PropertyEditorControl ctrl = null;
 
-			//FIXME: don't hardcode column
 			var tr = TableRow;
 			if (tr > 0) {
 				do {
 					tr--;
-					ctrl = TableView.GetView (1, tr, false) as PropertyEditorControl;
+					ctrl = (TableView.GetView (0, tr, false) as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
 				} while (tr > 0 && ctrl == null);
 
 				if (ctrl != null) {

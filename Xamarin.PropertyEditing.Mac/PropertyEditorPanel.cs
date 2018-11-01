@@ -158,15 +158,11 @@ namespace Xamarin.PropertyEditing.Mac
 			propertyTable.GridStyleMask = NSTableViewGridStyle.SolidHorizontalLine | NSTableViewGridStyle.SolidVerticalLine;
 #endif
 
-			var propertiesList = new NSTableColumn (PropertyListColId) { Title = LocalizationResources.PropertyColumnTitle };
-			var propertyEditors = new NSTableColumn (PropertyEditorColId) { Title = LocalizationResources.ValueColumnTitle };
-			propertiesList.Width = 158;
-			propertyEditors.Width = 250;
-			this.propertyTable.AddColumn (propertiesList);
+			var propertyEditors = new NSTableColumn (PropertyEditorColId);
 			this.propertyTable.AddColumn (propertyEditors);
 
 			// Set OutlineTableColumn or the arrows showing children/expansion will not be drawn
-			this.propertyTable.OutlineTableColumn = propertiesList;
+			this.propertyTable.OutlineTableColumn = propertyEditors;
 
 			// create a table view and a scroll view
 			var tableContainer = new NSScrollView {
@@ -250,13 +246,16 @@ namespace Xamarin.PropertyEditing.Mac
 				return true;
 			}
 
-			public override CGRect FrameOfOutlineCellAtRow (nint row)
+			public override CGRect GetCellFrame (nint column, nint row)
 			{
-				var obj = (NSObjectFacade)ItemAtRow (row);
-				if (obj.Target is IGroupingList<string, PropertyViewModel>)
-					return new CGRect (8, 11, 10, 10);
+				var super = base.GetCellFrame (column, row);
+				if (column == 0) {
+					var obj = (NSObjectFacade)ItemAtRow (row);
+					if (obj.Target is PropertyGroupViewModel)
+						return new CGRect (0, super.Top, super.Right - (super.Left / 2), super.Height);
+				}
 
-				return base.FrameOfOutlineCellAtRow (row);
+				return super;
 			}
 		}
 	}
