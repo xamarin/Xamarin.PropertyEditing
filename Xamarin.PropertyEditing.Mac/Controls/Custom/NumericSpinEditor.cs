@@ -176,9 +176,13 @@ namespace Xamarin.PropertyEditing.Mac
 			TranslatesAutoresizingMaskIntoConstraints = false;
 			var controlSize = NSControlSize.Small;
 
-			incrementButton = new UpSpinnerButton ();
+			incrementButton = new UpSpinnerButton {
+				TranslatesAutoresizingMaskIntoConstraints = false
+			};
 
-			decrementButton = new DownSpinnerButton ();
+			decrementButton = new DownSpinnerButton {
+				TranslatesAutoresizingMaskIntoConstraints = false
+			};
 
 			formatter = new NSNumberFormatter {
 				FormatterBehavior = NSNumberFormatterBehavior.Version_10_4,
