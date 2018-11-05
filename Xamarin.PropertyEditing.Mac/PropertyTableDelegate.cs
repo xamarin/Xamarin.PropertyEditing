@@ -66,9 +66,6 @@ namespace Xamarin.PropertyEditing.Mac
 				return labelContainer;
 			}
 
-			if (evm == null)
-				return null;
-
 			NSView editorOrContainer = null;
 			if (this.firstCache.TryGetValue (cellIdentifier, out IEditorView editor)) {
 				this.firstCache.Remove (cellIdentifier);
@@ -92,6 +89,8 @@ namespace Xamarin.PropertyEditing.Mac
 				if (editor.IsDynamicallySized) {
 					outlineView.NoteHeightOfRowsWithIndexesChanged (new NSIndexSet (index));
 				}
+			} else if (editorOrContainer is PanelHeaderEditorControl header) {
+				header.ViewModel = this.dataSource.DataContext;
 			}
 
 			return editorOrContainer;
@@ -135,28 +134,28 @@ namespace Xamarin.PropertyEditing.Mac
 				return 20;
 
 			if (!this.registrations.TryGetValue (cellIdentifier, out EditorRegistration registration)) {
-				NSView editorOrContainer = GetEditor (cellIdentifier, vm, outlineView);
-				IEditorView view = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
+				registration = new EditorRegistration ();
 
-				if (view == null) {
-					this.registrations[cellIdentifier] = registration = new EditorRegistration {
-						RowSize = PropertyEditorControl.DefaultControlHeight
-					};
-				} else if (view.IsDynamicallySized) {
-					this.registrations[cellIdentifier] = registration = new EditorRegistration {
-						SizingInstance = view
-					};
-
-					// We're cheating by declaring GetHeight should act static, so we can call it from
-					// an instance that is being used elsewhere.
-					this.firstCache[cellIdentifier] = view;
+				if (cellIdentifier == nameof(PanelHeaderEditorControl)) {
+					registration.RowSize = 44;
 				} else {
-					this.registrations[cellIdentifier] = registration = new EditorRegistration {
-						RowSize = view.GetHeight (vm)
-					};
+					NSView editorOrContainer = GetEditor (cellIdentifier, vm, outlineView);
+					IEditorView view = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
 
-					this.firstCache[cellIdentifier] = view;
+					if (view == null) {
+						registration.RowSize = PropertyEditorControl.DefaultControlHeight;
+					} else if (view.IsDynamicallySized) {
+						registration.SizingInstance = view;
+					} else {
+						this.registrations[cellIdentifier] = registration = new EditorRegistration {
+							RowSize = view.GetHeight (vm)
+						};
+
+						this.firstCache[cellIdentifier] = view;
+					}
 				}
+
+				this.registrations[cellIdentifier] = registration;
 			}
 
 			return registration.GetHeight (vm);
@@ -204,7 +203,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				return new EditorContainer (editor) { Identifier = identifier };
 			} else
-				return new PanelHeaderEditorControl (this.dataSource.DataContext);
+				return new PanelHeaderEditorControl ();
 		}
 
 		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out EditorViewModel vm, out IGroupingList<string, EditorViewModel> group, out string cellIdentifier)
@@ -212,7 +211,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var facade = (NSObjectFacade)item;
 			vm = facade.Target as EditorViewModel;
 			group = facade.Target as IGroupingList<string, EditorViewModel>;
-			cellIdentifier = facade.Target is PanelHeaderEditorControl pvh
+			cellIdentifier = facade.Target == null
 								   ? nameof (PanelHeaderEditorControl)
 								   : (group == null) ? vm.GetType ().FullName : group.Key;
 		}

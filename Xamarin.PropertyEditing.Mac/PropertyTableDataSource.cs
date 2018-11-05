@@ -47,7 +47,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			// We only want the Header to appear at the top of both Category and Name Modes, which means item is null in both.
 			if (childIndex == 0 && item == null && !Filtering)
-				element = new PanelHeaderEditorControl (this.vm);
+				element = null;
 			else {
 				if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
 					element = Filtering ? this.vm.ArrangedEditors[0][(int)childIndex] : this.vm.ArrangedEditors[0][(int)childIndex - 1];

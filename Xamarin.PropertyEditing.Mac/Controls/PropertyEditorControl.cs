@@ -72,14 +72,18 @@ namespace Xamarin.PropertyEditing.Mac
 
 			var tr = TableRow;
 			if (tr > 0) {
+				NSView view;
 				do {
 					tr--;
-					ctrl = (TableView.GetView (0, tr, false) as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
+					view = TableView.GetView (0, tr, false);
+					ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
 				} while (tr > 0 && ctrl == null);
 
 				if (ctrl != null) {
 					ctrl.LastKeyView.NextKeyView = FirstKeyView;
 					ctrl.UpdateKeyViews ();
+				} else if (tr == 0 && view is PanelHeaderEditorControl header) {
+					header.SetNextKeyView (FirstKeyView);
 				}
 			}
 		}
