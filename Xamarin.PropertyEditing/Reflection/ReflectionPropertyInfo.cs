@@ -47,6 +47,8 @@ namespace Xamarin.PropertyEditing.Reflection
 
 		public bool CanWrite => this.propertyInfo.CanWrite;
 
+		public bool IsUncommon => false;
+
 		public ValueSources ValueSources => ValueSources.Local;
 
 		public IReadOnlyList<PropertyVariationOption> Variations => EmtpyVariationOptions;

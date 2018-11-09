@@ -23,12 +23,13 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 	public class MockPropertyInfo<T> : IPropertyInfo, IPropertyConverter, IEquatable<MockPropertyInfo<T>>
 	{
-		public MockPropertyInfo (string name, string description = null, string category = null, bool canWrite = true, IEnumerable<Type> converterTypes = null, ValueSources valueSources = ValueSources.Local | ValueSources.Default, PropertyVariationOption[] options = null)
+		public MockPropertyInfo (string name, string description = null, string category = null, bool canWrite = true, IEnumerable<Type> converterTypes = null, ValueSources valueSources = ValueSources.Local | ValueSources.Default, PropertyVariationOption[] options = null, bool isUncommon = false)
 		{
 			Name = name;
 			Description = description;
 			Category = category;
 			CanWrite = canWrite;
+			IsUncommon = isUncommon;
 			ValueSources = valueSources;
 			if (converterTypes != null) {
 				this.typeConverters = converterTypes
@@ -52,6 +53,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 		public string Category { get; }
 		public bool CanWrite { get; }
+		public bool IsUncommon { get; }
 		public ValueSources ValueSources { get; }
 		static readonly PropertyVariationOption[] EmptyVariationOptions = new PropertyVariationOption[0];
 
