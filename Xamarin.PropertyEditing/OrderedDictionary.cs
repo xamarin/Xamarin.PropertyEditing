@@ -378,7 +378,7 @@ namespace Cadenza.Collections
 		private readonly List<TKey> keyOrder;
 
 		private class ReadOnlyValueCollection
-			: IList<TValue>
+			: IList<TValue>, IReadOnlyList<TValue>
 		{
 			public ReadOnlyValueCollection (OrderedDictionary<TKey, TValue> dict)
 			{
