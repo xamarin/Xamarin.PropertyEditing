@@ -9,7 +9,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal abstract class BaseRectangleEditorControl<T> : PropertyEditorControl<PropertyViewModel<T>>
+	internal abstract class BaseRectangleEditorControl<T> : PropertyEditorControl<T>
 	{
 		protected UnfocusableTextField XLabel { get; set; }
 		protected NumericSpinEditor<T> XEditor { get; set; }
@@ -26,27 +26,31 @@ namespace Xamarin.PropertyEditing.Mac
 		public BaseRectangleEditorControl ()
 		{
 			XLabel = new UnfocusableTextField ();
-			XEditor = new NumericSpinEditor<T> ();
-			XEditor.BackgroundColor = NSColor.Clear;
-			XEditor.Value = 0.0f;
+			XEditor = new NumericSpinEditor<T> {
+				BackgroundColor = NSColor.Clear,
+				Value = 0.0f
+			};
 			XEditor.ValueChanged += OnInputUpdated;
 
 			YLabel =  new UnfocusableTextField ();
-			YEditor = new NumericSpinEditor<T> ();
-			YEditor.BackgroundColor = NSColor.Clear;
-			YEditor.Value = 0.0f;
+			YEditor = new NumericSpinEditor<T> {
+				BackgroundColor = NSColor.Clear,
+				Value = 0.0f
+			};
 			YEditor.ValueChanged += OnInputUpdated;
 
 			WidthLabel = new UnfocusableTextField ();
-			WidthEditor = new NumericSpinEditor<T> ();
-			WidthEditor.BackgroundColor = NSColor.Clear;
-			WidthEditor.Value = 0.0f;
+			WidthEditor = new NumericSpinEditor<T> {
+				BackgroundColor = NSColor.Clear,
+				Value = 0.0f
+			};
 			WidthEditor.ValueChanged += OnInputUpdated;
 
 			HeightLabel =  new UnfocusableTextField ();
-			HeightEditor = new NumericSpinEditor<T> ();
-			HeightEditor.BackgroundColor = NSColor.Clear;
-			HeightEditor.Value = 0.0f;
+			HeightEditor = new NumericSpinEditor<T> {
+				BackgroundColor = NSColor.Clear,
+				Value = 0.0f
+			};
 			HeightEditor.ValueChanged += OnInputUpdated;
 
 			AddSubview (XLabel);

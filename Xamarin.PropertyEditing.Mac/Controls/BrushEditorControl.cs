@@ -35,7 +35,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class BrushEditorControl : PropertyEditorControl<BrushPropertyViewModel>
+	internal class BrushEditorControl : PropertyEditorControl<CommonBrush>
 	{
 		public BrushEditorControl ()
 		{
@@ -79,6 +79,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override NSView FirstKeyView => this.popUpButton;
 		public override NSView LastKeyView => this.popUpButton;
+
+		internal new BrushPropertyViewModel ViewModel
+		{
+			get { return (BrushPropertyViewModel)base.ViewModel; }
+			set { base.ViewModel = value; }
+		}
 
 		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
 		{

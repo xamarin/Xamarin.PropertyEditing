@@ -8,8 +8,14 @@ using Xamarin.PropertyEditing.ViewModels;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class NumericEditorControl<T>
-		: PropertyEditorControl<NumericPropertyViewModel<T>>
+		: PropertyEditorControl<T>
 	{
+		internal new NumericPropertyViewModel<T> ViewModel
+		{
+			get { return (NumericPropertyViewModel<T>)base.ViewModel; }
+			set { base.ViewModel = value; }
+		}
+
 		public NumericEditorControl ()
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;

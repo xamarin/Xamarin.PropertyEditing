@@ -8,7 +8,7 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class StringEditorControl : PropertyEditorControl<PropertyViewModel<string>>
+	internal class StringEditorControl : PropertyEditorControl<string>
 	{
 		public StringEditorControl ()
 		{

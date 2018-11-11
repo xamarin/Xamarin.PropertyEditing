@@ -89,9 +89,6 @@ namespace Xamarin.PropertyEditing.Mac
 			SetEnabled ();
 			UpdateValue ();
 			UpdateAccessibilityValues ();
-
-			// Hook this up so we know when to reset values 
-			PropertyButton.ViewModel = viewModel;
 		}
 
 		protected virtual void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -114,13 +111,40 @@ namespace Xamarin.PropertyEditing.Mac
 		protected abstract void UpdateAccessibilityValues ();
 	}
 
-	internal abstract class PropertyEditorControl<TViewModel> : PropertyEditorControl
-		where TViewModel : PropertyViewModel
+	internal abstract class PropertyEditorControl<T> : PropertyEditorControl
 	{
-		internal new TViewModel ViewModel
+		internal new PropertyViewModel<T> ViewModel
 		{
-			get { return (TViewModel)base.ViewModel; }
+			get { return (PropertyViewModel<T>)base.ViewModel; }
 			set { base.ViewModel = value; }
+		}
+
+		private PropertyButton<T> propertyButton;
+		public PropertyButton<T> PropertyButton
+		{
+			get { return this.propertyButton; }
+		}
+
+		protected PropertyEditorControl ()
+		{
+			this.propertyButton = new PropertyButton<T> ();
+
+			AddSubview (this.propertyButton);
+
+			this.DoConstraints (new[] {
+				this.propertyButton.ConstraintTo (this, (ab, c) => ab.Width == DefaultPropertyButtonSize),
+				this.propertyButton.ConstraintTo (this, (ab, c) => ab.Height == DefaultPropertyButtonSize),
+				this.propertyButton.ConstraintTo (this, (ab, c) => ab.Top == c.Top + 1),
+				this.propertyButton.ConstraintTo (this, (ab, c) => ab.Left == c.Right - 33),
+			});
+		}
+
+		protected override void OnViewModelChanged (PropertyViewModel oldModel)
+		{
+			base.OnViewModelChanged (oldModel);
+
+			// Hook this up so we know when to reset values
+			PropertyButton.ViewModel = ViewModel;
 		}
 	}
 }

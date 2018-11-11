@@ -130,10 +130,6 @@ namespace Xamarin.PropertyEditing.Mac
 				propertyTypeName.ConstraintTo(this, (tn, c) => tn.Height == DefaultControlHeight),
 			});
 
-			// We won't enable or show the PropertyButton for the header
-			this.PropertyButton.Enabled = false;
-			this.PropertyButton.Hidden = true;
-
 			UpdateValue ();
 		}
 

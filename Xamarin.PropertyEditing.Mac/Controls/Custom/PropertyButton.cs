@@ -9,26 +9,27 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class PropertyButton : UnfocusableButton
+	public abstract class PropertyButton : UnfocusableButton
 	{
-		NSMenu popUpContextMenu;
+		private NSMenu popUpContextMenu;
 
-		PropertyViewModel viewModel;
+		private PropertyViewModel viewModel;
 		internal PropertyViewModel ViewModel
 		{
-			get { return viewModel; }
-			set {
-				if (viewModel != null) {
-					viewModel.PropertyChanged -= OnPropertyChanged;
+			get { return this.viewModel; }
+			set
+			{
+				if (this.viewModel != null) {
+					this.viewModel.PropertyChanged -= OnPropertyChanged;
 				}
 
-				viewModel = value;
-				viewModel.PropertyChanged += OnPropertyChanged;
+				this.viewModel = value;
+				this.viewModel.PropertyChanged += OnPropertyChanged;
 
 				// No point showing myself if you can't do anything with me.
-				Hidden = !viewModel.Property.CanWrite;
+				Hidden = !this.viewModel.Property.CanWrite;
 
-				ValueSourceChanged (viewModel.ValueSource);
+				ValueSourceChanged (this.viewModel.ValueSource);
 			}
 		}
 
@@ -117,37 +118,37 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void ToggleFocusImage (bool focused = false)
 		{
-			if (viewModel != null) {
-				
-				switch (viewModel.ValueSource) {
-				case ValueSource.Binding:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-bound-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-bound-mac-10");
-					break;
+			if (this.viewModel != null) {
 
-				case ValueSource.Default:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-10");
-					break;
+				switch (this.viewModel.ValueSource) {
+					case ValueSource.Binding:
+						Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-bound-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-bound-mac-10");
+						break;
 
-				case ValueSource.Local:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-local-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-local-mac-10");
-					break;
+					case ValueSource.Default:
+						Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-10");
+						break;
 
-				case ValueSource.Inherited:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-10");
-					break;
+					case ValueSource.Local:
+						Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-local-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-local-mac-10");
+						break;
 
-				case ValueSource.Resource:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-10");
-					break;
+					case ValueSource.Inherited:
+						Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-10");
+						break;
 
-				case ValueSource.Unset:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-10");
-					break;
+					case ValueSource.Resource:
+						Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-10");
+						break;
 
-				default:
-					// To Handle ValueSource.DefaultStyle, ValueSource.Style etc.
-					Image = null;
-					break;
+					case ValueSource.Unset:
+						Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-10");
+						break;
+
+					default:
+						// To Handle ValueSource.DefaultStyle, ValueSource.Style etc.
+						Image = null;
+						break;
 				}
 			}
 		}
@@ -190,21 +191,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == nameof (viewModel.ValueSource)) {
-				ValueSourceChanged (viewModel.ValueSource);
+			if (e.PropertyName == nameof (this.viewModel.ValueSource)) {
+				ValueSourceChanged (this.viewModel.ValueSource);
 			}
 		}
 
-		private void OnCustomExpression (object sender, EventArgs e)
-		{
-			var customExpressionView = new CustomExpressionView (viewModel);
-
-			var customExpressionPopOver = new AutoClosePopOver {
-				ContentViewController = new NSViewController (null, null) { View = customExpressionView },
-			};
-
-			customExpressionPopOver.Show (customExpressionView.Frame, (NSView)this, NSRectEdge.MinYEdge);
-		}
+		protected abstract void OnCustomExpression (object sender, EventArgs e);
 
 		private void OnResourceRequested (object sender, EventArgs e)
 		{
@@ -217,6 +209,26 @@ namespace Xamarin.PropertyEditing.Mac
 			requestResourceView.PopOver = resourceSelectorPopOver;
 
 			resourceSelectorPopOver.Show (requestResourceView.Frame, (NSView)this, NSRectEdge.MinYEdge);
+		}
+	}
+
+	public class PropertyButton<T> : PropertyButton
+	{
+		internal new PropertyViewModel<T> ViewModel
+		{
+			get { return (PropertyViewModel<T>)base.ViewModel; }
+			set { base.ViewModel = value; }
+		}
+
+		protected override void OnCustomExpression (object sender, EventArgs e)
+		{
+			var customExpressionView = new CustomExpressionView<T> (ViewModel);
+
+			var customExpressionPopOver = new AutoClosePopOver {
+				ContentViewController = new NSViewController (null, null) { View = customExpressionView },
+			};
+
+			customExpressionPopOver.Show(customExpressionView.Frame, (NSView)this, NSRectEdge.MinYEdge);
 		}
 	}
 }

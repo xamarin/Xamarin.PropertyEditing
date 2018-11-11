@@ -11,30 +11,20 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class BaseEditorControl : NSView
 	{
-		IEnumerable errorList;
-		const int DefaultPropertyButtonSize = 20;
-		const int DefaultActioButtonSize = 16;
+		private IEnumerable errorList;
+		protected const int DefaultPropertyButtonSize = 20;
+		protected const int DefaultActioButtonSize = 16;
 
 		public event EventHandler ActionButtonClicked;
-		NSButton actionButton;
+		private NSButton actionButton;
 		public NSButton ActionButton
 		{
-			get { return actionButton; }
+			get { return this.actionButton; }
 		}
 
-		PropertyButton propertyButton;
-		public PropertyButton PropertyButton
+		protected BaseEditorControl ()
 		{
-			get { return propertyButton; }
-		}
-
-		public BaseEditorControl ()
-		{
-			propertyButton = new PropertyButton ();
-
-			AddSubview (propertyButton);
-
-			actionButton = new NSButton {
+			this.actionButton = new NSButton {
 				Bordered = false,
 				Enabled = false,
 				ImageScaling = NSImageScale.AxesIndependently,
@@ -48,32 +38,28 @@ namespace Xamarin.PropertyEditing.Mac
 			actionButton.Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("action-warning-16");
 #endif
 
-			actionButton.Activated += (object sender, EventArgs e) => {
-				if (errorList != null) {
-					var Container = new ErrorMessageView (errorList);
+			this.actionButton.Activated += (object sender, EventArgs e) => {
+				if (this.errorList != null) {
+					var Container = new ErrorMessageView (this.errorList);
 
 					var errorMessagePopUp = new NSPopover {
 						Behavior = NSPopoverBehavior.Semitransient,
 						ContentViewController = new NSViewController (null, null) { View = Container },
 					};
 
-					errorMessagePopUp.Show (default (CGRect), actionButton, NSRectEdge.MinYEdge);
+					errorMessagePopUp.Show (default (CGRect), this.actionButton, NSRectEdge.MinYEdge);
 				}
 
 				NotifyActionButtonClicked ();
 			};
 
-			AddSubview (actionButton);
+			AddSubview (this.actionButton);
 
 			this.DoConstraints (new[] {
-				propertyButton.ConstraintTo (this, (ab, c) => ab.Width == DefaultPropertyButtonSize),
-				propertyButton.ConstraintTo (this, (ab, c) => ab.Height == DefaultPropertyButtonSize),
-				propertyButton.ConstraintTo (this, (ab, c) => ab.Top == c.Top + 1),
-				propertyButton.ConstraintTo (this, (ab, c) => ab.Left == c.Right - 33),
-				actionButton.ConstraintTo (this, (eb, c) => eb.Width == DefaultActioButtonSize),
-				actionButton.ConstraintTo (this, (eb, c) => eb.Height == DefaultActioButtonSize),
-				actionButton.ConstraintTo (propertyButton, (eb, ab) => eb.Left == ab.Left + DefaultPropertyButtonSize),
-				actionButton.ConstraintTo (this, (eb, c) => eb.Top == c.Top + 3), // TODO: Better centering based on the icon height
+				 this.actionButton.ConstraintTo (this, (eb, c) => eb.Width == DefaultActioButtonSize),
+				 this.actionButton.ConstraintTo (this, (eb, c) => eb.Height == DefaultActioButtonSize),
+				 this.actionButton.ConstraintTo (this, (eb, c) => eb.Left == c.Left + DefaultPropertyButtonSize),
+				 this.actionButton.ConstraintTo (this, (eb, c) => eb.Top == c.Top + 3), // TODO: Better centering based on the icon height
 			});
 
 			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
@@ -86,7 +72,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		void ThemeManager_ThemeChanged (object sender, EventArgs e)
+		private void ThemeManager_ThemeChanged (object sender, EventArgs e)
 		{
 			UpdateTheme ();
 		}
@@ -98,13 +84,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected void SetErrors (IEnumerable errors)
 		{
-			errorList = errors;
+			this.errorList = errors;
 
-			actionButton.Enabled = errors != null;
-			actionButton.Hidden = !actionButton.Enabled;
+			this.actionButton.Enabled = errors != null;
+			this.actionButton.Hidden = !this.actionButton.Enabled;
 
 			// Using NSImageName.Caution for now, we can change this later at the designers behest
-			actionButton.Image = actionButton.Enabled ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("action-warning-16") : null;
+			this.actionButton.Image = this.actionButton.Enabled ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("action-warning-16") : null;
 		}
 
 		void NotifyActionButtonClicked ()

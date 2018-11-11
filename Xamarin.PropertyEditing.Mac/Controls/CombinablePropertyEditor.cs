@@ -15,8 +15,15 @@ using Xamarin.PropertyEditing.Mac.Resources;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class CombinablePropertyEditor<T>
-		: PropertyEditorControl<CombinablePropertyViewModel<T>>
+		: PropertyEditorControl<T>
 	{
+
+		internal new CombinablePropertyViewModel<T> ViewModel
+		{
+			get { return (CombinablePropertyViewModel<T>)base.ViewModel; }
+			set { base.ViewModel = value; }
+		}
+
 		public CombinablePropertyEditor ()
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
