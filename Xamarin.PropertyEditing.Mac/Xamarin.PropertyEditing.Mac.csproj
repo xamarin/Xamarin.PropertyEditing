@@ -136,6 +136,7 @@
     <Compile Include="Controls\RequestResource\RequestResourcePreviewPanel.cs" />
     <Compile Include="Controls\PanelHeaderEditorControl.cs" />
     <Compile Include="Controls\ThicknessEditorControl.cs" />
+    <Compile Include="Controls\Custom\AutocompleteComboBox.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
