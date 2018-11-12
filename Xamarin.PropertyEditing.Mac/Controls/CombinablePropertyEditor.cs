@@ -27,9 +27,9 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => this.firstKeyView;
 		public override NSView LastKeyView => this.lastKeyView;
 
-		public override bool TriggerRowChange => true;
+		public override bool IsDynamicallySized => true;
 
-		public override nint GetHeight (PropertyViewModel vm)
+		public override nint GetHeight (EditorViewModel vm)
 		{
 			var realVm = (CombinablePropertyViewModel<T>)vm;
 			return checkHeight * realVm.Choices.Count;

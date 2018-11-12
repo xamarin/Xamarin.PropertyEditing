@@ -29,14 +29,7 @@ namespace Xamarin.PropertyEditing.Mac
 			Editable = false;
 			Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultPropertyLabelFontSize);
 			Selectable = false;
-		}
-
-		public override void DrawRect (CGRect dirtyRect)
-		{
-			CGPoint origin = new CGPoint (0.0f, 4.0f);
-			CGRect rect = new CGRect (origin, new CGSize (Bounds.Width - 5, Bounds.Height));
-
-			this.AttributedStringValue.DrawInRect (rect);
+			BackgroundColor = NSColor.Clear;
 		}
 	}
 }

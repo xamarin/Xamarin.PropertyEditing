@@ -11,6 +11,8 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	public class PropertyButton : UnfocusableButton
 	{
+		public const int DefaultSize = 20;
+
 		NSMenu popUpContextMenu;
 
 		PropertyViewModel viewModel;
@@ -24,9 +26,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 				viewModel = value;
 				viewModel.PropertyChanged += OnPropertyChanged;
-
-				// No point showing myself if you can't do anything with me.
-				Hidden = !viewModel.Property.CanWrite;
 
 				ValueSourceChanged (viewModel.ValueSource);
 			}

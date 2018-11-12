@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
+
 using AppKit;
 using Foundation;
-using Xamarin.PropertyEditing.Drawing;
+
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -38,82 +38,62 @@ namespace Xamarin.PropertyEditing.Mac
 			this.isExpanding = false;
 		}
 
-		public override void DidAddRowView (NSOutlineView outlineView, NSTableRowView rowView, nint row)
-		{
-			// Let's make the columns look pretty by applying the Golden Ratio
-			if (!goldenRatioApplied) {
-				int middleColumnWidth = 5;
-				nfloat rightColumnWidth = (outlineView.Frame.Width - middleColumnWidth) / 1.618f;
-				nfloat leftColumnWidth = outlineView.Frame.Width - rightColumnWidth - middleColumnWidth;
-				outlineView.TableColumns ()[0].Width = leftColumnWidth;
-				outlineView.TableColumns ()[1].Width = rightColumnWidth;
-				goldenRatioApplied = true;
-			}
-		}
-
-		// the table is looking for this method, picks it up automagically
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
-			PropertyViewModel vm;
+			EditorViewModel evm;
 			IGroupingList<string, EditorViewModel> group;
 			string cellIdentifier;
-			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
+			GetVMGroupCellItendifiterFromFacade (item, out evm, out group, out cellIdentifier);
 
-			var isGrouping = group != null;
-			// Setup view based on the column
-			switch (tableColumn.Identifier) {
-				case PropertyEditorPanel.PropertyListColId:
-					if (vm != null || isGrouping) {
+			if (group != null) {
+				var labelContainer = outlineView.MakeView (LabelIdentifier, this);
+				if (labelContainer == null) {
+					labelContainer = new NSView { Identifier = LabelIdentifier };
+					var label = new UnfocusableTextField {
+						TranslatesAutoresizingMaskIntoConstraints = false
+					};
 
-						var view = (UnfocusableTextField)outlineView.MakeView (LabelIdentifier, this);
-						if (view == null) {
-							view = new UnfocusableTextField {
-								Identifier = LabelIdentifier,
-								Alignment = NSTextAlignment.Right,
-							};
-						}
+					labelContainer.AddSubview (label);
+					labelContainer.AddConstraints (new[] {
+						NSLayoutConstraint.Create (labelContainer, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, label, NSLayoutAttribute.CenterY, 1f, 0f),
+						NSLayoutConstraint.Create (labelContainer, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, label, NSLayoutAttribute.Leading, 1f, 0f),
+						NSLayoutConstraint.Create (labelContainer, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, label, NSLayoutAttribute.Trailing, 1f, 0f)
+					});
+				}
 
-						view.StringValue = (isGrouping ? group.Key : vm.Property.Name + ":") ?? String.Empty;
+				((UnfocusableTextField)labelContainer.Subviews[0]).StringValue = group.Key;
 
-						// Set tooltips only for truncated strings
-						var stringWidth = view.AttributedStringValue.Size.Width + 30;
-						if (stringWidth > tableColumn.Width) {
-							view.ToolTip = vm.Property.Name;
-						}
-
-						return view;
-					} else {
-						var view = (PanelHeaderLabelControl)outlineView.MakeView (PanelHeaderLabelControl.PanelHeaderLabelIdentifierString, this);
-						if (view == null) {
-							view = new PanelHeaderLabelControl (dataSource.DataContext);
-						}
-						return view;
-					}
-
-				case PropertyEditorPanel.PropertyEditorColId:
-					if (cellIdentifier != null && this.firstCache.TryGetValue (cellIdentifier, out PropertyEditorControl editor)) {
-						this.firstCache.Remove (cellIdentifier);
-					} else
-						editor = GetEditor (cellIdentifier, vm, outlineView, isGrouping);
-
-					// If still null we have no editor yet.
-					if (editor == null)
-						return new NSView ();
-
-					if (vm != null) {
-						// we must reset these every time, as the view may have been reused
-						editor.TableRow = outlineView.RowForItem (item);
-						editor.ViewModel = vm;
-
-						// Force a row update due to new height, but only when we are non-default
-						if (editor.TriggerRowChange)
-							outlineView.NoteHeightOfRowsWithIndexesChanged (new NSIndexSet (editor.TableRow));
-					}
-
-					return editor;
+				return labelContainer;
 			}
 
-			throw new Exception ("Unknown column identifier: " + tableColumn.Identifier);
+			NSView editorOrContainer = null;
+			if (this.firstCache.TryGetValue (cellIdentifier, out IEditorView editor)) {
+				this.firstCache.Remove (cellIdentifier);
+				editorOrContainer = (editor.NativeView is PropertyEditorControl) ? new EditorContainer (editor) : editor.NativeView;
+			} else {
+				editorOrContainer = GetEditor (cellIdentifier, evm, outlineView);
+				editor = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
+			}
+
+			if (editor != null) {
+				nint index = outlineView.RowForItem (item);
+				if (editor.NativeView is PropertyEditorControl pec) {
+					pec.TableRow = index;
+				}
+
+				editor.ViewModel = evm;
+				if (editorOrContainer is EditorContainer ec)
+					ec.Label = evm.Name + ":";
+
+				// Force a row update due to new height, but only when we are non-default
+				if (editor.IsDynamicallySized) {
+					outlineView.NoteHeightOfRowsWithIndexesChanged (new NSIndexSet (index));
+				}
+			} else if (editorOrContainer is PanelHeaderEditorControl header) {
+				header.ViewModel = this.dataSource.DataContext;
+			}
+
+			return editorOrContainer;
 		}
 
 		public override bool ShouldSelectItem (NSOutlineView outlineView, NSObject item)
@@ -145,36 +125,37 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
 		{
-			PropertyViewModel vm;
+			EditorViewModel vm;
 			IGroupingList<string, EditorViewModel> group;
 			string cellIdentifier;
 			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
 
-			var isGrouping = group != null;
-			if (isGrouping)
-				return 30;
+			if (group != null)
+				return 20;
 
 			if (!this.registrations.TryGetValue (cellIdentifier, out EditorRegistration registration)) {
-				var view = GetEditor (cellIdentifier, vm, outlineView, isGrouping);
-				if (view == null) {
-					this.registrations[cellIdentifier] = registration = new EditorRegistration {
-						RowSize = PropertyEditorControl.DefaultControlHeight
-					};
-				} else if (view.TriggerRowChange) {
-					this.registrations[cellIdentifier] = registration = new EditorRegistration {
-						SizingInstance = view
-					};
+				registration = new EditorRegistration ();
 
-					// We're cheating by declaring GetHeight should act static, so we can call it from
-					// an instance that is being used elsewhere.
-					this.firstCache[cellIdentifier] = view;
+				if (cellIdentifier == nameof(PanelHeaderEditorControl)) {
+					registration.RowSize = 44;
 				} else {
-					this.registrations[cellIdentifier] = registration = new EditorRegistration {
-						RowSize = view.GetHeight (vm)
-					};
+					NSView editorOrContainer = GetEditor (cellIdentifier, vm, outlineView);
+					IEditorView view = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
 
-					this.firstCache[cellIdentifier] = view;
+					if (view == null) {
+						registration.RowSize = PropertyEditorControl.DefaultControlHeight;
+					} else if (view.IsDynamicallySized) {
+						registration.SizingInstance = view;
+					} else {
+						this.registrations[cellIdentifier] = registration = new EditorRegistration {
+							RowSize = view.GetHeight (vm)
+						};
+
+						this.firstCache[cellIdentifier] = view;
+					}
 				}
+
+				this.registrations[cellIdentifier] = registration;
 			}
 
 			return registration.GetHeight (vm);
@@ -183,9 +164,9 @@ namespace Xamarin.PropertyEditing.Mac
 		private class EditorRegistration
 		{
 			public nint RowSize;
-			public PropertyEditorControl SizingInstance;
+			public IEditorView SizingInstance;
 
-			public nint GetHeight (PropertyViewModel vm)
+			public nint GetHeight (EditorViewModel vm)
 			{
 				if (SizingInstance != null)
 					return SizingInstance.GetHeight (vm);
@@ -198,80 +179,41 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private PropertyTableDataSource dataSource;
 		private bool isExpanding;
-		private bool goldenRatioApplied = false;
+		private readonly PropertyEditorSelector editorSelector = new PropertyEditorSelector ();
 
 		private readonly Dictionary<string, EditorRegistration> registrations = new Dictionary<string, EditorRegistration> ();
-		private readonly Dictionary<string, PropertyEditorControl> firstCache = new Dictionary<string, PropertyEditorControl> ();
+		private readonly Dictionary<string, IEditorView> firstCache = new Dictionary<string, IEditorView> ();
 
-		private PropertyEditorControl GetEditor (string identifier, EditorViewModel vm, NSOutlineView outlineView, bool isGrouping)
+		private NSView GetEditor (string identifier, EditorViewModel vm, NSOutlineView outlineView)
 		{
-			var view = (PropertyEditorControl)outlineView.MakeView (identifier, this);
+			var view = outlineView.MakeView (identifier, this);
 			if (view != null)
 				return view;
 
 			if (vm != null) {
-				Type[] genericArgs = null;
-				Type controlType;
-				Type propertyType = vm.GetType ();
-				if (!ViewModelTypes.TryGetValue (propertyType, out controlType)) {
-					if (propertyType.IsConstructedGenericType) {
-						genericArgs = propertyType.GetGenericArguments ();
-						propertyType = propertyType.GetGenericTypeDefinition ();
-						ViewModelTypes.TryGetValue (propertyType, out controlType);
-					}
+				IEditorView editor = this.editorSelector.GetEditor (vm);
+
+				var editorControl = editor?.NativeView as PropertyEditorControl;
+				if (editorControl != null) {
+					editorControl.TableView = outlineView;
+				} else if (editor?.NativeView != null) {
+					editor.NativeView.Identifier = identifier;
+					return editor.NativeView;
 				}
 
-				if (controlType == null)
-					return null;
-
-				if (controlType.IsGenericTypeDefinition) {
-					if (genericArgs == null)
-						genericArgs = propertyType.GetGenericArguments ();
-
-					controlType = controlType.MakeGenericType (genericArgs);
-				}
-
-				view = (PropertyEditorControl)Activator.CreateInstance (controlType);
-				view.Identifier = identifier;
-				view.TableView = outlineView;
-
-				return view;
-			} else {
-				if (isGrouping)
-					return null;
-				else
-					return new PanelHeaderEditorControl (dataSource.DataContext);
-			}
+				return new EditorContainer (editor) { Identifier = identifier };
+			} else
+				return new PanelHeaderEditorControl ();
 		}
 
-		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out PropertyViewModel vm, out IGroupingList<string, EditorViewModel> group, out string cellIdentifier)
+		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out EditorViewModel vm, out IGroupingList<string, EditorViewModel> group, out string cellIdentifier)
 		{
 			var facade = (NSObjectFacade)item;
-			vm = facade.Target as PropertyViewModel;
+			vm = facade.Target as EditorViewModel;
 			group = facade.Target as IGroupingList<string, EditorViewModel>;
-			cellIdentifier = facade.Target is PanelHeaderEditorControl pvh
+			cellIdentifier = facade.Target == null
 								   ? nameof (PanelHeaderEditorControl)
 								   : (group == null) ? vm.GetType ().FullName : group.Key;
 		}
-
-		private static readonly Dictionary<Type, Type> ViewModelTypes = new Dictionary<Type, Type> {
-			{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
-			{typeof (NumericPropertyViewModel<>), typeof (NumericEditorControl<>)},
-			{typeof (PropertyViewModel<bool?>), typeof (BooleanEditorControl)},
-			{typeof (PredefinedValuesViewModel<>), typeof(PredefinedValuesEditor<>)},
-			{typeof (CombinablePropertyViewModel<>), typeof(CombinablePropertyEditor<>)},
-			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (CGPointEditorControl)},
-			{typeof (PropertyViewModel<CoreGraphics.CGRect>), typeof (CGRectEditorControl)},
-			{typeof (PropertyViewModel<CoreGraphics.CGSize>), typeof (CGSizeEditorControl)},
-			{typeof (PointPropertyViewModel), typeof (CommonPointEditorControl) },
-			{typeof (RectanglePropertyViewModel), typeof (CommonRectangleEditorControl) },
-			{typeof (SizePropertyViewModel), typeof (CommonSizeEditorControl) },
-			{typeof (PropertyViewModel<Point>), typeof (SystemPointEditorControl)},
-			{typeof (PropertyViewModel<Size>), typeof (SystemSizeEditorControl)},
-			{typeof (PropertyViewModel<Rectangle>), typeof (SystemRectangleEditorControl)},
-			{typeof (BrushPropertyViewModel), typeof (BrushEditorControl)},
-			{typeof (RatioViewModel), typeof (RatioEditorControl<CommonRatio>)},
-			{typeof (ThicknessPropertyViewModel), typeof (CommonThicknessEditorControl) },
-		};
 	}
 }

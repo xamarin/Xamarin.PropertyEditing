@@ -16,7 +16,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			Enabled = true;
 			ImageScaling = NSImageScale.AxesIndependently;
-			TranslatesAutoresizingMaskIntoConstraints = false;
 
 			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
 

@@ -2,4 +2,5 @@
 
 using static Xamarin.Provisioning.ProvisioningScript;
 
-Item ("https://bosstoragemirror.azureedge.net/wrench/macios-mac-master/90/90a2ac27b12c460aa021198e1c913b38a12937af/xamarin.mac-4.3.0.84.pkg");
+Item ("https://bosstoragemirror.blob.core.windows.net/wrench/jenkins/xcode10/b40230c09d557991b776de918b047442cd41533f/211/package/xamarin.mac-5.0.0.0.pkg");
+Item (XreItem.Xcode_10_0_0).XcodeSelect();

@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using CoreGraphics;
 using Foundation;
 using AppKit;
+
 using Xamarin.PropertyEditing.ViewModels;
 using Xamarin.PropertyEditing.Mac.Resources;
-using System.ComponentModel;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -68,6 +69,7 @@ namespace Xamarin.PropertyEditing.Mac
 				this.propertyTable.Delegate = new PropertyTableDelegate (this.dataSource);
 				this.propertyTable.DataSource = this.dataSource;
 
+				OnVmPropertyChanged (this.viewModel, new PropertyChangedEventArgs (null));
 				if (this.viewModel != null) {
 					this.viewModel.ArrangedPropertiesChanged += OnPropertiesChanged;
 					this.viewModel.PropertyChanged += OnVmPropertyChanged;
@@ -127,7 +129,6 @@ namespace Xamarin.PropertyEditing.Mac
 			foreach (var item in enumValues) {
 				this.propertyArrangeMode.Add (new NSString (item.ToString ())); // TODO May need translating
 			}
-			this.propertyArrangeMode.SelectItem (0);
 
 			if (IsArrangeEnabled) {
 				AddSubview (this.propertyArrangeMode);
@@ -157,15 +158,11 @@ namespace Xamarin.PropertyEditing.Mac
 			propertyTable.GridStyleMask = NSTableViewGridStyle.SolidHorizontalLine | NSTableViewGridStyle.SolidVerticalLine;
 #endif
 
-			var propertiesList = new NSTableColumn (PropertyListColId) { Title = LocalizationResources.PropertyColumnTitle };
-			var propertyEditors = new NSTableColumn (PropertyEditorColId) { Title = LocalizationResources.ValueColumnTitle };
-			propertiesList.Width = 158;
-			propertyEditors.Width = 250;
-			this.propertyTable.AddColumn (propertiesList);
+			var propertyEditors = new NSTableColumn (PropertyEditorColId);
 			this.propertyTable.AddColumn (propertyEditors);
 
 			// Set OutlineTableColumn or the arrows showing children/expansion will not be drawn
-			this.propertyTable.OutlineTableColumn = propertiesList;
+			this.propertyTable.OutlineTableColumn = propertyEditors;
 
 			// create a table view and a scroll view
 			var tableContainer = new NSScrollView {
@@ -220,8 +217,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnArrangeModeChanged (object sender, EventArgs e)
 		{
-			Enum.TryParse<PropertyArrangeMode> (this.propertyArrangeMode.GetItemObject (this.propertyArrangeMode.SelectedIndex).ToString (), out PropertyArrangeMode filterMode);
-			this.viewModel.ArrangeMode = filterMode;
+			this.viewModel.ArrangeMode = this.viewModel.ArrangeModes[(int)this.propertyArrangeMode.SelectedIndex].ArrangeMode;
 		}
 
 		private void OnPropertyFilterChanged (object sender, EventArgs e)
@@ -238,8 +234,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnVmPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == nameof (PanelViewModel.ArrangeMode))
-				OnArrangeModeChanged (sender, e);
+			if (e.PropertyName == nameof (PanelViewModel.ArrangeMode) || String.IsNullOrEmpty (e.PropertyName))
+				this.propertyArrangeMode.Select (new NSString (this.viewModel.ArrangeMode.ToString ()));
 		}
 
 		class FirstResponderOutlineView : NSOutlineView
@@ -250,13 +246,16 @@ namespace Xamarin.PropertyEditing.Mac
 				return true;
 			}
 
-			public override CGRect FrameOfOutlineCellAtRow (nint row)
+			public override CGRect GetCellFrame (nint column, nint row)
 			{
-				var obj = (NSObjectFacade)ItemAtRow (row);
-				if (obj.Target is IGroupingList<string, PropertyViewModel>)
-					return new CGRect (8, 11, 10, 10);
+				var super = base.GetCellFrame (column, row);
+				if (column == 0) {
+					var obj = (NSObjectFacade)ItemAtRow (row);
+					if (obj.Target is PropertyGroupViewModel)
+						return new CGRect (0, super.Top, super.Right - (super.Left / 2), super.Height);
+				}
 
-				return base.FrameOfOutlineCellAtRow (row);
+				return super;
 			}
 		}
 	}

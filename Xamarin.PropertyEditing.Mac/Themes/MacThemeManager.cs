@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Themes
 		private Dictionary<string, NSImage> themeCache = new Dictionary<string, NSImage> ();
 
 		NSAppearance DarkAppearance = NSAppearance.GetAppearance (NSAppearance.NameVibrantDark);
-		NSAppearance LightAppearance = NSAppearance.GetAppearance (NSAppearance.NameVibrantLight);
+		NSAppearance LightAppearance = NSAppearance.GetAppearance (NSAppearance.NameAqua);
 
 		protected override void SetTheme ()
 		{

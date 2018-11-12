@@ -7,7 +7,8 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal abstract class PropertyEditorControl : BaseEditorControl
+	internal abstract class PropertyEditorControl
+		: BaseEditorControl, IEditorView
 	{
 		public string Label { get; set; }
 
@@ -22,7 +23,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public const int DefaultPropertyLabelFontSize = 11;
 		public const int DefaultDescriptionLabelFontSize = 10;
 		public const string DefaultFontName = ".AppleSystemUIFont";
-		public virtual bool TriggerRowChange => false;
+		public virtual bool IsDynamicallySized => false;
 
 		PropertyViewModel viewModel;
 		public PropertyViewModel ViewModel {
@@ -46,6 +47,14 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+		EditorViewModel IEditorView.ViewModel
+		{
+			get { return this.ViewModel; }
+			set { ViewModel = (PropertyViewModel)value; }
+		}
+
+		NSView IEditorView.NativeView => this;
+
 		[Export ("_primitiveSetDefaultNextKeyView:")]
 		public void SetDefaultNextKeyView (NSView child)
 		{
@@ -61,23 +70,26 @@ namespace Xamarin.PropertyEditing.Mac
 
 			PropertyEditorControl ctrl = null;
 
-			//FIXME: don't hardcode column
 			var tr = TableRow;
 			if (tr > 0) {
+				NSView view;
 				do {
 					tr--;
-					ctrl = TableView.GetView (1, tr, false) as PropertyEditorControl;
+					view = TableView.GetView (0, tr, false);
+					ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
 				} while (tr > 0 && ctrl == null);
 
 				if (ctrl != null) {
 					ctrl.LastKeyView.NextKeyView = FirstKeyView;
 					ctrl.UpdateKeyViews ();
+				} else if (tr == 0 && view is PanelHeaderEditorControl header) {
+					header.SetNextKeyView (FirstKeyView);
 				}
 			}
 		}
 
 		/// <remarks>You should treat the implementation of this as static.</remarks>
-		public virtual nint GetHeight (PropertyViewModel vm)
+		public virtual nint GetHeight (EditorViewModel vm)
 		{
 			return DefaultControlHeight;
 		}

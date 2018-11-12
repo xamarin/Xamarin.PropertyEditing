@@ -10,7 +10,8 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class BrushTabViewController : UnderlinedTabViewController<BrushPropertyViewModel>
+	internal class BrushTabViewController
+		: UnderlinedTabViewController<BrushPropertyViewModel>, IEditorView
 	{
 		public BrushTabViewController ()
 		{
@@ -32,6 +33,20 @@ namespace Xamarin.PropertyEditing.Mac
 			this.filterResource.Hidden = true;
 
 			TabStack.AddView (this.filterResource, NSStackViewGravity.Leading);
+		}
+
+		EditorViewModel IEditorView.ViewModel {
+			get { return this.ViewModel; }
+			set { ViewModel = (BrushPropertyViewModel)value; }
+		}
+
+		NSView IEditorView.NativeView => View;
+
+		public bool IsDynamicallySized => false;
+
+		public nint GetHeight (EditorViewModel viewModel)
+		{
+			return (int)(PreferredContentSize.Height + EdgeInsets.Top + EdgeInsets.Bottom);
 		}
 
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)

@@ -18,10 +18,10 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.vm?.Resources == null)
 				return 0;
 
-			if (this.vm.Resources?.Count () == 0)
+			if (this.vm.Resources?.Count == 0)
 				return 0;
 
-			return this.vm.Resources.Count ();
+			return this.vm.Resources.Count;
 		}
 
 		public override NSObject GetChild (NSOutlineView outlineView, nint childIndex, NSObject item)

@@ -136,6 +136,13 @@
     <Compile Include="Controls\RequestResource\RequestResourcePreviewPanel.cs" />
     <Compile Include="Controls\PanelHeaderEditorControl.cs" />
     <Compile Include="Controls\ThicknessEditorControl.cs" />
+    <Compile Include="Controls\GroupEditorControl.cs" />
+    <Compile Include="PropertyEditorSelector.cs" />
+    <Compile Include="PropertyGroupedEditorSelector.cs" />
+    <Compile Include="Controls\IEditorView.cs" />
+    <Compile Include="PropertyInlinePreviewSelector.cs" />
+    <Compile Include="Controls\EditorContainer.cs" />
+    <Compile Include="Controls\Layout.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
