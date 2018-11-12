@@ -22,7 +22,8 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 				SupportsBrushOpacity = false,
 				GroupedTypes = new Dictionary<Type, string> {
 					{ typeof(CommonBrush), "Brush" }
-				}
+				},
+				AutoExpandGroups = new[] { "ReadWrite" }
 			};
 
 #if USE_VS_ICONS
