@@ -387,6 +387,33 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.GetIsExpanded ("ints"), Is.True);
 		}
 
+		[Test]
+		public void AutoExpandChosenGroups ()
+		{
+			var normalProp = new Mock<IPropertyInfo> ();
+			normalProp.SetupGet (p => p.Type).Returns (typeof (string));
+			normalProp.SetupGet (p => p.Category).Returns ("Category");
+			normalProp.SetupGet (p => p.Name).Returns ("name");
+			
+			var target = new object ();
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target))
+				.ReturnsAsync (new MockObjectEditor (normalProp.Object));
+
+			var platform = new TargetPlatform (provider.Object) {
+				AutoExpandGroups = new[] { normalProp.Object.Category }
+			};
+
+			var vm = new PanelViewModel (platform) {
+				ArrangeMode = PropertyArrangeMode.Category
+			};
+			vm.SelectedObjects.Add (target);
+
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
+			Assert.That (vm.GetIsExpanded (normalProp.Object.Category), Is.True);
+		}
+
 		internal override PanelViewModel CreateVm (TargetPlatform platform)
 		{
 			return new PanelViewModel (platform);
