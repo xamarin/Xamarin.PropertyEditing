@@ -142,6 +142,7 @@
     <Compile Include="Controls\IEditorView.cs" />
     <Compile Include="PropertyInlinePreviewSelector.cs" />
     <Compile Include="Controls\EditorContainer.cs" />
+    <Compile Include="Controls\Layout.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

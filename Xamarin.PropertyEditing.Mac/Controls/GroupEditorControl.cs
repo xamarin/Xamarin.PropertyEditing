@@ -100,6 +100,7 @@ namespace Xamarin.PropertyEditing.Mac
 				FocusRingType = NSFocusRingType.None;
 			}
 
+			// ValidateProposedFirstResponder is implemented as an extension method so we have to override the hard way (see xamarin-macios/4837)
 			[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "objc_msgSendSuper")]
 			public extern static bool bool_objc_msgSendSuper_IntPtr_IntPtr (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2);
 

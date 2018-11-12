@@ -60,14 +60,14 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.propertyIcon, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1, 32),
 
 				NSLayoutConstraint.Create (this.objectNameLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 5),
-				NSLayoutConstraint.Create (this.objectNameLabel, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, .38196601125f, 0f),
+				NSLayoutConstraint.Create (this.objectNameLabel, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, Mac.Layout.GoldenRatioLeft, 0f),
 
 				NSLayoutConstraint.Create (this.propertyObjectName, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this.objectNameLabel, NSLayoutAttribute.CenterY, 1, 0),
 				NSLayoutConstraint.Create (this.propertyObjectName, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.objectNameLabel, NSLayoutAttribute.Right, 1, 5),
 				NSLayoutConstraint.Create (this.propertyObjectName, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1, -(14 + PropertyButton.DefaultSize)),
 
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.propertyObjectName, NSLayoutAttribute.Bottom, 1, 5),
-				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, .38196601125f, 0f),
+				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, Mac.Layout.GoldenRatioLeft, 0f),
 
 				NSLayoutConstraint.Create (this.typeDisplay, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.typeLabel, NSLayoutAttribute.Top, 1, 0),
 				NSLayoutConstraint.Create (this.typeDisplay, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this.propertyObjectName, NSLayoutAttribute.Width, 1, 0),
