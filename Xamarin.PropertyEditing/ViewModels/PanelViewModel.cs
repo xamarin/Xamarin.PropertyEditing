@@ -199,7 +199,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void AutoExpandGroup (string group)
 		{
-			if (AutoExpand)
+			if (AutoExpand || TargetPlatform.AutoExpandGroups.Contains (group))
 				UpdateExpanded (new[] { group }, true);
 		}
 
