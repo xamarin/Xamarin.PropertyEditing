@@ -25,7 +25,8 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 				SupportsMaterialDesign = true,
 				GroupedTypes = new Dictionary<Type, string> {
 					{ typeof(CommonBrush), "Brush" }
-				}
+				},
+				AutoExpandGroups = new [] { "ReadWrite" }
 			};
 		}
 

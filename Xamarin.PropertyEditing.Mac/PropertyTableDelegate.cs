@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading;
 using AppKit;
 using Foundation;
 
@@ -62,6 +62,12 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 
 				((UnfocusableTextField)labelContainer.Subviews[0]).StringValue = group.Key;
+
+				if (this.dataSource.DataContext.GetIsExpanded (group.Key)) {
+					SynchronizationContext.Current.Post (s => {
+						outlineView.ExpandItem (item);
+					}, null);
+				}
 
 				return labelContainer;
 			}
