@@ -30,11 +30,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using Xamarin.PropertyEditing;
 
 namespace Cadenza.Collections
 {
 	internal class OrderedDictionary<TKey, TValue>
-		: IDictionary<TKey, TValue>, IList<KeyValuePair<TKey, TValue>>, IReadOnlyOrderedDictionary<TKey, TValue>
+		: IDictionary<TKey, TValue>, IList<KeyValuePair<TKey, TValue>>, IReadOnlyOrderedDictionary<TKey, TValue>, INotifyCollectionChanged
 	{
 		public OrderedDictionary ()
 			: this (0)
@@ -56,7 +58,7 @@ namespace Cadenza.Collections
 			this.dict = new Dictionary<TKey, TValue> (capacity, equalityComparer);
 			this.kvpCollection = this.dict;
 			this.keyOrder = new List<TKey> (capacity);
-			this.roKeys = new ReadOnlyCollection<TKey> (this.keyOrder);
+			this.roKeys = new ReadOnlyKeysCollection (this.keyOrder);
 			this.roValues = new ReadOnlyValueCollection (this);
 		}
 
@@ -74,6 +76,8 @@ namespace Cadenza.Collections
 			foreach (var kvp in dictionary)
 				Add (kvp.Key, kvp.Value);
 		}
+
+		public event NotifyCollectionChangedEventHandler CollectionChanged;
 
 		bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
 		{
@@ -99,10 +103,24 @@ namespace Cadenza.Collections
 			get { return this.dict[key]; }
 			set
 			{
-				if (!this.dict.ContainsKey (key))
+				int index = -1;
+				bool replace = false;
+				if (!this.dict.TryGetValue (key, out TValue oldValue))
 					this.keyOrder.Add (key);
+				else {
+					replace = true;
+					index = this.keyOrder.IndexOf (key);
+				}
 
 				this.dict[key] = value;
+
+				if (replace) {
+					this.roValues.OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Replace, oldValue, value, index));
+					OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Replace,
+						new KeyValuePair<TKey, TValue> (key, oldValue), new KeyValuePair<TKey, TValue> (key, value)));
+				} else {
+					OnCollectionChanged (NotifyCollectionChangedAction.Add, this.keyOrder.Count - 1, key, value);
+				}
 			}
 		}
 
@@ -137,8 +155,17 @@ namespace Cadenza.Collections
 			get { return new KeyValuePair<TKey, TValue> (this.keyOrder[index], this[index]); }
 			set
 			{
-				keyOrder[index] = value.Key;
+				TKey existingKey = this.keyOrder[index];
+				if (!Equals (existingKey, value.Key))
+					this.keyOrder[index] = value.Key;
+
+				TValue existingValue = this.dict[value.Key];
 				this.dict[value.Key] = value.Value;
+
+				this.roKeys.OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Replace, existingKey, value.Key, index));
+				this.roValues.OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Replace, existingValue, value.Value, index));
+				OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Replace,
+					new KeyValuePair<TKey, TValue> (existingKey, existingValue), new KeyValuePair<TKey, TValue> (value.Key, value.Value)));
 			}
 		}
 
@@ -282,8 +309,11 @@ namespace Cadenza.Collections
 		/// <exception cref="ArgumentException"><paramref name="key"/> already exists in the dictionary.</exception>
 		public void Add (TKey key, TValue value)
 		{
+			int index = this.keyOrder.Count;
 			this.dict.Add (key, value);
 			this.keyOrder.Add (key);
+
+			OnCollectionChanged (NotifyCollectionChangedAction.Add, index, key, value);
 		}
 
 		void ICollection<KeyValuePair<TKey, TValue>>.Add (KeyValuePair<TKey, TValue> item)
@@ -303,6 +333,8 @@ namespace Cadenza.Collections
 		{
 			this.keyOrder.Insert (index, key);
 			this.dict.Add (key, value);
+
+			OnCollectionChanged (NotifyCollectionChangedAction.Add, index, key, value);
 		}
 
 		void IList<KeyValuePair<TKey, TValue>>.Insert (int index, KeyValuePair<TKey, TValue> item)
@@ -318,12 +350,24 @@ namespace Cadenza.Collections
 		/// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
 		public bool Remove (TKey key)
 		{
-			return (this.dict.Remove (key) && this.keyOrder.Remove (key));
+			int index = this.keyOrder.IndexOf (key);
+			if (index > -1) {
+				RemoveAt (index);
+				return true;
+			}
+
+			return false;
 		}
 
 		bool ICollection<KeyValuePair<TKey, TValue>>.Remove (KeyValuePair<TKey, TValue> item)
 		{
-			return (kvpCollection.Remove (item) && this.keyOrder.Remove (item.Key));
+			int index = this.keyOrder.IndexOf (item.Key);
+			if (index > -1) {
+				RemoveAt (index);
+				return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -333,7 +377,11 @@ namespace Cadenza.Collections
 		public void RemoveAt (int index)
 		{
 			TKey key = this.keyOrder[index];
-			Remove (key);
+
+			this.keyOrder.RemoveAt (index);
+			this.dict.TryRemove (key, out var value);
+
+			OnCollectionChanged (NotifyCollectionChangedAction.Remove, index, key, value);
 		}
 
 		/// <summary>
@@ -343,6 +391,11 @@ namespace Cadenza.Collections
 		{
 			this.dict.Clear ();
 			this.keyOrder.Clear ();
+
+			var args = new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Reset);
+			this.roKeys.OnCollectionChanged (args);
+			this.roValues.OnCollectionChanged (args);
+			OnCollectionChanged (args);
 		}
 
 		void ICollection<KeyValuePair<TKey, TValue>>.CopyTo (KeyValuePair<TKey, TValue>[] array, int arrayIndex)
@@ -372,18 +425,48 @@ namespace Cadenza.Collections
 		}
 
 		private readonly ReadOnlyValueCollection roValues;
-		private readonly ReadOnlyCollection<TKey> roKeys;
+		private readonly ReadOnlyKeysCollection roKeys;
 		private readonly ICollection<KeyValuePair<TKey, TValue>> kvpCollection;
 		private readonly Dictionary<TKey, TValue> dict;
 		private readonly List<TKey> keyOrder;
 
+		private void OnCollectionChanged (NotifyCollectionChangedAction action, int index, TKey key, TValue value)
+		{
+			OnCollectionChanged (new NotifyCollectionChangedEventArgs (action, new KeyValuePair<TKey, TValue> (key, value), index));
+			this.roKeys.OnCollectionChanged (new NotifyCollectionChangedEventArgs (action, key, index));
+			this.roValues.OnCollectionChanged (new NotifyCollectionChangedEventArgs (action, value, index));
+		}
+
+		private void OnCollectionChanged (NotifyCollectionChangedEventArgs e)
+		{
+			CollectionChanged?.Invoke (this, e);
+		}
+
+		private class ReadOnlyKeysCollection
+			: ReadOnlyCollection<TKey>, INotifyCollectionChanged
+		{
+			public ReadOnlyKeysCollection (IList<TKey> list)
+				: base (list)
+			{
+			}
+
+			public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+			internal void OnCollectionChanged (NotifyCollectionChangedEventArgs e)
+			{
+				CollectionChanged?.Invoke (this, e);
+			}
+		}
+
 		private class ReadOnlyValueCollection
-			: IList<TValue>, IReadOnlyList<TValue>
+			: IList<TValue>, IReadOnlyList<TValue>, INotifyCollectionChanged
 		{
 			public ReadOnlyValueCollection (OrderedDictionary<TKey, TValue> dict)
 			{
 				this.odict = dict;
 			}
+
+			public event NotifyCollectionChangedEventHandler CollectionChanged;
 
 			public void Add (TValue item)
 			{
@@ -462,6 +545,11 @@ namespace Cadenza.Collections
 			}
 
 			private readonly OrderedDictionary<TKey, TValue> odict;
+
+			internal void OnCollectionChanged (NotifyCollectionChangedEventArgs e)
+			{
+				CollectionChanged?.Invoke (this, e);
+			}
 		}
 	}
 }
