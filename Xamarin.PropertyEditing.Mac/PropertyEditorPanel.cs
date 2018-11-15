@@ -113,7 +113,6 @@ namespace Xamarin.PropertyEditing.Mac
 				Bezeled = false,
 				Editable = false,
 				StringValue = LocalizationResources.ArrangeByLabel,
-				TextColor = NSColor.Black,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
@@ -203,7 +202,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		void ThemeManager_ThemeChanged (object sender, EventArgs e)
+		private void ThemeManager_ThemeChanged (object sender, EventArgs e)
 		{
 			UpdateTheme ();
 		}
@@ -227,7 +226,7 @@ namespace Xamarin.PropertyEditing.Mac
 			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
 		}
 
-		void UpdateTheme ()
+		private void UpdateTheme ()
 		{
 			Appearance = ThemeManager.CurrentAppearance;
 		}
@@ -238,7 +237,7 @@ namespace Xamarin.PropertyEditing.Mac
 				this.propertyArrangeMode.Select (new NSString (this.viewModel.ArrangeMode.ToString ()));
 		}
 
-		class FirstResponderOutlineView : NSOutlineView
+		private class FirstResponderOutlineView : NSOutlineView
 		{
 			[Export ("validateProposedFirstResponder:forEvent:")]
 			public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
