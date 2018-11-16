@@ -30,8 +30,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 				});
 			AddProperty<FlagsNoValues> ("FlagsNoValues", ReadWrite, canWrite: true, flag: true);
 			AddProperty<FlagsWithValues> ("FlagsWithValues", ReadWrite, canWrite: true, flag: true);
-			AddProperty<CommonPoint> ("Point", ReadWrite);
-			AddProperty<CommonSize> ("Size", ReadWrite);
+			AddProperty<CommonPoint> ("Point", ReadWrite, isUncommon: true);
+			AddProperty<CommonSize> ("Size", ReadWrite, isUncommon: true);
 			AddProperty<CommonRectangle> ("Rectangle", ReadWrite);
 			AddProperty<CommonRatio> ("Ratio", ReadWrite);
 			AddProperty<CommonThickness> ("Thickness", ReadWrite);
