@@ -133,14 +133,29 @@
 	</Style>
 
 	<DataTemplate x:Key="PropertyGroupTemplate">
-		<local:CategoryExpander Header="{Binding Key,Mode=OneTime}" Style="{StaticResource TreeExpanderStyle}">
-			<ItemsControl Style="{StaticResource PropertyListStyle}" ItemsSource="{Binding}">
-				<ItemsControl.Template>
-					<ControlTemplate>
-						<ItemsPresenter />
-					</ControlTemplate>
-				</ItemsControl.Template>
-			</ItemsControl>
+		<local:CategoryExpander Header="{Binding Category,Mode=OneTime}" Style="{StaticResource TreeExpanderStyle}">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<ItemsControl Grid.Row="0" Style="{StaticResource PropertyListStyle}" ItemsSource="{Binding Editors,Mode=OneTime}">
+					<ItemsControl.Template>
+						<ControlTemplate>
+							<ItemsPresenter />
+						</ControlTemplate>
+					</ItemsControl.Template>
+				</ItemsControl>
+				<Expander Grid.Row="1" Visibility="{Binding HasUncommonElements,Converter={StaticResource BoolToVisibilityConverter}}" Style="{StaticResource AdvancedPropertiesExpander}">
+					<ItemsControl Grid.Row="0" Style="{StaticResource PropertyListStyle}" ItemsSource="{Binding UncommonEditors,Mode=OneTime}">
+						<ItemsControl.Template>
+							<ControlTemplate>
+								<ItemsPresenter />
+							</ControlTemplate>
+						</ItemsControl.Template>
+					</ItemsControl>
+				</Expander>
+			</Grid>
 		</local:CategoryExpander>
 	</DataTemplate>
 
