@@ -43,6 +43,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (YEditor);
 
 			this.DoConstraints (new[] {
+				XEditor.ConstraintTo (this, (xe, c) => xe.Left == xe.Left - 1),
 				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 90),
 				XEditor.ConstraintTo (this, (xe, c) => xe.Height == DefaultControlHeight),
 				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 90),

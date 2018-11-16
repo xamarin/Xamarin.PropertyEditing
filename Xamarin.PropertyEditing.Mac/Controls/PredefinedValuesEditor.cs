@@ -39,25 +39,25 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			popupButtonList = new NSMenu ();
-			popUpButton.Menu = popupButtonList;
+			this.popUpButton.Menu = popupButtonList;
 
-			popUpButton.Activated += (o, e) => {
+			this.popUpButton.Activated += (o, e) => {
 				ViewModel.ValueName = (o as NSPopUpButton).Title;
 			};
 
 			UpdateTheme ();
 		}
 
-		public override NSView FirstKeyView => firstKeyView;
-		public override NSView LastKeyView => lastKeyView;
+		public override NSView FirstKeyView => this.firstKeyView;
+		public override NSView LastKeyView => this.lastKeyView;
 
-		readonly NSComboBox comboBox;
-		readonly NSPopUpButton popUpButton;
-		NSMenu popupButtonList;
+		private readonly NSComboBox comboBox;
+		private readonly NSPopUpButton popUpButton;
+		private NSMenu popupButtonList;
 
-		bool dataPopulated;
-		NSView firstKeyView;
-		NSView lastKeyView;
+		private bool dataPopulated;
+		private NSView firstKeyView;
+		private NSView lastKeyView;
 
 		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
 		{
@@ -85,24 +85,24 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
 		{
-			if (!dataPopulated) {
+			if (!this.dataPopulated) {
 				if (ViewModel.IsConstrainedToPredefined) {
 					this.popupButtonList.RemoveAllItems ();
 					foreach (string item in ViewModel.PossibleValues) {
-						popupButtonList.AddItem (new NSMenuItem (item));
+						this.popupButtonList.AddItem (new NSMenuItem (item));
 					}
 
 					AddSubview (this.popUpButton);
 
 					this.DoConstraints (new[] {
-						popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 34),
-						popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
-						popUpButton.ConstraintTo (this, (pub, c) => pub.Left == pub.Left + 4),
-						popUpButton.ConstraintTo (this, (pub, c) => pub.Top == pub.Top + 0),
+						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 34),
+						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
+						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Top == pub.Top + 0),
+						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Left == pub.Left + 1),
 					});
 
-					firstKeyView = this.popUpButton;
-					lastKeyView = this.popUpButton;
+					this.firstKeyView = this.popUpButton;
+					this.lastKeyView = this.popUpButton;
 				} else {
 					this.comboBox.RemoveAll ();
 
@@ -114,17 +114,17 @@ namespace Xamarin.PropertyEditing.Mac
 					AddSubview (this.comboBox);
 
 					this.DoConstraints (new[] {
-						comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 35),
-						comboBox.ConstraintTo (this, (cb, c) => cb.Height == DefaultControlHeight),
-						comboBox.ConstraintTo (this, (cb, c) => cb.Left == cb.Left + 4),
-						comboBox.ConstraintTo (this, (cb, c) => cb.Top == cb.Top + 0),
+						this.comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 34),
+						this.comboBox.ConstraintTo (this, (cb, c) => cb.Height == DefaultControlHeight),
+						this.comboBox.ConstraintTo (this, (cb, c) => cb.Top == cb.Top + 0),
+						this.comboBox.ConstraintTo (this, (cb, c) => cb.Left == cb.Left - 1),
 					});
 
-					firstKeyView = this.comboBox;
-					lastKeyView = this.comboBox;
+					this.firstKeyView = this.comboBox;
+					this.lastKeyView = this.comboBox;
 				}
 
-				dataPopulated = true;
+				this.dataPopulated = true;
 			}
 
 			base.OnViewModelChanged (oldModel);
@@ -142,8 +142,8 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			if (ViewModel.IsConstrainedToPredefined) {
-				popUpButton.AccessibilityEnabled = popUpButton.Enabled;
-				popUpButton.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);
+				this.popUpButton.AccessibilityEnabled = this.popUpButton.Enabled;
+				this.popUpButton.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);
 			} else {
 				comboBox.AccessibilityEnabled = comboBox.Enabled;
 				comboBox.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);

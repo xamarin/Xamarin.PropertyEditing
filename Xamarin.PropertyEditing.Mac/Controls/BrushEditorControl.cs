@@ -41,10 +41,11 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			TranslatesAutoresizingMaskIntoConstraints = false;
 
-			this.popover = new NSPopover ();
-			popover.Behavior = NSPopoverBehavior.Transient;
-			popover.ContentViewController = brushTabViewController = new BrushTabViewController {
-				PreferredContentSize = new CGSize (430, 263)
+			this.popover = new NSPopover {
+				Behavior = NSPopoverBehavior.Transient,
+				ContentViewController = this.brushTabViewController = new BrushTabViewController {
+					PreferredContentSize = new CGSize (430, 263)
+				}
 			};
 
 			this.popUpButton = new ColorPopUpButton {
@@ -53,14 +54,14 @@ namespace Xamarin.PropertyEditing.Mac
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
 			};
 
-			popupButtonList = new NSMenu ();
-			popUpButton.Menu = popupButtonList;
+			this.popupButtonList = new NSMenu ();
+			this.popUpButton.Menu = this.popupButtonList;
 
 			this.DoConstraints (new [] {
-				popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 34),
-				popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
-				popUpButton.ConstraintTo (this, (pub, c) => pub.Left == c.Left + 4),
-				popUpButton.ConstraintTo (this, (pub, c) => pub.Top == c.Top + 0),
+				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 33),
+				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
+				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Top == c.Top + 0),
+				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Left == c.Left - 1),
 			});
 
 			AddSubview (this.popUpButton);
@@ -119,19 +120,19 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateValue ()
 		{
 			this.brushTabViewController.ViewModel = ViewModel;
-			this.popUpButton.Popover = (ViewModel?.Property.CanWrite ?? false) ? popover : null;
+			this.popUpButton.Popover = (ViewModel?.Property.CanWrite ?? false) ? this.popover : null;
 
 			if (ViewModel.Solid != null) {
 				var title = GetTitle ();
 
-				if (popupButtonList.Count == 0)
-					popupButtonList.AddItem (new NSMenuItem ());
+				if (this.popupButtonList.Count == 0)
+					this.popupButtonList.AddItem (new NSMenuItem ());
 
-				previewLayer.Brush = ViewModel.Value;
-				var item = popupButtonList.ItemAt (0);
+				this.previewLayer.Brush = ViewModel.Value;
+				var item = this.popupButtonList.ItemAt (0);
 				if (item.Title != title) {
 					item.Title = title;
-					item.Image = previewLayer.RenderPreview ();
+					item.Image = this.previewLayer.RenderPreview ();
 				}
 			}
 		}
