@@ -8,14 +8,15 @@ using Cadenza.Collections;
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class PanelGroupViewModel
+		: NotifyingObject
 	{
-		public PanelGroupViewModel (string category, IEnumerable<EditorViewModel> editors)
+		public PanelGroupViewModel (string category, IEnumerable<EditorViewModel> editors, bool separateUncommon = true)
 		{
 			if (editors == null)
 				throw new ArgumentNullException (nameof(editors));
 
 			Category = category;
-			Add (editors);
+			AddCore (editors, separateUncommon);
 		}
 
 		public string Category
@@ -27,7 +28,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public IReadOnlyList<EditorViewModel> UncommonEditors => this.uncommonEditors;
 
-		public bool HasChildElements => Editors.Count > 0 || UncommonEditors.Count > 0;
+		public bool HasChildElements => Editors.Count > 0 || HasUncommonElements;
+
+		public bool HasUncommonElements => UncommonEditors.Count > 0;
 
 		public bool UncommonShown
 		{
@@ -37,19 +40,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public void Add (IEnumerable<EditorViewModel> editors)
 		{
-			if (editors == null)
-				throw new ArgumentNullException (nameof(editors));
-
-			foreach (EditorViewModel evm in editors)
-				Add (evm);
+			AddCore (editors, separate: true);
 		}
 
 		public void Add (EditorViewModel editor)
 		{
-			if (editor == null)
-				throw new ArgumentNullException (nameof(editor));
-
-			GetList (editor).Add (editor);
+			AddCore (editor, separate: true);
 		}
 
 		public bool Remove (EditorViewModel editor)
@@ -57,7 +53,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (editor == null)
 				throw new ArgumentNullException (nameof(editor));
 
-			return GetList (editor).Remove (editor);
+			return GetList (editor, separate: true).Remove (editor);
 		}
 
 		public bool GetIsExpanded (PropertyArrangeMode mode)
@@ -85,9 +81,28 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private readonly ObservableCollectionEx<EditorViewModel> editors = new ObservableCollectionEx<EditorViewModel> ();
 		private readonly ObservableCollectionEx<EditorViewModel> uncommonEditors = new ObservableCollectionEx<EditorViewModel> ();
 
-		private IList<EditorViewModel> GetList (EditorViewModel evm)
+		private void AddCore (IEnumerable<EditorViewModel> editors, bool separate)
 		{
-			if (evm is PropertyViewModel pvm)
+			if (editors == null)
+				throw new ArgumentNullException (nameof (editors));
+
+			foreach (EditorViewModel evm in editors)
+				AddCore (evm, separate);
+		}
+
+		private void AddCore (EditorViewModel editor, bool separate)
+		{
+			if (editor == null)
+				throw new ArgumentNullException (nameof (editor));
+
+			GetList (editor, separate).Add (editor);
+			OnPropertyChanged (nameof(HasChildElements));
+			OnPropertyChanged (nameof(HasUncommonElements));
+		}
+
+		private IList<EditorViewModel> GetList (EditorViewModel evm, bool separate)
+		{
+			if (separate && evm is PropertyViewModel pvm)
 				return pvm.Property.IsUncommon ? this.uncommonEditors : this.editors;
 			else
 				return this.editors;
@@ -169,7 +184,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool GetIsExpanded (string group)
 		{
-			if (!this.arranged.TryGetValue (group, out PanelGroupViewModel panelGroup))
+			if (group == null || !this.arranged.TryGetValue (group, out PanelGroupViewModel panelGroup))
 				return false;
 
 			return panelGroup.GetIsExpanded (ArrangeMode);
@@ -198,6 +213,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			Dictionary<string, List<PropertyViewModel>> groupedTypeProperties = null;
 
+			bool isFlat = ArrangeMode == PropertyArrangeMode.Name;
+
 			this.arranged.Clear ();
 			foreach (var grouping in props.GroupBy (GetGroup).OrderBy (g => g.Key, CategoryComparer.Instance)) {
 				HashSet<EditorViewModel> remainingItems = null;
@@ -225,7 +242,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (remainingItems != null) // TODO: pretty sure this was out of order before, add test
 					this.arranged.Add (key, new PanelGroupViewModel (key, grouping.Where (evm => remainingItems.Contains (evm))));
 				else
-					this.arranged.Add (key, new PanelGroupViewModel (key, grouping));
+					this.arranged.Add (key, new PanelGroupViewModel (key, grouping, separateUncommon: !isFlat));
 
 				AutoExpandGroup (key);
 			}
