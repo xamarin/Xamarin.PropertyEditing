@@ -191,7 +191,7 @@ namespace Xamarin.PropertyEditing.Windows
 					this.list.SelectedIndex--;
 
 				this.list.ScrollIntoView (this.list.SelectedItem);
-			} else if (e.Key == Key.Enter || e.Key == Key.Tab) {
+			} else if (e.Key == Key.Enter) {
 				if (this.list.SelectedValue != null) {
 					SelectCompleteItem (this.list.SelectedItem);
 				} else if (!this.popup.IsOpen) {
@@ -200,6 +200,11 @@ namespace Xamarin.PropertyEditing.Windows
 					else
 						e.Handled = false;
 				}
+			} else if (e.Key == Key.Tab) {
+				if (this.list.SelectedValue != null)
+					SelectCompleteItem (this.list.SelectedItem);
+				else
+					e.Handled = false;
 			} else if (e.Key == Key.Escape) {
 				if (this.popup.IsOpen)
 					this.popup.IsOpen = false;
