@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using AppKit;
+using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -108,8 +109,8 @@ namespace Xamarin.PropertyEditing.Mac
 		private NSView GetView (NSTabViewItem item)
 		{
 			NSView tabView;
-			if (item.Image != null) {
-				tabView = new UnderlinedImageView (item.Image.Name) {
+			if (item.Identifier != null) {
+				tabView = new UnderlinedImageView ((item.Identifier as NSString).ToString()) {
 					Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex,
 					ToolTip = item.ToolTip
 				};
