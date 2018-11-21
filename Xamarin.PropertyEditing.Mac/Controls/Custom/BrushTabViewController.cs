@@ -78,11 +78,11 @@ namespace Xamarin.PropertyEditing.Mac
 					continue;
 				}
 
-				var item = new NSTabViewItem ();
-				item.Label = kvp.Key;
+				var item = new NSTabViewItem {
+					Label = kvp.Key
+				};
 
-				var themeManager = PropertyEditorPanel.ThemeManager;
-				NSImage image;
+				string image;
 
 				switch (kvp.Value) {
 					case CommonBrushType.Solid:
@@ -90,40 +90,45 @@ namespace Xamarin.PropertyEditing.Mac
 						solid.ViewModel = ViewModel;
 						item.ViewController = solid;
 						item.ToolTip = Properties.Resources.SolidBrush;
-						image = themeManager.GetImageForTheme ("property-brush-solid-16");
+						image = "property-brush-solid-16"; 
 						break;
+
 					case CommonBrushType.MaterialDesign:
 						var material = new MaterialBrushEditorViewController ();
 						material.ViewModel = ViewModel;
 						item.ViewController = material;
 						item.ToolTip = Properties.Resources.MaterialDesignColorBrush;
-						image = themeManager.GetImageForTheme ("property-brush-palette-16");
+						image = "property-brush-palette-16";
 						break;
+
 					case CommonBrushType.Resource:
 						this.resource = new ResourceBrushViewController ();
 						this.resource.ViewModel = ViewModel;
 						item.ViewController = this.resource;
 						item.ToolTip = Properties.Resources.ResourceBrush;
-						image = themeManager.GetImageForTheme ("property-brush-resources-16");
+						image = "property-brush-resources-16"; 
 						break;
+
 					case CommonBrushType.Gradient:
 						var gradient = new EmptyBrushEditorViewController ();
 						gradient.ViewModel = ViewModel;
 						item.ViewController = gradient;
 						item.ToolTip = item.Label;
-						image = themeManager.GetImageForTheme ("property-brush-gradient-16");
+						image = "property-brush-gradient-16"; 
 						break;
+
 					default:
-					case CommonBrushType.NoBrush:
-						var none = new EmptyBrushEditorViewController ();
-						none.ViewModel = ViewModel;
-						item.ViewController = none;
-						item.ToolTip = Properties.Resources.NoBrush;
-						image = themeManager.GetImageForTheme ("property-brush-none-16");
-						break;
+						case CommonBrushType.NoBrush:
+							var none = new EmptyBrushEditorViewController ();
+							none.ViewModel = ViewModel;
+							item.ViewController = none;
+							item.ToolTip = Properties.Resources.NoBrush;
+							image = "property-brush-none-16"; 
+							break;
 				}
+
 				if (image != null) {
-					item.Image = image;
+					item.Identifier = new NSString (image); // Using the Identifier object, to avoid unused NSImage creation when selection happens in GetView ()
 				}
 
 				InsertTabViewItem (item, i);
