@@ -9,13 +9,13 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class RatioEditorControl<T> : PropertyEditorControl<RatioViewModel>
 	{
-		RatioEditor<T> ratioEditor;
+		private RatioEditor<T> ratioEditor;
 
 		public RatioEditorControl ()
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			ratioEditor = new RatioEditor<T> {
+			this.ratioEditor = new RatioEditor<T> {
 				AllowNegativeValues = false,
 				AllowRatios = true,
 				BackgroundColor = NSColor.Clear,
@@ -24,18 +24,18 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			// update the value on keypress
-			ratioEditor.ValueChanged += (sender, e) => {
+			this.ratioEditor.ValueChanged += (sender, e) => {
 				if (e is RatioEditor<T>.RatioEventArgs ratioEventArgs) {
-					ViewModel.ValueChanged (ratioEditor.StringValue, ratioEventArgs.CaretPosition, ratioEventArgs.SelectionLength, ratioEventArgs.IncrementValue);
+					ViewModel.ValueChanged (this.ratioEditor.StringValue, ratioEventArgs.CaretPosition, ratioEventArgs.SelectionLength, ratioEventArgs.IncrementValue);
 				}
 			};
-			AddSubview (ratioEditor);
+			AddSubview (this.ratioEditor);
 
 			this.DoConstraints (new[] {
-				ratioEditor.ConstraintTo (this, (re, c) => re.Top == c.Top - 2),
-				ratioEditor.ConstraintTo (this, (re, c) => re.Left == c.Left + 4),
-				ratioEditor.ConstraintTo (this, (re, c) => re.Width == c.Width - 33),
-				ratioEditor.ConstraintTo (this, (re, c) => re.Height == DefaultControlHeight),
+				this.ratioEditor.ConstraintTo (this, (re, c) => re.Top == c.Top - 2),
+				this.ratioEditor.ConstraintTo (this, (re, c) => re.Left == c.Left - 1),
+				this.ratioEditor.ConstraintTo (this, (re, c) => re.Width == c.Width - 32),
+				this.ratioEditor.ConstraintTo (this, (re, c) => re.Height == DefaultControlHeight),
 			});
 
 			UpdateTheme ();
@@ -51,13 +51,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			ratioEditor.Editable = ViewModel.Property.CanWrite;
+			this.ratioEditor.Editable = ViewModel.Property.CanWrite;
 		}
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			ratioEditor.AccessibilityEnabled = ratioEditor.Enabled;
-			ratioEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityNumeric, ViewModel.Property.Name);
+			this.ratioEditor.AccessibilityEnabled = this.ratioEditor.Enabled;
+			this.ratioEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityNumeric, ViewModel.Property.Name);
 		}
 
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
@@ -72,7 +72,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateValue ()
 		{
-			ratioEditor.StringValue = ViewModel.ValueString;
+			this.ratioEditor.StringValue = ViewModel.ValueString;
 		}
 	}
 }
