@@ -171,6 +171,8 @@
     <Compile Include="IReadOnlyOrderedDictionary.cs" />
     <Compile Include="ViewModels\CreateVariationEventArgs.cs" />
     <Compile Include="ViewModels\IPropertyValue.cs" />
+    <Compile Include="Drawing\CommonDateTime.cs" />
+    <Compile Include="ViewModels\DateTimePropertyViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Themes\BaseThemeManager.cs" />

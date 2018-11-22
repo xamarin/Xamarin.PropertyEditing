@@ -80,6 +80,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 				valueSources: ValueSources.Default | ValueSources.Local | ValueSources.Resource);
 			AddProperty<CommonColor> (this.colorPropertyInfo);
 
+			AddProperty<CommonDateTime> ("DateTime", ReadWrite);
+
 			AddEvents ("Click", "Hover", "Focus");
 
 		}
