@@ -32,14 +32,14 @@ namespace Xamarin.PropertyEditing.Themes
 			this.themeCache.Clear ();
 		}
 
-		public string GetImageNameForTheme (string imageNamed, string selectedSuffix = "")
+		public string GetImageNameForTheme (string imageNamed, bool selected = false)
 		{
-			return (Theme == PropertyEditorTheme.Dark ? imageNamed + "~dark" : imageNamed) + selectedSuffix;
+			return (Theme == PropertyEditorTheme.Dark ? imageNamed + "~dark" : imageNamed) + (selected ? "~sel" : string.Empty);
 		}
 
-		public NSImage GetImageForTheme (string imageNamed, string selectedSuffix = "")
+		public NSImage GetImageForTheme (string imageNamed, bool selected = false)
 		{
-			var imageNameForTheme = GetImageNameForTheme (imageNamed, selectedSuffix);
+			var imageNameForTheme = GetImageNameForTheme (imageNamed, selected);
 
 			if (!this.themeCache.TryGetValue (imageNameForTheme, out NSImage themeImage)) {
 				themeImage = NSImage.ImageNamed (imageNameForTheme);

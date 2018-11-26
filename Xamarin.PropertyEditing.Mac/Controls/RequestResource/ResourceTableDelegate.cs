@@ -102,7 +102,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				if (tableView.SelectedRow != -1
 				    && tableView.GetView (0, tableView.SelectedRow, false) is NSImageView selectedIconColumn) {
-					selectedIconColumn.Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("resource-editor-32", "~sel");
+					selectedIconColumn.Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("resource-editor-32", true);
 					previousRow = tableView.SelectedRow;
 				}
 			}

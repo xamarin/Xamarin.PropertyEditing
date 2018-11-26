@@ -35,10 +35,10 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			get => lineWidth;
 			set {
-				if (lineWidth == value)
+				if (this.lineWidth == value)
 					return;
 
-				lineWidth = value;
+				this.lineWidth = value;
 				NeedsLayout = true;
 			}
 		}
@@ -46,14 +46,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private string VersionName {
 			get {
-				return PropertyEditorPanel.ThemeManager.GetImageNameForTheme (name, selected ? "~sel" : string.Empty);
+				return PropertyEditorPanel.ThemeManager.GetImageNameForTheme (this.name, this.selected);
 			}
 		}
 
 		public override void DrawRect (CGRect dirtyRect)
 		{
 			if (Image?.Name != VersionName) {
-				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme (name, selected ? "~sel" : string.Empty);
+				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme (this.name, this.selected);
 			}
 
 			base.DrawRect (dirtyRect);
@@ -61,7 +61,7 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 			
 			NSBezierPath path = new NSBezierPath ();
-			path.AppendPathWithRect (new CGRect (Bounds.X, Bounds.Top + lineWidth, Bounds.Width, lineWidth));
+			path.AppendPathWithRect (new CGRect (Bounds.X, Bounds.Top + this.lineWidth, Bounds.Width, this.lineWidth));
 			(selected? NSColor.Text: NSColor.DisabledControlText).Set ();
 			path.Fill ();
 		}
@@ -70,7 +70,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			get {
 				var size = base.IntrinsicContentSize;
-				return new CGSize (size.Width + lineWidth + 10, size.Height + lineWidth + 10);
+				return new CGSize (size.Width + this.lineWidth + 10, size.Height + this.lineWidth + 10);
 			}
 		}
 	}
@@ -88,11 +88,11 @@ namespace Xamarin.PropertyEditing.Mac
 		private bool selected;
 		public bool Selected
 		{
-			get => selected;
+			get => this.selected;
 			set
 			{
-				selected = value;
-				TextColor = selected ? NSColor.Text : NSColor.DisabledControlText;
+				this.selected = value;
+				TextColor = this.selected ? NSColor.Text : NSColor.DisabledControlText;
                
 				///NeedsDisplay = true;
 			}
@@ -100,12 +100,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private int lineWidth = 2;
 		public int LineWidth {
-			get => lineWidth;
+			get =>this.lineWidth;
 			set {
-				if (lineWidth == value)
+				if (this.lineWidth == value)
 					return;
 
-				lineWidth = value;
+				this.lineWidth = value;
 				NeedsLayout = true;
 			}
 		}
