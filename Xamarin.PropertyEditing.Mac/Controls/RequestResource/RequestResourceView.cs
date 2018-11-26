@@ -103,7 +103,7 @@ namespace Xamarin.PropertyEditing.Mac
 					break;
 				case 2:
 					this.resourceSelectorPanel.ViewModel.ShowOnlySystemResources = true;
-					this.segmentedControl.SetImage (PropertyEditorPanel.ThemeManager.GetImageForTheme ("resource-editor-16", "~sel"), 2);
+					this.segmentedControl.SetImage (PropertyEditorPanel.ThemeManager.GetImageForTheme ("resource-editor-16", true), 2);
 					break;
 				}
 
