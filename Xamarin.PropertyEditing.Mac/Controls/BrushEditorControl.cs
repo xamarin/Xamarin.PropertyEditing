@@ -59,7 +59,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.DoConstraints (new [] {
 				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 33),
-				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
+				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight),
 				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Top == c.Top + 0),
 				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Left == c.Left - 1),
 			});
