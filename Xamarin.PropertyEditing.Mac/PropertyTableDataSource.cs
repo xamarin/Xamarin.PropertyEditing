@@ -30,12 +30,14 @@ namespace Xamarin.PropertyEditing.Mac
 			var childCount = 0;
 
 			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
-				childCount = Filtering ? this.vm.ArrangedEditors[0].Count : this.vm.ArrangedEditors[0].Count + 1;
+				childCount = Filtering ? this.vm.ArrangedEditors[0].Editors.Count : this.vm.ArrangedEditors[0].Editors.Count + 1;
 			else {
 				if (item == null)
 					childCount = Filtering ? this.vm.ArrangedEditors.Count : this.vm.ArrangedEditors.Count + 1;
-				else
-					childCount = ((IGroupingList<string, EditorViewModel>)((NSObjectFacade)item).Target).Count;
+				else {
+					var group = (PanelGroupViewModel)((NSObjectFacade)item).Target;
+					childCount = group.Editors.Count + group.UncommonEditors.Count;
+				}
 			}
 
 			return childCount;
@@ -50,12 +52,19 @@ namespace Xamarin.PropertyEditing.Mac
 				element = null;
 			else {
 				if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
-					element = Filtering ? this.vm.ArrangedEditors[0][(int)childIndex] : this.vm.ArrangedEditors[0][(int)childIndex - 1];
+					element = Filtering ? this.vm.ArrangedEditors[0].Editors[(int)childIndex] : this.vm.ArrangedEditors[0].Editors[(int)childIndex - 1];
 				else {
 					if (item == null)
 						element = Filtering ? this.vm.ArrangedEditors[(int)childIndex] : this.vm.ArrangedEditors[(int)childIndex - 1];
 					else {
-						element = ((IGroupingList<string, EditorViewModel>)((NSObjectFacade)item).Target)[(int)childIndex];
+						var group = (PanelGroupViewModel)((NSObjectFacade)item).Target;
+						var list = group.Editors;
+						if (childIndex >= list.Count) {
+							childIndex -= list.Count;
+							list = group.UncommonEditors;
+						}
+
+						element = list[(int)childIndex];
 					}
 				}
 			}
@@ -68,13 +77,13 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
 				return false;
 
-			return ((NSObjectFacade)item).Target is IGroupingList<string, EditorViewModel>;
+			return ((NSObjectFacade)item).Target is PanelGroupViewModel;
 		}
 
 		public NSObject GetFacade (object element)
 		{
 			NSObject facade;
-			if (element is IGrouping<string, PropertyViewModel>) {
+			if (element is PanelGroupViewModel) {
 				if (!this.groupFacades.TryGetValue (element, out facade)) {
 					this.groupFacades[element] = facade = new NSObjectFacade (element);
 				}
