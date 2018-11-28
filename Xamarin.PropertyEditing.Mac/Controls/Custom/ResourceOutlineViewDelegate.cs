@@ -37,7 +37,6 @@ namespace Xamarin.PropertyEditing.Mac
 					var utf = (UnfocusableTextField)outlineView.MakeView (labelIdentifier, this);
 					if (utf == null) {
 						utf = new UnfocusableTextField {
-							BackgroundColor = NSColor.Clear,
 							Identifier = labelIdentifier,
 						};
 					}

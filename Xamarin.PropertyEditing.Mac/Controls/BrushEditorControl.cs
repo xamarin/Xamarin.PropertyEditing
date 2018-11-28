@@ -61,7 +61,6 @@ namespace Xamarin.PropertyEditing.Mac
 				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 33),
 				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight),
 				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Top == c.Top + 0),
-				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Left == c.Left - 1),
 			});
 
 			AddSubview (this.popUpButton);

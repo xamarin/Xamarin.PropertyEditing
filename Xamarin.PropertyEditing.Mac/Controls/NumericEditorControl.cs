@@ -41,7 +41,6 @@ namespace Xamarin.PropertyEditing.Mac
 			this.DoConstraints ( new[] {
 				NumericEditor.ConstraintTo (this, (n, c) => n.Top == c.Top + 1),
 				NumericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - 32),
-				NumericEditor.ConstraintTo (this, (n, c) => n.Left == c.Left - 1),
 			});
 		}
 

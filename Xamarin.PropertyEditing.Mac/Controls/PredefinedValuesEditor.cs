@@ -95,10 +95,9 @@ namespace Xamarin.PropertyEditing.Mac
 					AddSubview (this.popUpButton);
 
 					this.DoConstraints (new[] {
-						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 34),
+						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 33),
 						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
 						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Top == pub.Top + 0),
-						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Left == pub.Left + 1),
 					});
 
 					this.firstKeyView = this.popUpButton;
@@ -117,7 +116,7 @@ namespace Xamarin.PropertyEditing.Mac
 						this.comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 34),
 						this.comboBox.ConstraintTo (this, (cb, c) => cb.Height == DefaultControlHeight),
 						this.comboBox.ConstraintTo (this, (cb, c) => cb.Top == cb.Top + 0),
-						this.comboBox.ConstraintTo (this, (cb, c) => cb.Left == cb.Left - 1),
+						this.comboBox.ConstraintTo (this, (cb, c) => cb.Left == cb.Left + 0),
 					});
 
 					this.firstKeyView = this.comboBox;

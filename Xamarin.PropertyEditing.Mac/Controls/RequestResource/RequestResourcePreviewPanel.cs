@@ -8,33 +8,28 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class RequestResourcePreviewPanel : NSView
 	{
-		private NSTextField noPreviewAvailable;
+		private UnfocusableTextField noPreviewAvailable;
 		private NSView previewView;
 
 		private Resource selectedResource;
-		public Resource SelectedResource
-		{
-			internal get
-			{
-				return selectedResource;
-			}
+		public Resource SelectedResource {
+			internal get { return this.selectedResource; }
 
-			set
-			{
-				if (selectedResource != value) {
-					selectedResource = value;
+			set {
+				if (this.selectedResource != value) {
+					this.selectedResource = value;
 
-					if (selectedResource != null) {
+					if (this.selectedResource != null) {
 						// Let's find the next View
-						var pView = GetPreviewView (selectedResource);
+						var pView = GetPreviewView (this.selectedResource);
 
 						if (pView == null) {
 							ShowNoPreviewText ();
 						} else {
-							noPreviewAvailable.Hidden = true;
-							previewView.Hidden = false;
+							this.noPreviewAvailable.Hidden = true;
+							this.previewView.Hidden = false;
 
-							switch (selectedResource) {
+							switch (this.selectedResource) {
 								case Resource<CommonColor> colour:
 									if (pView is CommonBrushView cc) {
 										cc.Brush = new CommonSolidBrush (colour.Value);
@@ -55,11 +50,11 @@ namespace Xamarin.PropertyEditing.Mac
 							}
 
 							// Only 1 subview allowed (must be a better way to handle this??)
-							if (previewView.Subviews.Count () > 0) {
-								previewView.Subviews[0].RemoveFromSuperview ();
+							if (this.previewView.Subviews.Count () > 0) {
+								this.previewView.Subviews[0].RemoveFromSuperview ();
 							}
 							// Free up anything from the previous view
-							previewView.AddSubview (pView);
+							this.previewView.AddSubview (pView);
 						}
 					} else {
 						ShowNoPreviewText ();
@@ -70,8 +65,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void ShowNoPreviewText ()
 		{
-			noPreviewAvailable.Hidden = false;
-			previewView.Hidden = true;
+			this.noPreviewAvailable.Hidden = false;
+			this.previewView.Hidden = true;
 		}
 
 		public RequestResourcePreviewPanel (CGRect frame) : base (frame)
@@ -80,17 +75,17 @@ namespace Xamarin.PropertyEditing.Mac
 			var FrameWidthHalf = (Frame.Width - 32) / 2;
 			var FrameWidthThird = (Frame.Width - 32) / 3;
 
-			noPreviewAvailable = new UnfocusableTextField {
-				BackgroundColor = NSColor.Clear,
+			this.noPreviewAvailable = new UnfocusableTextField {
 				StringValue = Properties.Resources.NoPreviewAvailable,
 				Frame = new CGRect (50, FrameHeightHalf, 150, 50),
 			};
 
-			AddSubview (noPreviewAvailable);
+			AddSubview (this.noPreviewAvailable);
 
-			previewView = new NSView (new CGRect (20, 0, frame.Width - 30, frame.Height));
-			previewView.Hidden = true; // Hidden until a resource is selected and a preview is available for it.
-			AddSubview (previewView);
+			this.previewView = new NSView (new CGRect (20, 0, frame.Width - 30, frame.Height)) {
+				Hidden = true // Hidden until a resource is selected and a preview is available for it.
+			};
+			AddSubview (this.previewView);
 		}
 
 		NSView GetPreviewView (Resource resource)
@@ -120,7 +115,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			var view = (NSView)Activator.CreateInstance (previewRenderType);
 			view.Identifier = previewRenderType.Name;
-			view.Frame = new CGRect (0, 0, previewView.Frame.Width, previewView.Frame.Height);
+			view.Frame = new CGRect (0, 0, this.previewView.Frame.Width, this.previewView.Frame.Height);
 
 			return view;
 		}

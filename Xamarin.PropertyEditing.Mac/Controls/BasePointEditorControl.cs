@@ -17,25 +17,23 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => XEditor;
 		public override NSView LastKeyView => YEditor.DecrementButton;
 
-		public BasePointEditorControl ()
+		protected BasePointEditorControl ()
 		{
 			XLabel = new UnfocusableTextField ();
 
-			XEditor = new NumericSpinEditor<T> ();
-			XEditor.BackgroundColor = NSColor.Clear;
-			XEditor.Value = 0.0f;
+			XEditor = new NumericSpinEditor<T> {
+				BackgroundColor = NSColor.Clear,
+				Value = 0.0f
+			};
 			XEditor.ValueChanged += OnInputUpdated;
-
-			XLabel.AccessibilityElement = false;
 
 			YLabel = new UnfocusableTextField ();
 
-			YEditor = new NumericSpinEditor<T> ();
-			YEditor.BackgroundColor = NSColor.Clear;
-			YEditor.Value = 0.0f;
+			YEditor = new NumericSpinEditor<T> {
+				BackgroundColor = NSColor.Clear,
+				Value = 0.0f
+			};
 			YEditor.ValueChanged += OnInputUpdated;
-
-			YLabel.AccessibilityElement = false;
 
 			AddSubview (XLabel);
 			AddSubview (XEditor);
@@ -43,7 +41,6 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (YEditor);
 
 			this.DoConstraints (new[] {
-				XEditor.ConstraintTo (this, (xe, c) => xe.Left == xe.Left - 1),
 				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 90),
 				XEditor.ConstraintTo (this, (xe, c) => xe.Height == DefaultControlHeight),
 				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 90),

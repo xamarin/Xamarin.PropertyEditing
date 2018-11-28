@@ -33,7 +33,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.DoConstraints (new[] {
 				this.ratioEditor.ConstraintTo (this, (re, c) => re.Top == c.Top - 2),
-				this.ratioEditor.ConstraintTo (this, (re, c) => re.Left == c.Left - 1),
 				this.ratioEditor.ConstraintTo (this, (re, c) => re.Width == c.Width - 32),
 				this.ratioEditor.ConstraintTo (this, (re, c) => re.Height == DefaultControlHeight),
 			});

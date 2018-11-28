@@ -66,19 +66,12 @@ namespace Xamarin.PropertyEditing.Mac
 				Orientation = NSUserInterfaceLayoutOrientation.Horizontal
 			};
 
-			var alphaLabel = new NSTextField {
-				Bordered = false,
-				Editable = false,
-				Selectable = false,
-				ControlSize = NSControlSize.Small,
-				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultPropertyLabelFontSize),
-				AccessibilityElement = false,
+			var alphaLabel = new UnfocusableTextField {
 				StringValue = $"{Properties.Resources.Alpha}:",
 				Alignment = NSTextAlignment.Left,
-				BackgroundColor = NSColor.Clear,
 			};
-			alphaLabel.Cell.UsesSingleLineMode = true;
 			alphaLabel.Cell.LineBreakMode = NSLineBreakMode.Clipping;
+
 			alphaStack.AddView (alphaLabel, NSStackViewGravity.Trailing);
 			alphaStack.AddView (alphaSpinEditor, NSStackViewGravity.Trailing);
 

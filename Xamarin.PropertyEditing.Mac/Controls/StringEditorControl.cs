@@ -30,7 +30,6 @@ namespace Xamarin.PropertyEditing.Mac
 				StringEditor.ConstraintTo (this, (s, c) => s.Width == c.Width - 34),
 				StringEditor.ConstraintTo (this, (s, c) => s.Height == DefaultControlHeight - 3),
 				StringEditor.ConstraintTo (this, (s, c) => s.Top == s.Top + 1),
-				StringEditor.ConstraintTo (this, (s, c) => s.Left == s.Left - 1),
 			});
 
 			UpdateTheme ();

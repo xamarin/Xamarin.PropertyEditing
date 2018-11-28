@@ -23,7 +23,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => XEditor;
 		public override NSView LastKeyView => HeightEditor.DecrementButton;
 
-		public BaseRectangleEditorControl ()
+		protected BaseRectangleEditorControl ()
 		{
 			XLabel = new UnfocusableTextField ();
 			XEditor = new NumericSpinEditor<T> ();

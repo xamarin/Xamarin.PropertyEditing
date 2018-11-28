@@ -85,7 +85,7 @@ namespace Xamarin.PropertyEditing.Mac
 				propRight = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), member.Member.Name);
 			}
 
-			//Console.WriteLine ("v1.{0} {1} v2.{2} * {3} + {4}", propLeft, relation, propRight, multiplier, constant);
+			// Console.WriteLine ("NSLayoutConstraint.Create ({0}, {1}, {2}, {3}, {4}, {5}, {6});", view1, propLeft, relation, view2, propRight, multiplier, constant);
 
 			return NSLayoutConstraint.Create (view1, propLeft, relation, view2, propRight, multiplier, constant);
 		}

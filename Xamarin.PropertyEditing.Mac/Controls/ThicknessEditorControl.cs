@@ -11,25 +11,25 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public CommonThicknessEditorControl ()
 		{
-			XLabel.Frame = new CGRect (28, 23, 50, 22);
+			XLabel.Frame = new CGRect (28, 28, 50, 22);
 			XLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize);
 			XLabel.StringValue = "LEFT";
 
-			XEditor.Frame = new CGRect (-1, 46, 90, 20);
+			XEditor.Frame = new CGRect (0, 46, 90, 20);
 
-			YLabel.Frame = new CGRect (160, 23, 45, 22);
+			YLabel.Frame = new CGRect (160, 28, 45, 22);
 			YLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize);
 			YLabel.StringValue = "TOP";
 
 			YEditor.Frame = new CGRect (132, 46, 90, 20);
 
-			WidthLabel.Frame = new CGRect (24, -10, 50, 22);
+			WidthLabel.Frame = new CGRect (24, -5, 50, 22);
 			WidthLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize);
 			WidthLabel.StringValue = "RIGHT";
 
-			WidthEditor.Frame = new CGRect (-1, 13, 90, 20);
+			WidthEditor.Frame = new CGRect (0, 13, 90, 20);
 
-			HeightLabel.Frame = new CGRect (150, -10, 50, 22);
+			HeightLabel.Frame = new CGRect (150, -5, 50, 22);
 			HeightLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize);
 			HeightLabel.StringValue = "BOTTOM";
 
