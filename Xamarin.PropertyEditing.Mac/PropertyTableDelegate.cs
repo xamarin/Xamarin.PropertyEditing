@@ -81,6 +81,15 @@ namespace Xamarin.PropertyEditing.Mac
 				editor = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
 			}
 
+			if (editorOrContainer is EditorContainer ec) {
+				ec.Label = evm.Name + ":";
+
+#if DEBUG // Currently only used to highlight which controls haven't been implemented
+				if (editor == null)
+					ec.LabelTextColor = NSColor.Red;
+#endif
+			}
+
 			if (editor != null) {
 				nint index = outlineView.RowForItem (item);
 				if (editor.NativeView is PropertyEditorControl pec) {
@@ -88,8 +97,6 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 
 				editor.ViewModel = evm;
-				if (editorOrContainer is EditorContainer ec)
-					ec.Label = evm.Name + ":";
 
 				// Force a row update due to new height, but only when we are non-default
 				if (editor.IsDynamicallySized) {

@@ -30,13 +30,11 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public IEditorView EditorView
-		{
+		public IEditorView EditorView {
 			get;
 		}
 
-		public string Label
-		{
+		public string Label {
 			get { return this.label.StringValue; }
 			set { this.label.StringValue = value; }
 		}
@@ -45,5 +43,11 @@ namespace Xamarin.PropertyEditing.Mac
 			Alignment = NSTextAlignment.Right,
 			TranslatesAutoresizingMaskIntoConstraints = false
 		};
+
+#if DEBUG // Currently only used to highlight which controls haven't been implemented
+		public NSColor LabelTextColor {
+			set { this.label.TextColor = value; }
+		}
+#endif
 	}
 }
