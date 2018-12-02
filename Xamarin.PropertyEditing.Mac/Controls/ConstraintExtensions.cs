@@ -45,10 +45,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 			if (mainExpression.Right.NodeType == ExpressionType.Constant) {
 				var c = Convert.ToSingle (((ConstantExpression)mainExpression.Right).Value);
+				// Console.WriteLine ("NSLayoutConstraint.Create ({0}, NSLayoutAttribute.{1}, NSLayoutRelation.{2}, {3},  NSLayoutAttribute.{4}, {5}f, {6}f),", view1, propLeft, relation, null, propRight, 1, c);
 				return NSLayoutConstraint.Create (view1, propLeft, relation, null, NSLayoutAttribute.NoAttribute, 1, c);
 			}
 			else if (mainExpression.Right is MemberExpression) {
 				propRight = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), ((MemberExpression)mainExpression.Right).Member.Name);
+				// Console.WriteLine ("NSLayoutConstraint.Create ({0}, NSLayoutAttribute.{1}, NSLayoutRelation.{2}, {3},  NSLayoutAttribute.{4}, {5}f, {6}f),", view1, propLeft, relation, view2, propRight, 1, 0);
 				return NSLayoutConstraint.Create (view1, propLeft, relation, view2, propRight, 1, 0);
 			}
 
@@ -84,8 +86,8 @@ namespace Xamarin.PropertyEditing.Mac
 				var member = (MemberExpression)(addNode.Right is MemberExpression ? addNode.Right : addNode.Left);
 				propRight = (NSLayoutAttribute)Enum.Parse (typeof (NSLayoutAttribute), member.Member.Name);
 			}
-
-			// Console.WriteLine ("NSLayoutConstraint.Create ({0}, {1}, {2}, {3}, {4}, {5}, {6});", view1, propLeft, relation, view2, propRight, multiplier, constant);
+		
+			// Console.WriteLine ("NSLayoutConstraint.Create ({0}, NSLayoutAttribute.{1}, NSLayoutRelation.{2}, {3},  NSLayoutAttribute.{4}, {5}f, {6}f),", view1, propLeft, relation, view2, propRight, multiplier, constant);
 
 			return NSLayoutConstraint.Create (view1, propLeft, relation, view2, propRight, multiplier, constant);
 		}

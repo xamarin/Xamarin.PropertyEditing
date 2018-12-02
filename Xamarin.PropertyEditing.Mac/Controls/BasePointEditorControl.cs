@@ -40,11 +40,12 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (YLabel);
 			AddSubview (YEditor);
 
-			this.DoConstraints (new[] {
-				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 90),
-				XEditor.ConstraintTo (this, (xe, c) => xe.Height == DefaultControlHeight),
-				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 90),
-				YEditor.ConstraintTo (this, (ye, c) => ye.Height == DefaultControlHeight),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 90f),
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 90f),
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
 			});
 
 			UpdateTheme ();

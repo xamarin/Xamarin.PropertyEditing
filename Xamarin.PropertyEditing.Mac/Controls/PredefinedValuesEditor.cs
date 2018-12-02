@@ -88,16 +88,16 @@ namespace Xamarin.PropertyEditing.Mac
 			if (!this.dataPopulated) {
 				if (ViewModel.IsConstrainedToPredefined) {
 					this.popupButtonList.RemoveAllItems ();
-					foreach (string item in ViewModel.PossibleValues) {
+					foreach (var item in ViewModel.PossibleValues) {
 						this.popupButtonList.AddItem (new NSMenuItem (item));
 					}
 
 					AddSubview (this.popUpButton);
 
-					this.DoConstraints (new[] {
-						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 33),
-						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight + 1),
-						this.popUpButton.ConstraintTo (this, (pub, c) => pub.Top == pub.Top + 0),
+					this.AddConstraints (new[] {
+						NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 0f),
+						NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -33f),
+						NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight + 1),
 					});
 
 					this.firstKeyView = this.popUpButton;
@@ -112,11 +112,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 					AddSubview (this.comboBox);
 
-					this.DoConstraints (new[] {
-						this.comboBox.ConstraintTo (this, (cb, c) => cb.Width == c.Width - 34),
-						this.comboBox.ConstraintTo (this, (cb, c) => cb.Height == DefaultControlHeight),
-						this.comboBox.ConstraintTo (this, (cb, c) => cb.Top == cb.Top + 0),
-						this.comboBox.ConstraintTo (this, (cb, c) => cb.Left == cb.Left + 0),
+					this.AddConstraints (new[] {
+						NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 0f),
+						NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0f),
+						NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -34f),
+						NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
 					});
 
 					this.firstKeyView = this.comboBox;
@@ -144,8 +144,8 @@ namespace Xamarin.PropertyEditing.Mac
 				this.popUpButton.AccessibilityEnabled = this.popUpButton.Enabled;
 				this.popUpButton.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);
 			} else {
-				comboBox.AccessibilityEnabled = comboBox.Enabled;
-				comboBox.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);
+				this.comboBox.AccessibilityEnabled = this.comboBox.Enabled;
+				this.comboBox.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);
 			}
 		}
 	}

@@ -31,10 +31,10 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (this.ratioEditor);
 
-			this.DoConstraints (new[] {
-				this.ratioEditor.ConstraintTo (this, (re, c) => re.Top == c.Top - 2),
-				this.ratioEditor.ConstraintTo (this, (re, c) => re.Width == c.Width - 32),
-				this.ratioEditor.ConstraintTo (this, (re, c) => re.Height == DefaultControlHeight),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, -2f),
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -32f),
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
 			});
 
 			UpdateTheme ();

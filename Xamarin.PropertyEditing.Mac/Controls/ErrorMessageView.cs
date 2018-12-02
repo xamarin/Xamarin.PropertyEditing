@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		const int DefaultIconButtonSize = 24;
 
-		NSTextField ErrorMessages;
+		private NSTextField errorMessages;
 
 		public ErrorMessageView (IEnumerable errors)
 		{
@@ -33,31 +33,34 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (viewTitle);
 
-			ErrorMessages = new NSTextField {
+			this.errorMessages = new NSTextField {
 				BackgroundColor = NSColor.Clear,
 				Editable = false,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
-			ErrorMessages.Cell.Wraps = true;
+			this.errorMessages.Cell.Wraps = true;
 
 			foreach (var error in errors) {
-				ErrorMessages.StringValue += error + "\n";
+				this.errorMessages.StringValue += error + "\n";
 			}
 
-			AddSubview (ErrorMessages);
+			AddSubview (this.errorMessages);
 
-			this.DoConstraints (new[] {
-				iconView.ConstraintTo (this, (iv, c) => iv.Top == c.Top + 5),
-				iconView.ConstraintTo (this, (iv, c) => iv.Left == c.Left + 5),
-				iconView.ConstraintTo (this, (iv, c) => iv.Width == DefaultIconButtonSize),
-				iconView.ConstraintTo (this, (iv, c) => iv.Height == DefaultIconButtonSize),
-				viewTitle.ConstraintTo (this, (vt, c) => vt.Top == c.Top + 7),
-				viewTitle.ConstraintTo (this, (vt, c) => vt.Width == 120),
-				viewTitle.ConstraintTo (this, (vt, c) => vt.Height == 24),
-				ErrorMessages.ConstraintTo (this, (s, c) => s.Top == c.Top + 35),
-				ErrorMessages.ConstraintTo (this, (s, c) => s.Left == c.Left + 5),
-				ErrorMessages.ConstraintTo (this, (s, c) => s.Width == c.Width - 10),
-				ErrorMessages.ConstraintTo (this, (s, c) => s.Height == c.Height - 40),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 5f),
+				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 5f),
+				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, DefaultIconButtonSize),
+				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultIconButtonSize),
+
+				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 7f),
+				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Left, NSLayoutRelation.Equal, iconView,  NSLayoutAttribute.Right, 1f, 5f),
+				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 120),
+				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight),
+
+				NSLayoutConstraint.Create (this.errorMessages, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 35f),
+				NSLayoutConstraint.Create (this.errorMessages, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 5f),
+				NSLayoutConstraint.Create (this.errorMessages, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -10f),
+				NSLayoutConstraint.Create (this.errorMessages, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Height, 1f, -40f),
 			});
 
 			this.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;

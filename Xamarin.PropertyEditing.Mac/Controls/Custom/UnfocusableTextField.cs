@@ -33,6 +33,11 @@ namespace Xamarin.PropertyEditing.Mac
 			internal set { this.label.StringValue = value; }
 		}
 
+		public NSColor TextColor {
+			get { return this.label.TextColor; }
+			internal set { this.label.TextColor = value; }
+		}
+
 		public UnfocusableTextField ()
 		{
 			SetDefaultTextProperties ();

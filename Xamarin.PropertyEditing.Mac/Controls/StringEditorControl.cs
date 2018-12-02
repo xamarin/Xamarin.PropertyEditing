@@ -26,10 +26,10 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (StringEditor);
 
-			this.DoConstraints (new[] {
-				StringEditor.ConstraintTo (this, (s, c) => s.Width == c.Width - 34),
-				StringEditor.ConstraintTo (this, (s, c) => s.Height == DefaultControlHeight - 3),
-				StringEditor.ConstraintTo (this, (s, c) => s.Top == s.Top + 1),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (StringEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
+				NSLayoutConstraint.Create (StringEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -34f),
+				NSLayoutConstraint.Create (StringEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
 			});
 
 			UpdateTheme ();

@@ -58,15 +58,18 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (HeightLabel);
 			AddSubview (HeightEditor);
 
-			this.DoConstraints (new[] {
-				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 90),
-				XEditor.ConstraintTo (this, (xe, c) => xe.Height == DefaultControlHeight),
-				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 90),
-				YEditor.ConstraintTo (this, (ye, c) => ye.Height == DefaultControlHeight),
-				WidthEditor.ConstraintTo (this, (we, c) => we.Width == 90),
-				WidthEditor.ConstraintTo (this, (we, c) => we.Height == DefaultControlHeight),
-				HeightEditor.ConstraintTo (this, (he, c) => he.Width == 90),
-				HeightEditor.ConstraintTo (this, (he, c) => he.Height == DefaultControlHeight),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 90f),
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 90f),
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+
+				NSLayoutConstraint.Create (WidthEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 90f),
+				NSLayoutConstraint.Create (WidthEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+
+				NSLayoutConstraint.Create (HeightEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 90f),
+				NSLayoutConstraint.Create (HeightEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
 			});
 
 			UpdateTheme ();

@@ -57,13 +57,13 @@ namespace Xamarin.PropertyEditing.Mac
 			this.popupButtonList = new NSMenu ();
 			this.popUpButton.Menu = this.popupButtonList;
 
-			this.DoConstraints (new [] {
-				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Width == c.Width - 33),
-				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Height == DefaultControlHeight),
-				this.popUpButton.ConstraintTo (this, (pub, c) => pub.Top == c.Top + 0),
-			});
-
 			AddSubview (this.popUpButton);
+
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 0f),
+				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -33f),
+				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight + 1),
+			});
 
 			UpdateTheme ();
 		}

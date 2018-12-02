@@ -215,19 +215,19 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (incrementButton);
 			AddSubview (decrementButton);
 
-			this.DoConstraints (new[] {
-				numericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - (stepperWidth + stepperSpace + 1)),
-				numericEditor.ConstraintTo (this, (n, c) => n.Height == PropertyEditorControl.DefaultControlHeight - 3),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (this.numericEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -(stepperWidth + stepperSpace + 1)),
+				NSLayoutConstraint.Create (this.numericEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight - 3),
 
-				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Left == n.Right + stepperSpace),
-				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Top == n.Top),
-				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Width == stepperWidth),
-				incrementButton.ConstraintTo (numericEditor, (s, n) => s.Height == stepperTopHeight),
+				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.numericEditor,  NSLayoutAttribute.Top, 1f, 0f),
+				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.numericEditor,  NSLayoutAttribute.Right, 1f, stepperSpace),
+				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, stepperWidth),
+				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, stepperTopHeight),
 
-				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Left == n.Right + stepperSpace),
-				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Top == n.Top + stepperTopHeight),
-				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Width == stepperWidth),
-				decrementButton.ConstraintTo (numericEditor, (s, n) => s.Height == stepperBotHeight),
+				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.numericEditor,  NSLayoutAttribute.Top, 1f, stepperTopHeight),
+				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.numericEditor,  NSLayoutAttribute.Right, 1f, stepperSpace),
+				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, stepperWidth),
+				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, stepperBotHeight),
 			});
 
 			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
