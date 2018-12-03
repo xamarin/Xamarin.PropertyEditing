@@ -30,6 +30,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MicroBuild.Core">
+      <Version>0.3.0</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <FilesToSign Include="$(OutDir)\$(AssemblyName).dll">
+      <Authenticode>Microsoft</Authenticode>
+    </FilesToSign>
+  </ItemGroup>
   <!-- Build with strong naming if built as part of some Xamarin VSIX, normally referencing this project as a git submodule under external\Xamarin.PropertyEditing -->
   <PropertyGroup Condition="Exists('..\..\..\xamarin.snk')">
     <AssemblyOriginatorKeyFile>..\..\..\xamarin.snk</AssemblyOriginatorKeyFile>

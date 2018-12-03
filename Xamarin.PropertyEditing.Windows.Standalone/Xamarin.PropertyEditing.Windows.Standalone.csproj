@@ -34,6 +34,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MicroBuild.Core">
+      <Version>0.3.0</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <FilesToSign Include="$(OutDir)\$(AssemblyName).exe">
+      <Authenticode>Microsoft</Authenticode>
+    </FilesToSign>
+  </ItemGroup>
   <PropertyGroup Condition="Exists('..\..\designer\Xamarin.Designer.VisualStudio\src\VisualStudio.Designer\Resources\ProppyIcons.xaml') OR Exists('..\..\..\Xamarin.Designer.VisualStudio\src\VisualStudio.Designer\Resources\ProppyIcons.xaml')">
     <DefineConstants>$(DefineConstants);USE_VS_ICONS</DefineConstants>
   </PropertyGroup>
