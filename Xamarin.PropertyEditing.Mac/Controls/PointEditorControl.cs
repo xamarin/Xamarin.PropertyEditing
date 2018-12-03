@@ -12,13 +12,13 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public PointEditorControl ()
 		{
-			XLabel.Frame = new CGRect (34, -10, 25, 22);
+			XLabel.Frame = new CGRect (34, -5, 25, 22);
 			XLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
 			XLabel.StringValue = "X"; // TODO Localise
 
 			XEditor.Frame = new CGRect (0, 13, 90, 20);
 
-			YLabel.Frame = new CGRect (166, -10, 25, 22);
+			YLabel.Frame = new CGRect (166, -5, 25, 22);
 			YLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
 			YLabel.StringValue = "Y"; // TODO Localise
 

@@ -38,10 +38,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (NumericEditor);
 
-			this.DoConstraints ( new[] {
-				NumericEditor.ConstraintTo (this, (n, c) => n.Top == c.Top + 1),
-				NumericEditor.ConstraintTo (this, (n, c) => n.Width == c.Width - 32),
-				NumericEditor.ConstraintTo (this, (n, c) => n.Left == c.Left - 1),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
+				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -32f),
 			});
 		}
 

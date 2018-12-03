@@ -46,22 +46,14 @@ namespace Xamarin.PropertyEditing.Mac
 			GetVMGroupCellItendifiterFromFacade (item, out evm, out group, out cellIdentifier);
 
 			if (group != null) {
-				var labelContainer = outlineView.MakeView (LabelIdentifier, this);
+				var labelContainer = (UnfocusableTextField)outlineView.MakeView (LabelIdentifier, this);
 				if (labelContainer == null) {
-					labelContainer = new NSView { Identifier = LabelIdentifier };
-					var label = new UnfocusableTextField {
-						TranslatesAutoresizingMaskIntoConstraints = false
+					labelContainer = new UnfocusableTextField {
+						Identifier = LabelIdentifier,
 					};
-
-					labelContainer.AddSubview (label);
-					labelContainer.AddConstraints (new[] {
-						NSLayoutConstraint.Create (labelContainer, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, label, NSLayoutAttribute.CenterY, 1f, 0f),
-						NSLayoutConstraint.Create (labelContainer, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, label, NSLayoutAttribute.Leading, 1f, 0f),
-						NSLayoutConstraint.Create (labelContainer, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, label, NSLayoutAttribute.Trailing, 1f, 0f)
-					});
 				}
 
-				((UnfocusableTextField)labelContainer.Subviews[0]).StringValue = group.Key;
+				labelContainer.StringValue = group.Key;
 
 				if (this.dataSource.DataContext.GetIsExpanded (group.Key)) {
 					SynchronizationContext.Current.Post (s => {

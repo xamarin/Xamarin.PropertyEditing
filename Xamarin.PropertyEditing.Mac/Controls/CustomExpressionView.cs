@@ -23,23 +23,23 @@ namespace Xamarin.PropertyEditing.Mac
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
-			vmType = viewModel.GetType ();
-			customExpressionPropertyInfo = vmType.GetProperty (CustomExpressionPropertyString);
-			var value = customExpressionPropertyInfo.GetValue (viewModel);
+			this.vmType = viewModel.GetType ();
+			this.customExpressionPropertyInfo = vmType.GetProperty (CustomExpressionPropertyString);
+			var value = this.customExpressionPropertyInfo.GetValue (viewModel);
 			if (value != null)
 				customExpressionField.StringValue = (string)value;
 
 			customExpressionField.Activated += (sender, e) => {
-				customExpressionPropertyInfo.SetValue (viewModel, customExpressionField.StringValue);
+				this.customExpressionPropertyInfo.SetValue (viewModel, customExpressionField.StringValue);
 			};
 
 			AddSubview (customExpressionField);
 
-			this.DoConstraints (new[] {
-				customExpressionField.ConstraintTo (this, (s, c) => s.Top == c.Top + 37),
-				customExpressionField.ConstraintTo (this, (s, c) => s.Left == c.Left + 38),
-				customExpressionField.ConstraintTo (this, (s, c) => s.Width == c.Width - 57),
-				customExpressionField.ConstraintTo (this, (s, c) => s.Height == 24),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 37f),
+				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 38f),
+				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -57f),
+				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight),
 			});
 		}
 	}

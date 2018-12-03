@@ -35,9 +35,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (BooleanEditor);
 
-            this.DoConstraints (new[] {
-				BooleanEditor.ConstraintTo (this, (be, c) => be.Width == c.Width - 50),
-				BooleanEditor.ConstraintTo (this, (be, c) => be.Top == c.Top + 6),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (BooleanEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 6f),
+				NSLayoutConstraint.Create (BooleanEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -50f),
 			});
 
 			UpdateTheme ();

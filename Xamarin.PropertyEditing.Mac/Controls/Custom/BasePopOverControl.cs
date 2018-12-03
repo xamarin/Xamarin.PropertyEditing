@@ -26,24 +26,25 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (iconView);
 
-			var viewTitle = new UnfocusableTextField () {
+			var viewTitle = new UnfocusableTextField {
+				Font = NSFont.BoldSystemFontOfSize (11),
 				StringValue = title,
 				TranslatesAutoresizingMaskIntoConstraints = false,
-				Font = NSFont.BoldSystemFontOfSize (11)
 			};
 
 			AddSubview (viewTitle);
 
-			this.DoConstraints (new[] {
-				iconView.ConstraintTo (this, (iv, c) => iv.Top == c.Top + 5),
-				iconView.ConstraintTo (this, (iv, c) => iv.Left == c.Left + 5),
-				iconView.ConstraintTo (this, (iv, c) => iv.Width == DefaultIconButtonSize),
-				iconView.ConstraintTo (this, (iv, c) => iv.Height == DefaultIconButtonSize),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 5f),
+				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 5f),
+				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, DefaultIconButtonSize),
+				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultIconButtonSize),
 
-				viewTitle.ConstraintTo (this, (vt, c) => vt.Top == c.Top + 10),
-				viewTitle.ConstraintTo (this, (vt, c) => vt.Left == c.Left + 38),
-				viewTitle.ConstraintTo (this, (vt, c) => vt.Width == 120),
-				viewTitle.ConstraintTo (this, (vt, c) => vt.Height == 24),
+				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 7f),
+				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Left, NSLayoutRelation.Equal, iconView,  NSLayoutAttribute.Right, 1f, 5f),
+				//NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 38f),
+				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 120),
+				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight),
 			});
 
 			Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;

@@ -49,7 +49,6 @@ namespace Xamarin.PropertyEditing.Mac
 				Label = new UnfocusableTextField {
 					StringValue = $"{editor.Name}:",
 					Alignment = NSTextAlignment.Right,
-					BackgroundColor = NSColor.Clear,
 					ToolTip = editor.ToolTip
 				},
 				Editor = new ComponentSpinEditor (editor) {
@@ -116,14 +115,12 @@ namespace Xamarin.PropertyEditing.Mac
 			this.hexLabel = new UnfocusableTextField {
 				StringValue = "#:",
 				Alignment = NSTextAlignment.Right,
-				BackgroundColor = NSColor.Clear,
 				ToolTip = Properties.Resources.HexValue
 			};
 			AddSubview (this.hexLabel);
 
 			this.hexEditor = new NSTextField {
 				Alignment = NSTextAlignment.Right,
-				BackgroundColor = NSColor.Clear
 			};
 			AddSubview (this.hexEditor);
 

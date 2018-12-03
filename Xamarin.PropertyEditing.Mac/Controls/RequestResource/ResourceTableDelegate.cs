@@ -54,7 +54,6 @@ namespace Xamarin.PropertyEditing.Mac
 					if (typeView == null) {
 						typeView = new UnfocusableTextField {
 							Identifier = typeIdentifier,
-							BackgroundColor = NSColor.Clear,
 						};
 					}
 
@@ -65,7 +64,6 @@ namespace Xamarin.PropertyEditing.Mac
 					var nameView = (UnfocusableTextField)tableView.MakeView (nameIdentifier, this);
 					if (nameView == null) {
 						nameView = new UnfocusableTextField {
-							BackgroundColor = NSColor.Clear,
 							Identifier = nameIdentifier,
 						};
 					}

@@ -172,22 +172,22 @@ namespace Xamarin.PropertyEditing.Mac
 			tableContainer.DocumentView = this.propertyTable;
 			AddSubview (tableContainer);
 
-			this.DoConstraints (new NSLayoutConstraint[] {
-				this.propertyArrangeModeLabel.ConstraintTo(this, (pl, c) => pl.Top == c.Top + 5),
-				this.propertyArrangeModeLabel.ConstraintTo(this, (pl, c) => pl.Left == c.Left + 10),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (this.propertyArrangeModeLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 5f),
+				NSLayoutConstraint.Create (this.propertyArrangeModeLabel, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 10f),
 
-				this.propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Top == c.Top + 4),
-				this.propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Left == c.Left + 90),
-				this.propertyArrangeMode.ConstraintTo(this, (pa, c) => pa.Width == 130),
+				NSLayoutConstraint.Create (this.propertyArrangeMode, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 4f),
+				NSLayoutConstraint.Create (this.propertyArrangeMode, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 90f),
+				NSLayoutConstraint.Create (this.propertyArrangeMode, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 130f),
 
-				this.propertyFilter.ConstraintTo(this, (pf, c) => pf.Top == c.Top + 3),
-				this.propertyFilter.ConstraintTo(this, (pf, c) => pf.Left == c.Left + 255),
-				this.propertyFilter.ConstraintTo(this, (pa, c) => pa.Width == c.Width - 265),
+				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 3f),
+				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 255f),
+				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -265f),
 
-				tableContainer.ConstraintTo(this, (t, c) => t.Top == c.Top + 30),
-				tableContainer.ConstraintTo(this, (t, c) => t.Left == c.Left + 10),
-				tableContainer.ConstraintTo(this, (t, c) => t.Width == c.Width - 20),
-				tableContainer.ConstraintTo(this, (t, c) => t.Height == c.Height - 37),
+				NSLayoutConstraint.Create (tableContainer, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 30f),
+				NSLayoutConstraint.Create (tableContainer, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 10f),
+				NSLayoutConstraint.Create (tableContainer, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -20f),
+				NSLayoutConstraint.Create (tableContainer, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1f, -37f),
 			});
 
 			ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;

@@ -17,37 +17,35 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => XEditor;
 		public override NSView LastKeyView => YEditor.DecrementButton;
 
-		public BasePointEditorControl ()
+		protected BasePointEditorControl ()
 		{
 			XLabel = new UnfocusableTextField ();
 
-			XEditor = new NumericSpinEditor<T> ();
-			XEditor.BackgroundColor = NSColor.Clear;
-			XEditor.Value = 0.0f;
+			XEditor = new NumericSpinEditor<T> {
+				BackgroundColor = NSColor.Clear,
+				Value = 0.0f
+			};
 			XEditor.ValueChanged += OnInputUpdated;
-
-			XLabel.AccessibilityElement = false;
 
 			YLabel = new UnfocusableTextField ();
 
-			YEditor = new NumericSpinEditor<T> ();
-			YEditor.BackgroundColor = NSColor.Clear;
-			YEditor.Value = 0.0f;
+			YEditor = new NumericSpinEditor<T> {
+				BackgroundColor = NSColor.Clear,
+				Value = 0.0f
+			};
 			YEditor.ValueChanged += OnInputUpdated;
-
-			YLabel.AccessibilityElement = false;
 
 			AddSubview (XLabel);
 			AddSubview (XEditor);
 			AddSubview (YLabel);
 			AddSubview (YEditor);
 
-			this.DoConstraints (new[] {
-				XEditor.ConstraintTo (this, (xe, c) => xe.Left == xe.Left - 1),
-				XEditor.ConstraintTo (this, (xe, c) => xe.Width == 90),
-				XEditor.ConstraintTo (this, (xe, c) => xe.Height == DefaultControlHeight),
-				YEditor.ConstraintTo (this, (ye, c) => ye.Width == 90),
-				YEditor.ConstraintTo (this, (ye, c) => ye.Height == DefaultControlHeight),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 90f),
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 90f),
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
 			});
 
 			UpdateTheme ();

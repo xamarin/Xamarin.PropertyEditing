@@ -118,9 +118,9 @@ namespace Xamarin.PropertyEditing.Mac
 			this.previewPanel = new RequestResourcePreviewPanel (new CGRect (Frame.Width - FrameWidthThird, 0, FrameWidthThird, Frame.Height));
 			AddSubview (this.previewPanel);
 
-			this.DoConstraints (new NSLayoutConstraint[] {
-				this.tableContainer.ConstraintTo (this, (t, c) => t.Width == c.Width - 190),
-				this.tableContainer.ConstraintTo (this, (t, c) => t.Height == c.Height),
+			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (this.tableContainer, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -190f),
+				NSLayoutConstraint.Create (this.tableContainer, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Height, 1f, 0f),
 			});
 
 			ReloadData ();
