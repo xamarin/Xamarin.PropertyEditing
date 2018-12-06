@@ -413,10 +413,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (hasPredefinedValues != null) {
 				Type type = typeof(PredefinedValuesViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0]);
 				return (PropertyViewModel) Activator.CreateInstance (type, property, this.objEditors);
-			} else if (property.Type.IsEnum) {
+			} /*else if (property.Type.IsEnum) {
 				Type type = typeof(EnumPropertyViewModel<>).MakeGenericType (property.Type);
 				return (PropertyViewModel) Activator.CreateInstance (type, property, this.objEditors);
-			}
+			}*/
+			// HACK: In Workbooks, only CALayer.ContentsFormat seems to trigger above enum code, and when it does no
+			//       editor is created (seems to be related to there being no enum view model in the ViewModelMap).
+			//       Lack of editor was causing crashes due to NRE. Disable this so at least a StringPropertyViewModel
+			//       is created, which does get an editor.
 
 			Func<IPropertyInfo, IEnumerable<IObjectEditor>, PropertyViewModel> vmFactory;
 			if (ViewModelMap.TryGetValue (property.Type, out vmFactory))
