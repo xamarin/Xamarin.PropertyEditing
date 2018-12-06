@@ -87,6 +87,9 @@ namespace Xamarin.PropertyEditing.Mac
 					if (editor == null) {
 						editor = GetEditor (vm, outlineView);
 					}
+					// HACK: Prevent crash if editor is null
+					if (editor == null)
+						return null;
 
 					// we must reset these every time, as the view may have been reused
 					editor.ViewModel = vm;
@@ -165,6 +168,9 @@ namespace Xamarin.PropertyEditing.Mac
 			if (editor == null) {
 				editor = GetEditor (vm, outlineView);
 			}
+			// HACK: Prevent crash if editor is null
+			if (editor == null)
+				return 30;
 			return editor.RowHeight;
 		}
 
