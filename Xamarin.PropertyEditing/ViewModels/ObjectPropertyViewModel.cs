@@ -16,7 +16,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		/// <summary>
 		/// Gets or sets the type selected by the user from the UI
 		/// </summary>
-		public ITypeInfo SelectedType
+		public Task<ITypeInfo> SelectedType
 		{
 			get;
 			set;
@@ -164,14 +164,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 						if (args.SelectedType == null)
 							return;
 
-						selectedType = args.SelectedType;
+						selectedType = await args.SelectedType;
 					}
 
 					await SetValueAsync (new ValueInfo<object> {
-							Value = await TargetPlatform.EditorProvider.CreateObjectAsync (selectedType),
-							ValueDescriptor = selectedType,
-							Source = ValueSource.Local
-						});
+						Value = await TargetPlatform.EditorProvider.CreateObjectAsync (selectedType),
+						ValueDescriptor = selectedType,
+						Source = ValueSource.Local
+					});
 				}
 			} finally {
 				IsCreateInstancePending = false;

@@ -353,15 +353,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 			await PushValueAsync ();
 		}
 
-		private void RequestOtherType (ITypeInfo previousType)
+		private async void RequestOtherType (ITypeInfo previousType)
 		{
 			var args = new TypeRequestedEventArgs();
 			TypeRequested?.Invoke (this, args);
 
-			ITypeInfo st = args.SelectedType;
-			if (args.SelectedType != null) {
-				if (!this.suggestedTypes.Contains (args.SelectedType))
-					this.suggestedTypes.Insert (0, args.SelectedType);
+			ITypeInfo st = await args.SelectedType;
+			if (st != null) {
+				if (!this.suggestedTypes.Contains (st))
+					this.suggestedTypes.Insert (0, st);
 			} else {
 				st = previousType;
 			}

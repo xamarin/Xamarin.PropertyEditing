@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Windows;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -35,7 +36,7 @@ namespace Xamarin.PropertyEditing.Windows
 			var panel = this.FindPropertiesHost ();
 
 			ITypeInfo type = TypeSelectorWindow.RequestType (panel, vsender.AssignableTypes);
-			e.SelectedType = type;
+			e.SelectedType = Task.FromResult (type);
 		}
 	}
 }

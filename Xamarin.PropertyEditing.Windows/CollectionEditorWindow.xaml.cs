@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -39,7 +40,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnTypeRequested (object sender, TypeRequestedEventArgs args)
 		{
-			args.SelectedType = TypeSelectorWindow.RequestType (this, ((CollectionPropertyViewModel)DataContext).AssignableTypes);
+			args.SelectedType = Task.FromResult (TypeSelectorWindow.RequestType (this, ((CollectionPropertyViewModel)DataContext).AssignableTypes));
 		}
 
 		private void OnOkClick (object sender, RoutedEventArgs e)
