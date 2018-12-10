@@ -61,9 +61,8 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			this.popUpButton = new ColorPopUpButton {
-				TranslatesAutoresizingMaskIntoConstraints = false,
-				ControlSize = NSControlSize.Small,
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
 			this.popupButtonList = new NSMenu ();
@@ -74,7 +73,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 0f),
 				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -33f),
-				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight + 1),
+				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
 			});
 
 			UpdateTheme ();

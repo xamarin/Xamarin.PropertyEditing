@@ -104,7 +104,7 @@
   </data>
   <data name="AccessibilityLeftEditor" xml:space="preserve">
     <value>{0} Left Editor</value>
-    <comment>Editor for LEft Value</comment>
+    <comment>Editor for Left Value</comment>
   </data>
   <data name="AccessibilityTopEditor" xml:space="preserve">
     <value>{0} Top Editor</value>
@@ -117,5 +117,9 @@
   <data name="AccessibilityBottomEditor" xml:space="preserve">
     <value>{0} Bottom Editor</value>
     <comment>Editor for Bottom Value</comment>
+  </data>
+  <data name="AccessibilityInpueModeEditor" xml:space="preserve">
+    <value>{0} InputMode Editor</value>
+    <comment>Editor for InputMode Value</comment>
   </data>
 </root>
