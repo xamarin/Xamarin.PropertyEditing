@@ -30,8 +30,20 @@ namespace Xamarin.PropertyEditing.Mac
 			if (Popover == null)
 				return;
 
-			if (!Popover.Shown)
+			if (!Popover.Shown) {
 				Popover.Show (new CGRect (26, this.Frame.Height / 2 - 2, 2, 2), this, NSRectEdge.MinYEdge);
+				Window.MakeFirstResponder (Popover);
+			}
+		}
+
+		public override void KeyDown (NSEvent theEvent)
+		{
+			if (theEvent.KeyCode == 36 || theEvent.KeyCode == 49) {
+				MouseDown (theEvent);
+			}
+			else {
+				base.KeyDown (theEvent);
+			}
 		}
 	}
 
