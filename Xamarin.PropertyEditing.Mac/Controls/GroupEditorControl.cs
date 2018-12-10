@@ -144,8 +144,8 @@ namespace Xamarin.PropertyEditing.Mac
 			{
 				if (!this.resized) {
 					var cols = tableView.TableColumns ();
-					cols[0].Width = tableView.Bounds.Width / 2;
-					cols[1].Width = tableView.Bounds.Width / 2;
+					cols[0].Width = (tableView.Frame.Width + 45) * Mac.Layout.GoldenRatioLeft;
+					cols[1].Width = tableView.Frame.Width - cols[0].Width;
 					this.resized = true;
 				}
 
