@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var buttonType = GetTypeInfo (typeof(MockWpfButton));
 			vm.TypeRequested += (o, e) => {
-				e.SelectedType = buttonType;
+				e.SelectedType = Task.FromResult (buttonType);
 			};
 
 			vm.AssignableTypes.Task.Wait();
@@ -121,7 +121,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var buttonType = GetTypeInfo (typeof (MockWpfButton));
 			vm.TypeRequested += (o, e) => {
-				e.SelectedType = buttonType;
+				e.SelectedType = Task.FromResult (buttonType);
 			};
 
 			vm.SelectedType = vm.SuggestedTypes.Last ();
