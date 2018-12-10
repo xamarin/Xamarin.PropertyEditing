@@ -156,10 +156,15 @@ namespace Cadenza.Collections
 			set
 			{
 				TKey existingKey = this.keyOrder[index];
-				if (!Equals (existingKey, value.Key))
-					this.keyOrder[index] = value.Key;
+				TValue existingValue = this.dict[existingKey];
+				if (!Equals (existingKey, value.Key)) {
+					if (this.dict.ContainsKey (value.Key))
+						throw new ArgumentException ("Existing keys can't be moved by setting them into another index", $"{nameof(value)}.{nameof(value.Key)}");
 
-				TValue existingValue = this.dict[value.Key];
+					this.keyOrder[index] = value.Key;
+					this.dict.Remove (existingKey);
+				}
+				
 				this.dict[value.Key] = value.Value;
 
 				this.roKeys.OnCollectionChanged (new NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction.Replace, existingKey, value.Key, index));
@@ -331,8 +336,11 @@ namespace Cadenza.Collections
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than 0 or greater than <see cref="Count"/></exception>
 		public void Insert (int index, TKey key, TValue value)
 		{
-			this.keyOrder.Insert (index, key);
+			if (index < 0 || index > this.keyOrder.Count)
+				throw new ArgumentOutOfRangeException (nameof(index));
+
 			this.dict.Add (key, value);
+			this.keyOrder.Insert (index, key);
 
 			OnCollectionChanged (NotifyCollectionChangedAction.Add, index, key, value);
 		}
@@ -350,6 +358,9 @@ namespace Cadenza.Collections
 		/// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
 		public bool Remove (TKey key)
 		{
+			if (key == null)
+				throw new ArgumentNullException (nameof(key));
+
 			int index = this.keyOrder.IndexOf (key);
 			if (index > -1) {
 				RemoveAt (index);
@@ -374,6 +385,7 @@ namespace Cadenza.Collections
 		/// Removes they key and associated value from the dictionary located at <paramref name="index"/>.
 		/// </summary>
 		/// <param name="index">The index at which to remove an item.</param>
+		/// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than 0 or greater than <see cref="Count"/></exception>
 		public void RemoveAt (int index)
 		{
 			TKey key = this.keyOrder[index];
