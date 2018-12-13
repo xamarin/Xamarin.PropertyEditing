@@ -157,6 +157,8 @@
     <Compile Include="Controls\PropertyContainer.cs" />
     <Compile Include="Controls\CharEditorControl.cs" />
     <Compile Include="Controls\Custom\CharTextField.cs" />
+    <Compile Include="Controls\DateTimeEditorControl.cs" />
+    <Compile Include="Controls\Custom\DateTimeTextField.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
