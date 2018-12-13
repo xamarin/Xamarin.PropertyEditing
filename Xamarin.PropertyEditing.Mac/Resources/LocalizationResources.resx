@@ -36,6 +36,10 @@
 		<value>{0} Combobox Editor</value>
 		<comment>Editor for Combobox Value</comment>
 	</data>
+  <data name="AccessibilityChar" xml:space="preserve">
+    <value>{0} Char Editor</value>
+    <comment>Editor for Char Value</comment>
+  </data>
 	<data name="AccessibilityString" xml:space="preserve">
 		<value>{0} String Editor</value>
 		<comment>Editor for String Value</comment>

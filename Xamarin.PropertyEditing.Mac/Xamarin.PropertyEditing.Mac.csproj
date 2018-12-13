@@ -155,6 +155,8 @@
     <Compile Include="Controls\Custom\FocusableBooleanButton.cs" />
     <Compile Include="Controls\Custom\FocusableButton.cs" />
     <Compile Include="Controls\PropertyContainer.cs" />
+    <Compile Include="Controls\CharEditorControl.cs" />
+    <Compile Include="Controls\Custom\CharTextField.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

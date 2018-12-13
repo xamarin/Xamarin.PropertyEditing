@@ -597,6 +597,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		} = new AsyncWorkQueue();
 
 		private static readonly Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyVariation, PropertyViewModel>> ViewModelMap = new Dictionary<Type, Func<TargetPlatform, IPropertyInfo, IEnumerable<IObjectEditor>, PropertyVariation, PropertyViewModel>> {
+			{ typeof(char), (tp,p,e,v) => new PropertyViewModel<char> (tp, p, e, v) },
 			{ typeof(string), (tp,p,e,v) => new StringPropertyViewModel (tp, p, e, v) },
 			{ typeof(bool), (tp,p,e,v) => new PropertyViewModel<bool?> (tp, p, e, v) },
 			{ typeof(float), (tp,p,e,v) => new NumericPropertyViewModel<float?> (tp, p, e, v) },
