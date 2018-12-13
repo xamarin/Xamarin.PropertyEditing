@@ -83,6 +83,12 @@ namespace Xamarin.PropertyEditing.Mac.Resources {
             }
         }
         
+        internal static string AccessibilityChar {
+            get {
+                return ResourceManager.GetString("AccessibilityChar", resourceCulture);
+            }
+        }
+        
         internal static string AccessibilityString {
             get {
                 return ResourceManager.GetString("AccessibilityString", resourceCulture);
