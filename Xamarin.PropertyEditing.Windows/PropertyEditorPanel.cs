@@ -210,7 +210,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 			Binding itemsSource;
 			if (newMode == PropertyArrangeMode.Name)
-				itemsSource = new Binding ("ArrangedEditors[0]");
+				itemsSource = new Binding ("ArrangedEditors[0].Editors");
 			else
 				itemsSource = new Binding ("ArrangedEditors");
 

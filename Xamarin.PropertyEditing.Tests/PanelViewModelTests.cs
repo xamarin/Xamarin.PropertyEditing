@@ -74,10 +74,10 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedObjects.Add (obj);
 
 			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
-			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (2));
+			Assume.That (vm.ArrangedEditors[0].Editors.Count, Is.EqualTo (2));
 
 			vm.FilterText = "sub";
-			Assert.That (vm.ArrangedEditors[0].Count, Is.EqualTo (1));
+			Assert.That (vm.ArrangedEditors[0].Editors.Count, Is.EqualTo (1));
 		}
 
 		[Test]
@@ -93,7 +93,7 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedObjects.Add (obj);
 
 			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
-			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (2));
+			Assume.That (vm.ArrangedEditors[0].Editors.Count, Is.EqualTo (2));
 
 			Assume.That (vm.IsFiltering, Is.False);
 			bool changed = false;
@@ -104,7 +104,7 @@ namespace Xamarin.PropertyEditing.Tests
 			};
 
 			vm.FilterText = "sub";
-			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (1));
+			Assume.That (vm.ArrangedEditors[0].Editors.Count, Is.EqualTo (1));
 			Assert.That (vm.IsFiltering, Is.True);
 			Assert.That (changed, Is.True);
 			changed = false;
@@ -128,13 +128,13 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedObjects.Add (obj);
 
 			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
-			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (2));
+			Assume.That (vm.ArrangedEditors[0].Editors.Count, Is.EqualTo (2));
 
 			vm.FilterText = "sub";
-			Assume.That (vm.ArrangedEditors[0].Count, Is.EqualTo (1));
+			Assume.That (vm.ArrangedEditors[0].Editors.Count, Is.EqualTo (1));
 
 			vm.FilterText = String.Empty;
-			Assert.That (vm.ArrangedEditors[0].Count, Is.EqualTo (2));
+			Assert.That (vm.ArrangedEditors[0].Editors.Count, Is.EqualTo (2));
 		}
 
 		[Test]
@@ -149,7 +149,7 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedObjects.Add (obj);
 
 			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
-			Assert.That (vm.ArrangedEditors.FirstOrDefault (g => g.Key == "Sub"), Is.Not.Null);
+			Assert.That (vm.ArrangedEditors.FirstOrDefault (g => g.Category == "Sub"), Is.Not.Null);
 		}
 
 		[Test]
@@ -180,9 +180,9 @@ namespace Xamarin.PropertyEditing.Tests
 
 			vm.ArrangeMode = PropertyArrangeMode.Category;
 			vm.SelectedObjects.Add (editor.Target);
-			Assert.That (vm.ArrangedEditors[0].Key, Is.EqualTo ("A"));
-			Assert.That (vm.ArrangedEditors[1].Key, Is.EqualTo ("B"));
-			Assert.That (vm.ArrangedEditors[2].Key, Is.EqualTo ("C"));
+			Assert.That (vm.ArrangedEditors[0].Category, Is.EqualTo ("A"));
+			Assert.That (vm.ArrangedEditors[1].Category, Is.EqualTo ("B"));
+			Assert.That (vm.ArrangedEditors[2].Category, Is.EqualTo ("C"));
 		}
 
 		[Test]
@@ -201,9 +201,9 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.FilterText = "sub";
 			Assert.That (vm.ArrangedEditors.Count, Is.EqualTo (1));
 
-			var group = vm.ArrangedEditors.FirstOrDefault (g => g.Key == "Sub");
+			var group = vm.ArrangedEditors.FirstOrDefault (g => g.Category == "Sub");
 			Assert.That (group, Is.Not.Null);
-			Assert.That (group.Count, Is.EqualTo (1));
+			Assert.That (group.Editors.Count, Is.EqualTo (1));
 		}
 
 		[Test]
@@ -236,8 +236,8 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedObjects.Add (target);
 
 			Assert.That (vm.ArrangedEditors.Count, Is.EqualTo (2));
-			Assert.That (vm.ArrangedEditors[0].Key, Is.EqualTo ("ints"), "Grouped group not found or out of order");
-			Assert.That (vm.ArrangedEditors[1].Key, Is.Null);
+			Assert.That (vm.ArrangedEditors[0].Category, Is.EqualTo ("ints"), "Grouped group not found or out of order");
+			Assert.That (vm.ArrangedEditors[1].Category, Is.Empty);
 		}
 
 		[Test]
@@ -272,7 +272,7 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.FilterText = "name";
 			Assert.That (vm.ArrangedEditors.Count, Is.EqualTo (1));
 
-			var group = vm.ArrangedEditors.FirstOrDefault (g => g.Key == "ints");
+			var group = vm.ArrangedEditors.FirstOrDefault (g => g.Category == "ints");
 			Assert.That (group, Is.Null);
 		}
 
@@ -332,7 +332,7 @@ namespace Xamarin.PropertyEditing.Tests
 			};
 			vm.SelectedObjects.Add (target);
 
-			Assert.That (vm.ArrangedEditors.Any (g => g.Key == "ints"), Is.True, "Does not have grouped editors category");
+			Assert.That (vm.ArrangedEditors.Any (g => g.Category == "ints"), Is.True, "Does not have grouped editors category");
 		}
 
 		[Test]
@@ -350,7 +350,7 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedObjects.Add (obj);
 
 			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
-			Assert.That (vm.GetIsExpanded (vm.ArrangedEditors[0].Key), Is.True);
+			Assert.That (vm.GetIsExpanded (vm.ArrangedEditors[0].Category), Is.True);
 		}
 
 		[Test]
@@ -383,7 +383,7 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedObjects.Add (target);
 
 			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
-			Assume.That (vm.ArrangedEditors.Any (g => g.Key == "ints"), Is.True, "Does not have grouped editors category");
+			Assume.That (vm.ArrangedEditors.Any (g => g.Category == "ints"), Is.True, "Does not have grouped editors category");
 			Assert.That (vm.GetIsExpanded ("ints"), Is.True);
 		}
 

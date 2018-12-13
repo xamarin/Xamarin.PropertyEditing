@@ -35,6 +35,8 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 		public bool CanWrite { get; }
 
+		public bool IsUncommon { get; }
+
 		public ValueSources ValueSources { get; }
 
 		public IReadOnlyList<PropertyVariationOption> Variations { get; }

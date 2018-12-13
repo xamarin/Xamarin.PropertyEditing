@@ -24,12 +24,12 @@ namespace Xamarin.PropertyEditing.Mac
 			if (!String.IsNullOrWhiteSpace (this.dataSource.DataContext.FilterText)) {
 				outlineView.ExpandItem (null, true);
 			} else {
-				foreach (IGrouping<string, EditorViewModel> g in this.dataSource.DataContext.ArrangedEditors) {
+				foreach (PanelGroupViewModel g in this.dataSource.DataContext.ArrangedEditors) {
 					NSObject item;
 					if (!this.dataSource.TryGetFacade (g, out item))
 						continue;
 
-					if (this.dataSource.DataContext.GetIsExpanded (g.Key))
+					if (this.dataSource.DataContext.GetIsExpanded (g.Category))
 						outlineView.ExpandItem (item);
 					else
 						outlineView.CollapseItem (item);
@@ -41,7 +41,8 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
 			EditorViewModel evm;
-			IGroupingList<string, EditorViewModel> group;
+			PropertyViewModel vm;
+			PanelGroupViewModel group;
 			string cellIdentifier;
 			GetVMGroupCellItendifiterFromFacade (item, out evm, out group, out cellIdentifier);
 
@@ -53,9 +54,9 @@ namespace Xamarin.PropertyEditing.Mac
 					};
 				}
 
-				labelContainer.StringValue = group.Key;
+				labelContainer.StringValue = group.Category;
 
-				if (this.dataSource.DataContext.GetIsExpanded (group.Key)) {
+				if (this.dataSource.DataContext.GetIsExpanded (group.Category)) {
 					SynchronizationContext.Current.Post (s => {
 						outlineView.ExpandItem (item);
 					}, null);
@@ -103,7 +104,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override bool ShouldSelectItem (NSOutlineView outlineView, NSObject item)
 		{
-			return (!(item is NSObjectFacade) || !(((NSObjectFacade)item).Target is IGroupingList<string, EditorViewModel>));
+			return (!(item is NSObjectFacade) || !(((NSObjectFacade)item).Target is PanelGroupViewModel));
 		}
 
 		public override void ItemDidExpand (NSNotification notification)
@@ -112,9 +113,9 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 
 			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
-			var group = facade.Target as IGroupingList<string, EditorViewModel>;
+			var group = facade.Target as PanelGroupViewModel;
 			if (group != null)
-				this.dataSource.DataContext.SetIsExpanded (group.Key, isExpanded: true);
+				this.dataSource.DataContext.SetIsExpanded (group.Category, isExpanded: true);
 		}
 
 		public override void ItemDidCollapse (NSNotification notification)
@@ -123,15 +124,15 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 
 			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
-			var group = facade.Target as IGroupingList<string, EditorViewModel>;
+			var group = facade.Target as PanelGroupViewModel;
 			if (group != null)
-				this.dataSource.DataContext.SetIsExpanded (group.Key, isExpanded: false);
+				this.dataSource.DataContext.SetIsExpanded (group.Category, isExpanded: false);
 		}
 
 		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
 		{
 			EditorViewModel vm;
-			IGroupingList<string, EditorViewModel> group;
+			PanelGroupViewModel group;
 			string cellIdentifier;
 			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
 
@@ -211,14 +212,14 @@ namespace Xamarin.PropertyEditing.Mac
 				return new PanelHeaderEditorControl ();
 		}
 
-		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out EditorViewModel vm, out IGroupingList<string, EditorViewModel> group, out string cellIdentifier)
+		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out EditorViewModel vm, out PanelGroupViewModel group, out string cellIdentifier)
 		{
 			var facade = (NSObjectFacade)item;
 			vm = facade.Target as EditorViewModel;
-			group = facade.Target as IGroupingList<string, EditorViewModel>;
+			group = facade.Target as PanelGroupViewModel;
 			cellIdentifier = facade.Target == null
 								   ? nameof (PanelHeaderEditorControl)
-								   : (group == null) ? vm.GetType ().FullName : group.Key;
+								   : (group == null) ? vm.GetType ().FullName : group.Category;
 		}
 	}
 }

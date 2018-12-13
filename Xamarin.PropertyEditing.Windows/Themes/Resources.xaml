@@ -702,7 +702,7 @@
 							</StackPanel>
 						</Border>
 						<Border Padding="1" Visibility="{Binding TargetPlatform.SupportsBrushOpacity, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
-							<Expander Name="advancedPropertyPanel" Template="{DynamicResource AdvancedPropertiesExpander}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+							<Expander Name="advancedPropertyPanel" Style="{DynamicResource AdvancedPropertiesExpander}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
 								  Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Foreground="{DynamicResource PanelForegroundBrush}">
 								<Expander.Content>
 									<Border Padding="19,6,6,6" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}">
@@ -1489,7 +1489,6 @@
 	</Style>
 
 	<Style TargetType="local:PropertyPresenter">
-		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyPresenter">
@@ -1540,39 +1539,6 @@
 			</Trigger>
 		</Style.Triggers>
 	</Style>
-
-	<ControlTemplate TargetType="Expander" x:Key="AdvancedPropertiesExpander">
-		<StackPanel Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}">
-			<ToggleButton
-				x:Name="ExpanderButton" DockPanel.Dock="Top" Template="{DynamicResource AdvancedPropertiesToggleButton}" Content="{TemplateBinding Header}" VerticalAlignment="Stretch"
-				IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" OverridesDefaultStyle="True" Height="14" Padding="1.5,1,1.5,1">
-			</ToggleButton>
-			<ContentPresenter x:Name="ExpanderContent" Grid.Row="1" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-		</StackPanel>
-		<ControlTemplate.Triggers>
-			<Trigger Property="IsExpanded" Value="True">
-				<Setter TargetName="ExpanderContent" Property="Visibility" Value="Visible"/>
-			</Trigger>
-		</ControlTemplate.Triggers>
-	</ControlTemplate>
-
-	<ControlTemplate x:Key="AdvancedPropertiesToggleButton" TargetType="{x:Type ToggleButton}">
-		<Border x:Name="ExpanderButtonBorder" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" DockPanel.Dock="Top">
-			<Path x:Name="Chevron" Data="M 0,3 L 5,8 L 10,3" Stroke="{DynamicResource ToggleItemForegroundBrush}" Width="10" Height="10" StrokeThickness="2"
-				  HorizontalAlignment="Stretch" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"/>
-		</Border>
-		<ControlTemplate.Triggers>
-			<Trigger Property="IsChecked" Value="True">
-				<Setter Property="Data" TargetName="Chevron" Value="M 0,8 L 5,3 L 10,8"/>
-			</Trigger>
-			<Trigger Property="IsMouseOver" Value="true">
-				<Setter Property="Stroke" Value="{DynamicResource ToggleItemMouseOverForegroundBrush}" TargetName="Chevron"/>
-			</Trigger>
-			<Trigger Property="IsPressed" Value="true">
-				<Setter Property="Stroke" Value="{DynamicResource ToggleItemSelectedForegroundBrush}" TargetName="Chevron"/>
-			</Trigger>
-		</ControlTemplate.Triggers>
-	</ControlTemplate>
 
 	<Style TargetType="{x:Type TabItem}">
 		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}"/>

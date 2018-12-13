@@ -33,6 +33,14 @@ namespace Xamarin.PropertyEditing
 		bool CanWrite { get; }
 
 		/// <summary>
+		/// Gets whether the property is an uncommonly used property.
+		/// </summary>
+		/// <remarks>
+		/// This acts as a hint to hide the property behind disclosures when appropriate.
+		/// </remarks>
+		bool IsUncommon { get; }
+
+		/// <summary>
 		/// Gets the possible sources of values for this property.
 		/// </summary>
 		ValueSources ValueSources { get; }
