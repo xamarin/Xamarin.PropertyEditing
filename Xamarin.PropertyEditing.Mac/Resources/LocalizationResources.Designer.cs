@@ -100,6 +100,12 @@ namespace Xamarin.PropertyEditing.Mac.Resources {
                 return ResourceManager.GetString("AccessibilityDateTime", resourceCulture);
             }
         }
+
+        internal static string AccessibilityTimeSpan {
+            get {
+                return ResourceManager.GetString("AccessibilityTimeSpan", resourceCulture);
+            }
+        }
         
         internal static string AccessibilityXEditor {
             get {

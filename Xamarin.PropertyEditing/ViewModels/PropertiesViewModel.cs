@@ -605,6 +605,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(double), (tp,p,e,v) => new NumericPropertyViewModel<double?> (tp, p, e, v) },
 			{ typeof(int), (tp,p,e,v) => new NumericPropertyViewModel<int?> (tp, p, e, v) },
 			{ typeof(long), (tp,p,e,v) => new NumericPropertyViewModel<long?> (tp, p, e, v) },
+			{ typeof(TimeSpan), (tp,p,e,v) => new PropertyViewModel<TimeSpan> (tp, p, e, v) },
 			{ typeof(CommonSolidBrush), (tp,p,e,v) => new BrushPropertyViewModel (tp, p, e, v, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
 			{ typeof(CommonColor), (tp,p,e,v) => new BrushPropertyViewModel (tp, p, e, v, new[] {CommonBrushType.NoBrush, CommonBrushType.Solid, CommonBrushType.MaterialDesign, CommonBrushType.Resource }) },
 			{ typeof(CommonBrush), (tp,p,e,v) => new BrushPropertyViewModel (tp, p, e, v) },
