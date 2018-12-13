@@ -6,21 +6,12 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	public class CharTextField : NSTextField
 	{
+		string cachedValueString;
+		NSText CachedCurrentEditor { get; set; }
+
 		public event EventHandler ValidatedEditingEnded;
 
 		public override CoreGraphics.CGSize IntrinsicContentSize => new CoreGraphics.CGSize (30, 20);
-
-		NSText CachedCurrentEditor
-		{
-			get; set;
-		}
-
-		string cachedValueString;
-
-		public CharTextField ()
-		{
-
-		}
 
 		public override bool ShouldBeginEditing (NSText textObject)
 		{
@@ -43,10 +34,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	public class CharValidationDelegate : NSTextViewDelegate
 	{
-		protected CharTextField TextField
-		{
-			get; set;
-		}
+		protected CharTextField TextField { get; set; }
 
 		public CharValidationDelegate (CharTextField textField)
 		{
@@ -60,7 +48,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override bool TextShouldEndEditing (NSText textObject)
 		{
-			bool shouldEndEditing = false;
+			var shouldEndEditing = false;
 
 			if (!char.TryParse (textObject.Value, out var result)) {
 				TextField.ResetInvalidInput ();
@@ -79,5 +67,4 @@ namespace Xamarin.PropertyEditing.Mac
 			TextField.DidEndEditing (notification);
 		}
 	}
-
 }
