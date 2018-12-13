@@ -40,6 +40,10 @@
 		<value>{0} String Editor</value>
 		<comment>Editor for String Value</comment>
 	</data>
+  <data name="AccessibilityTimeSpan" xml:space="preserve">
+    <value>{0} TimeSpan Editor</value>
+    <comment>Editor for TimeSpan Value</comment>
+  </data>
 	<data name="AccessibilityXEditor" xml:space="preserve">
 		<value>{0} X Editor</value>
 		<comment>Editor for X Value</comment>
