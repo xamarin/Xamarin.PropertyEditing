@@ -10,6 +10,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 	{
 		public MockSampleControl ()
 		{
+			AddProperty<char> ("Char", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<bool> ("Boolean", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<bool> ("UnsetBoolean", ReadWrite, valueSources: ValueSources.Local);
 			AddProperty<int> ("Integer", ReadWrite);
