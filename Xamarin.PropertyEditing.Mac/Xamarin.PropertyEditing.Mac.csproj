@@ -159,6 +159,8 @@
     <Compile Include="Controls\Custom\CharTextField.cs" />
     <Compile Include="Controls\DateTimeEditorControl.cs" />
     <Compile Include="Controls\Custom\DateTimeTextField.cs" />
+    <Compile Include="Controls\TimeSpanEditorControl.cs" />
+    <Compile Include="Controls\Custom\TimeSpanTextField.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
