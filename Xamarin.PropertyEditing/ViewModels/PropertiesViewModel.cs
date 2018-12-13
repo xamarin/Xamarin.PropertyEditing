@@ -614,6 +614,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(IList), (tp,p,e,v) => new CollectionPropertyViewModel (tp, p ,e, v) },
 			{ typeof(BindingSource), (tp,p,e,v) => new PropertyViewModel<BindingSource> (tp, p, e, v) },
 			{ typeof(Resource), (tp,p,e,v) => new PropertyViewModel<Resource> (tp, p, e, v) },
+			{ typeof(TimeSpan), (tp,p,e,v) => new TimeSpanPropertyViewModel (tp, p, e, v) },
 			{ typeof(object), (tp,p,e,v) => new ObjectPropertyViewModel (tp, p, e, v) },
 			{ typeof(CommonRatio), (tp, p, e, v) => new RatioViewModel (tp, p, e, v) },
 		};

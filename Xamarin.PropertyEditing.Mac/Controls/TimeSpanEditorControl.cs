@@ -6,16 +6,16 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class CharValidationTextDelegate : IValidationTextDelegate
+	public class TimeSpanValidationTextDelegate : IValidationTextDelegate
 	{
-		public bool IsValid (NSText textObject) => char.TryParse (textObject.Value, out var result);
+		public bool IsValid (NSText textObject) => TimeSpan.TryParse (textObject.Value, out var result);
 	}
 
-	internal class CharEditorControl : PropertyEditorControl<PropertyViewModel<char>>
+	internal class TimeSpanEditorControl : PropertyEditorControl<PropertyViewModel<TimeSpan>>
 	{
-		public CharEditorControl ()
+		public TimeSpanEditorControl ()
 		{
-			StringEditor = new ValidationTextField (new CharValidationTextDelegate ()) {
+			StringEditor = new ValidationTextField (new TimeSpanValidationTextDelegate ()) {
 				BackgroundColor = NSColor.Clear,
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
@@ -25,10 +25,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			// update the value on keypress
 			StringEditor.Changed += (sender, e) => {
-				if (StringEditor.StringValue.Length > 0) {
-					ViewModel.Value = StringEditor.StringValue[0];
-				} else {
-					ViewModel.Value = default (char);
+				if (TimeSpan.TryParse (StringEditor.StringValue, out TimeSpan result)) {
+					ViewModel.Value = result;
 				}
 			};
 			AddSubview (StringEditor);

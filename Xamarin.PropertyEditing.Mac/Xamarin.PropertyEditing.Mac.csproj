@@ -144,7 +144,8 @@
     <Compile Include="Controls\EditorContainer.cs" />
     <Compile Include="Controls\Layout.cs" />
     <Compile Include="Controls\CharEditorControl.cs" />
-    <Compile Include="Controls\Custom\CharTextField.cs" />
+    <Compile Include="Controls\Custom\ValidationTextField.cs" />
+    <Compile Include="Controls\TimeSpanEditorControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

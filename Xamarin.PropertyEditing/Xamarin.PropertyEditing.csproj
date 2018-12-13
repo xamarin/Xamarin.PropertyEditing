@@ -172,6 +172,7 @@
     <Compile Include="ViewModels\CreateVariationEventArgs.cs" />
     <Compile Include="ViewModels\IPropertyValue.cs" />
     <Compile Include="ViewModels\CharPropertyViewModel.cs" />
+    <Compile Include="ViewModels\TimeSpanPropertyViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Themes\BaseThemeManager.cs" />
