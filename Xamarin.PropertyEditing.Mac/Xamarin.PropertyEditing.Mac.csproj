@@ -145,6 +145,8 @@
     <Compile Include="Controls\Custom\DynamicFillBox.cs" />
     <Compile Include="Controls\Custom\TabButton.cs" />
     <Compile Include="Controls\Custom\FocusableComboBox.cs" />
+    <Compile Include="Controls\DateTimeEditorControl.cs" />
+    <Compile Include="Controls\DateExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
