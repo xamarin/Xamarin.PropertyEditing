@@ -162,6 +162,7 @@
     <Compile Include="Controls\TimeSpanEditorControl.cs" />
     <Compile Include="Controls\Custom\TimeSpanTextField.cs" />
     <Compile Include="Controls\FilePathEditorControl.cs" />
+    <Compile Include="Controls\DirectoryPathEditorControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

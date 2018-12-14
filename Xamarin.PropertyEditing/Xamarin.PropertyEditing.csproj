@@ -173,6 +173,7 @@
     <Compile Include="ViewModels\CreateVariationEventArgs.cs" />
     <Compile Include="ViewModels\IPropertyValue.cs" />
     <Compile Include="FilePath.cs" />
+    <Compile Include="DirectoryPath.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
