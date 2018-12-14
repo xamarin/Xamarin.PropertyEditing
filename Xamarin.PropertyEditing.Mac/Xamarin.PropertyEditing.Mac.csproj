@@ -149,6 +149,7 @@
     <Compile Include="Controls\Custom\DateTimeTextField.cs" />
     <Compile Include="Controls\TimeSpanEditorControl.cs" />
     <Compile Include="Controls\Custom\TimeSpanTextField.cs" />
+    <Compile Include="Controls\FilePathEditorControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
