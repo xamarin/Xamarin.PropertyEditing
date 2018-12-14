@@ -171,6 +171,7 @@
     <Compile Include="IReadOnlyOrderedDictionary.cs" />
     <Compile Include="ViewModels\CreateVariationEventArgs.cs" />
     <Compile Include="ViewModels\IPropertyValue.cs" />
+    <Compile Include="Common\FilePath.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

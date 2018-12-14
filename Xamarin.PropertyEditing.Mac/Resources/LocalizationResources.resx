@@ -121,5 +121,25 @@
   <data name="AccessibilityInpueModeEditor" xml:space="preserve">
     <value>{0} InputMode Editor</value>
     <comment>Editor for InputMode Value</comment>
+  </data>    
+  <data name="ChooseFileOrDirectory" xml:space="preserve">
+    <value>Choose a {0}</value>
+    <comment>Choose a File or Directory</comment>
+  </data>
+  <data name="BrowseFileOrDirectory" xml:space="preserve">
+    <value>Browse for a {0}</value>
+    <comment>Browse for a File or Directory</comment>
+  </data>
+  <data name="RevealFileOrDirectory" xml:space="preserve">
+    <value>Reveal {0}</value>
+    <comment>Reveal a File or Directory</comment>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
+    <comment>File</comment>
+  </data>
+   <data name="Directory" xml:space="preserve">
+    <value>Directory</value>
+    <comment>Directory</comment>
   </data>
 </root>

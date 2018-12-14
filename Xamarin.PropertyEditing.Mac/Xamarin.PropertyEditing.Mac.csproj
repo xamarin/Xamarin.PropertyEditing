@@ -145,6 +145,8 @@
     <Compile Include="Controls\Custom\DynamicFillBox.cs" />
     <Compile Include="Controls\Custom\TabButton.cs" />
     <Compile Include="Controls\Custom\FocusableComboBox.cs" />
+    <Compile Include="Controls\FilePathEditorControl.cs" />
+    <Compile Include="Controls\Custom\TextFieldSmallButtonContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
@@ -326,6 +328,14 @@
     <BundleResource Include="Resources\group-by-category-16.png" />
     <BundleResource Include="Resources\sort-alphabetically-16.png" />
     <BundleResource Include="Resources\sort-alphabetically-16~dark.png" />
+    <BundleResource Include="Resources\path-reveal%402x.png" />
+    <BundleResource Include="Resources\path-reveal.png" />
+    <BundleResource Include="Resources\path-browse%402x.png" />
+    <BundleResource Include="Resources\path-browse.png" />
+    <BundleResource Include="Resources\path-browse~dark.png" />
+    <BundleResource Include="Resources\path-browse~dark%402x.png" />
+    <BundleResource Include="Resources\path-reveal~dark.png" />
+    <BundleResource Include="Resources\path-reveal~dark%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

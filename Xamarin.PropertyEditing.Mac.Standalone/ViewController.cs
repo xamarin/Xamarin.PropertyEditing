@@ -75,6 +75,7 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 				return;
 
 			IObjectEditor editor = await PropertyPanel.TargetPlatform.EditorProvider.GetObjectEditorAsync (mocked.MockedControl);
+			await mocked.MockedControl.SetInitialValuesAsync (editor);
 			await mocked.MockedControl.SetBrushInitialValueAsync (editor, new CommonSolidBrush (20, 120, 220, 240, "sRGB"));
 			await mocked.MockedControl.SetMaterialDesignBrushInitialValueAsync (editor, new CommonSolidBrush (0x65, 0x1F, 0xFF, 200));
 			await mocked.MockedControl.SetReadOnlyBrushInitialValueAsync (editor, new CommonSolidBrush (240, 220, 15, 190));
