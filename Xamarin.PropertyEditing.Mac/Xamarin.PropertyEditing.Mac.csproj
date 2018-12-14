@@ -159,6 +159,8 @@
     <Compile Include="Controls\CollectionEditorWindow.cs" />
     <Compile Include="Controls\CollectionEditorControl.cs" />
     <Compile Include="PropertyList.cs" />
+    <Compile Include="Controls\FilePathEditorControl.cs" />
+    <Compile Include="Controls\Custom\TextFieldSmallButtonContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
