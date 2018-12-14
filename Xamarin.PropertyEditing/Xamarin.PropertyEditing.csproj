@@ -172,6 +172,7 @@
     <Compile Include="ViewModels\CreateVariationEventArgs.cs" />
     <Compile Include="ViewModels\IPropertyValue.cs" />
     <Compile Include="FilePath.cs" />
+    <Compile Include="DirectoryPath.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Themes\BaseThemeManager.cs" />
