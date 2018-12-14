@@ -164,7 +164,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 						if (args.SelectedType == null)
 							return;
 
-						selectedType = await args.SelectedType;
+						try {
+							selectedType = await args.SelectedType;
+ 						} catch (OperationCanceledException) {
+							return;
+						}
 					}
 
 					await SetValueAsync (new ValueInfo<object> {
