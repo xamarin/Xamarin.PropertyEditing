@@ -39,6 +39,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
 			{typeof (NumericPropertyViewModel<>), typeof (NumericEditorControl<>)},
 			{typeof (PropertyViewModel<bool?>), typeof (BooleanEditorControl)},
+			{typeof (PropertyViewModel<FilePath>), typeof (FilePathEditorControl)},
 			{typeof (PredefinedValuesViewModel<>), typeof(PredefinedValuesEditor<>)},
 			{typeof (CombinablePropertyViewModel<>), typeof(CombinablePropertyEditor<>)},
 			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (CGPointEditorControl)},
