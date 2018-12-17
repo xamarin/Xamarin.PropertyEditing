@@ -30,6 +30,6 @@
 		<local:MockedWpfButton Grid.Row="3" Grid.Column="0" Click="Button_Click">Mocked WPF button</local:MockedWpfButton>
 		<Button Grid.Row="4" Grid.Column="0" Click="Button_Click">Actual WPF button</Button>
 
-		<xamarinprops:PropertyEditorPanel Name="panel" Grid.Row="1" Grid.RowSpan="4" Grid.Column="1" />
+		<xamarinprops:PropertyEditorPanel Name="panel" Grid.Row="1" Grid.RowSpan="4" Grid.Column="1" ArrangeMode="Category" />
 	</Grid>
 </Window>
