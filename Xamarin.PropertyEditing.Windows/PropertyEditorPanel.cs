@@ -102,7 +102,7 @@ namespace Xamarin.PropertyEditing.Windows
 			this.paneSelector.SelectedItemChanged += OnPaneChanged;
 			OnTargetPlatformChanged();
 
-			if (this.vm.SelectedObjects.Count > 0)
+			if (this.vm.SelectedObjects.Count > 0 || ArrangeMode != PropertyArrangeMode.Name)
 				OnArrangeModeChanged (ArrangeMode);
 		}
 
@@ -215,6 +215,9 @@ namespace Xamarin.PropertyEditing.Windows
 				itemsSource = new Binding ("ArrangedEditors");
 
 			this.items.SetBinding (ItemsControl.ItemsSourceProperty, itemsSource);
+
+			if (this.vm != null)
+				this.vm.ArrangeMode = newMode;
 		}
 	}
 
