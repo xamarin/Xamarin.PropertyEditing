@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.ComponentModel;
+
 using AppKit;
 using CoreGraphics;
-using System.Windows.Input;
 
 using Xamarin.PropertyEditing.Mac.Resources;
 
@@ -23,9 +22,14 @@ namespace Xamarin.PropertyEditing.Mac
 		public PropertyButton PropertyButton => this.propertyButton;
 
 
-		public BaseEditorControl ()
+		public BaseEditorControl (IHostResourceProvider hostResources)
 		{
-			this.propertyButton = new PropertyButton {
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			HostResources = hostResources;
+
+			this.propertyButton = new PropertyButton (hostResources) {
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
 
@@ -41,13 +45,9 @@ namespace Xamarin.PropertyEditing.Mac
 				AccessibilityHelp = LocalizationResources.AccessibilityActionButtonDescription,
 			};
 
-#if DESIGNER_DEBUG
-			this.actionButton.Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("action-warning-16");
-#endif
-
 			this.actionButton.Activated += (object sender, EventArgs e) => {
 				if (this.errorList != null) {
-					var Container = new ErrorMessageView (this.errorList);
+					var Container = new ErrorMessageView (HostResources, this.errorList);
 
 					var errorMessagePopUp = new NSPopover {
 						Behavior = NSPopoverBehavior.Semitransient,
@@ -73,25 +73,16 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.actionButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, DefaultActioButtonSize),
 				NSLayoutConstraint.Create (this.actionButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultActioButtonSize),
 			});
-
-			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
 		}
 
-		protected override void Dispose (bool disposing)
+		public override void ViewDidChangeEffectiveAppearance ()
 		{
-			if (disposing) {
-				PropertyEditorPanel.ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
-			}
+			this.actionButton.Image = this.actionButton.Enabled ? HostResources.GetNamedImage ("action-warning-16") : null;
 		}
 
-		void ThemeManager_ThemeChanged (object sender, EventArgs e)
+		protected IHostResourceProvider HostResources
 		{
-			UpdateTheme ();
-		}
-
-		protected void UpdateTheme ()
-		{
-			this.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
+			get;
 		}
 
 		protected void SetErrors (IEnumerable errors)
@@ -102,7 +93,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.actionButton.Hidden = !this.actionButton.Enabled;
 
 			// Using NSImageName.Caution for now, we can change this later at the designers behest
-			this.actionButton.Image = this.actionButton.Enabled ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("action-warning-16") : null;
+			this.actionButton.Image = this.actionButton.Enabled ? HostResources.GetNamedImage ("action-warning-16") : null;
 		}
 
 		void NotifyActionButtonClicked ()

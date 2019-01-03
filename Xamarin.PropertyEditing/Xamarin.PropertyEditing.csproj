@@ -173,10 +173,6 @@
     <Compile Include="ViewModels\IPropertyValue.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Themes\BaseThemeManager.cs" />
-    <Compile Include="Themes\PropertyEditorTheme.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

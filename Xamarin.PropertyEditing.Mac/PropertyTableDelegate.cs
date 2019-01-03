@@ -12,9 +12,15 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class PropertyTableDelegate
 		: NSOutlineViewDelegate
 	{
-		public PropertyTableDelegate (PropertyTableDataSource datasource)
+		public PropertyTableDelegate (IHostResourceProvider hostResources, PropertyTableDataSource dataSource)
 		{
-			this.dataSource = datasource;
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+			if (dataSource == null)
+				throw new ArgumentNullException (nameof (dataSource));
+
+			this.hostResources = hostResources;
+			this.dataSource = dataSource;
 		}
 
 		public void UpdateExpansions (NSOutlineView outlineView)
@@ -68,7 +74,7 @@ namespace Xamarin.PropertyEditing.Mac
 			NSView editorOrContainer = null;
 			if (this.firstCache.TryGetValue (cellIdentifier, out IEditorView editor)) {
 				this.firstCache.Remove (cellIdentifier);
-				editorOrContainer = (editor.NativeView is PropertyEditorControl) ? new EditorContainer (editor) : editor.NativeView;
+				editorOrContainer = (editor.NativeView is PropertyEditorControl) ? new EditorContainer (this.hostResources, editor) : editor.NativeView;
 			} else {
 				editorOrContainer = GetEditor (cellIdentifier, evm, outlineView);
 				editor = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
@@ -187,6 +193,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private bool isExpanding;
 		private readonly PropertyEditorSelector editorSelector = new PropertyEditorSelector ();
 
+		private readonly IHostResourceProvider hostResources;
 		private readonly Dictionary<string, EditorRegistration> registrations = new Dictionary<string, EditorRegistration> ();
 		private readonly Dictionary<string, IEditorView> firstCache = new Dictionary<string, IEditorView> ();
 
@@ -197,7 +204,7 @@ namespace Xamarin.PropertyEditing.Mac
 				return view;
 
 			if (vm != null) {
-				IEditorView editor = this.editorSelector.GetEditor (vm);
+				IEditorView editor = this.editorSelector.GetEditor (this.hostResources, vm);
 
 				var editorControl = editor?.NativeView as PropertyEditorControl;
 				if (editorControl != null) {
@@ -207,9 +214,9 @@ namespace Xamarin.PropertyEditing.Mac
 					return editor.NativeView;
 				}
 
-				return new EditorContainer (editor) { Identifier = identifier };
+				return new EditorContainer (this.hostResources, editor) { Identifier = identifier };
 			} else
-				return new PanelHeaderEditorControl ();
+				return new PanelHeaderEditorControl (this.hostResources);
 		}
 
 		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out EditorViewModel vm, out PanelGroupViewModel group, out string cellIdentifier)

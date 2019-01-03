@@ -11,7 +11,8 @@ namespace Xamarin.PropertyEditing.Mac
 	internal abstract class SizeEditorControl<T> : BasePointEditorControl<T>
 		where T : struct
 	{
-		public SizeEditorControl ()
+		public SizeEditorControl (IHostResourceProvider hostResource)
+			: base (hostResource)
 		{
 			XLabel.Frame = new CGRect (20, -5, 50, 22);
 			XLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
@@ -38,8 +39,14 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class SystemSizeEditorControl : SizeEditorControl<Size>
+	internal class SystemSizeEditorControl
+		: SizeEditorControl<Size>
 	{
+		public SystemSizeEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
+		{
+		}
+
 		protected override void UpdateValue ()
 		{
 			XEditor.Value = ViewModel.Value.Width;
@@ -47,8 +54,14 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class CommonSizeEditorControl : SizeEditorControl<CommonSize>
+	internal class CommonSizeEditorControl
+		: SizeEditorControl<CommonSize>
 	{
+		public CommonSizeEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
+		{
+		}
+
 		protected override void UpdateValue ()
 		{
 			XEditor.Value = ViewModel.Value.Width;

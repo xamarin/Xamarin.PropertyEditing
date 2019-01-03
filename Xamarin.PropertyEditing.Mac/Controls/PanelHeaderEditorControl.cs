@@ -12,8 +12,13 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class PanelHeaderEditorControl
 		: NSView
 	{
-		public PanelHeaderEditorControl ()
+		public PanelHeaderEditorControl (IHostResourceProvider hostResources)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			this.hostResources = hostResources;
+
 			NSControlSize controlSize = NSControlSize.Small;
 			TranslatesAutoresizingMaskIntoConstraints = false;
 
@@ -103,6 +108,8 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.propertyObjectName.NextKeyView = nextKeyView;
 		}
+
+		private readonly IHostResourceProvider hostResources;
 
 		private NSImageView propertyIcon;
 		private NSTextField propertyObjectName;

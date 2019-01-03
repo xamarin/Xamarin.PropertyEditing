@@ -53,6 +53,22 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+		public IHostResourceProvider HostResourceProvider
+		{
+			get => this.hostResources;
+			set
+			{
+				if (this.hostResources == value)
+					return;
+				if (value == null)
+					throw new ArgumentNullException (nameof (value), "Cannot set HostResourceProvider to null");
+
+				this.hostResources = value;
+				if (this.propertyTable.Delegate != null)
+					this.propertyTable.Delegate = new PropertyTableDelegate (value, this.dataSource);
+			}
+		}
+
 		public TargetPlatform TargetPlatform
 		{
 			get { return this.targetPlatform; }
@@ -66,7 +82,7 @@ namespace Xamarin.PropertyEditing.Mac
 				this.targetPlatform = value;
 				this.viewModel = new PanelViewModel (value);
 				this.dataSource = new PropertyTableDataSource (this.viewModel);
-				this.propertyTable.Delegate = new PropertyTableDelegate (this.dataSource);
+				this.propertyTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
 				this.propertyTable.DataSource = this.dataSource;
 
 				OnVmPropertyChanged (this.viewModel, new PropertyChangedEventArgs (null));
@@ -87,8 +103,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public ICollection<object> SelectedItems => this.viewModel.SelectedObjects;
 
-		public static Themes.MacThemeManager ThemeManager = new Themes.MacThemeManager ();
-
 		public void Select (IEnumerable<object> selectedItems)
 		{
 			if (selectedItems == null)
@@ -97,8 +111,16 @@ namespace Xamarin.PropertyEditing.Mac
 			((ObservableCollectionEx<object>)SelectedItems).Reset (selectedItems);
 		}
 
+		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			this.propertyArrangeMode.Font = HostResourceProvider.GetNamedFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize);
+			this.propertyFilter.Font = HostResourceProvider.GetNamedFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize);
+
+			this.propertyTable.BackgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
+		}
+
+		private IHostResourceProvider hostResources = new HostResourceProvider ();
 		private bool isArrangeEnabled = true;
-		// when this property changes, need to create new datasource
 		private TargetPlatform targetPlatform;
 		private NSOutlineView propertyTable;
 		private PropertyTableDataSource dataSource;
@@ -127,7 +149,6 @@ namespace Xamarin.PropertyEditing.Mac
 			this.propertyArrangeMode = new NSComboBox {
 				ControlSize = controlSize,
 				Editable = false,
-				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
@@ -138,7 +159,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.propertyFilter = new NSSearchField {
 				ControlSize = controlSize,
-				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
 				PlaceholderString = LocalizationResources.PropertyFilterLabel,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
@@ -192,21 +212,7 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (tableContainer, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1f, -37f),
 			});
 
-			ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
-
-			UpdateTheme ();
-		}
-
-		protected override void Dispose (bool disposing)
-		{
-			if (disposing) {
-				PropertyEditorPanel.ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
-			}
-		}
-
-		private void ThemeManager_ThemeChanged (object sender, EventArgs e)
-		{
-			UpdateTheme ();
+			ViewDidChangeEffectiveAppearance ();
 		}
 
 		private void OnPropertiesChanged (object sender, EventArgs e)
@@ -226,11 +232,6 @@ namespace Xamarin.PropertyEditing.Mac
 			this.viewModel.FilterText = this.propertyFilter.Cell.Title;
 
 			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
-		}
-
-		private void UpdateTheme ()
-		{
-			Appearance = ThemeManager.CurrentAppearance;
 		}
 
 		private void OnVmPropertyChanged (object sender, PropertyChangedEventArgs e)

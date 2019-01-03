@@ -720,8 +720,8 @@
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="qr0-t0-q16">
                                     <font key="font" metaFont="system"/>
                                     <segments>
-                                        <segment label="Dark" width="61" selected="YES"/>
-                                        <segment label="Light" width="61" tag="1"/>
+                                        <segment label="Dark" width="61"/>
+                                        <segment label="Light" width="61" selected="YES" tag="1"/>
                                         <segment label="None"/>
                                     </segments>
                                 </segmentedCell>

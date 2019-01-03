@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections;
-using System.ComponentModel;
 using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.Mac.Resources;
-using Xamarin.PropertyEditing.Themes;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class PropertyButton : UnfocusableButton
+	public class PropertyButton
+		: UnfocusableButton
 	{
 		public const int DefaultSize = 20;
 
@@ -31,12 +29,17 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public PropertyButton ()
+		public PropertyButton (IHostResourceProvider hostResources)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			this.hostResources = hostResources;
+
 			AccessibilityTitle = LocalizationResources.AccessibilityPropertiesButton;
 			AccessibilityHelp = LocalizationResources.AccessibilityPropertiesButtonDescription;
 			Enabled = true;
-			Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-10");
+			Image = this.hostResources.GetNamedImage ("property-button-default-mac-10");
 			ImageScaling = NSImageScale.None;
 			ToolTip = Properties.Resources.Default;
 
@@ -107,12 +110,13 @@ namespace Xamarin.PropertyEditing.Mac
 			NSMenu.PopUpContextMenu (popUpContextMenu, popupMenuEvent, this);
 		}
 
-		protected override void UpdateTheme ()
+		public override void ViewDidChangeEffectiveAppearance ()
 		{
-			base.UpdateTheme ();
-
+			base.ViewDidChangeEffectiveAppearance ();
 			ToggleFocusImage ();
 		}
+
+		private readonly IHostResourceProvider hostResources;
 
 		private void ToggleFocusImage (bool focused = false)
 		{
@@ -120,27 +124,27 @@ namespace Xamarin.PropertyEditing.Mac
 				
 				switch (viewModel.ValueSource) {
 				case ValueSource.Binding:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-bound-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-bound-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("property-button-bound-mac-active-10") : this.hostResources.GetNamedImage ("property-button-bound-mac-10");
 					break;
 
 				case ValueSource.Default:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("property-button-default-mac-10");
 					break;
 
 				case ValueSource.Local:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-local-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-local-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("property-button-local-mac-active-10") : this.hostResources.GetNamedImage ("property-button-local-mac-10");
 					break;
 
 				case ValueSource.Inherited:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("property-button-inherited-mac-10");
 					break;
 
 				case ValueSource.Resource:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-inherited-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("property-button-inherited-mac-10");
 					break;
 
 				case ValueSource.Unset:
-					Image = focused ? PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-active-10") : PropertyEditorPanel.ThemeManager.GetImageForTheme ("property-button-default-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("property-button-default-mac-10");
 					break;
 
 				default:
@@ -183,8 +187,6 @@ namespace Xamarin.PropertyEditing.Mac
 					ToolTip = string.Empty;
 					break;
 			}
-
-			UpdateTheme ();
 		}
 
 		private void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -196,7 +198,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnCustomExpression (object sender, EventArgs e)
 		{
-			var customExpressionView = new CustomExpressionView (viewModel);
+			var customExpressionView = new CustomExpressionView (this.hostResources, viewModel);
 
 			var customExpressionPopOver = new AutoClosePopOver {
 				ContentViewController = new NSViewController (null, null) { View = customExpressionView },
@@ -207,7 +209,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnResourceRequested (object sender, EventArgs e)
 		{
-			var requestResourceView = new RequestResourceView (this.viewModel);
+			var requestResourceView = new RequestResourceView (this.hostResources, this.viewModel);
 
 			var resourceSelectorPopOver = new AutoClosePopOver {
 				ContentViewController = new NSViewController (null, null) { View = requestResourceView },

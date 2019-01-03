@@ -2,9 +2,11 @@
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class ComponentSpinEditor : NumericSpinEditor
+	internal class ComponentSpinEditor
+		: NumericSpinEditor
 	{
-		public ComponentSpinEditor (ChannelEditor component)
+		public ComponentSpinEditor (IHostResourceProvider hostResources, ChannelEditor component)
+			: base (hostResources)
 		{
 			ComponentEditor = component;
 			MinimumValue = component.MinimumValue;

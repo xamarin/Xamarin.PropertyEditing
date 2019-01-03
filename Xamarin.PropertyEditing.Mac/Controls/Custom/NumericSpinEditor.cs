@@ -1,17 +1,22 @@
 ﻿using System;
+
 using AppKit;
 using CoreGraphics;
 using Foundation;
-using Xamarin.PropertyEditing.Drawing;
-using Xamarin.PropertyEditing.Themes;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class NumericSpinEditor<T> : NumericSpinEditor
+	internal class NumericSpinEditor<T>
+		: NumericSpinEditor
 	{
+		public NumericSpinEditor (IHostResourceProvider hostResources)
+			: base (hostResources)
+		{
+		}
 	}
 
-	internal class NumericSpinEditor : NSView, INSAccessibilityGroup
+	internal class NumericSpinEditor
+		: NSView, INSAccessibilityGroup
 	{
 		const int stepperSpace = 2;
 		const int stepperWidth = 11;
@@ -24,13 +29,13 @@ namespace Xamarin.PropertyEditing.Mac
 			get { return this.numericEditor; }
 		}
 
-		private UpSpinnerButton incrementButton;
-		public UpSpinnerButton IncrementButton {
+		private SpinnerButton incrementButton;
+		public SpinnerButton IncrementButton {
 			get { return this.incrementButton; }
 		}
 
-		private DownSpinnerButton decrementButton;
-		public DownSpinnerButton DecrementButton {
+		private SpinnerButton decrementButton;
+		public SpinnerButton DecrementButton {
 			get { return this.decrementButton; }
 		}
 
@@ -166,16 +171,19 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		public NumericSpinEditor ()
+		public NumericSpinEditor (IHostResourceProvider hostResources)
 		{
-			TranslatesAutoresizingMaskIntoConstraints = false;
-			var controlSize = NSControlSize.Small;
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
 
-			incrementButton = new UpSpinnerButton {
+			this.hostResources = hostResources;
+			TranslatesAutoresizingMaskIntoConstraints = false;
+
+			this.incrementButton = new SpinnerButton (this.hostResources, isUp: true) {
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
 
-			decrementButton = new DownSpinnerButton {
+			this.decrementButton = new SpinnerButton (this.hostResources, isUp: false) {
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
 
@@ -188,13 +196,15 @@ namespace Xamarin.PropertyEditing.Mac
 				NumberStyle = NSNumberFormatterStyle.Decimal,
 				UsesGroupingSeparator = false 
 			};
-			if (DisplayFormat != null) this.formatter.PositiveFormat = DisplayFormat;
+
+			if (DisplayFormat != null)
+				this.formatter.PositiveFormat = DisplayFormat;
 
 			this.numericEditor = new NumericTextField {
 				Alignment = NSTextAlignment.Right,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
-				ControlSize = controlSize,
+				ControlSize = NSControlSize.Small,
 				Formatter = this.formatter
 			};
 
@@ -224,27 +234,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, stepperWidth),
 				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, stepperBotHeight),
 			});
-
-			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
-
-			UpdateTheme ();
-		}
-
-		protected override void Dispose (bool disposing)
-		{
-			if (disposing) {
-				PropertyEditorPanel.ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
-			}
-		}
-
-		void ThemeManager_ThemeChanged (object sender, EventArgs e)
-		{
-			UpdateTheme ();
-		}
-
-		protected void UpdateTheme ()
-		{
-			Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
 		}
 
 		virtual protected void OnEditingEnded (object sender, EventArgs e)
@@ -306,5 +295,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			return (double)Decimal.Round ((decimal)(value < MinimumValue ? MinimumValue : value > MaximumValue ? MaximumValue : value), Digits);
 		}
+
+		private readonly IHostResourceProvider hostResources;
 	}
 }

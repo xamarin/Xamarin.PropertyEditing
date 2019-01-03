@@ -10,3 +10,4 @@ obj
 /out
 .vs
 packages
+.DS_Store

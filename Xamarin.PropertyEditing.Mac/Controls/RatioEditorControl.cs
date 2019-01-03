@@ -11,11 +11,12 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		private RatioEditor<T> ratioEditor;
 
-		public RatioEditorControl ()
+		public RatioEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			this.ratioEditor = new RatioEditor<T> {
+			this.ratioEditor = new RatioEditor<T> (hostResources) {
 				AllowNegativeValues = false,
 				AllowRatios = true,
 				BackgroundColor = NSColor.Clear,
@@ -36,8 +37,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -32f),
 				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
 			});
-
-			UpdateTheme ();
 		}
 
 		public override NSView FirstKeyView => ratioEditor.NumericEditor;

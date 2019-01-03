@@ -1,4 +1,5 @@
 using System;
+using AppKit;
 using CoreAnimation;
 using CoreGraphics;
 
@@ -9,8 +10,12 @@ namespace Xamarin.PropertyEditing.Mac
 		private const float Margin = 3;
 		private const float BorderRadius = 3;
 
-		public HistoryLayer ()
+		public HistoryLayer (IHostResourceProvider hostResources)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			this.hostResources = hostResources;
 			clip.AddSublayer (previous);
 			clip.AddSublayer (current);
 			AddSublayer (clip);
@@ -22,6 +27,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
+		private readonly IHostResourceProvider hostResources;
 		private readonly CALayer previous = new UnanimatedLayer ();
 		private readonly CALayer current = new UnanimatedLayer ();
 		private readonly CALayer last = new UnanimatedLayer ();
@@ -56,8 +62,11 @@ namespace Xamarin.PropertyEditing.Mac
 				Bounds.Width - Bounds.Height + Margin,
 				Bounds.Height).Inset (Margin, Margin);
 
-			this.clip.Contents = DrawingExtensions.GenerateCheckerboard (this.clip.Bounds);
-			this.lastClip.Contents = DrawingExtensions.GenerateCheckerboard (this.last.Bounds);
+			NSColor cc0 = this.hostResources.GetNamedColor (NamedResources.Checkerboard0Color);
+			NSColor cc1 = this.hostResources.GetNamedColor (NamedResources.Checkerboard1Color);
+
+			this.clip.Contents = DrawingExtensions.GenerateCheckerboard (this.clip.Bounds, cc0, cc1);
+			this.lastClip.Contents = DrawingExtensions.GenerateCheckerboard (this.last.Bounds, cc0, cc1);
 			this.last.Frame = this.lastClip.Bounds;
 
 			var width = clip.Frame.Width / 2;

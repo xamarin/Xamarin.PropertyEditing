@@ -49,13 +49,18 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class BrushEditorControl : PropertyEditorControl<BrushPropertyViewModel>
 	{
-		public BrushEditorControl ()
+		public BrushEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			TranslatesAutoresizingMaskIntoConstraints = false;
 
+			this.previewLayer = new CommonBrushLayer (hostResources) {
+				Frame = new CGRect (0, 0, 30, 10)
+			};
+
 			this.popover = new NSPopover {
 				Behavior = NSPopoverBehavior.Transient,
-				ContentViewController = this.brushTabViewController = new BrushTabViewController {
+				ContentViewController = this.brushTabViewController = new BrushTabViewController (hostResources) {
 					PreferredContentSize = new CGSize (430, 263)
 				}
 			};
@@ -75,8 +80,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -33f),
 				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
 			});
-
-			UpdateTheme ();
 		}
 
 
@@ -84,9 +87,7 @@ namespace Xamarin.PropertyEditing.Mac
 		readonly NSPopover popover;
 		readonly BrushTabViewController brushTabViewController;
 		readonly NSMenu popupButtonList;
-		readonly CommonBrushLayer previewLayer = new CommonBrushLayer {
-			Frame = new CGRect (0, 0, 30, 10)
-		};
+		readonly CommonBrushLayer previewLayer;
 
 		public override NSView FirstKeyView => this.popUpButton;
 		public override NSView LastKeyView => this.popUpButton;

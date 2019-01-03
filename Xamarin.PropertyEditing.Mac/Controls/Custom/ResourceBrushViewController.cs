@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using AppKit;
 using CoreGraphics;
-using Foundation;
-using Xamarin.PropertyEditing.Drawing;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -13,12 +9,12 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class ResourceBrushViewController : NotifyingViewController<BrushPropertyViewModel>
 	{
 		private ResourceOutlineView resourceSelector;
-		private ResourceBrushPropertyViewDelegate viewDelegate;
+		private readonly ResourceBrushPropertyViewDelegate viewDelegate;
 
-		public ResourceBrushViewController ()
+		public ResourceBrushViewController (IHostResourceProvider hostResources)
 		{
 			PreferredContentSize = new CGSize (430, 230);
-			viewDelegate = new ResourceBrushPropertyViewDelegate ();
+			this.viewDelegate = new ResourceBrushPropertyViewDelegate (hostResources);
 		}
 
 		private Resource resource;

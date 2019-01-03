@@ -41,22 +41,13 @@ namespace Xamarin.PropertyEditing.Mac
 		public UnfocusableTextField ()
 		{
 			SetDefaultTextProperties ();
-			SetTheming ();
 		}
 
 		public UnfocusableTextField (CGRect frameRect, string text) : base (frameRect)
 		{
 			SetDefaultTextProperties ();
-			SetTheming ();
 
 			StringValue = text;
-		}
-
-		protected override void Dispose (bool disposing)
-		{
-			if (disposing) {
-				PropertyEditorPanel.ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
-			}
 		}
 
 		private void SetDefaultTextProperties ()
@@ -83,23 +74,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.label, NSLayoutAttribute.Leading, 1f, 0f),
 				NSLayoutConstraint.Create (this, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, this.label, NSLayoutAttribute.Trailing, 1f, 0f)
 			});
-		}
-
-		private void SetTheming ()
-		{
-			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
-
-			UpdateTheme ();
-		}
-
-		private void ThemeManager_ThemeChanged (object sender, EventArgs e)
-		{
-			UpdateTheme ();
-		}
-
-		protected void UpdateTheme ()
-		{
-			Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
 		}
 	}
 }

@@ -13,7 +13,8 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class BrushTabViewController
 		: UnderlinedTabViewController<BrushPropertyViewModel>, IEditorView
 	{
-		public BrushTabViewController ()
+		public BrushTabViewController (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			PreferredContentSize = new CGSize (430, 230);
 			TransitionOptions = NSViewControllerTransitionOptions.None;
@@ -86,7 +87,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				switch (kvp.Value) {
 					case CommonBrushType.Solid:
-						var solid = new SolidColorBrushEditorViewController ();
+						var solid = new SolidColorBrushEditorViewController (HostResources);
 						solid.ViewModel = ViewModel;
 						item.ViewController = solid;
 						item.ToolTip = Properties.Resources.SolidBrush;
@@ -94,7 +95,7 @@ namespace Xamarin.PropertyEditing.Mac
 						break;
 
 					case CommonBrushType.MaterialDesign:
-						var material = new MaterialBrushEditorViewController ();
+						var material = new MaterialBrushEditorViewController (HostResources);
 						material.ViewModel = ViewModel;
 						item.ViewController = material;
 						item.ToolTip = Properties.Resources.MaterialDesignColorBrush;
@@ -102,7 +103,7 @@ namespace Xamarin.PropertyEditing.Mac
 						break;
 
 					case CommonBrushType.Resource:
-						this.resource = new ResourceBrushViewController ();
+						this.resource = new ResourceBrushViewController (HostResources);
 						this.resource.ViewModel = ViewModel;
 						item.ViewController = this.resource;
 						item.ToolTip = Properties.Resources.ResourceBrush;

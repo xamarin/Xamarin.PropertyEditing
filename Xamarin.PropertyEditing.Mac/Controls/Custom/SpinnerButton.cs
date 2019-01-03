@@ -1,49 +1,52 @@
 ﻿using System;
 using AppKit;
 using ObjCRuntime;
-using Xamarin.PropertyEditing.Themes;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class UpSpinnerButton : UnfocusableButton
+	internal class SpinnerButton
+		: UnfocusableButton
 	{
-		public UpSpinnerButton ()
+		public SpinnerButton (IHostResourceProvider hostResource, bool isUp)
 		{
-			OnMouseEntered += (sender, e) => {
-				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("stepper-up-focus-blue");
-			};
+			if (hostResource == null)
+				throw new ArgumentNullException (nameof (hostResource));
 
-			OnMouseExited += (sender, e) => {
-				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("stepper-up");
-			};
+			this.hostResources = hostResource;
+			this.imageBase += (isUp) ? "up" : "down";
 		}
 
-		protected override void UpdateTheme ()
+		public override void MouseExited (NSEvent theEvent)
 		{
-			base.UpdateTheme ();
-
-			Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("stepper-up");
-		}
-	}
-
-	public class DownSpinnerButton : UnfocusableButton
-	{
-		public DownSpinnerButton ()
-		{
-			OnMouseEntered += (sender, e) => {
-				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("stepper-down-focus-blue");
-			};
-
-			OnMouseExited += (sender, e) => {
-				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("stepper-down");
-			};
+			this.isMouseOver = false;
+			UpdateImage ();
 		}
 
-		protected override void UpdateTheme ()
+		public override void MouseEntered (NSEvent theEvent)
 		{
-			base.UpdateTheme ();
+			this.isMouseOver = true;
+			UpdateImage ();
+		}
 
-			Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("stepper-down");
+		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			base.ViewDidChangeEffectiveAppearance ();
+			this.image = this.hostResources.GetNamedImage (this.imageBase);
+			this.mouseOverImage = this.hostResources.GetNamedImage (this.imageBase + "-focus-blue");
+
+			UpdateImage ();
+		}
+
+		private readonly IHostResourceProvider hostResources;
+		private bool isMouseOver;
+		private string imageBase = "stepper-";
+
+		private NSImage image;
+		private NSImage mouseOverImage;
+
+		private void UpdateImage ()
+		{
+			Image = (this.isMouseOver) ? this.mouseOverImage : Image;
 		}
 	}
 }

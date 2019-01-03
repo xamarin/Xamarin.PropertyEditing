@@ -15,18 +15,15 @@ namespace Xamarin.PropertyEditing.Mac
 
 		NSView IValueView.NativeView => this;
 
-		public CommonBrushView ()
+		public CommonBrushView (IHostResourceProvider hostResources)
 		{
-			Initialize ();
+			Initialize (hostResources);
 		}
 
-		public CommonBrushView (CGRect frame) : base (frame)
+		public CommonBrushView (IHostResourceProvider hostResources, CGRect frame)
+			: base (frame)
 		{
-			Initialize ();
-		}
-
-		public CommonBrushView (IntPtr handle) : base (handle)
-		{
+			Initialize (hostResources);
 		}
 
 		void IValueView.SetValue (object value)
@@ -38,10 +35,10 @@ namespace Xamarin.PropertyEditing.Mac
 			Brush = brush;
 		}
 
-		private void Initialize () {
+		private void Initialize (IHostResourceProvider hostResources)
+		{
 			WantsLayer = true;
-			Layer = new CommonBrushLayer
-			{
+			Layer = new CommonBrushLayer (hostResources) {
 				Brush = Brush
 			};
 		}

@@ -23,28 +23,29 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => XEditor;
 		public override NSView LastKeyView => HeightEditor.DecrementButton;
 
-		protected BaseRectangleEditorControl ()
+		protected BaseRectangleEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			XLabel = new UnfocusableTextField ();
-			XEditor = new NumericSpinEditor<T> ();
+			XEditor = new NumericSpinEditor<T> (hostResources);
 			XEditor.BackgroundColor = NSColor.Clear;
 			XEditor.Value = 0.0f;
 			XEditor.ValueChanged += OnInputUpdated;
 
 			YLabel =  new UnfocusableTextField ();
-			YEditor = new NumericSpinEditor<T> ();
+			YEditor = new NumericSpinEditor<T> (hostResources);
 			YEditor.BackgroundColor = NSColor.Clear;
 			YEditor.Value = 0.0f;
 			YEditor.ValueChanged += OnInputUpdated;
 
 			WidthLabel = new UnfocusableTextField ();
-			WidthEditor = new NumericSpinEditor<T> ();
+			WidthEditor = new NumericSpinEditor<T> (hostResources);
 			WidthEditor.BackgroundColor = NSColor.Clear;
 			WidthEditor.Value = 0.0f;
 			WidthEditor.ValueChanged += OnInputUpdated;
 
 			HeightLabel =  new UnfocusableTextField ();
-			HeightEditor = new NumericSpinEditor<T> ();
+			HeightEditor = new NumericSpinEditor<T> (hostResources);
 			HeightEditor.BackgroundColor = NSColor.Clear;
 			HeightEditor.Value = 0.0f;
 			HeightEditor.ValueChanged += OnInputUpdated;
@@ -72,7 +73,17 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (HeightEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
 			});
 
-			UpdateTheme ();
+			ViewDidChangeEffectiveAppearance ();
+		}
+
+		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			XLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
+			YLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
+			WidthLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
+			HeightLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
+
+			base.ViewDidChangeEffectiveAppearance ();
 		}
 
 		protected virtual void OnInputUpdated (object sender, EventArgs e)

@@ -12,9 +12,11 @@ using Xamarin.PropertyEditing.Mac.Resources;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class PredefinedValuesEditor<T> : PropertyEditorControl<PredefinedValuesViewModel<T>>
+	internal class PredefinedValuesEditor<T>
+		: PropertyEditorControl<PredefinedValuesViewModel<T>>
 	{
-		public PredefinedValuesEditor ()
+		public PredefinedValuesEditor (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
@@ -44,8 +46,6 @@ namespace Xamarin.PropertyEditing.Mac
 			this.popUpButton.Activated += (o, e) => {
 				ViewModel.ValueName = (o as NSPopUpButton).Title;
 			};
-
-			UpdateTheme ();
 		}
 
 		public override NSView FirstKeyView => this.firstKeyView;

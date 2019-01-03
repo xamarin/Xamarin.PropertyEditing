@@ -9,6 +9,14 @@ namespace Xamarin.PropertyEditing.Mac
 		: NotifyingTabViewController<TViewModel>
 		where TViewModel : NotifyingObject
 	{
+		public UnderlinedTabViewController (IHostResourceProvider hostResources)
+		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			HostResources = hostResources;
+		}
+
 		public override void InsertTabViewItem (NSTabViewItem tabViewItem, nint index)
 		{
 			this.tabStack.InsertView (GetView (tabViewItem), (nuint)index, NSStackViewGravity.Leading);
@@ -84,6 +92,11 @@ namespace Xamarin.PropertyEditing.Mac
 			View = this.outerStack;
 		}
 
+		protected IHostResourceProvider HostResources
+		{
+			get;
+		}
+
 		private IUnderliningTabView selected;
 		private NSStackView outerStack;
 		private NSStackView innerStack;
@@ -110,7 +123,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			NSView tabView;
 			if (item.Identifier != null) {
-				tabView = new UnderlinedImageView ((item.Identifier as NSString).ToString()) {
+				tabView = new UnderlinedImageView (HostResources, ((NSString)item.Identifier).ToString()) {
 					Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex,
 					ToolTip = item.ToolTip
 				};

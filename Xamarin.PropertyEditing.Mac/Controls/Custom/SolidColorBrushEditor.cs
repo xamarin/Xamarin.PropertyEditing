@@ -37,24 +37,29 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class SolidColorBrushEditor : ColorEditorView
+	internal class SolidColorBrushEditor
+		: ColorEditorView
 	{
-		public SolidColorBrushEditor (IntPtr handle) : base (handle)
+
+		public SolidColorBrushEditor (IHostResourceProvider hostResources, CGRect frame)
+			: base (frame)
 		{
+			Initialize (hostResources);
 		}
 
-		public SolidColorBrushEditor (CGRect frame) : base (frame)
+		public SolidColorBrushEditor (IHostResourceProvider hostResources)
 		{
-			Initialize ();
+			Initialize (hostResources);
 		}
 
-		public SolidColorBrushEditor () : base ()
+		private void Initialize (IHostResourceProvider hostResources)
 		{
-			Initialize ();
-		}
+			this.historyLayer = new HistoryLayer (hostResources);
 
-		private void Initialize ()
-		{
+			this.componentTabs = new ColorComponentTabViewController (hostResources) {
+				EditorType = ChannelEditorType.RGB
+			};
+
 			Layer = new CALayer ();
 			Layer.AddSublayer (background);
 			Layer.AddSublayer (shadeLayer);
@@ -65,15 +70,12 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (componentTabs.View);
 		}
 
-		private readonly ColorComponentTabViewController componentTabs = new ColorComponentTabViewController () {
-			EditorType = ChannelEditorType.RGB
-		};
-
 		public override bool AcceptsFirstResponder () => true;
 
 		private readonly ShadeLayer shadeLayer = new ShadeLayer ();
 		private readonly HueLayer hueLayer = new HueLayer ();
-		private readonly HistoryLayer historyLayer = new HistoryLayer ();
+		private HistoryLayer historyLayer;
+		private ColorComponentTabViewController componentTabs;
 
 		private readonly CALayer background = new CALayer {
 			CornerRadius = 3,

@@ -70,12 +70,9 @@
     <Compile Include="Controls\BooleanEditorControl.cs" />
     <Compile Include="Controls\ConstraintExtensions.cs" />
     <Compile Include="Controls\BaseRectangleEditorControl.cs" />
-    <Compile Include="Controls\CGRectEditorControl.cs" />
-    <Compile Include="Controls\CGPointEditorControl.cs" />
     <Compile Include="NSObjectFacade.cs" />
     <Compile Include="Controls\PredefinedValuesEditor.cs" />
     <Compile Include="Controls\BasePointEditorControl.cs" />
-    <Compile Include="Controls\CGSizeEditorControl.cs" />
     <Compile Include="Controls\PointEditorControl.cs" />
     <Compile Include="Controls\RectangleEditorControl.cs" />
     <Compile Include="Controls\SizeEditorControl.cs" />
@@ -143,19 +140,19 @@
     <Compile Include="PropertyInlinePreviewSelector.cs" />
     <Compile Include="Controls\EditorContainer.cs" />
     <Compile Include="Controls\Layout.cs" />
+    <Compile Include="IHostResourceProvider.cs" />
+    <Compile Include="HostResourceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
     <Folder Include="Controls\Custom\" />
     <Folder Include="Resources\" />
-    <Compile Include="Themes\MacThemeManager.cs" />
     <Compile Include="Controls\BaseEditorControl.cs" />
     <Compile Include="Controls\ErrorMessageView.cs" />
     <Folder Include="Controls\RequestResource\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
-    <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">

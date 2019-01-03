@@ -14,7 +14,8 @@ namespace Xamarin.PropertyEditing.Mac
 		const string CustomExpressionPropertyString = "CustomExpression";
 		PropertyInfo customExpressionPropertyInfo;
 
-		public CustomExpressionView (PropertyViewModel viewModel) : base (viewModel,  Properties.Resources.CustomExpression, "custom-expression-32")
+		public CustomExpressionView (IHostResourceProvider hostResources, PropertyViewModel viewModel)
+			: base (hostResources, viewModel,  Properties.Resources.CustomExpression, "custom-expression-32")
 		{
 			Frame = new CGRect (CGPoint.Empty, new CGSize (250, 80));
 
