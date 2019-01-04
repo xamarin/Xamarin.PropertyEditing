@@ -73,6 +73,14 @@ namespace Xamarin.PropertyEditing.Mac
 				if (this.viewModel != null) {
 					this.viewModel.ArrangedPropertiesChanged += OnPropertiesChanged;
 					this.viewModel.PropertyChanged += OnVmPropertyChanged;
+
+					this.propertyArrangeMode.RemoveAll ();
+					foreach (ArrangeModeViewModel item in this.viewModel.ArrangeModes) {
+						var itemAsString = new NSString (item.ArrangeMode.ToString ());
+						this.propertyArrangeMode.Add (itemAsString);
+						if (item.IsChecked)
+							this.propertyArrangeMode.Select (itemAsString);
+					}
 				}
 			}
 		}
@@ -122,12 +130,6 @@ namespace Xamarin.PropertyEditing.Mac
 				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
-
-			var enumValues = Enum.GetValues (typeof (PropertyArrangeMode));
-
-			foreach (var item in enumValues) {
-				this.propertyArrangeMode.Add (new NSString (item.ToString ())); // TODO May need translating
-			}
 
 			if (IsArrangeEnabled) {
 				AddSubview (this.propertyArrangeMode);
