@@ -1,6 +1,7 @@
 ﻿using System;
 using AppKit;
 using CoreGraphics;
+using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -36,6 +37,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public NSColor TextColor {
 			get { return this.label.TextColor; }
 			internal set { this.label.TextColor = value; }
+		}
+
+		public virtual NSBackgroundStyle BackgroundStyle
+		{
+			[Export ("backgroundStyle")] get => this.label.Cell.BackgroundStyle;
+			[Export ("setBackgroundStyle:")] set => this.label.Cell.BackgroundStyle = value;
 		}
 
 		public UnfocusableTextField ()
