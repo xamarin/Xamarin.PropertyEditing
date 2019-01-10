@@ -26,12 +26,21 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 				AutoExpandGroups = new[] { "ReadWrite" }
 			};
 
+			Application.Current.Resources.MergedDictionaries.Add (DarkTheme);
+
 #if USE_VS_ICONS
 			this.panel.Resources.MergedDictionaries.Add (new ResourceDictionary {
 				Source = new Uri ("pack://application:,,,/ProppyIcons.xaml", UriKind.RelativeOrAbsolute)
 			});
 #endif
 		}
+
+		private static readonly ResourceDictionary DarkTheme = new ResourceDictionary () {
+			Source = new Uri ("pack://application:,,,/Xamarin.PropertyEditing.Windows;component/Themes/VS.Dark.xaml")
+		};
+		private static readonly ResourceDictionary LightTheme = new ResourceDictionary () {
+			Source = new Uri ("pack://application:,,,/Xamarin.PropertyEditing.Windows;component/Themes/VS.Light.xaml")
+		};
 
 		private async void Button_Click (object sender, RoutedEventArgs e)
 		{
@@ -57,15 +66,18 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 		private void Theme_Click (object sender, RoutedEventArgs e)
 		{
 			if (e.Source is RadioButton rb) {
-				switch (rb.Content.ToString()) {
+				switch (rb.Content.ToString ()) {
 				case "Dark Theme":
-				PropertyEditorPanel.ThemeManager.Theme = PropertyEditing.Themes.PropertyEditorTheme.Dark;
+					Application.Current.Resources.MergedDictionaries.Remove (LightTheme);
+					Application.Current.Resources.MergedDictionaries.Add (DarkTheme);
 					break;
 				case "Light Theme":
-					PropertyEditorPanel.ThemeManager.Theme = PropertyEditing.Themes.PropertyEditorTheme.Light;
+					Application.Current.Resources.MergedDictionaries.Remove (DarkTheme);
+					Application.Current.Resources.MergedDictionaries.Add (LightTheme);
 					break;
 				default:
-					PropertyEditorPanel.ThemeManager.Theme = PropertyEditing.Themes.PropertyEditorTheme.None;
+					Application.Current.Resources.MergedDictionaries.Remove (LightTheme);
+					Application.Current.Resources.MergedDictionaries.Remove (DarkTheme);
 					break;
 				}
 			}

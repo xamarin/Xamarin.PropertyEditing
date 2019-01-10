@@ -140,7 +140,6 @@
     <Compile Include="SolidBrushEditorControl.cs" />
     <Compile Include="ThicknessEditorControl.cs" />
     <Compile Include="StringEditorControl.cs" />
-    <Compile Include="Themes\WinThemeManager.cs" />
     <Compile Include="TreeViewItemEx.cs" />
     <Compile Include="TypeSelectorControl.xaml.cs">
       <DependentUpon>TypeSelectorControl.xaml</DependentUpon>
