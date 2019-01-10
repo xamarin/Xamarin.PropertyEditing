@@ -187,6 +187,8 @@ namespace Xamarin.PropertyEditing.Mac
 					ToolTip = string.Empty;
 					break;
 			}
+
+			ToggleFocusImage ();
 		}
 
 		private void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)

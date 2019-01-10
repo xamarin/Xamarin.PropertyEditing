@@ -80,7 +80,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			// create a table view and a scroll view
 			var tableContainer = new NSScrollView (new CGRect (10, PreferredContentSize.Height - 210, PreferredContentSize.Width, PreferredContentSize.Height)) {
-				TranslatesAutoresizingMaskIntoConstraints = false,
+				AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable
 			};
 
 			// add the panel to the window

@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Linq;
+
 using AppKit;
+using CoreGraphics;
 using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -15,6 +16,26 @@ namespace Xamarin.PropertyEditing.Mac
 				throw new ArgumentNullException (nameof (hostResources));
 
 			HostResources = hostResources;
+
+			this.tabContainer = new DynamicFill (hostResources, null);
+			this.border = new DynamicFill (hostResources, null) {
+				Frame = new CGRect (0, 0, 1, 1),
+				BorderWidth = 0,
+				BoxType = NSBoxType.NSBoxCustom,
+				AutoresizingMask = NSViewResizingMask.WidthSizable,
+			};
+		}
+
+		public string TabBackgroundColor
+		{
+			get => this.tabContainer.FillColorName;
+			set => this.tabContainer.FillColorName = value;
+		}
+
+		public string TabBorderColor
+		{
+			get => this.border.FillColorName;
+			set => this.border.FillColorName = value;
 		}
 
 		public override void InsertTabViewItem (NSTabViewItem tabViewItem, nint index)
@@ -33,14 +54,12 @@ namespace Xamarin.PropertyEditing.Mac
 			base.RemoveTabViewItem (tabViewItem);
 		}
 
-		public NSEdgeInsets EdgeInsets {
+		/// <remarks>This doesn't actually support independent left/right padding, they'll be added and content centered.</remarks>
+		public NSEdgeInsets ContentPadding {
 			get => this.edgeInsets;
 			set {
 				this.edgeInsets = value;
-				if (this.outerStack != null) {
-					this.outerStack.EdgeInsets = value;
-					this.innerStack.EdgeInsets = value;
-				}
+				UpdatePadding ();
 			}
 		}
 
@@ -73,23 +92,26 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void LoadView ()
 		{
-			this.outerStack = new NSStackView () {
-				Orientation = NSUserInterfaceLayoutOrientation.Horizontal,
-				Spacing = 0,
-				EdgeInsets = new NSEdgeInsets (0, edgeInsets.Left, 0, edgeInsets.Right)
-			};
-
 			this.innerStack = new NSStackView () {
 				Spacing = 0,
 				Alignment = NSLayoutAttribute.Left,
 				Orientation = NSUserInterfaceLayoutOrientation.Vertical,
-				EdgeInsets = new NSEdgeInsets (edgeInsets.Top, 0, edgeInsets.Bottom, 0)
 			};
 
-			this.outerStack.AddView (this.innerStack, NSStackViewGravity.Leading);
-			this.innerStack.AddView (this.tabStack, NSStackViewGravity.Leading);
+			this.tabContainer.ContentView = this.tabStack;
+
+			this.innerStack.AddView (this.tabContainer, NSStackViewGravity.Top);
+			this.innerStack.AddView (border, NSStackViewGravity.Top);
 			this.innerStack.AddView (TabView, NSStackViewGravity.Bottom);
-			View = this.outerStack;
+
+			View = this.innerStack;
+
+			this.innerStack.AddConstraints (new[] {
+				NSLayoutConstraint.Create (this.tabContainer, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this.innerStack, NSLayoutAttribute.Width, 1, 0),
+				NSLayoutConstraint.Create (TabView, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, this.innerStack, NSLayoutAttribute.CenterX, 1, 0),
+			});
+
+			UpdatePadding ();
 		}
 
 		protected IHostResourceProvider HostResources
@@ -97,8 +119,10 @@ namespace Xamarin.PropertyEditing.Mac
 			get;
 		}
 
+		private NSLayoutConstraint sidePadding, topPadding, bottomPadding;
+
 		private IUnderliningTabView selected;
-		private NSStackView outerStack;
+		private DynamicFill tabContainer, border;
 		private NSStackView innerStack;
 		private NSStackView tabStack = new NSStackView () {
 			Spacing = 10f,
@@ -107,6 +131,62 @@ namespace Xamarin.PropertyEditing.Mac
 		protected NSStackView TabStack => this.tabStack;
 
 		private NSEdgeInsets edgeInsets = new NSEdgeInsets (0, 0, 0, 0);
+
+		private class DynamicFill
+			: NSBox
+		{
+			public DynamicFill (IHostResourceProvider hostResources, string colorName)
+			{
+				this.hostResources = hostResources;
+				BorderWidth = 0;
+				BoxType = NSBoxType.NSBoxCustom;
+				TranslatesAutoresizingMaskIntoConstraints = false;
+				this.colorName = colorName;
+				if (colorName == null)
+					FillColor = NSColor.Clear;
+
+				ViewDidChangeEffectiveAppearance ();
+			}
+
+			public string FillColorName
+			{
+				get => this.colorName;
+				set
+				{
+					this.colorName = value;
+					if (value == null)
+						FillColor = NSColor.Clear;
+
+					ViewDidChangeEffectiveAppearance ();
+				}
+			}
+
+			public override void ViewDidChangeEffectiveAppearance ()
+			{
+				if (this.colorName == null)
+					return;
+
+				FillColor = this.hostResources.GetNamedColor (this.colorName);
+			}
+
+			private readonly IHostResourceProvider hostResources;
+			private string colorName;
+		}
+
+		private void UpdatePadding()
+		{
+			if (this.innerStack == null)
+				return;
+
+			if (this.sidePadding != null)
+				this.innerStack.RemoveConstraints (new[] { this.sidePadding, this.topPadding, this.bottomPadding });
+
+			this.sidePadding = NSLayoutConstraint.Create (TabView, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this.innerStack, NSLayoutAttribute.Width, 1, -(ContentPadding.Left + ContentPadding.Right));
+			this.bottomPadding = NSLayoutConstraint.Create (TabView, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this.innerStack, NSLayoutAttribute.Bottom, 1, -(ContentPadding.Bottom));
+			this.topPadding = NSLayoutConstraint.Create (TabView, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.border, NSLayoutAttribute.Bottom, 1, ContentPadding.Top);
+
+			this.innerStack.AddConstraints (new[] { this.sidePadding, this.topPadding, this.bottomPadding });
+		}
 
 		private void SetSelected (int index)
 		{
@@ -121,9 +201,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private NSView GetView (NSTabViewItem item)
 		{
+			var id = item.Identifier as NSObjectFacade;
 			NSView tabView;
-			if (item.Identifier != null) {
-				tabView = new UnderlinedImageView (HostResources, ((NSString)item.Identifier).ToString()) {
+			if (id != null) {
+				tabView = new UnderlinedImageView (HostResources, ((string)id.Target)) {
 					Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex,
 					ToolTip = item.ToolTip
 				};

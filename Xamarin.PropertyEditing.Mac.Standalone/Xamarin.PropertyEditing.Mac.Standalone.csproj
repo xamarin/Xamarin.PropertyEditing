@@ -73,10 +73,9 @@
     <ImageAsset Include="Assets.xcassets\ForegroundColor.colorset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\PadBackgroundColor.colorset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\PopoverContentBackground.colorset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\SelectionBackgroundColor.colorset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\SelectionUnfocusedBackgroundColor.colorset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\ValueBlockBackgroundColor.colorset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\DescriptionLabelColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\TabBorderColor.colorset\Contents.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

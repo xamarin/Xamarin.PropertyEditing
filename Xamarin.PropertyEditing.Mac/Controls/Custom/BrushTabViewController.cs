@@ -16,9 +16,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public BrushTabViewController (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
-			PreferredContentSize = new CGSize (430, 230);
+			TabBorderColor = NamedResources.TabBorderColor;
+			TabBackgroundColor = NamedResources.PadBackgroundColor;
+
+			PreferredContentSize = new CGSize (430, 280);
 			TransitionOptions = NSViewControllerTransitionOptions.None;
-			EdgeInsets = new NSEdgeInsets (0, 12, 12, 12);
+			ContentPadding = new NSEdgeInsets (10, 10, 10, 10);
 
 			this.filterResource = new NSSearchField {
 				ControlSize = NSControlSize.Mini,
@@ -47,7 +50,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public nint GetHeight (EditorViewModel viewModel)
 		{
-			return (int)(PreferredContentSize.Height + EdgeInsets.Top + EdgeInsets.Bottom);
+			return (int)(PreferredContentSize.Height + ContentPadding.Top + ContentPadding.Bottom);
 		}
 
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
@@ -129,7 +132,7 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 
 				if (image != null) {
-					item.Identifier = new NSString (image); // Using the Identifier object, to avoid unused NSImage creation when selection happens in GetView ()
+					item.Identifier = new NSObjectFacade (image); // Using the Identifier object, to avoid unused NSImage creation when selection happens in GetView ()
 				}
 
 				InsertTabViewItem (item, i);

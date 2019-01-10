@@ -30,5 +30,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public const string ForegroundColor = "ForegroundColor";
 		public const string PadBackgroundColor = "PadBackgroundColor";
 		public const string DescriptionLabelColor = "DescriptionLabelColor";
+		public const string ValueBlockBackgroundColor = "ValueBlockBackgroundColor";
+		public const string TabBorderColor = "TabBorderColor";
 	}
 }

@@ -35,6 +35,7 @@ namespace Xamarin.PropertyEditing.Mac
 				BoxType = NSBoxType.NSBoxCustom,
 				BorderWidth = 0,
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				ContentViewMargins = new CGSize (0, 0)
 			};
 
 			this.container.AddView (this.host, NSStackViewGravity.Top);

@@ -28,7 +28,8 @@ namespace Xamarin.PropertyEditing.Mac
 					if (cbv == null) {
 						cbv = new CommonBrushView (this.hostResources) {
 							Identifier = resourceIdentifier,
-							Frame = new CGRect (0, 0, 30, 10),
+							Frame = new CGRect (0, 0, 30, 18),
+							AutoresizingMask = NSViewResizingMask.WidthSizable
 						};
 					}
 
@@ -49,12 +50,6 @@ namespace Xamarin.PropertyEditing.Mac
 					utf.StringValue = resource.Name;
 					return utf;
 			}
-		}
-
-
-		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
-		{
-			return PropertyEditorControl.DefaultControlHeight;
 		}
 
 		private const string labelIdentifier = "label";
