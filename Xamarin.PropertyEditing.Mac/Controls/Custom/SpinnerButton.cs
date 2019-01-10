@@ -14,6 +14,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.hostResources = hostResource;
 			this.imageBase += (isUp) ? "up" : "down";
+
+			ViewDidChangeEffectiveAppearance ();
 		}
 
 		public override void MouseExited (NSEvent theEvent)
@@ -30,7 +32,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ViewDidChangeEffectiveAppearance ()
 		{
-			base.ViewDidChangeEffectiveAppearance ();
 			this.image = this.hostResources.GetNamedImage (this.imageBase);
 			this.mouseOverImage = this.hostResources.GetNamedImage (this.imageBase + "-focus-blue");
 
@@ -46,7 +47,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void UpdateImage ()
 		{
-			Image = (this.isMouseOver) ? this.mouseOverImage : Image;
+			Image = (this.isMouseOver) ? this.mouseOverImage : this.image;
 		}
 	}
 }
