@@ -52,6 +52,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddReadOnlyProperty<CommonThickness> ("ReadOnlyThickness", ReadOnly);
 
 			AddProperty<NotImplemented> ("Uncategorized", None);
+			AddProperty<string> ("ReadOnlyStringWithInputMode", ReadOnly, canWrite: false, flag: true, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding, inputModes: new[] { new InputMode ("Auto", true), new InputMode ("Star"), new InputMode ("Pixel"), });
+			AddProperty<string> ("StringWithInputMode", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding, inputModes: new[] { new InputMode ("Auto", true), new InputMode ("Star"), new InputMode ("Pixel"), });
 
 			// TODO: Move the declaration of this property to MockSampleControl once SolidBrush is supported on both platforms.
 			this.brushPropertyInfo = new MockBrushPropertyInfo (

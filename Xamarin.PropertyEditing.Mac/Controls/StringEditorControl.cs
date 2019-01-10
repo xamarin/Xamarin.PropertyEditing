@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using AppKit;
 using CoreGraphics;
+using Foundation;
 using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -10,9 +13,19 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class StringEditorControl : PropertyEditorControl<PropertyViewModel<string>>
 	{
+		private NSTextField stringEditor { get; set; }
+
+		private NSLayoutConstraint stringEditorWidthConstraint;
+
+		public override NSView FirstKeyView => this.stringEditor;
+		public override NSView LastKeyView => this.stringEditor;
+
+		internal NSPopUpButton inputModePopup;
+		private IReadOnlyList<InputMode> viewModelInputModes;
+
 		public StringEditorControl ()
 		{
-			StringEditor = new NSTextField {
+			this.stringEditor = new NSTextField {
 				BackgroundColor = NSColor.Clear,
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
@@ -21,33 +34,75 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			// update the value on keypress
-			StringEditor.Changed += (sender, e) => {
-				ViewModel.Value = StringEditor.StringValue;
+			this.stringEditor.Changed += (sender, e) => {
+				ViewModel.Value = this.stringEditor.StringValue;
 			};
-			AddSubview (StringEditor);
+			AddSubview (this.stringEditor);
+
+			this.stringEditorWidthConstraint = NSLayoutConstraint.Create (this.stringEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -117f);
 
 			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (StringEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
-				NSLayoutConstraint.Create (StringEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -34f),
-				NSLayoutConstraint.Create (StringEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
+				NSLayoutConstraint.Create (this.stringEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
+				this.stringEditorWidthConstraint,
+				NSLayoutConstraint.Create (this.stringEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
 			});
 
 			UpdateTheme ();
 		}
 
-		internal NSTextField StringEditor { get; set; }
-
-		public override NSView FirstKeyView => StringEditor;
-		public override NSView LastKeyView => StringEditor;
-
 		protected override void UpdateValue ()
 		{
-			StringEditor.StringValue = ViewModel.Value ?? string.Empty;
+			this.stringEditor.StringValue = ViewModel.Value ?? string.Empty;
+			this.stringEditor.Enabled = ((ViewModel.InputMode != null) && !ViewModel.InputMode.IsSingleValue) || (this.inputModePopup == null);
+			if (this.inputModePopup != null)
+				this.inputModePopup.SelectItem ((ViewModel.InputMode == null) ? string.Empty : ViewModel.InputMode.Identifier);
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
 		{
 			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
+		}
+
+		protected override void OnViewModelChanged (PropertyViewModel oldModel)
+		{
+			if (ViewModel.HasInputModes) {
+				if (this.inputModePopup == null) {
+					this.inputModePopup = new NSPopUpButton {
+						Menu = new NSMenu (),
+						TranslatesAutoresizingMaskIntoConstraints = false,
+					};
+
+					this.inputModePopup.Activated += (o, e) => {
+						var popupButton = o as NSPopUpButton;
+						ViewModel.InputMode = this.viewModelInputModes.FirstOrDefault (im => im.Identifier == popupButton.Title);
+					};
+
+					AddSubview (this.inputModePopup);
+
+					this.AddConstraints (new[] {
+						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
+						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, -33f),
+						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 80f),
+						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3 ),
+					});
+				}
+
+				this.inputModePopup.Menu.RemoveAllItems ();
+				this.viewModelInputModes = ViewModel.InputModes;
+				foreach (InputMode item in this.viewModelInputModes) {
+					this.inputModePopup.Menu.AddItem (new NSMenuItem (item.Identifier));
+				}
+
+				this.stringEditorWidthConstraint.Constant = -117f; // Shorten the stringEditor if we have Inputmodes Showing.
+			} else {
+				this.stringEditorWidthConstraint.Constant = -34f; // Lengthen the stringEditor if we have Inputmodes Hidden.
+			}
+
+			// If we are reusing the control we'll have to hid the inputMode if this doesn't have InputMode.
+			if (this.inputModePopup != null)
+				this.inputModePopup.Hidden = !ViewModel.HasInputModes;
+
+			base.OnViewModelChanged (oldModel);
 		}
 
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
@@ -62,12 +117,18 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			StringEditor.Editable = ViewModel.Property.CanWrite;
+			this.stringEditor.Editable = ViewModel.Property.CanWrite;
+			if (this.inputModePopup != null)
+				this.inputModePopup.Enabled = ViewModel.Property.CanWrite;
 		}
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			StringEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityString, ViewModel.Property.Name);
+			this.stringEditor.AccessibilityEnabled = this.stringEditor.Editable;
+			this.stringEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityString, ViewModel.Property.Name);
+			if (this.inputModePopup != null) {
+				this.inputModePopup.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityInpueModeEditor, ViewModel.Property.Name);
+			}
 		}
 	}
 }

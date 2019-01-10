@@ -21,10 +21,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void OnEditingEnded (object sender, EventArgs e)
 		{
-			if (!editing) {
-				editing = true;
+			if (!this.editing) {
+				this.editing = true;
 				NotifyingValueChanged (new RatioEventArgs (0, 0, 0));
-				editing = false;
+				this.editing = false;
 			}
 		}
 
