@@ -107,10 +107,25 @@ namespace Xamarin.PropertyEditing.Mac
 					this.popUpContextMenu.AddItem (mi2);
 				}
 
+				if (this.viewModel.SupportsBindings) {
+					this.popUpContextMenu.AddItem (NSMenuItem.SeparatorItem);
+
+					var mi3 = new NSMenuItem (Properties.Resources.CreateDataBindingMenuItem) {
+						AttributedTitle = new Foundation.NSAttributedString (
+						Properties.Resources.CreateDataBindingMenuItem,
+						new CoreText.CTStringAttributes {
+							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
+						})
+					};
+
+					mi3.Activated += OnBindingRequested;
+					this.popUpContextMenu.AddItem (mi3);
+				}
+
 				this.popUpContextMenu.AddItem (NSMenuItem.SeparatorItem);
 
 				// TODO If we add more menu items consider making the Label/Command a dictionary that we can iterate over to populate everything.
-				this.popUpContextMenu.AddItem (new CommandMenuItem (Properties.Resources.Reset, viewModel.ClearValueCommand) {
+				this.popUpContextMenu.AddItem (new CommandMenuItem (Properties.Resources.Reset, this.viewModel.ClearValueCommand) {
 					AttributedTitle = new Foundation.NSAttributedString (
 						Properties.Resources.Reset,
 						new CoreText.CTStringAttributes {
@@ -235,6 +250,12 @@ namespace Xamarin.PropertyEditing.Mac
 			requestResourceView.PopOver = resourceSelectorPopOver;
 
 			resourceSelectorPopOver.Show (requestResourceView.Frame, (NSView)this, NSRectEdge.MinYEdge);
+		}
+
+		private void OnBindingRequested (object sender, EventArgs e)
+		{
+			var bindingEditorWindow = new BindingEditorWindow (this.hostResources, this.viewModel);
+			bindingEditorWindow.MakeKeyAndOrderFront (this);
 		}
 	}
 }

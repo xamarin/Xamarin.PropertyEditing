@@ -109,6 +109,8 @@ namespace Xamarin.PropertyEditing.Mac
 				for (int i = 0; i < this.outlineView.RowCount; i++) {
 					this.outlineView.ExpandItem (this.outlineView.ItemAtRow (i));
 				}
+			} else {
+				this.outlineView.ExpandItem (null, true);
 			}
 		}
 

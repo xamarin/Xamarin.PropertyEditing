@@ -37,10 +37,10 @@ namespace Xamarin.PropertyEditing.Mac
 			var facade = (NSObjectFacade)item;
 			if (facade?.Target is ObjectPropertyViewModel ovm)
 				return ovm.ValueModel.Properties.Count;
-
+				
 			int headerCount = (ShowHeader && !Filtering) ? 1 : 0;
 
-			int childCount;
+			nint childCount;
 			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
 				childCount = this.vm.ArrangedEditors[0].Editors.Count + headerCount;
 			else {
