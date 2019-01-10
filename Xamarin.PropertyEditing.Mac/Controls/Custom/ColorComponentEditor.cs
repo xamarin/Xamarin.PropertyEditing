@@ -243,9 +243,9 @@ namespace Xamarin.PropertyEditing.Mac
 				channelGroup.Label.Frame = labelFrame;
 				channelGroup.Editor.Frame = editorFrame;
 				channelGroup.Gradient.Frame = new CGRect (
-					editorFrame.X,
+					editorFrame.X + .5f,
 					editorFrame.Y - DefaultGradientHeight + 1,
-					editorFrame.Width - 16, DefaultGradientHeight);
+					editorFrame.Width - 15, DefaultGradientHeight);
 
 				channelGroup.Gradient.BorderColor = NSColor.DisabledControlText.CGColor;
 				channelGroup.Gradient.ContentsScale = Window?.Screen?.BackingScaleFactor ?? NSScreen.MainScreen.BackingScaleFactor;
