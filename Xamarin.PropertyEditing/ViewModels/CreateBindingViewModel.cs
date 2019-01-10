@@ -452,7 +452,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private static readonly Resource NoValueConverter = new Resource (Resources.NoValueConverter);
-		private static readonly Resource AddValueConverter = new Resource ("<" + Resources.AddValueConverterEllipsis + ">");
+		internal static readonly Resource AddValueConverter = new Resource ("<" + Resources.AddValueConverterEllipsis + ">");
 
 		private readonly PropertyVariation variations;
 		private readonly IObjectEditor targetEditor;
@@ -497,7 +497,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			var converters = await TargetPlatform.BindingProvider.GetValueConverterResourcesAsync (this.targetEditor.Target);
 			this.valueConverters.AddRange (converters);
-			this.valueConverters.Add (AddValueConverter);
+
+			// Don't add the AddValueConverter resource if we are on Mac
+			if (Environment.OSVersion.Platform != PlatformID.Unix) {
+				this.valueConverters.Add (AddValueConverter);
+			}
 
 			return this.valueConverters;
 		}

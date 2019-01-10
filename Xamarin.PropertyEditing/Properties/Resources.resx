@@ -577,4 +577,26 @@
     <value>Select {0} type</value>
     <comment>Select {property} type</comment>
   </data>
+  <data name="CreatBindingTitle" xml:space="preserve">
+    <value>Create Binding</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="ShowSettings" xml:space="preserve">
+    <value>Show Settings</value>
+    <comment>Show Settings for Binding to Object.Property</comment>
+  </data>
+  <data name="HideSettings" xml:space="preserve">
+    <value>Hide Settings</value>
+    <comment>Hide Settings for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>Converter</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>Select Type</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>Done</value>
+  </data>
 </root>

@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Reflection;
 using Xamarin.PropertyEditing.Tests.MockControls;
@@ -192,7 +193,12 @@ namespace Xamarin.PropertyEditing.Tests
 
 			await vm.ValueConverters.Task;
 			Assert.That (vm.ValueConverters.Value, Contains.Item (visi));
-			Assert.That (vm.ValueConverters.Value.Count, Is.EqualTo (3)); // visi, No Converter, Request Converter
+
+			if (OSPlatform.CurrentPlatform.IsWindows) {
+				Assert.That (vm.ValueConverters.Value.Count, Is.EqualTo (3)); // visi, No Converter, Request Converter
+			} else if (OSPlatform.CurrentPlatform.IsMacOSX) {
+				Assert.That (vm.ValueConverters.Value.Count, Is.EqualTo (2)); // visi, No Converter
+			}
 		}
 
 		[Test]
