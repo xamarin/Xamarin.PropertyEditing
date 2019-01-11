@@ -16,26 +16,30 @@ namespace Xamarin.PropertyEditing.Mac
 				throw new ArgumentNullException (nameof (hostResources));
 
 			HostResources = hostResources;
-
-			this.tabContainer = new DynamicFill (hostResources, null);
-			this.border = new DynamicFill (hostResources, null) {
-				Frame = new CGRect (0, 0, 1, 1),
-				BorderWidth = 0,
-				BoxType = NSBoxType.NSBoxCustom,
-				AutoresizingMask = NSViewResizingMask.WidthSizable,
-			};
 		}
 
 		public string TabBackgroundColor
 		{
-			get => this.tabContainer.FillColorName;
-			set => this.tabContainer.FillColorName = value;
+			get => this.tabBackground;
+			set
+			{
+				if (this.tabContainer != null)
+					this.tabContainer.FillColorName = value;
+
+				this.tabBackground = value;
+			}
 		}
 
 		public string TabBorderColor
 		{
-			get => this.border.FillColorName;
-			set => this.border.FillColorName = value;
+			get => this.tabBorder;
+			set
+			{
+				if (this.border != null)
+					this.border.FillColorName = value;
+
+				this.tabBorder = value;
+			}
 		}
 
 		public override void InsertTabViewItem (NSTabViewItem tabViewItem, nint index)
@@ -98,18 +102,37 @@ namespace Xamarin.PropertyEditing.Mac
 				Orientation = NSUserInterfaceLayoutOrientation.Vertical,
 			};
 
-			this.tabContainer.ContentView = this.tabStack;
+			NSView tabs = this.tabStack;
+			if (TabBackgroundColor != null) {
+				this.tabContainer = new DynamicFill (HostResources, TabBackgroundColor) {
+					ContentView = this.tabStack
+				};
 
-			this.innerStack.AddView (this.tabContainer, NSStackViewGravity.Top);
-			this.innerStack.AddView (border, NSStackViewGravity.Top);
+				tabs = this.tabContainer;
+			}
+
+			this.innerStack.AddView (tabs, NSStackViewGravity.Top);
+
+			if (TabBorderColor != null) {
+				this.border = new DynamicFill (HostResources, TabBorderColor)	{
+					Frame = new CGRect (0, 0, 1, 1),
+					BorderWidth = 0,
+					BoxType = NSBoxType.NSBoxCustom,
+					AutoresizingMask = NSViewResizingMask.WidthSizable
+				};
+
+				this.innerStack.AddView (this.border, NSStackViewGravity.Top);
+			}
+
 			this.innerStack.AddView (TabView, NSStackViewGravity.Bottom);
 
 			View = this.innerStack;
 
-			this.innerStack.AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.tabContainer, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this.innerStack, NSLayoutAttribute.Width, 1, 0),
-				NSLayoutConstraint.Create (TabView, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, this.innerStack, NSLayoutAttribute.CenterX, 1, 0),
-			});
+			if (TabBackgroundColor != null) {
+				this.innerStack.AddConstraint (NSLayoutConstraint.Create (this.tabContainer, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this.innerStack, NSLayoutAttribute.Width, 1, 0));
+			}
+
+			this.innerStack.AddConstraint (NSLayoutConstraint.Create (TabView, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, this.innerStack, NSLayoutAttribute.CenterX, 1, 0));
 
 			UpdatePadding ();
 		}
@@ -121,6 +144,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private NSLayoutConstraint sidePadding, topPadding, bottomPadding;
 
+		private string tabBackground, tabBorder;
 		private IUnderliningTabView selected;
 		private DynamicFill tabContainer, border;
 		private NSStackView innerStack;
@@ -183,7 +207,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.sidePadding = NSLayoutConstraint.Create (TabView, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this.innerStack, NSLayoutAttribute.Width, 1, -(ContentPadding.Left + ContentPadding.Right));
 			this.bottomPadding = NSLayoutConstraint.Create (TabView, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this.innerStack, NSLayoutAttribute.Bottom, 1, -(ContentPadding.Bottom));
-			this.topPadding = NSLayoutConstraint.Create (TabView, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.border, NSLayoutAttribute.Bottom, 1, ContentPadding.Top);
+
+			NSView bottomItem = this.border ?? this.tabContainer ?? (NSView)this.tabStack;
+			this.topPadding = NSLayoutConstraint.Create (TabView, NSLayoutAttribute.Top, NSLayoutRelation.Equal, bottomItem, NSLayoutAttribute.Bottom, 1, ContentPadding.Top);
 
 			this.innerStack.AddConstraints (new[] { this.sidePadding, this.topPadding, this.bottomPadding });
 		}

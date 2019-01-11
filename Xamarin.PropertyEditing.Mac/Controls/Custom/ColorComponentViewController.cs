@@ -15,7 +15,7 @@ namespace Xamarin.PropertyEditing.Mac
 				throw new ArgumentNullException (nameof (hostResources));
 
 			this.hostResources = hostResources;
-			PreferredContentSize = new CGSize (100, 400);
+			PreferredContentSize = new CGSize (200, 500);
 			EditorType = type;
 		}
 

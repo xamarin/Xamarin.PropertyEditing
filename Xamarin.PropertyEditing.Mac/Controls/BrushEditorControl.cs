@@ -61,7 +61,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.popover = new NSPopover {
 				Behavior = NSPopoverBehavior.Transient,
 				ContentViewController = this.brushTabViewController = new BrushTabViewController (hostResources) {
-					PreferredContentSize = new CGSize (430, 263)
+					PreferredContentSize = new CGSize (550, 363)
 				}
 			};
 
@@ -81,7 +81,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
 			});
 		}
-
 
 		readonly ColorPopUpButton popUpButton;
 		readonly NSPopover popover;

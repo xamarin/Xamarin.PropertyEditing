@@ -133,7 +133,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 		}
 
-		public override CGSize IntrinsicContentSize => new CGSize (100, 300);
+		public override CGSize IntrinsicContentSize => new CGSize (100, 400);
 
 		void UpdateComponent (object sender, EventArgs args)
 		{

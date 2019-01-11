@@ -19,9 +19,9 @@ namespace Xamarin.PropertyEditing.Mac
 			TabBorderColor = NamedResources.TabBorderColor;
 			TabBackgroundColor = NamedResources.PadBackgroundColor;
 
-			PreferredContentSize = new CGSize (430, 280);
+			PreferredContentSize = new CGSize (450, 280);
 			TransitionOptions = NSViewControllerTransitionOptions.None;
-			ContentPadding = new NSEdgeInsets (10, 10, 10, 10);
+			ContentPadding = new NSEdgeInsets (8, 8, 8, 8);
 
 			this.filterResource = new NSSearchField {
 				ControlSize = NSControlSize.Mini,
