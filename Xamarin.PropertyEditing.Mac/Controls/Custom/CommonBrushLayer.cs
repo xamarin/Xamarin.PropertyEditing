@@ -69,7 +69,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.LayoutSublayers ();
 			BrushLayer.Frame = Bounds;
-			Contents = DrawingExtensions.GenerateCheckerboard (Bounds, this.hostResources.GetNamedColor (NamedResources.Checkerboard0Color), this.hostResources.GetNamedColor (NamedResources.Checkerboard0Color));
+			Contents = DrawingExtensions.GenerateCheckerboard (Bounds, this.hostResources.GetNamedColor (NamedResources.Checkerboard0Color), this.hostResources.GetNamedColor (NamedResources.Checkerboard1Color));
 		}
 
 		public NSImage RenderPreview ()

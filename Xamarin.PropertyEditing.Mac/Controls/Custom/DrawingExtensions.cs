@@ -8,12 +8,6 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	static class DrawingExtensions
 	{
-		public static NSImage CreateSwatch (this CommonColor color, CGSize size, NSColor c0, NSColor c1)
-			=> CreateSwatch (color, size, CIColor.FromCGColor (c0.CGColor), CIColor.FromCGColor (c1.CGColor));
-
-		public static NSImage CreateSwatch (this CommonColor color, CGSize size, CIColor c0, CIColor c1)
-			=> new NSImage (GenerateCheckerboard (new CGRect (0, 0, size.Width, size.Height), c0, c1), size);
-
 		public static CGImage GenerateCheckerboard (CGRect frame, NSColor c0, NSColor c1)
 		{
 			return GenerateCheckerboard (frame, CIColor.FromCGColor (c0.CGColor), CIColor.FromCGColor (c1.CGColor));
