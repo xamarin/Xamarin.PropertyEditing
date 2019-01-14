@@ -32,9 +32,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		PropertyViewModel viewModel;
 		public PropertyViewModel ViewModel {
-			get { return viewModel; }
+			get { return this.viewModel; }
 			set {
-				if (viewModel == value)
+				if (this.ViewModel == value)
 					return;
 
 				PropertyViewModel oldModel = this.viewModel;
@@ -45,10 +45,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 				this.viewModel = value;
 				OnViewModelChanged (oldModel);
-				viewModel.PropertyChanged += OnPropertyChanged;
-
-				// FIXME: figure out what we want errors to display as (tooltip, etc.)
-				viewModel.ErrorsChanged += HandleErrorsChanged;
+				if (this.viewModel != null) {
+					this.viewModel.PropertyChanged += OnPropertyChanged;
+					this.viewModel.ErrorsChanged += HandleErrorsChanged;
+				}
 			}
 		}
 
@@ -103,11 +103,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected virtual void OnViewModelChanged (PropertyViewModel oldModel)
 		{
-			SetEnabled ();
-			UpdateValue ();
-			UpdateAccessibilityValues ();
+			if (ViewModel != null) {
+				SetEnabled ();
+				UpdateValue ();
+				UpdateAccessibilityValues ();
+			}
 
-			// Hook this up so we know when to reset values 
 			PropertyButton.ViewModel = viewModel;
 		}
 

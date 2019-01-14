@@ -58,6 +58,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
 		{
+			base.OnViewModelChanged (oldModel);
+
+			if (ViewModel == null)
+				return;
+
 			nint rowHeight = GetHeight (ViewModel);
 
 			float top = checkHeight;
@@ -99,9 +104,6 @@ namespace Xamarin.PropertyEditing.Mac
 			// Set our tabable order
 			this.firstKeyView = this.combinableList.KeyAt (0);
 			this.lastKeyView = this.combinableList.KeyAt (this.combinableList.Count - 1);
-
-			base.OnViewModelChanged (oldModel);
-
 		}
 
 		protected override void UpdateValue ()

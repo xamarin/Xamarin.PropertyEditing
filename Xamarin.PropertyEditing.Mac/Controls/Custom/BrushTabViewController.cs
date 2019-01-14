@@ -58,7 +58,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.inhibitSelection = true;
 			base.OnViewModelChanged (oldModel);
 
-			var existing = new HashSet<CommonBrushType> (ViewModel?.BrushTypes?.Values ?? Array.Empty<CommonBrushType> ());
+			var existing = new HashSet<CommonBrushType> (oldModel?.BrushTypes?.Values ?? Array.Empty<CommonBrushType> ());
 			existing.IntersectWith (this.brushTypeTable.Keys);
 
 			var removed = new HashSet<CommonBrushType> (this.brushTypeTable.Keys);
