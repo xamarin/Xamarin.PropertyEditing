@@ -133,6 +133,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
 		{
+			base.OnViewModelChanged (oldModel);
+
+			if (ViewModel == null)
+				return;
+
 			if (ViewModel.HasInputModes) {
 				if (this.inputModePopup == null) {
 					this.inputModePopup = new NSPopUpButton {
@@ -169,8 +174,6 @@ namespace Xamarin.PropertyEditing.Mac
 			// If we are reusing the control we'll have to hid the inputMode if this doesn't have InputMode.
 			if (this.inputModePopup != null)
 				this.inputModePopup.Hidden = !ViewModel.HasInputModes;
-
-			base.OnViewModelChanged (oldModel);
 		}
 	}
 }
