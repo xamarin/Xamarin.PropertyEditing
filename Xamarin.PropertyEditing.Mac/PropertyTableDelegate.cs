@@ -74,7 +74,7 @@ namespace Xamarin.PropertyEditing.Mac
 			NSView editorOrContainer = null;
 			if (this.firstCache.TryGetValue (cellIdentifier, out IEditorView editor)) {
 				this.firstCache.Remove (cellIdentifier);
-				editorOrContainer = (editor.NativeView is PropertyEditorControl) ? new EditorContainer (this.hostResources, editor) : editor.NativeView;
+				editorOrContainer = (editor.NativeView is PropertyEditorControl) ? new EditorContainer (this.hostResources, editor) { Identifier = cellIdentifier } : editor.NativeView;
 			} else {
 				editorOrContainer = GetEditor (cellIdentifier, evm, outlineView);
 				editor = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
