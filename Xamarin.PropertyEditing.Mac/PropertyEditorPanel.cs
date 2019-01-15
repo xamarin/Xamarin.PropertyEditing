@@ -183,7 +183,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var propertyEditors = new NSTableColumn (PropertyEditorColId);
 			this.propertyTable.AddColumn (propertyEditors);
 
-			// Set OutlineTableColumn or the arrows showing children/expansion will not be drawn
+			// Set OutlineTableColumn or the arrows showing children/expansion or they will not be drawn
 			this.propertyTable.OutlineTableColumn = propertyEditors;
 
 			var tableContainer = new NSScrollView {

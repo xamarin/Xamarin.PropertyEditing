@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Cadenza.Collections;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -14,7 +11,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		: EventArgs
 	{
 		/// <summary>
-		/// Gets or sets the type selected by the user from the UI
+		/// Gets or sets a task for the type selected by the user from the UI
 		/// </summary>
 		public Task<ITypeInfo> SelectedType
 		{
@@ -101,7 +98,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (CurrentValue?.Value != null)
 					ValueModel.SelectedObjects.Add (CurrentValue.Value);
 
-				SetCanDelve (Editors.Any (e => e != null));
+				SetCanDelve (ValueModel.SelectedObjects.Count > 0);
 			}
 		}
 
