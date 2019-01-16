@@ -113,6 +113,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ViewDidChangeEffectiveAppearance ()
 		{
+			if (this.propertyArrangeMode == null)
+				return;
+
 			this.propertyArrangeMode.Font = HostResourceProvider.GetNamedFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize);
 			this.propertyFilter.Font = HostResourceProvider.GetNamedFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize);
 
