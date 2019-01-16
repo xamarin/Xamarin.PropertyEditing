@@ -91,12 +91,6 @@
 						<Trigger Property="IsChecked" Value="True">
 							<Setter Property="Data" TargetName="Chevron" Value="M 0,8 L 5,3 L 10,8"/>
 						</Trigger>
-						<Trigger Property="IsMouseOver" Value="true">
-							<Setter Property="Stroke" Value="{DynamicResource ToggleItemMouseOverForegroundBrush}" TargetName="Chevron"/>
-						</Trigger>
-						<Trigger Property="IsPressed" Value="true">
-							<Setter Property="Stroke" Value="{DynamicResource ToggleItemSelectedForegroundBrush}" TargetName="Chevron"/>
-						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
