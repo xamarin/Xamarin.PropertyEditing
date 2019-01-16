@@ -85,7 +85,15 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 		{
 			var themeControl = (NSSegmentedControl)sender;
 
-			View.Appearance = NSAppearance.GetAppearance ((themeControl.SelectedSegment == 0) ? NSAppearance.NameVibrantDark : NSAppearance.NameAqua);
+			NSString appearance = NSAppearance.NameAqua;
+			if (themeControl.SelectedSegment == 0) {
+				if (NSProcessInfo.ProcessInfo.OperatingSystemVersion.Minor > 13)
+					appearance = NSAppearance.NameDarkAqua;
+				else
+					appearance = NSAppearance.NameVibrantDark;
+			}
+
+			View.Appearance = NSAppearance.GetAppearance (appearance);
 		}
 	}
 }
