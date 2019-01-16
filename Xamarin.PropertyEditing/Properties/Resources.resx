@@ -320,9 +320,6 @@
   <data name="Opacity" xml:space="preserve">
     <value>Opacity</value>
   </data>
-  <data name="ShowAdvancedProperties" xml:space="preserve">
-    <value>Show advanced properties</value>
-  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -565,5 +562,8 @@
   </data>
   <data name="ErrorCreatingVariant" xml:space="preserve">
     <value>Error creating variant: {0}. If this error continues, please report it.</value>
+  </data>
+  <data name="UncommonPropertiesTooltip" xml:space="preserve">
+    <value>Show advanced properties</value>
   </data>
 </root>
