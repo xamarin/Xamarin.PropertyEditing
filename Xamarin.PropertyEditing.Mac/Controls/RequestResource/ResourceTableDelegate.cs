@@ -153,7 +153,7 @@ namespace Xamarin.PropertyEditing.Mac
 		// set up the editor based on the type of view model
 		private NSView SetUpRenderer (Type valueRenderType)
 		{
-			var view = (NSView)Activator.CreateInstance (valueRenderType);
+			var view = (NSView)Activator.CreateInstance (valueRenderType, this.hostResources);
 
 			return view;
 		}

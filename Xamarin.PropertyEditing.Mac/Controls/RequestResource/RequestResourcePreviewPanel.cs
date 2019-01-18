@@ -8,69 +8,14 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class RequestResourcePreviewPanel : NSView
 	{
-		private UnfocusableTextField noPreviewAvailable;
-		private NSView previewView;
-
-		private Resource selectedResource;
-		public Resource SelectedResource {
-			internal get { return this.selectedResource; }
-
-			set {
-				if (this.selectedResource != value) {
-					this.selectedResource = value;
-
-					if (this.selectedResource != null) {
-						// Let's find the next View
-						var pView = GetPreviewView (this.selectedResource);
-
-						if (pView == null) {
-							ShowNoPreviewText ();
-						} else {
-							this.noPreviewAvailable.Hidden = true;
-							this.previewView.Hidden = false;
-
-							switch (this.selectedResource) {
-								case Resource<CommonColor> colour:
-									if (pView is CommonBrushView cc) {
-										cc.Brush = new CommonSolidBrush (colour.Value);
-									}
-									break;
-
-								case Resource<CommonGradientBrush> gradient:
-									if (pView is CommonBrushView vg) {
-										vg.Brush = gradient.Value;
-									}
-									break;
-
-								case Resource<CommonSolidBrush> solid:
-									if (pView is CommonBrushView vs) {
-										vs.Brush = solid.Value;
-									}
-									break;
-							}
-
-							// Only 1 subview allowed (must be a better way to handle this??)
-							if (this.previewView.Subviews.Count () > 0) {
-								this.previewView.Subviews[0].RemoveFromSuperview ();
-							}
-							// Free up anything from the previous view
-							this.previewView.AddSubview (pView);
-						}
-					} else {
-						ShowNoPreviewText ();
-					}
-				}
-			}
-		}
-
-		private void ShowNoPreviewText ()
+		public RequestResourcePreviewPanel (IHostResourceProvider hostResources, CGRect frame)
+			: base (frame)
 		{
-			this.noPreviewAvailable.Hidden = false;
-			this.previewView.Hidden = true;
-		}
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
 
-		public RequestResourcePreviewPanel (CGRect frame) : base (frame)
-		{
+			this.hostResources = hostResources;
+
 			var FrameHeightHalf = (Frame.Height - 32) / 2;
 			var FrameWidthHalf = (Frame.Width - 32) / 2;
 			var FrameWidthThird = (Frame.Width - 32) / 3;
@@ -88,7 +33,87 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.previewView);
 		}
 
-		NSView GetPreviewView (Resource resource)
+		public Resource SelectedResource
+		{
+			get { return this.selectedResource; }
+			set
+			{
+				if (this.selectedResource == value)
+					return;
+
+				this.selectedResource = value;
+
+				if (this.selectedResource != null) {
+					PreviewResource ();
+				} else {
+					ShowNoPreviewText ();
+				}
+			}
+		}
+
+		private readonly IHostResourceProvider hostResources;
+
+		private UnfocusableTextField noPreviewAvailable;
+		private NSView previewView;
+
+		private Resource selectedResource;
+
+		private void PreviewResource()
+		{
+			// Let's find the next View
+			var pView = GetPreviewView (this.selectedResource);
+
+			if (pView == null) {
+				ShowNoPreviewText ();
+			} else {
+				this.noPreviewAvailable.Hidden = true;
+				this.previewView.Hidden = false;
+
+				switch (this.selectedResource) {
+				case Resource<CommonColor> colour:
+					if (pView is CommonBrushView cc) {
+						cc.Brush = new CommonSolidBrush (colour.Value);
+					}
+					break;
+
+				case Resource<CommonGradientBrush> gradient:
+					if (pView is CommonBrushView vg) {
+						vg.Brush = gradient.Value;
+					}
+					break;
+
+				case Resource<CommonSolidBrush> solid:
+					if (pView is CommonBrushView vs) {
+						vs.Brush = solid.Value;
+					}
+					break;
+				}
+
+				NSView[] subviews = this.previewView.Subviews;
+				if (subviews.Length > 0) {
+					subviews[0].RemoveFromSuperview ();
+				}
+				// Free up anything from the previous view
+				this.previewView.AddSubview (pView);
+			}
+		}
+
+		private void ShowNoPreviewText ()
+		{
+			this.noPreviewAvailable.Hidden = false;
+			this.previewView.Hidden = true;
+		}
+
+		private NSView SetUpPreviewer (Type previewRenderType)
+		{
+			var view = (NSView)Activator.CreateInstance (previewRenderType, this.hostResources);
+			view.Identifier = previewRenderType.Name;
+			view.Frame = new CGRect (0, 0, this.previewView.Frame.Width, this.previewView.Frame.Height);
+
+			return view;
+		}
+
+		private NSView GetPreviewView (Resource resource)
 		{
 			Type[] genericArgs = null;
 			Type previewRenderType;
@@ -109,15 +134,6 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			return SetUpPreviewer (previewRenderType);
-		}
-
-		private NSView SetUpPreviewer (Type previewRenderType)
-		{
-			var view = (NSView)Activator.CreateInstance (previewRenderType);
-			view.Identifier = previewRenderType.Name;
-			view.Frame = new CGRect (0, 0, this.previewView.Frame.Width, this.previewView.Frame.Height);
-
-			return view;
 		}
 
 		internal static readonly Dictionary<Type, Type> PreviewValueTypes = new Dictionary<Type, Type> {

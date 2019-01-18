@@ -119,7 +119,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.tableContainer.DocumentView = resourceTable;
 			AddSubview (this.tableContainer);
 
-			this.previewPanel = new RequestResourcePreviewPanel (new CGRect (Frame.Width - FrameWidthThird, 0, FrameWidthThird, Frame.Height));
+			this.previewPanel = new RequestResourcePreviewPanel (hostResources, new CGRect (Frame.Width - FrameWidthThird, 0, FrameWidthThird, Frame.Height));
 			AddSubview (this.previewPanel);
 
 			this.AddConstraints (new[] {
