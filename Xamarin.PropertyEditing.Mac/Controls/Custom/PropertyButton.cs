@@ -56,6 +56,14 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 		}
 
+		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			base.ViewDidChangeEffectiveAppearance ();
+			ToggleFocusImage ();
+		}
+
+		private readonly IHostResourceProvider hostResources;
+
 		private void PopUpContextMenu ()
 		{
 			if (this.popUpContextMenu == null) {
@@ -109,14 +117,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			NSMenu.PopUpContextMenu (popUpContextMenu, popupMenuEvent, this);
 		}
-
-		public override void ViewDidChangeEffectiveAppearance ()
-		{
-			base.ViewDidChangeEffectiveAppearance ();
-			ToggleFocusImage ();
-		}
-
-		private readonly IHostResourceProvider hostResources;
 
 		private void ToggleFocusImage (bool focused = false)
 		{
@@ -200,22 +200,28 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnCustomExpression (object sender, EventArgs e)
 		{
-			var customExpressionView = new CustomExpressionView (this.hostResources, viewModel);
+			var customExpressionView = new CustomExpressionView (this.hostResources, viewModel) {
+				Appearance = EffectiveAppearance
+			};
 
 			var customExpressionPopOver = new AutoClosePopOver {
 				ContentViewController = new NSViewController (null, null) { View = customExpressionView },
 			};
+			customExpressionPopOver.SetAppearance (this.hostResources.GetVibrantAppearance (EffectiveAppearance));
 
 			customExpressionPopOver.Show (customExpressionView.Frame, (NSView)this, NSRectEdge.MinYEdge);
 		}
 
 		private void OnResourceRequested (object sender, EventArgs e)
 		{
-			var requestResourceView = new RequestResourceView (this.hostResources, this.viewModel);
+			var requestResourceView = new RequestResourceView (this.hostResources, this.viewModel) {
+				Appearance = EffectiveAppearance
+			};
 
 			var resourceSelectorPopOver = new AutoClosePopOver {
 				ContentViewController = new NSViewController (null, null) { View = requestResourceView },
 			};
+			resourceSelectorPopOver.SetAppearance (this.hostResources.GetVibrantAppearance (EffectiveAppearance));
 
 			requestResourceView.PopOver = resourceSelectorPopOver;
 
