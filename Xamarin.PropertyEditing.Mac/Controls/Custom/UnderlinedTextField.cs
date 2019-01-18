@@ -5,6 +5,8 @@ using CoreGraphics;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal interface IUnderliningTabView {
+		event EventHandler Clicked;
+
 		bool Selected { get; set; }
 		int LineWidth { get; set; }
 	}
@@ -19,6 +21,8 @@ namespace Xamarin.PropertyEditing.Mac
 			this.hostResources = hostResources;
 			this.name = name;
 		}
+
+		public event EventHandler Clicked;
 
 		private bool selected;
 		public bool Selected
@@ -68,6 +72,12 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+		public override void MouseDown (NSEvent theEvent)
+		{
+			Clicked?.Invoke (this, EventArgs.Empty);
+			base.MouseDown (theEvent);
+		}
+
 		private readonly IHostResourceProvider hostResources;
 		private readonly string name;
 	}
@@ -81,6 +91,8 @@ namespace Xamarin.PropertyEditing.Mac
 			UsesSingleLineMode = true;
 			Alignment = NSTextAlignment.Center;
 		}
+
+		public event EventHandler Clicked;
 
 		private bool selected;
 		public bool Selected
@@ -105,6 +117,12 @@ namespace Xamarin.PropertyEditing.Mac
 				this.lineWidth = value;
 				NeedsLayout = true;
 			}
+		}
+
+		public override void MouseDown (NSEvent theEvent)
+		{
+			Clicked?.Invoke (this, EventArgs.Empty);
+			base.MouseDown (theEvent);
 		}
 
 		public override void DrawRect (CGRect dirtyRect)
