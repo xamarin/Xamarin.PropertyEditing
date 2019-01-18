@@ -34,6 +34,12 @@ namespace Xamarin.PropertyEditing.Mac
 			Initialize ();
 		}
 
+		public PropertyArrangeMode ArrangeMode
+		{
+			get => this.viewModel.ArrangeMode;
+			set => this.viewModel.ArrangeMode = value;
+		}
+
 		public bool IsArrangeEnabled
 		{
 			get { return this.isArrangeEnabled; }
