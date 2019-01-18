@@ -80,6 +80,16 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -33f),
 				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
 			});
+
+			ViewDidChangeEffectiveAppearance ();
+		}
+
+		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			base.ViewDidChangeEffectiveAppearance ();
+
+			this.popover.SetAppearance (HostResources.GetVibrantAppearance (EffectiveAppearance));
+			this.popover.ContentViewController.View.Appearance = EffectiveAppearance;
 		}
 
 		readonly ColorPopUpButton popUpButton;

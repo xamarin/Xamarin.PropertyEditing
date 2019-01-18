@@ -7,6 +7,17 @@ namespace Xamarin.PropertyEditing.Mac
 	public class HostResourceProvider
 		: IHostResourceProvider
 	{
+		public virtual NSAppearance GetVibrantAppearance (NSAppearance appearance)
+		{
+			if (appearance == null)
+				throw new ArgumentNullException (nameof (appearance));
+
+			if (appearance.Name == NSAppearance.NameDarkAqua || appearance.Name == NSAppearance.NameVibrantDark)
+				return NSAppearance.GetAppearance (NSAppearance.NameVibrantDark);
+
+			return NSAppearance.GetAppearance (NSAppearance.NameVibrantLight);
+		}
+
 		public virtual NSColor GetNamedColor (string name)
 		{
 			return NSColor.FromName (name);
