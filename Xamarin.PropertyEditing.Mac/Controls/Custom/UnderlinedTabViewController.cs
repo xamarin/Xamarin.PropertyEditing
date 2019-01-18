@@ -104,7 +104,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			NSView tabs = this.tabStack;
 			if (TabBackgroundColor != null) {
-				this.tabContainer = new DynamicFill (HostResources, TabBackgroundColor) {
+				this.tabContainer = new DynamicFillBox (HostResources, TabBackgroundColor) {
 					ContentView = this.tabStack
 				};
 
@@ -114,10 +114,8 @@ namespace Xamarin.PropertyEditing.Mac
 			this.innerStack.AddView (tabs, NSStackViewGravity.Top);
 
 			if (TabBorderColor != null) {
-				this.border = new DynamicFill (HostResources, TabBorderColor)	{
+				this.border = new DynamicFillBox (HostResources, TabBorderColor)	{
 					Frame = new CGRect (0, 0, 1, 1),
-					BorderWidth = 0,
-					BoxType = NSBoxType.NSBoxCustom,
 					AutoresizingMask = NSViewResizingMask.WidthSizable
 				};
 
@@ -146,7 +144,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private string tabBackground, tabBorder;
 		private IUnderliningTabView selected;
-		private DynamicFill tabContainer, border;
+		private DynamicFillBox tabContainer, border;
 		private NSStackView innerStack;
 		private NSStackView tabStack = new NSStackView () {
 			Spacing = 10f,
@@ -155,47 +153,6 @@ namespace Xamarin.PropertyEditing.Mac
 		protected NSStackView TabStack => this.tabStack;
 
 		private NSEdgeInsets edgeInsets = new NSEdgeInsets (0, 0, 0, 0);
-
-		private class DynamicFill
-			: NSBox
-		{
-			public DynamicFill (IHostResourceProvider hostResources, string colorName)
-			{
-				this.hostResources = hostResources;
-				BorderWidth = 0;
-				BoxType = NSBoxType.NSBoxCustom;
-				TranslatesAutoresizingMaskIntoConstraints = false;
-				this.colorName = colorName;
-				if (colorName == null)
-					FillColor = NSColor.Clear;
-
-				ViewDidChangeEffectiveAppearance ();
-			}
-
-			public string FillColorName
-			{
-				get => this.colorName;
-				set
-				{
-					this.colorName = value;
-					if (value == null)
-						FillColor = NSColor.Clear;
-
-					ViewDidChangeEffectiveAppearance ();
-				}
-			}
-
-			public override void ViewDidChangeEffectiveAppearance ()
-			{
-				if (this.colorName == null)
-					return;
-
-				FillColor = this.hostResources.GetNamedColor (this.colorName);
-			}
-
-			private readonly IHostResourceProvider hostResources;
-			private string colorName;
-		}
 
 		private void UpdatePadding()
 		{

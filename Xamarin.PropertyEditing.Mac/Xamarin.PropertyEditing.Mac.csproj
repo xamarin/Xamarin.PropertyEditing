@@ -142,6 +142,7 @@
     <Compile Include="Controls\Layout.cs" />
     <Compile Include="IHostResourceProvider.cs" />
     <Compile Include="HostResourceProvider.cs" />
+    <Compile Include="Controls\Custom\DynamicFillBox.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
