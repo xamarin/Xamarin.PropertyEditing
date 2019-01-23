@@ -141,7 +141,13 @@ namespace Xamarin.PropertyEditing.Reflection
 		{
 			return Task.Run (() => {
 				var types = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (a => a.GetTypes ()).AsParallel ()
-					.Where (t => t.Namespace != null && !t.IsAbstract && !t.IsInterface && t.IsPublic && t.GetConstructor (Type.EmptyTypes) != null);
+					.Where (t => {
+						try {
+							return t.Namespace != null && !t.IsAbstract && !t.IsInterface && t.IsPublic && t.GetConstructor (Type.EmptyTypes) != null;
+						} catch (TypeLoadException) {
+							return false;
+						}
+					});
 
 				Type realType = ReflectionEditorProvider.GetRealType (type);
 				if (childTypes) {
