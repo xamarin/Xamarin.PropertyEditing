@@ -139,11 +139,13 @@ namespace Xamarin.PropertyEditing
 			return new TargetPlatform (provider) {
 				ResourceProvider = ResourceProvider,
 				BindingProvider = BindingProvider,
+				IconProvider = IconProvider,
 				SupportsMaterialDesign = SupportsMaterialDesign,
 				SupportsCustomExpressions = SupportsCustomExpressions,
 				SupportsBrushOpacity = SupportsBrushOpacity,
 				GroupedTypes = GroupedTypes,
-				AutoExpandGroups = AutoExpandGroups
+				AutoExpandGroups = AutoExpandGroups,
+				ErrorHandler = ErrorHandler
 			};
 		}
 	}
