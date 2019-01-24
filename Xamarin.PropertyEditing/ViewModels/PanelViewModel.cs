@@ -115,10 +115,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public PanelViewModel (TargetPlatform targetPlatform)
 			: base (targetPlatform)
 		{
-			ArrangeModes = new List<ArrangeModeViewModel> {
-				new ArrangeModeViewModel (PropertyArrangeMode.Name, this),
-				new ArrangeModeViewModel (PropertyArrangeMode.Category, this)
-			};
+			if (targetPlatform == null)
+				throw new ArgumentNullException (nameof(targetPlatform));
+
+			var modes = new List<ArrangeModeViewModel> ();
+			if (targetPlatform.ArrangeModes == null || targetPlatform.ArrangeModes.Count == 0)
+				modes.Add (new ArrangeModeViewModel (PropertyArrangeMode.Name, this));
+			else {
+				for (int i = 0; i < targetPlatform.ArrangeModes.Count; i++)
+					modes.Add (new ArrangeModeViewModel (targetPlatform.ArrangeModes[i], this));
+			}
+
+			ArrangeModes = modes;
 		}
 
 		public event EventHandler ArrangedPropertiesChanged;
