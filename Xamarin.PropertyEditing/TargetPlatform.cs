@@ -112,6 +112,15 @@ namespace Xamarin.PropertyEditing
 		}
 
 		/// <summary>
+		/// Gets or sets a list of the allowed arrange modes.
+		/// </summary>
+		public IReadOnlyList<PropertyArrangeMode> ArrangeModes
+		{
+			get;
+			set;
+		} = new[] { PropertyArrangeMode.Name, PropertyArrangeMode.Category };
+
+		/// <summary>
 		/// Gets or sets a callback for errors that should be edge cases and/or don't have a defined way of displaying in the UI.
 		/// </summary>
 		/// <remarks>
@@ -139,11 +148,14 @@ namespace Xamarin.PropertyEditing
 			return new TargetPlatform (provider) {
 				ResourceProvider = ResourceProvider,
 				BindingProvider = BindingProvider,
+				IconProvider = IconProvider,
 				SupportsMaterialDesign = SupportsMaterialDesign,
 				SupportsCustomExpressions = SupportsCustomExpressions,
 				SupportsBrushOpacity = SupportsBrushOpacity,
 				GroupedTypes = GroupedTypes,
-				AutoExpandGroups = AutoExpandGroups
+				AutoExpandGroups = AutoExpandGroups,
+				ArrangeModes = ArrangeModes,
+				ErrorHandler = ErrorHandler
 			};
 		}
 	}
