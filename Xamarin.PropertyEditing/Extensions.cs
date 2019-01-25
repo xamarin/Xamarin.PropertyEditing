@@ -31,6 +31,25 @@ namespace Xamarin.PropertyEditing
 				self.Add (item);
 		}
 
+		public static int IndexOf<T> (this IEnumerable<T> self, T element)
+		{
+			if (self == null)
+				throw new ArgumentNullException (nameof (self));
+
+			if (self is IList list)
+				return list.IndexOf (element);
+
+			int i = 0;
+			foreach (T current in self) {
+				if (Equals (current, element))
+					return i;
+
+				i++;
+			}
+
+			return -1;
+		}
+
 		public static object ElementAt (this IEnumerable self, int index)
 		{
 			if (self == null)

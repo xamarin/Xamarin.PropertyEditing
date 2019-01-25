@@ -75,6 +75,7 @@
     <ImageAsset Include="Assets.xcassets\ValueBlockBackgroundColor.colorset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\DescriptionLabelColor.colorset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\TabBorderColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\PanelTabBackground.colorset\Contents.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

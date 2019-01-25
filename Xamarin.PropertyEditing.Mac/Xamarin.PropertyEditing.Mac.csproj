@@ -143,6 +143,7 @@
     <Compile Include="IHostResourceProvider.cs" />
     <Compile Include="HostResourceProvider.cs" />
     <Compile Include="Controls\Custom\DynamicFillBox.cs" />
+    <Compile Include="Controls\Custom\TabButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
@@ -316,6 +317,14 @@
     <BundleResource Include="Resources\resource-editor-32~sel%402x.png" />
     <BundleResource Include="Resources\resource-editor-32~dark~sel.png" />
     <BundleResource Include="Resources\resource-editor-32~dark~sel%402x.png" />
+    <BundleResource Include="Resources\sort-alphabetically-16~dark%402x.png" />
+    <BundleResource Include="Resources\sort-alphabetically-16%402x.png" />
+    <BundleResource Include="Resources\group-by-category-16~dark%402x.png" />
+    <BundleResource Include="Resources\group-by-category-16%402x.png" />
+    <BundleResource Include="Resources\group-by-category-16~dark.png" />
+    <BundleResource Include="Resources\group-by-category-16.png" />
+    <BundleResource Include="Resources\sort-alphabetically-16.png" />
+    <BundleResource Include="Resources\sort-alphabetically-16~dark.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>
