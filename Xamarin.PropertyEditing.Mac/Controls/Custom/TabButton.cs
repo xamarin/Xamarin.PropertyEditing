@@ -34,7 +34,6 @@ namespace Xamarin.PropertyEditing.Mac
 			get { return this.selected; }
 			set
 			{
-				Enabled = value;
 				this.selected = value;
 				NeedsDisplay = true;
 			}
