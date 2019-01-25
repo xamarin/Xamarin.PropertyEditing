@@ -7,6 +7,12 @@ namespace Xamarin.PropertyEditing.Mac
 	public class HostResourceProvider
 		: IHostResourceProvider
 	{
+		public NSAppearance CurrentAppearance
+		{
+			get;
+			set;
+		}
+
 		public virtual NSAppearance GetVibrantAppearance (NSAppearance appearance)
 		{
 			if (appearance == null)
@@ -25,6 +31,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public virtual NSImage GetNamedImage (string name)
 		{
+			if ((CurrentAppearance ?? NSAppearance.CurrentAppearance).Name.ToLower ().Contains ("dark"))
+				name += "~dark";
+
 			return NSImage.ImageNamed (name);
 		}
 

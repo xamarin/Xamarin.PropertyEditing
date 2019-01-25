@@ -93,7 +93,9 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 					appearance = NSAppearance.NameVibrantDark;
 			}
 
-			View.Appearance = NSAppearance.GetAppearance (appearance);
+			var realAppearance = NSAppearance.GetAppearance (appearance);
+			((HostResourceProvider)PropertyPanel.HostResourceProvider).CurrentAppearance = realAppearance;
+			View.Appearance = realAppearance;
 		}
 	}
 }
