@@ -149,6 +149,7 @@
     <Compile Include="Controls\TypeSelectorControl.cs" />
     <Compile Include="Controls\TypeSelectorWindow.cs" />
     <Compile Include="Controls\Custom\DynamicFillBox.cs" />
+    <Compile Include="Controls\Custom\TabButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
