@@ -11,7 +11,8 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class StringEditorControl : PropertyEditorControl<PropertyViewModel<string>>
+	internal class StringEditorControl
+		: PropertyEditorControl<PropertyViewModel<string>>
 	{
 		private NSTextField stringEditor { get; set; }
 
@@ -23,7 +24,8 @@ namespace Xamarin.PropertyEditing.Mac
 		internal NSPopUpButton inputModePopup;
 		private IReadOnlyList<InputMode> viewModelInputModes;
 
-		public StringEditorControl ()
+		public StringEditorControl (IHostResourceProvider hostResource)
+			: base (hostResource)
 		{
 			this.stringEditor = new NSTextField {
 				BackgroundColor = NSColor.Clear,
@@ -46,8 +48,6 @@ namespace Xamarin.PropertyEditing.Mac
 				this.stringEditorWidthConstraint,
 				NSLayoutConstraint.Create (this.stringEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
 			});
-
-			UpdateTheme ();
 		}
 
 		protected override void UpdateValue ()

@@ -20,16 +20,17 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public bool ClickableGradients { get; set; } = true;
 
-		public ColorComponentEditor (ChannelEditorType editorType, CGRect frame) : base (frame)
+		public ColorComponentEditor (IHostResourceProvider hostResources, ChannelEditorType editorType, CGRect frame)
+			: base (frame)
 		{
 			EditorType = EditorType;
-			Initialize ();
+			Initialize (hostResources);
 		}
 
-		public ColorComponentEditor (ChannelEditorType editorType) : base ()
+		public ColorComponentEditor (IHostResourceProvider hostResources, ChannelEditorType editorType)
 		{
 			EditorType = editorType;
-			Initialize ();
+			Initialize (hostResources);
 		}
 
 		private ChannelGroup [] Editors { get; set; }
@@ -43,7 +44,7 @@ namespace Xamarin.PropertyEditing.Mac
 			public CAGradientLayer Gradient { get; set; }
 		}
 
-		private ChannelGroup CreateEditor (ChannelEditor editor)
+		private ChannelGroup CreateEditor (IHostResourceProvider hostResources, ChannelEditor editor)
 		{
 			var ce = new ChannelGroup {
 				Label = new UnfocusableTextField {
@@ -51,7 +52,7 @@ namespace Xamarin.PropertyEditing.Mac
 					Alignment = NSTextAlignment.Right,
 					ToolTip = editor.ToolTip
 				},
-				Editor = new ComponentSpinEditor (editor) {
+				Editor = new ComponentSpinEditor (hostResources, editor) {
 					BackgroundColor = NSColor.Clear,
 					TranslatesAutoresizingMaskIntoConstraints = true
 				},
@@ -71,46 +72,46 @@ namespace Xamarin.PropertyEditing.Mac
 			return ce;
 		}
 
-		private ChannelGroup [] CreateEditors (ChannelEditorType type)
+		private ChannelGroup [] CreateEditors (IHostResourceProvider hostResources, ChannelEditorType type)
 		{
 			switch (type) {
 				case ChannelEditorType.HSB:
 					return new [] {
-						CreateEditor (new HsbHueChannelEditor ()),
-						CreateEditor (new HsbSaturationChannelEditor ()),
-						CreateEditor (new HsbBrightnessChannelEditor ()),
-						CreateEditor (new HsbAlphaChannelEditor ())
+						CreateEditor (hostResources, new HsbHueChannelEditor ()),
+						CreateEditor (hostResources, new HsbSaturationChannelEditor ()),
+						CreateEditor (hostResources, new HsbBrightnessChannelEditor ()),
+						CreateEditor (hostResources, new HsbAlphaChannelEditor ())
 					};
 				case ChannelEditorType.HLS:
 					return new [] {
-						CreateEditor (new HlsHueChannelEditor ()),
-						CreateEditor (new HlsLightnessChannelEditor ()),
-						CreateEditor (new HlsSaturationChannelEditor ()),
-						CreateEditor (new HlsAlphaChannelEditor ())
+						CreateEditor (hostResources, new HlsHueChannelEditor ()),
+						CreateEditor (hostResources, new HlsLightnessChannelEditor ()),
+						CreateEditor (hostResources, new HlsSaturationChannelEditor ()),
+						CreateEditor (hostResources, new HlsAlphaChannelEditor ())
 					};
 				case ChannelEditorType.RGB:
 					return new [] {
-						CreateEditor (new RedChannelEditor ()),
-						CreateEditor (new GreenChannelEditor ()),
-						CreateEditor (new BlueChannelEditor ()),
-						CreateEditor (new AlphaChannelEditor ())
+						CreateEditor (hostResources, new RedChannelEditor ()),
+						CreateEditor (hostResources, new GreenChannelEditor ()),
+						CreateEditor (hostResources, new BlueChannelEditor ()),
+						CreateEditor (hostResources, new AlphaChannelEditor ())
 					};
 				default:
 				case ChannelEditorType.CMYK:
 					return new [] {
-						CreateEditor (new CyanChannelEditor ()),
-						CreateEditor (new MagentaChannelEditor ()),
-						CreateEditor (new YellowChannelEditor ()),
-						CreateEditor (new BlackChannelEditor ()),
-						CreateEditor (new AlphaChannelEditor ())
+						CreateEditor (hostResources, new CyanChannelEditor ()),
+						CreateEditor (hostResources, new MagentaChannelEditor ()),
+						CreateEditor (hostResources, new YellowChannelEditor ()),
+						CreateEditor (hostResources, new BlackChannelEditor ()),
+						CreateEditor (hostResources, new AlphaChannelEditor ())
 					};
 			}
 		}
 
-		private void Initialize ()
+		private void Initialize (IHostResourceProvider hostResources)
 		{
 			WantsLayer = true;
-			Editors = CreateEditors (EditorType);
+			Editors = CreateEditors (hostResources, EditorType);
 
 			this.hexLabel = new UnfocusableTextField {
 				StringValue = "#:",
@@ -132,7 +133,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 		}
 
-		public override CGSize IntrinsicContentSize => new CGSize (100, 300);
+		public override CGSize IntrinsicContentSize => new CGSize (100, 400);
 
 		void UpdateComponent (object sender, EventArgs args)
 		{
@@ -242,9 +243,9 @@ namespace Xamarin.PropertyEditing.Mac
 				channelGroup.Label.Frame = labelFrame;
 				channelGroup.Editor.Frame = editorFrame;
 				channelGroup.Gradient.Frame = new CGRect (
-					editorFrame.X,
+					editorFrame.X + .5f,
 					editorFrame.Y - DefaultGradientHeight + 1,
-					editorFrame.Width - 16, DefaultGradientHeight);
+					editorFrame.Width - 15, DefaultGradientHeight);
 
 				channelGroup.Gradient.BorderColor = NSColor.DisabledControlText.CGColor;
 				channelGroup.Gradient.ContentsScale = Window?.Screen?.BackingScaleFactor ?? NSScreen.MainScreen.BackingScaleFactor;

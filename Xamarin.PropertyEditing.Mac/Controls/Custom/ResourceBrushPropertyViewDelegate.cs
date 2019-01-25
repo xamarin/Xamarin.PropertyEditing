@@ -4,8 +4,14 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class ResourceBrushPropertyViewDelegate : ResourceOutlineViewDelegate
+	internal class ResourceBrushPropertyViewDelegate
+		: ResourceOutlineViewDelegate
 	{
+		public ResourceBrushPropertyViewDelegate (IHostResourceProvider hostResources)
+			: base (hostResources)
+		{
+		}
+
 		public BrushPropertyViewModel ViewModel
 		{
 			get;

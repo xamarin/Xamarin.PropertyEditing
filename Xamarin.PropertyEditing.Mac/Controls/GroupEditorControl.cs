@@ -14,22 +14,36 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class GroupEditorControl
 		: NSView, IEditorView
 	{
-		public GroupEditorControl ()
+		public GroupEditorControl (IHostResourceProvider hostResources)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			this.hostResources = hostResources;
+
 			this.container = new NSStackView (Bounds) {
 				Alignment = NSLayoutAttribute.CenterX,
 				AutoresizingMask = NSViewResizingMask.HeightSizable | NSViewResizingMask.WidthSizable
 			};
 
-			this.table = new GroupedTableView ();
+			this.table = new GroupedTableView { RowHeight = 24 };
 			this.table.AddColumn (new NSTableColumn (PropertyIdentifier));
 			this.table.AddColumn (new NSTableColumn (PreviewIdentifier));
 			this.container.AddView (this.table, NSStackViewGravity.Top);
 
-			this.host = new NSView ();
+			this.host = new NSBox {
+				BoxType = NSBoxType.NSBoxCustom,
+				BorderWidth = 0,
+				TranslatesAutoresizingMaskIntoConstraints = false,
+				ContentViewMargins = new CGSize (0, 0)
+			};
+
 			this.container.AddView (this.host, NSStackViewGravity.Top);
+			this.container.AddConstraint (NSLayoutConstraint.Create (this.host, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this.container, NSLayoutAttribute.Width, 1, 0));
 
 			AddSubview (this.container);
+
+			ViewDidChangeEffectiveAppearance ();
 		}
 
 		NSView IEditorView.NativeView => this;
@@ -55,11 +69,17 @@ namespace Xamarin.PropertyEditing.Mac
 
 				view = this.hostedEditor;
 			} else {
-				view = this.selector.GetEditor (gvm.Properties[0]);
+				view = this.selector.GetEditor (this.hostResources, gvm.Properties[0]);
 			}
 
 			nint editorHeight = view.GetHeight (gvm.Properties[0]);
 			return ((nint)this.table.RowHeight * gvm.Properties.Count) + editorHeight;
+		}
+
+		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			this.table.BackgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
+			this.host.FillColor = this.hostResources.GetNamedColor (NamedResources.ValueBlockBackgroundColor);
 		}
 
 		internal PropertyGroupViewModel ViewModel
@@ -85,8 +105,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private readonly NSTableView table;
 		private readonly NSStackView container;
-		private readonly NSView host;
+		private readonly NSBox host;
 		private readonly PropertyGroupedEditorSelector selector = new PropertyGroupedEditorSelector ();
+		private readonly IHostResourceProvider hostResources;
 
 		private IEditorView hostedEditor;
 		private GroupedDataSource source;
@@ -175,11 +196,11 @@ namespace Xamarin.PropertyEditing.Mac
 				string identifier = pvm.GetType().FullName;
 				PreviewView view = table.MakeView (identifier, table) as PreviewView;
 				if (view == null) {
-					IValueView valueView = this.selector.CreateView (pvm.Property.Type);
+					IValueView valueView = this.selector.CreateView (this.host.hostResources, pvm.Property.Type);
 					if (valueView == null)
 						return new NSView ();
 						
-					view = new PreviewView (valueView, new CGRect (0, 0, table.TableColumns ()[1].Width, table.RowHeight)) {
+					view = new PreviewView (this.host.hostResources, valueView, new CGRect (0, 0, table.TableColumns ()[1].Width, table.RowHeight)) {
 						Identifier = identifier
 					};
 				}
@@ -192,17 +213,17 @@ namespace Xamarin.PropertyEditing.Mac
 		private class PreviewView
 			: NSView
 		{
-			public PreviewView (IValueView valueView, CGRect frame)
+			public PreviewView (IHostResourceProvider hostResources, IValueView valueView, CGRect frame)
 			{
 				Frame = frame;
 
 				this.view = valueView;
-				valueView.NativeView.Frame = new CGRect (0, 0, frame.Width - PropertyButton.DefaultSize, frame.Height);
-				valueView.NativeView.AutoresizingMask = NSViewResizingMask.WidthSizable;
+				valueView.NativeView.Frame = new CGRect (0, 3, frame.Width - PropertyButton.DefaultSize, frame.Height - 6);
+				valueView.NativeView.AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
 				AddSubview (valueView.NativeView);
 
-				this.propertyButton = new PropertyButton {
-					Frame = new CGRect (valueView.NativeView.Frame.Width, 0, PropertyButton.DefaultSize, PropertyButton.DefaultSize),
+				this.propertyButton = new PropertyButton (hostResources) {
+					Frame = new CGRect (valueView.NativeView.Frame.Width, 0, PropertyButton.DefaultSize, 24),
 					AutoresizingMask = NSViewResizingMask.MinXMargin
 				};
 
@@ -249,10 +270,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			PropertyViewModel pvm = ViewModel.Properties[(int)index];
 			if (this.hostedEditor == null) {
-				this.hostedEditor = this.selector.GetEditor (pvm);
-				this.host.Frame = this.hostedEditor.NativeView.Bounds;
-				this.hostedEditor.NativeView.AutoresizingMask = NSViewResizingMask.WidthSizable;
-				this.host.AddSubview (this.hostedEditor.NativeView);
+				this.hostedEditor = this.selector.GetEditor (this.hostResources, pvm);
+				this.host.ContentView = this.hostedEditor.NativeView;
 			}
 
 			this.hostedEditor.ViewModel = pvm;

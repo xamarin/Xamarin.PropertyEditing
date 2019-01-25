@@ -10,7 +10,8 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		private bool fullSelection;
 
-		public RatioEditor ()
+		public RatioEditor (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			AllowNegativeValues = false;
 			AllowRatios = true;

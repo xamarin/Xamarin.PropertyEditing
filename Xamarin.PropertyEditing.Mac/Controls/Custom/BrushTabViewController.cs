@@ -13,11 +13,15 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class BrushTabViewController
 		: UnderlinedTabViewController<BrushPropertyViewModel>, IEditorView
 	{
-		public BrushTabViewController ()
+		public BrushTabViewController (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
-			PreferredContentSize = new CGSize (430, 230);
+			TabBorderColor = NamedResources.TabBorderColor;
+			TabBackgroundColor = NamedResources.PadBackgroundColor;
+
+			PreferredContentSize = new CGSize (450, 280);
 			TransitionOptions = NSViewControllerTransitionOptions.None;
-			EdgeInsets = new NSEdgeInsets (0, 12, 12, 12);
+			ContentPadding = new NSEdgeInsets (8, 8, 8, 8);
 
 			this.filterResource = new NSSearchField {
 				ControlSize = NSControlSize.Mini,
@@ -46,7 +50,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public nint GetHeight (EditorViewModel viewModel)
 		{
-			return (int)(PreferredContentSize.Height + EdgeInsets.Top + EdgeInsets.Bottom);
+			return (int)(PreferredContentSize.Height + ContentPadding.Top + ContentPadding.Bottom);
 		}
 
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
@@ -86,7 +90,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				switch (kvp.Value) {
 					case CommonBrushType.Solid:
-						var solid = new SolidColorBrushEditorViewController ();
+						var solid = new SolidColorBrushEditorViewController (HostResources);
 						solid.ViewModel = ViewModel;
 						item.ViewController = solid;
 						item.ToolTip = Properties.Resources.SolidBrush;
@@ -94,7 +98,7 @@ namespace Xamarin.PropertyEditing.Mac
 						break;
 
 					case CommonBrushType.MaterialDesign:
-						var material = new MaterialBrushEditorViewController ();
+						var material = new MaterialBrushEditorViewController (HostResources);
 						material.ViewModel = ViewModel;
 						item.ViewController = material;
 						item.ToolTip = Properties.Resources.MaterialDesignColorBrush;
@@ -102,7 +106,7 @@ namespace Xamarin.PropertyEditing.Mac
 						break;
 
 					case CommonBrushType.Resource:
-						this.resource = new ResourceBrushViewController ();
+						this.resource = new ResourceBrushViewController (HostResources);
 						this.resource.ViewModel = ViewModel;
 						item.ViewController = this.resource;
 						item.ToolTip = Properties.Resources.ResourceBrush;
@@ -128,7 +132,7 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 
 				if (image != null) {
-					item.Identifier = new NSString (image); // Using the Identifier object, to avoid unused NSImage creation when selection happens in GetView ()
+					item.Identifier = new NSObjectFacade (image); // Using the Identifier object, to avoid unused NSImage creation when selection happens in GetView ()
 				}
 
 				InsertTabViewItem (item, i);

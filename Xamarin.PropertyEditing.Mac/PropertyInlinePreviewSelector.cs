@@ -7,18 +7,18 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class ValueViewSelector
 	{
-		public abstract IValueView CreateView (Type valueType);
+		public abstract IValueView CreateView (IHostResourceProvider hostResources, Type valueType);
 	}
 
 	internal class PropertyInlinePreviewSelector
 		: ValueViewSelector
 	{
-		public override IValueView CreateView (Type valueType)
+		public override IValueView CreateView (IHostResourceProvider hostResources, Type valueType)
 		{
 			if (!ValueTypes.TryGetValue (valueType, out Type viewType))
 				return null;
 
-			return (IValueView)Activator.CreateInstance (viewType);
+			return (IValueView)Activator.CreateInstance (viewType, hostResources);
 		}
 
 		private static readonly Dictionary<Type, Type> ValueTypes = new Dictionary<Type, Type> {

@@ -83,18 +83,19 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 		// If theme toggled, then notify our manager
 		partial void OnThemeChanged (NSObject sender)
 		{
-			var themeControl = sender as NSSegmentedControl;
-			switch (themeControl.SelectedSegment) {
-				case 0:
-					PropertyEditorPanel.ThemeManager.Theme = Themes.PropertyEditorTheme.Dark;
-					break;
-				case 1:
-					PropertyEditorPanel.ThemeManager.Theme = Themes.PropertyEditorTheme.Light;
-					break;
-				case 2:
-					PropertyEditorPanel.ThemeManager.Theme = Themes.PropertyEditorTheme.None;
-					break;
+			var themeControl = (NSSegmentedControl)sender;
+
+			NSString appearance = NSAppearance.NameAqua;
+			if (themeControl.SelectedSegment == 0) {
+				if (NSProcessInfo.ProcessInfo.OperatingSystemVersion.Minor > 13)
+					appearance = NSAppearance.NameDarkAqua;
+				else
+					appearance = NSAppearance.NameVibrantDark;
 			}
+
+			var realAppearance = NSAppearance.GetAppearance (appearance);
+			((HostResourceProvider)PropertyPanel.HostResourceProvider).CurrentAppearance = realAppearance;
+			View.Appearance = realAppearance;
 		}
 	}
 }

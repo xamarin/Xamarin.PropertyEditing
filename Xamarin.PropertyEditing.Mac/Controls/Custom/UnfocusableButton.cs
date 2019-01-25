@@ -16,19 +16,9 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			Enabled = true;
 			ImageScaling = NSImageScale.AxesIndependently;
-
-			PropertyEditorPanel.ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
-
-			UpdateTheme ();
 		}
 
 		#region Overridden Methods
-		protected override void Dispose (bool disposing)
-		{
-			if (disposing) {
-				PropertyEditorPanel.ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
-			}
-		}
 
 		public override void MouseDown (NSEvent theEvent)
 		{
@@ -96,15 +86,6 @@ namespace Xamarin.PropertyEditing.Mac
 			OnMouseRightDown?.Invoke (this, EventArgs.Empty);
 		}
 
-		void ThemeManager_ThemeChanged (object sender, EventArgs e)
-		{
-			UpdateTheme ();
-		}
-
-		protected virtual void UpdateTheme ()
-		{
-			this.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
-		}
 		#endregion
 	}
 }

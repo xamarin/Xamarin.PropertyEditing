@@ -6,11 +6,13 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class BooleanEditorControl : PropertyEditorControl<PropertyViewModel<bool?>>
+	internal class BooleanEditorControl
+		: PropertyEditorControl<PropertyViewModel<bool?>>
 	{
 		const string setBezelColorSelector = "setBezelColor:";
 
-		public BooleanEditorControl ()
+		public BooleanEditorControl (IHostResourceProvider hostResource)
+			: base (hostResource)
 		{
 			BooleanEditor = new NSButton {
 				AllowsMixedState = true,
@@ -39,8 +41,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (BooleanEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 6f),
 				NSLayoutConstraint.Create (BooleanEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -50f),
 			});
-
-			UpdateTheme ();
 		}
 
 		internal NSButton BooleanEditor { get; set; }

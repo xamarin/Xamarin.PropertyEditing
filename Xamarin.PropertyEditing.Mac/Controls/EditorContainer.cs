@@ -6,8 +6,11 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class EditorContainer
 		: NSView
 	{
-		public EditorContainer (IEditorView editorView)
+		public EditorContainer (IHostResourceProvider hostResources, IEditorView editorView)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
 			EditorView = editorView;
 
 			AddSubview (this.label);
@@ -50,5 +53,7 @@ namespace Xamarin.PropertyEditing.Mac
 			set { this.label.TextColor = value; }
 		}
 #endif
+
+		private readonly IHostResourceProvider hostResources;
 	}
 }

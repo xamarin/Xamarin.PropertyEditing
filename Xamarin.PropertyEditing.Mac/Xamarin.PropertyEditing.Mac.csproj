@@ -70,12 +70,9 @@
     <Compile Include="Controls\BooleanEditorControl.cs" />
     <Compile Include="Controls\ConstraintExtensions.cs" />
     <Compile Include="Controls\BaseRectangleEditorControl.cs" />
-    <Compile Include="Controls\CGRectEditorControl.cs" />
-    <Compile Include="Controls\CGPointEditorControl.cs" />
     <Compile Include="NSObjectFacade.cs" />
     <Compile Include="Controls\PredefinedValuesEditor.cs" />
     <Compile Include="Controls\BasePointEditorControl.cs" />
-    <Compile Include="Controls\CGSizeEditorControl.cs" />
     <Compile Include="Controls\PointEditorControl.cs" />
     <Compile Include="Controls\RectangleEditorControl.cs" />
     <Compile Include="Controls\SizeEditorControl.cs" />
@@ -143,19 +140,21 @@
     <Compile Include="PropertyInlinePreviewSelector.cs" />
     <Compile Include="Controls\EditorContainer.cs" />
     <Compile Include="Controls\Layout.cs" />
+    <Compile Include="IHostResourceProvider.cs" />
+    <Compile Include="HostResourceProvider.cs" />
+    <Compile Include="Controls\Custom\DynamicFillBox.cs" />
+    <Compile Include="Controls\Custom\TabButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
     <Folder Include="Controls\Custom\" />
     <Folder Include="Resources\" />
-    <Compile Include="Themes\MacThemeManager.cs" />
     <Compile Include="Controls\BaseEditorControl.cs" />
     <Compile Include="Controls\ErrorMessageView.cs" />
     <Folder Include="Controls\RequestResource\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
-    <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">
@@ -318,6 +317,14 @@
     <BundleResource Include="Resources\resource-editor-32~sel%402x.png" />
     <BundleResource Include="Resources\resource-editor-32~dark~sel.png" />
     <BundleResource Include="Resources\resource-editor-32~dark~sel%402x.png" />
+    <BundleResource Include="Resources\sort-alphabetically-16~dark%402x.png" />
+    <BundleResource Include="Resources\sort-alphabetically-16%402x.png" />
+    <BundleResource Include="Resources\group-by-category-16~dark%402x.png" />
+    <BundleResource Include="Resources\group-by-category-16%402x.png" />
+    <BundleResource Include="Resources\group-by-category-16~dark.png" />
+    <BundleResource Include="Resources\group-by-category-16.png" />
+    <BundleResource Include="Resources\sort-alphabetically-16.png" />
+    <BundleResource Include="Resources\sort-alphabetically-16~dark.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

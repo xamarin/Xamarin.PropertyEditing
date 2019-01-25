@@ -7,16 +7,17 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class MaterialBrushEditorViewController : NotifyingViewController<BrushPropertyViewModel>
+	internal class MaterialBrushEditorViewController
+		: NotifyingViewController<BrushPropertyViewModel>
 	{
-		public MaterialBrushEditorViewController ()
+		public MaterialBrushEditorViewController (IHostResourceProvider hostResources)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			this.hostResources = hostResources;
 			PreferredContentSize = new CGSize (430, 230);
 		}
-
-		private MaterialView materialEditor;
-		private AlphaChannelEditor alphaChannelEditor;
-		private ComponentSpinEditor alphaSpinEditor;
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
@@ -37,15 +38,6 @@ namespace Xamarin.PropertyEditing.Mac
 				this.materialEditor.ViewModel = ViewModel?.MaterialDesign;
 		}
 
-		void UpdateComponent (object sender, EventArgs args)
-		{
-			if (ViewModel == null)
-				return;
-			
-			var editor = sender as NumericSpinEditor;
-			ViewModel.MaterialDesign.Alpha = (byte)editor.Value;
-		}
-
 		public override void LoadView ()
 		{
 			var stack = new NSStackView () {
@@ -57,7 +49,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			this.alphaChannelEditor = new AlphaChannelEditor ();
-			this.alphaSpinEditor = new ComponentSpinEditor (this.alphaChannelEditor) {
+			this.alphaSpinEditor = new ComponentSpinEditor (this.hostResources, this.alphaChannelEditor) {
 				BackgroundColor = NSColor.Clear
 			};
 			this.alphaSpinEditor.ValueChanged += UpdateComponent;
@@ -79,6 +71,21 @@ namespace Xamarin.PropertyEditing.Mac
 			stack.AddView (alphaStack, NSStackViewGravity.Trailing);
 
 			View = stack;
+		}
+
+		private readonly IHostResourceProvider hostResources;
+
+		private MaterialView materialEditor;
+		private AlphaChannelEditor alphaChannelEditor;
+		private ComponentSpinEditor alphaSpinEditor;
+
+		private void UpdateComponent (object sender, EventArgs args)
+		{
+			if (ViewModel == null)
+				return;
+
+			var editor = sender as NumericSpinEditor;
+			ViewModel.MaterialDesign.Alpha = (byte)editor.Value;
 		}
 	}
 }

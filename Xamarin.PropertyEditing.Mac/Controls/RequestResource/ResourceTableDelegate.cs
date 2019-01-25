@@ -10,8 +10,6 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class ResourceTableDelegate
 		: NSTableViewDelegate
 	{
-		private ResourceTableDataSource datasource;
-
 		const string iconIdentifier = "icon";
 		const string typeIdentifier = "type";
 		const string nameIdentifier = "name";
@@ -19,11 +17,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public event EventHandler ResourceSelected;
 
-		private nint previousRow = -1;
-
-		public ResourceTableDelegate (ResourceTableDataSource resourceTableDatasource)
+		public ResourceTableDelegate (IHostResourceProvider hostResources, ResourceTableDataSource resourceTableDatasource)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
 			this.datasource = resourceTableDatasource;
+			this.hostResources = hostResources;
 		}
 
 		// the table is looking for this method, picks it up automagically
@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.Mac
 						var iconView = (NSImageView)tableView.MakeView (iconIdentifier, this);
 						if (iconView == null) {
 							iconView = new NSImageView {
-								Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("resource-editor-32"),
+								Image = this.hostResources.GetNamedImage ("resource-editor-32"),
 								ImageScaling = NSImageScale.None,
 								Identifier = iconIdentifier,
 							};
@@ -95,17 +95,21 @@ namespace Xamarin.PropertyEditing.Mac
 				if (previousRow != -1
 				    && previousRow < tableView.RowCount
 				    && tableView.GetView (0, previousRow, false) is NSImageView previousIconColumn) {
-					previousIconColumn.Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("resource-editor-32");
+					previousIconColumn.Image = this.hostResources.GetNamedImage ("resource-editor-32");
 				}
 
 				if (tableView.SelectedRow != -1
 				    && tableView.GetView (0, tableView.SelectedRow, false) is NSImageView selectedIconColumn) {
-					selectedIconColumn.Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("resource-editor-32", true);
+					selectedIconColumn.Image = this.hostResources.GetNamedImage ("resource-editor-32~sel");
 					previousRow = tableView.SelectedRow;
 				}
 			}
 			ResourceSelected?.Invoke (this, EventArgs.Empty);
 		}
+
+		private readonly IHostResourceProvider hostResources;
+		private readonly ResourceTableDataSource datasource;
+		private nint previousRow = -1;
 
 		private NSView MakeValueView (Resource resource, NSTableView tableView)
 		{
@@ -123,7 +127,7 @@ namespace Xamarin.PropertyEditing.Mac
 			return view;
 		}
 
-		NSView GetValueView (Type representationType)
+		private NSView GetValueView (Type representationType)
 		{
 			Type[] genericArgs = null;
 			Type valueRenderType;
@@ -149,7 +153,7 @@ namespace Xamarin.PropertyEditing.Mac
 		// set up the editor based on the type of view model
 		private NSView SetUpRenderer (Type valueRenderType)
 		{
-			var view = (NSView)Activator.CreateInstance (valueRenderType);
+			var view = (NSView)Activator.CreateInstance (valueRenderType, this.hostResources);
 
 			return view;
 		}

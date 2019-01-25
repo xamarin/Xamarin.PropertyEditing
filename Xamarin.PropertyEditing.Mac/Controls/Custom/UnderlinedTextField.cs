@@ -1,21 +1,28 @@
-﻿using AppKit;
+﻿using System;
+using AppKit;
 using CoreGraphics;
 
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal interface IUnderliningTabView {
+		event EventHandler Clicked;
+
 		bool Selected { get; set; }
 		int LineWidth { get; set; }
 	}
 
 	internal class UnderlinedImageView : NSImageView, IUnderliningTabView
 	{
-		public UnderlinedImageView (string name)
+		public UnderlinedImageView (IHostResourceProvider hostResources, string name)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			this.hostResources = hostResources;
 			this.name = name;
 		}
 
-		private string name;
+		public event EventHandler Clicked;
 
 		private bool selected;
 		public bool Selected
@@ -43,18 +50,9 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-
-		private string VersionName {
-			get {
-				return PropertyEditorPanel.ThemeManager.GetImageNameForTheme (this.name, this.selected);
-			}
-		}
-
 		public override void DrawRect (CGRect dirtyRect)
 		{
-			if (Image?.Name != VersionName) {
-				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme (this.name, this.selected);
-			}
+			Image = this.hostResources.GetNamedImage (this.name + ((Selected) ? "~sel" : String.Empty));
 
 			base.DrawRect (dirtyRect);
 			if (!Selected)
@@ -62,7 +60,7 @@ namespace Xamarin.PropertyEditing.Mac
 			
 			NSBezierPath path = new NSBezierPath ();
 			path.AppendPathWithRect (new CGRect (Bounds.X, Bounds.Top + this.lineWidth, Bounds.Width, this.lineWidth));
-			(selected? NSColor.Text: NSColor.DisabledControlText).Set ();
+			(Selected ? NSColor.Text: NSColor.DisabledControlText).Set ();
 			path.Fill ();
 		}
 
@@ -73,6 +71,15 @@ namespace Xamarin.PropertyEditing.Mac
 				return new CGSize (size.Width + this.lineWidth + 10, size.Height + this.lineWidth + 10);
 			}
 		}
+
+		public override void MouseDown (NSEvent theEvent)
+		{
+			Clicked?.Invoke (this, EventArgs.Empty);
+			base.MouseDown (theEvent);
+		}
+
+		private readonly IHostResourceProvider hostResources;
+		private readonly string name;
 	}
 
 	internal class UnderlinedTextField : NSTextField, IUnderliningTabView
@@ -84,6 +91,8 @@ namespace Xamarin.PropertyEditing.Mac
 			UsesSingleLineMode = true;
 			Alignment = NSTextAlignment.Center;
 		}
+
+		public event EventHandler Clicked;
 
 		private bool selected;
 		public bool Selected
@@ -108,6 +117,12 @@ namespace Xamarin.PropertyEditing.Mac
 				this.lineWidth = value;
 				NeedsLayout = true;
 			}
+		}
+
+		public override void MouseDown (NSEvent theEvent)
+		{
+			Clicked?.Invoke (this, EventArgs.Empty);
+			base.MouseDown (theEvent);
 		}
 
 		public override void DrawRect (CGRect dirtyRect)

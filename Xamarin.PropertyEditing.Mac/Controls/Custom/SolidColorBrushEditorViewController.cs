@@ -5,12 +5,15 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class SolidColorBrushEditorViewController : NotifyingViewController<BrushPropertyViewModel>
+	internal class SolidColorBrushEditorViewController
+		: NotifyingViewController<BrushPropertyViewModel>
 	{
-		private SolidColorBrushEditor brushEditor;
-
-		public SolidColorBrushEditorViewController ()
+		public SolidColorBrushEditorViewController (IHostResourceProvider hostResources)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			this.hostResources = hostResources;
 			PreferredContentSize = new CGSize (430, 230);
 		}
 
@@ -44,9 +47,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void LoadView ()
 		{
-			View = this.brushEditor = new SolidColorBrushEditor {
+			View = this.brushEditor = new SolidColorBrushEditor (this.hostResources) {
 				ViewModel = ViewModel?.Solid
 			};
 		}
+
+		private readonly IHostResourceProvider hostResources;
+		private SolidColorBrushEditor brushEditor;
 	}
 }

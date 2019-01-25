@@ -10,6 +10,11 @@ namespace Xamarin.PropertyEditing.Mac
 	internal abstract class PropertyEditorControl
 		: BaseEditorControl, IEditorView
 	{
+		protected PropertyEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
+		{
+		}
+
 		public string Label { get; set; }
 
 		public abstract NSView FirstKeyView { get; }
@@ -126,9 +131,15 @@ namespace Xamarin.PropertyEditing.Mac
 		protected abstract void UpdateAccessibilityValues ();
 	}
 
-	internal abstract class PropertyEditorControl<TViewModel> : PropertyEditorControl
+	internal abstract class PropertyEditorControl<TViewModel>
+		: PropertyEditorControl
 		where TViewModel : PropertyViewModel
 	{
+		public PropertyEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
+		{
+		}
+
 		internal new TViewModel ViewModel
 		{
 			get { return (TViewModel)base.ViewModel; }

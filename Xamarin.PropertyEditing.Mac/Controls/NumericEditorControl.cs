@@ -12,11 +12,12 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class NumericEditorControl<T>
 		: PropertyEditorControl<NumericPropertyViewModel<T>>
 	{
-		public NumericEditorControl ()
+		public NumericEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			NumericEditor = new NumericSpinEditor<T> ();
+			NumericEditor = new NumericSpinEditor<T> (hostResources);
 			NumericEditor.ValueChanged += OnValueChanged;
 
 			var t = typeof (T);

@@ -6,13 +6,19 @@ using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class CommonBrushLayer : CALayer
+	internal class CommonBrushLayer
+		: CALayer
 	{
-		public CommonBrushLayer ()
+		public CommonBrushLayer (IHostResourceProvider hostResources)
 		{
-			this.CornerRadius = 3;
-			this.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
-			this.BorderWidth = 1;
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			this.hostResources = hostResources;
+
+			CornerRadius = 3;
+			BorderColor = new CGColor (.5f, .5f, .5f, .5f);
+			BorderWidth = 1;
 			MasksToBounds = true;
 		}
 
@@ -63,7 +69,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.LayoutSublayers ();
 			BrushLayer.Frame = Bounds;
-			Contents = DrawingExtensions.GenerateCheckerboard (Bounds);
+			Contents = DrawingExtensions.GenerateCheckerboard (Bounds, this.hostResources.GetNamedColor (NamedResources.Checkerboard0Color), this.hostResources.GetNamedColor (NamedResources.Checkerboard1Color));
 		}
 
 		public NSImage RenderPreview ()
@@ -84,5 +90,7 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			}
 		}
+
+		private readonly IHostResourceProvider hostResources;
 	}
 }

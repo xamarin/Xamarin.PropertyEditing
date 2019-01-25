@@ -8,18 +8,22 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		const int DefaultIconButtonSize = 32;
 
-		public BasePopOverControl (string title, string imageNamed) : base ()
+		public BasePopOverControl (IHostResourceProvider hostResources, string title, string imageNamed) : base ()
 		{
 			if (title == null)
 				throw new ArgumentNullException (nameof (title));
 			if (imageNamed == null)
 				throw new ArgumentNullException (nameof (imageNamed));
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
 
 			TranslatesAutoresizingMaskIntoConstraints = false;
 			WantsLayer = true;
 
+			HostResources = hostResources;
+
 			var iconView = new NSImageView {
-				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme (imageNamed),
+				Image = hostResources.GetNamedImage (imageNamed),
 				ImageScaling = NSImageScale.None,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
@@ -46,8 +50,12 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 120),
 				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight),
 			});
+		}
 
-			Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
+		protected IHostResourceProvider HostResources
+		{
+			get;
+			private set;
 		}
 	}
 }

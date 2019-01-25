@@ -7,10 +7,16 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class ResourceOutlineViewDelegate : NSOutlineViewDelegate
+	internal class ResourceOutlineViewDelegate
+		: NSOutlineViewDelegate
 	{
-		private const string labelIdentifier = "label";
-		private const string resourceIdentifier = "resource";
+		public ResourceOutlineViewDelegate (IHostResourceProvider hostResource)
+		{
+			if (hostResource == null)
+				throw new ArgumentNullException (nameof (hostResource));
+
+			this.hostResources = hostResource;
+		}
 
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
@@ -20,9 +26,10 @@ namespace Xamarin.PropertyEditing.Mac
 				case ResourceOutlineView.ResourcePreviewColId:
 					var cbv = (CommonBrushView)outlineView.MakeView (resourceIdentifier, this);
 					if (cbv == null) {
-						cbv = new CommonBrushView {
+						cbv = new CommonBrushView (this.hostResources) {
 							Identifier = resourceIdentifier,
-							Frame = new CGRect (0, 0, 30, 10),
+							Frame = new CGRect (0, 0, 30, 18),
+							AutoresizingMask = NSViewResizingMask.WidthSizable
 						};
 					}
 
@@ -45,10 +52,9 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+		private const string labelIdentifier = "label";
+		private const string resourceIdentifier = "resource";
 
-		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
-		{
-			return PropertyEditorControl.DefaultControlHeight;
-		}
+		private readonly IHostResourceProvider hostResources;
 	}
 }

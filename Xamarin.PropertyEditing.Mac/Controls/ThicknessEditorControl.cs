@@ -7,9 +7,11 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class CommonThicknessEditorControl : BaseRectangleEditorControl<CommonThickness>
+	internal class CommonThicknessEditorControl
+		: BaseRectangleEditorControl<CommonThickness>
 	{
-		public CommonThicknessEditorControl ()
+		public CommonThicknessEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			XLabel.Frame = new CGRect (28, 28, 50, 22);
 			XLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize);

@@ -19,7 +19,8 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class RequestResourceView : BasePopOverViewModelControl
+	internal class RequestResourceView
+		: BasePopOverViewModelControl
 	{
 		NSSearchField searchResources;
 		NSSegmentedControl segmentedControl;
@@ -43,7 +44,8 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public RequestResourceView (PropertyViewModel propertyViewModel) : base (propertyViewModel, Properties.Resources.SelectResourceTitle, "resource-editor-32")
+		public RequestResourceView (IHostResourceProvider hostResources, PropertyViewModel propertyViewModel)
+			: base (hostResources, propertyViewModel, Properties.Resources.SelectResourceTitle, "resource-editor-32")
 		{
 			Initialize (propertyViewModel);
 		}
@@ -77,9 +79,9 @@ namespace Xamarin.PropertyEditing.Mac
 			var resourceSelector = resourceSelectorPropertyInfo.GetValue (propertyViewModel) as ResourceSelectorViewModel;
 
 			if (resourceSelector != null) {
-				this.resourceSelectorPanel = new RequestResourcePanel (resourceSelector, resourceValue);
+				this.resourceSelectorPanel = new RequestResourcePanel (HostResources, resourceSelector, resourceValue);
 			} else {
-				this.resourceSelectorPanel = new RequestResourcePanel (new ResourceSelectorViewModel (propertyViewModel.TargetPlatform.ResourceProvider, propertyViewModel.Editors.Select (ed => ed.Target), propertyViewModel.Property), resourceValue);
+				this.resourceSelectorPanel = new RequestResourcePanel (HostResources, new ResourceSelectorViewModel (propertyViewModel.TargetPlatform.ResourceProvider, propertyViewModel.Editors.Select (ed => ed.Target), propertyViewModel.Property), resourceValue);
 			}
 			this.resourceSelectorPanel.ResourceSelected += (sender, e) => {
 				propertyViewModel.Resource = this.resourceSelectorPanel.SelectedResource;
@@ -95,21 +97,21 @@ namespace Xamarin.PropertyEditing.Mac
 				switch (this.segmentedControl.SelectedSegment) {
 				case 0:
 					this.resourceSelectorPanel.ViewModel.ShowBothResourceTypes = true;
-					this.segmentedControl.SetImage (PropertyEditorPanel.ThemeManager.GetImageForTheme ("resource-editor-16"), 2);
+					this.segmentedControl.SetImage (HostResources.GetNamedImage ("resource-editor-16"), 2);
 					break;
 				case 1:
 					this.resourceSelectorPanel.ViewModel.ShowOnlyLocalResources = true;
-					this.segmentedControl.SetImage (PropertyEditorPanel.ThemeManager.GetImageForTheme ("resource-editor-16"), 2);
+					this.segmentedControl.SetImage (HostResources.GetNamedImage ("resource-editor-16"), 2);
 					break;
 				case 2:
 					this.resourceSelectorPanel.ViewModel.ShowOnlySystemResources = true;
-					this.segmentedControl.SetImage (PropertyEditorPanel.ThemeManager.GetImageForTheme ("resource-editor-16", true), 2);
+					this.segmentedControl.SetImage (HostResources.GetNamedImage ("resource-editor-16~sel"), 2);
 					break;
 				}
 
 				this.resourceSelectorPanel.ReloadData ();
 			});
-			this.segmentedControl.SetImage (PropertyEditorPanel.ThemeManager.GetImageForTheme ("resource-editor-16"), 2);
+			this.segmentedControl.SetImage (HostResources.GetNamedImage ("resource-editor-16"), 2);
 			this.segmentedControl.Frame = new CGRect ((FrameWidthThird - (segmentedControl.Bounds.Width) / 2), 5, (Frame.Width - (FrameWidthThird)) - 10, 24);
 			this.segmentedControl.Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize);
 			this.segmentedControl.TranslatesAutoresizingMaskIntoConstraints = false;
@@ -132,8 +134,6 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			AddSubview (this.showPreviewImage);
-
-			this.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
 
 			OnSearchResourcesChanged(null, null);
 

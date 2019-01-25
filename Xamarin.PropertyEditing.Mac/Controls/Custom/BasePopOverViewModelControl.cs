@@ -9,7 +9,8 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		internal PropertyViewModel ViewModel { get; }
 
-		public BasePopOverViewModelControl (PropertyViewModel viewModel, string title, string imageNamed) : base (title, imageNamed)
+		public BasePopOverViewModelControl (IHostResourceProvider hostResources, PropertyViewModel viewModel, string title, string imageNamed)
+			: base (hostResources, title, imageNamed)
 		{
 			if (viewModel == null)
 				throw new ArgumentNullException (nameof (viewModel));

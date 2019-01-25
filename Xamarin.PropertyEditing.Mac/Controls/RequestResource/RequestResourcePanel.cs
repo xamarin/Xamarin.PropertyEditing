@@ -18,7 +18,8 @@ namespace Xamarin.PropertyEditing.Mac
 		private NSTableView resourceTable;
 		private ResourceTableDataSource dataSource;
 
-		private ResourceSelectorViewModel viewModel;
+		private readonly ResourceSelectorViewModel viewModel;
+
 		public ResourceSelectorViewModel ViewModel => this.viewModel;
 		private SimpleCollectionView collectionView => this.viewModel.Resources as SimpleCollectionView;
 		public Resource SelectedResource {
@@ -38,11 +39,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private object selectedValue;
 
-		public RequestResourcePanel (ResourceSelectorViewModel viewModel, object value)
+		public RequestResourcePanel (IHostResourceProvider hostResources, ResourceSelectorViewModel viewModel, object value)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+				
 			this.viewModel = viewModel;
 			this.viewModel.PropertyChanged += OnPropertyChanged;
-			Initialize (value);
+			Initialize (hostResources, value);
 		}
 
 		private void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
@@ -58,7 +62,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		private void Initialize (object selectedValue)
+		private void Initialize (IHostResourceProvider hostResources, object selectedValue)
 		{
 			this.selectedValue = selectedValue;
 			Frame = new CGRect (10, 35, 630, 305);
@@ -80,7 +84,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			this.dataSource = new ResourceTableDataSource (viewModel);
-			var resourceTableDelegate = new ResourceTableDelegate (dataSource);
+			var resourceTableDelegate = new ResourceTableDelegate (hostResources, dataSource);
 			resourceTableDelegate.ResourceSelected += (sender, e) => {
 				this.previewPanel.SelectedResource = SelectedResource;
 
@@ -115,7 +119,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.tableContainer.DocumentView = resourceTable;
 			AddSubview (this.tableContainer);
 
-			this.previewPanel = new RequestResourcePreviewPanel (new CGRect (Frame.Width - FrameWidthThird, 0, FrameWidthThird, Frame.Height));
+			this.previewPanel = new RequestResourcePreviewPanel (hostResources, new CGRect (Frame.Width - FrameWidthThird, 0, FrameWidthThird, Frame.Height));
 			AddSubview (this.previewPanel);
 
 			this.AddConstraints (new[] {

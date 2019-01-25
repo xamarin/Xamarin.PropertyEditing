@@ -1,5 +1,6 @@
 ﻿using System;
 using AppKit;
+using CoreGraphics;
 using Foundation;
 using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
@@ -14,6 +15,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public ResourceOutlineView ()
 		{
 			Initialize ();
+			RowHeight = 24;
 		}
 
 		// Called when created from unmanaged code

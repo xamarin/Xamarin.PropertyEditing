@@ -9,8 +9,11 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class PropertyEditorSelector
 	{
-		public virtual IEditorView GetEditor (EditorViewModel vm)
+		public virtual IEditorView GetEditor (IHostResourceProvider hostResources, EditorViewModel vm)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
 			Type[] genericArgs = null;
 			Type controlType;
 			Type propertyType = vm.GetType ();
@@ -32,7 +35,7 @@ namespace Xamarin.PropertyEditing.Mac
 				controlType = controlType.MakeGenericType (genericArgs);
 			}
 
-			return (IEditorView)Activator.CreateInstance (controlType);
+			return (IEditorView)Activator.CreateInstance (controlType, hostResources);
 		}
 
 		private static readonly Dictionary<Type, Type> ViewModelTypes = new Dictionary<Type, Type> {
@@ -41,9 +44,6 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (PropertyViewModel<bool?>), typeof (BooleanEditorControl)},
 			{typeof (PredefinedValuesViewModel<>), typeof(PredefinedValuesEditor<>)},
 			{typeof (CombinablePropertyViewModel<>), typeof(CombinablePropertyEditor<>)},
-			{typeof (PropertyViewModel<CoreGraphics.CGPoint>), typeof (CGPointEditorControl)},
-			{typeof (PropertyViewModel<CoreGraphics.CGRect>), typeof (CGRectEditorControl)},
-			{typeof (PropertyViewModel<CoreGraphics.CGSize>), typeof (CGSizeEditorControl)},
 			{typeof (PointPropertyViewModel), typeof (CommonPointEditorControl) },
 			{typeof (RectanglePropertyViewModel), typeof (CommonRectangleEditorControl) },
 			{typeof (SizePropertyViewModel), typeof (CommonSizeEditorControl) },

@@ -77,9 +77,6 @@ namespace Xamarin.PropertyEditing.Windows
 			get { return (PropertyArrangeMode) GetValue (ArrangeModeProperty); }
 			set { SetValue (ArrangeModeProperty, value); }
 		}
-
-		public static PropertyEditing.Themes.WinThemeManager ThemeManager = new PropertyEditing.Themes.WinThemeManager();
-
 		public void Select (IEnumerable<object> selectedItems)
 		{
 			if (selectedItems == null)

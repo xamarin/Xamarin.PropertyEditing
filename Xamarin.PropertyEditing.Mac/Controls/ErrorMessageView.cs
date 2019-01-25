@@ -13,7 +13,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private NSTextField errorMessages;
 
-		public ErrorMessageView (IEnumerable errors)
+		public ErrorMessageView (IHostResourceProvider hostResources, IEnumerable errors)
 		{
 			if (errors == null)
 				throw new ArgumentNullException (nameof (errors));
@@ -22,7 +22,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			var iconView = new NSButton (new CGRect (5, Frame.Height - 25, DefaultIconButtonSize, DefaultIconButtonSize)) {
 				Bordered = false,
-				Image = PropertyEditorPanel.ThemeManager.GetImageForTheme ("action-warning-16"),
+				Image = hostResources.GetNamedImage ("action-warning-16"),
 				Title = string.Empty,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
@@ -62,8 +62,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.errorMessages, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -10f),
 				NSLayoutConstraint.Create (this.errorMessages, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Height, 1f, -40f),
 			});
-
-			this.Appearance = PropertyEditorPanel.ThemeManager.CurrentAppearance;
 		}
 	}
 }

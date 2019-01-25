@@ -17,11 +17,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => XEditor;
 		public override NSView LastKeyView => YEditor.DecrementButton;
 
-		protected BasePointEditorControl ()
+		protected BasePointEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			XLabel = new UnfocusableTextField ();
 
-			XEditor = new NumericSpinEditor<T> {
+			XEditor = new NumericSpinEditor<T> (hostResources) {
 				BackgroundColor = NSColor.Clear,
 				Value = 0.0f
 			};
@@ -29,7 +30,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			YLabel = new UnfocusableTextField ();
 
-			YEditor = new NumericSpinEditor<T> {
+			YEditor = new NumericSpinEditor<T> (hostResources) {
 				BackgroundColor = NSColor.Clear,
 				Value = 0.0f
 			};
@@ -48,7 +49,13 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
 			});
 
-			UpdateTheme ();
+			ViewDidChangeEffectiveAppearance ();
+		}
+
+		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			XLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
+			YLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)

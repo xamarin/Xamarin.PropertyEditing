@@ -10,7 +10,8 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class PointEditorControl<T> : BasePointEditorControl<T>
 	{
-		public PointEditorControl ()
+		public PointEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			XLabel.Frame = new CGRect (34, -5, 25, 22);
 			XLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
@@ -31,8 +32,14 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class SystemPointEditorControl : PointEditorControl<Point>
+	internal class SystemPointEditorControl
+		: PointEditorControl<Point>
 	{
+		public SystemPointEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
+		{
+		}
+
 		protected override void UpdateValue ()
 		{
 			XEditor.Value = ViewModel.Value.X;
@@ -42,6 +49,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class CommonPointEditorControl : PointEditorControl<CommonPoint>
 	{
+		public CommonPointEditorControl (IHostResourceProvider hostResource)
+			: base (hostResource)
+		{
+		}
+
 		protected override void UpdateValue ()
 		{
 			XEditor.Value = ViewModel.Value.X;

@@ -7,9 +7,11 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal abstract class RectangleEditorControl<T>: BaseRectangleEditorControl<T>
+	internal abstract class RectangleEditorControl<T>
+		: BaseRectangleEditorControl<T>
 	{
-		protected RectangleEditorControl ()
+		protected RectangleEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			// TODO localize
 			XLabel.Frame = new CGRect (34, 28, 25, 22);
@@ -43,8 +45,14 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class SystemRectangleEditorControl : RectangleEditorControl<Rectangle>
+	internal class SystemRectangleEditorControl
+		: RectangleEditorControl<Rectangle>
 	{
+		public SystemRectangleEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
+		{
+		}
+
 		protected override void UpdateValue ()
 		{
 			XEditor.Value = ViewModel.Value.X;
@@ -54,8 +62,14 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class CommonRectangleEditorControl : RectangleEditorControl<CommonRectangle>
+	internal class CommonRectangleEditorControl
+		: RectangleEditorControl<CommonRectangle>
 	{
+		public CommonRectangleEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
+		{
+		}
+
 		protected override void UpdateValue ()
 		{
 			XEditor.Value = ViewModel.Value.X;

@@ -17,11 +17,10 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class CombinablePropertyEditor<T>
 		: PropertyEditorControl<CombinablePropertyViewModel<T>>
 	{
-		public CombinablePropertyEditor ()
+		public CombinablePropertyEditor (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
-
-			UpdateTheme ();
 		}
 
 		public override NSView FirstKeyView => this.firstKeyView;
