@@ -43,6 +43,14 @@ namespace Xamarin.PropertyEditing.Mac
 			set { this.label.StringValue = value; }
 		}
 
+		public override void ViewWillMoveToSuperview (NSView newSuperview)
+		{
+			if (newSuperview == null && EditorView != null)
+				EditorView.ViewModel = null;
+
+			base.ViewWillMoveToSuperview (newSuperview);
+		}
+
 		private UnfocusableTextField label = new UnfocusableTextField {
 			Alignment = NSTextAlignment.Right,
 			TranslatesAutoresizingMaskIntoConstraints = false
@@ -53,7 +61,5 @@ namespace Xamarin.PropertyEditing.Mac
 			set { this.label.TextColor = value; }
 		}
 #endif
-
-		private readonly IHostResourceProvider hostResources;
 	}
 }
