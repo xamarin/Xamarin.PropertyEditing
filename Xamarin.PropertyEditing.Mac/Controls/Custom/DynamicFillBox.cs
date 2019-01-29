@@ -8,7 +8,9 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public DynamicFillBox (IHostResourceProvider hostResources, string colorName)
 		{
-			this.hostResources = hostResources;
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
 			BorderWidth = 0;
 			BoxType = NSBoxType.NSBoxCustom;
 			TranslatesAutoresizingMaskIntoConstraints = false;
@@ -16,7 +18,17 @@ namespace Xamarin.PropertyEditing.Mac
 			if (colorName == null)
 				FillColor = NSColor.Clear;
 
-			ViewDidChangeEffectiveAppearance ();
+			HostResourceProvider = hostResources;
+		}
+
+		public IHostResourceProvider HostResourceProvider
+		{
+			get { return this.hostResources; }
+			set
+			{
+				this.hostResources = value;
+				ViewDidChangeEffectiveAppearance ();
+			}
 		}
 
 		public string FillColorName
@@ -37,10 +49,14 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.colorName == null)
 				return;
 
-			FillColor = this.hostResources.GetNamedColor (this.colorName);
+			NSColor color = this.hostResources.GetNamedColor (this.colorName);
+			if (color == null)
+				return;
+
+			FillColor = color;
 		}
 
-		private readonly IHostResourceProvider hostResources;
+		private IHostResourceProvider hostResources;
 		private string colorName;
 	}
 }
