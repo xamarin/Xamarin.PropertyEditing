@@ -64,8 +64,7 @@ namespace Xamarin.PropertyEditing.Mac
 					throw new ArgumentNullException (nameof (value), "Cannot set HostResourceProvider to null");
 
 				this.hostResources = value;
-				if (this.propertyTable.Delegate != null)
-					this.propertyTable.Delegate = new PropertyTableDelegate (value, this.dataSource);
+				UpdateResourceProvider ();
 			}
 		}
 
@@ -139,31 +138,31 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private NSSearchField propertyFilter;
 		private NSStackView tabStack;
+		private DynamicFillBox header, border;
 
-		// Shared initialization code
 		private void Initialize ()
 		{
 			AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
 
 			NSControlSize controlSize = NSControlSize.Small;
 
-			var header = new DynamicFillBox (HostResourceProvider, NamedResources.PanelTabBackground) {
+			this.header = new DynamicFillBox (HostResourceProvider, NamedResources.PanelTabBackground) {
 				ContentViewMargins = new CGSize (0, 0),
 				ContentView = new NSView ()
 			};
-			AddSubview (header);
+			AddSubview (this.header);
 
-			var border = new DynamicFillBox (HostResourceProvider, NamedResources.TabBorderColor) {
+			this.border = new DynamicFillBox (HostResourceProvider, NamedResources.TabBorderColor) {
 				Frame = new CGRect (0, 0, 1, 1)
 			};
-			header.AddSubview (border);
+			header.AddSubview (this.border);
 
 			this.propertyFilter = new NSSearchField {
 				ControlSize = controlSize,
 				PlaceholderString = LocalizationResources.PropertyFilterLabel,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
-			((NSView)header.ContentView).AddSubview (this.propertyFilter);
+			((NSView)this.header.ContentView).AddSubview (this.propertyFilter);
 
 			this.propertyFilter.Changed += OnPropertyFilterChanged;
 
@@ -173,7 +172,7 @@ namespace Xamarin.PropertyEditing.Mac
 				EdgeInsets = new NSEdgeInsets (0, 0, 0, 0)
 			};
 
-			((NSView)header.ContentView).AddSubview (this.tabStack);
+			((NSView)this.header.ContentView).AddSubview (this.tabStack);
 
 			this.propertyTable = new FirstResponderOutlineView {
 				RefusesFirstResponder = true,
@@ -215,6 +214,17 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (tableContainer, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this, NSLayoutAttribute.Bottom, 1, 0),
 				NSLayoutConstraint.Create (tableContainer, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, 0),
 			});
+
+			ViewDidChangeEffectiveAppearance ();
+		}
+
+		private void UpdateResourceProvider()
+		{
+			if (this.propertyTable.Delegate != null)
+				this.propertyTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
+
+			this.header.HostResourceProvider = HostResourceProvider;
+			this.border.HostResourceProvider = HostResourceProvider;
 
 			ViewDidChangeEffectiveAppearance ();
 		}
