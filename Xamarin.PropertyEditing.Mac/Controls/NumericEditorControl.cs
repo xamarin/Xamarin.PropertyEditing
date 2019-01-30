@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		public override NSView FirstKeyView => NumericEditor;
-		public override NSView LastKeyView => NumericEditor;
+		public override NSView LastKeyView => NumericEditor.DecrementButton;
 
 		protected NSNumberFormatterStyle NumberStyle {
 			get { 
