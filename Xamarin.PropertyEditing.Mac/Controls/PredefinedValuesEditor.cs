@@ -20,12 +20,11 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			this.comboBox = new NSComboBox {
+			this.comboBox = new FocusableComboBox {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				BackgroundColor = NSColor.Clear,
 				StringValue = String.Empty,
 				ControlSize = NSControlSize.Small,
-				Editable = false,
 				Font = NSFont.FromFontName(DefaultFontName, DefaultFontSize),
 			};
 
