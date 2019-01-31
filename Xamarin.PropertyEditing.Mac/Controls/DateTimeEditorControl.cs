@@ -10,7 +10,8 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		readonly DateTimeTextField editor;
 
-		public DateTimeEditorControl ()
+		public DateTimeEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			editor = new DateTimeTextField {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
@@ -32,7 +33,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (editor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
 			});
 
-			UpdateTheme ();
 		}
 
 		public override NSView FirstKeyView => editor;

@@ -10,7 +10,8 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		readonly TimeSpanTextField editor;
 
-		public TimeSpanEditorControl ()
+		public TimeSpanEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			editor = new TimeSpanTextField {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
@@ -27,7 +28,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (editor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
 			});
 
-			UpdateTheme ();
 		}
 
 		public override NSView FirstKeyView => editor;

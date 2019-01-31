@@ -9,7 +9,8 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		readonly CharTextField editor;
 
-		public CharEditorControl ()
+		public CharEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			editor = new CharTextField {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize)
@@ -31,7 +32,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (editor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
 			});
 
-			UpdateTheme ();
 		}
 
 		public override NSView FirstKeyView => editor;

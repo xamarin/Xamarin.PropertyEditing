@@ -11,7 +11,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		NSOpenPanel panel;
 
-		public DirectoryPathEditorControl ()
+		public DirectoryPathEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			ButtonEditor = new NSButton {
 				BezelStyle = NSBezelStyle.RegularSquare,
@@ -41,8 +42,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (ButtonEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -34f),
 				NSLayoutConstraint.Create (ButtonEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
 			});
-
-			UpdateTheme ();
 		}
 
 		void ButtonEditor_Activated (object sender, System.EventArgs e)
