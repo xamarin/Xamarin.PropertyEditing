@@ -178,6 +178,7 @@ namespace Xamarin.PropertyEditing.Mac
 				RefusesFirstResponder = true,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 				HeaderView = null,
+				IntercellSpacing = new CGSize (0, 0)
 			};
 
 			var propertyEditors = new NSTableColumn (PropertyEditorColId);
