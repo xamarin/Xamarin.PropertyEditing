@@ -6,9 +6,9 @@ using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class SmallButton : NSButton
+	internal class SmallButton : NSButton
 	{
-		NSView previousKeyView;
+		private NSView previousKeyView;
 		public override NSView PreviousKeyView => this.previousKeyView ?? base.PreviousKeyView;
 
 		internal void SetPreviousKeyView (NSView view)
@@ -26,10 +26,10 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class TextFieldSmallButtonContainer : NSTextField
+	internal class TextFieldSmallButtonContainer : NSTextField
 	{
 		public List<SmallButton> Buttons { get; } = new List<SmallButton> ();
-		readonly ButtonTextFieldCell cell;
+		private readonly ButtonTextFieldCell cell;
 		internal NSView lastView;
 
 		public override bool Editable { 
@@ -51,7 +51,8 @@ namespace Xamarin.PropertyEditing.Mac
 			Cell.ControlSize = NSControlSize.Regular;
 			Cell.BezelStyle = NSTextFieldBezelStyle.Square;
 			TranslatesAutoresizingMaskIntoConstraints = false;
-
+			UsesSingleLineMode = true;
+			LineBreakMode = NSLineBreakMode.CharWrapping;
 			this.lastView = this;
 		}
 		public override bool AllowsVibrancy => false;
@@ -96,9 +97,9 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		sealed class ButtonTextFieldCell : NSTextFieldCell
+		private sealed class ButtonTextFieldCell : NSTextFieldCell
 		{
-			readonly TextFieldSmallButtonContainer field;
+			private readonly TextFieldSmallButtonContainer field;
 
 			public ButtonTextFieldCell (TextFieldSmallButtonContainer field)
 			{
@@ -127,11 +128,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 			public override CGRect DrawingRectForBounds (CGRect theRect)
 			{
-				var baseRect = base.DrawingRectForBounds (theRect);
+				CGRect baseRect = base.DrawingRectForBounds (theRect);
 				if (this.field.Buttons.Count == 0) {
 					return baseRect;
 				}
-				return new CGRect (baseRect.X, baseRect.Y - 2, baseRect.Width - 30, 20);
+				return new CGRect (baseRect.X, baseRect.Y - 2, baseRect.Width - (this.field.ButtonSize * this.field.Buttons.Count), 20);
 			}
 		}
 	}

@@ -20,8 +20,8 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => this.currentTextField;
 		public override NSView LastKeyView => this.revealPathButton.Enabled ? this.revealPathButton : this.browsePathButton;
 
-		bool IsDirectory () => ViewModel.Value?.IsDirectory ?? false;
-		bool FileExists () => IsDirectory () ? Directory.Exists (this.currentTextField.StringValue) : File.Exists (this.currentTextField.StringValue);
+		private bool IsDirectory () => ViewModel.Value?.IsDirectory ?? false;
+		private bool FileExists () => IsDirectory () ? Directory.Exists (this.currentTextField.StringValue) : File.Exists (this.currentTextField.StringValue);
 
 		public FilePathEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
@@ -50,7 +50,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			// update the value on keypress
-			this.revealPathButton.Activated += revealPathButton_Activated;
+			this.revealPathButton.Activated += RevealPathButton_Activated;
 
 			#endregion
 
@@ -73,12 +73,12 @@ namespace Xamarin.PropertyEditing.Mac
 			});
 		}
 
-		void CurrentTextField_Changed (object sender, EventArgs e)
+		private void CurrentTextField_Changed (object sender, EventArgs e)
 		{
 			StoreCurrentValue ();
 		}
 
-		void StoreCurrentValue ()
+		private void StoreCurrentValue ()
 		{
 			if (ViewModel.Value == null) {
 				return;
@@ -86,22 +86,22 @@ namespace Xamarin.PropertyEditing.Mac
 			ViewModel.Value = new FilePath { Source = this.currentTextField.StringValue, IsDirectory = IsDirectory () };
 		}
 
-		void BrowsePathButton_Activated (object sender, EventArgs e)
+		private void BrowsePathButton_Activated (object sender, EventArgs e)
 		{
 			this.panel.BeginSheet (this.Window, HandleAction);
 		}
 
-		void revealPathButton_Activated (object sender, EventArgs e)
+		private void RevealPathButton_Activated (object sender, EventArgs e)
 		{
 			if (FileExists ()) {
 				NSWorkspace.SharedWorkspace.OpenFile (this.currentTextField.StringValue);
 			}
 		}
 
-		void HandleAction (nint result)
+		private void HandleAction (nint result)
 		{
 			if (result == 1) {
-				var url = this.panel.Url;
+				NSUrl url = this.panel.Url;
 				if (url.IsFileUrl) {
 					this.currentTextField.StringValue = url.Path;
 					StoreCurrentValue ();
@@ -168,7 +168,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.currentTextField.Changed -= CurrentTextField_Changed;
 			this.browsePathButton.Activated -= BrowsePathButton_Activated;
-			this.revealPathButton.Activated -= revealPathButton_Activated;
+			this.revealPathButton.Activated -= RevealPathButton_Activated;
 			base.Dispose (disposing);
 		}
 	}
