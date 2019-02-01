@@ -161,7 +161,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			this.currentTextField.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityString, ViewModel.Property.Name);
+			this.currentTextField.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityPathEditor,
+				 IsDirectory () ? LocalizationResources.Directory : LocalizationResources.File);
 		}
 
 		protected override void Dispose (bool disposing)

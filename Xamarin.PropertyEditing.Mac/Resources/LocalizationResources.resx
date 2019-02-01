@@ -121,7 +121,11 @@
   <data name="AccessibilityInpueModeEditor" xml:space="preserve">
     <value>{0} InputMode Editor</value>
     <comment>Editor for InputMode Value</comment>
-  </data>    
+  </data>
+  <data name="AccessibilityPathEditor" xml:space="preserve">
+    <value>{0} Path Editor</value>
+    <comment>Editor for File/Directory Path Editor</comment>
+  </data>  
   <data name="ChooseFileOrDirectory" xml:space="preserve">
     <value>Choose a {0}</value>
     <comment>Choose a File or Directory</comment>
