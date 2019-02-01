@@ -231,8 +231,14 @@ namespace Xamarin.PropertyEditing.Mac.Resources {
             get {
                 return ResourceManager.GetString("AccessibilityInpueModeEditor", resourceCulture);
             }
-        } 
-
+        }
+        
+        internal static string AccessibilityPathEditor {
+            get {
+                return ResourceManager.GetString("AccessibilityPathEditor", resourceCulture);
+            }
+        }
+        
         internal static string ChooseFileOrDirectory {
             get {
                 return ResourceManager.GetString("ChooseFileOrDirectory", resourceCulture);
