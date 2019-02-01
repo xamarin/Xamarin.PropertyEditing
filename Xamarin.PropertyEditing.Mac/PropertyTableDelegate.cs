@@ -92,6 +92,14 @@ namespace Xamarin.PropertyEditing.Mac
 			if (editor != null) {
 				editor.ViewModel = evm;
 
+				bool openObjectRow = evm is ObjectPropertyViewModel && outlineView.IsItemExpanded (item);
+				if (!openObjectRow) {
+					var parent = outlineView.GetParent (item);
+					openObjectRow = (parent != null && ((NSObjectFacade)parent).Target is ObjectPropertyViewModel);
+				}
+
+				SetRowValueBackground (editorOrContainer, openObjectRow);
+
 				// Force a row update due to new height, but only when we are non-default
 				if (editor.IsDynamicallySized) {
 					nint index = outlineView.RowForItem (item);
@@ -115,9 +123,15 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 
 			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
-			var group = facade.Target as PanelGroupViewModel;
-			if (group != null)
+			var outline = (NSOutlineView)notification.Object;
+			nint row = outline.RowForItem (facade);
+
+			if (facade.Target is PanelGroupViewModel group)
 				this.dataSource.DataContext.SetIsExpanded (group.Category, isExpanded: true);
+			else if (facade.Target is ObjectPropertyViewModel ovm) {
+				NSView view = outline.GetView (0, row, makeIfNecessary: false);
+				SetRowValueBackground (view, valueBackground: true);
+			}
 		}
 
 		public override void ItemDidCollapse (NSNotification notification)
@@ -126,9 +140,15 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 
 			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
-			var group = facade.Target as PanelGroupViewModel;
-			if (group != null)
+			var outline = (NSOutlineView)notification.Object;
+			nint row = outline.RowForItem (facade);
+
+			if (facade.Target is PanelGroupViewModel group)
 				this.dataSource.DataContext.SetIsExpanded (group.Category, isExpanded: false);
+			else if (facade.Target is ObjectPropertyViewModel ovm) {
+				NSView view = outline.GetView (0, row, makeIfNecessary: false);
+				SetRowValueBackground (view, valueBackground: false);
+			}
 		}
 
 		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
@@ -192,6 +212,25 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly IHostResourceProvider hostResources;
 		private readonly Dictionary<string, EditorRegistration> registrations = new Dictionary<string, EditorRegistration> ();
 		private readonly Dictionary<string, IEditorView> firstCache = new Dictionary<string, IEditorView> ();
+
+		private NSView GetViewForItem (NSOutlineView outline, NSObjectFacade facade)
+		{
+			nint row = outline.RowForItem (facade);
+			return outline.GetView (0, row, false);
+		}
+
+		private void SetRowValueBackground (NSView view, bool valueBackground)
+		{
+			if (view == null)
+				return;
+
+			if (valueBackground) {
+				var c = this.hostResources.GetNamedColor (NamedResources.ValueBlockBackgroundColor);
+				view.SetValueForKey (c, new NSString ("backgroundColor"));
+			} else {
+				view.SetValueForKey (NSColor.Clear, new NSString ("backgroundColor"));
+			}
+		}
 
 		private NSView GetEditor (string identifier, EditorViewModel vm, NSOutlineView outlineView)
 		{
