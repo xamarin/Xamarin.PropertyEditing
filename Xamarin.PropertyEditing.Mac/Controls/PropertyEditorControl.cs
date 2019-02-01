@@ -20,7 +20,6 @@ namespace Xamarin.PropertyEditing.Mac
 		public abstract NSView FirstKeyView { get; }
 		public abstract NSView LastKeyView { get; }
 
-		public nint TableRow { get; set; } = -1;
 		public NSTableView TableView { get; set; }
 
 		public const int DefaultControlHeight = 22;
@@ -70,26 +69,23 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public void UpdateKeyViews ()
 		{
-			if (TableRow < 0)
+			nint row = TableView.RowForView (this);
+			if (row <= 0)
 				return;
 
+			NSView view;
 			PropertyEditorControl ctrl = null;
+			do {
+				row--;
+				view = TableView.GetView (0, row, makeIfNecessary: false);
+				ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
+			} while (row > 0 && ctrl == null);
 
-			var tr = TableRow;
-			if (tr > 0) {
-				NSView view;
-				do {
-					tr--;
-					view = TableView.GetView (0, tr, false);
-					ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
-				} while (tr > 0 && ctrl == null);
-
-				if (ctrl != null) {
-					ctrl.LastKeyView.NextKeyView = FirstKeyView;
-					ctrl.UpdateKeyViews ();
-				} else if (tr == 0 && view is PanelHeaderEditorControl header) {
-					header.SetNextKeyView (FirstKeyView);
-				}
+			if (ctrl != null) {
+				ctrl.LastKeyView.NextKeyView = FirstKeyView;
+				ctrl.UpdateKeyViews ();
+			} else if (row == 0 && view is PanelHeaderEditorControl header) {
+				header.SetNextKeyView (FirstKeyView);
 			}
 		}
 

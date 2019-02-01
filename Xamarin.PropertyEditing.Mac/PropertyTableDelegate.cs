@@ -90,15 +90,11 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			if (editor != null) {
-				nint index = outlineView.RowForItem (item);
-				if (editor.NativeView is PropertyEditorControl pec) {
-					pec.TableRow = index;
-				}
-
 				editor.ViewModel = evm;
 
 				// Force a row update due to new height, but only when we are non-default
 				if (editor.IsDynamicallySized) {
+					nint index = outlineView.RowForItem (item);
 					outlineView.NoteHeightOfRowsWithIndexesChanged (new NSIndexSet (index));
 				}
 			} else if (editorOrContainer is PanelHeaderEditorControl header) {
