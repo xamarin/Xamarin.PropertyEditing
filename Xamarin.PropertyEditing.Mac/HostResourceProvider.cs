@@ -13,6 +13,13 @@ namespace Xamarin.PropertyEditing.Mac
 			set;
 		}
 
+		private readonly NSBundle resourceBundle;
+
+		public HostResourceProvider ()
+		{
+			this.resourceBundle = new NSBundle ("../../../PropertyEditingResource.bundle");
+		}
+
 		public virtual NSAppearance GetVibrantAppearance (NSAppearance appearance)
 		{
 			if (appearance == null)
@@ -42,7 +49,7 @@ namespace Xamarin.PropertyEditing.Mac
 					name += "~sel";
 			}
 
-			return NSImage.ImageNamed (name);
+			return this.resourceBundle.ImageForResource (name);
 		}
 
 		public virtual NSFont GetNamedFont (string name, nfloat fontSize)

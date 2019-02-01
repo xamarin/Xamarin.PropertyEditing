@@ -94,7 +94,7 @@ namespace Xamarin.PropertyEditing.Mac
 						solid.ViewModel = ViewModel;
 						item.ViewController = solid;
 						item.ToolTip = Properties.Resources.SolidBrush;
-						image = "property-brush-solid-16"; 
+						image = "pe-property-brush-solid-16"; 
 						break;
 
 					case CommonBrushType.MaterialDesign:
@@ -102,7 +102,7 @@ namespace Xamarin.PropertyEditing.Mac
 						material.ViewModel = ViewModel;
 						item.ViewController = material;
 						item.ToolTip = Properties.Resources.MaterialDesignColorBrush;
-						image = "property-brush-palette-16";
+						image = "pe-property-brush-palette-16";
 						break;
 
 					case CommonBrushType.Resource:
@@ -110,7 +110,7 @@ namespace Xamarin.PropertyEditing.Mac
 						this.resource.ViewModel = ViewModel;
 						item.ViewController = this.resource;
 						item.ToolTip = Properties.Resources.ResourceBrush;
-						image = "property-brush-resources-16"; 
+						image = "pe-property-brush-resources-16"; 
 						break;
 
 					case CommonBrushType.Gradient:
@@ -118,7 +118,7 @@ namespace Xamarin.PropertyEditing.Mac
 						gradient.ViewModel = ViewModel;
 						item.ViewController = gradient;
 						item.ToolTip = item.Label;
-						image = "property-brush-gradient-16"; 
+						image = "pe-property-brush-gradient-16"; 
 						break;
 
 					default:
@@ -127,7 +127,7 @@ namespace Xamarin.PropertyEditing.Mac
 							none.ViewModel = ViewModel;
 							item.ViewController = none;
 							item.ToolTip = Properties.Resources.NoBrush;
-							image = "property-brush-none-16"; 
+							image = "pe-property-brush-none-16"; 
 							break;
 				}
 

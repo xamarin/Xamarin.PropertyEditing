@@ -114,4 +114,19 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <ItemGroup>
+    <PropertyEditingResource Include="PropertyEditingResource\**\*" />
+  </ItemGroup>
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <PropertyEditingResourceBundlePath Include="$(SolutionDir)\Xamarin.PropertyEditing.Mac\PropertyEditingResource\**\*" />
+    </ItemGroup>
+    <Copy 
+      SourceFiles="@(PropertyEditingResourceBundlePath)" 
+      DestinationFiles="@(PropertyEditingResourceBundlePath->'$(OutDir)\PropertyEditingResource.bundle\%(RecursiveDir)%(Filename)%(Extension)')" 
+      SkipUnchangedFiles="true" 
+      OverwriteReadOnlyFiles="true" 
+      Retries="3" 
+      RetryDelayMilliseconds="300" />
+  </Target>
 </Project>

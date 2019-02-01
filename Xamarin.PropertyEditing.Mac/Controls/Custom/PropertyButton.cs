@@ -39,7 +39,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AccessibilityTitle = LocalizationResources.AccessibilityPropertiesButton;
 			AccessibilityHelp = LocalizationResources.AccessibilityPropertiesButtonDescription;
 			Enabled = true;
-			Image = this.hostResources.GetNamedImage ("property-button-default-mac-10");
+			Image = this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");
 			ImageScaling = NSImageScale.None;
 			ToolTip = Properties.Resources.Default;
 
@@ -124,27 +124,27 @@ namespace Xamarin.PropertyEditing.Mac
 				
 				switch (viewModel.ValueSource) {
 				case ValueSource.Binding:
-					Image = focused ? this.hostResources.GetNamedImage ("property-button-bound-mac-active-10") : this.hostResources.GetNamedImage ("property-button-bound-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-bound-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-bound-mac-10");
 					break;
 
 				case ValueSource.Default:
-					Image = focused ? this.hostResources.GetNamedImage ("property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("property-button-default-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");
 					break;
 
 				case ValueSource.Local:
-					Image = focused ? this.hostResources.GetNamedImage ("property-button-local-mac-active-10") : this.hostResources.GetNamedImage ("property-button-local-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-local-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-local-mac-10");
 					break;
 
 				case ValueSource.Inherited:
-					Image = focused ? this.hostResources.GetNamedImage ("property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("property-button-inherited-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-10");
 					break;
 
 				case ValueSource.Resource:
-					Image = focused ? this.hostResources.GetNamedImage ("property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("property-button-inherited-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-10");
 					break;
 
 				case ValueSource.Unset:
-					Image = focused ? this.hostResources.GetNamedImage ("property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("property-button-default-mac-10");
+					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");
 					break;
 
 				default:

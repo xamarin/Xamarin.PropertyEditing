@@ -263,9 +263,9 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			switch (mode) {
 			case PropertyArrangeMode.Name:
-				return "sort-alphabetically-16";
+				return "pe-sort-alphabetically-16";
 			case PropertyArrangeMode.Category:
-				return "group-by-category-16";
+				return "pe-group-by-category-16";
 			default:
 				throw new ArgumentException();
 			}
