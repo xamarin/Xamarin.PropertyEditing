@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using AppKit;
 using Foundation;
 
@@ -17,7 +18,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public HostResourceProvider ()
 		{
-			this.resourceBundle = new NSBundle ("../../../PropertyEditingResource.bundle");
+			var containingDir = Path.GetDirectoryName (typeof (HostResourceProvider).Assembly.Location);
+			var bundlePath = Path.Combine (containingDir, "PropertyEditingResource.bundle");
+			this.resourceBundle = new NSBundle (bundlePath);
 		}
 
 		public virtual NSAppearance GetVibrantAppearance (NSAppearance appearance)
