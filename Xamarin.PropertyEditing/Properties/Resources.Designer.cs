@@ -1159,7 +1159,7 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Show all assemblies.
+        ///   Looks up a localized string similar to Show all assemblies.
         /// </summary>
         public static string ShowAllAssemblies {
             get {
@@ -1168,7 +1168,7 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Show system resources.
+        ///   Looks up a localized string similar to Show system resources.
         /// </summary>
         public static string ShowSystemResources {
             get {
