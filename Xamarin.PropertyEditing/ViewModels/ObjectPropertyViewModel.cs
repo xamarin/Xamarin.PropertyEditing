@@ -90,13 +90,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return;
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
-				ValueModel.SelectedObjects.Clear();
+				
 
 				await base.UpdateCurrentValueAsync ();
 				ValueType = CurrentValue?.ValueDescriptor as ITypeInfo;
 
-				if (CurrentValue?.Value != null)
-					ValueModel.SelectedObjects.Add (CurrentValue.Value);
+				if (CurrentValue?.Value != null) {
+					ValueModel.SelectedObjects.Reset (new[] { CurrentValue.Value });
+				} else {
+					ValueModel.SelectedObjects.Clear ();
+				}
 
 				SetCanDelve (ValueModel.SelectedObjects.Count > 0);
 			}
