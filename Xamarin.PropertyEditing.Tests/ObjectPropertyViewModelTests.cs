@@ -179,7 +179,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void CanDelve ()
+		public async Task CanDelve ()
 		{
 			object value = new object();
 
@@ -189,6 +189,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var editor = new MockObjectEditor (new[] { p.Object }, new Dictionary<IPropertyInfo, IReadOnlyList<ITypeInfo>> {
 				{ p.Object, new[] { childsubInfo } }
 			});
+			await editor.SetValueAsync (p.Object, new ValueInfo<object> { Value = value, Source = ValueSource.Local });
 
 			var providerMock = CreateProviderMock (value, new MockObjectEditor { Target = value });
 

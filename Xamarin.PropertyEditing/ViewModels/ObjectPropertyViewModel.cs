@@ -90,8 +90,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return;
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
-				
-
 				await base.UpdateCurrentValueAsync ();
 				ValueType = CurrentValue?.ValueDescriptor as ITypeInfo;
 
