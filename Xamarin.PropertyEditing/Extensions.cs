@@ -107,6 +107,21 @@ namespace Xamarin.PropertyEditing
 			self.Add (with);
 		}
 
+		public static void Reset<T> (this ICollection<T> self, IEnumerable<T> newContents)
+		{
+			if (self == null)
+				throw new ArgumentNullException (nameof(self));
+			if (newContents == null)
+				throw new ArgumentNullException (nameof(newContents));
+
+			if (self is ObservableCollectionEx<T> oce) {
+				oce.Reset (newContents);
+			} else {
+				self.Clear();
+				self.AddItems (newContents);
+			}
+		}
+
 		public static void Move (this IList self, int index, int moveTo)
 		{
 			if (self == null)
