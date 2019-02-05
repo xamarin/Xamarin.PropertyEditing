@@ -53,14 +53,30 @@ namespace Xamarin.PropertyEditing.Mac
 			GetVMGroupCellItendifiterFromFacade (item, out evm, out group, out cellIdentifier);
 
 			if (group != null) {
-				var labelContainer = (UnfocusableTextField)outlineView.MakeView (LabelIdentifier, this);
+				var labelContainer = (NSView)outlineView.MakeView (CategoryIdentifier, this);
 				if (labelContainer == null) {
-					labelContainer = new UnfocusableTextField {
-						Identifier = LabelIdentifier,
+					labelContainer = new NSView {
+						Identifier = CategoryIdentifier,
 					};
+
+					var disclosure = outlineView.MakeView ("NSOutlineViewDisclosureButtonKey", outlineView);
+					disclosure.TranslatesAutoresizingMaskIntoConstraints = false;
+					labelContainer.AddSubview (disclosure);
+
+					var label = new UnfocusableTextField {
+						TranslatesAutoresizingMaskIntoConstraints = false
+					};
+					labelContainer.AddSubview (label);
+
+					labelContainer.AddConstraints (new[] {
+						NSLayoutConstraint.Create (disclosure, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, labelContainer, NSLayoutAttribute.CenterY, 1, 0),
+						NSLayoutConstraint.Create (disclosure, NSLayoutAttribute.Left, NSLayoutRelation.Equal, labelContainer, NSLayoutAttribute.Left, 1, 4),
+						NSLayoutConstraint.Create (label, NSLayoutAttribute.Left, NSLayoutRelation.Equal, disclosure, NSLayoutAttribute.Right, 1, 0),
+						NSLayoutConstraint.Create (label, NSLayoutAttribute.Height, NSLayoutRelation.Equal, labelContainer, NSLayoutAttribute.Height, 1, 0),
+					});
 				}
 
-				labelContainer.StringValue = group.Category;
+				((UnfocusableTextField)labelContainer.Subviews[1]).StringValue = group.Category;
 
 				if (this.dataSource.DataContext.GetIsExpanded (group.Category)) {
 					SynchronizationContext.Current.Post (s => {
@@ -92,7 +108,17 @@ namespace Xamarin.PropertyEditing.Mac
 			if (editor != null) {
 				editor.ViewModel = evm;
 
-				bool openObjectRow = evm is ObjectPropertyViewModel && outlineView.IsItemExpanded (item);
+				var ovm = evm as ObjectPropertyViewModel;
+				if (ovm != null && editorOrContainer is EditorContainer container) {
+					if (container.LeftEdgeView == null) {
+						if (ovm.CanDelve)
+							container.LeftEdgeView = outlineView.MakeView ("NSOutlineViewDisclosureButtonKey", outlineView);
+					} else if (!ovm.CanDelve) {
+						container.LeftEdgeView = null;
+					}
+				}
+
+				bool openObjectRow = ovm != null && outlineView.IsItemExpanded (item);
 				if (!openObjectRow) {
 					var parent = outlineView.GetParent (item);
 					openObjectRow = (parent != null && ((NSObjectFacade)parent).Target is ObjectPropertyViewModel);
@@ -119,12 +145,17 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ItemDidExpand (NSNotification notification)
 		{
-			if (this.isExpanding)
-				return;
-
 			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
 			var outline = (NSOutlineView)notification.Object;
 			nint row = outline.RowForItem (facade);
+
+			if (this.isExpanding) {
+				NSView view = outline.GetView (0, row, makeIfNecessary: true);
+				if (view.Subviews[0] is NSButton expander)
+					expander.State = NSCellStateValue.On;
+
+				return;
+			}
 
 			if (facade.Target is PanelGroupViewModel group)
 				this.dataSource.DataContext.SetIsExpanded (group.Category, isExpanded: true);
@@ -136,12 +167,17 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ItemDidCollapse (NSNotification notification)
 		{
-			if (this.isExpanding)
-				return;
-
 			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
 			var outline = (NSOutlineView)notification.Object;
 			nint row = outline.RowForItem (facade);
+
+			if (this.isExpanding) {
+				NSView view = outline.GetView (0, row, makeIfNecessary: true);
+				if (view.Subviews[0] is NSButton expander)
+					expander.State = NSCellStateValue.Off;
+
+				return;
+			}
 
 			if (facade.Target is PanelGroupViewModel group)
 				this.dataSource.DataContext.SetIsExpanded (group.Category, isExpanded: false);
@@ -203,7 +239,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public const string LabelIdentifier = "label";
+		public const string CategoryIdentifier = "label";
 
 		private PropertyTableDataSource dataSource;
 		private bool isExpanding;
