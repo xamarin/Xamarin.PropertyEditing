@@ -7,26 +7,27 @@ using Foundation;
 using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 using System.IO;
+using Xamarin.PropertyEditing.Common;
 
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class FilePathEditorControl : PropertyEditorControl<PropertyViewModel<FilePath>>
 	{
-		readonly NSOpenPanel panel;
-		readonly TextFieldSmallButtonContainer currentTextField;
-		readonly SmallButton browsePathButton;
-		readonly SmallButton revealPathButton;
+		private readonly NSOpenPanel panel;
+		private readonly TextFieldSmallButtonContainer currentTextField;
+		private readonly SmallButton browsePathButton;
+		private readonly SmallButton revealPathButton;
 
 		public override NSView FirstKeyView => this.currentTextField;
 		public override NSView LastKeyView => this.revealPathButton.Enabled ? this.revealPathButton : this.browsePathButton;
 
-		private bool IsDirectory () => ViewModel.Value?.IsDirectory ?? false;
-		private bool FileExists () => IsDirectory () ? Directory.Exists (this.currentTextField.StringValue) : File.Exists (this.currentTextField.StringValue);
+		private bool FileExists () => File.Exists (this.currentTextField.StringValue);
 
 		public FilePathEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
 			this.currentTextField = new TextFieldSmallButtonContainer ();
+			this.currentTextField.ToolTip = this.currentTextField.PlaceholderString = string.Format (LocalizationResources.ChooseFileOrDirectory, LocalizationResources.File);
 			this.currentTextField.Changed += CurrentTextField_Changed;
 			AddSubview (this.currentTextField);
 
@@ -37,6 +38,9 @@ namespace Xamarin.PropertyEditing.Mac
 				StringValue = string.Empty,
 				Image = hostResource.GetNamedImage ("path-reveal"),
 			};
+
+			this.revealPathButton.ToolTip = string.Format (LocalizationResources.RevealFileOrDirectory, LocalizationResources.File);
+
 			this.currentTextField.AddButton (this.revealPathButton);
 
 			this.panel = new NSOpenPanel {
@@ -64,6 +68,8 @@ namespace Xamarin.PropertyEditing.Mac
 			this.browsePathButton.Activated += BrowsePathButton_Activated;
 			this.currentTextField.AddButton (this.browsePathButton);
 
+			this.browsePathButton.ToolTip = string.Format (LocalizationResources.BrowseFileOrDirectory, LocalizationResources.File);
+
 			#endregion
 
 			AddConstraints (new[] {
@@ -83,7 +89,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (ViewModel.Value == null) {
 				return;
 			}
-			ViewModel.Value = new FilePath { Source = this.currentTextField.StringValue, IsDirectory = IsDirectory () };
+			ViewModel.Value = new FilePath { Source = this.currentTextField.StringValue };
 		}
 
 		private void BrowsePathButton_Activated (object sender, EventArgs e)
@@ -119,21 +125,6 @@ namespace Xamarin.PropertyEditing.Mac
 				this.revealPathButton.Alignment = NSTextAlignment.Left;
 			}
 
-			if (IsDirectory ()) {
-				this.currentTextField.ToolTip = this.currentTextField.PlaceholderString = string.Format (LocalizationResources.ChooseFileOrDirectory, LocalizationResources.Directory);
-				this.revealPathButton.ToolTip = string.Format (LocalizationResources.RevealFileOrDirectory, LocalizationResources.Directory);
-				this.browsePathButton.ToolTip = string.Format (LocalizationResources.BrowseFileOrDirectory, LocalizationResources.Directory);
-
-				this.panel.CanChooseFiles = false;
-				this.panel.CanChooseDirectories = true;
-			} else {
-				this.currentTextField.ToolTip = this.currentTextField.PlaceholderString = string.Format (LocalizationResources.ChooseFileOrDirectory, LocalizationResources.File);
-				this.revealPathButton.ToolTip = string.Format (LocalizationResources.RevealFileOrDirectory, LocalizationResources.File);
-				this.browsePathButton.ToolTip = string.Format (LocalizationResources.BrowseFileOrDirectory, LocalizationResources.File);
-
-				this.panel.CanChooseFiles = true;
-				this.panel.CanChooseDirectories = false;
-			}
 			//button states
 			this.revealPathButton.Enabled = FileExists ();
 			Window?.RecalculateKeyViewLoop ();
@@ -161,8 +152,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			this.currentTextField.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityPathEditor,
-				 IsDirectory () ? LocalizationResources.Directory : LocalizationResources.File);
+			this.currentTextField.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityPathEditor, LocalizationResources.File);
 		}
 
 		protected override void Dispose (bool disposing)

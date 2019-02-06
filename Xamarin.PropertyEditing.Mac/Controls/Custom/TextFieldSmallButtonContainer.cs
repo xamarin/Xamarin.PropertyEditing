@@ -30,14 +30,14 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public List<SmallButton> Buttons { get; } = new List<SmallButton> ();
 		private readonly ButtonTextFieldCell cell;
-		internal NSView lastView;
+		private NSView lastView;
 
 		public override bool Editable { 
 			get => base.Editable;
 			set
 			{
 				base.Editable = value;
-				foreach (var item in Buttons) {
+				foreach (SmallButton item in Buttons) {
 					item.Enabled = value;
 				}
 			}
