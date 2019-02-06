@@ -168,7 +168,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				this.numericEditorWidthConstraint.Constant = -117f; // Shorten the stringEditor if we have Inputmodes Showing.
 			} else {
-				this.numericEditorWidthConstraint.Constant = -34f; // Lengthen the stringEditor if we have Inputmodes Hidden.
+				this.numericEditorWidthConstraint.Constant = -32f; // Lengthen the stringEditor if we have Inputmodes Hidden.
 			}
 
 			// If we are reusing the control we'll have to hid the inputMode if this doesn't have InputMode.

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using AppKit;
 using CoreGraphics;
@@ -25,7 +25,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public const int DefaultControlHeight = 22;
 		public const int DefaultFontSize = 11;
 		public const int DefaultPropertyLabelFontSize = 11;
-		public const int DefaultDescriptionLabelFontSize = 10;
+		public const int DefaultDescriptionLabelFontSize = 9;
 		public const string DefaultFontName = ".AppleSystemUIFont";
 		public virtual bool IsDynamicallySized => false;
 

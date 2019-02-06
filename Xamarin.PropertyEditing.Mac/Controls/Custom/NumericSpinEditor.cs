@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using AppKit;
 using CoreGraphics;
@@ -18,8 +18,8 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class NumericSpinEditor
 		: NSView, INSAccessibilityGroup
 	{
-		const int stepperSpace = 2;
-		const int stepperWidth = 11;
+		internal const int StepperSpace = 2;
+		internal const int StepperWidth = 11;
 		const int stepperTopHeight = 9;
 		const int stepperBotHeight = 10;
 		const int inputModeWidth = 60;
@@ -221,17 +221,17 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.decrementButton);
 
 			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.numericEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -(stepperWidth + stepperSpace + 1)),
+				NSLayoutConstraint.Create (this.numericEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -(StepperWidth + StepperSpace + 1)),
 				NSLayoutConstraint.Create (this.numericEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight - 3),
 
 				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.numericEditor,  NSLayoutAttribute.Top, 1f, 0f),
-				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.numericEditor,  NSLayoutAttribute.Right, 1f, stepperSpace),
-				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, stepperWidth),
+				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.numericEditor,  NSLayoutAttribute.Right, 1f, StepperSpace),
+				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, StepperWidth),
 				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, stepperTopHeight),
 
 				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.numericEditor,  NSLayoutAttribute.Top, 1f, stepperTopHeight),
-				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.numericEditor,  NSLayoutAttribute.Right, 1f, stepperSpace),
-				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, stepperWidth),
+				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.numericEditor,  NSLayoutAttribute.Right, 1f, StepperSpace),
+				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, StepperWidth),
 				NSLayoutConstraint.Create (this.decrementButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, stepperBotHeight),
 			});
 		}
