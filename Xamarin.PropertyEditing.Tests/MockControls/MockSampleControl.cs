@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Xamarin.PropertyEditing.Common;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Tests.MockPropertyInfo;
 
@@ -12,7 +13,6 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		{
 			AddProperty<bool> ("Boolean", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<bool> ("UnsetBoolean", ReadWrite, valueSources: ValueSources.Local);
-			AddProperty<FilePath> ("DirectoryPath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<FilePath> ("FilePath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<int> ("Integer", ReadWrite);
 			AddProperty<int> ("UnsetInteger", ReadWrite, valueSources: ValueSources.Local);
@@ -120,7 +120,6 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		public async Task SetInitialValuesAsync (IObjectEditor editor)
 		{
 			await editor.SetValueAsync (Properties["FilePath"], new ValueInfo<FilePath> { Value = new FilePath { Source = "/Desktop/MyTestFile" } }); ;
-			await editor.SetValueAsync (Properties["DirectoryPath"], new ValueInfo<FilePath> { Value = new FilePath { Source = "/etc", IsDirectory = true } }); ;
 		}
 
 		public async Task SetBrushInitialValueAsync (IObjectEditor editor, CommonBrush brush)

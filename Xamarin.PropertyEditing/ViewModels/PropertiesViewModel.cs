@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Cadenza.Collections;
+using Xamarin.PropertyEditing.Common;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.ViewModels
