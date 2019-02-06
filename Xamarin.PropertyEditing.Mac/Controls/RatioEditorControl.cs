@@ -42,11 +42,6 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => ratioEditor.NumericEditor;
 		public override NSView LastKeyView => ratioEditor.DecrementButton;
 
-		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
-		{
-			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
-		}
-
 		protected override void SetEnabled ()
 		{
 			this.ratioEditor.Enabled = ViewModel.Property.CanWrite;
@@ -56,16 +51,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.ratioEditor.AccessibilityEnabled = this.ratioEditor.Enabled;
 			this.ratioEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityNumeric, ViewModel.Property.Name);
-		}
-
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
-			if (ViewModel.HasErrors) {
-				SetErrors (errors);
-			} else {
-				SetErrors (null);
-				SetEnabled ();
-			}
 		}
 
 		protected override void UpdateValue ()

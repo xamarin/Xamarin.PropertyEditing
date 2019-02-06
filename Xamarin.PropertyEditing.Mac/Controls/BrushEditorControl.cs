@@ -90,21 +90,9 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => this.popUpButton;
 		public override NSView LastKeyView => this.popUpButton;
 
-		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
-		{
-		}
-
 		protected override void SetEnabled ()
 		{
 			this.popUpButton.Enabled = this.ViewModel?.Property.CanWrite ?? false;
-		}
-
-		protected override void UpdateAccessibilityValues ()
-		{
-		}
-
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
 		}
 
 		string GetTitle ()

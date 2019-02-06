@@ -133,21 +133,6 @@ namespace Xamarin.PropertyEditing.Mac
 			ViewModel.Value = (T)Activator.CreateInstance (typeof(T), XEditor.Value, YEditor.Value, WidthEditor.Value, HeightEditor.Value);
 		}
 
-		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
-		{
-			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
-		}
-
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
-			if (ViewModel.HasErrors) {
-				SetErrors (errors);
-			} else {
-				SetErrors (null);
-				SetEnabled ();
-			}
-		}
-
 		protected override void SetEnabled ()
 		{
 			XEditor.Enabled = ViewModel.Property.CanWrite;

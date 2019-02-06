@@ -34,25 +34,10 @@ namespace Xamarin.PropertyEditing.Mac
 			return subrowHeight * realVm.Choices.Count + 6;
 		}
 
-		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
-		{
-			UpdateErrorsDisplayed (ViewModel.GetErrors (e.PropertyName));
-		}
-
 		protected override void SetEnabled ()
 		{
 			foreach (var item in this.combinableList) {
 				item.Key.Enabled = ViewModel.Property.CanWrite;
-			}
-		}
-
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
-			if (ViewModel.HasErrors) {
-				SetErrors (errors);
-			} else {
-				SetErrors (null);
-				SetEnabled ();
 			}
 		}
 

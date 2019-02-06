@@ -65,27 +65,12 @@ namespace Xamarin.PropertyEditing.Mac
 		private NSView firstKeyView;
 		private NSView lastKeyView;
 
-		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
-		{
-			UpdateErrorsDisplayed (ViewModel.GetErrors (e.PropertyName));
-		}
-
 		protected override void SetEnabled ()
 		{
 			if (ViewModel.IsConstrainedToPredefined) {
 				this.popUpButton.Enabled = ViewModel.Property.CanWrite;
 			} else {
 				this.comboBox.Enabled = ViewModel.Property.CanWrite;
-			}
-		}
-
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
-			if (ViewModel.HasErrors) {
-				SetErrors (errors);
-			} else {
-				SetErrors (null);
-				SetEnabled ();
 			}
 		}
 

@@ -47,14 +47,12 @@ namespace Xamarin.PropertyEditing.Mac
 				PropertyViewModel oldModel = this.viewModel;
 				if (oldModel != null) {
 					oldModel.PropertyChanged -= OnPropertyChanged;
-					oldModel.ErrorsChanged -= HandleErrorsChanged;
 				}
 
 				this.viewModel = value;
 				OnViewModelChanged (oldModel);
 				if (this.viewModel != null) {
 					this.viewModel.PropertyChanged += OnPropertyChanged;
-					this.viewModel.ErrorsChanged += HandleErrorsChanged;
 				}
 			}
 		}
@@ -105,7 +103,9 @@ namespace Xamarin.PropertyEditing.Mac
 			return 24;
 		}
 
-		protected abstract void UpdateValue ();
+		protected virtual void UpdateValue ()
+		{
+		}
 
 		protected virtual void OnViewModelChanged (PropertyViewModel oldModel)
 		{
@@ -123,17 +123,13 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		/// <summary>
-		/// Update the display with any errors we need to show or remove
-		/// </summary>
-		/// <param name="errors">The error messages to display to the user</param>
-		protected abstract void UpdateErrorsDisplayed (IEnumerable errors);
+		protected virtual void SetEnabled ()
+		{
+		}
 
-		protected abstract void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e);
-
-		protected abstract void SetEnabled ();
-
-		protected abstract void UpdateAccessibilityValues ();
+		protected virtual void UpdateAccessibilityValues ()
+		{
+		}
 	}
 
 	internal abstract class PropertyEditorControl<TViewModel>

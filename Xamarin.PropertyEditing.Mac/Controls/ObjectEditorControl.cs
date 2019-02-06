@@ -47,14 +47,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
-		}
-
-		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
-		{
-		}
-
 		protected override void SetEnabled ()
 		{
 			this.createObject.Enabled = ViewModel.Property.CanWrite;
