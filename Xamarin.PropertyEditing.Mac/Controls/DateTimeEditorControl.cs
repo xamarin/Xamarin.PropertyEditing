@@ -8,6 +8,8 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class DateTimeEditorControl : PropertyEditorControl<PropertyViewModel<DateTime>>
 	{
+		private const int HeightMargin = 1;
+
 		private readonly NSDatePicker editor;
 
 		public DateTimeEditorControl (IHostResourceProvider hostResources)
@@ -26,7 +28,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
-				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
+				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 0),
+				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
 			});
 		}
 
@@ -35,6 +38,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override NSView FirstKeyView => this.editor;
 		public override NSView LastKeyView => this.editor;
+
+		public override nint GetHeight (EditorViewModel vm)
+		{
+			return DefaultControlHeight + HeightMargin;
+		}
 
 		protected override void UpdateValue ()
 		{
