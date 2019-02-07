@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class DateTimeEditorControl : PropertyEditorControl<PropertyViewModel<DateTime>>
 	{
-		private const int HeightMargin = 1;
+		private const int HeightMargin = 2;
 
 		private readonly NSDatePicker editor;
 
