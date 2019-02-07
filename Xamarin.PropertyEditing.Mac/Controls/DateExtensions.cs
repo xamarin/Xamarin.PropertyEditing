@@ -3,7 +3,7 @@ using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public static class DateExtensions
+	internal static class DateExtensions
 	{
 		/// <summary>The NSDate from Xamarin takes a reference point form January 1, 2001, at 12:00</summary>
 		/// <remarks>
