@@ -10,11 +10,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class PanelGroupViewModel
 		: NotifyingObject
 	{
-		public PanelGroupViewModel (string category, IEnumerable<EditorViewModel> editors, bool separateUncommon = true)
+		public PanelGroupViewModel (TargetPlatform targetPlatform, string category, IEnumerable<EditorViewModel> editors, bool separateUncommon = true)
 		{
+			if (targetPlatform == null)
+				throw new ArgumentNullException (nameof(targetPlatform));
 			if (editors == null)
 				throw new ArgumentNullException (nameof(editors));
 
+			this.targetPlatform = targetPlatform;
 			Category = category;
 			AddCore (editors, separateUncommon);
 		}
@@ -53,7 +56,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (editor == null)
 				throw new ArgumentNullException (nameof(editor));
 
-			return GetList (editor, separate: true).Remove (editor);
+			var list = GetList (editor, separate: true);
+			if (editor is PropertyViewModel pvm && this.targetPlatform.GroupedTypes != null && this.targetPlatform.GroupedTypes.TryGetValue (pvm.Property.Type, out string groupName)) {
+				var group = list.OfType<PropertyGroupViewModel> ().First (gvm => gvm.Category == groupName);
+				if (group != null) {
+					bool found = group.Remove (pvm);
+					if (!group.HasChildElements)
+						list.Remove (group);
+
+					return found;
+				}
+			}
+
+			return list.Remove (editor);
 		}
 
 		public bool GetIsExpanded (PropertyArrangeMode mode)
@@ -80,6 +95,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private Dictionary<PropertyArrangeMode, bool> isExpanded;
 		private readonly ObservableCollectionEx<EditorViewModel> editors = new ObservableCollectionEx<EditorViewModel> ();
 		private readonly ObservableCollectionEx<EditorViewModel> uncommonEditors = new ObservableCollectionEx<EditorViewModel> ();
+		private readonly TargetPlatform targetPlatform;
 
 		private void AddCore (IEnumerable<EditorViewModel> editors, bool separate)
 		{
@@ -95,7 +111,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (editor == null)
 				throw new ArgumentNullException (nameof (editor));
 
-			GetList (editor, separate).Add (editor);
+			var list = GetList (editor, separate);
+			if (editor is PropertyViewModel pvm && this.targetPlatform.GroupedTypes != null && this.targetPlatform.GroupedTypes.TryGetValue (pvm.Property.Type, out string groupName)) {
+				var group = list.OfType<PropertyGroupViewModel> ().First (gvm => gvm.Category == groupName);
+				if (group != null)
+					group.Add (pvm);
+				else
+					list.Add (editor);
+			} else
+				list.Add (editor);
+
 			OnPropertyChanged (nameof(HasChildElements));
 			OnPropertyChanged (nameof(HasUncommonElements));
 		}
@@ -249,9 +274,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 				string key = grouping.Key;
 				if (remainingItems != null) {// TODO: pretty sure this was out of order before, add test
 					if (remainingItems.Count > 0)
-						this.arranged.Add (key, new PanelGroupViewModel (key, grouping.Where (evm => remainingItems.Contains (evm))));
+						this.arranged.Add (key, new PanelGroupViewModel (TargetPlatform, key, grouping.Where (evm => remainingItems.Contains (evm))));
 				} else
-					this.arranged.Add (key, new PanelGroupViewModel (key, grouping, separateUncommon: !isFlat));
+					this.arranged.Add (key, new PanelGroupViewModel (TargetPlatform, key, grouping, separateUncommon: !isFlat));
 
 				AutoExpandGroup (key);
 			}
@@ -259,7 +284,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (groupedTypeProperties != null) { // Insert type-grouped properties back in sorted.
 				int i = 0;
 				foreach (var kvp in groupedTypeProperties.OrderBy (kvp => kvp.Key, CategoryComparer.Instance)) {
-					var group = new PanelGroupViewModel (kvp.Key, new[] { new PropertyGroupViewModel (TargetPlatform, kvp.Key, kvp.Value, ObjectEditors) });
+					var group = new PanelGroupViewModel (TargetPlatform, kvp.Key, new[] { new PropertyGroupViewModel (TargetPlatform, kvp.Key, kvp.Value, ObjectEditors) });
 
 					bool added = false;
 					for (; i < this.arranged.Count; i++) {
@@ -385,7 +410,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private string GetGroup (EditorViewModel vm)
 		{
-			return (ArrangeMode == PropertyArrangeMode.Name) ? "0" : (vm.Category ?? String.Empty);
+			if (ArrangeMode == PropertyArrangeMode.Name)
+				return "0";
+			if (vm is PropertyViewModel pvm) {
+				if (TargetPlatform.GroupedTypes != null && TargetPlatform.GroupedTypes.TryGetValue (pvm.Property.Type, out string groupName))
+					return groupName;
+			}
+
+			return vm.Category ?? String.Empty;
 		}
 
 		private bool MatchesFilter (EditorViewModel vm)

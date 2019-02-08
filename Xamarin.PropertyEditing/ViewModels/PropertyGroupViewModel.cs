@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			Category = category;
 
-			this.properties = properties.ToArray ();
+			this.properties = properties.ToList ();
 			foreach (var vm in this.properties) {
 				if (vm.IsAvailable)
 					this.propertiesView.Add (vm);
@@ -55,9 +55,34 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		private readonly PropertyViewModel[] properties;
+		public void Add (PropertyViewModel property)
+		{
+			if (property == null)
+				throw new ArgumentNullException (nameof(property));
+
+			this.properties.Add (property);
+			Reload ();
+		}
+
+		public bool Remove (PropertyViewModel property)
+		{
+			if (property == null)
+				throw new ArgumentNullException (nameof(property));
+
+			if (this.properties.Remove (property))
+				return this.propertiesView.Remove (property);
+
+			return false;
+		}
+
+		private readonly List<PropertyViewModel> properties;
 		private readonly ObservableCollectionEx<PropertyViewModel> propertiesView = new ObservableCollectionEx<PropertyViewModel> ();
 		private string filterText;
+
+		private void Reload ()
+		{
+			Filter (null);
+		}
 
 		private void Filter (string oldFilter)
 		{
