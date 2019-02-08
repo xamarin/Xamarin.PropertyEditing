@@ -209,7 +209,7 @@ namespace Xamarin.PropertyEditing.Tests
 		[Test]
 		public async Task PropertyListCategoryGroupedWithNullCategory ()
 		{
-			// Purposefully a null catgory
+			// Purposefully a null category
 			var normalProp = new Mock<IPropertyInfo> ();
 			normalProp.SetupGet (p => p.Type).Returns (typeof(string));
 			normalProp.SetupGet (p => p.Name).Returns ("name");
@@ -412,6 +412,34 @@ namespace Xamarin.PropertyEditing.Tests
 
 			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
 			Assert.That (vm.GetIsExpanded (normalProp.Object.Category), Is.True);
+		}
+
+		[Test]
+		public void GroupedTypesDoNotLeavePhantomCategory ()
+		{
+			var target = new object ();
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.Type).Returns (typeof (string));
+			property.SetupGet (p => p.Category).Returns ((string)null);
+			property.SetupGet (p => p.Name).Returns ("name");
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (target))
+				.ReturnsAsync (new MockObjectEditor (property.Object) { Target = target });
+
+			var platform = new TargetPlatform (provider.Object) {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(string), "strings" }
+				}
+			};
+
+			var vm = CreateVm (platform);
+			vm.ArrangeMode = PropertyArrangeMode.Category;
+			vm.AutoExpand = true;
+			vm.SelectedObjects.Add (target);
+
+			Assert.That (vm.ArrangedEditors.Count, Is.EqualTo (1));
 		}
 
 		internal override PanelViewModel CreateVm (TargetPlatform platform)

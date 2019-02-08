@@ -246,10 +246,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 					}
 				}
 
-				string key = grouping.Key ?? String.Empty;
-				if (remainingItems != null) // TODO: pretty sure this was out of order before, add test
-					this.arranged.Add (key, new PanelGroupViewModel (key, grouping.Where (evm => remainingItems.Contains (evm))));
-				else
+				string key = grouping.Key;
+				if (remainingItems != null) {// TODO: pretty sure this was out of order before, add test
+					if (remainingItems.Count > 0)
+						this.arranged.Add (key, new PanelGroupViewModel (key, grouping.Where (evm => remainingItems.Contains (evm))));
+				} else
 					this.arranged.Add (key, new PanelGroupViewModel (key, grouping, separateUncommon: !isFlat));
 
 				AutoExpandGroup (key);
