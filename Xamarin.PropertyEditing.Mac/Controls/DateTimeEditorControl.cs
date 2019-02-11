@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using AppKit;
+using CoreGraphics;
+using Foundation;
 using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -8,17 +10,14 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class DateTimeEditorControl : PropertyEditorControl<PropertyViewModel<DateTime>>
 	{
-		private const int HeightMargin = 2;
-
-		private readonly NSDatePicker editor;
+		private const int HeightMargin = 1;
+		private readonly CustomDatePicker editor;
 
 		public DateTimeEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
-			this.editor = new NSDatePicker {
-				TranslatesAutoresizingMaskIntoConstraints = false,
+			this.editor = new CustomDatePicker (hostResources) {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
-				DatePickerElements = NSDatePickerElementFlags.HourMinuteSecond | NSDatePickerElementFlags.YearMonthDateDay
 			};
 
 			// update the value on keypress
@@ -29,24 +28,24 @@ namespace Xamarin.PropertyEditing.Mac
 			AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
 				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 0),
-				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 140),
+				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 20),
 			});
 		}
 
-		private void Editor_Activated (object sender, EventArgs e) =>
-			ViewModel.Value = this.editor.DateValue.ToDateTime ();
+		private void Editor_Activated (object sender, EventArgs e) => ViewModel.Value = this.editor.DateTime;
 
-		public override NSView FirstKeyView => this.editor;
-		public override NSView LastKeyView => this.editor;
+		public override NSView FirstKeyView => this.editor.DatePicker;
+		public override NSView LastKeyView => this.editor.DatePicker;
 
 		public override nint GetHeight (EditorViewModel vm)
 		{
-			return DefaultControlHeight + HeightMargin;
+			return DefaultControlHeight - HeightMargin;
 		}
 
 		protected override void UpdateValue ()
 		{
-			this.editor.DateValue = ViewModel.Value.ToNSDate ();
+			this.editor.DateTime = ViewModel.Value;
 		}
 
 		protected override void SetEnabled ()

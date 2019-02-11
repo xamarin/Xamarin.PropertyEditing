@@ -32,8 +32,12 @@ namespace Xamarin.PropertyEditing.Mac
 		/// <returns>A DateTime</returns>
 		public static DateTime ToDateTime (this NSDate nsDate)
 		{
-			// We loose granularity below millisecond range but that is probably ok
-			return _nsRef.AddSeconds (nsDate.SecondsSinceReferenceDate);
+			try {
+				// We loose granularity below millisecond range but that is probably ok
+				return _nsRef.AddSeconds (nsDate.SecondsSinceReferenceDate);
+			} catch (Exception) {
+				return _nsRef;
+			}
 		}
 	}
 }
