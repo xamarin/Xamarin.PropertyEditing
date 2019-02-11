@@ -1,5 +1,6 @@
 ﻿using System;
 using AppKit;
+using CoreGraphics;
 using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -7,6 +8,16 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class SpinnerButton
 		: UnfocusableButton
 	{
+		public bool AcceptsUserInteraction { get; set; } = true;
+
+		public override NSView HitTest (CGPoint aPoint)
+		{
+			if (!AcceptsUserInteraction) {
+				return null;
+			}
+			return this;
+		}
+
 		public SpinnerButton (IHostResourceProvider hostResource, bool isUp)
 		{
 			if (hostResource == null)
