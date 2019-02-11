@@ -14,9 +14,6 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	public partial class PropertyEditorPanel : NSView
 	{
-		internal const string PropertyListColId = "PropertiesList";
-		internal const string PropertyEditorColId = "PropertyEditors";
-
 		public PropertyEditorPanel ()
 		{
 			this.hostResources = new HostResourceProvider ();
@@ -83,7 +80,6 @@ namespace Xamarin.PropertyEditing.Mac
 			set
 			{
 				if (this.viewModel != null) {
-					this.viewModel.ArrangedPropertiesChanged -= OnPropertiesChanged;
 					this.viewModel.PropertyChanged -= OnVmPropertyChanged;
 
 					var views = this.tabStack.Views;
@@ -94,13 +90,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 				this.targetPlatform = value;
 				this.viewModel = new PanelViewModel (value);
-				this.dataSource = new PropertyTableDataSource (this.viewModel);
-				this.propertyTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
-				this.propertyTable.DataSource = this.dataSource;
+				this.propertyList.ViewModel = this.viewModel;
 
 				OnVmPropertyChanged (this.viewModel, new PropertyChangedEventArgs (null));
 				if (this.viewModel != null) {
-					this.viewModel.ArrangedPropertiesChanged += OnPropertiesChanged;
 					this.viewModel.PropertyChanged += OnVmPropertyChanged;
 
 					for (int i = 0; i < this.viewModel.ArrangeModes.Count; i++) {
@@ -130,18 +123,10 @@ namespace Xamarin.PropertyEditing.Mac
 			((ObservableCollectionEx<object>)SelectedItems).Reset (selectedItems);
 		}
 
-		public override void ViewDidChangeEffectiveAppearance ()
-		{
-			if (this.propertyTable == null)
-				return;
-
-			this.propertyTable.BackgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
-		}
-
 		private IHostResourceProvider hostResources;
 		private bool isArrangeEnabled = true;
 		private TargetPlatform targetPlatform;
-		private NSOutlineView propertyTable;
+		private PropertyList propertyList;
 		private PropertyTableDataSource dataSource;
 		private PanelViewModel viewModel;
 
@@ -180,23 +165,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 			((NSView)this.header.ContentView).AddSubview (this.tabStack);
 
-			this.propertyTable = new FirstResponderOutlineView {
-				IndentationPerLevel = 0,
-				RefusesFirstResponder = true,
-				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
-				HeaderView = null,
-				IntercellSpacing = new CGSize (0, 0)
+			this.propertyList = new PropertyList {
+				HostResourceProvider = this.hostResources,
+				TranslatesAutoresizingMaskIntoConstraints = false
 			};
-
-			var propertyEditors = new NSTableColumn (PropertyEditorColId);
-			this.propertyTable.AddColumn (propertyEditors);
-
-			var tableContainer = new NSScrollView {
-				TranslatesAutoresizingMaskIntoConstraints = false,
-			};
-
-			tableContainer.DocumentView = this.propertyTable;
-			AddSubview (tableContainer);
+			AddSubview (this.propertyList);
 
 			this.AddConstraints (new[] {
 				NSLayoutConstraint.Create (header, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 0),
@@ -215,9 +188,9 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (border, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, header, NSLayoutAttribute.Bottom, 1, 0),
 				NSLayoutConstraint.Create (border, NSLayoutAttribute.Width, NSLayoutRelation.Equal, header, NSLayoutAttribute.Width, 1, 0),
 
-				NSLayoutConstraint.Create (tableContainer, NSLayoutAttribute.Top, NSLayoutRelation.Equal, border, NSLayoutAttribute.Bottom, 1, 0),
-				NSLayoutConstraint.Create (tableContainer, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this, NSLayoutAttribute.Bottom, 1, 0),
-				NSLayoutConstraint.Create (tableContainer, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, 0),
+				NSLayoutConstraint.Create (this.propertyList, NSLayoutAttribute.Top, NSLayoutRelation.Equal, border, NSLayoutAttribute.Bottom, 1, 0),
+				NSLayoutConstraint.Create (this.propertyList, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this, NSLayoutAttribute.Bottom, 1, 0),
+				NSLayoutConstraint.Create (this.propertyList, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, 0),
 			});
 
 			ViewDidChangeEffectiveAppearance ();
@@ -225,20 +198,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void UpdateResourceProvider()
 		{
-			if (this.propertyTable.Delegate != null)
-				this.propertyTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
-
+			this.propertyList.HostResourceProvider = HostResourceProvider;
 			this.header.HostResourceProvider = HostResourceProvider;
 			this.border.HostResourceProvider = HostResourceProvider;
 
 			ViewDidChangeEffectiveAppearance ();
-		}
-
-		private void OnPropertiesChanged (object sender, EventArgs e)
-		{
-			this.propertyTable.ReloadData ();
-
-			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
 		}
 
 		private void OnArrangeModeChanged (object sender, EventArgs e)
@@ -249,8 +213,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private void OnPropertyFilterChanged (object sender, EventArgs e)
 		{
 			this.viewModel.FilterText = this.propertyFilter.Cell.Title;
-
-			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
+			this.propertyList.UpdateExpansions ();
 		}
 
 		private void OnVmPropertyChanged (object sender, PropertyChangedEventArgs e)
@@ -273,15 +236,6 @@ namespace Xamarin.PropertyEditing.Mac
 				return "pe-group-by-category-16";
 			default:
 				throw new ArgumentException();
-			}
-		}
-
-		private class FirstResponderOutlineView : NSOutlineView
-		{
-			[Export ("validateProposedFirstResponder:forEvent:")]
-			public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
-			{
-				return true;
 			}
 		}
 	}
