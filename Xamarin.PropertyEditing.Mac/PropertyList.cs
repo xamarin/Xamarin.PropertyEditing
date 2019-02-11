@@ -34,6 +34,22 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (tableContainer);
 		}
 
+		public bool ShowHeader
+		{
+			get { return this.showHeader; }
+			set
+			{
+				if (this.showHeader == value)
+					return;
+
+				this.showHeader = value;
+				if (this.dataSource != null) {
+					this.dataSource.ShowHeader = false;
+					this.propertyTable.ReloadData ();
+				}
+			}
+		}
+
 		public PanelViewModel ViewModel
 		{
 			get { return this.viewModel; }
@@ -51,7 +67,7 @@ namespace Xamarin.PropertyEditing.Mac
 				if (this.viewModel != null) {
 					this.viewModel.ArrangedPropertiesChanged += OnPropertiesChanged;
 
-					this.dataSource = new PropertyTableDataSource (this.viewModel);
+					this.dataSource = new PropertyTableDataSource (this.viewModel) { ShowHeader = ShowHeader };
 					this.propertyTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
 					this.propertyTable.DataSource = this.dataSource;
 				}
@@ -90,6 +106,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private IHostResourceProvider hostResources;
 		private PropertyTableDataSource dataSource;
 		private PanelViewModel viewModel;
+		private bool showHeader = true;
 
 		private class FirstResponderOutlineView : NSOutlineView
 		{

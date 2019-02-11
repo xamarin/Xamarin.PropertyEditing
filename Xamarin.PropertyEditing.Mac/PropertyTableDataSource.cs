@@ -23,6 +23,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public PanelViewModel DataContext => this.vm;
 
+		public bool ShowHeader
+		{
+			get;
+			set;
+		} = true;
+
 		public override nint GetChildrenCount (NSOutlineView outlineView, NSObject item)
 		{
 			if (this.vm.ArrangedEditors.Count == 0)
@@ -32,12 +38,14 @@ namespace Xamarin.PropertyEditing.Mac
 			if (facade?.Target is ObjectPropertyViewModel ovm)
 				return ovm.ValueModel.Properties.Count;
 
-			var childCount = 0;
+			int headerCount = (ShowHeader && !Filtering) ? 1 : 0;
+
+			int childCount;
 			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
-				childCount = Filtering ? this.vm.ArrangedEditors[0].Editors.Count : this.vm.ArrangedEditors[0].Editors.Count + 1;
+				childCount = this.vm.ArrangedEditors[0].Editors.Count + headerCount;
 			else {
 				if (item == null)
-					childCount = Filtering ? this.vm.ArrangedEditors.Count : this.vm.ArrangedEditors.Count + 1;
+					childCount = this.vm.ArrangedEditors.Count + headerCount;
 				else {
 					var group = (PanelGroupViewModel)((NSObjectFacade)item).Target;
 					childCount = group.Editors.Count + group.UncommonEditors.Count;
@@ -53,16 +61,17 @@ namespace Xamarin.PropertyEditing.Mac
 
 			var f = ((NSObjectFacade)item);
 			// We only want the Header to appear at the top of both Category and Name Modes, which means item is null in both.
-			if (childIndex == 0 && item == null && !Filtering)
+			if (childIndex == 0 && item == null && !Filtering && ShowHeader)
 				element = null;
 			else if (f?.Target is ObjectPropertyViewModel ovm) {
 				element = ovm.ValueModel.Properties[(int)childIndex];
 			} else {
+				int headerCount = (ShowHeader && !Filtering) ? 1 : 0;
 				if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
-					element = Filtering ? this.vm.ArrangedEditors[0].Editors[(int)childIndex] : this.vm.ArrangedEditors[0].Editors[(int)childIndex - 1];
+					element = this.vm.ArrangedEditors[0].Editors[(int)childIndex - headerCount];
 				else {
 					if (item == null)
-						element = Filtering ? this.vm.ArrangedEditors[(int)childIndex] : this.vm.ArrangedEditors[(int)childIndex - 1];
+						element = this.vm.ArrangedEditors[(int)childIndex - headerCount];
 					else {
 						var group = (PanelGroupViewModel)f.Target;
 						var list = group.Editors;
