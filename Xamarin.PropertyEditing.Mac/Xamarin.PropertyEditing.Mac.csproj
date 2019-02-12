@@ -153,6 +153,7 @@
     <Compile Include="Controls\TypeEditorControl.cs" />
     <Compile Include="Controls\FilePathEditorControl.cs" />
     <Compile Include="Controls\Custom\TextFieldSmallButtonContainer.cs" />
+    <Compile Include="Controls\BasePathEditorControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
