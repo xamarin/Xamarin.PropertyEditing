@@ -27,6 +27,7 @@ namespace Xamarin.PropertyEditing.Common
 
 		public bool Equals (FilePath other)
 		{
+			if (other == null) return false;
 			return Source.Equals (other.Source, StringComparison.InvariantCultureIgnoreCase);
 		}
 
