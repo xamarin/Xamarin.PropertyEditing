@@ -10,6 +10,9 @@ namespace Xamarin.PropertyEditing.Common
 
 		public FilePath (string source) 
 		{
+			if (source == null) {
+				throw new ArgumentNullException (nameof (source));
+			}
 			Source = source;
 		}
 
