@@ -110,38 +110,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnTypeRequested (object sender, TypeRequestedEventArgs e)
 		{
-			var tcs = new TaskCompletionSource<ITypeInfo> ();
-			e.SelectedType = tcs.Task;
-
-			var vm = new TypeSelectorViewModel (ViewModel.AssignableTypes);
-			var selector = new TypeSelectorControl {
-				ViewModel = vm,
-				Appearance = EffectiveAppearance
-			};
-
-			vm.PropertyChanged += (vms, ve) => {
-				if (ve.PropertyName == nameof (TypeSelectorViewModel.SelectedType)) {
-					tcs.TrySetResult (vm.SelectedType);
-				}
-			};
-
-			var popover = new NSPopover {
-				Behavior = NSPopoverBehavior.Transient,
-				Delegate = new PopoverDelegate<ITypeInfo> (tcs),
-				ContentViewController = new NSViewController {
-					View = selector,
-					PreferredContentSize = new CoreGraphics.CGSize (360, 335)
-				},
-			};
-
-			popover.SetAppearance (HostResources.GetVibrantAppearance (EffectiveAppearance));
-
-			tcs.Task.ContinueWith (t => {
-				popover.PerformClose (popover);
-				popover.Dispose ();
-			}, TaskScheduler.FromCurrentSynchronizationContext());
-
-			popover.Show (this.createObject.Frame, this, NSRectEdge.MinYEdge);
+			e.SelectedType = e.RequestAt (HostResources, this.createObject, ViewModel.AssignableTypes);
 		}
 
 		private void UpdateTypeLabel ()
@@ -163,22 +132,6 @@ namespace Xamarin.PropertyEditing.Mac
 		private void OnNewPressed (object sender, EventArgs e)
 		{
 			ViewModel.CreateInstanceCommand.Execute (null);
-		}
-
-		private class PopoverDelegate<T>
-			: NSPopoverDelegate
-		{
-			public PopoverDelegate (TaskCompletionSource<T> tcs)
-			{
-				this.tcs = tcs;
-			}
-
-			public override void WillClose (NSNotification notification)
-			{
-				this.tcs.TrySetCanceled ();
-			}
-
-			private readonly TaskCompletionSource<T> tcs;
 		}
 	}
 }
