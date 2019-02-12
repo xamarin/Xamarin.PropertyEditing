@@ -21,6 +21,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => this.currentTextField;
 		public override NSView LastKeyView => this.revealPathButton.Enabled ? this.revealPathButton : this.browsePathButton;
 
+		private readonly NSObject[] objects;
+		public override NSObject[] AccessibilityChildren
+		{
+			get => this.objects;
+		}
+
 		protected BasePathEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
@@ -59,6 +65,17 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			this.browsePathButton.Activated += BrowsePathButton_Activated;
 			this.currentTextField.AddButton (this.browsePathButton);
+
+			this.objects = new NSObject[3];
+			this.objects[0] = this.currentTextField;
+			this.objects[1] = this.browsePathButton;
+			this.objects[2] = this.revealPathButton;
+			this.AccessibilityElement = true;
+			this.AccessibilityRole = NSAccessibilityRoles.GroupRole;
+
+			this.currentTextField.AccessibilityRole = NSAccessibilityRoles.TextFieldRole;
+			this.revealPathButton.AccessibilityRole = NSAccessibilityRoles.ButtonRole;
+			this.browsePathButton.AccessibilityRole = NSAccessibilityRoles.ButtonRole;
 
 			#endregion
 

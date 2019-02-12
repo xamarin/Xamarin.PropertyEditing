@@ -5,6 +5,7 @@ using CoreGraphics;
 using Xamarin.PropertyEditing.Mac.Resources;
 using System.IO;
 using Xamarin.PropertyEditing.Common;
+using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -38,7 +39,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			this.currentTextField.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityPathEditor, LocalizationResources.File);
+			this.currentTextField.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityPathEditor, ViewModel.Property.Name, LocalizationResources.File);
 		}
 
 		protected override void UpdateValue ()
