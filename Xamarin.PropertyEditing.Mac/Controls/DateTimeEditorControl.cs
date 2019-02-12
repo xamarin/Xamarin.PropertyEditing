@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using AppKit;
 using CoreGraphics;
@@ -10,42 +10,40 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class DateTimeEditorControl : PropertyEditorControl<PropertyViewModel<DateTime>>
 	{
-		private const int HeightMargin = 1;
-		private readonly CustomDatePicker editor;
+		private readonly NSDatePicker datePicker;
 
 		public DateTimeEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
-			this.editor = new CustomDatePicker (hostResources) {
+			this.datePicker = new NSDatePicker {
+				ControlSize = NSControlSize.Small,
+				DatePickerElements = NSDatePickerElementFlags.HourMinuteSecond | NSDatePickerElementFlags.YearMonthDateDay,
+				DatePickerStyle = NSDatePickerStyle.TextFieldAndStepper,
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				TranslatesAutoresizingMaskIntoConstraints = false
 			};
 
 			// update the value on keypress
-			this.editor.Activated += Editor_Activated;
+			this.datePicker.Activated += Editor_Activated;
 
-			AddSubview (this.editor);
+			AddSubview (this.datePicker);
 
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
-				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 0),
-				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 140),
-				NSLayoutConstraint.Create (this.editor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 20),
+				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
+				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 1f),
+				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -34f),
+				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 20),
 			});
 		}
 
-		private void Editor_Activated (object sender, EventArgs e) => ViewModel.Value = this.editor.DateTime;
+		private void Editor_Activated (object sender, EventArgs e) => ViewModel.Value = this.datePicker.DateValue.ToDateTime ();
 
-		public override NSView FirstKeyView => this.editor.DatePicker;
-		public override NSView LastKeyView => this.editor.DatePicker;
-
-		public override nint GetHeight (EditorViewModel vm)
-		{
-			return DefaultControlHeight - HeightMargin;
-		}
+		public override NSView FirstKeyView => this.datePicker;
+		public override NSView LastKeyView => this.datePicker;
 
 		protected override void UpdateValue ()
 		{
-			this.editor.DateTime = ViewModel.Value;
+			this.datePicker.DateValue = ViewModel.Value.ToNSDate ();
 		}
 
 		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
@@ -65,17 +63,17 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			this.editor.Enabled = ViewModel.Property.CanWrite;
+			this.datePicker.Enabled = ViewModel.Property.CanWrite;
 		}
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			this.editor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityDateTime, ViewModel.Property.Name);
+			this.datePicker.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityDateTime, ViewModel.Property.Name);
 		}
 
 		protected override void Dispose (bool disposing)
 		{
-			this.editor.Activated -= Editor_Activated;
+			this.datePicker.Activated -= Editor_Activated;
 			base.Dispose (disposing);
 		}
 	}
