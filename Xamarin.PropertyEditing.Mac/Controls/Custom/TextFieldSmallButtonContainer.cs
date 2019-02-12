@@ -28,7 +28,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class TextFieldSmallButtonContainer : NSTextField
 	{
-		public List<SmallButton> Buttons { get; } = new List<SmallButton> ();
+		private readonly List<SmallButton> buttons = new List<SmallButton> ();
 		private readonly ButtonTextFieldCell cell;
 		private NSView lastView;
 
@@ -37,7 +37,7 @@ namespace Xamarin.PropertyEditing.Mac
 			set
 			{
 				base.Editable = value;
-				foreach (SmallButton item in Buttons) {
+				foreach (SmallButton item in buttons) {
 					item.Enabled = value;
 				}
 			}
@@ -76,7 +76,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			AddSubview (button);
 
-			var separation = Buttons.Count == 0 ? ButtonRightBorder : (ButtonSeparation + ButtonSize);
+			var separation = buttons.Count == 0 ? ButtonRightBorder : (ButtonSeparation + ButtonSize);
 
 			AddConstraints (new[] {
 				NSLayoutConstraint.Create (button, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, lastView, NSLayoutAttribute.CenterY, 1f, 0),
@@ -85,14 +85,14 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (button, NSLayoutAttribute.Right, NSLayoutRelation.Equal, lastView, NSLayoutAttribute.Right, 1f, -separation),
 			});
 
-			Buttons.Add (button);
-			this.lastView = Buttons[Buttons.Count - 1];
+			buttons.Add (button);
+			this.lastView = buttons[buttons.Count - 1];
 
 			//preview keyview calculation
 			button.SetPreviousKeyView (this);
-			if (Buttons.Count > 1) {
-				for (var i = Buttons.Count - 2; i >= 0; i--) {
-					Buttons[i].SetPreviousKeyView (Buttons[i+1]);
+			if (buttons.Count > 1) {
+				for (var i = buttons.Count - 2; i >= 0; i--) {
+					buttons[i].SetPreviousKeyView (buttons[i + 1]);
 				}
 			}
 		}
@@ -120,7 +120,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{
 				base.SelectWithFrame (DrawingRectForBounds (aRect), inView, editor, delegateObject, selStart, selLength);
 			}
-		
+
 			public override void ResetCursorRect (CGRect cellFrame, NSView inView)
 			{
 				base.ResetCursorRect (DrawingRectForBounds (cellFrame), inView);
@@ -129,10 +129,10 @@ namespace Xamarin.PropertyEditing.Mac
 			public override CGRect DrawingRectForBounds (CGRect theRect)
 			{
 				CGRect baseRect = base.DrawingRectForBounds (theRect);
-				if (this.field.Buttons.Count == 0) {
+				if (this.field.buttons.Count == 0) {
 					return baseRect;
 				}
-				return new CGRect (baseRect.X, baseRect.Y - 2, baseRect.Width - (this.field.ButtonSize * this.field.Buttons.Count), 20);
+				return new CGRect (baseRect.X, baseRect.Y - 2, baseRect.Width - (this.field.ButtonSize * this.field.buttons.Count), 20);
 			}
 		}
 	}
