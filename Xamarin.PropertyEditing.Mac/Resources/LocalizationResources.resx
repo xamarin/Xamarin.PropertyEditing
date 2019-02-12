@@ -149,7 +149,7 @@
     <comment>Editor for InputMode Value</comment>
   </data>
   <data name="AccessibilityPathEditor" xml:space="preserve">
-    <value>{0} Path Editor</value>
+    <value>{0} {1} Path Editor</value>
     <comment>Editor for File/Directory Path Editor</comment>
   </data>  
   <data name="ChooseFileOrDirectory" xml:space="preserve">

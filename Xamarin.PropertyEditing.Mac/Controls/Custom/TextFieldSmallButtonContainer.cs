@@ -28,6 +28,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class TextFieldSmallButtonContainer : NSTextField
 	{
+		private readonly NSObject[] objects = new NSObject[0];
+		public override NSObject[] AccessibilityChildren => this.objects;
+
 		private readonly List<SmallButton> buttons = new List<SmallButton> ();
 		private readonly ButtonTextFieldCell cell;
 		private NSView lastView;
@@ -84,7 +87,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (button, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, ButtonSize),
 				NSLayoutConstraint.Create (button, NSLayoutAttribute.Right, NSLayoutRelation.Equal, lastView, NSLayoutAttribute.Right, 1f, -separation),
 			});
-
 			this.buttons.Add (button);
 			this.lastView = this.buttons[this.buttons.Count - 1];
 
