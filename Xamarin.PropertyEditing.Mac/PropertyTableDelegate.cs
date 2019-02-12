@@ -191,13 +191,13 @@ namespace Xamarin.PropertyEditing.Mac
 			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
 
 			if (group != null)
-				return 20;
+				return 24;
 
 			if (!this.registrations.TryGetValue (cellIdentifier, out EditorRegistration registration)) {
 				registration = new EditorRegistration ();
 
 				if (cellIdentifier == nameof(PanelHeaderEditorControl)) {
-					registration.RowSize = 44;
+					registration.RowSize = 54;
 				} else {
 					NSView editorOrContainer = GetEditor (cellIdentifier, vm, outlineView);
 					IEditorView view = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
