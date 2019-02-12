@@ -9,6 +9,9 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class BasePathEditorControl<T> : PropertyEditorControl<PropertyViewModel<T>>
 	{
+		private const string PathRevealName = "path-reveal";
+		private const string PathBrowseName = "path-browse";
+
 		protected readonly TextFieldSmallButtonContainer currentTextField;
 
 		protected readonly NSOpenPanel panel;
@@ -29,6 +32,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.revealPathButton = new SmallButton {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				Image = HostResources.GetNamedImage (PathRevealName),
 				StringValue = string.Empty
 			};
 
@@ -50,6 +54,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.browsePathButton = new SmallButton {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				Image = HostResources.GetNamedImage (PathBrowseName),
 				StringValue = string.Empty
 			};
 			this.browsePathButton.Activated += BrowsePathButton_Activated;
@@ -76,8 +81,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ViewDidChangeEffectiveAppearance ()
 		{
-			this.revealPathButton.Image = HostResources.GetNamedImage ("path-reveal");
-			this.browsePathButton.Image = HostResources.GetNamedImage ("path-browse");
+			this.revealPathButton.Image = HostResources.GetNamedImage (PathRevealName);
+			this.browsePathButton.Image = HostResources.GetNamedImage (PathBrowseName);
 			base.ViewDidChangeEffectiveAppearance ();
 		}
 
