@@ -26,12 +26,19 @@ namespace Xamarin.PropertyEditing.Mac
 			var propertyEditors = new NSTableColumn (PropertyEditorColId);
 			this.propertyTable.AddColumn (propertyEditors);
 
-			var tableContainer = new NSScrollView {
-				AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable
+			this.scrollView = new NSScrollView {
+				AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable,
+				HasHorizontalScroller = false,
 			};
 
-			tableContainer.DocumentView = this.propertyTable;
-			AddSubview (tableContainer);
+			this.scrollView.DocumentView = this.propertyTable;
+			AddSubview (this.scrollView);
+		}
+
+		public bool ShowBorder
+		{
+			get { return this.scrollView.BorderType != NSBorderType.NoBorder; }
+			set { this.scrollView.BorderType = (value) ? NSBorderType.LineBorder : NSBorderType.NoBorder; }
 		}
 
 		public bool ShowHeader
@@ -103,6 +110,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		private readonly NSOutlineView propertyTable;
+		private readonly NSScrollView scrollView;
 		private IHostResourceProvider hostResources;
 		private PropertyTableDataSource dataSource;
 		private PanelViewModel viewModel;
