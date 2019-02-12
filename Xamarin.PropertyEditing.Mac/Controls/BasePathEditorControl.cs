@@ -29,8 +29,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.revealPathButton = new SmallButton {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
-				StringValue = string.Empty,
-				Image = hostResource.GetNamedImage ("path-reveal"),
+				StringValue = string.Empty
 			};
 
 			this.currentTextField.AddButton (this.revealPathButton);
@@ -51,8 +50,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.browsePathButton = new SmallButton {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
-				StringValue = string.Empty,
-				Image = hostResource.GetNamedImage ("path-browse"),
+				StringValue = string.Empty
 			};
 			this.browsePathButton.Activated += BrowsePathButton_Activated;
 			this.currentTextField.AddButton (this.browsePathButton);
@@ -74,6 +72,13 @@ namespace Xamarin.PropertyEditing.Mac
 		private void BrowsePathButton_Activated (object sender, EventArgs e)
 		{
 			this.panel.BeginSheet (this.Window, HandleAction);
+		}
+
+		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			this.revealPathButton.Image = HostResources.GetNamedImage ("path-reveal");
+			this.browsePathButton.Image = HostResources.GetNamedImage ("path-browse");
+			base.ViewDidChangeEffectiveAppearance ();
 		}
 
 		protected abstract void OnRevealPathButtonActivated (object sender, EventArgs e);
