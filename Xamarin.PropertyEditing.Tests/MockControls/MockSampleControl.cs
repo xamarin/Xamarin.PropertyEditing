@@ -11,7 +11,6 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 	{
 		public MockSampleControl ()
 		{
-			AddProperty<DateTime> ("DateTime", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<bool> ("Boolean", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<bool> ("UnsetBoolean", ReadWrite, valueSources: ValueSources.Local);
 			AddProperty<int> ("Integer", ReadWrite);
@@ -85,8 +84,11 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 				valueSources: ValueSources.Default | ValueSources.Local | ValueSources.Resource);
 			AddProperty<CommonColor> (this.colorPropertyInfo);
 
+
 			AddProperty<FilePath> ("FilePath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddReadOnlyProperty<FilePath> ("ReadOnlyFilePath", ReadOnly);
+			AddProperty<DateTime> ("DateTime", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
+			AddReadOnlyProperty<DateTime> ("ReadDateTime", ReadOnly);
 
 			AddEvents ("Click", "Hover", "Focus");
 
