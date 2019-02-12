@@ -37,7 +37,7 @@ namespace Xamarin.PropertyEditing.Mac
 			set
 			{
 				base.Editable = value;
-				foreach (SmallButton item in buttons) {
+				foreach (SmallButton item in this.buttons) {
 					item.Enabled = value;
 				}
 			}
@@ -76,7 +76,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			AddSubview (button);
 
-			var separation = buttons.Count == 0 ? ButtonRightBorder : (ButtonSeparation + ButtonSize);
+			var separation = this.buttons.Count == 0 ? ButtonRightBorder : (ButtonSeparation + ButtonSize);
 
 			AddConstraints (new[] {
 				NSLayoutConstraint.Create (button, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, lastView, NSLayoutAttribute.CenterY, 1f, 0),
@@ -85,14 +85,14 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (button, NSLayoutAttribute.Right, NSLayoutRelation.Equal, lastView, NSLayoutAttribute.Right, 1f, -separation),
 			});
 
-			buttons.Add (button);
-			this.lastView = buttons[buttons.Count - 1];
+			this.buttons.Add (button);
+			this.lastView = this.buttons[this.buttons.Count - 1];
 
 			//preview keyview calculation
 			button.SetPreviousKeyView (this);
-			if (buttons.Count > 1) {
-				for (var i = buttons.Count - 2; i >= 0; i--) {
-					buttons[i].SetPreviousKeyView (buttons[i + 1]);
+			if (this.buttons.Count > 1) {
+				for (var i = this.buttons.Count - 2; i >= 0; i--) {
+					this.buttons[i].SetPreviousKeyView (this.buttons[i + 1]);
 				}
 			}
 		}
