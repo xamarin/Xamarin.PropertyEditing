@@ -134,8 +134,11 @@ namespace Xamarin.PropertyEditing.Mac
 				if (this.field.buttons.Count == 0) {
 					return baseRect;
 				}
-				return new CGRect (baseRect.X, baseRect.Y - 2, baseRect.Width - (this.field.ButtonSize * this.field.buttons.Count), 20);
+				return new CGRect (baseRect.X, baseRect.Y - 2, baseRect.Width + DefaultMargin - (this.field.ButtonSize * this.field.buttons.Count), DefaultHeight);
 			}
+
+			private const int DefaultMargin = 16;
+			private const int DefaultHeight = 20;
 		}
 	}
 }
