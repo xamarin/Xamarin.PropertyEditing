@@ -31,7 +31,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override nint GetHeight (EditorViewModel vm)
 		{
 			var realVm = (CombinablePropertyViewModel<T>)vm;
-			return checkHeight * realVm.Choices.Count;
+			return DefaultControlHeight * realVm.Choices.Count;
 		}
 
 		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
@@ -63,9 +63,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (ViewModel == null)
 				return;
 
-			nint rowHeight = GetHeight (ViewModel);
-
-			float top = checkHeight;
+			float top = 0;
 
 			while (this.combinableList.Count > ViewModel.Choices.Count) {
 				var child = this.combinableList.KeyAt (ViewModel.Choices.Count);
@@ -80,7 +78,12 @@ namespace Xamarin.PropertyEditing.Mac
 				NSButton checkbox;
 				if (i >= this.combinableList.Count) {
 					checkbox = new NSButton {
+						AllowsExpansionToolTips = true,
 						AllowsMixedState = true,
+						Cell = {
+							LineBreakMode = NSLineBreakMode.TruncatingTail,
+							UsesSingleLineMode = true,
+						},
 						ControlSize = NSControlSize.Small,
 						Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
 						TranslatesAutoresizingMaskIntoConstraints = false,
@@ -90,15 +93,21 @@ namespace Xamarin.PropertyEditing.Mac
 					checkbox.Activated += SelectionChanged;
 
 					AddSubview (checkbox);
+
+					this.AddConstraints (new[] {
+						NSLayoutConstraint.Create (checkbox, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, top),
+						NSLayoutConstraint.Create (checkbox, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0f),
+						NSLayoutConstraint.Create (checkbox, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -33f),
+						NSLayoutConstraint.Create (checkbox, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+					});
 				} else {
 					checkbox = this.combinableList.KeyAt (i);
 				}
 
 				checkbox.Title = choice.Name;
-				checkbox.Frame = new CGRect (0, rowHeight - top, Frame.Width, checkHeight);
 
 				this.combinableList[checkbox] = choice;
-				top += checkHeight;
+				top += DefaultControlHeight;
 			}
 
 			// Set our tabable order
@@ -127,7 +136,6 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		private const int checkHeight = 22;
 		private readonly OrderedDictionary<NSButton, FlaggableChoiceViewModel<T>> combinableList = new OrderedDictionary<NSButton, FlaggableChoiceViewModel<T>> ();
 		private NSView firstKeyView;
 		private NSView lastKeyView;

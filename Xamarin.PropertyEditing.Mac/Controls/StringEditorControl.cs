@@ -27,7 +27,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public StringEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
-			this.stringEditor = new NSTextField {
+			this.stringEditor = new PropertyTextField {
 				BackgroundColor = NSColor.Clear,
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),

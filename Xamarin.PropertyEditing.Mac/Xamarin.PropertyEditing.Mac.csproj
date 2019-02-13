@@ -148,6 +148,7 @@
     <Compile Include="Controls\ObjectEditorControl.cs" />
     <Compile Include="Controls\TypeSelectorControl.cs" />
     <Compile Include="Controls\TypeSelectorWindow.cs" />
+    <Compile Include="Controls\Custom\PropertyTextField.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

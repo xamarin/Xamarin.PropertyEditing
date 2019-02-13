@@ -81,7 +81,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private UnfocusableTextField label = new UnfocusableTextField {
 			Alignment = NSTextAlignment.Right,
-			TranslatesAutoresizingMaskIntoConstraints = false
+			Cell = {
+				LineBreakMode = NSLineBreakMode.TruncatingHead,
+			},
+			TranslatesAutoresizingMaskIntoConstraints = false,
 		};
 
 #if DEBUG // Currently only used to highlight which controls haven't been implemented
