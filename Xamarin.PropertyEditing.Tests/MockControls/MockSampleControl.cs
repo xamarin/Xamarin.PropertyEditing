@@ -13,7 +13,6 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		{
 			AddProperty<bool> ("Boolean", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<bool> ("UnsetBoolean", ReadWrite, valueSources: ValueSources.Local);
-			AddProperty<FilePath> ("FilePath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<int> ("Integer", ReadWrite);
 			AddProperty<int> ("UnsetInteger", ReadWrite, valueSources: ValueSources.Local);
 			AddProperty<float> ("FloatingPoint", ReadWrite);
@@ -39,6 +38,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<CommonThickness> ("Thickness", ReadWrite);
 			AddProperty<object> ("Object", ReadWrite);
 			AddProperty<IList> ("Collection", ReadWrite);
+			AddProperty<FilePath> ("FilePath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 
 			AddReadOnlyProperty<bool> ("ReadOnlyBoolean", ReadOnly);
 			AddReadOnlyProperty<int> ("ReadOnlyInteger", ReadOnly);
@@ -52,6 +52,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddReadOnlyProperty<CommonRectangle> ("ReadOnlyRectangle", ReadOnly);
 			AddReadOnlyProperty<CommonRatio> ("ReadOnlyRatio", ReadOnly);
 			AddReadOnlyProperty<CommonThickness> ("ReadOnlyThickness", ReadOnly);
+			AddProperty<FilePath> ("ReadOnlyFilePath", ReadOnly, canWrite: false);
 
 			AddProperty<NotImplemented> ("Uncategorized", None);
 			AddProperty<string> ("ReadOnlyStringWithInputMode", ReadOnly, canWrite: false, flag: true, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding, inputModes: new[] { new InputMode ("Auto", true), new InputMode ("Star"), new InputMode ("Pixel"), });
