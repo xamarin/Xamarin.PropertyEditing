@@ -53,7 +53,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			//button states
-			this.revealPathButton.Enabled = File.Exists (this.currentTextField.StringValue);
+			this.revealPathButton.Enabled = ViewModel.Property.CanWrite && File.Exists (this.currentTextField.StringValue);
 			Window?.RecalculateKeyViewLoop ();
 		}
 	}
