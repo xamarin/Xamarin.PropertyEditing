@@ -119,7 +119,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			this.currentTextField.Enabled = ViewModel.Property.CanWrite;
+			this.currentTextField.Enabled = 
+			this.browsePathButton.Enabled = 
+			this.revealPathButton.Enabled = ViewModel.Property.CanWrite;
 		}
 
 		protected override void Dispose (bool disposing)

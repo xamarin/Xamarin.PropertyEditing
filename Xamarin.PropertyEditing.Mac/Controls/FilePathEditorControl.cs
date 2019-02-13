@@ -51,16 +51,18 @@ namespace Xamarin.PropertyEditing.Mac
 			} else {
 				this.currentTextField.StringValue = ViewModel.Value.Source ?? string.Empty;
 				this.revealPathButton.Alignment = NSTextAlignment.Left;
-
-				//button states
-				this.revealPathButton.Enabled = File.Exists (this.currentTextField.StringValue);
-				Window?.RecalculateKeyViewLoop ();
 			}
+
+			SetEnabled ();
 		}
 
 		protected override void SetEnabled ()
 		{
 			this.currentTextField.Enabled = ViewModel.Property.CanWrite;
+
+			//button states
+			this.revealPathButton.Enabled = ViewModel.Property.CanWrite && File.Exists (this.currentTextField.StringValue);
+			Window?.RecalculateKeyViewLoop ();
 		}
 	}
 }
