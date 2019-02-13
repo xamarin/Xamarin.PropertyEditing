@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using AppKit;
 using CoreGraphics;
@@ -55,7 +55,7 @@ namespace Xamarin.PropertyEditing.Mac
 			Cell.BezelStyle = NSTextFieldBezelStyle.Square;
 			TranslatesAutoresizingMaskIntoConstraints = false;
 			UsesSingleLineMode = true;
-			LineBreakMode = NSLineBreakMode.CharWrapping;
+			LineBreakMode = NSLineBreakMode.TruncatingTail;
 			this.lastView = this;
 		}
 		public override bool AllowsVibrancy => false;
@@ -131,14 +131,14 @@ namespace Xamarin.PropertyEditing.Mac
 			public override CGRect DrawingRectForBounds (CGRect theRect)
 			{
 				CGRect baseRect = base.DrawingRectForBounds (theRect);
-				if (this.field.buttons.Count == 0) {
-					return baseRect;
+				if (this.field.buttons.Count != 0) {
+					baseRect.Y -= 2;
+					baseRect.Width -= this.field.ButtonSize;
+					baseRect.Height = PropertyEditorControl.DefaultControlHeight;
 				}
-				return new CGRect (baseRect.X, baseRect.Y - 2, baseRect.Width + DefaultMargin - (this.field.ButtonSize * this.field.buttons.Count), DefaultHeight);
-			}
 
-			private const int DefaultMargin = 16;
-			private const int DefaultHeight = 20;
+				return baseRect;
+			}
 		}
 	}
 }
