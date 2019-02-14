@@ -417,7 +417,7 @@
 						</Grid.ColumnDefinitions>
 
 						<TextBlock Text="{Binding ValueType.Name,StringFormat=({0})}" Grid.Column="0" VerticalAlignment="Center" />
-						<Button MinHeight="20" MinWidth="40" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Static prop:Resources.New}" Command="{Binding CreateInstanceCommand}" />
+						<Button AutomationProperties.Name="{Binding Property.Name,Mode=OneTime,StringFormat={x:Static prop:Resources.NewInstanceForProperty}}" MinHeight="20" MinWidth="40" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Static prop:Resources.New}" Command="{Binding CreateInstanceCommand}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
