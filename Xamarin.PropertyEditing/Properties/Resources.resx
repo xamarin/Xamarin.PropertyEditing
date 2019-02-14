@@ -566,4 +566,8 @@
   <data name="UncommonPropertiesTooltip" xml:space="preserve">
     <value>Show advanced properties</value>
   </data>
+  <data name="NewInstanceForProperty" xml:space="preserve">
+    <value>New {0}</value>
+    <comment>New {PropertyName}</comment>
+  </data>
 </root>

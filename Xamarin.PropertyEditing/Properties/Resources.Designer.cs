@@ -880,6 +880,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New {0}.
+        /// </summary>
+        public static string NewInstanceForProperty {
+            get {
+                return ResourceManager.GetString("NewInstanceForProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No brush.
         /// </summary>
         public static string NoBrush {
