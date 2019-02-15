@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using AppKit;
 using CoreGraphics;
@@ -31,10 +31,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void StoreCurrentValue ()
 		{
-			if (ViewModel.Value == null) {
-				return;
-			}
-			ViewModel.Value = new FilePath () { Source = this.currentTextField.StringValue };
+			ViewModel.Value = new FilePath (this.currentTextField.StringValue);
 		}
 
 		protected override void UpdateAccessibilityValues ()
