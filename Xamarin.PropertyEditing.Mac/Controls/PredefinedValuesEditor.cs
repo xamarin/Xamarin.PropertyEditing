@@ -21,22 +21,32 @@ namespace Xamarin.PropertyEditing.Mac
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
 			this.comboBox = new FocusableComboBox {
-				TranslatesAutoresizingMaskIntoConstraints = false,
+				AllowsExpansionToolTips = true,
 				BackgroundColor = NSColor.Clear,
-				StringValue = String.Empty,
+				Cell = {
+					LineBreakMode = NSLineBreakMode.TruncatingTail,
+					UsesSingleLineMode = true,
+				},
 				ControlSize = NSControlSize.Small,
-				Font = NSFont.FromFontName(DefaultFontName, DefaultFontSize),
+				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				TranslatesAutoresizingMaskIntoConstraints = false,
+				StringValue = String.Empty,
 			};
 
 			this.comboBox.SelectionChanged += (sender, e) => {
-				ViewModel.ValueName = comboBox.SelectedValue.ToString ();
+				ViewModel.ValueName = this.comboBox.SelectedValue.ToString ();
 			};
 
 			this.popUpButton = new NSPopUpButton {
-				TranslatesAutoresizingMaskIntoConstraints = false,
-				StringValue = String.Empty,
+				AllowsExpansionToolTips = true,
+				Cell = {
+					LineBreakMode = NSLineBreakMode.TruncatingTail,
+					UsesSingleLineMode = true,
+				},
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				TranslatesAutoresizingMaskIntoConstraints = false,
+				StringValue = String.Empty,
 			};
 
 			popupButtonList = new NSMenu ();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AppKit;
 using CoreGraphics;
 using Foundation;
@@ -6,13 +6,13 @@ using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class NumericTextField : NSTextField
+	internal class NumericTextField : PropertyTextField
 	{
-		NSText CachedCurrentEditor {
+		private NSText CachedCurrentEditor {
 			get; set;
 		}
 
-		string cachedValueString;
+		private string cachedValueString;
 
 		public bool AllowNegativeValues {
 			get; set;
@@ -54,7 +54,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override bool ShouldBeginEditing (NSText textObject)
 		{
 			CachedCurrentEditor = textObject;
-			cachedValueString = textObject.Value;
+			this.cachedValueString = textObject.Value;
 
 			if (AllowRatios)
 				CachedCurrentEditor.Delegate = new RatioValidateDelegate (this);
@@ -81,7 +81,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public virtual void ResetInvalidInput ()
 		{
-			this.StringValue = cachedValueString;
+			this.StringValue = this.cachedValueString;
 		}
 
 		public static bool CheckIfNumber (string finalString, ValidationType mode, bool allowNegativeValues)
@@ -93,9 +93,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public static bool ValidateDecimal (string finalString, bool allowNegativeValues)
 		{
-			double value;
 			//Checks parsing to number
-			if (!double.TryParse (finalString, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentUICulture, out value))
+			if (!double.TryParse (finalString, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentUICulture, out var value))
 				return false;
 			//Checks if needs to be possitive value
 			if (!allowNegativeValues && value < 0)
@@ -106,9 +105,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public static bool ValidateInteger (string finalString, bool allowNegativeValues)
 		{
-			int value;
 			//Checks parsing to number
-			if (!int.TryParse (finalString, out value))
+			if (!int.TryParse (finalString, out var value))
 				return false;
 			//Checks if needs to be possitive value
 			if (!allowNegativeValues && value < 0)
@@ -156,7 +154,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	class KeyUpDownDelegate : NSTextFieldDelegate
+	internal class KeyUpDownDelegate : NSTextFieldDelegate
 	{
 		public event EventHandler<bool> KeyArrowUp;
 		public event EventHandler<bool> KeyArrowDown;
@@ -194,7 +192,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	public abstract class TextViewValidationDelegate : NSTextViewDelegate
+	internal abstract class TextViewValidationDelegate : NSTextViewDelegate
 	{
 		protected NumericTextField TextField {
 			get; set;
@@ -233,7 +231,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected abstract bool ValidateFinalString (string value);
 	}
 
-	public class NumericValidationDelegate : TextViewValidationDelegate
+	internal class NumericValidationDelegate : TextViewValidationDelegate
 	{
 		public NumericValidationDelegate (NumericTextField textField)
 			: base (textField)
@@ -249,7 +247,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	public class RatioValidateDelegate : TextViewValidationDelegate
+	internal class RatioValidateDelegate : TextViewValidationDelegate
 	{
 		public RatioValidateDelegate (NumericTextField textField)
 			: base (textField)

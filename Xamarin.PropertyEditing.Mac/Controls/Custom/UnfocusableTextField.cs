@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AppKit;
 using CoreGraphics;
 using Foundation;
@@ -59,14 +59,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void SetDefaultTextProperties ()
 		{
-			this.label = new NSTextField {
+			this.label = new PropertyTextField {
 				AccessibilityElement = false,
 				BackgroundColor = NSColor.Clear,
 				Bordered = false,
-				Cell = {
-					LineBreakMode = NSLineBreakMode.TruncatingTail,
-					UsesSingleLineMode = true,
-				},
 				ControlSize = NSControlSize.Small,
 				Editable = false,
 				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultPropertyLabelFontSize),

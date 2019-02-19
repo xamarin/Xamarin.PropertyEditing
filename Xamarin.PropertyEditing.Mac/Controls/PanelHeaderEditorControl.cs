@@ -22,7 +22,7 @@ namespace Xamarin.PropertyEditing.Mac
 			NSControlSize controlSize = NSControlSize.Small;
 			TranslatesAutoresizingMaskIntoConstraints = false;
 
-			this.propertyObjectName = new NSTextField {
+			this.propertyObjectName = new PropertyTextField {
 				ControlSize = controlSize,
 				PlaceholderString = LocalizationResources.ObjectNamePlaceholder,
 				TranslatesAutoresizingMaskIntoConstraints = false,
