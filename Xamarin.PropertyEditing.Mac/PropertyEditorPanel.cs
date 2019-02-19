@@ -175,16 +175,15 @@ namespace Xamarin.PropertyEditing.Mac
 			((NSView)this.header.ContentView).AddSubview (this.tabStack);
 
 			this.propertyTable = new FirstResponderOutlineView {
+				IndentationPerLevel = 0,
 				RefusesFirstResponder = true,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 				HeaderView = null,
+				IntercellSpacing = new CGSize (0, 0)
 			};
 
 			var propertyEditors = new NSTableColumn (PropertyEditorColId);
 			this.propertyTable.AddColumn (propertyEditors);
-
-			// Set OutlineTableColumn or the arrows showing children/expansion will not be drawn
-			this.propertyTable.OutlineTableColumn = propertyEditors;
 
 			var tableContainer = new NSScrollView {
 				TranslatesAutoresizingMaskIntoConstraints = false,
@@ -277,18 +276,6 @@ namespace Xamarin.PropertyEditing.Mac
 			public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
 			{
 				return true;
-			}
-
-			public override CGRect GetCellFrame (nint column, nint row)
-			{
-				var super = base.GetCellFrame (column, row);
-				if (column == 0) {
-					var obj = (NSObjectFacade)ItemAtRow (row);
-					if (obj.Target is PropertyGroupViewModel)
-						return new CGRect (0, super.Top, super.Right - (super.Left / 2), super.Height);
-				}
-
-				return super;
 			}
 		}
 	}

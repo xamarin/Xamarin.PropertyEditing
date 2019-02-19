@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using AppKit;
 using Foundation;
@@ -27,8 +28,11 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.vm.ArrangedEditors.Count == 0)
 				return 0;
 
-			var childCount = 0;
+			var facade = (NSObjectFacade)item;
+			if (facade?.Target is ObjectPropertyViewModel ovm)
+				return ovm.ValueModel.Properties.Count;
 
+			var childCount = 0;
 			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
 				childCount = Filtering ? this.vm.ArrangedEditors[0].Editors.Count : this.vm.ArrangedEditors[0].Editors.Count + 1;
 			else {
@@ -47,17 +51,20 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			object element;
 
+			var f = ((NSObjectFacade)item);
 			// We only want the Header to appear at the top of both Category and Name Modes, which means item is null in both.
 			if (childIndex == 0 && item == null && !Filtering)
 				element = null;
-			else {
+			else if (f?.Target is ObjectPropertyViewModel ovm) {
+				element = ovm.ValueModel.Properties[(int)childIndex];
+			} else {
 				if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
 					element = Filtering ? this.vm.ArrangedEditors[0].Editors[(int)childIndex] : this.vm.ArrangedEditors[0].Editors[(int)childIndex - 1];
 				else {
 					if (item == null)
 						element = Filtering ? this.vm.ArrangedEditors[(int)childIndex] : this.vm.ArrangedEditors[(int)childIndex - 1];
 					else {
-						var group = (PanelGroupViewModel)((NSObjectFacade)item).Target;
+						var group = (PanelGroupViewModel)f.Target;
 						var list = group.Editors;
 						if (childIndex >= list.Count) {
 							childIndex -= list.Count;
@@ -74,10 +81,25 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override bool ItemExpandable (NSOutlineView outlineView, NSObject item)
 		{
+			var f = (NSObjectFacade)item;
+			if (f.Target is ObjectPropertyViewModel ovm) {
+				PropertyChangedEventHandler changed = null;
+				changed = (o, e) => {
+					if (e.PropertyName != nameof (ObjectPropertyViewModel.CanDelve))
+						return;
+
+					ovm.PropertyChanged -= changed;
+					outlineView.ReloadItem (item);
+				};
+				ovm.PropertyChanged += changed;
+
+				return ovm.CanDelve;
+			}
+
 			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
 				return false;
 
-			return ((NSObjectFacade)item).Target is PanelGroupViewModel;
+			return f.Target is PanelGroupViewModel;
 		}
 
 		public NSObject GetFacade (object element)

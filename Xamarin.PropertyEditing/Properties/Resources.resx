@@ -327,7 +327,7 @@
     <value>OK</value>
   </data>
   <data name="ShowAllAssemblies" xml:space="preserve">
-    <value>_Show all assemblies</value>
+    <value>Show all assemblies</value>
   </data>
   <data name="SearchProperties" xml:space="preserve">
     <value>Search properties</value>
@@ -354,7 +354,7 @@
     <value>Select Resource</value>
   </data>
   <data name="ShowSystemResources" xml:space="preserve">
-    <value>_Show system resources</value>
+    <value>Show system resources</value>
   </data>
   <data name="ResourceEllipsis" xml:space="preserve">
     <value>Resource…</value>

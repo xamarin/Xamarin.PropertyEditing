@@ -20,7 +20,6 @@ namespace Xamarin.PropertyEditing.Mac
 		public abstract NSView FirstKeyView { get; }
 		public abstract NSView LastKeyView { get; }
 
-		public nint TableRow { get; set; } = -1;
 		public NSTableView TableView { get; set; }
 
 		public const int DefaultControlHeight = 22;
@@ -32,9 +31,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		PropertyViewModel viewModel;
 		public PropertyViewModel ViewModel {
-			get { return viewModel; }
+			get { return this.viewModel; }
 			set {
-				if (viewModel == value)
+				if (this.ViewModel == value)
 					return;
 
 				PropertyViewModel oldModel = this.viewModel;
@@ -45,10 +44,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 				this.viewModel = value;
 				OnViewModelChanged (oldModel);
-				viewModel.PropertyChanged += OnPropertyChanged;
-
-				// FIXME: figure out what we want errors to display as (tooltip, etc.)
-				viewModel.ErrorsChanged += HandleErrorsChanged;
+				if (this.viewModel != null) {
+					this.viewModel.PropertyChanged += OnPropertyChanged;
+					this.viewModel.ErrorsChanged += HandleErrorsChanged;
+				}
 			}
 		}
 
@@ -70,26 +69,23 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public void UpdateKeyViews ()
 		{
-			if (TableRow < 0)
+			nint row = TableView.RowForView (this);
+			if (row <= 0)
 				return;
 
+			NSView view;
 			PropertyEditorControl ctrl = null;
+			do {
+				row--;
+				view = TableView.GetView (0, row, makeIfNecessary: false);
+				ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
+			} while (row > 0 && ctrl == null);
 
-			var tr = TableRow;
-			if (tr > 0) {
-				NSView view;
-				do {
-					tr--;
-					view = TableView.GetView (0, tr, false);
-					ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
-				} while (tr > 0 && ctrl == null);
-
-				if (ctrl != null) {
-					ctrl.LastKeyView.NextKeyView = FirstKeyView;
-					ctrl.UpdateKeyViews ();
-				} else if (tr == 0 && view is PanelHeaderEditorControl header) {
-					header.SetNextKeyView (FirstKeyView);
-				}
+			if (ctrl != null) {
+				ctrl.LastKeyView.NextKeyView = FirstKeyView;
+				ctrl.UpdateKeyViews ();
+			} else if (row == 0 && view is PanelHeaderEditorControl header) {
+				header.SetNextKeyView (FirstKeyView);
 			}
 		}
 
@@ -103,11 +99,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected virtual void OnViewModelChanged (PropertyViewModel oldModel)
 		{
-			SetEnabled ();
-			UpdateValue ();
-			UpdateAccessibilityValues ();
+			if (ViewModel != null) {
+				SetEnabled ();
+				UpdateValue ();
+				UpdateAccessibilityValues ();
+			}
 
-			// Hook this up so we know when to reset values 
 			PropertyButton.ViewModel = viewModel;
 		}
 

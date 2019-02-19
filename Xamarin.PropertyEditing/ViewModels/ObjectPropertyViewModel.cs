@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Cadenza.Collections;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
@@ -14,7 +11,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		: EventArgs
 	{
 		/// <summary>
-		/// Gets or sets the type selected by the user from the UI
+		/// Gets or sets a task for the type selected by the user from the UI
 		/// </summary>
 		public Task<ITypeInfo> SelectedType
 		{
@@ -93,15 +90,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return;
 
 			using (await AsyncWork.RequestAsyncWork (this)) {
-				ValueModel.SelectedObjects.Clear();
-
 				await base.UpdateCurrentValueAsync ();
 				ValueType = CurrentValue?.ValueDescriptor as ITypeInfo;
 
-				if (CurrentValue?.Value != null)
-					ValueModel.SelectedObjects.Add (CurrentValue.Value);
+				if (CurrentValue?.Value != null) {
+					ValueModel.SelectedObjects.Reset (new[] { CurrentValue.Value });
+				} else {
+					ValueModel.SelectedObjects.Clear ();
+				}
 
-				SetCanDelve (Editors.Any (e => e != null));
+				SetCanDelve (ValueModel.SelectedObjects.Count > 0);
 			}
 		}
 
@@ -164,7 +162,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 						if (args.SelectedType == null)
 							return;
 
-						selectedType = await args.SelectedType;
+						try {
+							selectedType = await args.SelectedType;
+ 						} catch (OperationCanceledException) {
+							return;
+						}
 					}
 
 					await SetValueAsync (new ValueInfo<object> {

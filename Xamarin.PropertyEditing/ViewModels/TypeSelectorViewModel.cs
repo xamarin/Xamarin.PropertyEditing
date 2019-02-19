@@ -61,7 +61,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		public IEnumerable Types
+		public IList Types
 		{
 			get { return this.assemblyView; }
 		}

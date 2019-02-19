@@ -18,14 +18,15 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			get { return viewModel; }
 			set {
-				if (viewModel != null) {
-					viewModel.PropertyChanged -= OnPropertyChanged;
+				if (this.viewModel != null) {
+					this.viewModel.PropertyChanged -= OnPropertyChanged;
 				}
 
-				viewModel = value;
-				viewModel.PropertyChanged += OnPropertyChanged;
-
-				ValueSourceChanged (viewModel.ValueSource);
+				this.viewModel = value;
+				if (this.viewModel != null) {
+					this.viewModel.PropertyChanged += OnPropertyChanged;
+					ValueSourceChanged (this.viewModel.ValueSource);
+				}
 			}
 		}
 

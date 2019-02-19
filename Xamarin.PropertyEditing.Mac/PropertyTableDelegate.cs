@@ -53,14 +53,30 @@ namespace Xamarin.PropertyEditing.Mac
 			GetVMGroupCellItendifiterFromFacade (item, out evm, out group, out cellIdentifier);
 
 			if (group != null) {
-				var labelContainer = (UnfocusableTextField)outlineView.MakeView (LabelIdentifier, this);
+				var labelContainer = (NSView)outlineView.MakeView (CategoryIdentifier, this);
 				if (labelContainer == null) {
-					labelContainer = new UnfocusableTextField {
-						Identifier = LabelIdentifier,
+					labelContainer = new NSView {
+						Identifier = CategoryIdentifier,
 					};
+
+					var disclosure = outlineView.MakeView ("NSOutlineViewDisclosureButtonKey", outlineView);
+					disclosure.TranslatesAutoresizingMaskIntoConstraints = false;
+					labelContainer.AddSubview (disclosure);
+
+					var label = new UnfocusableTextField {
+						TranslatesAutoresizingMaskIntoConstraints = false
+					};
+					labelContainer.AddSubview (label);
+
+					labelContainer.AddConstraints (new[] {
+						NSLayoutConstraint.Create (disclosure, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, labelContainer, NSLayoutAttribute.CenterY, 1, 0),
+						NSLayoutConstraint.Create (disclosure, NSLayoutAttribute.Left, NSLayoutRelation.Equal, labelContainer, NSLayoutAttribute.Left, 1, 4),
+						NSLayoutConstraint.Create (label, NSLayoutAttribute.Left, NSLayoutRelation.Equal, disclosure, NSLayoutAttribute.Right, 1, 0),
+						NSLayoutConstraint.Create (label, NSLayoutAttribute.Height, NSLayoutRelation.Equal, labelContainer, NSLayoutAttribute.Height, 1, 0),
+					});
 				}
 
-				labelContainer.StringValue = group.Category;
+				((UnfocusableTextField)labelContainer.Subviews[1]).StringValue = group.Category;
 
 				if (this.dataSource.DataContext.GetIsExpanded (group.Category)) {
 					SynchronizationContext.Current.Post (s => {
@@ -74,7 +90,7 @@ namespace Xamarin.PropertyEditing.Mac
 			NSView editorOrContainer = null;
 			if (this.firstCache.TryGetValue (cellIdentifier, out IEditorView editor)) {
 				this.firstCache.Remove (cellIdentifier);
-				editorOrContainer = (editor.NativeView is PropertyEditorControl) ? new EditorContainer (this.hostResources, editor) : editor.NativeView;
+				editorOrContainer = (editor.NativeView is PropertyEditorControl) ? new EditorContainer (this.hostResources, editor) { Identifier = cellIdentifier } : editor.NativeView;
 			} else {
 				editorOrContainer = GetEditor (cellIdentifier, evm, outlineView);
 				editor = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
@@ -90,15 +106,29 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			if (editor != null) {
-				nint index = outlineView.RowForItem (item);
-				if (editor.NativeView is PropertyEditorControl pec) {
-					pec.TableRow = index;
+				editor.ViewModel = evm;
+
+				var ovm = evm as ObjectPropertyViewModel;
+				if (ovm != null && editorOrContainer is EditorContainer container) {
+					if (container.LeftEdgeView == null) {
+						if (ovm.CanDelve)
+							container.LeftEdgeView = outlineView.MakeView ("NSOutlineViewDisclosureButtonKey", outlineView);
+					} else if (!ovm.CanDelve) {
+						container.LeftEdgeView = null;
+					}
 				}
 
-				editor.ViewModel = evm;
+				bool openObjectRow = ovm != null && outlineView.IsItemExpanded (item);
+				if (!openObjectRow) {
+					var parent = outlineView.GetParent (item);
+					openObjectRow = (parent != null && ((NSObjectFacade)parent).Target is ObjectPropertyViewModel);
+				}
+
+				SetRowValueBackground (editorOrContainer, openObjectRow);
 
 				// Force a row update due to new height, but only when we are non-default
 				if (editor.IsDynamicallySized) {
+					nint index = outlineView.RowForItem (item);
 					outlineView.NoteHeightOfRowsWithIndexesChanged (new NSIndexSet (index));
 				}
 			} else if (editorOrContainer is PanelHeaderEditorControl header) {
@@ -115,24 +145,46 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ItemDidExpand (NSNotification notification)
 		{
-			if (this.isExpanding)
-				return;
-
 			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
-			var group = facade.Target as PanelGroupViewModel;
-			if (group != null)
+			var outline = (NSOutlineView)notification.Object;
+			nint row = outline.RowForItem (facade);
+
+			if (this.isExpanding) {
+				NSView view = outline.GetView (0, row, makeIfNecessary: true);
+				if (view.Subviews[0] is NSButton expander)
+					expander.State = NSCellStateValue.On;
+
+				return;
+			}
+
+			if (facade.Target is PanelGroupViewModel group)
 				this.dataSource.DataContext.SetIsExpanded (group.Category, isExpanded: true);
+			else if (facade.Target is ObjectPropertyViewModel ovm) {
+				NSView view = outline.GetView (0, row, makeIfNecessary: false);
+				SetRowValueBackground (view, valueBackground: true);
+			}
 		}
 
 		public override void ItemDidCollapse (NSNotification notification)
 		{
-			if (this.isExpanding)
-				return;
-
 			NSObjectFacade facade = notification.UserInfo.Values[0] as NSObjectFacade;
-			var group = facade.Target as PanelGroupViewModel;
-			if (group != null)
+			var outline = (NSOutlineView)notification.Object;
+			nint row = outline.RowForItem (facade);
+
+			if (this.isExpanding) {
+				NSView view = outline.GetView (0, row, makeIfNecessary: true);
+				if (view.Subviews[0] is NSButton expander)
+					expander.State = NSCellStateValue.Off;
+
+				return;
+			}
+
+			if (facade.Target is PanelGroupViewModel group)
 				this.dataSource.DataContext.SetIsExpanded (group.Category, isExpanded: false);
+			else if (facade.Target is ObjectPropertyViewModel ovm) {
+				NSView view = outline.GetView (0, row, makeIfNecessary: false);
+				SetRowValueBackground (view, valueBackground: false);
+			}
 		}
 
 		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
@@ -187,7 +239,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public const string LabelIdentifier = "label";
+		public const string CategoryIdentifier = "label";
 
 		private PropertyTableDataSource dataSource;
 		private bool isExpanding;
@@ -196,6 +248,25 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly IHostResourceProvider hostResources;
 		private readonly Dictionary<string, EditorRegistration> registrations = new Dictionary<string, EditorRegistration> ();
 		private readonly Dictionary<string, IEditorView> firstCache = new Dictionary<string, IEditorView> ();
+
+		private NSView GetViewForItem (NSOutlineView outline, NSObjectFacade facade)
+		{
+			nint row = outline.RowForItem (facade);
+			return outline.GetView (0, row, false);
+		}
+
+		private void SetRowValueBackground (NSView view, bool valueBackground)
+		{
+			if (view == null)
+				return;
+
+			if (valueBackground) {
+				var c = this.hostResources.GetNamedColor (NamedResources.ValueBlockBackgroundColor);
+				view.SetValueForKey (c, new NSString ("backgroundColor"));
+			} else {
+				view.SetValueForKey (NSColor.Clear, new NSString ("backgroundColor"));
+			}
+		}
 
 		private NSView GetEditor (string identifier, EditorViewModel vm, NSOutlineView outlineView)
 		{
