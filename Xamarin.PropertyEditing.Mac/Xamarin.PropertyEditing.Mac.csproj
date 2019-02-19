@@ -142,7 +142,7 @@
     <Compile Include="Controls\Layout.cs" />
     <Compile Include="IHostResourceProvider.cs" />
     <Compile Include="HostResourceProvider.cs" />
-    <Compile Include="Controls\Custom\DynamicFillBox.cs" />
+    <Compile Include="Controls\Custom\DynamicBox.cs" />
     <Compile Include="Controls\Custom\TabButton.cs" />
     <Compile Include="Controls\Custom\FocusableComboBox.cs" />
     <Compile Include="Controls\ObjectEditorControl.cs" />
@@ -155,7 +155,9 @@
     <Compile Include="Controls\Custom\FocusableBooleanButton.cs" />
     <Compile Include="Controls\Custom\FocusableButton.cs" />
     <Compile Include="Controls\PropertyContainer.cs" />
-    <Compile Include="Controls\ControlExtensions.cs" />
+    <Compile Include="Controls\CollectionInlineEditorControl.cs" />
+    <Compile Include="Controls\CollectionEditorWindow.cs" />
+    <Compile Include="Controls\CollectionEditorControl.cs" />
     <Compile Include="PropertyList.cs" />
   </ItemGroup>
   <ItemGroup>

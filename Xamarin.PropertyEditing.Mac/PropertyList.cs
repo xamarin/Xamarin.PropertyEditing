@@ -35,12 +35,6 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.scrollView);
 		}
 
-		public bool ShowBorder
-		{
-			get { return this.scrollView.BorderType != NSBorderType.NoBorder; }
-			set { this.scrollView.BorderType = (value) ? NSBorderType.LineBorder : NSBorderType.NoBorder; }
-		}
-
 		public bool ShowHeader
 		{
 			get { return this.showHeader; }

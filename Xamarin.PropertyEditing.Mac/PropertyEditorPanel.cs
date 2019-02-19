@@ -132,19 +132,19 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private NSSearchField propertyFilter;
 		private NSStackView tabStack;
-		private DynamicFillBox header, border;
+		private DynamicBox header, border;
 
 		private void Initialize ()
 		{
 			AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
 
-			this.header = new DynamicFillBox (HostResourceProvider, NamedResources.PanelTabBackground) {
+			this.header = new DynamicBox (HostResourceProvider, NamedResources.PanelTabBackground) {
 				ContentViewMargins = new CGSize (0, 0),
 				ContentView = new NSView ()
 			};
 			AddSubview (this.header);
 
-			this.border = new DynamicFillBox (HostResourceProvider, NamedResources.TabBorderColor) {
+			this.border = new DynamicBox (HostResourceProvider, NamedResources.TabBorderColor) {
 				Frame = new CGRect (0, 0, 1, 1)
 			};
 			header.AddSubview (this.border);

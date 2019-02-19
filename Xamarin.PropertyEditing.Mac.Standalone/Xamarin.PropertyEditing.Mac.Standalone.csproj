@@ -76,6 +76,12 @@
     <ImageAsset Include="Assets.xcassets\DescriptionLabelColor.colorset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\TabBorderColor.colorset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\PanelTabBackground.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\FrameBoxBorderColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\FrameBoxBackgroundColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\FrameBoxButtonBorderColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\FrameBoxButtonBackgroundColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\ListHeaderSeparatorColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\ControlBackground.colorset\Contents.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

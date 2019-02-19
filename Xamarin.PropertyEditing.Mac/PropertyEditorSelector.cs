@@ -56,6 +56,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (PropertyGroupViewModel), typeof (GroupEditorControl)},
 			{typeof (ObjectPropertyViewModel), typeof (ObjectEditorControl)},
 			{typeof (TypePropertyViewModel), typeof (TypeEditorControl)},
+			{typeof (CollectionPropertyViewModel), typeof (CollectionInlineEditorControl)},
 
 		};
 	}
