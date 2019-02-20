@@ -20,7 +20,10 @@ namespace Xamarin.PropertyEditing.Mac
 		protected BasePointEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
-			XLabel = new UnfocusableTextField ();
+			XLabel = new UnfocusableTextField {
+				Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize),
+				TranslatesAutoresizingMaskIntoConstraints = false,
+			};
 
 			XEditor = new NumericSpinEditor<T> (hostResources) {
 				BackgroundColor = NSColor.Clear,
@@ -28,7 +31,10 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			XEditor.ValueChanged += OnInputUpdated;
 
-			YLabel = new UnfocusableTextField ();
+			YLabel = new UnfocusableTextField {
+				Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize),
+				TranslatesAutoresizingMaskIntoConstraints = false,
+			};
 
 			YEditor = new NumericSpinEditor<T> (hostResources) {
 				BackgroundColor = NSColor.Clear,
@@ -42,11 +48,24 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (YEditor);
 
 			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 90f),
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 0f),
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 0f),
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, YEditor,  NSLayoutAttribute.Left, 1f, -10f),
 				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
 
-				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 90f),
+				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, XEditor,  NSLayoutAttribute.Bottom, 1f, -4f),
+				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 0f),
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, -32f),
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, XEditor,  NSLayoutAttribute.Width, 1f, 0f),
 				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+
+				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, XLabel,  NSLayoutAttribute.Top, 1f, 0f),
+				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+
+				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, XEditor.Subviews[0], NSLayoutAttribute.CenterX, 1f, 0),
+				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, YEditor.Subviews[0], NSLayoutAttribute.CenterX, 1f, 0),
 			});
 
 			ViewDidChangeEffectiveAppearance ();

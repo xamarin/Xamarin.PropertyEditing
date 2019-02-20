@@ -1,6 +1,7 @@
 using System;
 using AppKit;
 using CoreGraphics;
+using Foundation;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
@@ -13,26 +14,18 @@ namespace Xamarin.PropertyEditing.Mac
 		public CommonThicknessEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
-			XLabel.Frame = new CGRect (28, 28, 50, 22);
-			XLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize);
 			XLabel.StringValue = "LEFT";
 
 			XEditor.Frame = new CGRect (0, 46, 90, 20);
 
-			YLabel.Frame = new CGRect (160, 28, 45, 22);
-			YLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize);
 			YLabel.StringValue = "TOP";
 
 			YEditor.Frame = new CGRect (132, 46, 90, 20);
 
-			WidthLabel.Frame = new CGRect (24, -5, 50, 22);
-			WidthLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize);
 			WidthLabel.StringValue = "RIGHT";
 
 			WidthEditor.Frame = new CGRect (0, 13, 90, 20);
 
-			HeightLabel.Frame = new CGRect (150, -5, 50, 22);
-			HeightLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize);
 			HeightLabel.StringValue = "BOTTOM";
 
 			HeightEditor.Frame = new CGRect (132, 13, 90, 20);

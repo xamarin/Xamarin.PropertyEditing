@@ -46,11 +46,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
-			EditorViewModel evm;
-			PropertyViewModel vm;
-			PanelGroupViewModel group;
-			string cellIdentifier;
-			GetVMGroupCellItendifiterFromFacade (item, out evm, out group, out cellIdentifier);
+			GetVMGroupCellItendifiterFromFacade (item, out EditorViewModel evm, out PanelGroupViewModel group, out var cellIdentifier);
 
 			if (group != null) {
 				var labelContainer = (NSView)outlineView.MakeView (CategoryIdentifier, this);

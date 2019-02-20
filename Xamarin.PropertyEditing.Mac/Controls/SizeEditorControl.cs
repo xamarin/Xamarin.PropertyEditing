@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Drawing;
 using AppKit;
 using CoreGraphics;
+using Foundation;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
@@ -14,14 +15,10 @@ namespace Xamarin.PropertyEditing.Mac
 		public SizeEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
-			XLabel.Frame = new CGRect (20, -5, 50, 22);
-			XLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
 			XLabel.StringValue = "WIDTH"; // TODO Localise
 
 			XEditor.Frame = new CGRect (0, 13, 90, 20);
-
-			YLabel.Frame = new CGRect (150, -5, 50, 22);
-			YLabel.Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize); // TODO: Washed-out color following specs
+			
 			YLabel.StringValue = "HEIGHT"; // TODO Localise
 
 			YEditor.Frame = new CGRect (132, 13, 90, 20);
