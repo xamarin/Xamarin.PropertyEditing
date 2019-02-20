@@ -152,6 +152,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			ArrangeModes = modes;
+			AutoExpand = targetPlatform.AutoExpandAll;
 		}
 
 		public event EventHandler ArrangedPropertiesChanged;
