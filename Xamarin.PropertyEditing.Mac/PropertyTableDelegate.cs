@@ -97,7 +97,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			if (editorOrContainer is EditorContainer ec) {
-				ec.Label = evm.Name + ":";
+				ec.Label = evm.Name;
 
 #if DEBUG // Currently only used to highlight which controls haven't been implemented
 				if (editor == null)
