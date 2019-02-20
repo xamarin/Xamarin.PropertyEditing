@@ -37,6 +37,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<CommonThickness> ("Thickness", ReadWrite);
 			AddProperty<object> ("Object", ReadWrite);
 			AddProperty<IList> ("Collection", ReadWrite);
+			AddProperty<ITypeInfo> ("Type", ReadWrite, realType: typeof(Type).ToTypeInfo());
 
 			AddReadOnlyProperty<bool> ("ReadOnlyBoolean", ReadOnly);
 			AddReadOnlyProperty<int> ("ReadOnlyInteger", ReadOnly);

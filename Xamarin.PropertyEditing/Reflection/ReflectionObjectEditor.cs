@@ -159,7 +159,8 @@ namespace Xamarin.PropertyEditing.Reflection
 					}
 				}
 
-				types = types.Where (t => realType.IsAssignableFrom (t));
+				if (realType != typeof(Type))
+					types = types.Where (t => realType.IsAssignableFrom (t));
 
 				return new AssignableTypesResult (types.Select (t => {
 					string asmName = t.Assembly.GetName ().Name;

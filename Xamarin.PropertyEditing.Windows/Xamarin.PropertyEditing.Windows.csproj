@@ -142,6 +142,7 @@
     <Compile Include="ThicknessEditorControl.cs" />
     <Compile Include="StringEditorControl.cs" />
     <Compile Include="TreeViewItemEx.cs" />
+    <Compile Include="TypeEditorControl.cs" />
     <Compile Include="TypeSelectorControl.xaml.cs">
       <DependentUpon>TypeSelectorControl.xaml</DependentUpon>
     </Compile>
