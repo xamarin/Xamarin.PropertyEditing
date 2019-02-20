@@ -269,6 +269,26 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.SelectedBrushType, Is.EqualTo (CommonBrushType.Resource));
 		}
 
+		[Test]
+		[Description ("Material must distinguish when it's actually set or defaulting to black when setting black as a value")]
+		public void NoValueToMaterialSets ()
+		{
+			var platform = new TargetPlatform (new MockEditorProvider ()) {
+				SupportsMaterialDesign = true
+			};
+			var mockProperty = new Mock<IPropertyInfo> ();
+			mockProperty.SetupGet (pi => pi.Type).Returns (typeof (CommonSolidBrush));
+			var mockEditor = new MockObjectEditor (mockProperty.Object);
+
+			var vm = new BrushPropertyViewModel (platform, mockProperty.Object, new[] { mockEditor });
+			Assume.That (vm.MaterialDesign.Color, Is.EqualTo (new CommonColor (0, 0, 0)));
+			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Default).Or.EqualTo (ValueSource.Unset));
+			Assume.That (vm.SelectedBrushType, Is.EqualTo (CommonBrushType.NoBrush));
+
+			vm.SelectedBrushType = CommonBrushType.MaterialDesign;
+			Assert.That (vm.ValueSource, Is.EqualTo (ValueSource.Local));
+		}
+
 		protected override CommonBrush GetRandomTestValue (Random rand)
 		{
 			CommonColor color = rand.NextColor ();
