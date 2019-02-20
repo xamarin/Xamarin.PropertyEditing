@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		public RequestResourceView (IHostResourceProvider hostResources, PropertyViewModel propertyViewModel)
-			: base (hostResources, propertyViewModel, Properties.Resources.SelectResourceTitle, "resource-editor-32")
+			: base (hostResources, propertyViewModel, Properties.Resources.SelectResourceTitle, "pe-resource-editor-32")
 		{
 			Initialize (propertyViewModel);
 		}
@@ -97,21 +97,21 @@ namespace Xamarin.PropertyEditing.Mac
 				switch (this.segmentedControl.SelectedSegment) {
 				case 0:
 					this.resourceSelectorPanel.ViewModel.ShowBothResourceTypes = true;
-					this.segmentedControl.SetImage (HostResources.GetNamedImage ("resource-editor-16"), 2);
+					this.segmentedControl.SetImage (HostResources.GetNamedImage ("pe-resource-editor-16"), 2);
 					break;
 				case 1:
 					this.resourceSelectorPanel.ViewModel.ShowOnlyLocalResources = true;
-					this.segmentedControl.SetImage (HostResources.GetNamedImage ("resource-editor-16"), 2);
+					this.segmentedControl.SetImage (HostResources.GetNamedImage ("pe-resource-editor-16"), 2);
 					break;
 				case 2:
 					this.resourceSelectorPanel.ViewModel.ShowOnlySystemResources = true;
-					this.segmentedControl.SetImage (HostResources.GetNamedImage ("resource-editor-16~sel"), 2);
+					this.segmentedControl.SetImage (HostResources.GetNamedImage ("pe-resource-editor-16~sel"), 2);
 					break;
 				}
 
 				this.resourceSelectorPanel.ReloadData ();
 			});
-			this.segmentedControl.SetImage (HostResources.GetNamedImage ("resource-editor-16"), 2);
+			this.segmentedControl.SetImage (HostResources.GetNamedImage ("pe-resource-editor-16"), 2);
 			this.segmentedControl.Frame = new CGRect ((FrameWidthThird - (segmentedControl.Bounds.Width) / 2), 5, (Frame.Width - (FrameWidthThird)) - 10, 24);
 			this.segmentedControl.Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize);
 			this.segmentedControl.TranslatesAutoresizingMaskIntoConstraints = false;

@@ -77,7 +77,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ViewDidChangeEffectiveAppearance ()
 		{
-			this.actionButton.Image = this.actionButton.Enabled ? HostResources.GetNamedImage ("action-warning-16") : null;
+			this.actionButton.Image = this.actionButton.Enabled ? HostResources.GetNamedImage ("pe-action-warning-16") : null;
 		}
 
 		protected IHostResourceProvider HostResources
@@ -93,7 +93,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.actionButton.Hidden = !this.actionButton.Enabled;
 
 			// Using NSImageName.Caution for now, we can change this later at the designers behest
-			this.actionButton.Image = this.actionButton.Enabled ? HostResources.GetNamedImage ("action-warning-16") : null;
+			this.actionButton.Image = this.actionButton.Enabled ? HostResources.GetNamedImage ("pe-action-warning-16") : null;
 		}
 
 		void NotifyActionButtonClicked ()

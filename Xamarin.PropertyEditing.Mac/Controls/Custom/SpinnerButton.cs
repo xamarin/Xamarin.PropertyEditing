@@ -40,7 +40,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private readonly IHostResourceProvider hostResources;
 		private bool isMouseOver;
-		private string imageBase = "stepper-";
+		private string imageBase = "pe-stepper-";
 
 		private NSImage image;
 		private NSImage mouseOverImage;

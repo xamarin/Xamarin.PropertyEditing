@@ -22,7 +22,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			var iconView = new NSButton (new CGRect (5, Frame.Height - 25, DefaultIconButtonSize, DefaultIconButtonSize)) {
 				Bordered = false,
-				Image = hostResources.GetNamedImage ("action-warning-16"),
+				Image = hostResources.GetNamedImage ("pe-action-warning-16"),
 				Title = string.Empty,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};

@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.Mac
 						var iconView = (NSImageView)tableView.MakeView (iconIdentifier, this);
 						if (iconView == null) {
 							iconView = new NSImageView {
-								Image = this.hostResources.GetNamedImage ("resource-editor-32"),
+								Image = this.hostResources.GetNamedImage ("pe-resource-editor-32"),
 								ImageScaling = NSImageScale.None,
 								Identifier = iconIdentifier,
 							};
@@ -95,12 +95,12 @@ namespace Xamarin.PropertyEditing.Mac
 				if (previousRow != -1
 				    && previousRow < tableView.RowCount
 				    && tableView.GetView (0, previousRow, false) is NSImageView previousIconColumn) {
-					previousIconColumn.Image = this.hostResources.GetNamedImage ("resource-editor-32");
+					previousIconColumn.Image = this.hostResources.GetNamedImage ("pe-resource-editor-32");
 				}
 
 				if (tableView.SelectedRow != -1
 				    && tableView.GetView (0, tableView.SelectedRow, false) is NSImageView selectedIconColumn) {
-					selectedIconColumn.Image = this.hostResources.GetNamedImage ("resource-editor-32~sel");
+					selectedIconColumn.Image = this.hostResources.GetNamedImage ("pe-resource-editor-32~sel");
 					previousRow = tableView.SelectedRow;
 				}
 			}

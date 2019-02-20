@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using AppKit;
 using Foundation;
 
@@ -11,6 +12,15 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			get;
 			set;
+		}
+
+		private readonly NSBundle resourceBundle;
+
+		public HostResourceProvider ()
+		{
+			var containingDir = Path.GetDirectoryName (typeof (HostResourceProvider).Assembly.Location);
+			var bundlePath = Path.Combine (containingDir, "PropertyEditingResource.bundle");
+			this.resourceBundle = new NSBundle (bundlePath);
 		}
 
 		public virtual NSAppearance GetVibrantAppearance (NSAppearance appearance)
@@ -42,7 +52,7 @@ namespace Xamarin.PropertyEditing.Mac
 					name += "~sel";
 			}
 
-			return NSImage.ImageNamed (name);
+			return this.resourceBundle.ImageForResource (name);
 		}
 
 		public virtual NSFont GetNamedFont (string name, nfloat fontSize)
