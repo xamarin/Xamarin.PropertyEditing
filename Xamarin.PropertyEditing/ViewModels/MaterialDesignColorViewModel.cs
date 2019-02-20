@@ -24,7 +24,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			private set {
-				if (!Color.Equals (value)) {
+				if (!Color.Equals (value) || !(Parent.Value is CommonSolidBrush)) {
 					// Debug.WriteLine ($"Setting Color to {value}");
 					Parent.Value = new CommonSolidBrush (value, null, Parent.Value?.Opacity ?? 1.0);
 					// Debug.WriteLine ($"Notifying alpha and color change");
