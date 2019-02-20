@@ -143,6 +143,8 @@
     <Compile Include="PropertyInlinePreviewSelector.cs" />
     <Compile Include="Controls\EditorContainer.cs" />
     <Compile Include="Controls\Layout.cs" />
+    <Compile Include="Controls\Custom\Focusable\TextField.cs" />
+    <Compile Include="Controls\Custom\Focusable\IFocusable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

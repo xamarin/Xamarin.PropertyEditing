@@ -8,6 +8,7 @@ using AppKit;
 
 using Xamarin.PropertyEditing.ViewModels;
 using Xamarin.PropertyEditing.Mac.Resources;
+using Xamarin.PropertyEditing.Mac.Controls.Custom.Focusable;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -15,6 +16,8 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		internal const string PropertyListColId = "PropertiesList";
 		internal const string PropertyEditorColId = "PropertyEditors";
+
+		public event EventHandler GainedFocus;
 
 		public PropertyEditorPanel ()
 		{
@@ -106,7 +109,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private bool isArrangeEnabled = true;
 		// when this property changes, need to create new datasource
 		private TargetPlatform targetPlatform;
-		private NSOutlineView propertyTable;
+		private FirstResponderOutlineView propertyTable;
 		private PropertyTableDataSource dataSource;
 		private PanelViewModel viewModel;
 
@@ -160,6 +163,7 @@ namespace Xamarin.PropertyEditing.Mac
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 				HeaderView = null,
 			};
+			this.propertyTable.GainedFocus += (o, e) => GainedFocus?.Invoke (this, e);
 
 #if DESIGNER_DEBUG
 			propertyTable.GridStyleMask = NSTableViewGridStyle.SolidHorizontalLine | NSTableViewGridStyle.SolidVerticalLine;
@@ -245,8 +249,12 @@ namespace Xamarin.PropertyEditing.Mac
 				this.propertyArrangeMode.Select (new NSString (this.viewModel.ArrangeMode.ToString ()));
 		}
 
-		private class FirstResponderOutlineView : NSOutlineView
+		private class FirstResponderOutlineView : NSOutlineView, IFocusable
 		{
+			public event EventHandler GainedFocus;
+
+			public void TriggerFocus (object sender) => GainedFocus?.Invoke (sender, EventArgs.Empty);
+
 			[Export ("validateProposedFirstResponder:forEvent:")]
 			public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
 			{

@@ -6,6 +6,7 @@ using System.Linq;
 using AppKit;
 using CoreGraphics;
 using Foundation;
+using Xamarin.PropertyEditing.Mac.Controls.Custom.Focusable;
 using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -13,7 +14,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class StringEditorControl : PropertyEditorControl<PropertyViewModel<string>>
 	{
-		private NSTextField stringEditor { get; set; }
+		private TextField stringEditor { get; set; }
 
 		private NSLayoutConstraint stringEditorWidthConstraint;
 
@@ -25,12 +26,18 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public StringEditorControl ()
 		{
-			this.stringEditor = new NSTextField {
+			this.stringEditor = new TextField {
 				BackgroundColor = NSColor.Clear,
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
 				StringValue = string.Empty,
 				TranslatesAutoresizingMaskIntoConstraints = false,
+			};
+
+			// Handle the text fields focus event so we can bubble it up.
+			this.stringEditor.GainedFocus += (sender, e) => {
+				var table = TableView as IFocusable;
+				if (table != null) table.TriggerFocus (sender);
 			};
 
 			// update the value on keypress
