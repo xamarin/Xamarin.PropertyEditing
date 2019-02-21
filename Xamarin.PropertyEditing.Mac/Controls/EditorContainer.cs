@@ -101,6 +101,6 @@ namespace Xamarin.PropertyEditing.Mac
 		private NSView leftEdgeView;
 		private NSLayoutConstraint leftEdgeLeftConstraint, leftEdgeVCenterConstraint;
 		private readonly IHostResourceProvider hostResources;
-		private const float LabelToControlSpacing = 5f;
+		private const float LabelToControlSpacing = 13f;
 	}
 }
