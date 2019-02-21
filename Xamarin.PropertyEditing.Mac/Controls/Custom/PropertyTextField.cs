@@ -21,4 +21,13 @@ namespace Xamarin.PropertyEditing.Mac
 			return willBecomeFirstResponder;
 		}
 	}
+
+	internal class PropertyTextFieldCell : NSTextFieldCell
+	{
+		public PropertyTextFieldCell ()
+		{
+			LineBreakMode = NSLineBreakMode.TruncatingTail;
+			UsesSingleLineMode = true;
+		}
+	}
 }

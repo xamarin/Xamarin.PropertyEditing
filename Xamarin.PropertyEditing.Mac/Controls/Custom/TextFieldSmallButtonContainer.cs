@@ -26,7 +26,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class TextFieldSmallButtonContainer : NSTextField
+	internal class TextFieldSmallButtonContainer : PropertyTextField
 	{
 		private readonly NSObject[] objects = new NSObject[0];
 		public override NSObject[] AccessibilityChildren => this.objects;
@@ -35,10 +35,9 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly ButtonTextFieldCell cell;
 		private NSView lastView;
 
-		public override bool Editable { 
+		public override bool Editable {
 			get => base.Editable;
-			set
-			{
+			set {
 				base.Editable = value;
 				foreach (SmallButton item in this.buttons) {
 					item.Enabled = value;
@@ -48,14 +47,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public TextFieldSmallButtonContainer ()
 		{
-			Cell = this.cell = new ButtonTextFieldCell (this);
-			Cell.Editable = true;
-			Cell.Bezeled = true;
-			Cell.ControlSize = NSControlSize.Regular;
-			Cell.BezelStyle = NSTextFieldBezelStyle.Square;
+			Cell = this.cell = new ButtonTextFieldCell (this) {
+				Bezeled = true,
+				BezelStyle = NSTextFieldBezelStyle.Square,
+				ControlSize = NSControlSize.Regular,
+				Editable = true,
+			};
+
 			TranslatesAutoresizingMaskIntoConstraints = false;
-			UsesSingleLineMode = true;
-			LineBreakMode = NSLineBreakMode.TruncatingTail;
 			this.lastView = this;
 		}
 		public override bool AllowsVibrancy => false;
@@ -99,7 +98,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		private sealed class ButtonTextFieldCell : NSTextFieldCell
+		private sealed class ButtonTextFieldCell : PropertyTextFieldCell
 		{
 			private readonly TextFieldSmallButtonContainer field;
 

@@ -9,8 +9,8 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class BasePathEditorControl<T> : PropertyEditorControl<PropertyViewModel<T>>
 	{
-		private const string PathRevealName = "path-reveal";
-		private const string PathBrowseName = "path-browse";
+		private const string PathRevealName = "pe-path-reveal";
+		private const string PathBrowseName = "pe-path-browse";
 
 		protected readonly TextFieldSmallButtonContainer currentTextField;
 
@@ -22,10 +22,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView LastKeyView => this.revealPathButton.Enabled ? this.revealPathButton : this.browsePathButton;
 
 		private readonly NSObject[] objects;
-		public override NSObject[] AccessibilityChildren
-		{
-			get => this.objects;
-		}
+		public override NSObject[] AccessibilityChildren { get => this.objects; }
 
 		protected BasePathEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
@@ -120,8 +117,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			this.currentTextField.Enabled = 
-			this.browsePathButton.Enabled = 
+			this.currentTextField.Enabled =
+			this.browsePathButton.Enabled =
 			this.revealPathButton.Enabled = ViewModel.Property.CanWrite;
 		}
 
