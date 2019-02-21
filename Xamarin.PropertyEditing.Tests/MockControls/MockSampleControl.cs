@@ -121,7 +121,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 
 		public async Task SetInitialValuesAsync (IObjectEditor editor)
 		{
-			await editor.SetValueAsync (Properties["FilePath"], new ValueInfo<FilePath> { Value = new FilePath { Source = "/Desktop/MyTestFile" } }); ;
+			await editor.SetValueAsync (Properties["FilePath"], new ValueInfo<FilePath> { Value = new FilePath ("/Desktop/MyTestFile") });
 		}
 
 		public async Task SetBrushInitialValueAsync (IObjectEditor editor, CommonBrush brush)
