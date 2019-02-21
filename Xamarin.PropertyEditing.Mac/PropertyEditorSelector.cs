@@ -55,6 +55,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (ThicknessPropertyViewModel), typeof (CommonThicknessEditorControl) },
 			{typeof (PropertyGroupViewModel), typeof (GroupEditorControl)},
 			{typeof (ObjectPropertyViewModel), typeof (ObjectEditorControl)},
+			{typeof (TypePropertyViewModel), typeof (TypeEditorControl)},
 
 		};
 	}

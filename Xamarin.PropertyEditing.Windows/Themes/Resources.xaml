@@ -417,7 +417,25 @@
 						</Grid.ColumnDefinitions>
 
 						<TextBlock Text="{Binding ValueType.Name,StringFormat=({0})}" Grid.Column="0" VerticalAlignment="Center" />
-						<Button AutomationProperties.Name="{Binding Property.Name,Mode=OneTime,StringFormat={x:Static prop:Resources.NewInstanceForProperty}}" MinHeight="20" MinWidth="40" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Static prop:Resources.New}" Command="{Binding CreateInstanceCommand}" />
+						<Button AutomationProperties.Name="{Binding Property.Name,Mode=OneTime,StringFormat={x:Static prop:Resources.NewInstanceForProperty}}" MinHeight="20" MinWidth="40" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Static prop:Resources.New}" Command="{Binding CreateInstanceCommand,Mode=OneTime}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:TypeEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:TypeEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<TextBlock Text="{Binding Value.Name,StringFormat=({0})}" Grid.Column="0" VerticalAlignment="Center" />
+						<Button AutomationProperties.Name="{Binding Property.Name,Mode=OneTime,StringFormat={x:Static prop:Resources.SelectTypeForProperty}}" MinHeight="20" MinWidth="40" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Static prop:Resources.Select}" Command="{Binding SelectTypeCommand,Mode=OneTime}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

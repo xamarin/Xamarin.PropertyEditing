@@ -23,7 +23,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 	public class MockPropertyInfo<T> : IPropertyInfo, IPropertyConverter, IEquatable<MockPropertyInfo<T>>
 	{
-		public MockPropertyInfo (string name, string description = null, string category = null, bool canWrite = true, IEnumerable<Type> converterTypes = null, ValueSources valueSources = ValueSources.Local | ValueSources.Default, PropertyVariationOption[] options = null, bool isUncommon = false)
+		public MockPropertyInfo (string name, string description = null, string category = null, bool canWrite = true, IEnumerable<Type> converterTypes = null, ValueSources valueSources = ValueSources.Local | ValueSources.Default, PropertyVariationOption[] options = null, bool isUncommon = false, ITypeInfo realType = null)
 		{
 			Name = name;
 			Description = description;
@@ -43,13 +43,18 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 			}
 
 			Variations = options ?? EmptyVariationOptions;
+			RealType = realType ?? typeof (T).ToTypeInfo ();
 		}
 
 		public string Name { get; }
 		public string Description { get; }
 		public virtual Type Type => typeof (T);
 
-		public virtual ITypeInfo RealType => typeof(T).ToTypeInfo ();
+		public ITypeInfo RealType
+		{
+			get;
+			private set;
+		}
 
 		public string Category { get; }
 		public bool CanWrite { get; }

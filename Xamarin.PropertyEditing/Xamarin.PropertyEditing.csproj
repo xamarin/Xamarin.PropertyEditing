@@ -165,6 +165,7 @@
     <Compile Include="ViewModels\RectanglePropertyViewModel.cs" />
     <Compile Include="ViewModels\ThicknessPropertyViewModel.cs" />
     <Compile Include="ViewModels\ObjectTreeElement.cs" />
+    <Compile Include="ViewModels\TypePropertyViewModel.cs" />
     <Compile Include="ViewModels\TypeSelectorViewModel.cs" />
     <Compile Include="ViewModels\RatioViewModel.cs" />
     <Compile Include="Drawing\CommonRatio.cs" />

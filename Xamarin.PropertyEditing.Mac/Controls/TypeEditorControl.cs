@@ -8,10 +8,10 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class ObjectEditorControl
-		: PropertyEditorControl<ObjectPropertyViewModel>
+	internal class TypeEditorControl
+		: PropertyEditorControl<TypePropertyViewModel>
 	{
-		public ObjectEditorControl (IHostResourceProvider hostResources)
+		public TypeEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
 			this.typeLabel = new UnfocusableTextField {
@@ -19,30 +19,30 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (this.typeLabel);
 
-			this.createObject = new NSButton {
-				Title = Properties.Resources.New,
+			this.selectType = new NSButton {
+				Title = Properties.Resources.Select,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				BezelStyle = NSBezelStyle.Rounded
 			};
-			this.createObject.Activated += OnNewPressed;
-			AddSubview (this.createObject);
+			this.selectType.Activated += OnSelectPressed;
+			AddSubview (this.selectType);
 
-			this.buttonConstraint = NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.typeLabel, NSLayoutAttribute.Trailing, 1f, 12);
+			this.buttonConstraint = NSLayoutConstraint.Create (this.selectType, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.typeLabel, NSLayoutAttribute.Trailing, 1f, 12);
 
 			AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this, NSLayoutAttribute.Leading, 1f, 0f),
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, 0),
 				this.buttonConstraint,
-				NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this, NSLayoutAttribute.Leading, 1, 0).WithPriority (NSLayoutPriority.DefaultLow),
-				NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
-				NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.Width, NSLayoutRelation.GreaterThanOrEqual, 1f, 70f),
+				NSLayoutConstraint.Create (this.selectType, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this, NSLayoutAttribute.Leading, 1, 0).WithPriority (NSLayoutPriority.DefaultLow),
+				NSLayoutConstraint.Create (this.selectType, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
+				NSLayoutConstraint.Create (this.selectType, NSLayoutAttribute.Width, NSLayoutRelation.GreaterThanOrEqual, 1f, 70f),
 			});
 		}
 
-		public override NSView FirstKeyView => this.createObject;
+		public override NSView FirstKeyView => this.selectType;
 
-		public override NSView LastKeyView => this.createObject;
+		public override NSView LastKeyView => this.selectType;
 
 		protected override void UpdateValue ()
 		{
@@ -58,26 +58,24 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			this.createObject.Enabled = ViewModel.Property.CanWrite;
+			this.selectType.Enabled = ViewModel.Property.CanWrite;
 		}
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			this.createObject.AccessibilityTitle = String.Format (Properties.Resources.NewInstanceForProperty, ViewModel.Property.Name);
+			this.selectType.AccessibilityTitle = String.Format (Properties.Resources.SelectTypeForProperty, ViewModel.Property.Name);
 		}
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
 		{
 			base.OnViewModelChanged (oldModel);
 
-			if (oldModel is ObjectPropertyViewModel ovm) {
-				ovm.TypeRequested -= OnTypeRequested;
-				ovm.CreateInstanceCommand.CanExecuteChanged -= OnCreateInstanceExecutableChanged;
+			if (oldModel is TypePropertyViewModel tvm) {
+				tvm.TypeRequested -= OnTypeRequested;
 			}
 
 			if (ViewModel != null) {
 				ViewModel.TypeRequested += OnTypeRequested;
-				ViewModel.CreateInstanceCommand.CanExecuteChanged += OnCreateInstanceExecutableChanged;
 
 				OnPropertyChanged (ViewModel, new PropertyChangedEventArgs (null));
 			}
@@ -86,7 +84,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			switch (e.PropertyName) {
-			case nameof (ObjectPropertyViewModel.ValueType):
+			case nameof (TypePropertyViewModel.Value):
 				UpdateTypeLabel ();
 				break;
 			case null:
@@ -100,7 +98,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		private readonly UnfocusableTextField typeLabel;
-		private readonly NSButton createObject;
+		private readonly NSButton selectType;
 		private readonly NSLayoutConstraint buttonConstraint;
 
 		private void OnCreateInstanceExecutableChanged (object sender, EventArgs e)
@@ -110,28 +108,44 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnTypeRequested (object sender, TypeRequestedEventArgs e)
 		{
-			e.SelectedType = e.RequestAt (HostResources, this.createObject, ViewModel.AssignableTypes);
+			e.SelectedType = e.RequestAt (HostResources, this.selectType, ViewModel.AssignableTypes);
 		}
 
 		private void UpdateTypeLabel ()
 		{
-			if (ViewModel.ValueType == null) {
+			if (ViewModel.Value == null) {
 				this.typeLabel.StringValue = String.Empty;
 				this.buttonConstraint.Active = false;
 			} else {
-				this.typeLabel.StringValue = $"({ViewModel.ValueType.Name})";
+				this.typeLabel.StringValue = $"({ViewModel.Value.Name})";
 				this.buttonConstraint.Active = true;
 			}
 		}
 
-		private void UpdateCreateInstanceCommand()
+		private void UpdateCreateInstanceCommand ()
 		{
-			this.createObject.Enabled = ViewModel.CreateInstanceCommand.CanExecute (null);
+			this.selectType.Enabled = ViewModel.SelectTypeCommand.CanExecute (null);
 		}
 
-		private void OnNewPressed (object sender, EventArgs e)
+		private void OnSelectPressed (object sender, EventArgs e)
 		{
-			ViewModel.CreateInstanceCommand.Execute (null);
+			ViewModel.SelectTypeCommand.Execute (null);
+		}
+
+		private class PopoverDelegate<T>
+			: NSPopoverDelegate
+		{
+			public PopoverDelegate (TaskCompletionSource<T> tcs)
+			{
+				this.tcs = tcs;
+			}
+
+			public override void WillClose (NSNotification notification)
+			{
+				this.tcs.TrySetCanceled ();
+			}
+
+			private readonly TaskCompletionSource<T> tcs;
 		}
 	}
 }

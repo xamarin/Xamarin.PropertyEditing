@@ -570,4 +570,11 @@
     <value>New {0}</value>
     <comment>New {PropertyName}</comment>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="SelectTypeForProperty" xml:space="preserve">
+    <value>Select {0} type</value>
+    <comment>Select {property} type</comment>
+  </data>
 </root>

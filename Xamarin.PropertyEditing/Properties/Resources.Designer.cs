@@ -1141,6 +1141,15 @@ namespace Xamarin.PropertyEditing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select.
+        /// </summary>
+        public static string Select {
+            get {
+                return ResourceManager.GetString("Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Object.
         /// </summary>
         public static string SelectObjectTitle {
@@ -1155,6 +1164,15 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string SelectResourceTitle {
             get {
                 return ResourceManager.GetString("SelectResourceTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select {0} type.
+        /// </summary>
+        public static string SelectTypeForProperty {
+            get {
+                return ResourceManager.GetString("SelectTypeForProperty", resourceCulture);
             }
         }
         

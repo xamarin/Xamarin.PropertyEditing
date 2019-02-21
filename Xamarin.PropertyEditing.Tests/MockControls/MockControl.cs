@@ -15,7 +15,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			bool canWrite = true, bool flag = false,
 			IEnumerable<Type> converterTypes = null,
 			string description = null, bool constrained = true, ValueSources valueSources = ValueSources.Local | ValueSources.Default | ValueSources.Binding,
-			IReadOnlyList<InputMode> inputModes = null, PropertyVariationOption[] options = null, bool isUncommon = false)
+			IReadOnlyList<InputMode> inputModes = null, PropertyVariationOption[] options = null, bool isUncommon = false, ITypeInfo realType = null)
 		{
 			IPropertyInfo propertyInfo;
 			if (typeof(T).IsEnum) {
@@ -26,7 +26,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			} else if (inputModes != null) {
 				propertyInfo = new MockPropertyInfoWithInputTypes<T> (name, inputModes, description, category, canWrite, converterTypes, valueSources, options);
 			} else {
-				propertyInfo = new MockPropertyInfo<T> (name, description, category, canWrite, converterTypes, valueSources, options, isUncommon);
+				propertyInfo = new MockPropertyInfo<T> (name, description, category, canWrite, converterTypes, valueSources, options, isUncommon, realType);
 			}
 
 			AddProperty<T> (propertyInfo);
