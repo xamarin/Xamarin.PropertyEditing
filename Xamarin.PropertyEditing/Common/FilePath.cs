@@ -1,14 +1,12 @@
-﻿using System;
+using System;
 
 namespace Xamarin.PropertyEditing.Common
 {
 	public class FilePath : IEquatable<FilePath>
 	{
-		public string Source { get; set; }
+		public string Source { get; }
 
-		public FilePath () { }
-
-		public FilePath (string source) 
+		public FilePath (string source)
 		{
 			if (source == null) {
 				throw new ArgumentNullException (nameof (source));
@@ -38,7 +36,7 @@ namespace Xamarin.PropertyEditing.Common
 		{
 			var hashCode = 1861433795;
 			unchecked {
-				hashCode = 1861433795 * -1521134295 + Source.GetHashCode ();
+				hashCode = hashCode * -1521134295 + Source.GetHashCode ();
 			}
 			return hashCode;
 		}

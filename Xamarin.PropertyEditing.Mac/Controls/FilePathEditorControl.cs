@@ -25,7 +25,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void OnRevealPathButtonActivated (object sender, EventArgs e)
 		{
 			if (File.Exists (this.currentTextField.StringValue)) {
-				NSWorkspace.SharedWorkspace.OpenFile (this.currentTextField.StringValue);
+				NSWorkspace.SharedWorkspace.SelectFile (this.currentTextField.StringValue, string.Empty);
 			}
 		}
 
@@ -56,6 +56,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void SetEnabled ()
 		{
 			this.currentTextField.Enabled = ViewModel.Property.CanWrite;
+			this.browsePathButton.Enabled = ViewModel.Property.CanWrite;
 
 			//button states
 			this.revealPathButton.Enabled = ViewModel.Property.CanWrite && File.Exists (this.currentTextField.StringValue);

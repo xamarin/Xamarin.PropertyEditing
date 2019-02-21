@@ -39,7 +39,6 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<object> ("Object", ReadWrite);
 			AddProperty<IList> ("Collection", ReadWrite);
 			AddProperty<ITypeInfo> ("Type", ReadWrite, realType: typeof(Type).ToTypeInfo());
-			AddProperty<FilePath> ("FilePath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 
 			AddReadOnlyProperty<bool> ("ReadOnlyBoolean", ReadOnly);
 			AddReadOnlyProperty<int> ("ReadOnlyInteger", ReadOnly);
@@ -53,7 +52,6 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddReadOnlyProperty<CommonRectangle> ("ReadOnlyRectangle", ReadOnly);
 			AddReadOnlyProperty<CommonRatio> ("ReadOnlyRatio", ReadOnly);
 			AddReadOnlyProperty<CommonThickness> ("ReadOnlyThickness", ReadOnly);
-			AddProperty<FilePath> ("ReadOnlyFilePath", ReadOnly, canWrite: false);
 
 			AddProperty<NotImplemented> ("Uncategorized", None);
 			AddProperty<string> ("ReadOnlyStringWithInputMode", ReadOnly, canWrite: false, flag: true, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding, inputModes: new[] { new InputMode ("Auto", true), new InputMode ("Star"), new InputMode ("Pixel"), });
@@ -85,6 +83,9 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 				canWrite: true,
 				valueSources: ValueSources.Default | ValueSources.Local | ValueSources.Resource);
 			AddProperty<CommonColor> (this.colorPropertyInfo);
+
+			AddProperty<FilePath> ("FilePath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
+			AddReadOnlyProperty<FilePath> ("ReadOnlyFilePath", ReadOnly);
 
 			AddEvents ("Click", "Hover", "Focus");
 
@@ -121,7 +122,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 
 		public async Task SetInitialValuesAsync (IObjectEditor editor)
 		{
-			await editor.SetValueAsync (Properties["FilePath"], new ValueInfo<FilePath> { Value = new FilePath { Source = "/Desktop/MyTestFile" } }); ;
+			await editor.SetValueAsync (Properties["FilePath"], new ValueInfo<FilePath> { Value = new FilePath ("/Desktop/MyTestFile") });
 		}
 
 		public async Task SetBrushInitialValueAsync (IObjectEditor editor, CommonBrush brush)

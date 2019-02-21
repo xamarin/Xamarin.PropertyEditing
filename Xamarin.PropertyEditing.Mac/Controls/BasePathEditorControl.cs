@@ -42,10 +42,11 @@ namespace Xamarin.PropertyEditing.Mac
 			this.currentTextField.AddButton (this.revealPathButton);
 
 			this.panel = new NSOpenPanel {
-				ShowsResizeIndicator = true,
-				ShowsHiddenFiles = false,
+				AllowsMultipleSelection = false,
 				CanCreateDirectories = true,
-				AllowsMultipleSelection = false
+				ShowsHiddenFiles = false,
+				ShowsResizeIndicator = true,
+				TreatsFilePackagesAsDirectories = true,
 			};
 
 			// update the value on keypress
@@ -79,8 +80,8 @@ namespace Xamarin.PropertyEditing.Mac
 			AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.currentTextField, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1, 0f),
 				NSLayoutConstraint.Create (this.currentTextField, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1, 0f),
-				NSLayoutConstraint.Create (this.currentTextField, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, -33f),
-				NSLayoutConstraint.Create (this.currentTextField, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1, DefaultControlHeight),
+				NSLayoutConstraint.Create (this.currentTextField, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, 0f),
+				NSLayoutConstraint.Create (this.currentTextField, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, -6f),
 			});
 		}
 
