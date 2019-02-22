@@ -94,6 +94,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
 		{
+			base.OnViewModelChanged (oldModel);
+
+			if (ViewModel == null)
+				return;
+
 			if (!this.dataPopulated) {
 				if (ViewModel.IsConstrainedToPredefined) {
 					this.popupButtonList.RemoveAllItems ();
@@ -136,7 +141,7 @@ namespace Xamarin.PropertyEditing.Mac
 				this.dataPopulated = true;
 			}
 
-			base.OnViewModelChanged (oldModel);
+			SetEnabled ();
 		}
 
 		protected override void UpdateValue ()

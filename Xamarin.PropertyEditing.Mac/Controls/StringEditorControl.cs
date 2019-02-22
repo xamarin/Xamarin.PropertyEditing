@@ -25,6 +25,8 @@ namespace Xamarin.PropertyEditing.Mac
 		internal NSPopUpButton inputModePopup;
 		private IReadOnlyList<InputMode> viewModelInputModes;
 
+		private bool CanEnable => ViewModel.Property.CanWrite && (((ViewModel.InputMode != null) && !ViewModel.InputMode.IsSingleValue) || (this.inputModePopup == null));
+
 		public StringEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
@@ -56,7 +58,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateValue ()
 		{
 			this.stringEditor.StringValue = ViewModel.Value ?? string.Empty;
-			this.stringEditor.Enabled = ((ViewModel.InputMode != null) && !ViewModel.InputMode.IsSingleValue) || (this.inputModePopup == null);
+			this.stringEditor.Enabled = CanEnable;
 			if (this.inputModePopup != null)
 				this.inputModePopup.SelectItem ((ViewModel.InputMode == null) ? string.Empty : ViewModel.InputMode.Identifier);
 		}
@@ -111,6 +113,8 @@ namespace Xamarin.PropertyEditing.Mac
 			// If we are reusing the control we'll have to hid the inputMode if this doesn't have InputMode.
 			if (this.inputModePopup != null)
 				this.inputModePopup.Hidden = !ViewModel.HasInputModes;
+
+			SetEnabled ();
 		}
 
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
@@ -125,16 +129,17 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			this.stringEditor.Editable = ViewModel.Property.CanWrite;
+			this.stringEditor.Enabled = CanEnable;
 			if (this.inputModePopup != null)
 				this.inputModePopup.Enabled = ViewModel.Property.CanWrite;
 		}
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			this.stringEditor.AccessibilityEnabled = this.stringEditor.Editable;
+			this.stringEditor.AccessibilityEnabled = this.stringEditor.Enabled;
 			this.stringEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityString, ViewModel.Property.Name);
 			if (this.inputModePopup != null) {
+				this.inputModePopup.AccessibilityEnabled = this.inputModePopup.Enabled;
 				this.inputModePopup.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityInpueModeEditor, ViewModel.Property.Name);
 			}
 		}

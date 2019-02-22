@@ -100,7 +100,7 @@ namespace Xamarin.PropertyEditing.Mac
 				this.typeDisplay.StringValue = value?.TypeName ?? String.Empty;
 				UpdateValue ();
 				UpdateIcon ();
-				this.propertyObjectName.Editable = !this.viewModel.IsObjectNameReadOnly;
+				this.propertyObjectName.Enabled = !this.viewModel.IsObjectNameReadOnly;
 			}
 		}
 
@@ -133,7 +133,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.propertyObjectName.StringValue = this.viewModel.ObjectName ?? string.Empty;
 			this.propertyObjectName.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityObjectName, nameof (viewModel.ObjectName));
-			this.propertyObjectName.Editable = !this.viewModel.IsObjectNameReadOnly;
+			this.propertyObjectName.Enabled = !this.viewModel.IsObjectNameReadOnly;
 		}
 
 		private void OnObjectNameEdited (object sender, EventArgs e)

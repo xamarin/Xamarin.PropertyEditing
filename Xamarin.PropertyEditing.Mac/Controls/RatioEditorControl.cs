@@ -49,7 +49,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			this.ratioEditor.Editable = ViewModel.Property.CanWrite;
+			this.ratioEditor.Enabled = ViewModel.Property.CanWrite;
 		}
 
 		protected override void UpdateAccessibilityValues ()
