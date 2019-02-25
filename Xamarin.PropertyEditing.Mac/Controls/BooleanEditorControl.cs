@@ -14,14 +14,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public BooleanEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
-			BooleanEditor = new NSButton {
-				AllowsMixedState = true,
-				ControlSize = NSControlSize.Small,
-				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
-				Title = string.Empty,
-				TranslatesAutoresizingMaskIntoConstraints = false,
-			};
-			BooleanEditor.SetButtonType (NSButtonType.Switch);
+			BooleanEditor = new FocusableBooleanButton ();
 
 			// update the value on 'enter'
 			BooleanEditor.Activated += (sender, e) => {

@@ -77,19 +77,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 				NSButton checkbox;
 				if (i >= this.combinableList.Count) {
-					checkbox = new NSButton {
-						AllowsExpansionToolTips = true,
-						AllowsMixedState = true,
-						Cell = {
-							LineBreakMode = NSLineBreakMode.TruncatingTail,
-							UsesSingleLineMode = true,
-						},
-						ControlSize = NSControlSize.Small,
-						Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
-						TranslatesAutoresizingMaskIntoConstraints = false,
-					};
+					checkbox = new FocusableBooleanButton ();
 
-					checkbox.SetButtonType (NSButtonType.Switch);
 					checkbox.Activated += SelectionChanged;
 
 					AddSubview (checkbox);

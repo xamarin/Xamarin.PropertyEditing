@@ -140,7 +140,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			if (ViewModel.HasInputModes) {
 				if (this.inputModePopup == null) {
-					this.inputModePopup = new NSPopUpButton {
+					this.inputModePopup = new FocusablePopUpButton {
 						Menu = new NSMenu (),
 						TranslatesAutoresizingMaskIntoConstraints = false,
 					};
