@@ -21,7 +21,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.createObject = new FocusableButton {
 				Title = Properties.Resources.New,
-				BezelStyle = NSBezelStyle.Rounded
+				BezelStyle = NSBezelStyle.Rounded,
 			};
 			this.createObject.Activated += OnNewPressed;
 			AddSubview (this.createObject);

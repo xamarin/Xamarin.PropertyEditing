@@ -63,7 +63,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.searchResources = new NSSearchField {
 				ControlSize = controlSize,
-				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				PlaceholderString = Properties.Resources.SearchResourcesTitle,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
@@ -113,7 +113,7 @@ namespace Xamarin.PropertyEditing.Mac
 			});
 			this.segmentedControl.SetImage (HostResources.GetNamedImage ("pe-resource-editor-16"), 2);
 			this.segmentedControl.Frame = new CGRect ((FrameWidthThird - (segmentedControl.Bounds.Width) / 2), 5, (Frame.Width - (FrameWidthThird)) - 10, 24);
-			this.segmentedControl.Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize);
+			this.segmentedControl.Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small));
 			this.segmentedControl.TranslatesAutoresizingMaskIntoConstraints = false;
 			this.segmentedControl.SetSelected (true, 0);
 			this.resourceSelectorPanel.ViewModel.ShowBothResourceTypes = true;

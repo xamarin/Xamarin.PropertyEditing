@@ -25,7 +25,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.filterResource = new NSSearchField {
 				ControlSize = NSControlSize.Mini,
-				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Mini)),
 				PlaceholderString = Properties.Resources.SearchResourcesTitle,
 			};
 
@@ -47,6 +47,7 @@ namespace Xamarin.PropertyEditing.Mac
 		NSView IEditorView.NativeView => View;
 
 		public bool IsDynamicallySized => false;
+		public bool NeedsPropertyButton => false;
 
 		public nint GetHeight (EditorViewModel viewModel)
 		{

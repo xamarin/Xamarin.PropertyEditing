@@ -15,6 +15,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		EditorViewModel ViewModel { get; set; }
 
+		bool NeedsPropertyButton { get; }
 		bool IsDynamicallySized { get; }
 		nint GetHeight (EditorViewModel vm);
 	}

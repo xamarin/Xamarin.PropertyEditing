@@ -56,6 +56,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public bool IsDynamicallySized => true;
 
+		public bool NeedsPropertyButton => false;
+
 		public nint GetHeight (EditorViewModel viewModel)
 		{
 			if (!(viewModel is PropertyGroupViewModel gvm))

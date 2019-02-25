@@ -8,11 +8,19 @@ using Xamarin.PropertyEditing.ViewModels;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class PropertyEditorControl
-		: BaseEditorControl, IEditorView
+		: NSView, IEditorView
 	{
 		protected PropertyEditorControl (IHostResourceProvider hostResources)
-			: base (hostResources)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			HostResources = hostResources;
+		}
+
+		public IHostResourceProvider HostResources
+		{
+			get;
 		}
 
 		public string Label { get; set; }
@@ -67,6 +75,8 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+		public virtual bool NeedsPropertyButton => true;
+
 		public void UpdateKeyViews ()
 		{
 			nint row = TableView.RowForView (this);
@@ -92,7 +102,7 @@ namespace Xamarin.PropertyEditing.Mac
 		/// <remarks>You should treat the implementation of this as static.</remarks>
 		public virtual nint GetHeight (EditorViewModel vm)
 		{
-			return DefaultControlHeight;
+			return 24;
 		}
 
 		protected abstract void UpdateValue ();
@@ -104,8 +114,6 @@ namespace Xamarin.PropertyEditing.Mac
 				UpdateValue ();
 				UpdateAccessibilityValues ();
 			}
-
-			PropertyButton.ViewModel = viewModel;
 		}
 
 		protected virtual void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -102,8 +102,6 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			if (editor != null) {
-				editor.ViewModel = evm;
-
 				var ovm = evm as ObjectPropertyViewModel;
 				if (ovm != null && editorOrContainer is EditorContainer container) {
 					if (container.LeftEdgeView == null) {
@@ -112,6 +110,10 @@ namespace Xamarin.PropertyEditing.Mac
 					} else if (!ovm.CanDelve) {
 						container.LeftEdgeView = null;
 					}
+
+					container.ViewModel = evm;
+				} else {
+					editor.ViewModel = evm;
 				}
 
 				bool openObjectRow = ovm != null && outlineView.IsItemExpanded (item);
@@ -203,7 +205,7 @@ namespace Xamarin.PropertyEditing.Mac
 					IEditorView view = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
 
 					if (view == null) {
-						registration.RowSize = PropertyEditorControl.DefaultControlHeight;
+						registration.RowSize = 24;
 					} else if (view.IsDynamicallySized) {
 						registration.SizingInstance = view;
 					} else {

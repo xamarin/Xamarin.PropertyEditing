@@ -33,9 +33,9 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.ratioEditor);
 
 			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, -2f),
-				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -32f),
-				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0),
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0),
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, -6),
 			});
 		}
 

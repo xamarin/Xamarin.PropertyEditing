@@ -65,7 +65,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Bordered = false,
 				ControlSize = NSControlSize.Small,
 				Editable = false,
-				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultPropertyLabelFontSize),
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				Selectable = false,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};

@@ -41,11 +41,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (NumericEditor);
 
-			this.numericEditorWidthConstraint = NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -32f);
+			this.editorRightConstraint = NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0);
 
 			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
-				this.numericEditorWidthConstraint,
+				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0),
+				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1, 0),
+				this.editorRightConstraint,
+				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, -6),
 			});
 		}
 
@@ -68,13 +70,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NumericEditor.NumberStyle = value;
 			}
 		}
-
-		private Type underlyingType;
-
-		internal NSPopUpButton inputModePopup;
-		private IReadOnlyList<InputMode> viewModelInputModes;
-
-		private NSLayoutConstraint numericEditorWidthConstraint;
 
 		protected override void UpdateErrorsDisplayed (IEnumerable errors)
 		{
@@ -140,9 +135,12 @@ namespace Xamarin.PropertyEditing.Mac
 			if (ViewModel == null)
 				return;
 
+			this.editorRightConstraint.Active = !ViewModel.HasInputModes;
 			if (ViewModel.HasInputModes) {
 				if (this.inputModePopup == null) {
 					this.inputModePopup = new FocusablePopUpButton {
+						ControlSize = NSControlSize.Small,
+						Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 						Menu = new NSMenu (),
 						TranslatesAutoresizingMaskIntoConstraints = false,
 					};
@@ -153,12 +151,13 @@ namespace Xamarin.PropertyEditing.Mac
 					};
 
 					AddSubview (this.inputModePopup);
-
+					this.editorInputModeConstraint = NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this.inputModePopup, NSLayoutAttribute.Left, 1, -4);
 					this.AddConstraints (new[] {
-						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
-						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, -33f),
+						this.editorInputModeConstraint,
+						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0f),
+						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, 0f),
 						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 80f),
-						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3 ),
+						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Height, NSLayoutRelation.Equal, NumericEditor, NSLayoutAttribute.Height, 1f, 0),
 					});
 				}
 
@@ -167,17 +166,24 @@ namespace Xamarin.PropertyEditing.Mac
 				foreach (InputMode item in this.viewModelInputModes) {
 					this.inputModePopup.Menu.AddItem (new NSMenuItem (item.Identifier));
 				}
-
-				this.numericEditorWidthConstraint.Constant = -117f; // Shorten the stringEditor if we have Inputmodes Showing.
-			} else {
-				this.numericEditorWidthConstraint.Constant = -32f; // Lengthen the stringEditor if we have Inputmodes Hidden.
 			}
 
 			// If we are reusing the control we'll have to hid the inputMode if this doesn't have InputMode.
-			if (this.inputModePopup != null)
+			if (this.inputModePopup != null) {
 				this.inputModePopup.Hidden = !ViewModel.HasInputModes;
+				this.editorInputModeConstraint.Active = ViewModel.HasInputModes;
+			}
 
 			SetEnabled ();
 		}
+
+		private Type underlyingType;
+
+		internal NSPopUpButton inputModePopup;
+		private IReadOnlyList<InputMode> viewModelInputModes;
+
+		private readonly NSLayoutConstraint editorRightConstraint;
+		private NSLayoutConstraint editorInputModeConstraint;
 	}
 }
+

@@ -76,37 +76,37 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (HeightEditor);
 
 			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 0f),
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 3f),
 				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 0f),
 				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, YEditor,  NSLayoutAttribute.Left, 1f, -10f),
-				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 
 				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, XEditor,  NSLayoutAttribute.Bottom, 1f, -4f),
-				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 
-				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 0f),
-				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, -32f),
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 3f),
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, 0),
 				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, XEditor,  NSLayoutAttribute.Width, 1f, 0f),
-				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 
 				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, XLabel,  NSLayoutAttribute.Top, 1f, 0f),
-				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 
 				NSLayoutConstraint.Create (WidthEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 33f),
 				NSLayoutConstraint.Create (WidthEditor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 0f),
 				NSLayoutConstraint.Create (WidthEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, HeightEditor,  NSLayoutAttribute.Left, 1f, -10f),
-				NSLayoutConstraint.Create (WidthEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+				NSLayoutConstraint.Create (WidthEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 
 				NSLayoutConstraint.Create (WidthLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, WidthEditor,  NSLayoutAttribute.Bottom, 1f, -4f),
-				NSLayoutConstraint.Create (WidthLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+				NSLayoutConstraint.Create (WidthLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 
 				NSLayoutConstraint.Create (HeightEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, WidthEditor,  NSLayoutAttribute.Top, 1f, 0f),
-				NSLayoutConstraint.Create (HeightEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, -32f),
+				NSLayoutConstraint.Create (HeightEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, 0),
 				NSLayoutConstraint.Create (HeightEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, WidthEditor,  NSLayoutAttribute.Width, 1f, 0f),
-				NSLayoutConstraint.Create (HeightEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+				NSLayoutConstraint.Create (HeightEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 
 				NSLayoutConstraint.Create (HeightLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, WidthLabel,  NSLayoutAttribute.Top, 1f, 0f),
-				NSLayoutConstraint.Create (HeightLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+				NSLayoutConstraint.Create (HeightLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 
 
 				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, XEditor.Subviews[0], NSLayoutAttribute.CenterX, 1f, 0),
