@@ -112,6 +112,16 @@ namespace Xamarin.PropertyEditing
 		}
 
 		/// <summary>
+		/// Gets or sets whether all groups should be expanded automatically.
+		/// </summary>
+		/// <remarks>This takes precedence over <see cref="AutoExpandGroups"/>.</remarks>
+		public bool AutoExpandAll
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets or sets a list of the allowed arrange modes.
 		/// </summary>
 		public IReadOnlyList<PropertyArrangeMode> ArrangeModes
