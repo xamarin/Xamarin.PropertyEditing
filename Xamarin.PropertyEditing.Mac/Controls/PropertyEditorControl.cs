@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using AppKit;
-using CoreGraphics;
 using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -63,7 +61,7 @@ namespace Xamarin.PropertyEditing.Mac
 			set { ViewModel = (PropertyViewModel)value; }
 		}
 
-		NSView IEditorView.NativeView => this;
+		NSView INativeContainer.NativeView => this;
 
 		[Export ("_primitiveSetDefaultNextKeyView:")]
 		public void SetDefaultNextKeyView (NSView child)

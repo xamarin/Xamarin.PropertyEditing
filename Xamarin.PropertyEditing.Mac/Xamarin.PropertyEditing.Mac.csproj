@@ -154,6 +154,7 @@
     <Compile Include="Controls\Custom\FocusablePopupButton.cs" />
     <Compile Include="Controls\Custom\FocusableBooleanButton.cs" />
     <Compile Include="Controls\Custom\FocusableButton.cs" />
+    <Compile Include="Controls\PropertyContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

@@ -1,67 +1,17 @@
-using System;
 using AppKit;
-using CoreGraphics;
-using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class EditorContainer
-		: NSView
+		: PropertyContainer
 	{
 		public EditorContainer (IHostResourceProvider hostResources, IEditorView editorView)
+			: base (hostResources, editorView, editorView?.NeedsPropertyButton ?? false)
 		{
-			if (hostResources == null)
-				throw new ArgumentNullException (nameof (hostResources));
-
-			EditorView = editorView;
-
-			AddSubview (this.label);
-
-			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, Mac.Layout.GoldenRatioLeft, 0f),
-				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
-			});
-
-			if (EditorView != null) {
-				AddSubview (EditorView.NativeView);
-				EditorView.NativeView.TranslatesAutoresizingMaskIntoConstraints = false;
-
-				if (EditorView.NativeView is PropertyEditorControl pec && pec.FirstKeyView != null) {
-					AddConstraint (NSLayoutConstraint.Create (this.label, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, pec.FirstKeyView, NSLayoutAttribute.CenterY, 1, 0));
-				} else {
-					AddConstraint (NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 3));
-				}
-
-				AddConstraints (new[] {
-					NSLayoutConstraint.Create (EditorView.NativeView, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
-					NSLayoutConstraint.Create (EditorView.NativeView, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.label, NSLayoutAttribute.Right, 1f, LabelToControlSpacing),
-					NSLayoutConstraint.Create (EditorView.NativeView, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1f, 0)
-				});
-
-				if (editorView.NeedsPropertyButton) {
-					this.propertyButton = new PropertyButton (hostResources) {
-						TranslatesAutoresizingMaskIntoConstraints = false
-					};
-
-					AddSubview (this.propertyButton);
-					AddConstraints (new[] {
-						NSLayoutConstraint.Create (this.propertyButton, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this.label, NSLayoutAttribute.CenterY, 1, 0),
-						NSLayoutConstraint.Create (EditorView.NativeView, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this.propertyButton, NSLayoutAttribute.Left, 1f, -EditorToButtonSpacing),
-						NSLayoutConstraint.Create (this.propertyButton, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, -ButtonToWallSpacing),
-						NSLayoutConstraint.Create (this.propertyButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, PropertyButton.DefaultSize),
-					});
-				} else {
-					AddConstraint (NSLayoutConstraint.Create (EditorView.NativeView, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0f));
-				}
-			} else {
-				AddConstraint (NSLayoutConstraint.Create (this.label, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1, 0));
-			}
 		}
 
-		public IEditorView EditorView {
-			get;
-		}
+		public IEditorView EditorView => (IEditorView)NativeContainer;
 
 		public EditorViewModel ViewModel
 		{
@@ -72,15 +22,7 @@ namespace Xamarin.PropertyEditing.Mac
 					return;
 
 				EditorView.ViewModel = value;
-				this.propertyButton.ViewModel = value as PropertyViewModel;
-			}
-		}
-
-		public string Label {
-			get { return this.label.StringValue; }
-			set {
-				this.label.StringValue = value + ":";
-				this.label.ToolTip = value;
+				PropertyButton.ViewModel = value as PropertyViewModel;
 			}
 		}
 
@@ -120,30 +62,13 @@ namespace Xamarin.PropertyEditing.Mac
 			base.ViewWillMoveToSuperview (newSuperview);
 		}
 
-		private UnfocusableTextField label = new UnfocusableTextField {
-			Alignment = NSTextAlignment.Right,
-			Cell = {
-				LineBreakMode = NSLineBreakMode.TruncatingHead,
-			},
-			TranslatesAutoresizingMaskIntoConstraints = false,
-		};
-
 #if DEBUG // Currently only used to highlight which controls haven't been implemented
 		public NSColor LabelTextColor {
-			set { this.label.TextColor = value; }
+			set { LabelControl.TextColor = value; }
 		}
 #endif
 
-
-		internal const float LabelToControlSpacing = 13f;
-		internal static float PropertyTotalWidth => PropertyButton.DefaultSize + ButtonToWallSpacing + EditorToButtonSpacing;
-
 		private NSView leftEdgeView;
 		private NSLayoutConstraint leftEdgeLeftConstraint, leftEdgeVCenterConstraint;
-		private readonly IHostResourceProvider hostResources;
-		private readonly PropertyButton propertyButton;
-
-		private const float EditorToButtonSpacing = 4f;
-		private const float ButtonToWallSpacing = 9f;
 	}
 }

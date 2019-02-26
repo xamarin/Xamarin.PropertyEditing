@@ -44,7 +44,7 @@ namespace Xamarin.PropertyEditing.Mac
 			set { ViewModel = (BrushPropertyViewModel)value; }
 		}
 
-		NSView IEditorView.NativeView => View;
+		NSView INativeContainer.NativeView => View;
 
 		public bool IsDynamicallySized => false;
 		public bool NeedsPropertyButton => false;
