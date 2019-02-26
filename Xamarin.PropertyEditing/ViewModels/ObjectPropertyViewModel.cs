@@ -164,7 +164,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 						try {
 							selectedType = await args.SelectedType;
- 						} catch (OperationCanceledException) {
+							if (selectedType == null)
+								return;
+						} catch (OperationCanceledException) {
 							return;
 						}
 					}

@@ -127,8 +127,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool HasChildElements => (this.filtered.Count > 0);
 
-		public bool IsFiltering => Options?.Filter != null;
-
 		public bool Contains (object value)
 		{
 			return IndexOf (value) != -1;
@@ -289,7 +287,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool MatchesFilter (Element element)
 		{
-			if (!IsFiltering)
+			if (!GetIsFiltering())
+				return true;
+			if (element.ChildrenView != null && !element.ChildrenView.HasChildElements)
+				return false;
+			if (Options.Filter == null)
 				return true;
 
 			return Options.Filter (element.Item);
@@ -297,7 +299,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void FilterCore (bool notify = true, bool isPureSubset = false)
 		{
-			if (!IsFiltering) {
+			if (!GetIsFiltering()) {
 				if (this.arranged.Count == this.filtered.Count)
 					return;
 			}
@@ -312,8 +314,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			var toRemove = new List<string>();
 			foreach (var kvp in this.filtered) {
-				var childView = kvp.Value.ChildrenView;
-				if ((childView != null && !childView.HasChildElements) || !MatchesFilter (kvp.Value)) {
+				if (!MatchesFilter (kvp.Value)) {
 					toRemove.Add (kvp.Key);
 				}
 			}
@@ -324,7 +325,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				var toAdd = new List<string> (filteredOut.Count);
 				foreach (string key in filteredOut) {
 					Element e = this.arranged[key];
-					if (!IsFiltering || Options.Filter (e.Item))
+					if (MatchesFilter (e))
 						toAdd.Add (key);
 				}
 				toAdd.Sort (Comparer);
@@ -435,8 +436,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.arranged.Clear();
 			this.filtered.Clear();
 
-			bool filtering = IsFiltering;
-
 			foreach (var sourceItem in this.source.Cast<object>().Select (o => new { Item = o, Key = GetKey (o) }).OrderBy (e => e.Key, Comparer)) {
 				Element e = new Element {
 					Item = sourceItem.Item
@@ -453,7 +452,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					e.ChildrenView = new SimpleCollectionView (children, Options.ChildOptions, this, sourceItem.Key, sourceItem.Item);
 				}
 
-				if (!filtering || this.options.Filter (e.Item))
+				if (MatchesFilter (e))
 					this.filtered.Add (sourceItem.Key, e);
 			}
 
@@ -498,6 +497,28 @@ namespace Xamarin.PropertyEditing.ViewModels
 					pair.Item1.RemoveFiltered (new[] { pair.Item2.key });
 				}
 			}
+		}
+
+		private bool GetIsFiltering ()
+		{
+			// Generally our hierarchy is at max 3 levels deep, this can be cached if we find it problematic
+			SimpleCollectionView parent = this;
+			while (parent != null) {
+				if (parent.Options?.Filter != null)
+					return true;
+
+				parent = parent.parent;
+			}
+
+			SimpleCollectionViewOptions childOptions = Options.ChildOptions;
+			while (childOptions != null) {
+				if (childOptions.Filter != null)
+					return true;
+
+				childOptions = childOptions.ChildOptions;
+			}
+
+			return false;
 		}
 	}
 }

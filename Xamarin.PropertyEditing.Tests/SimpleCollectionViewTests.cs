@@ -756,6 +756,50 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.Throws<ArgumentOutOfRangeException> (() => view[2].ToString(), "this[] didn't throw out of range on filtered out item");
 		}
 
+		[Test]
+		[Description ("Covers #522, empty parents now unfiltered by their own filter shouldn't be added")]
+		public void ParentFilterChangesOnEmpty ()
+		{
+			var parents = new ObservableCollection<TestNode> {
+				new TestNode ("A") {
+					Children = new List<TestNode> {
+						new TestNode ("A child")
+					}
+				},
+				new TestNode ("Baz") {
+					Children = new List<TestNode> {
+						new TestNode ("Baz child")
+					}
+				},
+				new TestNode ("Bar") {
+					Children = new List<TestNode> {
+						new TestNode ("Bar child")
+					}
+				},
+			};
+
+			var view = new SimpleCollectionView (parents, new SimpleCollectionViewOptions {
+				DisplaySelector = TestNodeDisplaySelector,
+				ChildrenSelector = TestNodeChildrenSelector,
+				ChildOptions = new SimpleCollectionViewOptions {
+					DisplaySelector = TestNodeDisplaySelector
+				}
+			});
+
+			Assume.That (view.Count, Is.EqualTo (3));
+
+			view.Options.Filter = o => ((TestNode) o).Key != "Bar";
+			Assume.That (view.Count, Is.EqualTo (2));
+
+			view.Options.ChildOptions.Filter = o => ((TestNode) o).Key.StartsWith ("A");
+			Assume.That (view.Count, Is.EqualTo (1));
+
+			view.Options.Filter = null;
+
+			Assert.That (((KeyValuePair<string, SimpleCollectionView>) view[0]).Key, Is.EqualTo (parents[0].Key));
+			Assert.That (view.Count, Is.EqualTo (1));
+		}
+
 		private IEnumerable TestNodeChildrenSelector (object o)
 		{
 			return ((TestNode)o).Children;

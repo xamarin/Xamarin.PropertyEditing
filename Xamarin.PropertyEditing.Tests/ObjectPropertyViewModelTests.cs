@@ -256,6 +256,41 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.ValueType, Is.Null);
 		}
 
+		[Test]
+		public void ReturnedNullTypeCancels ()
+		{
+			object value = new object ();
+			var p = CreatePropertyMock ("prop");
+			var childsubInfo = GetTypeInfo (typeof (SubChildClass));
+			var editor = new MockObjectEditor (new[] { p.Object }, new Dictionary<IPropertyInfo, IReadOnlyList<ITypeInfo>> {
+				{
+					p.Object,
+					new[] {
+						GetTypeInfo (typeof(ChildClass)),
+						childsubInfo
+					}
+				}
+			});
+
+			var providerMock = CreateProviderMock (value, new MockObjectEditor { Target = value });
+			var vm = new ObjectPropertyViewModel (new TargetPlatform (providerMock.Object), p.Object, new[] { editor });
+
+			var tcs = new TaskCompletionSource<ITypeInfo> ();
+			bool requested = false;
+			vm.TypeRequested += (sender, args) => {
+				requested = true;
+				args.SelectedType = tcs.Task;
+			};
+
+			Assume.That (vm.CreateInstanceCommand.CanExecute (childsubInfo), Is.True);
+			vm.CreateInstanceCommand.Execute (null);
+			Assume.That (requested, Is.True);
+
+			tcs.SetResult (null);
+
+			providerMock.Verify (ep => ep.CreateObjectAsync (null), Times.Never);
+		}
+
 		private TestContext syncContext;
 
 		private Mock<IEditorProvider> CreateProviderMock (object value, IObjectEditor editor)
