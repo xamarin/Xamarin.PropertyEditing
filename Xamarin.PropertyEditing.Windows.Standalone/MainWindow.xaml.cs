@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Tests;
 
@@ -15,6 +17,15 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 		public MainWindow ()
 		{
 			InitializeComponent ();
+
+			this.fonts.ItemsSource = Fonts.SystemFontFamilies;
+			this.fonts.SelectedItem = FontFamily;
+
+			this.fontSize.Text = this.fontSizeConverter.ConvertToString (FontSize);
+
+			this.locale.ItemsSource = CultureInfo.GetCultures (CultureTypes.AllCultures);
+			this.locale.SelectedItem = CultureInfo.CurrentUICulture;
+
 			var resources = new MockResourceProvider();
 			this.panel.TargetPlatform = new TargetPlatform (new MockEditorProvider (resources), resources, new MockBindingProvider()) {
 				SupportsCustomExpressions = true,
@@ -42,6 +53,8 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 			Source = new Uri ("pack://application:,,,/Xamarin.PropertyEditing.Windows;component/Themes/VS.Light.xaml")
 		};
 
+		private readonly FontSizeConverter fontSizeConverter = new FontSizeConverter();
+
 		private async void Button_Click (object sender, RoutedEventArgs e)
 		{
 			object inspectedObject;
@@ -63,23 +76,44 @@ namespace Xamarin.PropertyEditing.Windows.Standalone
 				this.panel.SelectedItems.Add (inspectedObject);
 		}
 
-		private void Theme_Click (object sender, RoutedEventArgs e)
+		private void Fonts_SelectionChanged (object sender, SelectionChangedEventArgs e)
 		{
-			if (e.Source is RadioButton rb) {
-				switch (rb.Content.ToString ()) {
-				case "Dark Theme":
-					Application.Current.Resources.MergedDictionaries.Remove (LightTheme);
-					Application.Current.Resources.MergedDictionaries.Add (DarkTheme);
-					break;
-				case "Light Theme":
-					Application.Current.Resources.MergedDictionaries.Remove (DarkTheme);
-					Application.Current.Resources.MergedDictionaries.Add (LightTheme);
-					break;
-				default:
-					Application.Current.Resources.MergedDictionaries.Remove (LightTheme);
-					Application.Current.Resources.MergedDictionaries.Remove (DarkTheme);
-					break;
-				}
+			FontFamily = (FontFamily) this.fonts.SelectedItem;
+		}
+
+		private void FontSize_TextChanged (object sender, TextChangedEventArgs e)
+		{
+			try {
+				object size = this.fontSizeConverter.ConvertFromString (this.fontSize.Text);
+				if (size == null)
+					return;
+
+				FontSize = (double) size;
+			} catch (FormatException) {
+			} catch (NotSupportedException) {
+			}
+		}
+
+		private void Locale_SelectionChanged (object sender, SelectionChangedEventArgs e)
+		{
+			CultureInfo.CurrentUICulture = (CultureInfo) this.locale.SelectedItem;
+		}
+
+		private void Theme_SelectionChanged (object sender, SelectionChangedEventArgs e)
+		{
+			switch ((this.theme.SelectedItem as ComboBoxItem)?.Content?.ToString ()) {
+			case "Dark":
+				Application.Current.Resources.MergedDictionaries.Remove (LightTheme);
+				Application.Current.Resources.MergedDictionaries.Add (DarkTheme);
+				break;
+			case "Light":
+				Application.Current.Resources.MergedDictionaries.Remove (DarkTheme);
+				Application.Current.Resources.MergedDictionaries.Add (LightTheme);
+				break;
+			default:
+				Application.Current.Resources.MergedDictionaries.Remove (LightTheme);
+				Application.Current.Resources.MergedDictionaries.Remove (DarkTheme);
+				break;
 			}
 		}
 	}

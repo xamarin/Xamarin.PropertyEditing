@@ -14,22 +14,40 @@
 		</Grid.ColumnDefinitions>
 
 		<Grid.RowDefinitions>
-            <RowDefinition Height="22" />
+			<RowDefinition Height="Auto" />
 			<RowDefinition />
 			<RowDefinition />
 			<RowDefinition />
 			<RowDefinition />
 		</Grid.RowDefinitions>
-		<StackPanel  Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-			<RadioButton GroupName="theme" Padding="5, 0, 20, 0" Click="Theme_Click" IsChecked="True">Dark Theme</RadioButton>
-			<RadioButton GroupName="theme" Padding="5, 0, 20, 0" Click="Theme_Click">Light Theme</RadioButton>
-			<RadioButton GroupName="theme" Padding="5, 0, 20, 0" Click="Theme_Click">No Theme</RadioButton>
-		</StackPanel>
+		<Grid Grid.Row="0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Theme:</TextBlock>
+			<ComboBox Name="theme" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" SelectionChanged="Theme_SelectionChanged">
+				<ComboBoxItem IsSelected="True">Dark</ComboBoxItem>
+				<ComboBoxItem>Light</ComboBoxItem>
+			</ComboBox>
+			<TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Font:</TextBlock>
+			<ComboBox Name="fonts" Grid.Row="1" Grid.Column="1" SelectionChanged="Fonts_SelectionChanged" />
+			<TextBox Name="fontSize"  Grid.Row="1" Grid.Column="2" TextChanged="FontSize_TextChanged" />
+
+			<TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Locale:</TextBlock>
+			<ComboBox Name="locale" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" SelectionChanged="Locale_SelectionChanged" />
+		</Grid>
 		<local:MockedSampleControlButton Grid.Row="1" Grid.Column="0" Click="Button_Click">Mocked Sample 1</local:MockedSampleControlButton>
 		<local:MockedSampleControlButton Grid.Row="2" Grid.Column="0" Click="Button_Click">Mocked Sample 2</local:MockedSampleControlButton>
 		<local:MockedWpfButton Grid.Row="3" Grid.Column="0" Click="Button_Click">Mocked WPF button</local:MockedWpfButton>
 		<Button Grid.Row="4" Grid.Column="0" Click="Button_Click">Actual WPF button</Button>
 
-		<xamarinprops:PropertyEditorPanel Name="panel" Grid.Row="1" Grid.RowSpan="4" Grid.Column="1" ArrangeMode="Category" />
+		<xamarinprops:PropertyEditorPanel Name="panel" Grid.Row="0" Grid.RowSpan="5" Grid.Column="1" ArrangeMode="Category" />
 	</Grid>
 </Window>
