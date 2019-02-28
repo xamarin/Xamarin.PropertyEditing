@@ -377,26 +377,27 @@
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
 						<Grid.RowDefinitions>
-							<RowDefinition />
-							<RowDefinition />
+							<!-- We want to mimick a regular row with our first row, but we're already inset 0,2,0,2 from the parent !-->
+							<RowDefinition MinHeight="22" />
+							<RowDefinition MinHeight="22" />
 						</Grid.RowDefinitions>
 
-						<Border Grid.Column="0" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
+						<Border Grid.Column="0" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}" Margin="0,0,0,2">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource LeftThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Left}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Left" />
-						<Border Grid.Column="1" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
+						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="0" Margin="14,0,2,2" Value="{Binding Left}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Left" />
+						<Border Grid.Column="1" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}" Margin="0,0,0,2">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource RightThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Right}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Right" />
-						<Border Grid.Column="0" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
+						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="0" Margin="14,0,2,2" Value="{Binding Right}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Right" />
+						<Border Grid.Column="0" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,2,2,0">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource TopThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Top}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Top" />
-						<Border Grid.Column="1" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
+						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="1" Margin="14,2,2,0" Value="{Binding Top}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Top" />
+						<Border Grid.Column="1" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,2,0,0">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource BottomThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Bottom}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Bottom" />
+						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,2,2,0" Value="{Binding Bottom}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Bottom" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
