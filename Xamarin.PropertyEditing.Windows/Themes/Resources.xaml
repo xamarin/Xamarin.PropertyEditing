@@ -273,7 +273,6 @@
 	</Style>
 
 	<Style TargetType="local:StringEditorControl">
-		<Setter Property="Height" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:StringEditorControl">
@@ -292,7 +291,6 @@
 	</Style>
 
 	<Style TargetType="local:BoolEditorControl">
-		<Setter Property="Height" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BoolEditorControl">
@@ -303,7 +301,6 @@
 	</Style>
 
     <Style TargetType="local:PointEditorControl">
-		<Setter Property="Height" Value="24" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:PointEditorControl">
@@ -1507,6 +1504,7 @@
 	</Style>
 
 	<Style TargetType="local:PropertyPresenter">
+		<Setter Property="MinHeight" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyPresenter">
@@ -1524,8 +1522,8 @@
 							</Grid.RowDefinitions>
 
 							<ToggleButton Name="delveButton" Grid.Column="0" Style="{DynamicResource StandaloneToggleStyle}" Width="11" Height="11" Visibility="{Binding HasItems,ElementName=subProperties,Converter={StaticResource BoolToVisibilityConverter}}" />
-							<TextBlock Name="Label" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" Height="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-							<ContentPresenter Grid.Column="2" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" />
+							<TextBlock Name="Label"  Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+							<ContentPresenter Grid.Column="2" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" MinHeight="20" />
 							<local:PropertyButton Grid.Column="3" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}"/>
 
 							<ItemsControl Name="subProperties" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Margin="-19,0,0,0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{DynamicResource PropertyEditorTemplate}">
@@ -2030,7 +2028,6 @@
 	</local:NumericTemplateSelector>
 
 	<Style TargetType="local:NumericEditorControl">
-		<Setter Property="Height" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:NumericEditorControl">
@@ -2050,20 +2047,14 @@
 	</Style>
 
 	<Style TargetType="local:IntegerUpDownControl" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
-		<Setter Property="Height" Value="24" />
-		<Setter Property="MinHeight" Value="20" />
 		<Setter Property="FocusSelectsAll" Value="True" />
 	</Style>
 
 	<Style TargetType="local:DoubleUpDownControl" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
-		<Setter Property="Height" Value="24" />
-		<Setter Property="MinHeight" Value="20" />
 		<Setter Property="FocusSelectsAll" Value="True" />
 	</Style>
 
 	<Style TargetType="local:ByteUpDownControl" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
-		<Setter Property="Height" Value="24" />
-		<Setter Property="MinHeight" Value="20" />
 		<Setter Property="FocusSelectsAll" Value="True" />
 	</Style>
 
