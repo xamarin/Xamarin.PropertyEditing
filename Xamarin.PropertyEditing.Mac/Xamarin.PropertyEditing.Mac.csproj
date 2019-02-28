@@ -176,5 +176,16 @@
       <LastGenOutput>LocalizationResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <Target Name="IncludeIconsInBundle" BeforeTargets="AssignTargetPaths">
+    <ItemGroup>
+      <PropertyEditingResourceBundlePath Include="PropertyEditingResource\**\*" />
+    </ItemGroup>
+
+    <CreateItem Include="@(PropertyEditingResourceBundlePath)" AdditionalMetadata="Link=PropertyEditingResource.bundle\%(RecursiveDir)%(Filename)%(Extension);CopyToOutputDirectory=PreserveNewest">
+      <Output TaskParameter="Include" ItemName="None" />
+    </CreateItem>
+  </Target>
+
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>
