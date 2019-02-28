@@ -311,9 +311,9 @@
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
-						<Label Grid.Column="0" Name="XLabel" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="X" />
+						<TextBlock Grid.Column="0" Name="XLabel" Text="X" Margin="0,0,5,0" />
 						<local:DoubleUpDownControl Grid.Column="1" x:Name="XTextBox" Value="{Binding X}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=XLabel,Mode=OneTime}"/>
-						<Label Grid.Column="2" Name="YLabel" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="Y" />
+						<TextBlock Grid.Column="2" Name="YLabel" Text="Y" Margin="5,0,5,0" />
 						<local:DoubleUpDownControl Grid.Column="3" x:Name="YTextBox" Value="{Binding Y}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=YLabel,Mode=OneTime}" />
 					</Grid>
                 </ControlTemplate>
@@ -321,26 +321,26 @@
         </Setter>
     </Style>
 
-    <Style TargetType="local:SizeEditorControl">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:SizeEditorControl">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="Width" />
-                        <local:DoubleUpDownControl x:Name="WidthTextBox" Grid.Column="1" Value="{Binding Width}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}" />
-                        <Label Name="HeightLabel" Grid.Column="2" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="Height" />
-                        <local:DoubleUpDownControl x:Name="HeightTextBox" Grid.Column="3" Value="{Binding Height}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+	<Style TargetType="local:SizeEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:SizeEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Name="WidthLabel" Text="Width" Margin="0,0,5,0" />
+						<local:DoubleUpDownControl x:Name="WidthTextBox" Grid.Column="1" Value="{Binding Width}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}" />
+						<TextBlock Name="HeightLabel" Grid.Column="2" Text="Height" Margin="5,0,5,0" />
+						<local:DoubleUpDownControl x:Name="HeightTextBox" Grid.Column="3" Value="{Binding Height}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
 	<Style TargetType="local:RatioEditorControl">
 		<Setter Property="Template">
