@@ -52,7 +52,7 @@
 					<ItemsControl Focusable="{TemplateBinding Focusable}" ItemsSource="{Binding Choices,Mode=OneTime}">
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
-								<CheckBox Foreground="{DynamicResource ListItemForegroundBrush}" FocusVisualStyle="{StaticResource GenericVisualFocusStyle}" IsChecked="{Binding IsFlagged,Mode=TwoWay}" Margin="0,1,0,1" Content="{Binding Name,Mode=OneTime}" />
+								<CheckBox Foreground="{DynamicResource ListItemForegroundBrush}" FocusVisualStyle="{StaticResource GenericVisualFocusStyle}" IsChecked="{Binding IsFlagged,Mode=TwoWay}" Margin="0,1,0,1" MinHeight="18" VerticalContentAlignment="Center" Content="{Binding Name,Mode=OneTime}" />
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
 					</ItemsControl>
@@ -273,7 +273,6 @@
 	</Style>
 
 	<Style TargetType="local:StringEditorControl">
-		<Setter Property="Height" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:StringEditorControl">
@@ -292,7 +291,6 @@
 	</Style>
 
 	<Style TargetType="local:BoolEditorControl">
-		<Setter Property="Height" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BoolEditorControl">
@@ -303,7 +301,6 @@
 	</Style>
 
     <Style TargetType="local:PointEditorControl">
-		<Setter Property="Height" Value="24" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:PointEditorControl">
@@ -314,9 +311,9 @@
 							<ColumnDefinition Width="Auto" />
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
-						<Label Grid.Column="0" Name="XLabel" Target="{Binding ElementName=XTextBox,Mode=OneTime}" Content="X" />
+						<TextBlock Grid.Column="0" Name="XLabel" Text="X" Margin="0,0,5,0" />
 						<local:DoubleUpDownControl Grid.Column="1" x:Name="XTextBox" Value="{Binding X}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=XLabel,Mode=OneTime}"/>
-						<Label Grid.Column="2" Name="YLabel" Target="{Binding ElementName=YTextBox,Mode=OneTime}" Content="Y" />
+						<TextBlock Grid.Column="2" Name="YLabel" Text="Y" Margin="5,0,5,0" />
 						<local:DoubleUpDownControl Grid.Column="3" x:Name="YTextBox" Value="{Binding Y}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=YLabel,Mode=OneTime}" />
 					</Grid>
                 </ControlTemplate>
@@ -324,26 +321,26 @@
         </Setter>
     </Style>
 
-    <Style TargetType="local:SizeEditorControl">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:SizeEditorControl">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Name="WidthLabel" Target="{Binding ElementName=WidthTextBox,Mode=OneTime}" Content="Width" />
-                        <local:DoubleUpDownControl x:Name="WidthTextBox" Grid.Column="1" Value="{Binding Width}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}" />
-                        <Label Name="HeightLabel" Grid.Column="2" Target="{Binding ElementName=HeightTextBox,Mode=OneTime}" Content="Height" />
-                        <local:DoubleUpDownControl x:Name="HeightTextBox" Grid.Column="3" Value="{Binding Height}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+	<Style TargetType="local:SizeEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:SizeEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Name="WidthLabel" Text="Width" Margin="0,0,5,0" />
+						<local:DoubleUpDownControl x:Name="WidthTextBox" Grid.Column="1" Value="{Binding Width}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=WidthLabel,Mode=OneTime}" />
+						<TextBlock Name="HeightLabel" Grid.Column="2" Text="Height" Margin="5,0,5,0" />
+						<local:DoubleUpDownControl x:Name="HeightTextBox" Grid.Column="3" Value="{Binding Height}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.LabeledBy="{Binding ElementName=HeightLabel,Mode=OneTime}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
 	<Style TargetType="local:RatioEditorControl">
 		<Setter Property="Template">
@@ -380,26 +377,27 @@
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
 						<Grid.RowDefinitions>
-							<RowDefinition />
-							<RowDefinition />
+							<!-- We want to mimick a regular row with our first row, but we're already inset 0,2,0,2 from the parent !-->
+							<RowDefinition MinHeight="22" />
+							<RowDefinition MinHeight="22" />
 						</Grid.RowDefinitions>
 
-						<Border Grid.Column="0" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
+						<Border Grid.Column="0" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}" Margin="0,0,0,2">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource LeftThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Left}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Left" />
-						<Border Grid.Column="1" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}">
+						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="0" Margin="14,0,2,2" Value="{Binding Left}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Left" />
+						<Border Grid.Column="1" Grid.Row="0" Style="{StaticResource EditorIconLabelHost}" Margin="0,0,0,2">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource RightThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="0" Margin="14,0,2,0" Value="{Binding Right}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Right" />
-						<Border Grid.Column="0" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
+						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="0" Margin="14,0,2,2" Value="{Binding Right}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Right" />
+						<Border Grid.Column="0" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,2,2,0">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource TopThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Top}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Top" />
-						<Border Grid.Column="1" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,4,0,0">
+						<local:IntegerUpDownControl Grid.Column="0" Grid.Row="1" Margin="14,2,2,0" Value="{Binding Top}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Top" />
+						<Border Grid.Column="1" Grid.Row="1" Style="{StaticResource EditorIconLabelHost}" Margin="0,2,0,0">
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource BottomThicknessGeometry}" />
 						</Border>
-						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,4,2,0" Value="{Binding Bottom}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Bottom" />
+						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,2,2,0" Value="{Binding Bottom}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Bottom" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -1507,6 +1505,7 @@
 	</Style>
 
 	<Style TargetType="local:PropertyPresenter">
+		<Setter Property="MinHeight" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyPresenter">
@@ -1519,16 +1518,17 @@
 								<ColumnDefinition Name="propertyButtonColumn" Width="12" />
 							</Grid.ColumnDefinitions>
 							<Grid.RowDefinitions>
-								<RowDefinition Height="Auto" />
+								<RowDefinition Height="Auto" MinHeight="24" />
+								<RowDefinition Height="*" />
 								<RowDefinition Height="Auto" />
 							</Grid.RowDefinitions>
 
 							<ToggleButton Name="delveButton" Grid.Column="0" Style="{DynamicResource StandaloneToggleStyle}" Width="11" Height="11" Visibility="{Binding HasItems,ElementName=subProperties,Converter={StaticResource BoolToVisibilityConverter}}" />
-							<TextBlock Name="Label" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" Height="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-							<ContentPresenter Grid.Column="2" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" />
-							<local:PropertyButton Grid.Column="3" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}"/>
+							<TextBlock Name="Label" Margin="0,3,0,3" Grid.Row="0" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+							<ContentPresenter Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" MinHeight="20" />
+							<local:PropertyButton Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}"/>
 
-							<ItemsControl Name="subProperties" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Margin="-19,0,0,0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{DynamicResource PropertyEditorTemplate}">
+							<ItemsControl Name="subProperties" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Margin="-19,0,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{DynamicResource PropertyEditorTemplate}">
 								<ItemsControl.Visibility>
 									<MultiBinding Converter="{StaticResource BoolsToVisibilityConverter}">
 										<Binding ElementName="delveButton" Path="IsChecked" />
@@ -2030,7 +2030,6 @@
 	</local:NumericTemplateSelector>
 
 	<Style TargetType="local:NumericEditorControl">
-		<Setter Property="Height" Value="24" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:NumericEditorControl">
@@ -2050,20 +2049,14 @@
 	</Style>
 
 	<Style TargetType="local:IntegerUpDownControl" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
-		<Setter Property="Height" Value="24" />
-		<Setter Property="MinHeight" Value="20" />
 		<Setter Property="FocusSelectsAll" Value="True" />
 	</Style>
 
 	<Style TargetType="local:DoubleUpDownControl" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
-		<Setter Property="Height" Value="24" />
-		<Setter Property="MinHeight" Value="20" />
 		<Setter Property="FocusSelectsAll" Value="True" />
 	</Style>
 
 	<Style TargetType="local:ByteUpDownControl" BasedOn="{StaticResource {x:Type local:TextBoxEx}}">
-		<Setter Property="Height" Value="24" />
-		<Setter Property="MinHeight" Value="20" />
 		<Setter Property="FocusSelectsAll" Value="True" />
 	</Style>
 
@@ -2852,7 +2845,7 @@
 		<Setter Property="BorderThickness" Value="1"/>
 		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
 		<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-		<Setter Property="Padding" Value="6,3,5,3"/>
+		<Setter Property="Padding" Value="6,2,5,2"/>
 		<Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
 		<Setter Property="ScrollViewer.PanningMode" Value="Both"/>
 		<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
@@ -2860,7 +2853,7 @@
 		<Style.Triggers>
 			<Trigger Property="IsEditable" Value="true">
 				<Setter Property="IsTabStop" Value="false"/>
-				<Setter Property="Padding" Value="2"/>
+				<Setter Property="Padding" Value="1"/>
 				<Setter Property="Template" Value="{StaticResource ComboBoxEditableTemplate}"/>
 			</Trigger>
 		</Style.Triggers>
