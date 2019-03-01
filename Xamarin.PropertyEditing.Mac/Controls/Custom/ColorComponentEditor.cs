@@ -234,7 +234,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (Frame.IsEmpty || Frame.IsInfinite () || double.IsNaN (Frame.X) || double.IsInfinity (Frame.X))
 				return;
 
-			var frame = Bounds.Inset (padding, padding);
+			var frame = Bounds.Inset (Padding, Padding);
 			var labelFrame = new CGRect (frame.X, frame.Height - DefaultControlHeight, 20, DefaultControlHeight);
 			var editorFrame = new CGRect (labelFrame.Right, labelFrame.Y, frame.Width - labelFrame.Right, DefaultControlHeight);
 			var yOffset = DefaultControlHeight + DefaultGradientHeight + 3;
@@ -253,10 +253,10 @@ namespace Xamarin.PropertyEditing.Mac
 				editorFrame = editorFrame.Translate (0, -yOffset);
 			}
 
-			this.hexLabel.Frame = new CGRect (frame.X, padding, 20, DefaultControlHeight);
+			this.hexLabel.Frame = new CGRect (frame.X, Padding, 20, DefaultControlHeight);
 			this.hexEditor.Frame = new CGRect (
 				labelFrame.Right,
-				padding,
+				Padding,
 				frame.Width - labelFrame.Right - 16,
 				DefaultControlHeight);
 		}
