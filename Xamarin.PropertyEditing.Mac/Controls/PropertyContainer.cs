@@ -75,7 +75,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected PropertyButton PropertyButton => this.propertyButton;
 
-		internal const float LabelToControlSpacing = 13f;
+		internal const float LabelToControlSpacing = 8f;
 		internal static float PropertyTotalWidth => PropertyButton.DefaultSize + ButtonToWallSpacing + EditorToButtonSpacing;
 
 		private const float EditorToButtonSpacing = 4f;
