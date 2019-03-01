@@ -1,9 +1,7 @@
 using System;
-using System.Linq;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
-using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -11,7 +9,6 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		private const float GripRadius = 4;
 		private const float BorderRadius = 3;
-		private const float Margin = 3;
 		private readonly ChannelEditor saturationEditor = new HsbSaturationChannelEditor ();
 		private readonly ChannelEditor brightnessEditor = new HsbBrightnessChannelEditor ();
 
@@ -68,7 +65,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.LayoutSublayers ();
 
-			this.saturationLayer.Frame = Bounds.Inset (Margin, Margin);
+			this.saturationLayer.Frame = Bounds;
 			this.brightnessLayer.Frame = this.saturationLayer.Bounds;
 			this.saturationLayer.StartPoint = new CGPoint (0, .5);
 			this.saturationLayer.EndPoint = new CGPoint (1, .5);

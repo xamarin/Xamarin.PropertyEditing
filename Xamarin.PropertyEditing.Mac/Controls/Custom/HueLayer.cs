@@ -86,7 +86,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void LayoutSublayers ()
 		{
 			base.LayoutSublayers ();
-			this.colors.Frame = Bounds.Inset (2, 2);
+			this.colors.Frame = Bounds;
 			this.grip.Frame = new CGRect (
 				this.grip.Frame.X,
 				this.grip.Frame.Y,
