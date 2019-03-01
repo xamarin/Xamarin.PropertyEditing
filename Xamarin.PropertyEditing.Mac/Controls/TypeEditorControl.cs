@@ -19,9 +19,8 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (this.typeLabel);
 
-			this.selectType = new NSButton {
+			this.selectType = new FocusableButton {
 				Title = Properties.Resources.Select,
-				TranslatesAutoresizingMaskIntoConstraints = false,
 				BezelStyle = NSBezelStyle.Rounded
 			};
 			this.selectType.Activated += OnSelectPressed;

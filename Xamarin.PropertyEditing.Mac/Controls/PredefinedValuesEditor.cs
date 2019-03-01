@@ -37,7 +37,7 @@ namespace Xamarin.PropertyEditing.Mac
 				ViewModel.ValueName = this.comboBox.SelectedValue.ToString ();
 			};
 
-			this.popUpButton = new NSPopUpButton {
+			this.popUpButton = new FocusablePopUpButton {
 				AllowsExpansionToolTips = true,
 				Cell = {
 					LineBreakMode = NSLineBreakMode.TruncatingTail,

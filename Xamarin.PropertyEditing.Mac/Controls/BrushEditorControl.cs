@@ -9,20 +9,8 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class ColorPopUpButton : NSPopUpButton
+	internal class ColorPopUpButton : FocusablePopUpButton
 	{
-		public ColorPopUpButton () : base ()
-		{
-		}
-
-		public ColorPopUpButton (CGRect frame) : base (frame, true)
-		{
-		}
-
-		public ColorPopUpButton (IntPtr handle) : base (handle)
-		{
-		}
-
 		public NSPopover Popover { get; set; }
 
 		public override void MouseDown (NSEvent theEvent)

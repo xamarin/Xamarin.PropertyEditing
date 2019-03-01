@@ -1,16 +1,12 @@
 using System;
 using AppKit;
+using CoreGraphics;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class PropertyTextField : NSTextField
+	internal class FocusablePopUpButton : NSPopUpButton
 	{
-		public PropertyTextField ()
-		{
-			AllowsExpansionToolTips = true;
-			Cell.LineBreakMode = NSLineBreakMode.TruncatingTail;
-			Cell.UsesSingleLineMode = true;
-		}
+		public override bool CanBecomeKeyView { get { return Enabled; } }
 
 		public override bool BecomeFirstResponder ()
 		{

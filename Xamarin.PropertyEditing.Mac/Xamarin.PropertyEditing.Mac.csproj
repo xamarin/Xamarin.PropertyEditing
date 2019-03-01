@@ -151,6 +151,9 @@
     <Compile Include="Controls\Custom\PropertyTextField.cs" />
     <Compile Include="Controls\ControlExtensions.cs" />
     <Compile Include="Controls\TypeEditorControl.cs" />
+    <Compile Include="Controls\Custom\FocusablePopupButton.cs" />
+    <Compile Include="Controls\Custom\FocusableBooleanButton.cs" />
+    <Compile Include="Controls\Custom\FocusableButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

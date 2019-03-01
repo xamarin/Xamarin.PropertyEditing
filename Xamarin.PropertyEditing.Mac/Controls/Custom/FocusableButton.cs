@@ -3,13 +3,20 @@ using AppKit;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class PropertyTextField : NSTextField
+	internal class FocusableButton : NSButton
 	{
-		public PropertyTextField ()
+		public override bool CanBecomeKeyView { get { return Enabled; } }
+
+		public FocusableButton ()
 		{
 			AllowsExpansionToolTips = true;
+			AllowsMixedState = true;
 			Cell.LineBreakMode = NSLineBreakMode.TruncatingTail;
 			Cell.UsesSingleLineMode = true;
+			ControlSize = NSControlSize.Small;
+			Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize);
+			Title = string.Empty;
+			TranslatesAutoresizingMaskIntoConstraints = false;
 		}
 
 		public override bool BecomeFirstResponder ()

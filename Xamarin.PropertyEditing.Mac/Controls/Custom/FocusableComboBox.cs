@@ -1,10 +1,19 @@
-﻿using Foundation;
+using Foundation;
 using AppKit;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class FocusableComboBox : NSComboBox
+	internal class FocusableComboBox : NSComboBox
 	{
+		public override bool BecomeFirstResponder ()
+		{
+			var willBecomeFirstResponder = base.BecomeFirstResponder ();
+			if (willBecomeFirstResponder) {
+				ScrollRectToVisible (Bounds);
+			}
+			return willBecomeFirstResponder;
+		}
+
 		public override bool ShouldBeginEditing (NSText textObject)
 		{
 			textObject.Delegate = new FocusableComboBoxDelegate ();

@@ -19,7 +19,8 @@ namespace Xamarin.PropertyEditing.Mac
 		private NSLayoutConstraint stringEditorWidthConstraint;
 
 		public override NSView FirstKeyView => this.stringEditor;
-		public override NSView LastKeyView => this.stringEditor;
+		private NSView lastKeyView;
+		public override NSView LastKeyView => this.lastKeyView;
 
 		internal NSPopUpButton inputModePopup;
 		private IReadOnlyList<InputMode> viewModelInputModes;
@@ -40,6 +41,8 @@ namespace Xamarin.PropertyEditing.Mac
 				ViewModel.Value = this.stringEditor.StringValue;
 			};
 			AddSubview (this.stringEditor);
+
+			this.lastKeyView = this.stringEditor;
 
 			this.stringEditorWidthConstraint = NSLayoutConstraint.Create (this.stringEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -117f);
 
@@ -72,7 +75,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			if (ViewModel.HasInputModes) {
 				if (this.inputModePopup == null) {
-					this.inputModePopup = new NSPopUpButton {
+					this.inputModePopup = new FocusablePopUpButton {
 						Menu = new NSMenu (),
 						TranslatesAutoresizingMaskIntoConstraints = false,
 					};
@@ -90,6 +93,8 @@ namespace Xamarin.PropertyEditing.Mac
 						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 80f),
 						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3 ),
 					});
+
+					this.lastKeyView = this.inputModePopup;
 				}
 
 				this.inputModePopup.Menu.RemoveAllItems ();
