@@ -59,6 +59,8 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => NumericEditor;
 		public override NSView LastKeyView => NumericEditor.DecrementButton;
 
+		private bool CanEnable => ViewModel.Property.CanWrite && (((ViewModel.InputMode != null) && !ViewModel.InputMode.IsSingleValue) || (this.inputModePopup == null));
+
 		protected NSNumberFormatterStyle NumberStyle {
 			get { 
 				return NumericEditor.NumberStyle; }
@@ -91,7 +93,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			NumericEditor.Editable = ViewModel.Property.CanWrite;
+			NumericEditor.Enabled = CanEnable;
 			if (this.inputModePopup != null)
 				this.inputModePopup.Enabled = ViewModel.Property.CanWrite;
 		}
@@ -108,7 +110,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (this.underlyingType != null) {
 				NumericEditor.StringValue = ViewModel.Value == null ? string.Empty : ViewModel.Value.ToString ();
-				NumericEditor.Enabled = ((ViewModel.InputMode != null) && !ViewModel.InputMode.IsSingleValue) || (this.inputModePopup == null);
+				NumericEditor.Enabled = CanEnable;
 
 				if (this.inputModePopup != null)
 					this.inputModePopup.SelectItem ((ViewModel.InputMode == null) ? string.Empty : ViewModel.InputMode.Identifier);
@@ -126,7 +128,7 @@ namespace Xamarin.PropertyEditing.Mac
 			NumericEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityNumeric, ViewModel.Property.Name);
 
 			if (this.inputModePopup != null) {
-				this.inputModePopup.AccessibilityEnabled = NumericEditor.Enabled;
+				this.inputModePopup.AccessibilityEnabled = this.inputModePopup.Enabled;
 				this.inputModePopup.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityInpueModeEditor, ViewModel.Property.Name);
 			}
 		}
@@ -174,6 +176,8 @@ namespace Xamarin.PropertyEditing.Mac
 			// If we are reusing the control we'll have to hid the inputMode if this doesn't have InputMode.
 			if (this.inputModePopup != null)
 				this.inputModePopup.Hidden = !ViewModel.HasInputModes;
+
+			SetEnabled ();
 		}
 	}
 }

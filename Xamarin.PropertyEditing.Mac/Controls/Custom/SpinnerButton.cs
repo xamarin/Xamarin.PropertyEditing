@@ -47,7 +47,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void UpdateImage ()
 		{
-			Image = (this.isMouseOver) ? this.mouseOverImage : this.image;
+			Image = Enabled ? (this.isMouseOver) ? this.mouseOverImage : this.image : this.image;
 		}
 	}
 }

@@ -102,6 +102,8 @@ namespace Xamarin.PropertyEditing.Mac
 			// Set our tabable order
 			this.firstKeyView = this.combinableList.KeyAt (0);
 			this.lastKeyView = this.combinableList.KeyAt (this.combinableList.Count - 1);
+
+			SetEnabled ();
 		}
 
 		protected override void UpdateValue ()

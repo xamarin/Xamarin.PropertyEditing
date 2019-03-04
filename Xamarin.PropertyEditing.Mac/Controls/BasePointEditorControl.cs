@@ -94,8 +94,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			XEditor.Editable = ViewModel.Property.CanWrite;
-			YEditor.Editable = ViewModel.Property.CanWrite;
+			XEditor.Enabled = ViewModel.Property.CanWrite;
+			YEditor.Enabled = ViewModel.Property.CanWrite;
 		}
 
 		protected override void UpdateAccessibilityValues ()
