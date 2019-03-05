@@ -183,12 +183,15 @@ namespace Xamarin.PropertyEditing.Mac
 
 			const float spacing = 8, hueWidth = 20, historyHeight = 20;
 			const float leftMinWidth = hueWidth + (Padding * 2) + 50;
-			const float rightMinWidth = 125;
-			const float rightRatio = 0.85f;
+			const float rightWidth = 170;
 
-			nfloat hspace = Frame.Width - spacing;
-			float leftWidth = Math.Max ((float)(hspace / 2) * (1 + (1 - rightRatio)), leftMinWidth);
-			float rightWidth = Math.Max ((float)(hspace - leftWidth), rightMinWidth);
+			nfloat leftWidth = leftMinWidth;
+
+			nfloat spaceLeft = Frame.Width - spacing - leftWidth - rightWidth;
+			if (spaceLeft > 0) {
+				leftWidth += spaceLeft;
+			}
+
 			nfloat vspace = Frame.Height - (Padding * 2);
 
 			this.background.Frame = new CGRect (0, 0, leftWidth, Frame.Height);
@@ -198,9 +201,10 @@ namespace Xamarin.PropertyEditing.Mac
 			this.historyLayer.Frame = new CGRect (Padding, Padding, shadeFrame.Width, historyHeight);
 			this.hueLayer.Frame = new CGRect (this.shadeLayer.Frame.Right + Padding, this.historyLayer.Frame.Bottom + Padding, hueWidth, shadeFrame.Height);
 
+			const float componentPadding = 9;
 			var backgroundFrame = new CGRect (this.hueLayer.Frame.Right + spacing, 0, rightWidth, Frame.Height);
 			this.componentBackground.Frame = backgroundFrame;
-			var inset = backgroundFrame.Inset (4 * Padding, 2 * Padding);
+			var inset = backgroundFrame.Inset (componentPadding, componentPadding);
 			this.componentTabs.View.Frame = inset;
 
 			var inter = interaction ?? new EditorInteraction (ViewModel, null);

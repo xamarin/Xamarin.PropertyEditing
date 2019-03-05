@@ -146,8 +146,8 @@ namespace Xamarin.PropertyEditing.Mac
 		private IUnderliningTabView selected;
 		private DynamicFillBox tabContainer, border;
 		private NSStackView innerStack;
-		private NSStackView tabStack = new NSStackView () {
-			Spacing = 10f,
+		private readonly NSStackView tabStack = new NSStackView () {
+			Spacing = 1f,
 		};
 
 		protected NSStackView TabStack => this.tabStack;
