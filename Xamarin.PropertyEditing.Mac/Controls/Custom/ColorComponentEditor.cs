@@ -11,10 +11,8 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class ColorComponentEditor : ColorEditorView
 	{
-		private const int DefaultPropertyButtonSize = 10;
-		private const int DefaultActioButtonSize = 16;
-		private const int DefaultControlHeight = 22;
-		private const int DefaultGradientHeight = 4;
+		private const int DefaultControlHeight = 18;
+		private const int DefaultGradientHeight = 3;
 
 		private ChannelEditorType EditorType { get; }
 
@@ -122,6 +120,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.hexEditor = new NSTextField {
 				Alignment = NSTextAlignment.Right,
+				ControlSize = NSControlSize.Small,
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small))
 			};
 			AddSubview (this.hexEditor);
 
@@ -234,18 +234,31 @@ namespace Xamarin.PropertyEditing.Mac
 			if (Frame.IsEmpty || Frame.IsInfinite () || double.IsNaN (Frame.X) || double.IsInfinity (Frame.X))
 				return;
 
-			var frame = Bounds.Inset (Padding, Padding);
-			var labelFrame = new CGRect (frame.X, frame.Height - DefaultControlHeight, 20, DefaultControlHeight);
+			nfloat maxLabelWidth = this.hexLabel.Cell.CellSizeForBounds (Frame).Width;
+			for (int i = 0; i < Editors.Length; i++) {
+				CGSize size = Editors[i].Label.Cell.CellSizeForBounds (Frame);
+				if (size.Width > maxLabelWidth)
+					maxLabelWidth = size.Width;
+			}
+
+			maxLabelWidth = (nfloat)Math.Ceiling (maxLabelWidth);
+
+			var frame = Bounds;
+			var labelFrame = new CGRect (frame.X, frame.Height - DefaultControlHeight, maxLabelWidth, DefaultControlHeight);
 			var editorFrame = new CGRect (labelFrame.Right, labelFrame.Y, frame.Width - labelFrame.Right, DefaultControlHeight);
 			var yOffset = DefaultControlHeight + DefaultGradientHeight + 3;
 
-			foreach (var channelGroup in Editors) {
+			for (int i = 0; i < Editors.Length; i++) {
+				var channelGroup = Editors[i];
+
 				channelGroup.Label.Frame = labelFrame;
 				channelGroup.Editor.Frame = editorFrame;
+				channelGroup.Editor.Layout ();
+
 				channelGroup.Gradient.Frame = new CGRect (
 					editorFrame.X + .5f,
 					editorFrame.Y - DefaultGradientHeight + 1,
-					editorFrame.Width - 15, DefaultGradientHeight);
+					channelGroup.Editor.Subviews[0].Frame.Width - 1f, DefaultGradientHeight);
 
 				channelGroup.Gradient.BorderColor = NSColor.DisabledControlText.CGColor;
 				channelGroup.Gradient.ContentsScale = Window?.Screen?.BackingScaleFactor ?? NSScreen.MainScreen.BackingScaleFactor;
@@ -253,10 +266,10 @@ namespace Xamarin.PropertyEditing.Mac
 				editorFrame = editorFrame.Translate (0, -yOffset);
 			}
 
-			this.hexLabel.Frame = new CGRect (frame.X, Padding, 20, DefaultControlHeight);
+			this.hexLabel.Frame = new CGRect (frame.X, 0, maxLabelWidth, DefaultControlHeight);
 			this.hexEditor.Frame = new CGRect (
 				labelFrame.Right,
-				Padding,
+				0,
 				frame.Width - labelFrame.Right - 16,
 				DefaultControlHeight);
 		}
