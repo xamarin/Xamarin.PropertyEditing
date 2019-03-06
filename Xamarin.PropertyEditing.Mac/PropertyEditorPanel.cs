@@ -19,12 +19,20 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public PropertyEditorPanel ()
 		{
+			this.hostResources = new HostResourceProvider ();
+			Initialize ();
+		}
+
+		public PropertyEditorPanel (IHostResourceProvider hostResources)
+		{
+			this.hostResources = hostResources;
 			Initialize ();
 		}
 
 		// Called when created from unmanaged code
 		public PropertyEditorPanel (IntPtr handle) : base (handle)
 		{
+			this.hostResources = new HostResourceProvider ();
 			Initialize ();
 		}
 
@@ -32,6 +40,7 @@ namespace Xamarin.PropertyEditing.Mac
 		[Export ("initWithCoder:")]
 		public PropertyEditorPanel (NSCoder coder) : base (coder)
 		{
+			this.hostResources = new HostResourceProvider ();
 			Initialize ();
 		}
 
@@ -129,7 +138,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.propertyTable.BackgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
 		}
 
-		private IHostResourceProvider hostResources = new HostResourceProvider ();
+		private IHostResourceProvider hostResources;
 		private bool isArrangeEnabled = true;
 		private TargetPlatform targetPlatform;
 		private NSOutlineView propertyTable;
