@@ -75,14 +75,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var vmType = propertyViewModel.GetType ();
 			var valuePropertyInfo = vmType.GetProperty ("Value");
 			var resourceValue = valuePropertyInfo.GetValue (propertyViewModel);
-			var resourceSelectorPropertyInfo = vmType.GetProperty ("ResourceSelector");
-			var resourceSelector = resourceSelectorPropertyInfo.GetValue (propertyViewModel) as ResourceSelectorViewModel;
-
-			if (resourceSelector != null) {
-				this.resourceSelectorPanel = new RequestResourcePanel (HostResources, resourceSelector, resourceValue);
-			} else {
-				this.resourceSelectorPanel = new RequestResourcePanel (HostResources, new ResourceSelectorViewModel (propertyViewModel.TargetPlatform.ResourceProvider, propertyViewModel.Editors.Select (ed => ed.Target), propertyViewModel.Property), resourceValue);
-			}
+			this.resourceSelectorPanel = new RequestResourcePanel (HostResources, new ResourceSelectorViewModel (propertyViewModel.TargetPlatform.ResourceProvider, propertyViewModel.Editors.Select (ed => ed.Target), propertyViewModel.Property), resourceValue);
 			this.resourceSelectorPanel.ResourceSelected += (sender, e) => {
 				propertyViewModel.Resource = this.resourceSelectorPanel.SelectedResource;
 			};
