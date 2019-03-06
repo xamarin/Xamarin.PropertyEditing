@@ -1,18 +1,24 @@
 using System;
-using System.Collections;
 using AppKit;
-using CoreGraphics;
 using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal abstract class PropertyEditorControl
-		: BaseEditorControl, IEditorView
+		: NSView, IEditorView
 	{
 		protected PropertyEditorControl (IHostResourceProvider hostResources)
-			: base (hostResources)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			HostResources = hostResources;
+		}
+
+		public IHostResourceProvider HostResources
+		{
+			get;
 		}
 
 		public string Label { get; set; }
@@ -22,7 +28,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public NSTableView TableView { get; set; }
 
-		public const int DefaultControlHeight = 22;
+		public const int DefaultControlHeight = 24;
 		public const int DefaultFontSize = 11;
 		public const int DefaultPropertyLabelFontSize = 11;
 		public const int DefaultDescriptionLabelFontSize = 9;
@@ -39,14 +45,12 @@ namespace Xamarin.PropertyEditing.Mac
 				PropertyViewModel oldModel = this.viewModel;
 				if (oldModel != null) {
 					oldModel.PropertyChanged -= OnPropertyChanged;
-					oldModel.ErrorsChanged -= HandleErrorsChanged;
 				}
 
 				this.viewModel = value;
 				OnViewModelChanged (oldModel);
 				if (this.viewModel != null) {
 					this.viewModel.PropertyChanged += OnPropertyChanged;
-					this.viewModel.ErrorsChanged += HandleErrorsChanged;
 				}
 			}
 		}
@@ -57,7 +61,7 @@ namespace Xamarin.PropertyEditing.Mac
 			set { ViewModel = (PropertyViewModel)value; }
 		}
 
-		NSView IEditorView.NativeView => this;
+		NSView INativeContainer.NativeView => this;
 
 		[Export ("_primitiveSetDefaultNextKeyView:")]
 		public void SetDefaultNextKeyView (NSView child)
@@ -66,6 +70,8 @@ namespace Xamarin.PropertyEditing.Mac
 				UpdateKeyViews ();
 			}
 		}
+
+		public virtual bool NeedsPropertyButton => true;
 
 		public void UpdateKeyViews ()
 		{
@@ -92,10 +98,12 @@ namespace Xamarin.PropertyEditing.Mac
 		/// <remarks>You should treat the implementation of this as static.</remarks>
 		public virtual nint GetHeight (EditorViewModel vm)
 		{
-			return DefaultControlHeight;
+			return 24;
 		}
 
-		protected abstract void UpdateValue ();
+		protected virtual void UpdateValue ()
+		{
+		}
 
 		protected virtual void OnViewModelChanged (PropertyViewModel oldModel)
 		{
@@ -104,8 +112,6 @@ namespace Xamarin.PropertyEditing.Mac
 				UpdateValue ();
 				UpdateAccessibilityValues ();
 			}
-
-			PropertyButton.ViewModel = viewModel;
 		}
 
 		protected virtual void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -115,17 +121,13 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		/// <summary>
-		/// Update the display with any errors we need to show or remove
-		/// </summary>
-		/// <param name="errors">The error messages to display to the user</param>
-		protected abstract void UpdateErrorsDisplayed (IEnumerable errors);
+		protected virtual void SetEnabled ()
+		{
+		}
 
-		protected abstract void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e);
-
-		protected abstract void SetEnabled ();
-
-		protected abstract void UpdateAccessibilityValues ();
+		protected virtual void UpdateAccessibilityValues ()
+		{
+		}
 	}
 
 	internal abstract class PropertyEditorControl<TViewModel>

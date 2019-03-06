@@ -20,6 +20,9 @@ namespace Xamarin.PropertyEditing.Mac
 					ViewController = new ColorComponentViewController (hostResources, editorType)
 				});
 			}
+
+			ContentPadding = new NSEdgeInsets (9, 0, 9, 0);
+			TabStack.Spacing = 4;
 		}
 
 		private string GetToolTip (ChannelEditorType editorType)

@@ -47,7 +47,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal abstract class ColorEditorView : NotifyingView<SolidBrushViewModel>
 	{
-		protected const float padding = 3;
+		protected const float Padding = 3;
 
 		public ColorEditorView (IntPtr handle) : base (handle)
 		{

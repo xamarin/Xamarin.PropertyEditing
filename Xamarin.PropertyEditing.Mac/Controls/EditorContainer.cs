@@ -1,50 +1,28 @@
-using System;
 using AppKit;
-using CoreGraphics;
-using Foundation;
+using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class EditorContainer
-		: NSView
+		: PropertyContainer
 	{
 		public EditorContainer (IHostResourceProvider hostResources, IEditorView editorView)
+			: base (hostResources, editorView, editorView?.NeedsPropertyButton ?? false)
 		{
-			if (hostResources == null)
-				throw new ArgumentNullException (nameof (hostResources));
-
-			EditorView = editorView;
-
-			AddSubview (this.label);
-
-			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 0f),
-				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, Mac.Layout.GoldenRatioLeft, 0f),
-				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight),
-			});
-
-			if (EditorView != null) {
-				AddSubview (EditorView.NativeView);
-				EditorView.NativeView.TranslatesAutoresizingMaskIntoConstraints = false;
-
-				this.AddConstraints (new[] {
-					NSLayoutConstraint.Create (EditorView.NativeView, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
-					NSLayoutConstraint.Create (EditorView.NativeView, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.label, NSLayoutAttribute.Right, 1f, LabelToControlSpacing),
-					NSLayoutConstraint.Create (EditorView.NativeView, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0f),
-					NSLayoutConstraint.Create (EditorView.NativeView, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1f, 0f)
-				});
-			}
 		}
 
-		public IEditorView EditorView {
-			get;
-		}
+		public IEditorView EditorView => (IEditorView)NativeContainer;
 
-		public string Label {
-			get { return this.label.StringValue; }
-			set {
-				this.label.StringValue = value + ":";
-				this.label.ToolTip = value;
+		public EditorViewModel ViewModel
+		{
+			get => EditorView?.ViewModel;
+			set
+			{
+				if (EditorView == null)
+					return;
+
+				EditorView.ViewModel = value;
+				PropertyButton.ViewModel = value as PropertyViewModel;
 			}
 		}
 
@@ -84,23 +62,13 @@ namespace Xamarin.PropertyEditing.Mac
 			base.ViewWillMoveToSuperview (newSuperview);
 		}
 
-		private UnfocusableTextField label = new UnfocusableTextField {
-			Alignment = NSTextAlignment.Right,
-			Cell = {
-				LineBreakMode = NSLineBreakMode.TruncatingHead,
-			},
-			TranslatesAutoresizingMaskIntoConstraints = false,
-		};
-
 #if DEBUG // Currently only used to highlight which controls haven't been implemented
 		public NSColor LabelTextColor {
-			set { this.label.TextColor = value; }
+			set { LabelControl.TextColor = value; }
 		}
 #endif
 
 		private NSView leftEdgeView;
 		private NSLayoutConstraint leftEdgeLeftConstraint, leftEdgeVCenterConstraint;
-		private readonly IHostResourceProvider hostResources;
-		private const float LabelToControlSpacing = 5f;
 	}
 }

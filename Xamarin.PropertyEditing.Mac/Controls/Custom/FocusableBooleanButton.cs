@@ -14,7 +14,7 @@ namespace Xamarin.PropertyEditing.Mac
 			Cell.LineBreakMode = NSLineBreakMode.TruncatingTail;
 			Cell.UsesSingleLineMode = true;
 			ControlSize = NSControlSize.Small;
-			Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize);
+			Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small));
 			Title = string.Empty;
 			TranslatesAutoresizingMaskIntoConstraints = false;
 

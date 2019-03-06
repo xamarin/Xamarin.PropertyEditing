@@ -31,8 +31,8 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (BooleanEditor);
 
 			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (BooleanEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 6f),
-				NSLayoutConstraint.Create (BooleanEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -50f),
+				NSLayoutConstraint.Create (BooleanEditor, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0f),
+				NSLayoutConstraint.Create (BooleanEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0f),
 			});
 		}
 
@@ -57,21 +57,6 @@ namespace Xamarin.PropertyEditing.Mac
 				BooleanEditor.State = NSCellStateValue.Mixed;
 				BooleanEditor.Title = string.Empty;
 			}
-		}
-
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
-			if (ViewModel.HasErrors) {
-				SetErrors (errors);
-			} else {
-				SetErrors (null);
-				SetEnabled ();
-			}
-		}
-
-		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
-		{
-			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
 		}
 
 		protected override void SetEnabled ()

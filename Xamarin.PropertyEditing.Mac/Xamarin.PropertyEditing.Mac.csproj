@@ -154,12 +154,12 @@
     <Compile Include="Controls\Custom\FocusablePopupButton.cs" />
     <Compile Include="Controls\Custom\FocusableBooleanButton.cs" />
     <Compile Include="Controls\Custom\FocusableButton.cs" />
+    <Compile Include="Controls\PropertyContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
     <Folder Include="Controls\Custom\" />
     <Folder Include="Resources\" />
-    <Compile Include="Controls\BaseEditorControl.cs" />
     <Compile Include="Controls\ErrorMessageView.cs" />
     <Folder Include="Controls\RequestResource\" />
     <Folder Include="PropertyEditingResource\Contents\Resources\" />

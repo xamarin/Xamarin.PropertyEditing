@@ -86,7 +86,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override nfloat GetRowHeight (NSTableView tableView, nint row)
 		{
-			return PropertyEditorControl.DefaultControlHeight;
+			return 24;
 		}
 
 		public override void SelectionDidChange (NSNotification notification)

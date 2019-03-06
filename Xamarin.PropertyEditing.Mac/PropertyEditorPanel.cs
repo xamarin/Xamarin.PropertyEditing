@@ -144,8 +144,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
 
-			NSControlSize controlSize = NSControlSize.Small;
-
 			this.header = new DynamicFillBox (HostResourceProvider, NamedResources.PanelTabBackground) {
 				ContentViewMargins = new CGSize (0, 0),
 				ContentView = new NSView ()
@@ -158,7 +156,6 @@ namespace Xamarin.PropertyEditing.Mac
 			header.AddSubview (this.border);
 
 			this.propertyFilter = new NSSearchField {
-				ControlSize = controlSize,
 				PlaceholderString = LocalizationResources.PropertyFilterLabel,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};

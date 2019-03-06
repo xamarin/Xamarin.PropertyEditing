@@ -48,7 +48,7 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Left, NSLayoutRelation.Equal, iconView,  NSLayoutAttribute.Right, 1f, 5f),
 				//NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 38f),
 				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 120),
-				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight),
+				NSLayoutConstraint.Create (viewTitle, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 24),
 			});
 		}
 

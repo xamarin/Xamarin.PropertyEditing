@@ -14,8 +14,6 @@ namespace Xamarin.PropertyEditing.Mac
 			set;
 		}
 
-		private readonly NSBundle resourceBundle;
-
 		public HostResourceProvider ()
 		{
 			var containingDir = Path.GetDirectoryName (typeof (HostResourceProvider).Assembly.Location);
@@ -59,6 +57,8 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			return NSFont.FromFontName (name, fontSize);
 		}
+
+		private readonly NSBundle resourceBundle;
 	}
 
 	public static class NamedResources

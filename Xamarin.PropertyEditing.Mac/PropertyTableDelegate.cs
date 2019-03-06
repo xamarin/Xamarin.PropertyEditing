@@ -93,6 +93,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			if (editorOrContainer is EditorContainer ec) {
+				ec.ViewModel = evm;
 				ec.Label = evm.Name;
 
 #if DEBUG // Currently only used to highlight which controls haven't been implemented
@@ -102,8 +103,6 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			if (editor != null) {
-				editor.ViewModel = evm;
-
 				var ovm = evm as ObjectPropertyViewModel;
 				if (ovm != null && editorOrContainer is EditorContainer container) {
 					if (container.LeftEdgeView == null) {
@@ -112,6 +111,8 @@ namespace Xamarin.PropertyEditing.Mac
 					} else if (!ovm.CanDelve) {
 						container.LeftEdgeView = null;
 					}
+				} else if (!(editorOrContainer is EditorContainer)) {
+					editor.ViewModel = evm;
 				}
 
 				bool openObjectRow = ovm != null && outlineView.IsItemExpanded (item);
@@ -191,19 +192,19 @@ namespace Xamarin.PropertyEditing.Mac
 			GetVMGroupCellItendifiterFromFacade (item, out vm, out group, out cellIdentifier);
 
 			if (group != null)
-				return 20;
+				return 24;
 
 			if (!this.registrations.TryGetValue (cellIdentifier, out EditorRegistration registration)) {
 				registration = new EditorRegistration ();
 
 				if (cellIdentifier == nameof(PanelHeaderEditorControl)) {
-					registration.RowSize = 44;
+					registration.RowSize = 54;
 				} else {
 					NSView editorOrContainer = GetEditor (cellIdentifier, vm, outlineView);
 					IEditorView view = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
 
 					if (view == null) {
-						registration.RowSize = PropertyEditorControl.DefaultControlHeight;
+						registration.RowSize = 24;
 					} else if (view.IsDynamicallySized) {
 						registration.SizingInstance = view;
 					} else {

@@ -40,7 +40,7 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 37f),
 				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 38f),
 				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -57f),
-				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight),
+				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 			});
 		}
 	}

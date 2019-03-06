@@ -7,7 +7,6 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class HistoryLayer : ColorEditorLayer
 	{
-		private const float Margin = 3;
 		private const float BorderRadius = 3;
 
 		public HistoryLayer (IHostResourceProvider hostResources)
@@ -54,13 +53,13 @@ namespace Xamarin.PropertyEditing.Mac
 				Bounds.Right - Bounds.Height,
 				0,
 				Bounds.Height,
-				Bounds.Height).Inset (Margin, Margin);
+				Bounds.Height);
 
 			this.clip.Frame = new CGRect (
 				0,
 				0,
-				Bounds.Width - Bounds.Height + Margin,
-				Bounds.Height).Inset (Margin, Margin);
+				Bounds.Width - Bounds.Height - 3,
+				Bounds.Height);
 
 			NSColor cc0 = this.hostResources.GetNamedColor (NamedResources.Checkerboard0Color);
 			NSColor cc1 = this.hostResources.GetNamedColor (NamedResources.Checkerboard1Color);

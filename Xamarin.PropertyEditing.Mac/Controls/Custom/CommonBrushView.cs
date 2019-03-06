@@ -13,7 +13,7 @@ namespace Xamarin.PropertyEditing.Mac
 			set => (Layer as CommonBrushLayer).Brush = value;
 		}
 
-		NSView IValueView.NativeView => this;
+		NSView INativeContainer.NativeView => this;
 
 		public CommonBrushView (IHostResourceProvider hostResources)
 		{

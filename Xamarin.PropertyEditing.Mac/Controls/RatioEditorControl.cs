@@ -33,19 +33,14 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.ratioEditor);
 
 			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, -2f),
-				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -32f),
-				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0),
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0),
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, -6),
 			});
 		}
 
 		public override NSView FirstKeyView => ratioEditor.NumericEditor;
 		public override NSView LastKeyView => ratioEditor.DecrementButton;
-
-		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
-		{
-			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
-		}
 
 		protected override void SetEnabled ()
 		{
@@ -56,16 +51,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.ratioEditor.AccessibilityEnabled = this.ratioEditor.Enabled;
 			this.ratioEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityNumeric, ViewModel.Property.Name);
-		}
-
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
-			if (ViewModel.HasErrors) {
-				SetErrors (errors);
-			} else {
-				SetErrors (null);
-				SetEnabled ();
-			}
 		}
 
 		protected override void UpdateValue ()

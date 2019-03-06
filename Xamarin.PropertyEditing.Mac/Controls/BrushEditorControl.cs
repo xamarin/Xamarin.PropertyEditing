@@ -54,7 +54,8 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			this.popUpButton = new ColorPopUpButton {
-				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				ControlSize = NSControlSize.Small,
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
@@ -64,9 +65,9 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.popUpButton);
 
 			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 2f),
-				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -32f),
-				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 3),
+				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0),
+				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 16),
+				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0),
 			});
 
 			ViewDidChangeEffectiveAppearance ();
@@ -89,21 +90,9 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => this.popUpButton;
 		public override NSView LastKeyView => this.popUpButton;
 
-		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
-		{
-		}
-
 		protected override void SetEnabled ()
 		{
 			this.popUpButton.Enabled = this.ViewModel?.Property.CanWrite ?? false;
-		}
-
-		protected override void UpdateAccessibilityValues ()
-		{
-		}
-
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
 		}
 
 		string GetTitle ()

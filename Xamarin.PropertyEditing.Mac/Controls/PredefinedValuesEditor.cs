@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
-using System.Diagnostics;
 using System.ComponentModel;
 
 using Foundation;
 using AppKit;
-using CoreGraphics;
 
 using Xamarin.PropertyEditing.ViewModels;
 using Xamarin.PropertyEditing.Mac.Resources;
@@ -28,7 +25,7 @@ namespace Xamarin.PropertyEditing.Mac
 					UsesSingleLineMode = true,
 				},
 				ControlSize = NSControlSize.Small,
-				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				StringValue = String.Empty,
 			};
@@ -44,7 +41,7 @@ namespace Xamarin.PropertyEditing.Mac
 					UsesSingleLineMode = true,
 				},
 				ControlSize = NSControlSize.Small,
-				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				StringValue = String.Empty,
 			};
@@ -68,27 +65,12 @@ namespace Xamarin.PropertyEditing.Mac
 		private NSView firstKeyView;
 		private NSView lastKeyView;
 
-		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
-		{
-			UpdateErrorsDisplayed (ViewModel.GetErrors (e.PropertyName));
-		}
-
 		protected override void SetEnabled ()
 		{
 			if (ViewModel.IsConstrainedToPredefined) {
 				this.popUpButton.Enabled = ViewModel.Property.CanWrite;
 			} else {
 				this.comboBox.Enabled = ViewModel.Property.CanWrite;
-			}
-		}
-
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
-			if (ViewModel.HasErrors) {
-				SetErrors (errors);
-			} else {
-				SetErrors (null);
-				SetEnabled ();
 			}
 		}
 
@@ -109,10 +91,9 @@ namespace Xamarin.PropertyEditing.Mac
 					AddSubview (this.popUpButton);
 
 					this.AddConstraints (new[] {
-						NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 0f),
-						NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, -1f),
-						NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -32f),
-						NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight + 1),
+						NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0f),
+						NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0f),
+						NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0),
 					});
 
 					this.firstKeyView = this.popUpButton;
@@ -128,10 +109,9 @@ namespace Xamarin.PropertyEditing.Mac
 					AddSubview (this.comboBox);
 
 					this.AddConstraints (new[] {
-						NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 0f),
-						NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, -1f),
-						NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -33f),
-						NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight),
+						NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
+						NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0f),
+						NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, 0),
 					});
 
 					this.firstKeyView = this.comboBox;

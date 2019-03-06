@@ -1,12 +1,11 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
+
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
-using CoreImage;
-using Foundation;
+
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -79,12 +78,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private readonly CALayer background = new CALayer {
 			CornerRadius = 3,
-			BorderWidth = 1
+			BorderWidth = 1,
+			BorderColor = new CGColor (.5f, .5f, .5f, .5f),
 		};
 
 		private readonly CALayer componentBackground = new CALayer {
 			CornerRadius = 3,
-			BorderWidth = 1
+			BorderWidth = 1,
+			BorderColor = new CGColor (.5f, .5f, .5f, .5f)
 		};
 
 		private EditorInteraction interaction;
@@ -176,36 +177,40 @@ namespace Xamarin.PropertyEditing.Mac
 			if (Frame.IsEmpty || Frame.IsInfinite () || double.IsNaN (Frame.X) || double.IsInfinity (Frame.X))
 				return;
 
-			var secondarySpan = 20;
-			var primarySpan = Frame.Height - 2 * padding - secondarySpan;
-			var firstBase = padding;
-			var secondBase = padding + secondarySpan;
-			var firstStop = firstBase + primarySpan;
-
-			this.background.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
 			this.background.BackgroundColor = NSColor.ControlBackground.CGColor;
-			this.background.Frame = new CGRect (0, 0, Frame.Height, Frame.Height);
-
-			this.componentBackground.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
 			this.componentBackground.BackgroundColor = NSColor.ControlBackground.CGColor;
-			this.componentBackground.Frame = new CGRect (0, 0, Frame.Height, Frame.Height);
-
-			var x = firstStop + secondarySpan + 4 * padding;
-			var backgroundFrame = new CGRect (x, 0, Math.Max(Frame.Width - x, 180), Frame.Height);
-			this.componentBackground.Frame = backgroundFrame;
-
-			this.hueLayer.Frame = new CGRect (firstStop, secondBase, secondarySpan, primarySpan);
 			this.hueLayer.GripColor = NSColor.Text.CGColor;
 
-			this.shadeLayer.Frame = new CGRect (firstBase, secondBase, primarySpan, primarySpan);
-			this.historyLayer.Frame = new CGRect (firstBase, firstBase, primarySpan, secondarySpan);
+			const float spacing = 8, hueWidth = 20, historyHeight = 20;
+			const float leftMinWidth = hueWidth + (Padding * 2) + 50;
+			const float rightWidth = 170;
+
+			nfloat leftWidth = leftMinWidth;
+
+			nfloat spaceLeft = Frame.Width - spacing - leftWidth - rightWidth;
+			if (spaceLeft > 0) {
+				leftWidth += spaceLeft;
+			}
+
+			nfloat vspace = Frame.Height - (Padding * 2);
+
+			this.background.Frame = new CGRect (0, 0, leftWidth, Frame.Height);
+
+			var shadeFrame = new CGRect (Padding, Padding + historyHeight + Padding, leftWidth - (Padding * 3) - hueWidth, vspace - historyHeight - Padding);
+			this.shadeLayer.Frame = shadeFrame;
+			this.historyLayer.Frame = new CGRect (Padding, Padding, shadeFrame.Width, historyHeight);
+			this.hueLayer.Frame = new CGRect (this.shadeLayer.Frame.Right + Padding, this.historyLayer.Frame.Bottom + Padding, hueWidth, shadeFrame.Height);
+
+			const float componentPadding = 9;
+			var backgroundFrame = new CGRect (this.hueLayer.Frame.Right + spacing, 0, rightWidth, Frame.Height);
+			this.componentBackground.Frame = backgroundFrame;
+			var inset = backgroundFrame.Inset (componentPadding, componentPadding);
+			this.componentTabs.View.Frame = inset;
+
 			var inter = interaction ?? new EditorInteraction (ViewModel, null);
 			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
 				editor.UpdateFromModel (inter);
 			}
-
-			var inset = backgroundFrame.Inset (4 * padding, 2 * padding);
-			this.componentTabs.View.Frame = inset;
 		}
 	}
 }

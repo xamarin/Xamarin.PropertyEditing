@@ -21,7 +21,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.createObject = new FocusableButton {
 				Title = Properties.Resources.New,
-				BezelStyle = NSBezelStyle.Rounded
+				BezelStyle = NSBezelStyle.Rounded,
 			};
 			this.createObject.Activated += OnNewPressed;
 			AddSubview (this.createObject);
@@ -44,14 +44,6 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView LastKeyView => this.createObject;
 
 		protected override void UpdateValue ()
-		{
-		}
-
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
-		}
-
-		protected override void HandleErrorsChanged (object sender, DataErrorsChangedEventArgs e)
 		{
 		}
 
