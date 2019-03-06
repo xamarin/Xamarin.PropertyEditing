@@ -58,7 +58,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			var list = GetList (editor, separate: true);
 			if (editor is PropertyViewModel pvm && this.targetPlatform.GroupedTypes != null && this.targetPlatform.GroupedTypes.TryGetValue (pvm.Property.Type, out string groupName)) {
-				var group = list.OfType<PropertyGroupViewModel> ().First (gvm => gvm.Category == groupName);
+				var group = list.OfType<PropertyGroupViewModel> ().FirstOrDefault (gvm => gvm.Category == groupName);
 				if (group != null) {
 					bool found = group.Remove (pvm);
 					if (!group.HasChildElements)
