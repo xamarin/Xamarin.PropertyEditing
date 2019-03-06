@@ -93,6 +93,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			if (editorOrContainer is EditorContainer ec) {
+				ec.ViewModel = evm;
 				ec.Label = evm.Name;
 
 #if DEBUG // Currently only used to highlight which controls haven't been implemented
@@ -110,9 +111,7 @@ namespace Xamarin.PropertyEditing.Mac
 					} else if (!ovm.CanDelve) {
 						container.LeftEdgeView = null;
 					}
-
-					container.ViewModel = evm;
-				} else {
+				} else if (!(editorOrContainer is EditorContainer)) {
 					editor.ViewModel = evm;
 				}
 
