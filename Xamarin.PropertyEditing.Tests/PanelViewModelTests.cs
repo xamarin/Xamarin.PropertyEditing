@@ -336,6 +336,35 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		[Description ("#544 Bug coverage for removing groupable items when not grouped")]
+		public void FilterGroupableWhenNotGrouped ()
+		{
+			var stringProvider = new StringViewModelTests ();
+
+			var stringProperty1 = stringProvider.GetPropertyMock ("string1");
+			var stringProperty2 = stringProvider.GetPropertyMock ("string2");
+
+			var editor = new MockObjectEditor (stringProperty1.Object, stringProperty2.Object);
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (editor.Target)).ReturnsAsync (editor);
+
+			var platform = new TargetPlatform (provider.Object) {
+				GroupedTypes = new Dictionary<Type, string> {
+					{ typeof(string), "B" }
+				}
+			};
+
+			var vm = new PanelViewModel (platform);
+			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
+			vm.SelectedObjects.Add (editor.Target);
+			Assume.That (vm.ArrangedEditors[0].Editors.Count, Is.EqualTo (2));
+
+			vm.FilterText = "A";
+			Assert.That (vm.ArrangedEditors.Count, Is.EqualTo (0));
+		}
+
+		[Test]
 		public async Task AutoExpand ()
 		{
 			var provider = new ReflectionEditorProvider ();
