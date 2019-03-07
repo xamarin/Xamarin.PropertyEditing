@@ -76,6 +76,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			RequestTypes ();
 
 			this.collectionView.CollectionChanged += OnCollectionViewContentsChanged;
+
+			UpdateSelectedTarget ();
 		}
 
 		public event EventHandler<TypeRequestedEventArgs> TypeRequested;
@@ -198,6 +200,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.collectionView.Reset (await GetViewsFromValueAsync());
 			else
 				this.collectionView.Clear();
+
+			if (Panel != null)
+				UpdateSelectedTarget();
 		}
 
 		protected override void OnEditorsChanged (object sender, NotifyCollectionChangedEventArgs e)
@@ -310,6 +315,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			return items;
+		}
+
+		private void UpdateSelectedTarget ()
+		{
+			if (SelectedTarget != null)
+				SelectedTarget = this.collectionView.FirstOrDefault (ivm => Equals (ivm.Item, SelectedTarget.Item));
+
+			if (SelectedTarget == null && Targets.Count > 0)
+				SelectedTarget = Targets[0];
 		}
 
 		private async void RequestTypes ()
