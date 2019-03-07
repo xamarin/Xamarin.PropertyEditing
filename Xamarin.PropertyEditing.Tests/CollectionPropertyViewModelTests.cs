@@ -394,6 +394,177 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (vm.SelectedType, Is.EqualTo (objType));
 		}
 
+		[Test]
+		[Description ("If the value updates and doesn't contain the selected target, it should clear if there are no items")]
+		public async Task SelectedTargetClearsWhenNotPresent ()
+		{
+			var obj = new TestClass {
+				Collection = new ArrayList ()
+			};
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (pi => pi.Type).Returns (typeof (IList));
+			property.SetupGet (pi => pi.Name).Returns (nameof (TestClass.Collection));
+			property.SetupGet (pi => pi.CanWrite).Returns (true);
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetTarget (obj);
+			editor.Setup (e => e.GetAssignableTypesAsync (property.Object, true))
+				.ReturnsAsync (new AssignableTypesResult (new[] { typeof (MockSampleControl).ToTypeInfo () }));
+			editor.Setup (e => e.Properties).Returns (new[] { property.Object });
+
+			ValueInfo<IList> valueInfo = new ValueInfo<IList> {
+				Value = default (IList),
+				Source = ValueSource.Default
+			};
+
+			editor.Setup (oe => oe.SetValueAsync (property.Object, It.IsAny<ValueInfo<IList>> (), null))
+				.Callback<IPropertyInfo, ValueInfo<IList>, PropertyVariation> ((p, vi, v) => {
+					valueInfo = vi;
+					editor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property.Object));
+				})
+				.Returns (Task.FromResult (true));
+			editor.Setup (oe => oe.GetValueAsync<IList> (property.Object, null)).ReturnsAsync (() => valueInfo);
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editor.Object);
+			provider.Setup (ep => ep.GetObjectEditorAsync (It.IsAny<MockSampleControl> ()))
+				.ReturnsAsync ((MockSampleControl sample) => new MockObjectEditor (sample));
+			provider.Setup (ep => ep.CreateObjectAsync (It.IsAny<ITypeInfo> ()))
+				.ReturnsAsync ((ITypeInfo type) => new MockSampleControl ());
+
+			var vm = new CollectionPropertyViewModel (new TargetPlatform (provider.Object), property.Object, new[] { editor.Object });
+			await vm.AssignableTypes.Task;
+
+			vm.SelectedType = GetTypeInfo (typeof (MockSampleControl));
+			vm.AddTargetCommand.Execute (null);
+
+			Assume.That (vm.Targets, Is.Not.Empty, "Adding a target failed");
+			var selected = vm.Targets.Single ().Item;
+			Assume.That (selected, Is.InstanceOf (typeof (MockSampleControl)));
+			Assume.That (vm.SelectedTarget?.Item, Is.SameAs (selected), "Added target wasn't selected");
+
+			editor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property.Object, null));
+
+			Assert.That (vm.SelectedTarget, Is.Null, "SelectedTarget didn't clear when it was no longer present");
+		}
+
+		[Test]
+		[Description ("If the value updates and doesn't contain the selected target, it should go to the first item")]
+		public async Task SelectedTargetGoesToFirstItemWhenNotPresent ()
+		{
+			var selected = new MockSampleControl ();
+			var obj = new TestClass {
+				Collection = new ArrayList {
+					new MockSampleControl(),
+					selected
+				}
+			};
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (pi => pi.Type).Returns (typeof (IList));
+			property.SetupGet (pi => pi.Name).Returns (nameof (TestClass.Collection));
+			property.SetupGet (pi => pi.CanWrite).Returns (true);
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetTarget (obj);
+			editor.Setup (e => e.GetAssignableTypesAsync (property.Object, true))
+				.ReturnsAsync (new AssignableTypesResult (new[] { typeof (MockSampleControl).ToTypeInfo () }));
+			editor.Setup (e => e.Properties).Returns (new[] { property.Object });
+
+			ValueInfo<IList> valueInfo = new ValueInfo<IList> {
+				Value = default (IList),
+				Source = ValueSource.Default
+			};
+
+			editor.Setup (oe => oe.SetValueAsync (property.Object, It.IsAny<ValueInfo<IList>> (), null))
+				.Callback<IPropertyInfo, ValueInfo<IList>, PropertyVariation> ((p, vi, v) => {
+					valueInfo = vi;
+					editor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property.Object));
+				})
+				.Returns (Task.FromResult (true));
+			editor.Setup (oe => oe.GetValueAsync<IList> (property.Object, null)).ReturnsAsync (() => valueInfo);
+			await editor.Object.SetValueAsync (property.Object, new ValueInfo<IList> { Value = obj.Collection, Source = ValueSource.Local });
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editor.Object);
+			provider.Setup (ep => ep.GetObjectEditorAsync (It.IsAny<MockSampleControl> ()))
+				.ReturnsAsync ((MockSampleControl sample) => new MockObjectEditor (sample));
+
+			var vm = new CollectionPropertyViewModel (new TargetPlatform (provider.Object), property.Object, new[] { editor.Object });
+			await vm.AssignableTypes.Task;
+
+			vm.SelectedTarget = vm.Targets.FirstOrDefault (item => item.Item == selected);
+
+			obj.Collection.Remove (selected);
+			editor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property.Object, null));
+
+			Assert.That (vm.SelectedTarget, Is.Not.Null, "SelectedTarget cleared but there was another item");
+			Assert.That (vm.SelectedTarget?.Item, Is.Not.SameAs (selected), "SelectedTarget didn't change to remaining item when collection changed");
+		}
+
+		[Test]
+		public async Task SelectedTargetHoldsAfterCollectionChange ()
+		{
+			var selected = new MockSampleControl ();
+			var obj = new TestClass {
+				Collection = new ArrayList {
+					new MockSampleControl(),
+					selected
+				}
+			};
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (pi => pi.Type).Returns (typeof (IList));
+			property.SetupGet (pi => pi.Name).Returns (nameof(TestClass.Collection));
+			property.SetupGet (pi => pi.CanWrite).Returns (true);
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetTarget (obj);
+			editor.Setup (e => e.GetAssignableTypesAsync (property.Object, true))
+				.ReturnsAsync (new AssignableTypesResult (new[] { typeof (MockSampleControl).ToTypeInfo () }));
+			editor.Setup (e => e.Properties).Returns (new[] { property.Object });
+
+			ValueInfo<IList> valueInfo = new ValueInfo<IList> {
+				Value = default(IList),
+				Source = ValueSource.Default
+			};
+
+			editor.Setup (oe => oe.SetValueAsync (property.Object, It.IsAny<ValueInfo<IList>> (), null))
+				.Callback<IPropertyInfo, ValueInfo<IList>, PropertyVariation> ((p, vi, v) => {
+					valueInfo = vi;
+					editor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property.Object));
+				})
+				.Returns (Task.FromResult (true));
+			editor.Setup (oe => oe.GetValueAsync<IList> (property.Object, null)).ReturnsAsync (() => valueInfo);
+
+			await editor.Object.SetValueAsync (property.Object, new ValueInfo<IList> { Value = obj.Collection, Source = ValueSource.Local });
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (obj)).ReturnsAsync (editor.Object);
+			provider.Setup (ep => ep.GetObjectEditorAsync (It.IsAny<MockSampleControl> ()))
+				.ReturnsAsync ((MockSampleControl sample) => new MockObjectEditor (sample));
+
+			var vm = new CollectionPropertyViewModel (new TargetPlatform (provider.Object), property.Object, new[] { editor.Object });
+			await vm.AssignableTypes.Task;
+
+			vm.SelectedTarget = vm.Targets.FirstOrDefault (item => item.Item == selected);
+
+			obj.Collection.Insert (0, new MockSampleControl ());
+			editor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property.Object, null));
+
+			Assert.That (vm.SelectedTarget?.Item, Is.SameAs (selected), "SelectedTarget didn't hold when collection changed");
+		}
+
+		private class TestClass
+		{
+			public ArrayList Collection
+			{
+				get;
+				set;
+			}
+		}
+
 		private ITypeInfo GetTypeInfo (Type type)
 		{
 			var asm = new AssemblyInfo (type.Assembly.FullName, true);
