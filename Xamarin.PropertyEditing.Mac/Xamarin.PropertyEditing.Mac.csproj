@@ -163,6 +163,7 @@
     <Compile Include="Controls\ErrorMessageView.cs" />
     <Folder Include="Controls\RequestResource\" />
     <Folder Include="PropertyEditingResource\Contents\Resources\" />
+    <Folder Include="Assets.xcassets\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
@@ -180,6 +181,18 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <ImageAsset Include="Assets.xcassets\Checkerboard0.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Checkerboard1.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\DescriptionLabelColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\ForegroundColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\PadBackgroundColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\PanelTabBackground.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\PopoverContentBackground.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\TabBorderColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\ValueBlockBackgroundColor.colorset\Contents.json" />
+  </ItemGroup>
   <Target Name="IncludeIconsInBundle" BeforeTargets="AssignTargetPaths">
     <ItemGroup>
       <PropertyEditingResourceBundlePath Include="PropertyEditingResource\**\*" />
