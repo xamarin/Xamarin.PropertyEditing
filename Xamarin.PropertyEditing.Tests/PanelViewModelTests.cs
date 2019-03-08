@@ -115,6 +115,54 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public void UncommonPropertiesFiltered ()
+		{
+			var obj = new TestClassSub ();
+
+			var property = new Mock<IPropertyInfo> ();
+			property.Setup (pi => pi.Name).Returns (nameof(TestClass.Property));
+			property.Setup (pi => pi.Type).Returns (typeof(string));
+			property.Setup (pi => pi.RealType).Returns (typeof (string).ToTypeInfo ());
+			property.Setup (pi => pi.IsUncommon).Returns (true);
+
+			var subProperty = new Mock<IPropertyInfo> ();
+			subProperty.Setup (pi => pi.Name).Returns (nameof (TestClassSub.SubProperty));
+			subProperty.Setup (pi => pi.Type).Returns (typeof (int));
+			subProperty.Setup (pi => pi.RealType).Returns (typeof (int).ToTypeInfo ());
+			subProperty.Setup (pi => pi.IsUncommon).Returns (false);
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetTarget (obj);
+			editor.Setup (e => e.Properties).Returns (new[] { property.Object, subProperty.Object });
+
+			var provider = new MockEditorProvider (editor.Object);
+
+			var vm = new PanelViewModel (new TargetPlatform (provider));
+			Assume.That (vm.ArrangeMode, Is.EqualTo (PropertyArrangeMode.Name));
+			vm.SelectedObjects.Add (obj);
+
+			Assume.That (vm.ArrangedEditors, Is.Not.Empty);
+			Assume.That (vm.ArrangedEditors[0].Editors.Count, Is.EqualTo (2));
+			Assume.That (vm.IsFiltering, Is.False);
+			bool changed = false;
+			vm.PropertyChanged += (sender, args) => {
+				if (args.PropertyName == nameof (PanelViewModel.IsFiltering)) {
+					changed = true;
+				}
+			};
+
+			vm.FilterText = "sub";
+			Assert.That (vm.ArrangedEditors[0].Editors.Count, Is.EqualTo (1), "Uncommon property wasn't filtered out");
+			Assert.That (vm.IsFiltering, Is.True);
+			Assert.That (changed, Is.True);
+			changed = false;
+
+			vm.FilterText = null;
+			Assert.That (vm.IsFiltering, Is.False);
+			Assert.That (changed, Is.True);
+		}
+
+		[Test]
 		[Description ("When filtered Text is cleared then list is restored back to its original.")]
 		public async Task PropertyListFilteredTextClearedRestoresList ()
 		{
