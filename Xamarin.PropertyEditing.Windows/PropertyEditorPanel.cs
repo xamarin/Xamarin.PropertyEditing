@@ -205,20 +205,21 @@ namespace Xamarin.PropertyEditing.Windows
 			if (this.items == null)
 				return;
 
-			Binding itemsSource = null;
 			if (arrangeMode == PropertyArrangeMode.Name) {
-				if (SelectedItems.Count > 0)
-					itemsSource = new Binding ("ArrangedEditors[0].Editors") { FallbackValue = null };
-			} else
-				itemsSource = new Binding ("ArrangedEditors");
-
-			if (itemsSource != null)
-				this.items.SetBinding (ItemsControl.ItemsSourceProperty, itemsSource);
-			else
-				this.items.ItemsSource = null;
+				this.items.ItemsSource = (this.vm.ArrangedEditors.Count > 0) ? this.vm.ArrangedEditors[0].Editors : null;
+				this.vm.ArrangedPropertiesChanged += OnArrangedByNamePropertiesChanged;
+			} else {
+				this.vm.ArrangedPropertiesChanged -= OnArrangedByNamePropertiesChanged;
+				this.items.SetBinding (ItemsControl.ItemsSourceProperty, new Binding ("ArrangedEditors"));
+			}
 
 			if (this.vm != null)
 				this.vm.ArrangeMode = arrangeMode;
+		}
+
+		private void OnArrangedByNamePropertiesChanged (object sender, EventArgs e)
+		{
+			this.items.ItemsSource = (this.vm.ArrangedEditors.Count > 0) ? this.vm.ArrangedEditors[0].Editors : null;
 		}
 	}
 
