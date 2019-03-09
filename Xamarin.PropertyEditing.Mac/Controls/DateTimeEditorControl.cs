@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using AppKit;
 using Xamarin.PropertyEditing.Mac.Resources;
@@ -43,20 +43,20 @@ namespace Xamarin.PropertyEditing.Mac
 			editor.StringValue = ViewModel.Value.ToShortDateString ();
 		}
 
-		protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
-		{
-			UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
-		}
+		//protected override void HandleErrorsChanged (object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
+		//{
+		//	UpdateErrorsDisplayed (ViewModel.GetErrors (ViewModel.Property.Name));
+		//}
 
-		protected override void UpdateErrorsDisplayed (IEnumerable errors)
-		{
-			if (ViewModel.HasErrors) {
-				SetErrors (errors);
-			} else {
-				SetErrors (null);
-				SetEnabled ();
-			}
-		}
+		//protected override void UpdateErrorsDisplayed (IEnumerable errors)
+		//{
+		//	if (ViewModel.HasErrors) {
+		//		SetErrors (errors);
+		//	} else {
+		//		SetErrors (null);
+		//		SetEnabled ();
+		//	}
+		//}
 
 		protected override void SetEnabled ()
 		{
