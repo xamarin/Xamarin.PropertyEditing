@@ -69,7 +69,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 				}
 			}
 
-			return list.Remove (editor);
+			bool result = list.Remove (editor);
+			if (result) {
+				OnPropertyChanged (nameof(HasChildElements));
+				OnPropertyChanged (nameof (HasUncommonElements));
+			}
+
+			return result;
 		}
 
 		public bool GetIsExpanded (PropertyArrangeMode mode)
