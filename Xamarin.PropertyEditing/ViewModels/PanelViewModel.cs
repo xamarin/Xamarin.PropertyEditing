@@ -17,9 +17,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (editors == null)
 				throw new ArgumentNullException (nameof(editors));
 
+			this.separateUncommon = separateUncommon;
 			this.targetPlatform = targetPlatform;
 			Category = category;
-			AddCore (editors, separateUncommon);
+			AddCore (editors);
 		}
 
 		public string Category
@@ -43,12 +44,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public void Add (IEnumerable<EditorViewModel> editors)
 		{
-			AddCore (editors, separate: true);
+			AddCore (editors);
 		}
 
 		public void Add (EditorViewModel editor)
 		{
-			AddCore (editor, separate: true);
+			AddCore (editor);
 		}
 
 		public bool Remove (EditorViewModel editor)
@@ -56,7 +57,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (editor == null)
 				throw new ArgumentNullException (nameof(editor));
 
-			var list = GetList (editor, separate: true);
+			var list = GetList (editor);
 			if (editor is PropertyViewModel pvm && this.targetPlatform.GroupedTypes != null && this.targetPlatform.GroupedTypes.TryGetValue (pvm.Property.Type, out string groupName)) {
 				var group = list.OfType<PropertyGroupViewModel> ().FirstOrDefault (gvm => gvm.Category == groupName);
 				if (group != null) {
@@ -68,7 +69,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 				}
 			}
 
-			return list.Remove (editor);
+			bool result = list.Remove (editor);
+			if (result) {
+				OnPropertyChanged (nameof(HasChildElements));
+				OnPropertyChanged (nameof (HasUncommonElements));
+			}
+
+			return result;
 		}
 
 		public bool GetIsExpanded (PropertyArrangeMode mode)
@@ -96,22 +103,23 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private readonly ObservableCollectionEx<EditorViewModel> editors = new ObservableCollectionEx<EditorViewModel> ();
 		private readonly ObservableCollectionEx<EditorViewModel> uncommonEditors = new ObservableCollectionEx<EditorViewModel> ();
 		private readonly TargetPlatform targetPlatform;
+		private readonly bool separateUncommon;
 
-		private void AddCore (IEnumerable<EditorViewModel> editors, bool separate)
+		private void AddCore (IEnumerable<EditorViewModel> editors)
 		{
 			if (editors == null)
 				throw new ArgumentNullException (nameof (editors));
 
 			foreach (EditorViewModel evm in editors)
-				AddCore (evm, separate);
+				AddCore (evm);
 		}
 
-		private void AddCore (EditorViewModel editor, bool separate)
+		private void AddCore (EditorViewModel editor)
 		{
 			if (editor == null)
 				throw new ArgumentNullException (nameof (editor));
 
-			var list = GetList (editor, separate);
+			var list = GetList (editor);
 			if (editor is PropertyViewModel pvm && this.targetPlatform.GroupedTypes != null && this.targetPlatform.GroupedTypes.TryGetValue (pvm.Property.Type, out string groupName)) {
 				var group = list.OfType<PropertyGroupViewModel> ().FirstOrDefault (gvm => gvm.Category == groupName);
 				if (group != null)
@@ -125,9 +133,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof(HasUncommonElements));
 		}
 
-		private IList<EditorViewModel> GetList (EditorViewModel evm, bool separate)
+		private IList<EditorViewModel> GetList (EditorViewModel evm)
 		{
-			if (separate && evm is PropertyViewModel pvm)
+			if (this.separateUncommon && evm is PropertyViewModel pvm)
 				return pvm.Property.IsUncommon ? this.uncommonEditors : this.editors;
 			else
 				return this.editors;

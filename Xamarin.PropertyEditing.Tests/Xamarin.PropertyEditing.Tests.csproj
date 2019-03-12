@@ -77,6 +77,7 @@
     <Compile Include="NumericTests.cs" />
     <Compile Include="NumericViewModelTests.cs" />
     <Compile Include="OrderedDictionaryTests.cs" />
+    <Compile Include="PanelGroupViewModelTests.cs" />
     <Compile Include="ResourceSelectorViewModelTests.cs" />
     <Compile Include="ResourceTests.cs" />
     <Compile Include="SimpleCollectionViewTests.cs" />

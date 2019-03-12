@@ -151,7 +151,7 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 
 			if (ArrangeMode == PropertyArrangeMode.Name)
-				UpdateBinding (ArrangeMode);
+				UpdateBinding (ArrangeMode, contentsOnly: true);
 
 			UpdateIcon ();
 		}
@@ -200,17 +200,20 @@ namespace Xamarin.PropertyEditing.Windows
 				SetCurrentValue (ArrangeModeProperty, this.vm.ArrangeMode);
 		}
 
-		private void UpdateBinding (PropertyArrangeMode arrangeMode)
+		private void UpdateBinding (PropertyArrangeMode arrangeMode, bool contentsOnly = false)
 		{
 			if (this.items == null)
 				return;
 
 			if (arrangeMode == PropertyArrangeMode.Name) {
 				this.items.ItemsSource = (this.vm.ArrangedEditors.Count > 0) ? this.vm.ArrangedEditors[0].Editors : null;
-				this.vm.ArrangedPropertiesChanged += OnArrangedByNamePropertiesChanged;
+				if (!contentsOnly)
+					this.vm.ArrangedPropertiesChanged += OnArrangedByNamePropertiesChanged;
 			} else {
-				this.vm.ArrangedPropertiesChanged -= OnArrangedByNamePropertiesChanged;
-				this.items.SetBinding (ItemsControl.ItemsSourceProperty, new Binding ("ArrangedEditors"));
+				if (!contentsOnly)
+					this.vm.ArrangedPropertiesChanged -= OnArrangedByNamePropertiesChanged;
+
+				this.items.SetBinding (ItemsControl.ItemsSourceProperty, new Binding (nameof(PanelViewModel.ArrangedEditors)));
 			}
 
 			if (this.vm != null)
