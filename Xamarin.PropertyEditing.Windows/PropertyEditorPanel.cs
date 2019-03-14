@@ -98,9 +98,7 @@ namespace Xamarin.PropertyEditing.Windows
 			this.paneSelector.SelectedValue = EditingPane.Properties;
 			this.paneSelector.SelectedItemChanged += OnPaneChanged;
 			OnTargetPlatformChanged();
-
-			if (this.vm.SelectedObjects.Count > 0 || ArrangeMode != PropertyArrangeMode.Name)
-				UpdateBinding (ArrangeMode);
+			UpdateBinding (ArrangeMode);
 		}
 
 		private FrameworkElement root;
