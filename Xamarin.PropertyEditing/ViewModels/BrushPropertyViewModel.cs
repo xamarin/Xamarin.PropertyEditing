@@ -117,6 +117,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof (ResourceSelector));
 		}
 
+		protected override Task SetValueAsync (ValueInfo<CommonBrush> newValue)
+		{
+			if (newValue.Source == ValueSource.Unset && Solid?.PreviousSolidBrush != null)
+				Solid.PreviousSolidBrush = null;
+			return base.SetValueAsync (newValue);
+		}
+
 		protected override async Task UpdateCurrentValueAsync ()
 		{
 			if (BrushTypes == null)

@@ -260,7 +260,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return args;
 		}
 
-		protected Task SetValueAsync (ValueInfo<TValue> newValue)
+		protected virtual Task SetValueAsync (ValueInfo<TValue> newValue)
 		{
 			if (this.value == newValue)
 				return Task.CompletedTask;
