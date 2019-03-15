@@ -39,7 +39,8 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			WantsLayer = true;
 			Layer = new CommonBrushLayer (hostResources) {
-				Brush = Brush
+				Brush = Brush,
+				VerticalMargin = 1
 			};
 		}
     }
