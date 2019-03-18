@@ -70,6 +70,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public const string DescriptionLabelColor = "DescriptionLabelColor";
 		public const string ValueBlockBackgroundColor = "ValueBlockBackgroundColor";
 		public const string TabBorderColor = "TabBorderColor";
+		public const string FrameBoxBorderColor = "FrameBoxBorderColor";
+		public const string FrameBoxBackgroundColor = "FrameBoxBackgroundColor";
+		public const string FrameBoxButtonBorderColor = "FrameBoxButtonBorderColor";
+		public const string FrameBoxButtonBackgroundColor = "FrameBoxButtonBackgroundColor";
+		public const string ListHeaderSeparatorColor = "ListHeaderSeparatorColor";
 		public const string PanelTabBackground = "PanelTabBackground";
+		public const string ControlBackground = "ControlBackground";
 	}
 }

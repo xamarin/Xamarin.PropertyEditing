@@ -83,6 +83,36 @@ namespace Xamarin.PropertyEditing.Mac.Resources {
             }
         }
         
+        internal static string AccessibilityCollection {
+            get {
+                return ResourceManager.GetString("AccessibilityCollection", resourceCulture);
+            }
+        }
+        
+        internal static string AccessibilityCollectionHelp {
+            get {
+                return ResourceManager.GetString("AccessibilityCollectionHelp", resourceCulture);
+            }
+        }
+        
+        internal static string AccessibilityCollectionTypeSelector {
+            get {
+                return ResourceManager.GetString("AccessibilityCollectionTypeSelector", resourceCulture);
+            }
+        }
+        
+        internal static string AccessibilityCollectionAddButton {
+            get {
+                return ResourceManager.GetString("AccessibilityCollectionAddButton", resourceCulture);
+            }
+        }
+        
+        internal static string AccessibilityCollectionRemoveButton {
+            get {
+                return ResourceManager.GetString("AccessibilityCollectionRemoveButton", resourceCulture);
+            }
+        }
+        
         internal static string AccessibilityString {
             get {
                 return ResourceManager.GetString("AccessibilityString", resourceCulture);
@@ -140,6 +170,24 @@ namespace Xamarin.PropertyEditing.Mac.Resources {
         internal static string AccessibilityActionButtonDescription {
             get {
                 return ResourceManager.GetString("AccessibilityActionButtonDescription", resourceCulture);
+            }
+        }
+        
+        internal static string CollectionTargetsHeader {
+            get {
+                return ResourceManager.GetString("CollectionTargetsHeader", resourceCulture);
+            }
+        }
+        
+        internal static string CollectionEditButton {
+            get {
+                return ResourceManager.GetString("CollectionEditButton", resourceCulture);
+            }
+        }
+        
+        internal static string CollectionEditorTitle {
+            get {
+                return ResourceManager.GetString("CollectionEditorTitle", resourceCulture);
             }
         }
         

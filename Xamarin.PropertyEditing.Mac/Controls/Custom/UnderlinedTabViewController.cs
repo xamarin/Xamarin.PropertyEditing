@@ -104,7 +104,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			NSView tabs = this.tabStack;
 			if (TabBackgroundColor != null) {
-				this.tabContainer = new DynamicFillBox (HostResources, TabBackgroundColor) {
+				this.tabContainer = new DynamicBox (HostResources, TabBackgroundColor) {
 					ContentView = this.tabStack
 				};
 
@@ -114,7 +114,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.innerStack.AddView (tabs, NSStackViewGravity.Top);
 
 			if (TabBorderColor != null) {
-				this.border = new DynamicFillBox (HostResources, TabBorderColor)	{
+				this.border = new DynamicBox (HostResources, TabBorderColor)	{
 					Frame = new CGRect (0, 0, 1, 1),
 					AutoresizingMask = NSViewResizingMask.WidthSizable
 				};
@@ -144,7 +144,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private string tabBackground, tabBorder;
 		private IUnderliningTabView selected;
-		private DynamicFillBox tabContainer, border;
+		private DynamicBox tabContainer, border;
 		private NSStackView innerStack;
 		private readonly NSStackView tabStack = new NSStackView () {
 			Spacing = 1f,

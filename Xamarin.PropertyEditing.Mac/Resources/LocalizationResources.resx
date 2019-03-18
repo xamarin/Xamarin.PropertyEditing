@@ -36,6 +36,22 @@
 		<value>{0} Combobox Editor</value>
 		<comment>Editor for Combobox Value</comment>
 	</data>
+  <data name="AccessibilityCollection" xml:space="preserve">
+    <value>{0} property, edit collection</value>
+    <comment></comment>
+  </data>
+  <data name="AccessibilityCollectionHelp" xml:space="preserve">
+    <value>Opens a window to edit the collection</value>
+  </data>
+  <data name="AccessibilityCollectionTypeSelector" xml:space="preserve">
+    <value>Type list</value>
+  </data>
+  <data name="AccessibilityCollectionAddButton" xml:space="preserve">
+    <value>Add instance of type</value>
+  </data>
+  <data name="AccessibilityCollectionRemoveButton" xml:space="preserve">
+    <value>Remove instance</value>
+  </data>
 	<data name="AccessibilityString" xml:space="preserve">
 		<value>{0} String Editor</value>
 		<comment>Editor for String Value</comment>
@@ -70,6 +86,16 @@
   </data>
   <data name="AccessibilityActionButtonDescription" xml:space="preserve">
     <value>Display warnings.</value>>
+  </data>
+  <data name="CollectionTargetsHeader" xml:space="preserve">
+    <value>Collection Items</value>
+  </data>
+  <data name="CollectionEditButton" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="CollectionEditorTitle" xml:space="preserve">
+    <value>Edit Collection – {0}</value>
+    <comment>Edit Collection - {PropertyName}</comment>
   </data>
   <data name="ColumnResourceName" xml:space="preserve">
     <value>Name</value>>

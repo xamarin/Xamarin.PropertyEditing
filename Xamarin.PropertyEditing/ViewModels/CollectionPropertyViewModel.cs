@@ -188,6 +188,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
+		public void MoveTarget (int index, int target)
+		{
+			this.collectionView.Move (index, target);
+			ReIndex ();
+		}
+
 		protected override async Task UpdateCurrentValueAsync ()
 		{
 			await base.UpdateCurrentValueAsync ();
@@ -372,7 +378,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			var args = new TypeRequestedEventArgs();
 			TypeRequested?.Invoke (this, args);
 
-			ITypeInfo st = await args.SelectedType;
+			ITypeInfo st = null;
+			try {
+				st = await args.SelectedType;
+			} catch (OperationCanceledException) {
+			}
+
 			if (st != null) {
 				if (!this.suggestedTypes.Contains (st))
 					this.suggestedTypes.Insert (0, st);
@@ -414,9 +425,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private void MoveTarget (bool up)
 		{
 			int index = this.collectionView.IndexOf (SelectedTarget);
-			this.collectionView.Move (index, index + ((up) ? -1 : 1));
-
-			ReIndex();
+			MoveTarget (index, index + ((up) ? -1 : 1));
 		}
 
 		private bool CanAddTarget ()
