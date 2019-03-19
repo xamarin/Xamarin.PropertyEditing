@@ -237,10 +237,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (!e.Property.HasVariations ())
 				return;
 
-			OnVariationsChanged (e.Property, EventArgs.Empty);
+			OnVariantsChanged (e.Property, EventArgs.Empty);
 		}
 
-		private async void OnVariationsChanged (object sender, EventArgs e)
+		private async void OnVariantsChanged (object sender, EventArgs e)
 		{
 			IPropertyInfo property = sender as IPropertyInfo;
 			if (property == null)
@@ -610,7 +610,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			else
 				vm = new StringPropertyViewModel (TargetPlatform, property, this.objEditors, variant);
 
-			vm.VariationsChanged += OnVariationsChanged;
+			vm.VariantsChanged += OnVariantsChanged;
 			return vm;
 		}
 

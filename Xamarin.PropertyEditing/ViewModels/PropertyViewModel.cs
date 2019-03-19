@@ -37,7 +37,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			RequestCreateBindingCommand = new RelayCommand (OnCreateBinding, CanCreateBinding);
 			RequestCreateResourceCommand = new RelayCommand (OnCreateResource, CanCreateResource);
-			RequestCreateVariationCommand = new RelayCommand (OnCreateVariation, CanCreateVariation);
+			RequestCreateVariantCommand = new RelayCommand (OnCreateVariant, CanCreateVariant);
 			RemoveVariationCommand = new RelayCommand (OnRemoveVariant, () => Variation != null);
 			NavigateToValueSourceCommand = new RelayCommand (OnNavigateToSource, CanNavigateToSource);
 			SetValueResourceCommand = new RelayCommand<Resource> (OnSetValueToResource, CanSetValueToResource);
@@ -514,20 +514,25 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		private bool CanCreateVariation ()
+		private bool CanCreateVariant ()
 		{
 			return HasVariations && !IsVariant;
 		}
 
-		private async void OnCreateVariation ()
+		private async void OnCreateVariant ()
 		{
 			var args = RequestCreateVariant ();
 			if (args.Variation == null)
 				return;
 
 			try {
-				await SetValueAsyncCore (CurrentValue, args.Variation);
+				PropertyVariation variation = await args.Variation;
+				if (variation == null)
+					return;
+
+				await SetValueAsyncCore (CurrentValue, variation);
 				OnVariationsChanged ();
+			} catch (OperationCanceledException) {
 			} catch (Exception ex) {
 				TargetPlatform.ReportError (String.Format (Resources.ErrorCreatingVariant, ex.Message), ex);
 			}
@@ -567,8 +572,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public event EventHandler<ResourceRequestedEventArgs> ResourceRequested;
 		public event EventHandler<CreateResourceRequestedEventArgs> CreateResourceRequested;
 		public event EventHandler<CreateBindingRequestedEventArgs> CreateBindingRequested;
-		public event EventHandler<CreateVariationEventArgs> CreateVariationRequested;
-		public event EventHandler VariationsChanged;
+		public event EventHandler<CreateVariantEventArgs> CreateVariantRequested;
+		public event EventHandler VariantsChanged;
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
 		public IPropertyInfo Property
@@ -688,7 +693,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			protected set;
 		}
 
-		public ICommand RequestCreateVariationCommand
+		public ICommand RequestCreateVariantCommand
 		{
 			get;
 			protected set;
@@ -803,16 +808,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return e;
 		}
 
-		protected CreateVariationEventArgs RequestCreateVariant ()
+		protected CreateVariantEventArgs RequestCreateVariant ()
 		{
-			var e = new CreateVariationEventArgs ();
-			CreateVariationRequested?.Invoke (this, e);
+			var e = new CreateVariantEventArgs ();
+			CreateVariantRequested?.Invoke (this, e);
 			return e;
 		}
 
 		protected void OnVariationsChanged ()
 		{
-			VariationsChanged?.Invoke (this, EventArgs.Empty);
+			VariantsChanged?.Invoke (this, EventArgs.Empty);
 		}
 
 		private readonly RelayCommand requestResourceCommand;

@@ -50,7 +50,7 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			var property = GetTestProperty (out PropertyVariationOption[] variations);
 			var categories = variations.Select (v => v.Category).Distinct ().ToArray();
-			var vm = new CreateVariationViewModel (property.Object);
+			var vm = new CreateVariantViewModel (property.Object);
 			Assert.That (vm.VariationCategories.Count, Is.EqualTo (categories.Length));
 			CollectionAssert.AreEqual (vm.VariationCategories.Select (v => v.Name), categories);
 		}
@@ -59,7 +59,7 @@ namespace Xamarin.PropertyEditing.Tests
 		public void WhenAllAnyCommandDisabledEnabled ()
 		{
 			var property = GetTestProperty (out PropertyVariationOption[] variations);
-			var vm = new CreateVariationViewModel (property.Object);
+			var vm = new CreateVariantViewModel (property.Object);
 			Assume.That (vm.VariationCategories.All (vvm => vvm.IsAnySelected), Is.True);
 			Assert.That (vm.CreateVariantCommand.CanExecute (null), Is.False);
 
@@ -75,12 +75,12 @@ namespace Xamarin.PropertyEditing.Tests
 		public void CreateVariant ()
 		{
 			var property = GetTestProperty (out PropertyVariationOption[] variations);
-			var vm = new CreateVariationViewModel (property.Object);
-			Assume.That (vm.Variant, Is.Null);
+			var vm = new CreateVariantViewModel (property.Object);
+			Assume.That (vm.Variation, Is.Null);
 
 			bool changed = false;
 			vm.PropertyChanged += (sender, args) => {
-				if (args.PropertyName == nameof (CreateVariationViewModel.Variant))
+				if (args.PropertyName == nameof (CreateVariantViewModel.Variation))
 					changed = true;
 			};
 
@@ -89,10 +89,10 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.CreateVariantCommand.Execute (null);
 
 			Assert.That (changed, Is.True, "Variation did not fire PropertyChanged");
-			Assert.That (vm.Variant, Is.Not.Null);
-			Assert.That (vm.Variant.Count, Is.EqualTo (2));
-			Assert.That (vm.Variant, Contains.Item (vm.VariationCategories[0].Variations[1]));
-			Assert.That (vm.Variant, Contains.Item (vm.VariationCategories[1].Variations[2]));
+			Assert.That (vm.Variation, Is.Not.Null);
+			Assert.That (vm.Variation.Count, Is.EqualTo (2));
+			Assert.That (vm.Variation, Contains.Item (vm.VariationCategories[0].Variations[1]));
+			Assert.That (vm.Variation, Contains.Item (vm.VariationCategories[1].Variations[2]));
 		}
 
 		private Mock<IPropertyInfo> GetTestProperty (out PropertyVariationOption[] options)
