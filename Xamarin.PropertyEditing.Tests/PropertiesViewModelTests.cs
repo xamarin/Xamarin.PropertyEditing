@@ -936,6 +936,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList();
 			Assert.That (stringVms.Count, Is.EqualTo (3), "Not including correct number of properties with variants");
 			Assert.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assert.That (stringVms.First (svm => svm.Variation == null).HasVariantChildren, Is.True, "Did not report variant children");
 			Assert.That (stringVms.Count (svm => svm.Variation == variants[0]), Is.EqualTo (1), "Missing variant property");
 			Assert.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
 		}
@@ -968,10 +969,15 @@ namespace Xamarin.PropertyEditing.Tests
 			editor.SetupGet (oe => oe.TargetType).Returns (typeof (object).ToTypeInfo ());
 			editor.SetupGet (oe => oe.Target).Returns (target);
 			editor.SetupGet (oe => oe.Properties).Returns (new[] { property.Object });
-			editor.Setup (oe => oe.GetPropertyVariantsAsync (property.Object)).ReturnsAsync (new[] { variants[1] });
+			editor.Setup (oe => oe.GetPropertyVariantsAsync (property.Object)).ReturnsAsync (new[] { variants[0], variants[1] });
 			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, null)).ReturnsAsync (
 				new ValueInfo<string> {
 					Value = "Any",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[0])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact",
 					Source = ValueSource.Local
 				});
 			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[1])).ReturnsAsync (
@@ -1005,9 +1011,11 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedObjects.Add (target);
 
 			var stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList ();
-			Assume.That (stringVms.Count, Is.EqualTo (2), "Not including correct number of properties with variants");
-			Assume.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
-			Assume.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
+			Assert.That (stringVms.Count, Is.EqualTo (3), "Not including correct number of properties with variants");
+			Assert.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assert.That (stringVms.First (svm => svm.Variation == null).HasVariantChildren, Is.True, "Did not report variant children");
+			Assert.That (stringVms.Count (svm => svm.Variation == variants[0]), Is.EqualTo (1), "Missing variant property");
+			Assert.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
 
 			vm.SelectedObjects.Add (target2);
 
@@ -1102,6 +1110,84 @@ namespace Xamarin.PropertyEditing.Tests
 
 			properties.RemoveAt (0);
 			Assert.That (vm.Properties, Is.Empty);
+		}
+
+		[Test]
+		public void VariantsUpdated ()
+		{
+			var variations = new[] {
+				new PropertyVariationOption ("Width", "Compact"),
+				new PropertyVariationOption ("Width", "Regular"),
+				new PropertyVariationOption ("Gamut", "P3"),
+				new PropertyVariationOption ("Gamut", "sRGB"),
+			};
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.Name).Returns ("Variation");
+			property.SetupGet (p => p.Type).Returns (typeof (string));
+			property.SetupGet (p => p.RealType).Returns (typeof (string).ToTypeInfo ());
+			property.SetupGet (p => p.CanWrite).Returns (true);
+			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
+			property.SetupGet (p => p.Variations).Returns (variations);
+
+			var properties = new ObservableCollection<IPropertyInfo> { property.Object };
+
+			var variation0 = new PropertyVariation (variations[0]);
+			var variation1 = new PropertyVariation (variations[0], variations[2]);
+			var variants = new List<PropertyVariation> {
+				variation0,
+				variation1
+			};
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.TargetType).Returns (typeof (object).ToTypeInfo ());
+			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.Properties).Returns (properties);
+			editor.Setup (oe => oe.GetPropertyVariantsAsync (property.Object)).ReturnsAsync (variants);
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, null)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Any",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variation0)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variation1)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact+P3",
+					Source = ValueSource.Local
+				});
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target)).ReturnsAsync (editor.Object);
+
+			var vm = CreateVm (provider.Object);
+			vm.SelectedObjects.Add (target);
+
+			var stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList ();
+			Assume.That (stringVms.Count, Is.EqualTo (3), "Not including correct number of properties with variants");
+			Assume.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assume.That (stringVms.First (svm => svm.Variation == null).HasVariantChildren, Is.True, "Did not report variant children");
+			Assume.That (stringVms.Count (svm => svm.Variation == variants[0]), Is.EqualTo (1), "Missing variant property");
+			Assume.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
+
+			variants.RemoveAt (1);
+			editor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property.Object));
+
+			Assert.That (vm.Properties.Count, Is.EqualTo (2));
+			Assert.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assert.That (stringVms.First (svm => svm.Variation == null).HasVariantChildren, Is.True, "Did not report variant children");
+			Assert.That (stringVms.Count (svm => svm.Variation == variants[0]), Is.EqualTo (1), "Missing variant property");
+
+			variants.RemoveAt (0);
+			editor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (property.Object));
+
+			Assert.That (vm.Properties.Count, Is.EqualTo (1));
+			Assert.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assert.That (stringVms.First (svm => svm.Variation == null).HasVariantChildren, Is.False, "Did not update variant children");
 		}
 
 		[Test]
@@ -1231,6 +1317,7 @@ namespace Xamarin.PropertyEditing.Tests
 			stringVms = vm.Properties.OfType<StringPropertyViewModel> ().ToList ();
 			Assert.That (stringVms.Count, Is.EqualTo (3), "Not including correct number of properties with variants");
 			Assert.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assert.That (stringVms.First (svm => svm.Variation == null).HasVariantChildren, Is.True, "Did not report variant children");
 			Assert.That (stringVms.Count (svm => svm.Variation == variants[0]), Is.EqualTo (1), "Missing variant property");
 			Assert.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
 		}

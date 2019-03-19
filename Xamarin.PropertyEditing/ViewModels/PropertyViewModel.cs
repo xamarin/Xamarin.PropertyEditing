@@ -516,7 +516,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool CanCreateVariation ()
 		{
-			return HasVariations;
+			return HasVariations && !IsVariant;
 		}
 
 		private async void OnCreateVariation ()
@@ -611,7 +611,25 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get { return Property.CanWrite && TargetPlatform.BindingProvider != null && Property.ValueSources.HasFlag (ValueSources.Binding); }
 		}
 
+		/// <summary>
+		/// Gets whether the property has possible variations.
+		/// </summary>
 		public bool HasVariations => Property.HasVariations();
+
+		public bool HasVariantChildren
+		{
+			get { return this.hasVariantChildren; }
+			internal set
+			{
+				if (this.hasVariantChildren == value)
+					return;
+
+				this.hasVariantChildren = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool IsVariant => Variation != null;
 
 		public abstract Resource Resource
 		{
@@ -737,6 +755,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			try {
 				if (e.Property != null && !Equals (e.Property, Property))
 					return;
+				if (!Equals (Variation, e.Variation))
+					return;
 		
 				// TODO: Smarter querying, can query the single editor and check against MultipleValues
 				await UpdateCurrentValueAsync ();
@@ -800,6 +820,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private HashSet<IPropertyInfo> constraintProperties;
 		private string error;
 		private Task<bool> isAvailable;
+		private bool hasVariantChildren;
 
 		private void OnErrorsChanged (DataErrorsChangedEventArgs e)
 		{
