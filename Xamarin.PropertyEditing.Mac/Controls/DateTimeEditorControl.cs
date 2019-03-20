@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using AppKit;
-using CoreGraphics;
-using Foundation;
 using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -19,7 +16,7 @@ namespace Xamarin.PropertyEditing.Mac
 				ControlSize = NSControlSize.Small,
 				DatePickerElements = NSDatePickerElementFlags.HourMinuteSecond | NSDatePickerElementFlags.YearMonthDateDay,
 				DatePickerStyle = NSDatePickerStyle.TextFieldAndStepper,
-				Font = NSFont.FromFontName (DefaultFontName, DefaultFontSize),
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
 
@@ -29,14 +26,17 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.datePicker);
 
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 1f),
-				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 0f),
-				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0f),
-				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, DefaultControlHeight - 6),
+				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0f),
+				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Leading, 1f, 0f),
+				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0),
+				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1f,  -6f),
 			});
 		}
 
-		private void Editor_Activated (object sender, EventArgs e) => ViewModel.Value = this.datePicker.DateValue.ToDateTime ();
+		private void Editor_Activated (object sender, EventArgs e)
+		{
+			ViewModel.Value = this.datePicker.DateValue.ToDateTime ();
+		}
 
 		public override NSView FirstKeyView => this.datePicker;
 		public override NSView LastKeyView => this.datePicker;

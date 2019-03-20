@@ -35,7 +35,7 @@ namespace Xamarin.PropertyEditing.Mac
 			try {
 				// We loose granularity below millisecond range but that is probably ok
 				return _nsRef.AddSeconds (nsDate.SecondsSinceReferenceDate);
-			} catch (Exception) {
+			} catch (ArgumentOutOfRangeException) {
 				return _nsRef;
 			}
 		}
