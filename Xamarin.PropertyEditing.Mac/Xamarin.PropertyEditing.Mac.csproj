@@ -162,6 +162,8 @@
     <Compile Include="Controls\FilePathEditorControl.cs" />
     <Compile Include="Controls\Custom\TextFieldSmallButtonContainer.cs" />
     <Compile Include="Controls\BasePathEditorControl.cs" />
+    <Compile Include="Controls\DateTimeEditorControl.cs" />
+    <Compile Include="Controls\DateExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

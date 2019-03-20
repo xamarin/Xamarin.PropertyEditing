@@ -84,8 +84,11 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 				valueSources: ValueSources.Default | ValueSources.Local | ValueSources.Resource);
 			AddProperty<CommonColor> (this.colorPropertyInfo);
 
+
 			AddProperty<FilePath> ("FilePath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddReadOnlyProperty<FilePath> ("ReadOnlyFilePath", ReadOnly);
+			AddProperty<DateTime> ("DateTime", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
+			AddReadOnlyProperty<DateTime> ("ReadDateTime", ReadOnly);
 
 			AddEvents ("Click", "Hover", "Focus");
 
