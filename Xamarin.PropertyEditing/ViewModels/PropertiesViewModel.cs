@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Cadenza.Collections;
+using Xamarin.PropertyEditing.Common;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.ViewModels
@@ -613,6 +614,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(IList), (tp,p,e,v) => new CollectionPropertyViewModel (tp, p ,e, v) },
 			{ typeof(BindingSource), (tp,p,e,v) => new PropertyViewModel<BindingSource> (tp, p, e, v) },
 			{ typeof(Resource), (tp,p,e,v) => new PropertyViewModel<Resource> (tp, p, e, v) },
+			{ typeof(FilePath), (tp,p,e,v) => new PropertyViewModel<FilePath> (tp, p, e, v) },
 			{ typeof(object), (tp,p,e,v) => new ObjectPropertyViewModel (tp, p, e, v) },
 			{ typeof(ITypeInfo), (tp,p,e,v) => new TypePropertyViewModel (tp, p, e, v) },
 			{ typeof(CommonRatio), (tp, p, e, v) => new RatioViewModel (tp, p, e, v) },

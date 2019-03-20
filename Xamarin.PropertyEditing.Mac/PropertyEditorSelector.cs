@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-
+using Xamarin.PropertyEditing.Common;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -42,6 +42,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
 			{typeof (NumericPropertyViewModel<>), typeof (NumericEditorControl<>)},
 			{typeof (PropertyViewModel<bool?>), typeof (BooleanEditorControl)},
+			{typeof (PropertyViewModel<FilePath>), typeof (FilePathEditorControl)},
 			{typeof (PredefinedValuesViewModel<>), typeof(PredefinedValuesEditor<>)},
 			{typeof (CombinablePropertyViewModel<>), typeof(CombinablePropertyEditor<>)},
 			{typeof (PointPropertyViewModel), typeof (CommonPointEditorControl) },

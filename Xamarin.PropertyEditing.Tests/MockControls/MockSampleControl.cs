@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Xamarin.PropertyEditing.Common;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Tests.MockPropertyInfo;
 
@@ -83,6 +84,9 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 				valueSources: ValueSources.Default | ValueSources.Local | ValueSources.Resource);
 			AddProperty<CommonColor> (this.colorPropertyInfo);
 
+			AddProperty<FilePath> ("FilePath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
+			AddReadOnlyProperty<FilePath> ("ReadOnlyFilePath", ReadOnly);
+
 			AddEvents ("Click", "Hover", "Focus");
 
 		}
@@ -114,6 +118,11 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			FlagHasValueOne = 1,
 			FlagHasValueTwo = 2,
 			FlagHasValueFour = 4,
+		}
+
+		public async Task SetInitialValuesAsync (IObjectEditor editor)
+		{
+			await editor.SetValueAsync (Properties["FilePath"], new ValueInfo<FilePath> { Value = new FilePath ("/Desktop/MyTestFile") });
 		}
 
 		public async Task SetBrushInitialValueAsync (IObjectEditor editor, CommonBrush brush)
