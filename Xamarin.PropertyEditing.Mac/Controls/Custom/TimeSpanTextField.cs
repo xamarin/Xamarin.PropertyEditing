@@ -4,7 +4,7 @@ using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public class TimeSpanTextField : NSTextField
+	internal class TimeSpanTextField : NSTextField
 	{
 		string cachedValueString;
 		NSText cachedCurrentEditor;
@@ -17,6 +17,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			BackgroundColor = NSColor.Clear;
 			ControlSize = NSControlSize.Small;
+			Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small));
 			StringValue = string.Empty;
 			TranslatesAutoresizingMaskIntoConstraints = false;
 		}
@@ -40,7 +41,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	public class TimeSpanValidationDelegate : NSTextViewDelegate
+	internal class TimeSpanValidationDelegate : NSTextViewDelegate
 	{
 		readonly TimeSpanTextField textField;
 
