@@ -88,6 +88,24 @@ namespace Xamarin.PropertyEditing.Mac
 			get;
 		}
 
+		public override void EditingBegan (NSNotification notification)
+		{
+			NSTextField text = (NSTextField)notification.Object;
+			this.lastValid = text.StringValue;
+		}
+
+		public override bool TextShouldEndEditing (NSControl control, NSText fieldEditor)
+		{
+			if (!CanGetValue (fieldEditor.Value)) {
+				NSTextField text = (NSTextField)control;
+				text.StringValue = this.lastValid;
+				AppKitFramework.NSBeep ();
+				return false;
+			}
+
+			return true;
+		}
+
 		protected virtual T GetValue (string value)
 		{
 			if (String.IsNullOrEmpty (value))
@@ -95,5 +113,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 			return (T)Convert.ChangeType (value, typeof(T));
 		}
+
+		protected virtual bool CanGetValue (string value)
+		{
+			return true;
+		}
+
+		private string lastValid;
 	}
 }

@@ -165,6 +165,7 @@
     <Compile Include="Controls\DateTimeEditorControl.cs" />
     <Compile Include="Controls\DateExtensions.cs" />
     <Compile Include="Controls\EntryPropertyEditor.cs" />
+    <Compile Include="Controls\TimeSpanEditorControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
