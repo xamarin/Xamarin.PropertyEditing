@@ -7,30 +7,25 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class PathOutlineView : NSOutlineView
+	internal class PathOutlineView : BaseSelectorOutlineView
 	{
-		private IReadOnlyCollection<object> viewModel;
+		private IReadOnlyCollection<object> itemsSource;
 		private PropertyTreeRoot propertyTreeRoot;
 
-		private IReadOnlyCollection<object> ViewModel
+		private void SetItemsSource (IReadOnlyCollection<object> value, string targetName)
 		{
-			get => this.viewModel;
-			set {
-				if (this.viewModel != value) {
-					this.viewModel = value;
+			if (this.itemsSource != value) {
+				this.itemsSource = value;
 
-					var dataSource = new PathOutlineViewDataSource (this.viewModel, this.targetName);
-					Delegate = new PathOutlineViewDelegate (dataSource);
-					DataSource = dataSource;
+				DataSource = new PathOutlineViewDataSource (this.itemsSource, targetName); ;
+				Delegate = new PathOutlineViewDelegate ();
 
-					ReloadData ();
+				ReloadData ();
 
-					ExpandItem (ItemAtRow (0));
-				}
+				ExpandItem (ItemAtRow (0));
 			}
 		}
 
-		private string targetName { get; set; }
 		public PropertyTreeRoot PropertyTreeRoot
 		{
 			get { return this.propertyTreeRoot; }
@@ -38,68 +33,25 @@ namespace Xamarin.PropertyEditing.Mac
 				if (this.propertyTreeRoot != value) {
 					this.propertyTreeRoot = value;
 					if (this.propertyTreeRoot != null) {
-						targetName = this.propertyTreeRoot.TargetType.Name;
-						ViewModel = this.propertyTreeRoot.Children;
+						SetItemsSource (this.propertyTreeRoot.Children, this.propertyTreeRoot.TargetType.Name);
 					} else {
-						targetName = string.Empty;
-						ViewModel = null;
+						SetItemsSource (null, string.Empty);
 					}
 				}
 			}
 		}
-
-		public PathOutlineView ()
-		{
-			Initialize ();
-		}
-
-		// Called when created from unmanaged code
-		public PathOutlineView (IntPtr handle) : base (handle)
-		{
-			Initialize ();
-		}
-
-		// Called when created directly from a XIB file
-		[Export ("initWithCoder:")]
-		public PathOutlineView (NSCoder coder) : base (coder)
-		{
-			Initialize ();
-		}
-
-		[Export ("validateProposedFirstResponder:forEvent:")]
-		public bool ValidateProposedFirstResponder (NSResponder responder, NSEvent forEvent)
-		{
-			return true;
-		}
-
-		public void Initialize ()
-		{
-			AutoresizingMask = NSViewResizingMask.WidthSizable;
-			HeaderView = null;
-			TranslatesAutoresizingMaskIntoConstraints = false;
-		}
 	}
 
-	internal class PathOutlineViewDelegate : NSOutlineViewDelegate
+	internal class PathOutlineViewDelegate : BaseOutlineViewDelegate
 	{
-		private readonly PathOutlineViewDataSource dataSource;
-
-		public PathOutlineViewDelegate (PathOutlineViewDataSource dataSource)
-		{
-			this.dataSource = dataSource;
-		}
-
-		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
-		{
-			return PropertyEditorControl.DefaultControlHeight;
-		}
+		private const string PathIdentifier = "path";
 
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 		{
-			var labelContainer = (UnfocusableTextField)outlineView.MakeView ("path", this);
+			var labelContainer = (UnfocusableTextField)outlineView.MakeView (PathIdentifier, this);
 			if (labelContainer == null) {
 				labelContainer = new UnfocusableTextField {
-					Identifier = "path",
+					Identifier = PathIdentifier,
 				};
 			}
 			var target = (item as NSObjectFacade).Target;
@@ -114,7 +66,7 @@ namespace Xamarin.PropertyEditing.Mac
 					break;
 
 				default:
-					labelContainer.StringValue = "Type Not Supported";
+					labelContainer.StringValue = Properties.Resources.TypeNotSupported;
 					break;
 			}
 
@@ -140,39 +92,33 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal class PathOutlineViewDataSource : NSOutlineViewDataSource
 	{
-		private readonly IReadOnlyCollection<object> viewModel;
-		private string targetName;
+		private readonly IReadOnlyCollection<object> itemsSource;
+		private readonly string targetName;
 
-		internal PathOutlineViewDataSource (IReadOnlyCollection<object> viewModel, string targetName)
+		internal PathOutlineViewDataSource (IReadOnlyCollection<object> itemsSource, string targetName)
 		{
-			this.viewModel = viewModel;
+			this.itemsSource = itemsSource;
 			this.targetName = targetName;
 		}
 
 		public override nint GetChildrenCount (NSOutlineView outlineView, NSObject item)
 		{
-			nint childCount;
 			if (item == null) {
-				childCount = this.viewModel != null ? this.viewModel.Count () + 1 : 0;
+				return this.itemsSource != null ? this.itemsSource.Count + 1 : 0;
 			} else {
 				var target = (item as NSObjectFacade).Target;
 				switch (target) {
 					case PropertyTreeElement propertyTreeElement:
 						IReadOnlyCollection<PropertyTreeElement> propertyTrees = propertyTreeElement.Children.Task.Result;
-						childCount = propertyTrees.Count;
-						break;
+						return propertyTrees.Count;
 
 					case string targetName:
-						childCount = this.viewModel.Count ();
-						break;
+						return this.itemsSource.Count;
 
 					default:
-						childCount = 0;
-						break;
+						return 0;
 				}
 			}
-
-			return childCount;
 		}
 
 		public override NSObject GetChild (NSOutlineView outlineView, nint childIndex, NSObject item)
@@ -189,7 +135,7 @@ namespace Xamarin.PropertyEditing.Mac
 						return new NSObjectFacade (propertyTrees.ElementAt ((int)childIndex));
 
 					case string targetName:
-						return new NSObjectFacade (this.viewModel.ElementAt ((int)childIndex));
+						return new NSObjectFacade (this.itemsSource.ElementAt ((int)childIndex));
 
 					default:
 						return null;
@@ -224,12 +170,18 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		private PathOutlineView pathOutlineView;
 		internal const string PathSelectorColumnColId = "PathSelectorColumn";
-		private const float spacing = 10f;
-		private NSTextField customPath;
-		public NSTextField CustomPath { get; private set; }
+
+        public NSTextField CustomPath { get; }
+
+		private readonly CreateBindingViewModel viewModel;
 
 		public BindingPathSelectorControl (CreateBindingViewModel viewModel)
 		{
+			if (viewModel == null)
+				throw new ArgumentNullException (nameof (viewModel));
+
+			this.viewModel = viewModel;
+
 			TranslatesAutoresizingMaskIntoConstraints = false;
 
 			var customCheckBox = new NSButton {
@@ -243,24 +195,24 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (customCheckBox);
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (customCheckBox, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 8f),
+				NSLayoutConstraint.Create (customCheckBox, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 3f),
 				NSLayoutConstraint.Create (customCheckBox, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, -90f),
 			});
 
-			this.customPath = new NSTextField {
-				ControlSize = NSControlSize.Mini,
+			this.CustomPath = new NSTextField {
+				ControlSize = NSControlSize.Small,
 				Enabled = false,
-				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
-			var customPathHeightConstraint = NSLayoutConstraint.Create (this.customPath, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 0);
+			var customPathHeightConstraint = NSLayoutConstraint.Create (this.CustomPath, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 0);
 
-			AddSubview (this.customPath);
+			AddSubview (this.CustomPath);
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.customPath, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 45f),
-				NSLayoutConstraint.Create (this.customPath, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -10f),
-				NSLayoutConstraint.Create (this.customPath, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterX, 1, 0),
+				NSLayoutConstraint.Create (this.CustomPath, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 35f),
+				NSLayoutConstraint.Create (this.CustomPath, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -10f),
+				NSLayoutConstraint.Create (this.CustomPath, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterX, 1, 0),
 				customPathHeightConstraint,
 			});
 
@@ -269,39 +221,22 @@ namespace Xamarin.PropertyEditing.Mac
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
-			var outlineViewContainerTopConstraint = NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.customPath, NSLayoutAttribute.Bottom, 1f, 0f);
+			var outlineViewContainerTopConstraint = NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.CustomPath, NSLayoutAttribute.Bottom, 1f, 0f);
 			customCheckBox.Activated += (sender, e) => {
-				this.customPath.Enabled = customCheckBox.State == NSCellStateValue.On;
-				customPathHeightConstraint.Constant = this.customPath.Enabled ? PropertyEditorControl.DefaultControlHeight : 0;
-				outlineViewContainerTopConstraint.Constant = this.customPath.Enabled ? 10 : 0;
-				SetCustomPath (viewModel);
+				this.CustomPath.Enabled = customCheckBox.State == NSCellStateValue.On;
+				customPathHeightConstraint.Constant = this.CustomPath.Enabled ? 20 : 0;
+				outlineViewContainerTopConstraint.Constant = this.CustomPath.Enabled ? 10 : 0;
 			};
 
-			this.customPath.Changed += (sender, e) => {
-				viewModel.Path = this.customPath.StringValue;
+			this.CustomPath.Changed += (sender, e) => {
+				viewModel.Path = this.CustomPath.StringValue;
 			};
 
 			this.pathOutlineView = new PathOutlineView {
 
 			};
 
-			this.pathOutlineView.Activated += (sender, e) => {
-				if (sender is PathOutlineView pov) {
-					if (pov.SelectedRow != -1) {
-						if (pov.ItemAtRow (pov.SelectedRow) is NSObjectFacade facade) {
-							switch (facade.Target) {
-							case PropertyTreeElement propertyTreeElement:
-								viewModel.SelectedPropertyElement = propertyTreeElement;
-								break;
-
-							default:
-								break;
-							}
-							SetCustomPath (viewModel);
-						}
-					}
-				}
-			};
+			this.pathOutlineView.Activated += OnPathOutlineViewSelected;
 
 			var pathColumn = new NSTableColumn (PathSelectorColumnColId);
 			this.pathOutlineView.AddColumn (pathColumn);
@@ -320,18 +255,41 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal,this, NSLayoutAttribute.Bottom, 1f, -5f),
 			});
 
-			viewModel.PropertyChanged += async (sender, e) => {
-				if (viewModel.PropertyRoot != null) {
-					this.pathOutlineView.PropertyTreeRoot = await viewModel.PropertyRoot.Task;
+			viewModel.PropertyChanged += OnPropertyChanged;
+		}
+
+		private async void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == nameof (CreateBindingViewModel.PropertyRoot)) {
+				if (this.viewModel.PropertyRoot != null) {
+					this.pathOutlineView.PropertyTreeRoot = await this.viewModel.PropertyRoot.Task;
 				} else {
 					this.pathOutlineView.PropertyTreeRoot = null;
 				}
-			};
+			}
+
+			if (e.PropertyName == nameof (CreateBindingViewModel.Path)) {
+				this.CustomPath.StringValue = this.viewModel.Path ?? string.Empty;
+			}
 		}
 
-		private void SetCustomPath (CreateBindingViewModel viewModel)
+		private void OnPathOutlineViewSelected (object sender, EventArgs e)
 		{
-			this.customPath.StringValue = this.customPath.Enabled ? viewModel.Path ?? string.Empty : string.Empty;
+			if (sender is PathOutlineView pov) {
+				if (pov.SelectedRow != -1) {
+					if (pov.ItemAtRow (pov.SelectedRow) is NSObjectFacade facade) {
+						switch (facade.Target) {
+						case PropertyTreeElement propertyTreeElement:
+							this.viewModel.SelectedPropertyElement = propertyTreeElement;
+							break;
+
+						default:
+							break;
+						}
+					}
+				}
+			}
 		}
+
 	}
 }

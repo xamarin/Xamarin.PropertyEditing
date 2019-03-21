@@ -40,19 +40,16 @@ namespace Xamarin.PropertyEditing.Mac
 				
 			int headerCount = (ShowHeader && !Filtering) ? 1 : 0;
 
-			nint childCount;
 			if (this.vm.ArrangeMode == PropertyArrangeMode.Name)
-				childCount = this.vm.ArrangedEditors[0].Editors.Count + headerCount;
+				return this.vm.ArrangedEditors[0].Editors.Count + headerCount;
 			else {
 				if (item == null)
-					childCount = this.vm.ArrangedEditors.Count + headerCount;
+					return this.vm.ArrangedEditors.Count + headerCount;
 				else {
 					var group = (PanelGroupViewModel)((NSObjectFacade)item).Target;
-					childCount = group.Editors.Count + group.UncommonEditors.Count;
+					return group.Editors.Count + group.UncommonEditors.Count;
 				}
 			}
-
-			return childCount;
 		}
 
 		public override NSObject GetChild (NSOutlineView outlineView, nint childIndex, NSObject item)

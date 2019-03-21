@@ -51,6 +51,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.property = property;
 			this.provider = platform.BindingProvider;
 			this.variations = variations;
+			this.platform = Environment.OSVersion.Platform;
 
 			PropertyDisplay = String.Format (Resources.CreateDataBindingTitle, $"[{this.targetEditor.TargetType.Name}].{property.Name}");
 			RequestNamedDisplay ();
@@ -452,7 +453,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		}
 
 		private static readonly Resource NoValueConverter = new Resource (Resources.NoValueConverter);
-		internal static readonly Resource AddValueConverter = new Resource ("<" + Resources.AddValueConverterEllipsis + ">");
+		private static readonly Resource AddValueConverter = new Resource ("<" + Resources.AddValueConverterEllipsis + ">");
 
 		private readonly PropertyVariation variations;
 		private readonly IObjectEditor targetEditor;
@@ -483,6 +484,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			set { GetKnownPropertyViewModel<object> (PropertyBinding.SourceParameterProperty).Value = value; }
 		}
 
+		private readonly PlatformID platform;
+
 		private void UpdateShowProperties ()
 		{
 			OnPropertyChanged (nameof (ShowResourceSelector));
@@ -499,7 +502,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.valueConverters.AddRange (converters);
 
 			// Don't add the AddValueConverter resource if we are on Mac
-			if (Environment.OSVersion.Platform != PlatformID.Unix) {
+			if (this.platform != PlatformID.Unix) {
 				this.valueConverters.Add (AddValueConverter);
 			}
 
@@ -677,6 +680,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			default:
 				throw new ArgumentException();
 			}
+		}
+
+		public void RequestAddValueConverter () {
+			SelectedValueConverter = CreateBindingViewModel.AddValueConverter;
 		}
 	}
 }

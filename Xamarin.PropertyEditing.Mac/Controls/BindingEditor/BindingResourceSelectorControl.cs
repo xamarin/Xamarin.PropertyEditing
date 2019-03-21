@@ -9,79 +9,39 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class BindingResourceSelectorControl : NSView
 	{
-		internal class ResourceOutlineView : NSOutlineView
+		internal class ResourceOutlineView : BaseSelectorOutlineView
 		{
-			private ILookup<ResourceSource, Resource> viewModel;
-			public ILookup<ResourceSource, Resource> ViewModel {
-				get => this.viewModel;
-				set {
-					if (this.viewModel != value) {
-						this.viewModel = value;
-						var dataSource = new ResourceOutlineViewDataSource (this.viewModel);
-						Delegate = new ResourceOutlineViewDelegate (dataSource);
-						DataSource = dataSource;
+			private ILookup<ResourceSource, Resource> itemsSource;
+			public ILookup<ResourceSource, Resource> ItemsSource
+			{
+				get => this.itemsSource;
+				set
+				{
+					if (this.itemsSource != value) {
+						this.itemsSource = value;
+
+						DataSource = new ResourceOutlineViewDataSource (this.itemsSource);
+						Delegate = new ResourceOutlineViewDelegate ();
 					}
 
-					if (this.viewModel != null) {
-						ReloadData ();
+					ReloadData ();
 
-						ExpandItem (null, true);
-					}
+					ExpandItem (null, true);
 				}
-			}
-
-			public ResourceOutlineView ()
-			{
-				Initialize ();
-			}
-
-			// Called when created from unmanaged code
-			public ResourceOutlineView (IntPtr handle) : base (handle)
-			{
-				Initialize ();
-			}
-
-			// Called when created directly from a XIB file
-			[Export ("initWithCoder:")]
-			public ResourceOutlineView (NSCoder coder) : base (coder)
-			{
-				Initialize ();
-			}
-
-			[Export ("validateProposedFirstResponder:forEvent:")]
-			public bool ValidateProposedFirstResponder (NSResponder responder, NSEvent forEvent)
-			{
-				return true;
-			}
-
-			public void Initialize ()
-			{
-				AutoresizingMask = NSViewResizingMask.WidthSizable;
-				HeaderView = null;
-				TranslatesAutoresizingMaskIntoConstraints = false;
 			}
 		}
 
-		internal class ResourceOutlineViewDelegate : NSOutlineViewDelegate
+		internal class ResourceOutlineViewDelegate : BaseOutlineViewDelegate
 		{
-			private readonly ResourceOutlineViewDataSource dataSource;
 
-			public ResourceOutlineViewDelegate (ResourceOutlineViewDataSource datasource)
-			{
-				this.dataSource = datasource;
-			}
-
-			public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
-			{
-				return PropertyEditorControl.DefaultControlHeight;
-			}
+			private const string ResourceIdentifier = "resource";
 
 			public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 			{
-				var labelContainer = (UnfocusableTextField)outlineView.MakeView ("resource", this);
+				var labelContainer = (UnfocusableTextField)outlineView.MakeView (ResourceIdentifier, this);
 				if (labelContainer == null) {
 					labelContainer = new UnfocusableTextField {
-						Identifier = "resource",
+						Identifier = ResourceIdentifier,
 					};
 				}
 				var target = (item as NSObjectFacade).Target;
@@ -94,7 +54,7 @@ namespace Xamarin.PropertyEditing.Mac
 					labelContainer.StringValue = resource.Name;
 					break;
 				default:
-					labelContainer.StringValue = "Resource Not Supported";
+					labelContainer.StringValue = Properties.Resources.ResourceNotSupported;
 					break;
 				}
 
@@ -105,50 +65,44 @@ namespace Xamarin.PropertyEditing.Mac
 			{
 				var target = (item as NSObjectFacade).Target;
 				switch (target) {
-					case IGrouping<ResourceSource, Resource> kvp:
-						return false;
-					case Resource resource:
-						return true;
+				case IGrouping<ResourceSource, Resource> kvp:
+					return false;
+				case Resource resource:
+					return true;
 
-					default:
-						return false;
+				default:
+					return false;
 				}
 			}
 		}
 
 		internal class ResourceOutlineViewDataSource : NSOutlineViewDataSource
 		{
-			public ILookup<ResourceSource, Resource> ViewModel { get; }
+			public ILookup<ResourceSource, Resource> ItemsSource { get; }
 
-			internal ResourceOutlineViewDataSource (ILookup<ResourceSource, Resource> viewModel)
+			internal ResourceOutlineViewDataSource (ILookup<ResourceSource, Resource> itemsSource)
 			{
-				if (viewModel == null)
-					throw new ArgumentNullException (nameof (viewModel));
+				if (itemsSource == null)
+					throw new ArgumentNullException (nameof (itemsSource));
 
-				ViewModel = viewModel;
+				ItemsSource = itemsSource;
 			}
 
 			public override nint GetChildrenCount (NSOutlineView outlineView, NSObject item)
 			{
-				var childCount = 0;
 				if (item == null) {
-					childCount = this.ViewModel != null ? this.ViewModel.Count () : 0;
+					return ItemsSource != null ? ItemsSource.Count : 0;
 				} else {
 					var target = (item as NSObjectFacade).Target;
 					switch (target) {
-						case IGrouping < ResourceSource, Resource> kvp:
-							childCount = kvp.Count ();
-							break;
-						case Resource resource:
-							childCount = 0;
-							break;
-						default:
-							childCount = 0;
-							break;
+					case IGrouping<ResourceSource, Resource> kvp:
+						return kvp.Count ();
+					case Resource resource:
+						return 0;
+					default:
+						return 0;
 					}
 				}
-
-				return childCount;
 			}
 
 			public override NSObject GetChild (NSOutlineView outlineView, nint childIndex, NSObject item)
@@ -156,18 +110,18 @@ namespace Xamarin.PropertyEditing.Mac
 				object element;
 
 				if (item == null) {
-					element = this.ViewModel.ElementAt ((int)childIndex);
+					element = ItemsSource.ElementAt ((int)childIndex);
 				} else {
 					var target = (item as NSObjectFacade).Target;
 					switch (target) {
-						case IGrouping<ResourceSource, Resource> kvp:
-							element = kvp.ElementAt ((int)childIndex);
-							break;
-						case Resource resource:
-							element = resource;
-							break;
-						default:
-							return null;
+					case IGrouping<ResourceSource, Resource> kvp:
+						element = kvp.ElementAt ((int)childIndex);
+						break;
+					case Resource resource:
+						element = resource;
+						break;
+					default:
+						return null;
 					}
 				}
 
@@ -178,38 +132,32 @@ namespace Xamarin.PropertyEditing.Mac
 			{
 				var target = (item as NSObjectFacade).Target;
 				switch (target) {
-					case IGrouping<ResourceSource, Resource> kvp:
-						return kvp.Count() > 0;
-					case Resource resource:
-						return false;
-					default:
-						return false;
+				case IGrouping<ResourceSource, Resource> kvp:
+					return kvp.Any ();
+				case Resource resource:
+					return false;
+				default:
+					return false;
 				}
 			}
 		}
 
-		internal const string ResourceSelectorColId = "ResourceSelectorColumn";
+		private const string ResourceSelectorColId = "ResourceSelectorColumn";
 
 		public ResourceOutlineView resourceOutlineView;
+		private readonly CreateBindingViewModel viewModel;
 
 		internal BindingResourceSelectorControl (CreateBindingViewModel viewModel)
 		{
+			if (viewModel == null)
+				throw new ArgumentNullException (nameof (viewModel));
+
+			this.viewModel = viewModel;
+
 			TranslatesAutoresizingMaskIntoConstraints = false;
 
-			this.resourceOutlineView = new ResourceOutlineView {
-
-			};
-			this.resourceOutlineView.Activated += (sender, e) => {
-				if (sender is ResourceOutlineView rov) {
-					if (rov.SelectedRow != -1) {
-						if (rov.ItemAtRow (rov.SelectedRow) is NSObjectFacade item) {
-							if (item.Target is Resource resource) {
-								viewModel.SelectedResource = resource;
-							}
-						}
-					}
-				}
-			};
+			this.resourceOutlineView = new ResourceOutlineView ();
+			this.resourceOutlineView.Activated += OnResourceOutlineViewSelected;
 
 			var resourceColumn = new NSTableColumn (ResourceSelectorColId);
 			this.resourceOutlineView.AddColumn (resourceColumn);
@@ -227,21 +175,37 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (outlineViewContainer);
 
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 45f),
+				NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 35f),
 				NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 5f),
 				NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -10f),
-				NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Height, NSLayoutRelation.Equal,this, NSLayoutAttribute.Height, 1f, -50f),
+				NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Height, NSLayoutRelation.Equal,this, NSLayoutAttribute.Height, 1f, -40f),
 			});
 
-			viewModel.PropertyChanged += (sender, e) => {
-				if (e.PropertyName == nameof (CreateBindingViewModel.ShowResourceSelector)) {
-					Hidden = !viewModel.ShowResourceSelector;
+			viewModel.PropertyChanged += OnPropertyChanged;
+		}
 
-					if (viewModel.ShowResourceSelector && viewModel.SourceResources != null) {
-							this.resourceOutlineView.ViewModel = viewModel.SourceResources.Value;
-					};
+		private void OnResourceOutlineViewSelected (object sender, EventArgs e)
+		{
+			if (sender is ResourceOutlineView rov) {
+				if (rov.SelectedRow != -1) {
+					if (rov.ItemAtRow (rov.SelectedRow) is NSObjectFacade item) {
+						if (item.Target is Resource resource) {
+							this.viewModel.SelectedResource = resource;
+						}
+					}
 				}
-			};
+			}
+		}
+
+		private void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == nameof (CreateBindingViewModel.ShowResourceSelector)) {
+				Hidden = !this.viewModel.ShowResourceSelector;
+
+				if (this.viewModel.ShowResourceSelector && this.viewModel.SourceResources != null) {
+					this.resourceOutlineView.ItemsSource = this.viewModel.SourceResources.Value;
+				};
+			}
 		}
 	}
 }

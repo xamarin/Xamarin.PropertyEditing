@@ -904,5 +904,17 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("DoneTitle", resourceCulture);
             }
         }
+        
+        public static string TypeNotSupported {
+            get {
+                return ResourceManager.GetString("TypeNotSupported", resourceCulture);
+            }
+        }
+        
+        public static string ResourceNotSupported {
+            get {
+                return ResourceManager.GetString("ResourceNotSupported", resourceCulture);
+            }
+        }
     }
 }

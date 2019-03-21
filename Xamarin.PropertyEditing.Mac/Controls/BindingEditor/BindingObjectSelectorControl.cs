@@ -8,79 +8,36 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class BindingObjectSelectorControl : NSView
 	{
-		internal class ObjectOutlineView : NSOutlineView
+		internal class ObjectOutlineView : BaseSelectorOutlineView
 		{
-			private IReadOnlyList<ObjectTreeElement> viewModel;
-			public IReadOnlyList<ObjectTreeElement> ViewModel {
-				get => this.viewModel;
+			private IReadOnlyList<ObjectTreeElement> itemsSource;
+			public IReadOnlyList<ObjectTreeElement> ItemsSource {
+				get => this.itemsSource;
 				set {
-					if (this.viewModel != value) {
-						this.viewModel = value;
-						var dataSource = new ObjectOutlineViewDataSource (this.viewModel);
-						Delegate = new ObjectOutlineViewDelegate (dataSource);
-						DataSource = dataSource;
+					if (this.itemsSource != value) {
+						this.itemsSource = value;
+
+						DataSource = new ObjectOutlineViewDataSource (this.itemsSource); ;
+						Delegate = new ObjectOutlineViewDelegate ();
 					}
 
-					if (this.viewModel != null) {
-						ReloadData ();
+					ReloadData ();
 
-						ExpandItem (null, true);
-					}
+					ExpandItem (null, true);
 				}
-			}
-
-			public ObjectOutlineView ()
-			{
-				Initialize ();
-			}
-
-			// Called when created from unmanaged code
-			public ObjectOutlineView (IntPtr handle) : base (handle)
-			{
-				Initialize ();
-			}
-
-			// Called when created directly from a XIB file
-			[Export ("initWithCoder:")]
-			public ObjectOutlineView (NSCoder coder) : base (coder)
-			{
-				Initialize ();
-			}
-
-			[Export ("validateProposedFirstResponder:forEvent:")]
-			public bool ValidateProposedFirstResponder (NSResponder responder, NSEvent forEvent)
-			{
-				return true;
-			}
-
-			public void Initialize ()
-			{
-				AutoresizingMask = NSViewResizingMask.WidthSizable;
-				HeaderView = null;
-				TranslatesAutoresizingMaskIntoConstraints = false;
 			}
 		}
 
-		internal class ObjectOutlineViewDelegate : NSOutlineViewDelegate
+		internal class ObjectOutlineViewDelegate : BaseOutlineViewDelegate
 		{
-			private ObjectOutlineViewDataSource dataSource;
-
-			public ObjectOutlineViewDelegate (ObjectOutlineViewDataSource dataSource)
-			{
-				this.dataSource = dataSource;
-			}
-
-			public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
-			{
-				return PropertyEditorControl.DefaultControlHeight;
-			}
+			private const string TypeIdentifier = "type";
 
 			public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 			{
-				var labelContainer = (UnfocusableTextField)outlineView.MakeView ("type", this);
+				var labelContainer = (UnfocusableTextField)outlineView.MakeView (TypeIdentifier, this);
 				if (labelContainer == null) {
 					labelContainer = new UnfocusableTextField {
-						Identifier = "type",
+						Identifier = TypeIdentifier,
 					};
 				}
 				var target = (item as NSObjectFacade).Target;
@@ -93,7 +50,7 @@ namespace Xamarin.PropertyEditing.Mac
 					labelContainer.StringValue = info.Name;
 					break;
 				default:
-					labelContainer.StringValue = "Type Not Supported";
+					labelContainer.StringValue = Properties.Resources.TypeNotSupported;
 					break;
 				}
 
@@ -117,37 +74,31 @@ namespace Xamarin.PropertyEditing.Mac
 
 		internal class ObjectOutlineViewDataSource : NSOutlineViewDataSource
 		{
-			public IReadOnlyList<ObjectTreeElement> ViewModel { get; }
+			public IReadOnlyList<ObjectTreeElement> ItemsSource { get; }
 
-			internal ObjectOutlineViewDataSource (IReadOnlyList<ObjectTreeElement> viewModel)
+			internal ObjectOutlineViewDataSource (IReadOnlyList<ObjectTreeElement> itemsSource)
 			{
-				if (viewModel == null)
-					throw new ArgumentNullException (nameof (viewModel));
+				if (itemsSource == null)
+					throw new ArgumentNullException (nameof (itemsSource));
 
-				ViewModel = viewModel;
+				ItemsSource = itemsSource;
 			}
 
 			public override nint GetChildrenCount (NSOutlineView outlineView, NSObject item)
 			{
-				var childCount = 0;
 				if (item == null) {
-					childCount = this.ViewModel != null ? this.ViewModel.Count () : 0;
+					return ItemsSource != null ? ItemsSource.Count : 0;
 				} else {
 					var target = (item as NSObjectFacade).Target;
 					switch (target) {
 					case KeyValuePair<string, SimpleCollectionView> kvp:
-						childCount = kvp.Value.Count;
-						break;
+						return kvp.Value.Count;
 					case TypeInfo info:
-						childCount = 0;
-						break;
+						return 0;
 					default:
-						childCount = 0;
-						break;
+						return 0;
 					}
 				}
-
-				return childCount;
 			}
 
 			public override NSObject GetChild (NSOutlineView outlineView, nint childIndex, NSObject item)
@@ -155,7 +106,7 @@ namespace Xamarin.PropertyEditing.Mac
 				object element;
 
 				if (item == null) {
-					element = this.ViewModel.ElementAt ((int)childIndex);
+					element = ItemsSource.ElementAt ((int)childIndex);
 				} else {
 					var target = (item as NSObjectFacade).Target;
 					switch (target) {
@@ -187,25 +138,73 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		internal ObjectOutlineView objectOutlineView;
+		private ObjectOutlineView objectOutlineView;
+
+		private const string ObjectSelectorColId = "ObjectSelectorColumn";
+
+		private readonly CreateBindingViewModel viewModel;
 
 		internal BindingObjectSelectorControl (CreateBindingViewModel viewModel)
 		{
 			if (viewModel == null)
 				throw new ArgumentNullException (nameof (viewModel));
 
+			this.viewModel = viewModel;
+
 			this.objectOutlineView = new ObjectOutlineView ();
 			TranslatesAutoresizingMaskIntoConstraints = false;
 
-			viewModel.PropertyChanged += (sender, e) => {
-				if (e.PropertyName == nameof (CreateBindingViewModel.ShowObjectSelector)) {
-					Hidden = !viewModel.ShowObjectSelector;
+			this.objectOutlineView.Activated += OnObjectOutlineViewSelected;
 
-					if (viewModel.ShowObjectSelector && viewModel.ObjectElementRoots != null) {
-						this.objectOutlineView.ViewModel = viewModel.ObjectElementRoots.Value;
-					};
-				}
+			var resourceColumn = new NSTableColumn (ObjectSelectorColId);
+			this.objectOutlineView.AddColumn (resourceColumn);
+
+			// Set OutlineTableColumn or the arrows showing children/expansion will not be drawn
+			this.objectOutlineView.OutlineTableColumn = resourceColumn;
+
+			// create a table view and a scroll view
+			var outlineViewContainer = new NSScrollView {
+				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
+
+			// add the panel to the window
+			outlineViewContainer.DocumentView = this.objectOutlineView;
+			AddSubview (outlineViewContainer);
+
+			AddConstraints (new[] {
+				NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 35f),
+				NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 5f),
+				NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, -10f),
+				NSLayoutConstraint.Create (outlineViewContainer, NSLayoutAttribute.Height, NSLayoutRelation.Equal,this, NSLayoutAttribute.Height, 1f, -40f),
+			});
+
+			viewModel.PropertyChanged += OnPropertyChanged;
 		}
+
+		void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == nameof (CreateBindingViewModel.ShowObjectSelector)) {
+				Hidden = !this.viewModel.ShowObjectSelector;
+
+				if (this.viewModel.ShowObjectSelector && this.viewModel.ObjectElementRoots != null) {
+					this.objectOutlineView.ItemsSource = this.viewModel.ObjectElementRoots.Value;
+				};
+			}
+		}
+
+
+		private void OnObjectOutlineViewSelected (object sender, EventArgs e)
+		{
+			if (sender is ObjectOutlineView rov) {
+				if (rov.SelectedRow != -1) {
+					if (rov.ItemAtRow (rov.SelectedRow) is NSObjectFacade item) {
+						if (item.Target is Resource resource) {
+							this.viewModel.SelectedResource = resource;
+						}
+					}
+				}
+			}
+		}
+
 	}
 }

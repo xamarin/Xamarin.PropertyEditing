@@ -327,7 +327,7 @@
     <value>OK</value>
   </data>
   <data name="ShowAllAssemblies" xml:space="preserve">
-    <value>Show all assemblies</value>
+    <value>Show All Assemblies</value>
   </data>
   <data name="SearchProperties" xml:space="preserve">
     <value>Search properties</value>
@@ -598,5 +598,11 @@
   </data>
   <data name="DoneTitle" xml:space="preserve">
     <value>Done</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>Type Not Supported</value>
+  </data>
+   <data name="ResourceNotSupported" xml:space="preserve">
+    <value>Resource Not Supported</value>
   </data>
 </root>

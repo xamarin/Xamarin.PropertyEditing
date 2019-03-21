@@ -161,14 +161,13 @@
     <Compile Include="Controls\EntryPropertyEditor.cs" />
     <Compile Include="Controls\TimeSpanEditorControl.cs" />
     <Compile Include="Controls\CharEditorControl.cs" />
-    <Compile Include="Controls\Custom\BasePanelWindow.cs" />
     <Compile Include="Controls\BindingEditor\BindingEditorWindow.cs" />
-    <Compile Include="Controls\BindingEditor\BindingTypeSelectorControl.cs" />
     <Compile Include="Controls\BindingEditor\BindingPathSelectorControl.cs" />
     <Compile Include="Controls\BindingEditor\BindingResourceSelectorControl.cs" />
     <Compile Include="Controls\BindingEditor\BindingObjectSelectorControl.cs" />
     <Compile Include="Controls\BindingEditor\HeaderView.cs" />
     <Compile Include="Controls\BindingEditor\CreateValueConverterWindow.cs" />
+    <Compile Include="Controls\BindingEditor\BaseSelectorOutlineView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
