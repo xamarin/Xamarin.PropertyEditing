@@ -41,6 +41,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private static readonly Dictionary<Type, Type> ViewModelTypes = new Dictionary<Type, Type> {
 			{typeof (PropertyViewModel<DateTime>), typeof (DateTimeEditorControl)},
 			{typeof (PropertyViewModel<TimeSpan>), typeof(TimeSpanEditorControl)},
+			{typeof (PropertyViewModel<char>), typeof(CharEditorControl)},
 			{typeof (StringPropertyViewModel), typeof (StringEditorControl)},
 			{typeof (NumericPropertyViewModel<>), typeof (NumericEditorControl<>)},
 			{typeof (PropertyViewModel<bool?>), typeof (BooleanEditorControl)},
