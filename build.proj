@@ -29,13 +29,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<BinDir>bin\Debug\</BinDir>
-		<BinDir Condition=" '$(Release)' ">bin\Release\</BinDir>
 
 		<CommonBuildProperties>$(CommonBuildProperties);Configuration=$(Configuration)</CommonBuildProperties>
 
-		<TestAssemblyDirectory>Xamarin.PropertyEditing.Tests\$(BinDir)\</TestAssemblyDirectory>
-		<TestAssembly>$(TestAssemblyDirectory)Xamarin.PropertyEditing.Tests.dll</TestAssembly>
+		<TestAssemblyBaseDirectory>Xamarin.PropertyEditing.Tests\bin\</TestAssemblyBaseDirectory>
+		<TestAssemblyName>Xamarin.PropertyEditing.Tests.dll</TestAssemblyName>
 
 		<Out Condition="'$(Out)' == ''">out</Out>
 	</PropertyGroup>
@@ -65,8 +63,11 @@
 	</Target>
 
 	<Target Name="Test" DependsOnTargets="TestMac;TestWindows">
+		<ItemGroup>
+			<TestAssembly Include="$(TestAssemblyBaseDirectory)**\$(TestAssemblyName)" />
+		</ItemGroup>
 		<MakeDir Directories="$(Out)" />
-		<Exec Command="$(Mono64) @(NunitConsoleRunner) $(TestAssembly) -result=$(Out)\TestResult.xml" />
+		<Exec Command="$(Mono64) @(NunitConsoleRunner) @(TestAssembly) -result=$(Out)\TestResult.xml" />
 	</Target>
 
 	<Target Name="TestMac" Condition=" '$(IsMac)' ">
