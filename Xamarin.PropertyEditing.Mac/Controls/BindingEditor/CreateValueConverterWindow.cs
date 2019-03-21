@@ -10,7 +10,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class CreateValueConverterWindow : NSPanel
 	{
-		new ModalWindowCloseDelegate Delegate {
+		private new ModalWindowCloseDelegate Delegate {
 			get => (ModalWindowCloseDelegate)base.Delegate;
 			set => base.Delegate = value;
 		}
@@ -42,31 +42,32 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			var valueConverterLabel = new UnfocusableTextField {
-				StringValue = Properties.Resources.ValueConverterName,
+				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, 13),
+				StringValue = Properties.Resources.ValueConverterName + ":",
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 			container.AddSubview (valueConverterLabel);
 
 			container.AddConstraints (new[] {
-				NSLayoutConstraint.Create (valueConverterLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, container, NSLayoutAttribute.Top, 1f, 0f),
-				NSLayoutConstraint.Create (valueConverterLabel, NSLayoutAttribute.Left, NSLayoutRelation.Equal, container, NSLayoutAttribute.Left, 1f, 5f),
-				NSLayoutConstraint.Create (valueConverterLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 24),
+				NSLayoutConstraint.Create (valueConverterLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, container, NSLayoutAttribute.Top, 1f, 18f),
+				NSLayoutConstraint.Create (valueConverterLabel, NSLayoutAttribute.Left, NSLayoutRelation.Equal, container, NSLayoutAttribute.Left, 1f, 21f),
+				NSLayoutConstraint.Create (valueConverterLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 20),
 			});
 
 			this.valueConverterName = new NSTextField {
-				ControlSize = NSControlSize.Small,
+				ControlSize = NSControlSize.Regular,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 			container.AddSubview (this.valueConverterName);
 
 			container.AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.valueConverterName, NSLayoutAttribute.Top, NSLayoutRelation.Equal, valueConverterLabel, NSLayoutAttribute.Bottom, 1f, 1f),
-				NSLayoutConstraint.Create (this.valueConverterName, NSLayoutAttribute.Left, NSLayoutRelation.Equal, container, NSLayoutAttribute.Left, 1f, 5f),
-				NSLayoutConstraint.Create (this.valueConverterName, NSLayoutAttribute.Width, NSLayoutRelation.Equal, container, NSLayoutAttribute.Width, 1f, -10f),
-				NSLayoutConstraint.Create (this.valueConverterName, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 24),
+				NSLayoutConstraint.Create (this.valueConverterName, NSLayoutAttribute.Left, NSLayoutRelation.Equal, valueConverterLabel, NSLayoutAttribute.Left, 1f, 0f),
+				NSLayoutConstraint.Create (this.valueConverterName, NSLayoutAttribute.Width, NSLayoutRelation.Equal, container, NSLayoutAttribute.Width, 1f, -40f),
 			});
 
 			var typeSelectorControl = new TypeSelectorControl {
+				Flush = true,
 				ViewModel = ViewModel,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
@@ -74,31 +75,53 @@ namespace Xamarin.PropertyEditing.Mac
 			container.AddSubview (typeSelectorControl);
 
 			container.AddConstraints (new[] {
-				NSLayoutConstraint.Create (typeSelectorControl, NSLayoutAttribute.Top, NSLayoutRelation.Equal, container, NSLayoutAttribute.Top, 1f, 45f),
-				NSLayoutConstraint.Create (typeSelectorControl, NSLayoutAttribute.Left, NSLayoutRelation.Equal, container, NSLayoutAttribute.Left, 1f, 0f),
-				NSLayoutConstraint.Create (typeSelectorControl, NSLayoutAttribute.Width, NSLayoutRelation.Equal, container, NSLayoutAttribute.Width, 1f, 0f),
-				NSLayoutConstraint.Create (typeSelectorControl, NSLayoutAttribute.Height, NSLayoutRelation.Equal, container, NSLayoutAttribute.Height, 1f, -50f)
+				NSLayoutConstraint.Create (typeSelectorControl, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.valueConverterName, NSLayoutAttribute.Bottom, 1f, 8f),
+				NSLayoutConstraint.Create (typeSelectorControl, NSLayoutAttribute.Left, NSLayoutRelation.Equal, valueConverterLabel, NSLayoutAttribute.Left, 1f, 0f),
+				NSLayoutConstraint.Create (typeSelectorControl, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this.valueConverterName, NSLayoutAttribute.Width, 1f, 0f),
+				NSLayoutConstraint.Create (typeSelectorControl, NSLayoutAttribute.Height, NSLayoutRelation.Equal, container, NSLayoutAttribute.Height, 1f, -95f),
 			});
 
-			var buttonDone = new NSButton {
+			var buttonSelect = new NSButton {
 				BezelStyle = NSBezelStyle.Rounded,
+				ControlSize = NSControlSize.Regular,
+				Enabled = false,
 				Highlighted = true,
 				KeyEquivalent = "\r", // Fire when enter pressed
-				Title = Properties.Resources.DoneTitle,
+				Title = Properties.Resources.Select,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
-			buttonDone.Activated += (sender, e) => {
+			buttonSelect.Activated += (sender, e) => {
 				Delegate.Response = NSModalResponse.OK;
 				Close ();
 			};
 
-			container.AddSubview (buttonDone);
+			container.AddSubview (buttonSelect);
 
 			container.AddConstraints (new[] {
-				NSLayoutConstraint.Create (buttonDone, NSLayoutAttribute.Top, NSLayoutRelation.Equal, container, NSLayoutAttribute.Bottom, 1f, -32f),
-				NSLayoutConstraint.Create (buttonDone, NSLayoutAttribute.Right, NSLayoutRelation.Equal, container, NSLayoutAttribute.Right, 1f, -16f),
-				NSLayoutConstraint.Create (buttonDone, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 24),
+				NSLayoutConstraint.Create (buttonSelect, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, container, NSLayoutAttribute.Bottom, 1f, -20f),
+				NSLayoutConstraint.Create (buttonSelect, NSLayoutAttribute.Right, NSLayoutRelation.Equal, typeSelectorControl, NSLayoutAttribute.Right, 1f, 0f),
+				NSLayoutConstraint.Create (buttonSelect, NSLayoutAttribute.Width, NSLayoutRelation.GreaterThanOrEqual, 1f, 80f),
+			});
+
+			var buttonCancel = new NSButton {
+				BezelStyle = NSBezelStyle.Rounded,
+				ControlSize = NSControlSize.Regular,
+				Title = Properties.Resources.Cancel,
+				TranslatesAutoresizingMaskIntoConstraints = false,
+			};
+
+			buttonCancel.Activated += (sender, e) => {
+				Delegate.Response = NSModalResponse.Cancel;
+				Close ();
+			};
+
+			container.AddSubview (buttonCancel);
+
+			container.AddConstraints (new[] {
+				NSLayoutConstraint.Create (buttonCancel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, buttonSelect, NSLayoutAttribute.Top, 1f, 0f),
+				NSLayoutConstraint.Create (buttonCancel, NSLayoutAttribute.Right, NSLayoutRelation.Equal, buttonSelect, NSLayoutAttribute.Left, 1f, -10f),
+				NSLayoutConstraint.Create (buttonCancel, NSLayoutAttribute.Width, NSLayoutRelation.GreaterThanOrEqual, 1f, 80f),
 			});
 
 			ContentViewController = new NSViewController (null, null) {
@@ -106,20 +129,11 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			ViewModel.PropertyChanged += (sender, e) => {
-				if (e.PropertyName == nameof (ViewModel.SelectedType)) {
-					this.valueConverterName.StringValue = ViewModel.SelectedType.Name;
+				if (e.PropertyName == nameof (AddValueConverterViewModel.SelectedType)) {
+					this.valueConverterName.StringValue = ViewModel.SelectedType != null ? ViewModel.SelectedType.Name : string.Empty;
+					buttonSelect.Enabled = ViewModel.SelectedType != null;
 				}
 			};
-		}
-	}
-
-	public class ModalWindowCloseDelegate : NSWindowDelegate
-	{
-		public NSModalResponse Response { get; set; } = NSModalResponse.Cancel;
-
-		public override void WillClose (NSNotification notification)
-		{
-			NSApplication.SharedApplication.StopModalWithCode ((int)Response);
 		}
 	}
 }

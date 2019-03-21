@@ -1169,15 +1169,9 @@ namespace Xamarin.PropertyEditing.Properties {
             }
         }
         
-        public static string ShowSettings {
+        public static string OtherSettings {
             get {
-                return ResourceManager.GetString("ShowSettings", resourceCulture);
-            }
-        }
-        
-        public static string HideSettings {
-            get {
-                return ResourceManager.GetString("HideSettings", resourceCulture);
+                return ResourceManager.GetString("OtherSettings", resourceCulture);
             }
         }
         
@@ -1196,6 +1190,18 @@ namespace Xamarin.PropertyEditing.Properties {
         public static string DoneTitle {
             get {
                 return ResourceManager.GetString("DoneTitle", resourceCulture);
+            }
+        }
+        
+        public static string TypeNotSupported {
+            get {
+                return ResourceManager.GetString("TypeNotSupported", resourceCulture);
+            }
+        }
+        
+        public static string ResourceNotSupported {
+            get {
+                return ResourceManager.GetString("ResourceNotSupported", resourceCulture);
             }
         }
     }

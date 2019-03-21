@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Reflection;
 using Xamarin.PropertyEditing.Tests.MockControls;
@@ -194,9 +193,9 @@ namespace Xamarin.PropertyEditing.Tests
 			await vm.ValueConverters.Task;
 			Assert.That (vm.ValueConverters.Value, Contains.Item (visi));
 
-			if (OSPlatform.CurrentPlatform.IsWindows) {
+			if (vm.IncludeAddValueConverter) {
 				Assert.That (vm.ValueConverters.Value.Count, Is.EqualTo (3)); // visi, No Converter, Request Converter
-			} else if (OSPlatform.CurrentPlatform.IsMacOSX) {
+			} else {
 				Assert.That (vm.ValueConverters.Value.Count, Is.EqualTo (2)); // visi, No Converter
 			}
 		}
@@ -620,6 +619,46 @@ namespace Xamarin.PropertyEditing.Tests
 				vm.BindingProperties.Cast<PropertyViewModel> ().Select (pvm => pvm.Property));
 		}
 
+		[TestCase (true)]
+		[TestCase (false)]
+		public async Task IsAddValueConverterIncluded (bool includeAddValueConverter)
+		{
+			var vm = CreateBasicViewModel (includeAddValueConverter: includeAddValueConverter);
+			Assume.That (vm.ValueConverters, Is.Not.Null);
+
+			await vm.ValueConverters.Task;
+
+			if (includeAddValueConverter) {
+				Assert.That (vm.ValueConverters.Value.Count, Is.EqualTo (2)); // No Converter, Request Converter
+			} else {
+				Assert.That (vm.ValueConverters.Value.Count, Is.EqualTo (1)); // No Converter
+			}
+		}
+
+		[Test]
+		public void RequestAddValueConverterCommand ()
+		{
+			BindingSource[] sources = new[] {
+				new BindingSource ("Resource", BindingSourceType.Resource),
+				new BindingSource ("Type", BindingSourceType.Type),
+			};
+
+			var vm = CreateBasicViewModel (sources);
+
+			Assert.That (vm.SelectedBindingSource, Is.EqualTo (sources[0]));
+
+			Assert.That (vm.RequestAddValueConverterCommand.CanExecute (null), Is.True);
+
+			bool changed = false;
+			vm.RequestAddValueConverterCommand.CanExecuteChanged += (o, e) => {
+				changed = true;
+			};
+
+			vm.SelectedBindingSource = sources[1];
+
+			Assert.That (changed, Is.True);
+		}
+
 		private TestContext syncContext;
 		private static readonly ResourceSource[] DefaultResourceSources = new[] { MockResourceProvider.SystemResourcesSource, MockResourceProvider.ApplicationResourcesSource };
 
@@ -683,7 +722,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return bpmock;
 		}
 
-		private CreateBindingViewModel CreateBasicViewModel (BindingSource[] sources = null, object target = null)
+		private CreateBindingViewModel CreateBasicViewModel (BindingSource[] sources = null, object target = null, bool includeAddValueConverter = true)
 		{
 			target = target ?? new object ();
 			Mock<IPropertyInfo> property = GetBasicProperty ();
@@ -693,7 +732,7 @@ namespace Xamarin.PropertyEditing.Tests
 			Mock<IResourceProvider> resourceProvider = GetBasicResourceProvider (target);
 			Mock<IBindingProvider> bpmock = GetBasicBindingProvider (target, property.Object, sources);
 
-			return new CreateBindingViewModel (new TargetPlatform (editorProvider, resourceProvider.Object, bpmock.Object), editor.Object, property.Object);
+			return new CreateBindingViewModel (new TargetPlatform (editorProvider, resourceProvider.Object, bpmock.Object), editor.Object, property.Object, includeAddValueConverter: includeAddValueConverter);
 		}
 	}
 }

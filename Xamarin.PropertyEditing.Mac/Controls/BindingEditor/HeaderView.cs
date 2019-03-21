@@ -7,13 +7,20 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class HeaderView : NSView
 	{
-		public string Title
-		{
+		public string Title {
 			get { return this.headerText.StringValue; }
 			set { this.headerText.StringValue = value; }
 		}
 
-		private UnfocusableTextField headerText = new UnfocusableTextField ();
+		private NSLayoutConstraint horizonalHeaderTextAlignment;
+		public nfloat HorizonalTitleOffset {
+			get { return this.horizonalHeaderTextAlignment.Constant; }
+			set { this.horizonalHeaderTextAlignment.Constant = value; }
+		}
+
+        private UnfocusableTextField headerText = new UnfocusableTextField {
+			TranslatesAutoresizingMaskIntoConstraints = false,
+		};
 
 		internal HeaderView ()
 		{
@@ -23,19 +30,17 @@ namespace Xamarin.PropertyEditing.Mac
 			// Layer out of alphabetical order so that WantsLayer creates the layer first
 			Layer = new CALayer {
 				CornerRadius = 1.0f,
-				BorderColor = new CGColor (.5f, .5f, .5f, .5f),
+				BorderColor = new CGColor (.5f, .5f, .5f, 1.0f),
 				BorderWidth = 1,
 			};
 
-			this.headerText.Alignment = NSTextAlignment.Center;
-			this.headerText.TranslatesAutoresizingMaskIntoConstraints = false;
+			this.horizonalHeaderTextAlignment = NSLayoutConstraint.Create (this.headerText, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterX, 1, 0);
 
 			AddSubview (this.headerText);
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.headerText, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 0f),
-				NSLayoutConstraint.Create (this.headerText, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0f),
-				NSLayoutConstraint.Create (this.headerText, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, 0f),
 				NSLayoutConstraint.Create (this.headerText, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1f, 0f),
+				this.horizonalHeaderTextAlignment,
+				NSLayoutConstraint.Create (this.headerText, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1, 0f),
 			});
 		}
 	}

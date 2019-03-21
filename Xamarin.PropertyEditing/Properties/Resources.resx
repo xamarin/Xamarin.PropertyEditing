@@ -327,7 +327,7 @@
     <value>OK</value>
   </data>
   <data name="ShowAllAssemblies" xml:space="preserve">
-    <value>Show all assemblies</value>
+    <value>Show All Assemblies</value>
   </data>
   <data name="SearchProperties" xml:space="preserve">
     <value>Search properties</value>
@@ -510,29 +510,29 @@
     <value>Name</value>
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
-    <value>Resource dictionary</value>
+    <value>Resource Dictionary</value>
   </data>
   <data name="CreateDataBindingMenuItem" xml:space="preserve">
     <value>Create New Binding…</value>
   </data>
   <data name="AddValueConverterEllipsis" xml:space="preserve">
-    <value>Add value converter…</value>
+    <value>Add Value Converter…</value>
   </data>
   <data name="AddValueConverterTitle" xml:space="preserve">
     <value>Add Value Converter</value>
   </data>
   <data name="NoValueConverter" xml:space="preserve">
-    <value>No value converter</value>
+    <value>No Value Converter</value>
   </data>
   <data name="ValueConverterName" xml:space="preserve">
-    <value>Value converter name</value>
+    <value>Value Converter Name</value>
   </data>
   <data name="CreateDataBindingTitle" xml:space="preserve">
     <value>Create Data Binding for {0}</value>
     <comment>Create Data Binding for Object.Property</comment>
   </data>
   <data name="BindingType" xml:space="preserve">
-    <value>Binding type</value>
+    <value>Binding Type</value>
   </data>
   <data name="Path" xml:space="preserve">
     <value>Path</value>
@@ -756,13 +756,9 @@
     <value>Create Binding</value>
     <comment>Create Binding for Object.Property</comment>
   </data>
-  <data name="ShowSettings" xml:space="preserve">
-    <value>Show Settings</value>
-    <comment>Show Settings for Binding to Object.Property</comment>
-  </data>
-  <data name="HideSettings" xml:space="preserve">
-    <value>Hide Settings</value>
-    <comment>Hide Settings for Binding to Object.Property</comment>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>Other Settings</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
   </data>
   <data name="Converter" xml:space="preserve">
     <value>Converter</value>
@@ -773,5 +769,11 @@
   </data>
   <data name="DoneTitle" xml:space="preserve">
     <value>Done</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>Type Not Supported</value>
+  </data>
+   <data name="ResourceNotSupported" xml:space="preserve">
+    <value>Resource Not Supported</value>
   </data>
 </root>
