@@ -8,8 +8,13 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class CreateValueConverterWindow : NSWindow
+	internal class CreateValueConverterWindow : NSPanel
 	{
+		new ModalWindowCloseDelegate Delegate {
+			get => (ModalWindowCloseDelegate)base.Delegate;
+			set => base.Delegate = value;
+		}
+
 		public AddValueConverterViewModel ViewModel { get; }
 
 		private NSTextField valueConverterName;
@@ -22,6 +27,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (viewModel == null)
 				throw new ArgumentNullException (nameof (viewModel));
 
+			Delegate = new ModalWindowCloseDelegate ();
 			ViewModel = new AddValueConverterViewModel (viewModel.TargetPlatform, viewModel.Target, typetasks);
 
 			StyleMask |= NSWindowStyle.Resizable;
@@ -83,7 +89,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			buttonDone.Activated += (sender, e) => {
-				NSApplication.SharedApplication.StopModalWithCode ((int)NSModalResponse.OK);
+				Delegate.Response = NSModalResponse.OK;
 				Close ();
 			};
 
@@ -105,15 +111,15 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			};
 		}
+	}
 
-		public override void KeyUp (NSEvent theEvent)
+	public class ModalWindowCloseDelegate : NSWindowDelegate
+	{
+		public NSModalResponse Response { get; set; } = NSModalResponse.Cancel;
+
+		public override void WillClose (NSNotification notification)
 		{
-			if (theEvent.KeyCode == 53) {
-				NSApplication.SharedApplication.StopModalWithCode ((int)NSModalResponse.Cancel);
-				Close ();
-			} else {
-				base.KeyUp (theEvent);
-			}
+			NSApplication.SharedApplication.StopModalWithCode ((int)Response);
 		}
 	}
 }
