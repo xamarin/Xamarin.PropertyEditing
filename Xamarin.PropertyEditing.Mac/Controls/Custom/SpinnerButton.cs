@@ -15,7 +15,8 @@ namespace Xamarin.PropertyEditing.Mac
 			if (!AcceptsUserInteraction) {
 				return null;
 			}
-			return this;
+
+			return base.HitTest (aPoint);
 		}
 
 		public SpinnerButton (IHostResourceProvider hostResource, bool isUp)
