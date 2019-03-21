@@ -695,7 +695,5 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			return new PanelViewModel (platform);
 		}
-
-		private TestContext context;
 	}
 }
