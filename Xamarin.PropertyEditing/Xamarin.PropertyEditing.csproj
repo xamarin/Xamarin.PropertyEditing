@@ -1,188 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A0B6FE73-D046-4E1C-BA9D-F20683889C5A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Xamarin.PropertyEditing</RootNamespace>
-    <AssemblyName>Xamarin.PropertyEditing</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <!-- Build with strong naming if built as part of some Xamarin VSIX, normally referencing this project as a git submodule under external/Xamarin.PropertyEditing -->
+
   <PropertyGroup Condition="Exists('..\..\..\xamarin.snk')">
     <AssemblyOriginatorKeyFile>..\..\..\xamarin.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <DefineConstants>$(DefineConstants);STRONG_NAMED</DefineConstants>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AssignableTypesResult.cs" />
-    <Compile Include="AsyncValue.cs" />
-    <Compile Include="AsyncWorkQueue.cs" />
-    <Compile Include="BidirectionalDictionary.cs" />
-    <Compile Include="CategoryComparer.cs" />
-    <Compile Include="Common\CommonValueConverter.cs" />
-    <Compile Include="Drawing\CommonAlignment.cs" />
-    <Compile Include="Drawing\CommonBrush.cs" />
-    <Compile Include="Drawing\CommonBrushMappingMode.cs" />
-    <Compile Include="Drawing\CommonBrushType.cs" />
-    <Compile Include="Drawing\CommonColor.cs" />
-    <Compile Include="Drawing\CommonColorInterpolationMode.cs" />
-    <Compile Include="Drawing\CommonColorToCommonBrushConverter.cs" />
-    <Compile Include="Drawing\CommonGradientBrush.cs" />
-    <Compile Include="Drawing\CommonGradientSpreadMethod.cs" />
-    <Compile Include="Drawing\CommonGradientStop.cs" />
-    <Compile Include="Drawing\CommonLinearGradientBrush.cs" />
-    <Compile Include="Drawing\CommonPoint.cs" />
-    <Compile Include="Drawing\CommonRadialGradientBrush.cs" />
-    <Compile Include="Drawing\CommonRectangle.cs" />
-    <Compile Include="Drawing\CommonSize.cs" />
-    <Compile Include="Drawing\CommonSolidBrush.cs" />
-    <Compile Include="Drawing\CommonStretch.cs" />
-    <Compile Include="Drawing\CommonThickness.cs" />
-    <Compile Include="Drawing\CommonTileBrush.cs" />
-    <Compile Include="Drawing\CommonTileMode.cs" />
-    <Compile Include="Drawing\CommonImageBrush.cs" />
-    <Compile Include="IAssemblyInfo.cs" />
-    <Compile Include="IAvailabilityConstraint.cs" />
-    <Compile Include="IBindingProvider.cs" />
-    <Compile Include="ICanNavigateToSource.cs" />
-    <Compile Include="IClampedPropertyInfo.cs" />
-    <Compile Include="IColorSpaced.cs" />
-    <Compile Include="ICoerce.cs" />
-    <Compile Include="ICompleteValues.cs" />
-    <Compile Include="IEditorProvider.cs" />
-    <Compile Include="IHaveInputModes.cs" />
-    <Compile Include="IObjectEventEditor.cs" />
-    <Compile Include="IEventInfo.cs" />
-    <Compile Include="INameableObject.cs" />
-    <Compile Include="IObjectEditor.cs" />
-    <Compile Include="IHavePredefinedValues.cs" />
-    <Compile Include="IPropertyInfo.cs" />
-    <Compile Include="IProvidePath.cs" />
-    <Compile Include="IResourceProvider.cs" />
-    <Compile Include="ISelfConstrainedPropertyInfo.cs" />
-    <Compile Include="IIconProvider.cs" />
-    <Compile Include="ITypeInfo.cs" />
-    <Compile Include="IValidator.cs" />
-    <Compile Include="KnownProperty.cs" />
-    <Compile Include="MultiAvailabilityConstraint.cs" />
-    <Compile Include="NotifyingObject.cs" />
-    <Compile Include="Numeric.cs" />
-    <Compile Include="ObservableCollectionEx.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\GlobalAssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyBinding.cs" />
-    <Compile Include="PropertyVariationOption.cs" />
-    <Compile Include="PropertyVariation.cs" />
-    <Compile Include="Reflection\ReflectionEditorProvider.cs" />
-    <Compile Include="Reflection\ReflectionEnumPropertyInfo.cs" />
-    <Compile Include="Reflection\ReflectionEventInfo.cs" />
-    <Compile Include="Reflection\ReflectionObjectEditor.cs" />
-    <Compile Include="Reflection\ReflectionPropertyInfo.cs" />
-    <Compile Include="Resource.cs" />
-    <Compile Include="ResourceSource.cs" />
-    <Compile Include="TargetPlatform.cs" />
-    <Compile Include="ValueInfo.cs" />
-    <Compile Include="ValueSource.cs" />
-    <Compile Include="ViewModels\AddValueConverterViewModel.cs" />
-    <Compile Include="ViewModels\ArrangeModeViewModel.cs" />
-    <Compile Include="ViewModels\BrushPropertyViewModel.cs" />
-    <Compile Include="ViewModels\CollectionPropertyViewModel.cs" />
-    <Compile Include="ViewModels\CreateBindingRequestedEventArgs.cs" />
-    <Compile Include="ViewModels\CreateBindingViewModel.cs" />
-    <Compile Include="ViewModels\CreateResourceRequestedEventArgs.cs" />
-    <Compile Include="ViewModels\CreateResourceViewModel.cs" />
-    <Compile Include="ViewModels\CreateVariationViewModel.cs" />
-    <Compile Include="ViewModels\MaterialColorScale.cs" />
-    <Compile Include="ViewModels\MaterialDesignColorViewModel.cs" />
-    <Compile Include="ViewModels\CombinablePropertyViewModel.cs" />
-    <Compile Include="ViewModels\PropertyTreeElement.cs" />
-    <Compile Include="ViewModels\ResourceRequestedEventArgs.cs" />
-    <Compile Include="ViewModels\ResourceSelectorViewModel.cs" />
-    <Compile Include="ViewModels\SimpleCollectionView.cs" />
-    <Compile Include="ViewModels\ConstrainedPropertyViewModel.cs" />
-    <Compile Include="ViewModels\EditorViewModel.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="ViewModels\EventViewModel.cs" />
-    <Compile Include="ViewModels\IFilterable.cs" />
-    <Compile Include="ViewModels\NumericPropertyViewModel.cs" />
-    <Compile Include="ViewModels\ObjectPropertyViewModel.cs" />
-    <Compile Include="ViewModels\ObjectViewModel.cs" />
-    <Compile Include="ViewModels\PanelViewModel.cs" />
-    <Compile Include="ViewModels\PointPropertyViewModel.cs" />
-    <Compile Include="ViewModels\PredefinedValuesViewModel.cs" />
-    <Compile Include="ViewModels\PropertiesViewModel.cs" />
-    <Compile Include="ViewModels\PropertyGroupViewModel.cs" />
-    <Compile Include="ViewModels\PropertyViewModel.cs" />
-    <Compile Include="ViewModels\RelayCommand.cs" />
-    <Compile Include="ViewModels\SizePropertyViewModel.cs" />
-    <Compile Include="ViewModels\SolidBrushViewModel.cs" />
-    <Compile Include="ViewModels\StringPropertyViewModel.cs" />
-    <Compile Include="PropertyArrangeMode.cs" />
-    <Compile Include="IGroupingList.cs" />
-    <Compile Include="ObservableLookup.cs" />
-    <Compile Include="IMutableLookup.cs" />
-    <Compile Include="OrderedDictionary.cs" />
-    <Compile Include="Controls\ValidationType.cs" />
-    <Compile Include="Controls\StringConversionExtensions.cs" />
-    <Compile Include="ViewModels\RectanglePropertyViewModel.cs" />
-    <Compile Include="ViewModels\ThicknessPropertyViewModel.cs" />
-    <Compile Include="ViewModels\ObjectTreeElement.cs" />
-    <Compile Include="ViewModels\TypePropertyViewModel.cs" />
-    <Compile Include="ViewModels\TypeSelectorViewModel.cs" />
-    <Compile Include="ViewModels\RatioViewModel.cs" />
-    <Compile Include="Drawing\CommonRatio.cs" />
-    <Compile Include="IReadOnlyOrderedDictionary.cs" />
-    <Compile Include="ViewModels\CreateVariationEventArgs.cs" />
-    <Compile Include="ViewModels\IPropertyValue.cs" />
-    <Compile Include="Common\FilePath.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.*.resx">
+    <EmbeddedResource Update="Properties\Resources.*.resx">
       <Visible>false</Visible>
     </EmbeddedResource>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>
