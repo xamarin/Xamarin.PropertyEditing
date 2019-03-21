@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <RestorePackagesPath>$(MSBuildThisFileDirectory)packages\</RestorePackagesPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="Exists('..\..\..\xamarin.snk')">
