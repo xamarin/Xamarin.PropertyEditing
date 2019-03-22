@@ -1,7 +1,6 @@
 using System;
 using AppKit;
 using Foundation;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -50,6 +49,11 @@ namespace Xamarin.PropertyEditing.Mac
 			Entry.StringValue = GetValue (ViewModel.Value) ?? String.Empty;
 		}
 
+		protected override void SetEnabled ()
+		{
+			Entry.Enabled = ViewModel.Property.CanWrite;
+		}
+
 		protected override void UpdateAccessibilityValues ()
 		{
 			Entry.AccessibilityEnabled = Entry.Enabled;
@@ -77,12 +81,6 @@ namespace Xamarin.PropertyEditing.Mac
 			ViewModel = viewModel;
 		}
 
-		public override void EditingEnded (NSNotification notification)
-		{
-			var text = (NSTextField)notification.Object;
-			ViewModel.Value = GetValue (text.StringValue);
-		}
-
 		protected PropertyViewModel<T> ViewModel
 		{
 			get;
@@ -92,6 +90,12 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			NSTextField text = (NSTextField)notification.Object;
 			this.lastValid = text.StringValue;
+		}
+
+		public override void EditingEnded (NSNotification notification)
+		{
+			var text = (NSTextField)notification.Object;
+			ViewModel.Value = GetValue (text.StringValue);
 		}
 
 		public override bool TextShouldEndEditing (NSControl control, NSText fieldEditor)
