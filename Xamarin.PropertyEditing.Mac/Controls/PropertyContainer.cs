@@ -81,7 +81,6 @@ namespace Xamarin.PropertyEditing.Mac
 		private const float EditorToButtonSpacing = 4f;
 		private const float ButtonToWallSpacing = 9f;
 
-		private readonly IHostResourceProvider hostResources;
 		private readonly PropertyButton propertyButton;
 		private readonly UnfocusableTextField label = new UnfocusableTextField {
 			Alignment = NSTextAlignment.Right,
