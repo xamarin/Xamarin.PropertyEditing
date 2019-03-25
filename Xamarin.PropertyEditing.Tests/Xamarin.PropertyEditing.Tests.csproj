@@ -33,12 +33,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <!-- Build with strong naming if built as part of some Xamarin VSIX, normally referencing this project as a git submodule under external/Xamarin.PropertyEditing -->
-  <PropertyGroup Condition="Exists('..\..\..\xamarin.snk')">
-    <AssemblyOriginatorKeyFile>..\..\..\xamarin.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
-    <DefineConstants>$(DefineConstants);STRONG_NAMED</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Moq" Version="4.5.30.0" />
     <PackageReference Include="NUnit" Version="3.7.1" />

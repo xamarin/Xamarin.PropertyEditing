@@ -1,0 +1,3 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Deliberately empty so we don't inherit files from whoever submodules this repository -->
+</Project>
