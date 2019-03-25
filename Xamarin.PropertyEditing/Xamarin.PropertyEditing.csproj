@@ -4,12 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup Condition="Exists('..\..\..\xamarin.snk')">
-    <AssemblyOriginatorKeyFile>..\..\..\xamarin.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
-    <DefineConstants>$(DefineConstants);STRONG_NAMED</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
