@@ -44,12 +44,6 @@
     <LinkMode></LinkMode>
     <XamMacArch></XamMacArch>
   </PropertyGroup>
-  <!-- Build with strong naming if built as part of some Xamarin VSIX, normally referencing this project as a git submodule under external\Xamarin.PropertyEditing -->
-  <PropertyGroup Condition="Exists('../../../xamarin.snk')">
-    <AssemblyOriginatorKeyFile>../../../xamarin.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
-    <DefineConstants>$(DefineConstants);STRONG_NAMED</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
