@@ -41,6 +41,12 @@ namespace Xamarin.PropertyEditing.Mac
 			Initialize ();
 		}
 
+		public bool ShowHeader
+		{
+			get => this.propertyList.ShowHeader;
+			set => this.propertyList.ShowHeader = value;
+		}
+
 		public PropertyArrangeMode ArrangeMode
 		{
 			get => this.viewModel.ArrangeMode;
