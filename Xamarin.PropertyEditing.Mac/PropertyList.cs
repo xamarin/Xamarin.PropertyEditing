@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				this.showHeader = value;
 				if (this.dataSource != null) {
-					this.dataSource.ShowHeader = false;
+					this.dataSource.ShowHeader = value;
 					this.propertyTable.ReloadData ();
 				}
 			}
