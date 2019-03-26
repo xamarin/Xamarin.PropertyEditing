@@ -17,7 +17,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.propertyTable = new FirstResponderOutlineView {
 				IndentationPerLevel = 0,
-				RefusesFirstResponder = true,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 				HeaderView = null,
 				IntercellSpacing = new CGSize (0, 0)
@@ -90,6 +89,8 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+		public NSOutlineView PropertyTable => this.propertyTable;
+
 		public override void ViewDidChangeEffectiveAppearance ()
 		{
 			if (this.propertyTable == null)
@@ -114,6 +115,11 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			[Export ("validateProposedFirstResponder:forEvent:")]
 			public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
+			{
+				return false;
+			}
+
+			public override bool BecomeFirstResponder ()
 			{
 				return true;
 			}

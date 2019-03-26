@@ -224,6 +224,10 @@ namespace Xamarin.PropertyEditing.Mac
 					((TabButton)views[i]).Selected = (i == selected);
 				}
 			}
+
+			if (this.propertyFilter.NextKeyView != null && this.propertyList.PropertyTable.RowCount > 0) {
+				Console.WriteLine ("Next Key View: {0}", this.propertyFilter.NextKeyView);
+			}
 		}
 
 		private string GetIconName (PropertyArrangeMode mode)
