@@ -17,7 +17,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.propertyTable = new FirstResponderOutlineView {
 				IndentationPerLevel = 0,
-				RefusesFirstResponder = true,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 				HeaderView = null,
 				IntercellSpacing = new CGSize (0, 0)
@@ -116,6 +115,20 @@ namespace Xamarin.PropertyEditing.Mac
 			public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
 			{
 				return true;
+			}
+
+			public override bool BecomeFirstResponder ()
+			{
+				if (base.BecomeFirstResponder ()) {
+					if (SelectedRows.Count == 0 && RowCount > 0)
+						SelectRow (0, false);
+
+					if (SelectedRows.Count > 0) {
+						var row = GetRowView ((nint) SelectedRows.FirstIndex, false);
+						return Window.MakeFirstResponder (row.NextValidKeyView);
+					}
+				}
+				return false;
 			}
 		}
 
