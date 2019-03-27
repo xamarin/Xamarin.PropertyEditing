@@ -95,7 +95,10 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.propertyTable == null)
 				return;
 
-			this.propertyTable.BackgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
+			var backgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
+			if (backgroundColor != null) {
+				this.propertyTable.BackgroundColor = backgroundColor;
+			}
 		}
 
 		public void UpdateExpansions()
