@@ -56,6 +56,14 @@
 		<value>{0} String Editor</value>
 		<comment>Editor for String Value</comment>
 	</data>
+	<data name="AccessibilityChar" xml:space="preserve">
+		<value>{0} Char Editor</value>
+		<comment>Editor for Char Value</comment>
+	</data>
+	<data name="AccessibilityTimeSpan" xml:space="preserve">
+		<value>{0} TimeSpan Editor</value>
+		<comment>Editor for TimeSpan Value</comment>
+	</data>
   <data name="AccessibilityDateTime" xml:space="preserve">
     <value>{0} DateTime Editor</value>
     <comment>Editor for DateTime Value</comment>
