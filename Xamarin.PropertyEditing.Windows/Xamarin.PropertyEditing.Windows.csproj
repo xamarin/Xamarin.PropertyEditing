@@ -99,6 +99,7 @@
     <Compile Include="IPropertiesHost.cs" />
     <Compile Include="MaterialDesignColorEditorControl.cs" />
     <Compile Include="MultiplyMarginConverter.cs" />
+    <Compile Include="NegativeThicknessConverter.cs" />
     <Compile Include="NullVisibilityConverter.cs" />
     <Compile Include="ObjectEditorControl.cs" />
     <Compile Include="PreviewTemplateSelector.cs" />

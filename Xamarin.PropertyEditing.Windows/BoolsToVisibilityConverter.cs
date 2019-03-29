@@ -10,15 +10,15 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public object Convert (object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			bool value = false;
 			if (values != null) {
-				value = (bool)values[0];
-				for (int i = 1; i < values.Length; i++) {
-					value = value && (bool)values[i];
+				for (int i = 0; i < values.Length; i++) {
+					object v = values[i];
+					if (v == DependencyProperty.UnsetValue || !(bool) v)
+						return Visibility.Collapsed;
 				}
 			}
 
-			return (value) ? Visibility.Visible : Visibility.Collapsed;
+			return Visibility.Visible;
 		}
 
 		public object[] ConvertBack (object value, Type[] targetTypes, object parameter, CultureInfo culture)

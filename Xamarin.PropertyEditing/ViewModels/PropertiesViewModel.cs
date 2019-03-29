@@ -589,7 +589,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (baseVm.HasVariations) {
 				using (await AsyncWork.RequestAsyncWork (this)) {
 					var variants = await GetVariationsAsync (property);
-					if (baseVm.HasVariantChildren = variants.Count > 0) {
+					baseVm.HasVariantChildren = variants.Count > 0;
+					if (baseVm.HasVariantChildren) {
 						foreach (PropertyVariation variant in variants) {
 							vms.Add (CreateViewModel (property, variant));
 						}
