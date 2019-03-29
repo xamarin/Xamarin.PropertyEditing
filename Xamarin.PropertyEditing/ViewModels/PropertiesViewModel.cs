@@ -216,6 +216,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 		}
 
+		/// <summary>
+		/// Gets whether the <paramref name="viewModel"/> is the last-arranged variant property of its base property
+		/// </summary>
+		internal virtual bool GetIsLastVariant (PropertyViewModel viewModel)
+		{
+			throw new NotSupportedException();
+		}
+
 		private INameableObject nameable;
 		private bool nameReadOnly;
 		private bool eventsEnabled;
@@ -581,10 +589,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (baseVm.HasVariations) {
 				using (await AsyncWork.RequestAsyncWork (this)) {
 					var variants = await GetVariationsAsync (property);
-					baseVm.HasVariantChildren = variants.Count > 0;
-
-					foreach (PropertyVariation variant in variants) {
-						vms.Add (CreateViewModel (property, variant));
+					if (baseVm.HasVariantChildren = variants.Count > 0) {
+						foreach (PropertyVariation variant in variants) {
+							vms.Add (CreateViewModel (property, variant));
+						}
 					}
 				}
 			}
@@ -610,6 +618,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			else
 				vm = new StringPropertyViewModel (TargetPlatform, property, this.objEditors, variant);
 
+			vm.Parent = this;
 			vm.VariantsChanged += OnVariantsChanged;
 			return vm;
 		}

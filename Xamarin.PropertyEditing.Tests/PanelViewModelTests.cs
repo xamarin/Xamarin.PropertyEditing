@@ -691,6 +691,139 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (group, Is.Not.Null);
 		}
 
+
+		[Test]
+		public void UncommonVariantsAddedWhenPropertyIs ()
+		{
+			var variations = new[] {
+				new PropertyVariationOption ("Width", "Compact"),
+				new PropertyVariationOption ("Width", "Regular"),
+				new PropertyVariationOption ("Gamut", "P3"),
+				new PropertyVariationOption ("Gamut", "sRGB"),
+			};
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.Name).Returns ("Variation");
+			property.SetupGet (p => p.Type).Returns (typeof (string));
+			property.SetupGet (p => p.RealType).Returns (typeof (string).ToTypeInfo ());
+			property.SetupGet (p => p.CanWrite).Returns (true);
+			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
+			property.SetupGet (p => p.Variations).Returns (variations);
+			property.SetupGet (p => p.IsUncommon).Returns (true);
+
+			var properties = new ObservableCollection<IPropertyInfo> ();
+
+			var variants = new[] {
+				new PropertyVariation (variations[0]),
+				new PropertyVariation (variations[0], variations[2])
+			};
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.TargetType).Returns (typeof (object).ToTypeInfo ());
+			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.Properties).Returns (properties);
+			editor.Setup (oe => oe.GetPropertyVariantsAsync (property.Object)).ReturnsAsync (variants);
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, null)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Any",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[0])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[1])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact+P3",
+					Source = ValueSource.Local
+				});
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target)).ReturnsAsync (editor.Object);
+
+			var vm = CreateVm (provider.Object);
+			vm.ArrangeMode = PropertyArrangeMode.Category;
+			vm.SelectedObjects.Add (target);
+			Assume.That (vm.Properties, Is.Empty);
+
+			properties.Add (property.Object);
+
+			var stringVms = vm.ArrangedEditors[0].UncommonEditors.OfType<StringPropertyViewModel> ().ToList ();
+			Assert.That (stringVms.Count, Is.EqualTo (3), "Not including correct number of properties with variants");
+			Assert.That (stringVms.Count (svm => svm.Variation == null), Is.EqualTo (1), "Did not include neutral property");
+			Assert.That (stringVms.Count (svm => svm.Variation == variants[0]), Is.EqualTo (1), "Missing variant property");
+			Assert.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
+		}
+
+		[Test]
+		public void GetIsLastVariant ([Values (true, false)] bool isUncommon, [Values (true, false)] bool isLast)
+		{
+			var variations = new[] {
+				new PropertyVariationOption ("Width", "Compact"),
+				new PropertyVariationOption ("Width", "Regular"),
+				new PropertyVariationOption ("Gamut", "P3"),
+				new PropertyVariationOption ("Gamut", "sRGB"),
+			};
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.Name).Returns ("Variation");
+			property.SetupGet (p => p.Type).Returns (typeof (string));
+			property.SetupGet (p => p.RealType).Returns (typeof (string).ToTypeInfo ());
+			property.SetupGet (p => p.CanWrite).Returns (true);
+			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Default | ValueSources.Local);
+			property.SetupGet (p => p.Variations).Returns (variations);
+			property.SetupGet (p => p.IsUncommon).Returns (isUncommon);
+
+			var properties = new ObservableCollection<IPropertyInfo> ();
+
+			var variants = new[] {
+				new PropertyVariation (variations[0]),
+				new PropertyVariation (variations[0], variations[2])
+			};
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.TargetType).Returns (typeof (object).ToTypeInfo ());
+			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.Properties).Returns (properties);
+			editor.Setup (oe => oe.GetPropertyVariantsAsync (property.Object)).ReturnsAsync (variants);
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, null)).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Any",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[0])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact",
+					Source = ValueSource.Local
+				});
+			editor.Setup (oe => oe.GetValueAsync<string> (property.Object, variants[1])).ReturnsAsync (
+				new ValueInfo<string> {
+					Value = "Compact+P3",
+					Source = ValueSource.Local
+				});
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (p => p.GetObjectEditorAsync (target)).ReturnsAsync (editor.Object);
+
+			var vm = CreateVm (provider.Object);
+			vm.ArrangeMode = PropertyArrangeMode.Category;
+			vm.SelectedObjects.Add (target);
+			Assume.That (vm.Properties, Is.Empty);
+
+			properties.Add (property.Object);
+
+			var stringVms = ((isUncommon) ? vm.ArrangedEditors[0].UncommonEditors : vm.ArrangedEditors[0].Editors)
+				.OfType<StringPropertyViewModel> ();
+			var prvm = (isLast)
+				? stringVms.Last (pvm => pvm.Property == property.Object)
+				: stringVms.Skip(1).First (pvm => pvm.Property == property.Object);
+
+			Assert.That (vm.GetIsLastVariant (prvm), Is.EqualTo (isLast));
+		}
+
 		internal override PanelViewModel CreateVm (TargetPlatform platform)
 		{
 			return new PanelViewModel (platform);

@@ -636,6 +636,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool IsVariant => Variation != null;
 
+		public PropertiesViewModel Parent
+		{
+			get;
+			internal set;
+		}
+
 		public abstract Resource Resource
 		{
 			get;
@@ -722,6 +728,16 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public PropertyVariation Variation
 		{
 			get;
+		}
+
+		public bool GetIsLastVariant ()
+		{
+			if (Variation == null)
+				return false;
+			if (Parent == null)
+				throw new InvalidOperationException ($"{nameof(Parent)} must be set in order to determine last variant");
+
+			return Parent.GetIsLastVariant (this);
 		}
 
 		public override int CompareTo (EditorViewModel other)
