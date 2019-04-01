@@ -9,6 +9,8 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class CommonBrushLayer
 		: CALayer
 	{
+		private const double VerticalMarginOffset = 0.5;
+
 		public CommonBrushLayer (IHostResourceProvider hostResources)
 		{
 			if (hostResources == null)
@@ -21,6 +23,8 @@ namespace Xamarin.PropertyEditing.Mac
 			BorderWidth = 1;
 			MasksToBounds = true;
 		}
+
+		internal uint VerticalMargin { get; set; }
 
 		private CALayer brushLayer;
 		private CALayer BrushLayer {
@@ -68,6 +72,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void LayoutSublayers ()
 		{
 			base.LayoutSublayers ();
+			Frame = new CGRect (Frame.X, Bounds.Y + VerticalMargin + VerticalMarginOffset, Bounds.Width, Bounds.Height - (VerticalMargin * 2));
 			BrushLayer.Frame = Bounds;
 			Contents = DrawingExtensions.GenerateCheckerboard (Bounds, this.hostResources.GetNamedColor (NamedResources.Checkerboard0Color), this.hostResources.GetNamedColor (NamedResources.Checkerboard1Color));
 		}
