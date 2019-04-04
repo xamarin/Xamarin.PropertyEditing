@@ -739,7 +739,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 					return;
 		
 				// TODO: Smarter querying, can query the single editor and check against MultipleValues
-				await UpdateCurrentValueAsync ();
+				ValueTask = UpdateCurrentValueAsync ();
+				await ValueTask;
 			} finally {
 				work?.Dispose ();
 			}

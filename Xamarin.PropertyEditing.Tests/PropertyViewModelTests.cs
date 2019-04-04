@@ -45,6 +45,21 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public async Task ValueTask ()
+		{
+			TValue testValue = GetRandomTestValue ();
+
+			var editor = GetBasicEditor (testValue, delay: TimeSpan.FromMilliseconds (100));
+			var vm = GetViewModel (editor.Properties.First (), editor);
+
+			Assert.That (vm.ValueTask, Is.Not.Null);
+			Assert.That (vm.Value, Is.EqualTo (default(TValue)));
+
+			await vm.ValueTask;
+			Assert.That (vm.Value, Is.EqualTo (testValue));
+		}
+
+		[Test]
 		public async Task SetValue ()
 		{
 			TValue testValue = GetRandomTestValue ();
@@ -104,7 +119,7 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public void AllEditorValuesChanged ()
+		public async Task AllEditorValuesChanged ()
 		{
 			TValue testValue = GetRandomTestValue ();
 
@@ -117,6 +132,7 @@ namespace Xamarin.PropertyEditing.Tests
 			SetupPropertyGet (mockEditor, property.Object, testValue);
 			mockEditor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (null));
 
+			await vm.ValueTask;
 			Assert.That (vm.Value, Is.EqualTo (testValue));
 		}
 

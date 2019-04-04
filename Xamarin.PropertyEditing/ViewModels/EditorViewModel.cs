@@ -50,6 +50,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
+		public Task ValueTask
+		{
+			get { return this.valueTask; }
+			protected set
+			{
+				if (this.valueTask == value)
+					return;
+
+				this.valueTask = value;
+				OnPropertyChanged();
+			}
+		}
+
 		public ICollection<IObjectEditor> Editors
 		{
 			get;
@@ -97,7 +110,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		/// </summary>
 		protected async void RequestCurrentValueUpdate ()
 		{
-			await UpdateCurrentValueAsync ();
+			ValueTask = UpdateCurrentValueAsync ();
+			await ValueTask;
 		}
 
 		/// <remarks>
@@ -121,6 +135,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool multipleValues;
 		private readonly List<IObjectEditor> subscribedEditors = new List<IObjectEditor> ();
+		private Task valueTask;
 
 		private void AddEditors (IList editors)
 		{

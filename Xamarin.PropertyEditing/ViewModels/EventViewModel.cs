@@ -103,7 +103,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (!String.IsNullOrWhiteSpace (name))
 				await editor.AttachHandlerAsync (Event, name);
 
-			await UpdateCurrentValueAsync ();
+			ValueTask = UpdateCurrentValueAsync ();
+			await ValueTask;
 		}
 	}
 }
