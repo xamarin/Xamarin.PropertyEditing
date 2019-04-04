@@ -33,6 +33,12 @@ namespace Xamarin.PropertyEditing.Tests
 			get;
 		}
 
+		public TimeSpan? Delay
+		{
+			get;
+			set;
+		}
+
 		public ITypeInfo TargetType => this.editor.TargetType;
 
 		public IReadOnlyCollection<IPropertyInfo> Properties => this.editor.Properties;
@@ -46,9 +52,10 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public IReadOnlyList<IObjectEditor> DirectChildren => null;
 
-		public Task<AssignableTypesResult> GetAssignableTypesAsync (IPropertyInfo property, bool childTypes)
+		public async Task<AssignableTypesResult> GetAssignableTypesAsync (IPropertyInfo property, bool childTypes)
 		{
-			return this.editor.GetAssignableTypesAsync (property, childTypes);
+			await GetCompletedTask ();
+			return await this.editor.GetAssignableTypesAsync (property, childTypes);
 		}
 
 		public Task<IReadOnlyCollection<PropertyVariation>> GetPropertyVariantsAsync (IPropertyInfo property)
@@ -61,16 +68,26 @@ namespace Xamarin.PropertyEditing.Tests
 			throw new NotSupportedException();
 		}
 
-		public Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variations = null)
+		public async Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variations = null)
 		{
-			return this.editor.SetValueAsync (property, value, variations);
+			await GetCompletedTask ();
+			await this.editor.SetValueAsync (property, value, variations);
 		}
 
-		public Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variations = null)
+		public async Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variations = null)
 		{
-			return this.editor.GetValueAsync<T> (property, variations);
+			await GetCompletedTask ();
+			return await this.editor.GetValueAsync<T> (property, variations);
 		}
 
 		private readonly ReflectionObjectEditor editor;
+
+		private Task GetCompletedTask ()
+		{
+			if (Delay == null)
+				return Task.CompletedTask;
+
+			return Task.Delay (Delay.Value);
+		}
 	}
 }

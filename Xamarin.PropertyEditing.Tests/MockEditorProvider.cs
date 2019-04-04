@@ -19,8 +19,20 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		public MockEditorProvider (IObjectEditor editor)
+			: this (new [] { editor })
 		{
-			this.editorCache.Add (editor.Target, editor);
+		}
+
+		public MockEditorProvider (params IObjectEditor[] editors)
+		{
+			foreach (IObjectEditor editor in editors)
+				this.editorCache.Add (editor.Target, editor);
+		}
+
+		public TimeSpan? Delay
+		{
+			get;
+			set;
 		}
 
 		public IReadOnlyDictionary<Type, ITypeInfo> KnownTypes
@@ -71,11 +83,11 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			switch (item) {
 			case MockWpfControl msc:
-				return new MockObjectEditor (msc) { Resources = this.resources };
+				return new MockObjectEditor (msc) { Resources = this.resources, Delay = Delay };
 			case MockControl mc:
-				return new MockNameableEditor (mc) { Resources = this.resources };
+				return new MockNameableEditor (mc) { Resources = this.resources, Delay = Delay };
 			case MockBinding mb:
-				return new MockBindingEditor (mb);
+				return new MockBindingEditor (mb) { Delay = Delay };
 			default:
 				return new ReflectionObjectEditor (item);
 			}

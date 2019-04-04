@@ -1517,7 +1517,7 @@ namespace Xamarin.PropertyEditing.Tests
 			return value;
 		}
 
-		protected internal MockObjectEditor GetBasicEditor (IPropertyInfo property = null)
+		protected internal MockObjectEditor GetBasicEditor (IPropertyInfo property = null, TimeSpan? delay = null)
 		{
 			if (property == null) {
 				var propertyMock = GetPropertyMock ();
@@ -1527,15 +1527,16 @@ namespace Xamarin.PropertyEditing.Tests
 			}
 
 			var editor = new MockObjectEditor (property) {
-				Target = new TestClass()
+				Target = new TestClass(),
+				Delay = delay
 			};
 
 			return editor;
 		}
 
-		protected internal MockObjectEditor GetBasicEditor (TValue value, IPropertyInfo property = null)
+		protected internal MockObjectEditor GetBasicEditor (TValue value, IPropertyInfo property = null, TimeSpan? delay = null)
 		{
-			var editor = GetBasicEditor (property);
+			var editor = GetBasicEditor (property, delay);
 			editor.SetValueAsync (editor.Properties.First (), new ValueInfo<TValue> {
 				Value = value,
 				Source = ValueSource.Local

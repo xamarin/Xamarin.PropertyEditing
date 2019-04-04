@@ -60,6 +60,12 @@ namespace Xamarin.PropertyEditing.Tests
 			TargetType = Target.GetType ().ToTypeInfo ();
 		}
 
+		public TimeSpan? Delay
+		{
+			get;
+			set;
+		}
+
 		public object Target
 		{
 			get;
@@ -132,13 +138,13 @@ namespace Xamarin.PropertyEditing.Tests
 		public Task AttachHandlerAsync (IEventInfo ev, string handlerName)
 		{
 			this.events[ev] = handlerName;
-			return Task.FromResult (true);
+			return GetCompletedTask();
 		}
 
 		public Task DetachHandlerAsync (IEventInfo ev, string handlerName)
 		{
 			this.events.Remove (ev);
-			return Task.FromResult (true);
+			return GetCompletedTask();
 		}
 
 		public Task<IReadOnlyList<string>> GetHandlersAsync (IEventInfo ev)
@@ -154,9 +160,9 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			if (this.assignableTypes != null) {
 				if (!this.assignableTypes.TryGetValue (property, out IReadOnlyList<ITypeInfo> types))
-					return Task.FromResult (new AssignableTypesResult (Enumerable.Empty<ITypeInfo> ().ToArray ()));
+					return GetCompletedTask (new AssignableTypesResult (Enumerable.Empty<ITypeInfo> ().ToArray ()));
 				else
-					return Task.FromResult (new AssignableTypesResult (types));
+					return GetCompletedTask (new AssignableTypesResult (types));
 			}
 
 			return ReflectionObjectEditor.GetAssignableTypes (property.RealType, childTypes);
@@ -171,7 +177,7 @@ namespace Xamarin.PropertyEditing.Tests
 				return Task.FromResult<IReadOnlyCollection<PropertyVariation>> (new PropertyVariation[0]);
 			}
 
-			return Task.FromResult<IReadOnlyCollection<PropertyVariation>> (propertyValues.Keys.Except (new[] { NeutralVariations }).ToList ());
+			return GetCompletedTask<IReadOnlyCollection<PropertyVariation>> (propertyValues.Keys.Except (new[] { NeutralVariations }).ToList ());
 		}
 
 		public Task RemovePropertyVariantAsync (IPropertyInfo property, PropertyVariation variant)
@@ -185,7 +191,7 @@ namespace Xamarin.PropertyEditing.Tests
 				propertyValues.Remove (variant);
 			}
 
-			return Task.CompletedTask;
+			return GetCompletedTask ();
 		}
 
 		public Task SetValueAsync<T> (IPropertyInfo property, ValueInfo<T> value, PropertyVariation variations = null)
@@ -207,7 +213,7 @@ namespace Xamarin.PropertyEditing.Tests
 			} else if (value.Source == ValueSource.Unset || (property.ValueSources.HasFlag (ValueSources.Default) && Equals (value.Value, default(T))) && value.ValueDescriptor == null && value.SourceDescriptor == null) {
 				if (propertyValues.Remove (variations ?? NeutralVariations)) {
 					PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property, variations));
-					return Task.CompletedTask;
+					return GetCompletedTask();
 				}
 			}
 
@@ -271,7 +277,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			propertyValues[variations ?? NeutralVariations] = softValue;
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property, variations));
-			return Task.CompletedTask;
+			return GetCompletedTask();
 		}
 
 		public Task<ValueInfo<T>> GetValueAsync<T> (IPropertyInfo property, PropertyVariation variations = null)
@@ -280,7 +286,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			IDictionary<PropertyVariation, object> propertyValues;
 			if (!this.values.TryGetValue (property, out propertyValues) || !propertyValues.TryGetValue (variations ?? NeutralVariations, out object value)) {
-				return Task.FromResult (new ValueInfo<T> {
+				return GetCompletedTask (new ValueInfo<T> {
 					Source = (property.ValueSources.HasFlag (ValueSources.Default))
 						? ValueSource.Default
 						: ValueSource.Unset,
@@ -290,7 +296,7 @@ namespace Xamarin.PropertyEditing.Tests
 
 			var info = value as ValueInfo<T>;
 			if (info != null) {
-				return Task.FromResult (new ValueInfo<T> {
+				return GetCompletedTask (new ValueInfo<T> {
 					CustomExpression = info.CustomExpression,
 					Source = info.Source,
 					ValueDescriptor = info.ValueDescriptor,
@@ -298,7 +304,7 @@ namespace Xamarin.PropertyEditing.Tests
 					Value = info.Value
 				});
 			} else if (value == null || value is T) {
-				return Task.FromResult (new ValueInfo<T> {
+				return GetCompletedTask (new ValueInfo<T> {
 					Value = (T) value,
 					Source = ValueSource.Local
 				});
@@ -323,7 +329,7 @@ namespace Xamarin.PropertyEditing.Tests
 						flags.Add (v);
 				}
 
-				return Task.FromResult ((ValueInfo<T>)Convert.ChangeType (new ValueInfo<IReadOnlyList<int>> {
+				return GetCompletedTask ((ValueInfo<T>)Convert.ChangeType (new ValueInfo<IReadOnlyList<int>> {
 					Value = flags,
 					Source = underlyingInfo?.Source ?? ValueSource.Local
 				}, typeof(ValueInfo<T>)));
@@ -342,14 +348,14 @@ namespace Xamarin.PropertyEditing.Tests
 				object newValue;
 				IPropertyConverter converter = property as IPropertyConverter;
 				if (converter != null && converter.TryConvert (value, tType, out newValue)) {
-					return Task.FromResult (new ValueInfo<T> {
+					return GetCompletedTask (new ValueInfo<T> {
 						Source = source,
 						Value = (T)newValue,
 						ValueDescriptor = valueDescriptor,
 						SourceDescriptor = sourceDescriptor
 					});
 				} else if (typeof(T).IsAssignableFrom (valueType)) {
-					return Task.FromResult (new ValueInfo<T> {
+					return GetCompletedTask (new ValueInfo<T> {
 						Source = source,
 						Value = (T)value,
 						ValueDescriptor = valueDescriptor,
@@ -358,7 +364,7 @@ namespace Xamarin.PropertyEditing.Tests
 				}
 			}
 
-			return Task.FromResult (new ValueInfo<T> {
+			return GetCompletedTask (new ValueInfo<T> {
 				Source = (property.ValueSources.HasFlag (ValueSources.Default)) ? ValueSource.Default : ValueSource.Unset,
 				Value = default(T)
 			});
@@ -396,6 +402,22 @@ namespace Xamarin.PropertyEditing.Tests
 					r.Name.IndexOf (input, StringComparison.OrdinalIgnoreCase) != -1
 					&& r.Name.Length > input.Length) // Skip exact matches
 				.Select (r => "@" + r.Name).ToList ();
+		}
+
+		private Task<T> GetCompletedTask<T> (T result)
+		{
+			if (Delay == null)
+				return Task.FromResult (result);
+
+			return Task.Delay (Delay.Value).ContinueWith (t => result);
+		}
+
+		private Task GetCompletedTask ()
+		{
+			if (Delay == null)
+				return Task.CompletedTask;
+
+			return Task.Delay (Delay.Value);
 		}
 
 		private static readonly PropertyVariation NeutralVariations = new PropertyVariation();
