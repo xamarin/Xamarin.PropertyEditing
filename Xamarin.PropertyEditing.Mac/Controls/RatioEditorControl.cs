@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using AppKit;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -50,7 +49,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			this.ratioEditor.AccessibilityEnabled = this.ratioEditor.Enabled;
-			this.ratioEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityNumeric, ViewModel.Property.Name);
+			this.ratioEditor.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityNumeric, ViewModel.Property.Name);
 		}
 
 		protected override void UpdateValue ()

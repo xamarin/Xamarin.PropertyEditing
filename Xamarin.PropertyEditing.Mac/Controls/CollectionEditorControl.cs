@@ -34,7 +34,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var header = new DynamicBox (hostResources, NamedResources.ControlBackground, NamedResources.FrameBoxBorderColor) {
 				BoxType = NSBoxType.NSBoxCustom,
 				BorderWidth = 1,
-				ContentView = new UnfocusableTextField { StringValue = Resources.LocalizationResources.CollectionTargetsHeader },
+				ContentView = new UnfocusableTextField { StringValue = Properties.Resources.CollectionTargetsHeader },
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				ContentViewMargins = new CGSize (8, 0),
 			};
@@ -62,13 +62,13 @@ namespace Xamarin.PropertyEditing.Mac
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				ControlSize = NSControlSize.Mini,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Mini)),
-				AccessibilityTitle = Resources.LocalizationResources.AccessibilityCollectionTypeSelector
+				AccessibilityTitle = Properties.Resources.AccessibilityCollectionTypeSelector
 			};
 			this.typeSelector.SelectionChanged += OnSelectedTypeChanged;
 
 			this.add = new NSButton {
 				BezelStyle = NSBezelStyle.SmallSquare,
-				AccessibilityTitle = Resources.LocalizationResources.AccessibilityCollectionAddButton,
+				AccessibilityTitle = Properties.Resources.AccessibilityCollectionAddButton,
 				Bordered = false,
 			};
 			this.add.Activated += OnAddChild;
@@ -83,7 +83,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.remove = new NSButton {
 				BezelStyle = NSBezelStyle.SmallSquare,
-				AccessibilityTitle = Resources.LocalizationResources.AccessibilityCollectionRemoveButton,
+				AccessibilityTitle = Properties.Resources.AccessibilityCollectionRemoveButton,
 				Bordered = false
 			};
 			this.remove.Activated += OnRemoveChild;

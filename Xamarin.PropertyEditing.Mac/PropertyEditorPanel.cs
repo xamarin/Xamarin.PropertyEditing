@@ -8,7 +8,6 @@ using Foundation;
 using AppKit;
 
 using Xamarin.PropertyEditing.ViewModels;
-using Xamarin.PropertyEditing.Mac.Resources;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -155,7 +154,7 @@ namespace Xamarin.PropertyEditing.Mac
 			header.AddSubview (this.border);
 
 			this.propertyFilter = new NSSearchField {
-				PlaceholderString = LocalizationResources.PropertyFilterLabel,
+				PlaceholderString = Properties.Resources.PropertyFilterLabel,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 			((NSView)this.header.ContentView).AddSubview (this.propertyFilter);

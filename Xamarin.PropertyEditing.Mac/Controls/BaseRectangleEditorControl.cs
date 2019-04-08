@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using AppKit;
 using CoreGraphics;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -144,16 +143,16 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			XEditor.AccessibilityEnabled = XEditor.Enabled;
-			XEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityXEditor, ViewModel.Property.Name);
+			XEditor.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityXEditor, ViewModel.Property.Name);
 
 			YEditor.AccessibilityEnabled = YEditor.Enabled;
-			YEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityYEditor, ViewModel.Property.Name);
+			YEditor.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityYEditor, ViewModel.Property.Name);
 
 			WidthEditor.AccessibilityEnabled = WidthEditor.Enabled;
-			WidthEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityWidthEditor, ViewModel.Property.Name);
+			WidthEditor.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityWidthEditor, ViewModel.Property.Name);
 
 			HeightEditor.AccessibilityEnabled = HeightEditor.Enabled;
-			HeightEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityHeightEditor, ViewModel.Property.Name);
+			HeightEditor.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityHeightEditor, ViewModel.Property.Name);
 		}
 	}
 }

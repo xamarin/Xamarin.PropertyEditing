@@ -473,6 +473,7 @@
   </data>
   <data name="CollectionEditorTitle" xml:space="preserve">
     <value>Collection Editor: {0}</value>
+    <comment>Collection Editor: {PropertyName}</comment>
   </data>
   <data name="MoveItemDown" xml:space="preserve">
     <value>Move item down</value>
@@ -576,5 +577,173 @@
   <data name="SelectTypeForProperty" xml:space="preserve">
     <value>Select {0} type</value>
     <comment>Select {property} type</comment>
+  </data>
+  <data name="PropertyFilterLabel" xml:space="preserve">
+    <value>Property Filter</value>
+    <comment>Property Filter placeholder text</comment>
+  </data>
+  <data name="PropertyColumnTitle" xml:space="preserve">
+    <value>Property</value>
+    <comment>Title text for property column</comment>
+  </data>
+  <data name="ValueColumnTitle" xml:space="preserve">
+    <value>Value</value>
+    <comment>Title text for value column</comment>
+  </data>
+  <data name="AccessibilityNumeric" xml:space="preserve">
+    <value>{0} Numeric Editor</value>
+    <comment>Editor for Numeric Value</comment>
+  </data>
+  <data name="AccessibilityBoolean" xml:space="preserve">
+    <value>{0} Boolean Editor</value>
+    <comment>Editor for Boolean Value</comment>
+  </data>
+  <data name="AccessibilityCombobox" xml:space="preserve">
+    <value>{0} Combobox Editor</value>
+    <comment>Editor for Combobox Value</comment>
+  </data>
+  <data name="AccessibilityCollection" xml:space="preserve">
+    <value>{0} property, edit collection</value>
+    <comment></comment>
+  </data>
+  <data name="AccessibilityCollectionHelp" xml:space="preserve">
+    <value>Opens a window to edit the collection</value>
+  </data>
+  <data name="AccessibilityCollectionTypeSelector" xml:space="preserve">
+    <value>Type list</value>
+  </data>
+  <data name="AccessibilityCollectionAddButton" xml:space="preserve">
+    <value>Add instance of type</value>
+  </data>
+  <data name="AccessibilityCollectionRemoveButton" xml:space="preserve">
+    <value>Remove instance</value>
+  </data>
+  <data name="AccessibilityString" xml:space="preserve">
+    <value>{0} String Editor</value>
+    <comment>Editor for String Value</comment>
+  </data>
+  <data name="AccessibilityChar" xml:space="preserve">
+    <value>{0} Char Editor</value>
+    <comment>Editor for Char Value</comment>
+  </data>
+  <data name="AccessibilityTimeSpan" xml:space="preserve">
+    <value>{0} TimeSpan Editor</value>
+    <comment>Editor for TimeSpan Value</comment>
+  </data>
+  <data name="AccessibilityDateTime" xml:space="preserve">
+    <value>{0} DateTime Editor</value>
+    <comment>Editor for DateTime Value</comment>
+  </data>  
+  <data name="AccessibilityXEditor" xml:space="preserve">
+    <value>{0} X Editor</value>
+    <comment>Editor for X Value</comment>
+  </data>
+  <data name="AccessibilityYEditor" xml:space="preserve">
+    <value>{0} Y Editor</value>
+    <comment>Editor for Y Value</comment>
+  </data>
+  <data name="AccessibilityWidthEditor" xml:space="preserve">
+    <value>{0} Width Editor</value>
+    <comment>Editor for Width Value</comment>
+  </data>
+  <data name="AccessibilityHeightEditor" xml:space="preserve">
+    <value>{0} Height Editor</value>
+    <comment>Editor for Height Value</comment>
+  </data> 
+  <data name="ArrangeByLabel" xml:space="preserve">
+    <value>Arrange By:</value>
+  </data>
+  <data name="AccessibilityPropertiesButton" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="AccessibilityPropertiesButtonDescription" xml:space="preserve">
+    <value>Edit the properties of this editor</value>
+  </data>
+  <data name="AccessibilityActionButton" xml:space="preserve">
+    <value>Warnings</value>
+  </data>
+  <data name="AccessibilityActionButtonDescription" xml:space="preserve">
+    <value>Display warnings.</value>>
+  </data>
+  <data name="CollectionTargetsHeader" xml:space="preserve">
+    <value>Collection Items</value>
+  </data>
+  <data name="CollectionEditButton" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="ColumnResourceName" xml:space="preserve">
+    <value>Name</value>>
+  </data>
+  <data name="ColumnResourcePreview" xml:space="preserve">
+    <value>Preview</value>>
+  </data>
+  <data name="ResourceTableImageColumnTitle" xml:space="preserve">
+    <value>Icon</value>
+  </data>
+  <data name="ResourceTableTypeColumnTitle" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="ResourceTableNameColumnTitle" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ResourceTableValueColumnTitle" xml:space="preserve">
+    <value>Value</value>>
+  </data>
+  <data name="CommonBrushTitleUnknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="CommonBrushTitleGradient" xml:space="preserve">
+    <value>Gradient</value>>
+  </data>
+  <data name="AccessibilityObjectName" xml:space="preserve">
+    <value>{0} Object Name Editor</value>
+    <comment>Editor for Object Name Value</comment>
+  </data>
+  <data name="ObjectNamePlaceholder" xml:space="preserve">
+    <value>No Name</value>>
+  </data>
+  <data name="AccessibilityLeftEditor" xml:space="preserve">
+    <value>{0} Left Editor</value>
+    <comment>Editor for Left Value</comment>
+  </data>
+  <data name="AccessibilityTopEditor" xml:space="preserve">
+    <value>{0} Top Editor</value>
+    <comment>Editor for Top Value</comment>
+  </data>
+  <data name="AccessibilityRightEditor" xml:space="preserve">
+    <value>{0} Right Editor</value>
+    <comment>Editor for Right Value</comment>
+  </data>
+  <data name="AccessibilityBottomEditor" xml:space="preserve">
+    <value>{0} Bottom Editor</value>
+    <comment>Editor for Bottom Value</comment>
+  </data>
+  <data name="AccessibilityInputModeEditor" xml:space="preserve">
+    <value>{0} InputMode Editor</value>
+    <comment>Editor for InputMode Value</comment>
+  </data>
+  <data name="AccessibilityPathEditor" xml:space="preserve">
+    <value>{0} {1} Path Editor</value>
+    <comment>Editor for File/Directory Path Editor</comment>
+  </data>  
+  <data name="ChooseFileOrDirectory" xml:space="preserve">
+    <value>Choose a {0}</value>
+    <comment>Choose a File or Directory</comment>
+  </data>
+  <data name="BrowseFileOrDirectory" xml:space="preserve">
+    <value>Browse for a {0}</value>
+    <comment>Browse for a File or Directory</comment>
+  </data>
+  <data name="RevealFileOrDirectory" xml:space="preserve">
+    <value>Reveal {0}</value>
+    <comment>Reveal a File or Directory</comment>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
+    <comment>File</comment>
+  </data>
+   <data name="Directory" xml:space="preserve">
+    <value>Directory</value>
+    <comment>Directory</comment>
   </data>
 </root>

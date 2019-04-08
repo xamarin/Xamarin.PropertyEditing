@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using AppKit;
 using Foundation;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac

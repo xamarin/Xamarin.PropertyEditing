@@ -1,5 +1,4 @@
 using System;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -20,7 +19,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			base.UpdateAccessibilityValues ();
-			Entry.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityChar, ViewModel.Property.Name);
+			Entry.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityChar, ViewModel.Property.Name);
 		}
 
 		protected override string GetValue (char value)

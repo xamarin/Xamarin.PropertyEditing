@@ -17,7 +17,7 @@ namespace Xamarin.PropertyEditing.Mac
 			: base (new CGRect (0, 0, 500, 400), NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Resizable, NSBackingStore.Buffered, true)
 		{
 			Delegate = new ModalDialogDelegate ();
-			Title = String.Format (Resources.LocalizationResources.CollectionEditorTitle, viewModel.Property.Name);
+			Title = String.Format (Properties.Resources.CollectionEditorTitle, viewModel.Property.Name);
 
 			this.collectionEditor = new CollectionEditorControl (hostResources) {
 				ViewModel = viewModel,

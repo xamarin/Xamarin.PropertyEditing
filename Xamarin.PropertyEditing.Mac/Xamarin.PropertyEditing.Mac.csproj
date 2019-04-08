@@ -72,9 +72,6 @@
     <Compile Include="Controls\SizeEditorControl.cs" />
     <Compile Include="Controls\Custom\NumericSpinEditor.cs" />
     <Compile Include="Controls\Custom\NumericTextField.cs" />
-    <Compile Include="Resources\LocalizationResources.Designer.cs">
-      <DependentUpon>LocalizationResources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Custom\UnfocusableTextField.cs" />
     <Compile Include="Controls\CombinablePropertyEditor.cs" />
     <Compile Include="Controls\Custom\PropertyButton.cs" />
@@ -165,7 +162,6 @@
   <ItemGroup>
     <Folder Include="Controls\" />
     <Folder Include="Controls\Custom\" />
-    <Folder Include="Resources\" />
     <Compile Include="Controls\ErrorMessageView.cs" />
     <Folder Include="Controls\RequestResource\" />
     <Folder Include="PropertyEditingResource\Contents\Resources\" />
@@ -179,13 +175,6 @@
       <Name>Xamarin.PropertyEditing</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\LocalizationResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>LocalizationResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-
   <Target Name="IncludeIconsInBundle" BeforeTargets="AssignTargetPaths">
     <ItemGroup>
       <PropertyEditingResourceBundlePath Include="PropertyEditingResource\**\*" />

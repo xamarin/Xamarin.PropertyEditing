@@ -4,7 +4,6 @@ using System.Linq;
 
 using AppKit;
 
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -94,11 +93,11 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			base.UpdateAccessibilityValues ();
-			Entry.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityString, ViewModel.Property.Name);
+			Entry.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityString, ViewModel.Property.Name);
 
 			if (this.inputModePopup != null) {
 				this.inputModePopup.AccessibilityEnabled = this.inputModePopup.Enabled;
-				this.inputModePopup.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityInpueModeEditor, ViewModel.Property.Name);
+				this.inputModePopup.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityInputModeEditor, ViewModel.Property.Name);
 			}
 		}
 

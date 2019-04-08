@@ -5,7 +5,6 @@ using Foundation;
 using AppKit;
 
 using Xamarin.PropertyEditing.ViewModels;
-using Xamarin.PropertyEditing.Mac.Resources;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -137,10 +136,10 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (ViewModel.IsConstrainedToPredefined) {
 				this.popUpButton.AccessibilityEnabled = this.popUpButton.Enabled;
-				this.popUpButton.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);
+				this.popUpButton.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityCombobox, ViewModel.Property.Name);
 			} else {
 				this.comboBox.AccessibilityEnabled = this.comboBox.Enabled;
-				this.comboBox.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);
+				this.comboBox.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityCombobox, ViewModel.Property.Name);
 			}
 		}
 	}

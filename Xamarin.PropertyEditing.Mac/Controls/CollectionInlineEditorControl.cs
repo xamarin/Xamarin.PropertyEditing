@@ -18,10 +18,10 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.label);
 
 			this.openCollection = new FocusableButton {
-				Title = Resources.LocalizationResources.CollectionEditButton,
+				Title = Properties.Resources.CollectionEditButton,
 				BezelStyle = NSBezelStyle.Rounded,
 				AccessibilityEnabled = true,
-				AccessibilityHelp = Resources.LocalizationResources.AccessibilityCollectionHelp
+				AccessibilityHelp = Properties.Resources.AccessibilityCollectionHelp
 			};
 
 			this.openCollection.Activated += (o, e) => {
@@ -62,7 +62,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.UpdateAccessibilityValues ();
 
-			this.openCollection.AccessibilityTitle = (ViewModel != null) ? String.Format (Resources.LocalizationResources.AccessibilityCollection, ViewModel.Property.Name) : null;
+			this.openCollection.AccessibilityTitle = (ViewModel != null) ? String.Format (Properties.Resources.AccessibilityCollection, ViewModel.Property.Name) : null;
 		}
 
 		private readonly UnfocusableTextField label;

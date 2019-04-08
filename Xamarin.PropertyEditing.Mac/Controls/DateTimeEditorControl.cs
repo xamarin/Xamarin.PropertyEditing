@@ -1,6 +1,5 @@
 using System;
 using AppKit;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -53,7 +52,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			this.datePicker.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityDateTime, ViewModel.Property.Name);
+			this.datePicker.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityDateTime, ViewModel.Property.Name);
 			this.datePicker.Enabled = this.datePicker.Enabled;
 		}
 

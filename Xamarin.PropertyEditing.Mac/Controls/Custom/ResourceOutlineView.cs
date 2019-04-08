@@ -2,7 +2,6 @@
 using AppKit;
 using CoreGraphics;
 using Foundation;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -32,13 +31,13 @@ namespace Xamarin.PropertyEditing.Mac
 		public void Initialize ()
 		{
 			var nameColumn = new NSTableColumn (ResourceNameColId) {
-				Title = LocalizationResources.ColumnResourceName,
+				Title = Properties.Resources.ColumnResourceName,
 				Width = 150,
 			};
 			AddColumn (nameColumn);
 
 			var previewColumn = new NSTableColumn (ResourcePreviewColId) {
-				Title = LocalizationResources.ColumnResourcePreview,
+				Title = Properties.Resources.ColumnResourcePreview,
 				Width = 150,
 			};
 			AddColumn (previewColumn);
