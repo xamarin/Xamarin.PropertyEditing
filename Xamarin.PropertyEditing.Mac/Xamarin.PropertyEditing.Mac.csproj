@@ -1,180 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E8F4F0EB-C2B1-4116-8459-E076E0E0E485}</ProjectGuid>
-    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Xamarin.PropertyEditing.Mac</RootNamespace>
-    <AssemblyName>Xamarin.PropertyEditing.Mac</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
-    <TargetFrameworkProfile />
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <HttpClientHandler></HttpClientHandler>
-    <LinkMode></LinkMode>
-    <XamMacArch></XamMacArch>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <DefineConstants></DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <HttpClientHandler></HttpClientHandler>
-    <LinkMode></LinkMode>
-    <XamMacArch></XamMacArch>
-  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="Xamarin.Mac" />
     <Reference Include="System.Drawing" />
+    <Reference Include="Xamarin.Mac">
+      <HintPath>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/x86_64/full/Xamarin.Mac.dll</HintPath>
+    </Reference>
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyEditorPanel.cs" />
-    <Compile Include="PropertyEditorPanel.designer.cs">
-      <DependentUpon>PropertyEditorPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\StringEditorControl.cs" />
-    <Compile Include="Controls\PropertyEditorControl.cs" />
-    <Compile Include="PropertyTableDelegate.cs" />
-    <Compile Include="PropertyTableDataSource.cs" />
-    <Compile Include="Controls\NumericEditorControl.cs" />
-    <Compile Include="Controls\BooleanEditorControl.cs" />
-    <Compile Include="Controls\ConstraintExtensions.cs" />
-    <Compile Include="Controls\BaseRectangleEditorControl.cs" />
-    <Compile Include="NSObjectFacade.cs" />
-    <Compile Include="Controls\PredefinedValuesEditor.cs" />
-    <Compile Include="Controls\BasePointEditorControl.cs" />
-    <Compile Include="Controls\PointEditorControl.cs" />
-    <Compile Include="Controls\RectangleEditorControl.cs" />
-    <Compile Include="Controls\SizeEditorControl.cs" />
-    <Compile Include="Controls\Custom\NumericSpinEditor.cs" />
-    <Compile Include="Controls\Custom\NumericTextField.cs" />
-    <Compile Include="Controls\Custom\UnfocusableTextField.cs" />
-    <Compile Include="Controls\CombinablePropertyEditor.cs" />
-    <Compile Include="Controls\Custom\PropertyButton.cs" />
-    <Compile Include="Controls\Custom\CommandMenuItem.cs" />
-    <Compile Include="Controls\Custom\BasePopOverControl.cs" />
-    <Compile Include="Controls\Custom\BasePopOverViewModelControl.cs" />
-    <Compile Include="Controls\CustomExpressionView.cs" />
-    <Compile Include="Controls\Custom\AutoClosePopOver.cs" />
-    <Compile Include="Controls\RatioEditorControl.cs" />
-    <Compile Include="Controls\Custom\RatioEditor.cs" />
-    <Compile Include="Controls\BrushEditorControl.cs" />
-    <Compile Include="Controls\Custom\UnderlinedTabViewController.cs" />
-    <Compile Include="Controls\Custom\NotifyingTabViewController.cs" />
-    <Compile Include="Controls\Custom\NotifyingViewAdaptor.cs" />
-    <Compile Include="Controls\Custom\DrawingExtensions.cs" />
-    <Compile Include="Controls\Custom\NotifyingViewController.cs" />
-    <Compile Include="Controls\Custom\UnderlinedTextField.cs" />
-    <Compile Include="Controls\Custom\UnfocusableButton.cs" />
-    <Compile Include="Controls\Custom\SpinnerButton.cs" />
-    <Compile Include="Controls\Custom\BrushTabViewController.cs" />
-    <Compile Include="Controls\Custom\ChannelEditor.cs" />
-    <Compile Include="Controls\Custom\ChannelEditorType.cs" />
-    <Compile Include="Controls\Custom\ColorComponentEditor.cs" />
-    <Compile Include="Controls\Custom\ColorComponentTabViewController.cs" />
-    <Compile Include="Controls\Custom\ColorComponentViewController.cs" />
-    <Compile Include="Controls\Custom\ColorEditorLayer.cs" />
-    <Compile Include="Controls\Custom\ColorEditorView.cs" />
-    <Compile Include="Controls\Custom\CommonBrushLayer.cs" />
-    <Compile Include="Controls\Custom\CommonBrushView.cs" />
-    <Compile Include="Controls\Custom\CommonGradientBrushLayer.cs" />
-    <Compile Include="Controls\Custom\ComponentSpinEditor.cs" />
-    <Compile Include="Controls\Custom\EmptyBrushEditorViewController.cs" />
-    <Compile Include="Controls\Custom\HistoryLayer.cs" />
-    <Compile Include="Controls\Custom\HueLayer.cs" />
-    <Compile Include="Controls\Custom\MaterialBrushEditorViewController.cs" />
-    <Compile Include="Controls\Custom\MaterialColorLayer.cs" />
-    <Compile Include="Controls\Custom\MaterialView.cs" />
-    <Compile Include="Controls\Custom\ResourceBrushPropertyViewDelegate.cs" />
-    <Compile Include="Controls\Custom\ResourceBrushViewController.cs" />
-    <Compile Include="Controls\Custom\ResourceDataSource.cs" />
-    <Compile Include="Controls\Custom\ResourceOutlineView.cs" />
-    <Compile Include="Controls\Custom\ResourceOutlineViewDelegate.cs" />
-    <Compile Include="Controls\Custom\ShadeLayer.cs" />
-    <Compile Include="Controls\Custom\SolidColorBrushEditor.cs" />
-    <Compile Include="Controls\Custom\SolidColorBrushEditorViewController.cs" />
-    <Compile Include="Controls\RequestResource\RequestResourcePanel.cs" />
-    <Compile Include="Controls\RequestResource\RequestResourceView.cs" />
-    <Compile Include="Controls\RequestResource\ResourceTableDataSource.cs" />
-    <Compile Include="Controls\RequestResource\ResourceTableDelegate.cs" />
-    <Compile Include="Controls\RequestResource\RequestResourcePreviewPanel.cs" />
-    <Compile Include="Controls\PanelHeaderEditorControl.cs" />
-    <Compile Include="Controls\ThicknessEditorControl.cs" />
-    <Compile Include="Controls\GroupEditorControl.cs" />
-    <Compile Include="PropertyEditorSelector.cs" />
-    <Compile Include="PropertyGroupedEditorSelector.cs" />
-    <Compile Include="Controls\IEditorView.cs" />
-    <Compile Include="PropertyInlinePreviewSelector.cs" />
-    <Compile Include="Controls\EditorContainer.cs" />
-    <Compile Include="Controls\Layout.cs" />
-    <Compile Include="IHostResourceProvider.cs" />
-    <Compile Include="HostResourceProvider.cs" />
-    <Compile Include="Controls\Custom\DynamicBox.cs" />
-    <Compile Include="Controls\Custom\TabButton.cs" />
-    <Compile Include="Controls\Custom\FocusableComboBox.cs" />
-    <Compile Include="Controls\ObjectEditorControl.cs" />
-    <Compile Include="Controls\TypeSelectorControl.cs" />
-    <Compile Include="Controls\TypeSelectorWindow.cs" />
-    <Compile Include="Controls\Custom\PropertyTextField.cs" />
-    <Compile Include="Controls\ControlExtensions.cs" />
-    <Compile Include="Controls\TypeEditorControl.cs" />
-    <Compile Include="Controls\Custom\FocusablePopupButton.cs" />
-    <Compile Include="Controls\Custom\FocusableBooleanButton.cs" />
-    <Compile Include="Controls\Custom\FocusableButton.cs" />
-    <Compile Include="Controls\PropertyContainer.cs" />
-    <Compile Include="Controls\CollectionInlineEditorControl.cs" />
-    <Compile Include="Controls\CollectionEditorWindow.cs" />
-    <Compile Include="Controls\CollectionEditorControl.cs" />
-    <Compile Include="PropertyList.cs" />
-    <Compile Include="Controls\FilePathEditorControl.cs" />
-    <Compile Include="Controls\Custom\TextFieldSmallButtonContainer.cs" />
-    <Compile Include="Controls\BasePathEditorControl.cs" />
-    <Compile Include="Controls\DateTimeEditorControl.cs" />
-    <Compile Include="Controls\DateExtensions.cs" />
-    <Compile Include="Controls\EntryPropertyEditor.cs" />
-    <Compile Include="Controls\TimeSpanEditorControl.cs" />
-    <Compile Include="Controls\CharEditorControl.cs" />
+    <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-    <Folder Include="Controls\Custom\" />
-    <Compile Include="Controls\ErrorMessageView.cs" />
-    <Folder Include="Controls\RequestResource\" />
-    <Folder Include="PropertyEditingResource\Contents\Resources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj">
-      <Project>{A0B6FE73-D046-4E1C-BA9D-F20683889C5A}</Project>
-      <Name>Xamarin.PropertyEditing</Name>
-    </ProjectReference>
-  </ItemGroup>
+
   <Target Name="IncludeIconsInBundle" BeforeTargets="AssignTargetPaths">
     <ItemGroup>
       <PropertyEditingResourceBundlePath Include="PropertyEditingResource\**\*" />
@@ -185,5 +27,4 @@
     </CreateItem>
   </Target>
 
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

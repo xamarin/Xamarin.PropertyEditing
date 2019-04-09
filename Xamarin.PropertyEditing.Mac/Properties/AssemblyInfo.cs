@@ -4,11 +4,7 @@ using System.Runtime.CompilerServices;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle ("Xamarin.PropertyEditing.Mac")]
 [assembly: AssemblyDescription ("")]
-[assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyCompany ("Xamarin Inc")]
-[assembly: AssemblyProduct ("")]
 [assembly: AssemblyCopyright ("Xamarin")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
