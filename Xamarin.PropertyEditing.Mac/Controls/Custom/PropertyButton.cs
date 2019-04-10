@@ -103,13 +103,15 @@ namespace Xamarin.PropertyEditing.Mac
 				this.popUpContextMenu.AddItem (NSMenuItem.SeparatorItem);
 
 				// TODO If we add more menu items consider making the Label/Command a dictionary that we can iterate over to populate everything.
-				this.popUpContextMenu.AddItem (new CommandMenuItem (Properties.Resources.Reset, viewModel.ClearValueCommand) {
-					AttributedTitle = new Foundation.NSAttributedString (
-						Properties.Resources.Reset,
-						new CoreText.CTStringAttributes {
-							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
-						})
-				});
+				if (viewModel.Property.CanWrite) {
+					this.popUpContextMenu.AddItem (new CommandMenuItem (Properties.Resources.Reset, viewModel.ClearValueCommand) {
+						AttributedTitle = new Foundation.NSAttributedString (
+							Properties.Resources.Reset,
+							new CoreText.CTStringAttributes {
+								Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
+							})
+					});
+				}
 			}
 
 			var menuOrigin = this.Superview.ConvertPointToView (new CGPoint (Frame.Location.X - 1, Frame.Location.Y + Frame.Size.Height + 4), null);
