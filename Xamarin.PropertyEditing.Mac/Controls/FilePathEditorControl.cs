@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using AppKit;
 using CoreGraphics;
-using Xamarin.PropertyEditing.Mac.Resources;
 using System.IO;
 using Xamarin.PropertyEditing.Common;
 using Foundation;
@@ -14,12 +13,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public FilePathEditorControl (IHostResourceProvider hostResource)
 		: base (hostResource)
 		{
-			this.currentTextField.ToolTip = this.currentTextField.PlaceholderString = string.Format (LocalizationResources.ChooseFileOrDirectory, LocalizationResources.File);
+			this.currentTextField.ToolTip = this.currentTextField.PlaceholderString = string.Format (Properties.Resources.ChooseFileOrDirectory, Properties.Resources.File);
 			this.panel.CanChooseFiles = true;
 			this.panel.CanChooseDirectories = false;
-			this.revealPathButton.ToolTip = string.Format (LocalizationResources.RevealFileOrDirectory, LocalizationResources.File);
-			this.browsePathButton.ToolTip = string.Format (LocalizationResources.BrowseFileOrDirectory, LocalizationResources.File);
-			this.panel.Title = string.Format (LocalizationResources.ChooseFileOrDirectory, LocalizationResources.File);
+			this.revealPathButton.ToolTip = string.Format (Properties.Resources.RevealFileOrDirectory, Properties.Resources.File);
+			this.browsePathButton.ToolTip = string.Format (Properties.Resources.BrowseFileOrDirectory, Properties.Resources.File);
+			this.panel.Title = string.Format (Properties.Resources.ChooseFileOrDirectory, Properties.Resources.File);
 		}
 
 		protected override void OnRevealPathButtonActivated (object sender, EventArgs e)
@@ -37,7 +36,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			this.currentTextField.AccessibilityEnabled = this.currentTextField.Enabled;
-			this.currentTextField.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityPathEditor, ViewModel.Property.Name, LocalizationResources.File);
+			this.currentTextField.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityPathEditor, ViewModel.Property.Name, Properties.Resources.File);
 		}
 
 		protected override void UpdateValue ()

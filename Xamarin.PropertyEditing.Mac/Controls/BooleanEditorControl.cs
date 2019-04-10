@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using AppKit;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -67,7 +66,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateAccessibilityValues ()
 		{
 			BooleanEditor.AccessibilityEnabled = BooleanEditor.Enabled;
-			BooleanEditor.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityBoolean, ViewModel.Property.Name);
+			BooleanEditor.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityBoolean, ViewModel.Property.Name);
 		}
 	}
 }

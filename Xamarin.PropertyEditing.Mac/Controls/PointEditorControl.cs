@@ -4,7 +4,6 @@ using AppKit;
 using CoreGraphics;
 using Foundation;
 using Xamarin.PropertyEditing.Drawing;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac

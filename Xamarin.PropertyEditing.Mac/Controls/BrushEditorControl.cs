@@ -4,7 +4,6 @@ using System.ComponentModel;
 using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.Drawing;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -97,13 +96,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 		string GetTitle ()
 		{
-			var title = LocalizationResources.CommonBrushTitleUnknown;
+			var title = Properties.Resources.CommonBrushTitleUnknown;
 			switch (ViewModel.Value) {
 				case CommonSolidBrush solid:
 					title = solid.Color.ToString ();
 					break;
 				case CommonGradientBrush gradient:
-					title = LocalizationResources.CommonBrushTitleGradient;
+					title = Properties.Resources.CommonBrushTitleGradient;
 					break;
 				default:
 					if (ViewModel.Value == null)

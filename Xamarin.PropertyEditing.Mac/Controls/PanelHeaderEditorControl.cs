@@ -4,7 +4,6 @@ using System.IO;
 
 using AppKit;
 
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -24,7 +23,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.propertyObjectName = new PropertyTextField {
 				ControlSize = controlSize,
-				PlaceholderString = LocalizationResources.ObjectNamePlaceholder,
+				PlaceholderString = Properties.Resources.ObjectNamePlaceholder,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
@@ -132,7 +131,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private void UpdateValue ()
 		{
 			this.propertyObjectName.StringValue = this.viewModel.ObjectName ?? string.Empty;
-			this.propertyObjectName.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityObjectName, nameof (viewModel.ObjectName));
+			this.propertyObjectName.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityObjectName, nameof (viewModel.ObjectName));
 			this.propertyObjectName.Enabled = !this.viewModel.IsObjectNameReadOnly;
 		}
 

@@ -3,7 +3,6 @@ using System.ComponentModel;
 using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.Drawing;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -95,16 +94,16 @@ namespace Xamarin.PropertyEditing.Mac
 			this.resourceTable.Delegate = resourceTableDelegate;
 			this.resourceTable.DataSource = dataSource;
 
-			NSTableColumn resourceImages = new NSTableColumn (ResourceImageColId) { Title = LocalizationResources.ResourceTableImageColumnTitle, Width = 32 };
+			NSTableColumn resourceImages = new NSTableColumn (ResourceImageColId) { Title = Properties.Resources.ResourceTableImageColumnTitle, Width = 32 };
 			this.resourceTable.AddColumn (resourceImages);
 
-			NSTableColumn resourceTypes = new NSTableColumn (ResourceTypeColId) { Title = LocalizationResources.ResourceTableTypeColumnTitle, Width = 150 };
+			NSTableColumn resourceTypes = new NSTableColumn (ResourceTypeColId) { Title = Properties.Resources.ResourceTableTypeColumnTitle, Width = 150 };
 			this.resourceTable.AddColumn (resourceTypes);
 
-			NSTableColumn resourceName = new NSTableColumn (ResourceNameColId) { Title = LocalizationResources.ResourceTableNameColumnTitle, Width = 150 };
+			NSTableColumn resourceName = new NSTableColumn (ResourceNameColId) { Title = Properties.Resources.ResourceTableNameColumnTitle, Width = 150 };
 			resourceTable.AddColumn (resourceName);
 
-			NSTableColumn resourceValue = new NSTableColumn (ResourceValueColId) { Title = LocalizationResources.ResourceTableValueColumnTitle, Width = 45 };
+			NSTableColumn resourceValue = new NSTableColumn (ResourceValueColId) { Title = Properties.Resources.ResourceTableValueColumnTitle, Width = 45 };
 			this.resourceTable.AddColumn (resourceValue);
 
 			this.resourceTable.DoubleClick += (object sender, EventArgs e) => {

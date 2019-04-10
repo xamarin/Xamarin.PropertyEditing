@@ -1,7 +1,6 @@
 ﻿using System;
 using AppKit;
 using CoreGraphics;
-using Xamarin.PropertyEditing.Mac.Resources;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -37,8 +36,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.hostResources = hostResources;
 
-			AccessibilityTitle = LocalizationResources.AccessibilityPropertiesButton;
-			AccessibilityHelp = LocalizationResources.AccessibilityPropertiesButtonDescription;
+			AccessibilityTitle = Properties.Resources.AccessibilityPropertiesButton;
+			AccessibilityHelp = Properties.Resources.AccessibilityPropertiesButtonDescription;
 			Enabled = true;
 			Image = this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");
 			ImageScaling = NSImageScale.None;

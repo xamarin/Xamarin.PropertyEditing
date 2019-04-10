@@ -10,7 +10,6 @@ using CoreGraphics;
 
 using Cadenza.Collections;
 using Xamarin.PropertyEditing.ViewModels;
-using Xamarin.PropertyEditing.Mac.Resources;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -107,7 +106,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			foreach (var item in combinableList) {
 				item.Key.AccessibilityEnabled = item.Key.Enabled;
-				item.Key.AccessibilityTitle = string.Format (LocalizationResources.AccessibilityCombobox, ViewModel.Property.Name);
+				item.Key.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityCombobox, ViewModel.Property.Name);
 			}
 		}
 
