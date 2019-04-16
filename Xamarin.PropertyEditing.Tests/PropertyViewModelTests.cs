@@ -1447,6 +1447,33 @@ namespace Xamarin.PropertyEditing.Tests
 			), It.IsAny<PropertyVariation> ()));
 		}
 
+		[Test]
+		public void CreateBindingExistingPreserved ()
+		{
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (pi => pi.ValueSources).Returns (ValueSources.Default | ValueSources.Local | ValueSources.Binding);
+
+			var bindObject = new object ();
+
+			var editor = new Mock<IObjectEditor> ();
+			SetupPropertySetAndGet (editor, mockProperty.Object, new ValueInfo<TValue> {
+				Source = ValueSource.Binding,
+				SourceDescriptor = bindObject
+			});
+
+			var vm = GetViewModel (mockProperty.Object, editor.Object);
+			Assume.That (vm.ValueSource, Is.EqualTo (ValueSource.Binding));
+
+			bool requested = false;
+			vm.CreateBindingRequested += (o, e) => {
+				requested = true;
+				Assert.That (e.BindingObject, Is.SameAs (bindObject));
+			};
+
+			vm.RequestCreateBindingCommand.Execute (null);
+			Assert.That (requested, Is.True, "Binding wasn't requested");
+		}
+
 		protected TViewModel GetViewModel (IPropertyInfo property, IObjectEditor editor)
 		{
 			return GetViewModel (property, new[] { editor });
@@ -1478,6 +1505,11 @@ namespace Xamarin.PropertyEditing.Tests
 				Source = (Equals (value, default(TValue))) ? ValueSource.Default : ValueSource.Local
 			};
 
+			SetupPropertySetAndGet (editorMock, property, valueInfo);
+		}
+
+		protected virtual void SetupPropertySetAndGet (Mock<IObjectEditor> editorMock, IPropertyInfo property, ValueInfo<TValue> valueInfo)
+		{
 			editorMock.Setup (oe => oe.SetValueAsync (property, It.IsAny<ValueInfo<TValue>> (), null))
 				.Callback<IPropertyInfo, ValueInfo<TValue>, PropertyVariation> ((p, vi, v) => {
 					valueInfo = vi;

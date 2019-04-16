@@ -15,24 +15,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (assignableTypes == null)
 				throw new ArgumentNullException (nameof (assignableTypes));
 
-			assignableTypes.Task.ContinueWith (t => {
-				this.typeOptions = new SimpleCollectionViewOptions {
-					DisplaySelector = (o) => ((ITypeInfo)o).Name
-				};
-
-				this.assemblyView = new SimpleCollectionView (t.Result, this.assemblyOptions = new SimpleCollectionViewOptions {
-					Filter = AssemblyFilter,
-					DisplaySelector = (o) => ((KeyValuePair<IAssemblyInfo, ILookup<string, ITypeInfo>>)o).Key.Name,
-					ChildrenSelector = (o) => ((KeyValuePair<IAssemblyInfo, ILookup<string, ITypeInfo>>)o).Value,
-					ChildOptions = new SimpleCollectionViewOptions {
-						DisplaySelector = (o) => ((IGrouping<string, ITypeInfo>)o).Key,
-						ChildrenSelector = (o) => ((IGrouping<string, ITypeInfo>)o),
-						ChildOptions = this.typeOptions
-					}
-				});
-				OnPropertyChanged (nameof(Types));
-				IsLoading = false;
-			}, TaskScheduler.FromCurrentSynchronizationContext());
+			RequestAssemblyView (assignableTypes);
 		}
 
 		public ITypeInfo SelectedType
@@ -122,6 +105,28 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private bool AssemblyFilter (object item)
 		{
 			return ((KeyValuePair<IAssemblyInfo, ILookup<string, ITypeInfo>>)item).Key.IsRelevant;
+		}
+
+		private async void RequestAssemblyView (AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
+		{
+			var types = await assignableTypes.Task;
+
+			this.typeOptions = new SimpleCollectionViewOptions {
+				DisplaySelector = (o) => ((ITypeInfo)o).Name
+			};
+
+			this.assemblyView = new SimpleCollectionView (types, this.assemblyOptions = new SimpleCollectionViewOptions {
+				Filter = AssemblyFilter,
+				DisplaySelector = (o) => ((KeyValuePair<IAssemblyInfo, ILookup<string, ITypeInfo>>)o).Key.Name,
+				ChildrenSelector = (o) => ((KeyValuePair<IAssemblyInfo, ILookup<string, ITypeInfo>>)o).Value,
+				ChildOptions = new SimpleCollectionViewOptions {
+					DisplaySelector = (o) => ((IGrouping<string, ITypeInfo>)o).Key,
+					ChildrenSelector = (o) => ((IGrouping<string, ITypeInfo>)o),
+					ChildOptions = this.typeOptions
+				}
+			});
+			OnPropertyChanged (nameof (Types));
+			IsLoading = false;
 		}
 	}
 }

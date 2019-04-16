@@ -260,6 +260,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return args;
 		}
 
+		protected CreateBindingRequestedEventArgs RequestCreateBinding ()
+		{
+			var e = new CreateBindingRequestedEventArgs ();
+			if (ValueSource == ValueSource.Binding) {
+				e.BindingObject = this.value.SourceDescriptor;
+			}
+
+			OnCreateBindingRequested (e);
+			return e;
+		}
+
 		protected Task SetValueAsync (ValueInfo<TValue> newValue)
 		{
 			if (this.value == newValue)
@@ -770,11 +781,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			editor.PropertyChanged -= OnEditorPropertyChanged;
 		}
 
-		protected CreateBindingRequestedEventArgs RequestCreateBinding ()
+		protected void OnCreateBindingRequested (CreateBindingRequestedEventArgs e)
 		{
-			var e = new CreateBindingRequestedEventArgs ();
 			CreateBindingRequested?.Invoke (this, e);
-			return e;
 		}
 
 		protected CreateResourceRequestedEventArgs RequestCreateResource ()

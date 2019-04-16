@@ -122,6 +122,22 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return vm;
 		}
 
+		public PropertyViewModel GetKnownPropertyViewModel (KnownProperty property)
+		{
+			if (property == null)
+				throw new ArgumentNullException (nameof (property));
+			if (this.knownEditors == null)
+				throw new InvalidOperationException ("Querying for known properties before they've been setup");
+			if (!this.knownEditors.TryGetValue (property, out EditorViewModel model))
+				throw new KeyNotFoundException ();
+
+			var vm = model as PropertyViewModel;
+			if (vm == null)
+				throw new InvalidOperationException ("KnownProperty doesn't return a PropertyViewModel");
+
+			return vm;
+		}
+
 		protected IReadOnlyList<IObjectEditor> ObjectEditors => this.objEditors;
 
 		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>

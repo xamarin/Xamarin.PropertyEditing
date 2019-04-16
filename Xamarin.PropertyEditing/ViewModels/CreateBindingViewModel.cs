@@ -34,7 +34,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class CreateBindingViewModel
 		: PropertiesViewModel, IProvidePath
 	{
-		public CreateBindingViewModel (TargetPlatform platform, IObjectEditor targetEditor, IPropertyInfo property, PropertyVariation variations = null)
+		public CreateBindingViewModel (TargetPlatform platform, IObjectEditor targetEditor, IPropertyInfo property, PropertyVariation variations = null, object bindingObject = null)
 			: base (platform)
 		{
 			if (platform == null)
@@ -59,7 +59,26 @@ namespace Xamarin.PropertyEditing.ViewModels
 			BindingSources = new AsyncValue<IReadOnlyList<BindingSource>> (
 					platform.BindingProvider.GetBindingSourcesAsync (targetEditor.Target, property));
 
-			RequestBindingObject();
+			if (bindingObject == null)
+				RequestBindingObject ();
+			else
+				SelectedObjects.Add (bindingObject);
+
+			var knownMapping = new Dictionary<KnownProperty, string> {
+				{ PropertyBinding.PathProperty, nameof(Path) },
+				{ PropertyBinding.SourceProperty, nameof(SelectedBindingSource) },
+				{ PropertyBinding.ConverterProperty, nameof(SelectedValueConverter) },
+			};
+
+			foreach (var kvp in BindingEditor.KnownProperties) {
+				var pvm = GetKnownPropertyViewModel (kvp.Value);
+				pvm.PropertyChanged += (sender, args) => {
+					if (args.PropertyName == nameof(StringPropertyViewModel.Value)) {
+						if (knownMapping.TryGetValue (kvp.Value, out string propertyName))
+							OnPropertyChanged (propertyName);
+					}
+				};
+			}
 		}
 
 		private async void RequestBindingObject ()
@@ -205,10 +224,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 			get
 			{
-				if (!KnownPropertiesSetup)
-					return null;
+				if (KnownPropertiesSetup) {
+					var source = GetKnownPropertyViewModel (PropertyBinding.SourceProperty).Value;
+					if (source != null)
+						return source;
+					
+				}
 
-				return GetKnownPropertyViewModel (PropertyBinding.SourceProperty).Value;
+				return BindingSources.Value?.FirstOrDefault ();
 			}
 
 			set
@@ -419,7 +442,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		protected override void OnAddEditors (IEnumerable<EditorViewModel> editors)
+		protected override async void OnAddEditors (IEnumerable<EditorViewModel> editors)
 		{
 			base.OnAddEditors (editors);
 			ValueConverters = new AsyncValue<IReadOnlyList<Resource>> (GetValueConvertersAsync());
@@ -443,13 +466,22 @@ namespace Xamarin.PropertyEditing.ViewModels
 			BindingProperties = regular;
 			FlagsProperties = flags;
 
-			BindingSources.Task.ContinueWith (t => {
-				SelectedBindingSource = t.Result.FirstOrDefault ();
-			}, TaskScheduler.FromCurrentSynchronizationContext ());
+			OnPropertyChanged (nameof (ShowTypeLevel));
 
-			OnPropertyChanged (nameof(Path));
-			OnPropertyChanged (nameof(SelectedValueConverter));
-			OnPropertyChanged (nameof(ShowTypeLevel));
+			var sourceVm = GetKnownPropertyViewModel (PropertyBinding.SourceProperty);
+			await Task.WhenAll (sourceVm.ValueTask, BindingSources.Task);
+			if (sourceVm.Value == null)
+				SelectedBindingSource = BindingSources.Value?.FirstOrDefault ();
+
+			if (SelectedBindingSource == null)
+				return;
+
+			var sourceParameter = GetKnownPropertyViewModel (PropertyBinding.SourceParameterProperty);
+			await sourceParameter.ValueTask;
+
+			await UpdateSourcesAsync (restoring: true);
+			UpdateShowProperties ();
+			await UpdatePropertiesAsync (restore: true);
 		}
 
 		private static readonly Resource NoValueConverter = new Resource (Resources.NoValueConverter);
@@ -511,25 +543,39 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private async void RequestUpdateSources ()
 		{
-			Task task = null;
+			await UpdateSourcesAsync (restoring: false);
+		}
+
+		private async Task UpdateSourcesAsync (bool restoring)
+		{
 			switch (SelectedBindingSource.Type) {
 			case BindingSourceType.SingleObject:
 			case BindingSourceType.Object:
-				SelectedObjectTreeElement = null;
+				if (!restoring)
+					SelectedObjectTreeElement = null;
+
 				ObjectElementRoots = new AsyncValue<IReadOnlyList<ObjectTreeElement>> (GetRootElementsAsync ());
-				task = ObjectElementRoots.Task;
+				await ObjectElementRoots.Task;
 				break;
 			case BindingSourceType.Type:
-				TypeSelector = new TypeSelectorViewModel (new AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> (GetBindingSourceTypesAsync()));
+				var selector = new TypeSelectorViewModel (new AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> (GetBindingSourceTypesAsync()));
+				if (restoring) {
+					selector.SelectedType = (ITypeInfo)BindingSourceTarget;
+				}
+
+				TypeSelector = selector;
 				break;
 			case BindingSourceType.Resource:
-				SelectedResource = null;
+				if (!restoring)
+					SelectedResource = null;
+
 				SourceResources = new AsyncValue<ILookup<ResourceSource, Resource>> (GetSourceResourcesAsync ());
+				await SourceResources.Task;
+				if (restoring)
+					SelectedResource = (Resource)BindingSourceTarget;
+
 				break;
 			}
-
-			if (task != null)
-				await task;
 
 			switch (SelectedBindingSource.Type) {
 				case BindingSourceType.SingleObject:
@@ -581,9 +627,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return editors.Select (oe => new ObjectTreeElement (this.editorProvider, oe)).ToArray ();
 		}
 
-		private void RequestUpdateProperties ()
+		private async void RequestUpdateProperties ()
 		{
-			SelectedPropertyElement = null;
+			await UpdatePropertiesAsync ();
+		}
+
+		private async Task UpdatePropertiesAsync (bool restore = false)
+		{
+			if (!restore)
+				SelectedPropertyElement = null;
 
 			ITypeInfo type = null;
 			switch (SelectedBindingSource.Type) {
@@ -611,10 +663,17 @@ namespace Xamarin.PropertyEditing.ViewModels
 				.ContinueWith (t => new PropertyTreeRoot (this.editorProvider, type, t.Result), TaskScheduler.Default);
 
 			PropertyRoot = new AsyncValue<PropertyTreeRoot> (task);
+
+			if (restore) {
+				await PropertyRoot.Task;
+				await SelectFromPathAsync ();
+			}
 		}
 
 		private ITypeInfo GetRealType (Resource resource)
 		{
+			if (resource.RepresentationType == null)
+				return null;
 			if (resource.RepresentationType.IsPrimitive)
 				return resource.RepresentationType.ToTypeInfo (isRelevant: false);
 			if (this.editorProvider.KnownTypes.TryGetValue (resource.RepresentationType, out ITypeInfo type))
@@ -630,15 +689,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return;
 			}
 
-			string newPath = String.Empty;
-			PropertyTreeElement element = SelectedPropertyElement;
-			while (element != null) {
-				string sep = (newPath != String.Empty) ? ((!element.IsCollection) ? "." : "/") : String.Empty;
-				newPath = element.Property.Name + sep + newPath;
-				element = element.Parent;
+			Path = BindingPath.FromTree (SelectedPropertyElement);
+		}
+
+		private async Task SelectFromPathAsync ()
+		{
+			string path = Path;
+			if (String.IsNullOrWhiteSpace (path)) {
+				SelectedPropertyElement = null;
+				return;
 			}
 
-			Path = newPath;
+			PropertyTreeRoot root = await PropertyRoot.Task;
+			SelectedPropertyElement = BindingPath.GetSelectedElement (root, path);
 		}
 
 		private async void RequestCreateValueConverter (Resource previous)

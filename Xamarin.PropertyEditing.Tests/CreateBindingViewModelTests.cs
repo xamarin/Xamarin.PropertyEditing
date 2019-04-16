@@ -242,7 +242,7 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedValueConverter = vm.ValueConverters.Value[1];
 
 			Assert.That (requested, Is.True);
-			Assert.That (selectedChanged, Is.EqualTo (2), "SelectedValueConverter did not fire INPC for request and result changes");
+			Assert.That (selectedChanged, Is.AtLeast (2), "SelectedValueConverter did not fire INPC for request and result changes");
 			Assert.That (newItem, Is.Not.Null);
 			Assert.That (vm.SelectedValueConverter, Is.EqualTo (newItem));
 		}
@@ -391,10 +391,9 @@ namespace Xamarin.PropertyEditing.Tests
 			};
 
 			var vm = CreateBasicViewModel (sources);
-
-			while (vm.SelectedObjects.Count == 0) {
-				await Task.Delay (1);
-			}
+			await vm.BindingSources.Task;
+			await vm.GetKnownPropertyViewModel (PropertyBinding.SourceProperty).ValueTask;
+			await Task.Delay (100);
 
 			var binding = (MockBinding)vm.SelectedObjects.First ();
 
@@ -620,6 +619,307 @@ namespace Xamarin.PropertyEditing.Tests
 				vm.BindingProperties.Cast<PropertyViewModel> ().Select (pvm => pvm.Property));
 		}
 
+		[Test, Timeout (10000)]
+		public async Task RestoresPropertiesObject ()
+		{
+			var target = new object ();
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Local | ValueSources.Binding);
+			property.SetupGet (p => p.Type).Returns (typeof (object));
+			property.SetupGet (p => p.Name).Returns ("name");
+			property.SetupGet (p => p.RealType).Returns (typeof (object).ToTypeInfo ());
+			property.SetupGet (p => p.CanWrite).Returns (true);
+
+			TimeSpan delay = TimeSpan.FromMilliseconds (150);
+
+			var editor = GetBasicEditor (target, property.Object);
+
+			var controlTarget = new MockWpfControl ();
+			var controlTarget2 = new MockSampleControl();
+			var controlEditor = new MockObjectEditor (controlTarget) { Delay = delay };
+			var controlEditor2 = new MockObjectEditor (controlTarget2) { Delay = delay };
+			var provider = new MockEditorProvider (controlEditor, controlEditor2) { Delay = delay };
+
+			var source1 = new BindingSource ("Control", BindingSourceType.Object);
+			var source2 = new BindingSource ("Source2", BindingSourceType.Object);
+
+			var bpmock = new Mock<IBindingProvider> ();
+			bpmock.Setup (bp => bp.GetBindingSourcesAsync (target, property.Object)).ReturnsAsync (new[] { source1, source2 }, delay);
+			bpmock.Setup (bp => bp.GetRootElementsAsync (source1, target)).ReturnsAsync (new[] { controlTarget }, delay);
+			bpmock.Setup (bp => bp.GetRootElementsAsync (source2, target)).ReturnsAsync (new[] { controlTarget2 }, delay);
+			bpmock.Setup (bp => bp.GetValueConverterResourcesAsync (It.IsAny<object> ())).ReturnsAsync (new Resource[0], delay);
+
+			var binding = new MockBinding {
+				Path = "String",
+				StringFormat = "Format",
+				Source = source2,
+				Converter = new Resource("resource")
+			};
+
+			var vm = new CreateBindingViewModel (new TargetPlatform (provider, bpmock.Object), editor.Object, property.Object, bindingObject: binding);
+			Assume.That (vm.ShowObjectSelector, Is.False);
+
+			var stringFormatTcs = new TaskCompletionSource<string> ();
+			var stringFormatVm = vm.BindingProperties.OfType<PropertyViewModel<string>> ().FirstOrDefault (pvm => pvm.Property.Name == nameof (MockBinding.StringFormat));
+			stringFormatVm.PropertyChanged += (s, e) => {
+				if (e.PropertyName == nameof(PropertyViewModel<string>.Value)) {
+					stringFormatTcs.SetResult (stringFormatVm.Value);
+				}
+			};
+
+			var changed = new Dictionary<string, TaskCompletionSource<object>> {
+				{ nameof(vm.SelectedBindingSource), new TaskCompletionSource<object> () },
+				{ nameof(vm.SelectedValueConverter), new TaskCompletionSource<object> () },
+				{ nameof(vm.Path), new TaskCompletionSource<object> () },
+				{ nameof(vm.ShowObjectSelector), new TaskCompletionSource<object> () },
+				{ nameof(vm.SelectedPropertyElement), new TaskCompletionSource<object> () },
+				{ nameof(vm.PropertyRoot), new TaskCompletionSource<object> () },
+				{ nameof(vm.SelectedObjectTreeElement), new TaskCompletionSource<object> () },
+			};
+
+			vm.PropertyChanged += (o, e) => {
+				if (!changed.TryGetValue (e.PropertyName, out TaskCompletionSource<object> tcs))
+					return;
+
+				tcs.TrySetResult (null);
+
+				if (e.PropertyName == nameof(vm.SelectedBindingSource)) {
+					Assert.That (vm.SelectedBindingSource, Is.EqualTo (binding.Source));
+				} else if (e.PropertyName == nameof(vm.SelectedValueConverter)) {
+					Assert.That (vm.SelectedValueConverter, Is.EqualTo (binding.Converter));
+				} else if (e.PropertyName == nameof(vm.Path)) {
+					Assert.That (vm.Path, Is.EqualTo (binding.Path));
+				} else if (e.PropertyName == nameof(vm.ShowObjectSelector)) {
+					Assert.That (vm.ShowObjectSelector, Is.True);
+				} else if (e.PropertyName == nameof(vm.SelectedObjectTreeElement)) {
+					Assert.That (vm.SelectedObjectTreeElement.Editor, Is.EqualTo (controlEditor2));
+				} else if (e.PropertyName == nameof(vm.SelectedPropertyElement)) {
+					Assert.That (vm.SelectedPropertyElement.Property, Is.EqualTo (controlEditor2.Properties.Single (pi => pi.Name == binding.Path)));
+				}
+			};
+
+			await vm.BindingSources.Task;
+			await vm.ValueConverters.Task;
+
+			foreach (var kvp in changed) {
+				await kvp.Value.Task;
+			}
+
+			await vm.PropertyRoot.Task;
+			Assert.That (vm.PropertyRoot.Value.TargetType, Is.EqualTo (controlEditor2.TargetType));
+			Assert.That (vm.SelectedPropertyElement.Property, Is.EqualTo (controlEditor2.Properties.Single (pi => pi.Name == binding.Path)));
+
+			string format = await stringFormatTcs.Task;
+			Assert.That (format, Is.EqualTo (binding.StringFormat));
+		}
+
+		[Test, Timeout (10000)]
+		public async Task RestoresPropertiesType ()
+		{
+			var target = new object ();
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Local | ValueSources.Binding);
+			property.SetupGet (p => p.Type).Returns (typeof (object));
+			property.SetupGet (p => p.Name).Returns ("name");
+			property.SetupGet (p => p.RealType).Returns (typeof (object).ToTypeInfo ());
+			property.SetupGet (p => p.CanWrite).Returns (true);
+
+			TimeSpan delay = TimeSpan.FromMilliseconds (150);
+
+			var editor = GetBasicEditor (target, property.Object);
+
+			var controlTarget = new MockWpfControl ();
+			var controlTarget2 = new MockSampleControl ();
+			var controlEditor = new MockObjectEditor (controlTarget) { Delay = delay };
+			var controlEditor2 = new MockObjectEditor (controlTarget2) { Delay = delay };
+			var provider = new MockEditorProvider (controlEditor, controlEditor2) { Delay = delay };
+
+			var source1 = new BindingSource ("Control", BindingSourceType.Object);
+			var source2 = new BindingSource ("Source2", BindingSourceType.Type);
+
+			var bpmock = new Mock<IBindingProvider> ();
+			bpmock.Setup (bp => bp.GetBindingSourcesAsync (target, property.Object)).ReturnsAsync (new[] { source1, source2 }, delay);
+			bpmock.Setup (bp => bp.GetRootElementsAsync (source1, target)).ReturnsAsync (new[] { controlTarget }, delay);
+			bpmock.Setup (bp => bp.GetSourceTypesAsync (source2, target)).ReturnsAsync (new AssignableTypesResult (new[] { controlEditor.TargetType, controlEditor2.TargetType }, new[] { controlEditor.TargetType, controlEditor2.TargetType }), delay);
+			bpmock.Setup (bp => bp.GetValueConverterResourcesAsync (It.IsAny<object> ())).ReturnsAsync (new Resource[0], delay);
+
+			var binding = new MockBinding {
+				Path = "String",
+				StringFormat = "Format",
+				Source = source2,
+				SourceParameter = controlEditor2.TargetType,
+				Converter = new Resource ("resource")
+			};
+
+			var vm = new CreateBindingViewModel (new TargetPlatform (provider, bpmock.Object), editor.Object, property.Object, bindingObject: binding);
+			Assume.That (vm.ShowObjectSelector, Is.False);
+
+			var stringFormatTcs = new TaskCompletionSource<string> ();
+			var stringFormatVm = vm.BindingProperties.OfType<PropertyViewModel<string>> ().FirstOrDefault (pvm => pvm.Property.Name == nameof (MockBinding.StringFormat));
+			stringFormatVm.PropertyChanged += (s, e) => {
+				if (e.PropertyName == nameof (PropertyViewModel<string>.Value)) {
+					stringFormatTcs.SetResult (stringFormatVm.Value);
+				}
+			};
+
+			var changed = new Dictionary<string, TaskCompletionSource<object>> {
+				{ nameof(vm.SelectedBindingSource), new TaskCompletionSource<object> () },
+				{ nameof(vm.SelectedValueConverter), new TaskCompletionSource<object> () },
+				{ nameof(vm.Path), new TaskCompletionSource<object> () },
+				{ nameof(vm.ShowTypeSelector), new TaskCompletionSource<object> () },
+				{ nameof(vm.SelectedPropertyElement), new TaskCompletionSource<object> () },
+				{ nameof(vm.PropertyRoot), new TaskCompletionSource<object> () }
+			};
+
+			vm.PropertyChanged += (o, e) => {
+				if (!changed.TryGetValue (e.PropertyName, out TaskCompletionSource<object> tcs))
+					return;
+
+				tcs.TrySetResult (null);
+
+				if (e.PropertyName == nameof (vm.SelectedBindingSource)) {
+					Assert.That (vm.SelectedBindingSource, Is.EqualTo (binding.Source));
+				} else if (e.PropertyName == nameof (vm.SelectedValueConverter)) {
+					Assert.That (vm.SelectedValueConverter, Is.EqualTo (binding.Converter));
+				} else if (e.PropertyName == nameof (vm.Path)) {
+					Assert.That (vm.Path, Is.EqualTo (binding.Path));
+				} else if (e.PropertyName == nameof (vm.ShowTypeSelector)) {
+					Assert.That (vm.ShowTypeSelector, Is.True);
+				} else if (e.PropertyName == nameof (vm.SelectedPropertyElement)) {
+					Assert.That (vm.SelectedPropertyElement.Property, Is.EqualTo (controlEditor2.Properties.Single (pi => pi.Name == binding.Path)));
+				}
+			};
+
+			await vm.BindingSources.Task;
+			await vm.ValueConverters.Task;
+
+			foreach (var kvp in changed) {
+				await kvp.Value.Task;
+			}
+
+			await vm.PropertyRoot.Task;
+			Assert.That (vm.PropertyRoot.Value.TargetType, Is.EqualTo (controlEditor2.TargetType));
+			Assert.That (vm.SelectedPropertyElement.Property, Is.EqualTo (controlEditor2.Properties.Single (pi => pi.Name == binding.Path)));
+			Assert.That (vm.TypeSelector.SelectedType, Is.EqualTo (binding.SourceParameter));
+
+			string format = await stringFormatTcs.Task;
+			Assert.That (format, Is.EqualTo (binding.StringFormat));
+		}
+
+		[Test, Timeout (10000)]
+		public async Task RestoresPropertiesResource ()
+		{
+			var target = new object ();
+
+			var property = new Mock<IPropertyInfo> ();
+			property.SetupGet (p => p.ValueSources).Returns (ValueSources.Local | ValueSources.Binding);
+			property.SetupGet (p => p.Type).Returns (typeof (object));
+			property.SetupGet (p => p.Name).Returns ("name");
+			property.SetupGet (p => p.RealType).Returns (typeof (object).ToTypeInfo ());
+			property.SetupGet (p => p.CanWrite).Returns (true);
+
+			TimeSpan delay = TimeSpan.FromMilliseconds (150);
+
+			var editor = GetBasicEditor (target, property.Object);
+
+			var controlTarget = new MockWpfControl ();
+			var controlTarget2 = new MockSampleControl ();
+			var controlEditor = new MockObjectEditor (controlTarget) { Delay = delay };
+			var controlEditor2 = new MockObjectEditor (controlTarget2) { Delay = delay };
+			var provider = new MockEditorProvider (controlEditor, controlEditor2) { Delay = delay };
+
+			var source1 = new BindingSource ("Control", BindingSourceType.Object);
+			var source2 = new BindingSource ("Source2", BindingSourceType.Resource);
+
+			var resourceSource1 = new ResourceSource ("Source1", ResourceSourceType.Application);
+			var resourceSource2 = new ResourceSource ("Source2", ResourceSourceType.Document);
+
+			var targetResource = new Resource<CommonSolidBrush> (resourceSource1, "Resource3", new CommonSolidBrush (0, 0, 0));
+			var resources = new ObservableLookup<ResourceSource, Resource> {
+				new ObservableGrouping<ResourceSource, Resource> (resourceSource1) {
+					new Resource (resourceSource1, "Resource")
+				},
+
+				new ObservableGrouping<ResourceSource, Resource> (resourceSource2) {
+					new Resource (resourceSource1, "Resource2"),
+					targetResource
+				}
+			};
+
+			var bpmock = new Mock<IBindingProvider> ();
+			bpmock.Setup (bp => bp.GetBindingSourcesAsync (target, property.Object)).ReturnsAsync (new[] { source1, source2 }, delay);
+			bpmock.Setup (bp => bp.GetRootElementsAsync (source1, target)).ReturnsAsync (new[] { controlTarget }, delay);
+			bpmock.Setup (bp => bp.GetResourcesAsync (source2, target)).ReturnsAsync (resources, delay);
+			bpmock.Setup (bp => bp.GetValueConverterResourcesAsync (It.IsAny<object> ())).ReturnsAsync (new Resource[0], delay);
+
+			var binding = new MockBinding {
+				Path = nameof(CommonSolidBrush.ColorSpace),
+				StringFormat = "Format",
+				Source = source2,
+				SourceParameter = targetResource,
+				Converter = new Resource ("resource")
+			};
+
+			var vm = new CreateBindingViewModel (new TargetPlatform (provider, bpmock.Object), editor.Object, property.Object, bindingObject: binding);
+			Assume.That (vm.ShowObjectSelector, Is.False);
+
+			var stringFormatTcs = new TaskCompletionSource<string> ();
+			var stringFormatVm = vm.BindingProperties.OfType<PropertyViewModel<string>> ().FirstOrDefault (pvm => pvm.Property.Name == nameof (MockBinding.StringFormat));
+			stringFormatVm.PropertyChanged += (s, e) => {
+				if (e.PropertyName == nameof (PropertyViewModel<string>.Value)) {
+					stringFormatTcs.SetResult (stringFormatVm.Value);
+				}
+			};
+
+			var changed = new Dictionary<string, TaskCompletionSource<object>> {
+				{ nameof(vm.SelectedBindingSource), new TaskCompletionSource<object> () },
+				{ nameof(vm.SelectedValueConverter), new TaskCompletionSource<object> () },
+				{ nameof(vm.Path), new TaskCompletionSource<object> () },
+				{ nameof(vm.ShowResourceSelector), new TaskCompletionSource<object> () },
+				{ nameof(vm.SelectedResource), new TaskCompletionSource<object> () },
+				{ nameof(vm.SelectedPropertyElement), new TaskCompletionSource<object> () },
+				{ nameof(vm.PropertyRoot), new TaskCompletionSource<object> () }
+			};
+
+			vm.PropertyChanged += (o, e) => {
+				if (!changed.TryGetValue (e.PropertyName, out TaskCompletionSource<object> tcs))
+					return;
+
+				tcs.TrySetResult (null);
+
+				if (e.PropertyName == nameof (vm.SelectedBindingSource)) {
+					Assert.That (vm.SelectedBindingSource, Is.EqualTo (binding.Source));
+				} else if (e.PropertyName == nameof (vm.SelectedValueConverter)) {
+					Assert.That (vm.SelectedValueConverter, Is.EqualTo (binding.Converter));
+				} else if (e.PropertyName == nameof (vm.Path)) {
+					Assert.That (vm.Path, Is.EqualTo (binding.Path));
+				} else if (e.PropertyName == nameof (vm.ShowResourceSelector)) {
+					Assert.That (vm.ShowResourceSelector, Is.True);
+				} else if (e.PropertyName == nameof (vm.SelectedPropertyElement)) {
+					Assert.That (vm.SelectedPropertyElement.Property.Name, Is.EqualTo (binding.Path));
+				}  else if (e.PropertyName == nameof(vm.SelectedResource)) {
+					Assert.That (vm.SelectedResource, Is.EqualTo (targetResource));
+				}
+			};
+
+			await vm.BindingSources.Task;
+			await vm.ValueConverters.Task;
+
+			foreach (var kvp in changed) {
+				await kvp.Value.Task;
+			}
+
+			await vm.PropertyRoot.Task;
+			await vm.SourceResources.Task;
+
+			Assert.That (vm.PropertyRoot.Value.TargetType, Is.EqualTo (typeof(CommonSolidBrush).ToTypeInfo ()));
+
+			string format = await stringFormatTcs.Task;
+			Assert.That (format, Is.EqualTo (binding.StringFormat));
+		}
+
 		private TestContext syncContext;
 		private static readonly ResourceSource[] DefaultResourceSources = new[] { MockResourceProvider.SystemResourcesSource, MockResourceProvider.ApplicationResourcesSource };
 
@@ -670,14 +970,19 @@ namespace Xamarin.PropertyEditing.Tests
 				bpmock.Setup (bp => bp.GetRootElementsAsync (sources[1], target)).ReturnsAsync (new[] { new object () });
 			} else {
 				for (int i = 0; i < sources.Length; i++) {
+
+					BindingSource source = sources[i];
+
 					int index = i;
-					if (sources[i].Type == BindingSourceType.SingleObject)
+					if (source.Type == BindingSourceType.SingleObject)
 						bpmock.Setup (bp => bp.GetRootElementsAsync (sources[index], target)).ReturnsAsync (new[] { new object () });
+					else if (source.Type == BindingSourceType.Type)
+						bpmock.Setup (bp => bp.GetSourceTypesAsync (source, target)).ReturnsAsync (new AssignableTypesResult (new[] { typeof(CommonSolidBrush).ToTypeInfo () }));
 					else
 						bpmock.Setup (bp => bp.GetRootElementsAsync (sources[index], target)).ReturnsAsync (new[] { new object (), new object() });
 				}
 			}
-			
+
 			bpmock.Setup (bp => bp.GetBindingSourcesAsync (target, property)).ReturnsAsync (sources);
 			bpmock.Setup (bp => bp.GetValueConverterResourcesAsync (It.IsAny<object> ())).ReturnsAsync (new Resource[0]);
 			return bpmock;
