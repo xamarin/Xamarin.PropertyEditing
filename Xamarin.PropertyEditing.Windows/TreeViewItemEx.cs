@@ -95,19 +95,38 @@ namespace Xamarin.PropertyEditing.Windows
 				return;
 			}
 
-			SelectedTreeItem = FindItem (ItemContainerGenerator, item);
+			TreeViewItemEx treeItem = FindItem (ItemContainerGenerator, item);
+			if (treeItem == null)
+				return;
+
+			SelectedTreeItem = treeItem;
 		}
 
 		private TreeViewItemEx FindItem (ItemContainerGenerator generator, object item)
 		{
-			TreeViewItemEx treeItem;
+			TreeViewItemEx treeItem = null;
 			if (DataContext is IProvidePath pathProvider) {
 				var path = pathProvider.GetItemParents (item);
 
 				for (int i = 0; i < path.Count; i++) {
-					treeItem = (TreeViewItemEx)generator.ContainerFromItem (path[i]);
-					treeItem.IsExpanded = true;
+					if (ItemsSource != null) {
+						treeItem = (TreeViewItemEx) generator.ContainerFromItem (path[i]);
+					} else { // Manual items won't map, despite data contexts
+						for (int x = 0; x < generator.Items.Count; x++) {
+							if (!(generator.Items[x] is TreeViewItemEx tvi))
+								continue;
 
+							if (Equals (tvi.DataContext, path[i])) {
+								treeItem = tvi;
+								break;
+							}
+						}
+					}
+
+					if (treeItem == null)
+						return null;
+
+					treeItem.IsExpanded = true;
 					generator = treeItem.ItemContainerGenerator;
 				}
 			}
