@@ -17,7 +17,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.propertyTable = new FirstResponderOutlineView {
 				IndentationPerLevel = 0,
-				RefusesFirstResponder = true,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 				HeaderView = null,
 				IntercellSpacing = new CGSize (0, 0)
@@ -98,7 +97,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.propertyTable.BackgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
 		}
 
-		public void UpdateExpansions()
+		public void UpdateExpansions ()
 		{
 			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
 		}
@@ -112,10 +111,36 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private class FirstResponderOutlineView : NSOutlineView
 		{
-			[Export ("validateProposedFirstResponder:forEvent:")]
-			public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
+			private bool tabbedIn;
+			public override bool ValidateProposedFirstResponder (NSResponder responder, NSEvent forEvent)
 			{
 				return true;
+			}
+
+			public override bool BecomeFirstResponder ()
+			{
+				var willBecomeFirstResponder = base.BecomeFirstResponder ();
+				if (willBecomeFirstResponder) {
+					if (SelectedRows.Count == 0 && RowCount > 0) {
+						SelectRow (0, false);
+						this.tabbedIn = true;
+						var row = GetRowView ((nint)SelectedRows.FirstIndex, false);
+						return Window.MakeFirstResponder (row.NextValidKeyView);
+					}
+				}
+				this.tabbedIn = false;
+				return willBecomeFirstResponder;
+			}
+
+			public override bool ResignFirstResponder ()
+			{
+				var wilResignFirstResponder = base.ResignFirstResponder ();
+				if (wilResignFirstResponder) {
+					if (SelectedRows.Count > 0 && !this.tabbedIn) {
+						DeselectRow ((nint)SelectedRows.FirstIndex);
+					}
+				}
+				return wilResignFirstResponder;
 			}
 		}
 
