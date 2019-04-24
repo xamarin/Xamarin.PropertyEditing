@@ -727,19 +727,36 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		IReadOnlyList<object> IProvidePath.GetItemParents (object item)
 		{
+			List<object> path = new List<object> ();
+
 			switch (item) {
 			case PropertyTreeElement prop:
-				List<object> path = new List<object> ();
-				var current = prop;
-				while (current != null) {
-					path.Insert (0, current);
-					current = current.Parent;
+				var currentProp = prop;
+				while (currentProp != null) {
+					path.Insert (0, currentProp);
+					currentProp = currentProp.Parent;
 				}
 
 				path.Insert (0, PropertyRoot.Value);
 				return path;
+			case ObjectTreeElement obj:
+				var currentObj = obj;
+				while (currentObj != null) {
+					path.Insert (0, currentObj);
+					currentObj = currentObj.Parent;
+				}
+
+				return path;
 			case Resource resource:
-				return new object[] { resource.Source, resource };
+				foreach (var k in SourceResources.Value) {
+					if (k.Key == resource.Source) {
+						path.Add (k);
+						break;
+					}
+				}
+
+				path.Add (resource);
+				return path;
 			default:
 				throw new ArgumentException();
 			}

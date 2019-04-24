@@ -61,7 +61,7 @@ namespace Xamarin.PropertyEditing.Tests
 		private static readonly BindingSource StaticResource = new BindingSource ("StaticResource", BindingSourceType.Resource);
 
 		private class BindingSourceInstance
-			: BindingSource
+			: BindingSource, IEquatable<BindingSourceInstance>
 		{
 			public BindingSourceInstance (BindingSource original, string description)
 				: base (original.Name, original.Type, description)
@@ -72,6 +72,41 @@ namespace Xamarin.PropertyEditing.Tests
 			public BindingSource Original
 			{
 				get;
+			}
+
+			public override bool Equals (object obj)
+			{
+				if (ReferenceEquals (null, obj))
+					return false;
+				if (ReferenceEquals (this, obj))
+					return true;
+				if (obj.GetType () != GetType ())
+					return false;
+				return Equals ((BindingSourceInstance) obj);
+			}
+
+			public bool Equals (BindingSourceInstance other)
+			{
+				if (ReferenceEquals (null, other))
+					return false;
+				if (ReferenceEquals (this, other))
+					return true;
+				return Original.Equals (other.Original);
+			}
+
+			public override int GetHashCode ()
+			{
+				return Original.GetHashCode ();
+			}
+
+			public static bool operator == (BindingSourceInstance left, BindingSourceInstance right)
+			{
+				return Equals (left, right);
+			}
+
+			public static bool operator != (BindingSourceInstance left, BindingSourceInstance right)
+			{
+				return !Equals (left, right);
 			}
 		}
 	}

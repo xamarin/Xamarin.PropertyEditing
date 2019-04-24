@@ -31,12 +31,23 @@ namespace Xamarin.PropertyEditing.ViewModels
 			Name = new AsyncValue<string> (nameTask, typeName);
 		}
 
+		private ObjectTreeElement (IEditorProvider provider, IObjectEditor editor, ObjectTreeElement parent)
+			: this (provider, editor)
+		{
+			Parent = parent;
+		}
+
 		public AsyncValue<string> Name
 		{
 			get;
 		}
 
 		public IObjectEditor Editor
+		{
+			get;
+		}
+
+		public ObjectTreeElement Parent
 		{
 			get;
 		}
@@ -56,7 +67,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 
 			IObjectEditor[] editors = await Task.WhenAll (editorTasks);
-			return editors.Select (e => new ObjectTreeElement (provider, e)).ToArray ();
+			return editors.Select (e => new ObjectTreeElement (provider, e, this)).ToArray ();
 		}
 	}
 }

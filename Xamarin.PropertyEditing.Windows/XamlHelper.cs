@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -73,6 +75,20 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 
 			return (TParent)parent;
+		}
+
+		public static DependencyObject GetOrCreateContainerFromIndex (this ItemContainerGenerator self, int index)
+		{
+			DependencyObject treeItem = self.ContainerFromIndex (index);
+			if (treeItem == null && self.Status != GeneratorStatus.ContainersGenerated) {
+				IItemContainerGenerator igen = self;
+				GeneratorPosition pos = igen.GeneratorPositionFromIndex (index);
+				using (igen.StartAt (pos, GeneratorDirection.Forward)) {
+					treeItem = igen.GenerateNext ();
+				}
+			}
+
+			return treeItem;
 		}
 	}
 }

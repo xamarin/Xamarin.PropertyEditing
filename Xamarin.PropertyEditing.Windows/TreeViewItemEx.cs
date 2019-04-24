@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -74,10 +75,29 @@ namespace Xamarin.PropertyEditing.Windows
 					value.IsSelected = true;
 				}
 
-				SetSelectedItem (oldItem, value?.DataContext);
-				this.fromTreeItem = true;
-				SetCurrentValue (SelectedDataItemProperty, value?.DataContext);
-				this.fromTreeItem = false;
+				void SetItem (object old, object newItem)
+				{
+					SetSelectedItem (old, newItem);
+					this.fromTreeItem = true;
+					SetCurrentValue (SelectedDataItemProperty, newItem);
+					this.fromTreeItem = false;
+				} // doesn't work
+
+				if (value != null && !value.IsDescendantOf (this)) {
+					RoutedEventHandler loaded = null;
+					loaded = (sender, args) => {
+						if (this.selectedTreeItem == value) {
+							SetItem (oldItem, value.DataContext);
+						}
+
+						value.Loaded -= loaded;
+					};
+
+					value.Loaded += loaded;
+					return;
+				}
+
+				SetItem (oldItem, value?.DataContext);
 			}
 		}
 
@@ -95,6 +115,19 @@ namespace Xamarin.PropertyEditing.Windows
 				return;
 			}
 
+			if (ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated) {
+				EventHandler statusHandler = null;
+				statusHandler = (sender, args) => {
+					if (ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated) {
+						ItemContainerGenerator.StatusChanged -= statusHandler;
+						OnSelectedDataItemChanged();
+					}
+				};
+
+				ItemContainerGenerator.StatusChanged += statusHandler;
+				return;
+			}
+
 			TreeViewItemEx treeItem = FindItem (ItemContainerGenerator, item);
 			if (treeItem == null)
 				return;
@@ -109,17 +142,17 @@ namespace Xamarin.PropertyEditing.Windows
 				var path = pathProvider.GetItemParents (item);
 
 				for (int i = 0; i < path.Count; i++) {
-					if (ItemsSource != null) {
-						treeItem = (TreeViewItemEx) generator.ContainerFromItem (path[i]);
-					} else { // Manual items won't map, despite data contexts
-						for (int x = 0; x < generator.Items.Count; x++) {
-							if (!(generator.Items[x] is TreeViewItemEx tvi))
-								continue;
+					for (int x = 0; x < generator.Items.Count; x++) {
+						object context = null;
+						object genItem = generator.Items[x];
+						if (genItem is FrameworkElement fe) {
+							context = fe.DataContext;
+						} else
+							context = genItem;
 
-							if (Equals (tvi.DataContext, path[i])) {
-								treeItem = tvi;
-								break;
-							}
+						if (Equals (context, path[i])) {
+							treeItem = (TreeViewItemEx)generator.GetOrCreateContainerFromIndex (x);
+							break;
 						}
 					}
 
@@ -129,6 +162,8 @@ namespace Xamarin.PropertyEditing.Windows
 					treeItem.IsExpanded = true;
 					generator = treeItem.ItemContainerGenerator;
 				}
+
+				return treeItem;
 			}
 
 			// This is a fallback that will fail if virtualized away
@@ -256,6 +291,9 @@ namespace Xamarin.PropertyEditing.Windows
 		protected override void OnSelected (RoutedEventArgs e)
 		{
 			TreeViewEx parent = GetParentTree();
+			if (parent == null)
+				return;
+
 			if (!IsSelectable) {
 				IsSelected = false;
 				e.Handled = true;

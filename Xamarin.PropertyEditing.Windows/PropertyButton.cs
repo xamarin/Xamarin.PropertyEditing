@@ -162,7 +162,7 @@ namespace Xamarin.PropertyEditing.Windows
 			var panel = this.FindPropertiesHost ();
 			var pvm = (PropertyViewModel) DataContext;
 
-			e.BindingObject = CreateBindingWindow.CreateBinding (panel, pvm.TargetPlatform, pvm.Editors.Single(), pvm.Property);
+			e.BindingObject = CreateBindingWindow.CreateBinding (panel, pvm.TargetPlatform, pvm.Editors.Single(), pvm.Property, pvm.Variation, e.BindingObject);
 		}
 
 		private void OnResourceRequested (object sender, ResourceRequestedEventArgs e)

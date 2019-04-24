@@ -12,9 +12,9 @@ namespace Xamarin.PropertyEditing.Windows
 	internal partial class CreateBindingWindow
 		: WindowEx
 	{
-		public CreateBindingWindow (IEnumerable<ResourceDictionary> merged, TargetPlatform platform, IObjectEditor editor, IPropertyInfo property)
+		public CreateBindingWindow (IEnumerable<ResourceDictionary> merged, TargetPlatform platform, IObjectEditor editor, IPropertyInfo property, PropertyVariation variation = null,  object bindingObject = null)
 		{
-			var vm = new CreateBindingViewModel (platform, editor, property);
+			var vm = new CreateBindingViewModel (platform, editor, property, variation, bindingObject);
 			vm.CreateValueConverterRequested += OnCreateValueConverterRequested;
 
 			DataContext = vm;
@@ -49,10 +49,10 @@ namespace Xamarin.PropertyEditing.Windows
 			DialogResult = false;
 		}
 
-		internal static object CreateBinding (FrameworkElement owner, TargetPlatform platform, IObjectEditor editor, IPropertyInfo property)
+		internal static object CreateBinding (FrameworkElement owner, TargetPlatform platform, IObjectEditor editor, IPropertyInfo property, PropertyVariation variation = null, object bindingObject = null)
 		{
 			Window ownerWindow = Window.GetWindow (owner);
-			var window = new CreateBindingWindow (owner.Resources.MergedDictionaries, platform, editor, property) {
+			var window = new CreateBindingWindow (owner.Resources.MergedDictionaries, platform, editor, property, variation, bindingObject) {
 				Owner = ownerWindow
 			};
 			bool? result = window.ShowDialog ();

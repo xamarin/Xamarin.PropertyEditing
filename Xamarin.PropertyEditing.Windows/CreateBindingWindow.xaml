@@ -120,7 +120,7 @@
 		<local:TextBoxEx Grid.Row="3" Grid.Column="2" VerticalAlignment="Top" Margin="0,4,0,4" Visibility="{Binding ElementName=content,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" Text="{Binding Path,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
 
 		<TextBlock Name="longDescription" Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" VerticalAlignment="Stretch" Text="{Binding SelectedBindingSource.Description}" Visibility="{Binding ShowLongDescription,Converter={StaticResource BoolToVisibilityConverter}}" />
-		<local:TreeViewEx Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Margin="0,4,0,0" Style="{DynamicResource SelectionTreeView}" ItemsSource="{Binding ObjectElementRoots.Value}" DisplayMemberPath="Name.Value" Visibility="{Binding ShowObjectSelector,Converter={StaticResource BoolToVisibilityConverter}}" />
+		<local:TreeViewEx Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Margin="0,4,0,0" Style="{DynamicResource SelectionTreeView}" ItemsSource="{Binding ObjectElementRoots.Value}" DisplayMemberPath="Name.Value" Visibility="{Binding ShowObjectSelector,Converter={StaticResource BoolToVisibilityConverter}}" SelectedDataItem="{Binding SelectedObjectTreeElement,Mode=TwoWay}" />
 		<local:TreeViewEx Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Margin="0,4,0,0" Style="{DynamicResource AutoExpandSelectionTreeView}" ItemsSource="{Binding SourceResources.Value}" Visibility="{Binding ShowResourceSelector,Converter={StaticResource BoolToVisibilityConverter}}" SelectedDataItem="{Binding SelectedResource,Mode=TwoWay}">
 			<local:TreeViewEx.ItemTemplate>
 				<HierarchicalDataTemplate ItemsSource="{Binding Mode=OneTime}">
@@ -133,10 +133,10 @@
 				</HierarchicalDataTemplate>
 			</local:TreeViewEx.ItemTemplate>
 		</local:TreeViewEx>
-		<local:TypeSelectorControl Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Margin="0,4,0,0" Visibility="{Binding DataContext.ShowTypeSelector,Converter={StaticResource BoolToVisibilityConverter},ElementName=propertiesTree}" ShowTypeLevel="{Binding DataContext.ShowTypeLevel,ElementName=propertiesTree}" DataContext="{Binding TypeSelector}" TypeLevel="{Binding TypeLevel,Mode=TwoWay}" />
+		<local:TypeSelectorControl Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Margin="0,4,0,0" Visibility="{Binding DataContext.ShowTypeSelector,Converter={StaticResource BoolToVisibilityConverter},ElementName=propertiesTree}" ShowTypeLevel="{Binding DataContext.ShowTypeLevel,ElementName=propertiesTree}"  DataContext="{Binding TypeSelector}" TypeLevel="{Binding TypeLevel,Mode=TwoWay}" />
 
 		<local:TreeViewEx x:Name="propertiesTree" Grid.Row="4" Grid.Column="2" Margin="0,4,0,0" Style="{DynamicResource SelectionTreeView}" SelectedDataItem="{Binding SelectedPropertyElement,Mode=TwoWay}">
-			<local:TreeViewItemEx Header="{Binding PropertyRoot.Value.TargetType.Name}" IsExpanded="True" ItemsSource="{Binding PropertyRoot.Value.Children}" ItemContainerStyle="{DynamicResource SelectionTreeViewItem}">
+			<local:TreeViewItemEx DataContext="{Binding PropertyRoot.Value}" Header="{Binding TargetType.Name}" IsExpanded="True" ItemsSource="{Binding Children}" ItemContainerStyle="{DynamicResource SelectionTreeViewItem}">
 				<local:TreeViewItemEx.ItemTemplate>
 					<HierarchicalDataTemplate DataType="vms:PropertyTreeElement" ItemsSource="{Binding Children.Value}">
 						<TextBlock>
