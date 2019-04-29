@@ -94,13 +94,6 @@ namespace Xamarin.PropertyEditing.Mac
 			this.panel.BeginSheet (this.Window, HandleAction);
 		}
 
-		public override void ViewDidChangeEffectiveAppearance ()
-		{
-			this.revealPathButton.Image = HostResources.GetNamedImage (PathRevealName);
-			this.browsePathButton.Image = HostResources.GetNamedImage (PathBrowseName);
-			base.ViewDidChangeEffectiveAppearance ();
-		}
-
 		protected abstract void OnRevealPathButtonActivated (object sender, EventArgs e);
 		protected abstract void StoreCurrentValue ();
 
@@ -128,6 +121,14 @@ namespace Xamarin.PropertyEditing.Mac
 			this.browsePathButton.Activated -= BrowsePathButton_Activated;
 			this.revealPathButton.Activated -= OnRevealPathButtonActivated;
 			base.Dispose (disposing);
+		}
+
+		protected override void AppearanceChanged ()
+		{
+			base.AppearanceChanged ();
+
+			this.revealPathButton.Image = HostResources.GetNamedImage (PathRevealName);
+			this.browsePathButton.Image = HostResources.GetNamedImage (PathBrowseName);
 		}
 	}
 }

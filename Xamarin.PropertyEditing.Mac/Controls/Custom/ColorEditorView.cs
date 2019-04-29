@@ -43,6 +43,17 @@ namespace Xamarin.PropertyEditing.Mac
 		public virtual void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 		}
+
+		protected virtual void AppearanceChanged ()
+		{
+		}
+
+		public sealed override void ViewDidChangeEffectiveAppearance ()
+		{
+			base.ViewDidChangeEffectiveAppearance ();
+
+			AppearanceChanged ();
+		}
 	}
 
 	internal abstract class ColorEditorView : NotifyingView<SolidBrushViewModel>

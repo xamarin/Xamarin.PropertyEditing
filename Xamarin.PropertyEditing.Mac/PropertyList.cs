@@ -91,10 +91,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ViewDidChangeEffectiveAppearance ()
 		{
-			if (this.propertyTable == null)
-				return;
+			base.ViewDidChangeEffectiveAppearance ();
 
-			this.propertyTable.BackgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
+			UpdateResourceProvider ();
 		}
 
 		public void UpdateExpansions ()
@@ -151,12 +150,15 @@ namespace Xamarin.PropertyEditing.Mac
 			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
 		}
 
-		private void UpdateResourceProvider()
+		private void UpdateResourceProvider ()
 		{
+			if (this.propertyTable == null || this.hostResources == null)
+				return;
+
+			this.propertyTable.BackgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
+
 			if (this.propertyTable.Delegate != null)
 				this.propertyTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
-
-			ViewDidChangeEffectiveAppearance ();
 		}
 	}
 }

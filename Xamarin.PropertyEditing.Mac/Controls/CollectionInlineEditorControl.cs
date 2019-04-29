@@ -40,7 +40,7 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.openCollection, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, -6)
 			});
 
-			ViewDidChangeEffectiveAppearance ();
+			AppearanceChanged ();
 		}
 
 		public override NSView FirstKeyView => this.openCollection;
@@ -52,12 +52,6 @@ namespace Xamarin.PropertyEditing.Mac
 			this.openCollection.Enabled = ViewModel?.Property.CanWrite ?? false;
 		}
 
-		public override void ViewDidChangeEffectiveAppearance ()
-		{
-			base.ViewDidChangeEffectiveAppearance ();
-			this.label.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
-		}
-
 		protected override void UpdateAccessibilityValues ()
 		{
 			base.UpdateAccessibilityValues ();
@@ -67,5 +61,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private readonly UnfocusableTextField label;
 		private readonly NSButton openCollection;
+
+		protected override void AppearanceChanged ()
+		{
+			base.AppearanceChanged ();
+
+			this.label.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
+		}
 	}
 }

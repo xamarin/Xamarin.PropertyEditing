@@ -114,17 +114,7 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (HeightLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, HeightEditor.Subviews[0], NSLayoutAttribute.CenterX, 1f, 0),
 			});
 
-			ViewDidChangeEffectiveAppearance ();
-		}
-
-		public override void ViewDidChangeEffectiveAppearance ()
-		{
-			XLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
-			YLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
-			WidthLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
-			HeightLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
-
-			base.ViewDidChangeEffectiveAppearance ();
+			AppearanceChanged ();
 		}
 
 		protected virtual void OnInputUpdated (object sender, EventArgs e)
@@ -153,6 +143,16 @@ namespace Xamarin.PropertyEditing.Mac
 
 			HeightEditor.AccessibilityEnabled = HeightEditor.Enabled;
 			HeightEditor.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityHeightEditor, ViewModel.Property.Name);
+		}
+
+		protected override void AppearanceChanged ()
+		{
+			base.AppearanceChanged ();
+
+			XLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
+			YLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
+			WidthLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
+			HeightLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
 		}
 	}
 }

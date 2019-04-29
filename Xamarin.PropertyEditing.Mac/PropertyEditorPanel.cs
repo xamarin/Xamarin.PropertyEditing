@@ -197,16 +197,23 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.propertyList, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, 0),
 			});
 
-			ViewDidChangeEffectiveAppearance ();
+			UpdateResourceProvider ();
 		}
 
-		private void UpdateResourceProvider()
+		public override void ViewDidChangeEffectiveAppearance ()
 		{
-			this.propertyList.HostResourceProvider = HostResourceProvider;
-			this.header.HostResourceProvider = HostResourceProvider;
-			this.border.HostResourceProvider = HostResourceProvider;
+			base.ViewDidChangeEffectiveAppearance ();
 
-			ViewDidChangeEffectiveAppearance ();
+			UpdateResourceProvider ();
+		}
+
+		private void UpdateResourceProvider ()
+		{
+			if (this.propertyList != null) {
+				this.propertyList.HostResourceProvider = HostResourceProvider;
+				this.header.HostResourceProvider = HostResourceProvider;
+				this.border.HostResourceProvider = HostResourceProvider;
+			}
 		}
 
 		private void OnArrangeModeChanged (object sender, EventArgs e)

@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (this.container);
 
-			ViewDidChangeEffectiveAppearance ();
+			AppearanceChanged ();
 		}
 
 		NSView INativeContainer.NativeView => this;
@@ -81,6 +81,13 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			base.ViewDidChangeEffectiveAppearance ();
+
+			AppearanceChanged ();
+		}
+
+		private void AppearanceChanged ()
 		{
 			this.table.BackgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
 			this.host.FillColor = this.hostResources.GetNamedColor (NamedResources.ValueBlockBackgroundColor);

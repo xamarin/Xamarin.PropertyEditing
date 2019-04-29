@@ -32,7 +32,7 @@ namespace Xamarin.PropertyEditing.Mac
 			set
 			{
 				this.hostResources = value;
-				ViewDidChangeEffectiveAppearance ();
+				AppearanceChanged ();
 			}
 		}
 
@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 				if (value == null)
 					FillColor = NSColor.Clear;
 
-				ViewDidChangeEffectiveAppearance ();
+				AppearanceChanged ();
 			}
 		}
 
@@ -58,11 +58,21 @@ namespace Xamarin.PropertyEditing.Mac
 				if (value == null)
 					BorderColor = NSColor.Clear;
 
-				ViewDidChangeEffectiveAppearance ();
+				AppearanceChanged ();
 			}
 		}
 
 		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			base.ViewDidChangeEffectiveAppearance ();
+
+			AppearanceChanged ();
+		}
+
+		private IHostResourceProvider hostResources;
+		private string fillColor, borderColor;
+
+		private void AppearanceChanged ()
 		{
 			if (this.fillColor != null) {
 				NSColor color = this.hostResources.GetNamedColor (this.fillColor);
@@ -80,8 +90,5 @@ namespace Xamarin.PropertyEditing.Mac
 				BorderColor = color;
 			}
 		}
-
-		private IHostResourceProvider hostResources;
-		private string fillColor, borderColor;
 	}
 }
