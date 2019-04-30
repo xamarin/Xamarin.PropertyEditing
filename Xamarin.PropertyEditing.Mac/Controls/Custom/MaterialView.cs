@@ -89,7 +89,7 @@ namespace Xamarin.PropertyEditing.Mac
 				l.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
 				l.Frame = new CGRect (x, y, width, height);
 				Layer.AddSublayer (l);
-				AddToolTip (new CGRect (x, y, width, height), new NSString(p.Name), new IntPtr());
+				AddToolTip (new CGRect (x, y, width, height), new NSString(p.Name), IntPtr.Zero);
 				x += width + 6;
 				col++;
 				if (col >= 10) {
