@@ -10,6 +10,7 @@ namespace Xamarin.PropertyEditing.Mac
 		: CALayer
 	{
 		private const double VerticalMarginOffset = 0.5;
+		private CGRect frameRect;
 
 		public CommonBrushLayer (IHostResourceProvider hostResources)
 		{
@@ -72,7 +73,10 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void LayoutSublayers ()
 		{
 			base.LayoutSublayers ();
-			Frame = new CGRect (Frame.X, Bounds.Y + VerticalMargin + VerticalMarginOffset, Bounds.Width, Bounds.Height - (VerticalMargin * 2));
+
+			if (frameRect.IsEmpty)
+				frameRect = new CGRect (Frame.X, Bounds.Y + VerticalMargin + VerticalMarginOffset, Bounds.Width, Bounds.Height - (VerticalMargin * 2));
+			Frame = frameRect;
 			BrushLayer.Frame = Bounds;
 			Contents = DrawingExtensions.GenerateCheckerboard (Bounds, this.hostResources.GetNamedColor (NamedResources.Checkerboard0Color), this.hostResources.GetNamedColor (NamedResources.Checkerboard1Color));
 		}
