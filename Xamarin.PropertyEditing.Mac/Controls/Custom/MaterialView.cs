@@ -123,7 +123,7 @@ namespace Xamarin.PropertyEditing.Mac
 				l.ColorType = MaterialColorType.Normal;
 				l.IsSelected = color.Value == ViewModel.NormalColor || color.Value == ViewModel.Color;
 				l.Frame = new CGRect (x, 0, width, height);
-				AddToolTip (new CGRect (x, y, width, height), new NSString (color.ToString ()), new IntPtr ());
+				AddToolTip (new CGRect (x, y, width, height), new NSString (color.ToString ()), IntPtr.Zero);
 				normal.AddSublayer (l);
 				x += width;
 			}
