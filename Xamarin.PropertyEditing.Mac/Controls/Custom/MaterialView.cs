@@ -1,9 +1,11 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
+using Foundation;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -87,6 +89,7 @@ namespace Xamarin.PropertyEditing.Mac
 				l.BorderColor = new CGColor (.5f, .5f, .5f, .5f);
 				l.Frame = new CGRect (x, y, width, height);
 				Layer.AddSublayer (l);
+				AddToolTip (new CGRect (x, y, width, height), new NSString(p.Name), IntPtr.Zero);
 				x += width + 6;
 				col++;
 				if (col >= 10) {
@@ -120,6 +123,7 @@ namespace Xamarin.PropertyEditing.Mac
 				l.ColorType = MaterialColorType.Normal;
 				l.IsSelected = color.Value == ViewModel.NormalColor || color.Value == ViewModel.Color;
 				l.Frame = new CGRect (x, 0, width, height);
+				AddToolTip (new CGRect (x, y, width, height), new NSString (color.ToString ()), IntPtr.Zero);
 				normal.AddSublayer (l);
 				x += width;
 			}
@@ -144,6 +148,7 @@ namespace Xamarin.PropertyEditing.Mac
 				l.ColorType = MaterialColorType.Accent;
 				l.IsSelected = color.Value == ViewModel.AccentColor || color.Value == ViewModel.Color;
 				l.Frame = new CGRect (x, 0, width, height);
+				AddToolTip (new CGRect (x, y, width, height), new NSString (color.ToString ()), IntPtr.Zero);
 				accent.AddSublayer (l);
 				x += width;
 			}
