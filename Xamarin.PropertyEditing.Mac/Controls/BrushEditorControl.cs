@@ -69,15 +69,7 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0),
 			});
 
-			ViewDidChangeEffectiveAppearance ();
-		}
-
-		public override void ViewDidChangeEffectiveAppearance ()
-		{
-			base.ViewDidChangeEffectiveAppearance ();
-
-			this.popover.SetAppearance (HostResources.GetVibrantAppearance (EffectiveAppearance));
-			this.popover.ContentViewController.View.Appearance = EffectiveAppearance;
+			AppearanceChanged ();
 		}
 
 		readonly ColorPopUpButton popUpButton;
@@ -131,6 +123,14 @@ namespace Xamarin.PropertyEditing.Mac
 					item.Image = this.previewLayer.RenderPreview ();
 				}
 			}
+		}
+
+		protected override void AppearanceChanged ()
+		{
+			base.AppearanceChanged ();
+
+			this.popover.SetAppearance (HostResources.GetVibrantAppearance (EffectiveAppearance));
+			this.popover.ContentViewController.View.Appearance = EffectiveAppearance;
 		}
 	}
 }

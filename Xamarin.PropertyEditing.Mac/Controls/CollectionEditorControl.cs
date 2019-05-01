@@ -162,7 +162,7 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (removeBorder, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1, 22),
 			});
 
-			ViewDidChangeEffectiveAppearance ();
+			AppearanceChanged ();
 		}
 
 		public override void OnViewModelChanged (CollectionPropertyViewModel oldModel)
@@ -244,9 +244,9 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public override void ViewDidChangeEffectiveAppearance ()
+		protected override void AppearanceChanged ()
 		{
-			base.ViewDidChangeEffectiveAppearance ();
+			base.AppearanceChanged ();
 
 			this.add.Image = this.hostResources.GetNamedImage ("pe-list-add-16");
 			this.remove.Image = this.hostResources.GetNamedImage ("pe-list-remove-16");
@@ -353,7 +353,7 @@ namespace Xamarin.PropertyEditing.Mac
 						NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, 0)
 					});
 
-					ViewDidChangeEffectiveAppearance ();
+					AppearanceChanged ();
 				}
 
 				public CollectionPropertyItemViewModel ViewModel
@@ -370,10 +370,16 @@ namespace Xamarin.PropertyEditing.Mac
 					}
 				}
 
-				public override void ViewDidChangeEffectiveAppearance ()
+				public sealed override void ViewDidChangeEffectiveAppearance ()
+				{
+					base.ViewDidChangeEffectiveAppearance ();
+
+					AppearanceChanged ();
+				}
+
+				private void AppearanceChanged ()
 				{
 					UpdateIcon ();
-					base.ViewDidChangeEffectiveAppearance ();
 				}
 
 				private readonly IIconProvider iconProvider;

@@ -68,13 +68,7 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, YEditor.Subviews[0], NSLayoutAttribute.CenterX, 1f, 0),
 			});
 
-			ViewDidChangeEffectiveAppearance ();
-		}
-
-		public override void ViewDidChangeEffectiveAppearance ()
-		{
-			XLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
-			YLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
+			AppearanceChanged ();
 		}
 
 		protected override void SetEnabled ()
@@ -95,6 +89,14 @@ namespace Xamarin.PropertyEditing.Mac
 		protected virtual void OnInputUpdated (object sender, EventArgs e)
 		{
 			ViewModel.Value = (T)Activator.CreateInstance (typeof (T), XEditor.Value, YEditor.Value);
+		}
+
+		protected override void AppearanceChanged ()
+		{
+			base.AppearanceChanged ();
+
+			XLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
+			YLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
 		}
 	}
 }

@@ -24,7 +24,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.hostResource = hostResource;
 			this.imageName = imageName;
 
-			ViewDidChangeEffectiveAppearance ();
+			AppearanceChanged ();
 		}
 
 		public event EventHandler Clicked;
@@ -48,10 +48,11 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public override void ViewDidChangeEffectiveAppearance ()
+		public sealed override void ViewDidChangeEffectiveAppearance ()
 		{
 			base.ViewDidChangeEffectiveAppearance ();
-			Image = this.hostResource.GetNamedImage (this.imageName);
+
+			AppearanceChanged ();
 		}
 
 		public override void DrawRect (CGRect dirtyRect)
@@ -64,6 +65,11 @@ namespace Xamarin.PropertyEditing.Mac
 			path.AppendPathWithRect (new CGRect (Bounds.X, Bounds.Height - 2, Bounds.Width, 2));
 			(Selected ? NSColor.Text : NSColor.DisabledControlText).Set ();
 			path.Fill ();
+		}
+
+		private void AppearanceChanged ()
+		{
+			Image = this.hostResource.GetNamedImage (this.imageName);
 		}
 
 		private readonly string imageName;

@@ -54,11 +54,19 @@ namespace Xamarin.PropertyEditing.Mac
 			OnMouseLeftDown += (sender, e) => {
 				PopUpContextMenu ();
 			};
+
+			AppearanceChanged ();
 		}
 
-		public override void ViewDidChangeEffectiveAppearance ()
+		public sealed override void ViewDidChangeEffectiveAppearance ()
 		{
 			base.ViewDidChangeEffectiveAppearance ();
+
+			AppearanceChanged ();
+		}
+
+		private void AppearanceChanged ()
+		{
 			ToggleFocusImage ();
 		}
 
@@ -120,9 +128,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void ToggleFocusImage (bool focused = false)
 		{
-			if (viewModel != null) {
+			if (this.viewModel != null) {
 				
-				switch (viewModel.ValueSource) {
+				switch (this.viewModel.ValueSource) {
 				case ValueSource.Binding:
 					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-bound-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-bound-mac-10");
 					break;

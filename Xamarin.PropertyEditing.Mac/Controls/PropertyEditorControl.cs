@@ -128,6 +128,17 @@ namespace Xamarin.PropertyEditing.Mac
 		protected virtual void UpdateAccessibilityValues ()
 		{
 		}
+
+		protected virtual void AppearanceChanged ()
+		{
+		}
+
+		public sealed override void ViewDidChangeEffectiveAppearance ()
+		{
+			base.ViewDidChangeEffectiveAppearance ();
+
+			AppearanceChanged ();
+		}
 	}
 
 	internal abstract class PropertyEditorControl<TViewModel>
