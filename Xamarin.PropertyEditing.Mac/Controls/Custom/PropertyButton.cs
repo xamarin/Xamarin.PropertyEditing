@@ -58,7 +58,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AppearanceChanged ();
 		}
 
-		public override void ViewDidChangeEffectiveAppearance ()
+		public sealed override void ViewDidChangeEffectiveAppearance ()
 		{
 			base.ViewDidChangeEffectiveAppearance ();
 

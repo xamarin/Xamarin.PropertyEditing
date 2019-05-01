@@ -80,7 +80,7 @@ namespace Xamarin.PropertyEditing.Mac
 			return ((nint)this.table.RowHeight * gvm.Properties.Count) + editorHeight;
 		}
 
-		public override void ViewDidChangeEffectiveAppearance ()
+		public sealed override void ViewDidChangeEffectiveAppearance ()
 		{
 			base.ViewDidChangeEffectiveAppearance ();
 
