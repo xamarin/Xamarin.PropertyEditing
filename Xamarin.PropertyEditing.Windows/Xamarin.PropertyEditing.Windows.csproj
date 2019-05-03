@@ -98,6 +98,7 @@
     <Compile Include="InvertedVisibilityConverter.cs" />
     <Compile Include="IPropertiesHost.cs" />
     <Compile Include="MaterialDesignColorEditorControl.cs" />
+    <Compile Include="MultiplierConverter.cs" />
     <Compile Include="MultiplyMarginConverter.cs" />
     <Compile Include="NegativeThicknessConverter.cs" />
     <Compile Include="NullVisibilityConverter.cs" />

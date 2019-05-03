@@ -47,6 +47,7 @@
 	<local:CommonColorToColorConverter x:Key="ColorConverter" />
 	<local:NegativeThicknessConverter x:Key="NegativeThicknessConverter" />
 	<local:GroupedEditorPropertySelector x:Key="GroupedEditorSelector" />
+	<local:MultiplierConverter x:Key="MultiplierConverter" />
 
 	<Style TargetType="local:CombinablePredefinedValuesEditor">
 		<Setter Property="Template">
@@ -1601,7 +1602,7 @@
 										<DataTemplate DataType="pe:PropertyVariationOption">
 											<Border Background="{DynamicResource VariantBackgroundBrush}" MinHeight="14" Padding="5,0,5,0" Margin="0,0,2,0">
 												<!-- We need to base this font size on some VS setting. !-->
-												<TextBlock Foreground="{DynamicResource VariantForegroundBrush}" FontSize="9px" VerticalAlignment="Center">
+												<TextBlock Foreground="{DynamicResource VariantForegroundBrush}" FontSize="{Binding FontSize,RelativeSource={RelativeSource FindAncestor,AncestorType=ItemsControl},Converter={StaticResource MultiplierConverter},ConverterParameter=0.83}" VerticalAlignment="Center">
 													<TextBlock.Text>
 														<MultiBinding StringFormat="{}{0}: {1}" Mode="OneTime">
 															<Binding Path="Category" Mode="OneTime" />
