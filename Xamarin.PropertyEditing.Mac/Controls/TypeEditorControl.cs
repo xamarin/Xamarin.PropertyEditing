@@ -54,7 +54,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			this.selectType.AccessibilityTitle = String.Format (Properties.Resources.SelectTypeForProperty, ViewModel.Property.Name);
+			this.selectType.AccessibilityEnabled = this.selectType.Enabled;
+			this.selectType.AccessibilityTitle = string.Format (Properties.Resources.SelectTypeForProperty, ViewModel.Property.Name);
 		}
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)

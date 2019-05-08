@@ -38,6 +38,10 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.currentTextField.AccessibilityEnabled = this.currentTextField.Enabled;
 			this.currentTextField.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityPathEditor, ViewModel.Property.Name, Properties.Resources.File);
+
+			this.revealPathButton.AccessibilityEnabled = this.browsePathButton.AccessibilityEnabled = this.currentTextField.AccessibilityEnabled;
+			this.revealPathButton.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityRevealButton, ViewModel.Property.Name, Properties.Resources.File);
+			this.browsePathButton.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityBrowseButton, ViewModel.Property.Name, Properties.Resources.File);
 		}
 
 		protected override void UpdateValue ()

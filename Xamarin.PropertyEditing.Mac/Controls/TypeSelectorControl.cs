@@ -33,6 +33,8 @@ namespace Xamarin.PropertyEditing.Mac
 		public TypeSelectorControl()
 		{
 			this.checkbox = NSButton.CreateCheckbox (Properties.Resources.ShowAllAssemblies, OnCheckedChanged);
+			this.checkbox.AccessibilityEnabled = true;
+			this.checkbox.AccessibilityTitle = Properties.Resources.AccessibilityTypeSelectorCheckbox;
 			this.checkbox.TranslatesAutoresizingMaskIntoConstraints = false;
 			AddSubview (this.checkbox);
 
@@ -42,6 +44,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			var d = new TypeSelectorDelegate ();
 			this.outlineView = new NSOutlineView  {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityTypeSelectorTable,
 				Delegate = d,
 				AutoresizingMask = NSViewResizingMask.WidthSizable,
 				HeaderView = null,
@@ -56,8 +60,10 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (scroll);
 
 			this.filter = new NSSearchField {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityTypeSelectorSearch,
+				PlaceholderString = "Filter",
 				TranslatesAutoresizingMaskIntoConstraints = false,
-				PlaceholderString = "Filter"
 			};
 			this.filter.Changed += OnFilterChanged;
 

@@ -133,5 +133,11 @@ namespace Xamarin.PropertyEditing.Mac
 			this.popover.SetAppearance (HostResources.GetVibrantAppearance (EffectiveAppearance));
 			this.popover.ContentViewController.View.Appearance = EffectiveAppearance;
 		}
+
+		protected override void UpdateAccessibilityValues ()
+		{
+			this.popUpButton.AccessibilityEnabled = this.popUpButton.Enabled;
+			this.popUpButton.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityPopUp, ViewModel.Property.Name);
+		}
 	}
 }

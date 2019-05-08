@@ -34,11 +34,17 @@ namespace Xamarin.PropertyEditing.Mac
 			PropertyInfo customAutocompleteItemsPropertyInfo = vmType.GetProperty (AutocompleteItemsString);
 			if (customAutocompleteItemsPropertyInfo.GetValue (viewModel) is ObservableCollectionEx<string> values) {
 				if (values != null && values.Count > 0)
-					editorControl = new AutocompleteComboBox (hostResources, viewModel, values, previewCustomExpressionPropertyInfo);
+					editorControl = new AutocompleteComboBox (hostResources, viewModel, values, previewCustomExpressionPropertyInfo) {
+						AccessibilityEnabled = true,
+						AccessibilityTitle = Properties.Resources.AccessibilityCustomExpressionCombobox,
+					};
 			}
 
 			if (editorControl == null)
-				editorControl = new NSTextField ();
+				editorControl = new NSTextField {
+					AccessibilityEnabled = true,
+					AccessibilityTitle = Properties.Resources.AccessibilityCustomExpressionEditControl,
+				};
 
 			editorControl.TranslatesAutoresizingMaskIntoConstraints = false;
 			editorControl.StringValue = (string)value ?? string.Empty;

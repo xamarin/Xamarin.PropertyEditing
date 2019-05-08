@@ -87,6 +87,8 @@ namespace Xamarin.PropertyEditing.Mac
 			this.lastKeyView = this.combinableList.KeyAt (this.combinableList.Count - 1);
 
 			SetEnabled ();
+
+			UpdateAccessibilityValues ();
 		}
 
 		protected override void UpdateValue ()
@@ -106,7 +108,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			foreach (var item in combinableList) {
 				item.Key.AccessibilityEnabled = item.Key.Enabled;
-				item.Key.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityCombobox, ViewModel.Property.Name);
+				item.Key.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityBoolean, ViewModel.Property.Name);
 			}
 		}
 

@@ -161,6 +161,16 @@ namespace Xamarin.PropertyEditing.Mac
 			set { this.numericEditor.AllowNegativeValues = value; }
 		}
 
+		public override bool AccessibilityEnabled {
+			get { return this.numericEditor.AccessibilityEnabled; }
+			set { this.numericEditor.AccessibilityEnabled = value; }
+		}
+
+		public override string AccessibilityTitle {
+			get { return this.numericEditor.AccessibilityTitle; }
+			set { this.numericEditor.AccessibilityTitle = value; }
+		}
+
 		public virtual void Reset ()
 		{
 		}
