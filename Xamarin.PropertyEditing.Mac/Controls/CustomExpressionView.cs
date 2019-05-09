@@ -4,43 +4,57 @@ using AppKit;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
+using Xamarin.PropertyEditing.Mac.Controls;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class CustomExpressionView : BasePopOverViewModelControl
 	{
-		Type vmType;
-		const string CustomExpressionPropertyString = "CustomExpression";
-		PropertyInfo customExpressionPropertyInfo;
+		private const string CustomExpressionPropertyString = "CustomExpression";
+		private const string PreviewCustomExpressionString = "PreviewCustomExpression";
+		private const string AutocompleteItemsString = "AutocompleteItems";
+
+		public AutoClosePopOver PopOver { get; internal set; }
 
 		public CustomExpressionView (IHostResourceProvider hostResources, PropertyViewModel viewModel)
 			: base (hostResources, viewModel,  Properties.Resources.CustomExpression, "pe-custom-expression-32")
 		{
 			Frame = new CGRect (CGPoint.Empty, new CGSize (250, 80));
 
-			var customExpressionField = new NSTextField {
-				StringValue = string.Empty,
-				TranslatesAutoresizingMaskIntoConstraints = false,
+			Type vmType = viewModel.GetType ();
+
+			PropertyInfo previewCustomExpressionPropertyInfo = vmType.GetProperty (PreviewCustomExpressionString);
+			previewCustomExpressionPropertyInfo.SetValue (viewModel, string.Empty);
+
+			PropertyInfo customExpressionPropertyInfo = vmType.GetProperty (CustomExpressionPropertyString);
+			var value = customExpressionPropertyInfo.GetValue (viewModel);
+
+			NSControl editorControl = null;
+			PropertyInfo customAutocompleteItemsPropertyInfo = vmType.GetProperty (AutocompleteItemsString);
+			if (customAutocompleteItemsPropertyInfo.GetValue (viewModel) is ObservableCollectionEx<string> values) {
+				if (values != null && values.Count > 0) {
+					editorControl = new AutocompleteComboBox (hostResources, viewModel, values, previewCustomExpressionPropertyInfo);
+				} else {
+					editorControl = new NSTextField ();
+				}
+			}
+
+			editorControl.TranslatesAutoresizingMaskIntoConstraints = false;
+			editorControl.StringValue = (string)value ?? string.Empty;
+
+			editorControl.Activated += (sender, e) => {
+				PopOver.CloseOnEnter = true;
+				customExpressionPropertyInfo.SetValue (viewModel, editorControl.StringValue);
 			};
 
-			this.vmType = viewModel.GetType ();
-			this.customExpressionPropertyInfo = vmType.GetProperty (CustomExpressionPropertyString);
-			var value = this.customExpressionPropertyInfo.GetValue (viewModel);
-			if (value != null)
-				customExpressionField.StringValue = (string)value;
-
-			customExpressionField.Activated += (sender, e) => {
-				this.customExpressionPropertyInfo.SetValue (viewModel, customExpressionField.StringValue);
-			};
-
-			AddSubview (customExpressionField);
+			AddSubview (editorControl);
 
 			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 37f),
-				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 38f),
-				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -57f),
-				NSLayoutConstraint.Create (customExpressionField, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
+				NSLayoutConstraint.Create (editorControl, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 37f),
+				NSLayoutConstraint.Create (editorControl, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 38f),
+				NSLayoutConstraint.Create (editorControl, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -57f),
+				NSLayoutConstraint.Create (editorControl, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight),
 			});
 		}
 	}
