@@ -216,6 +216,8 @@ namespace Xamarin.PropertyEditing.Mac
 					}
 
 					PropertyButton.ViewModel = value;
+
+					UpdateLabelVerticalConstraint ();
 				}
 			}
 

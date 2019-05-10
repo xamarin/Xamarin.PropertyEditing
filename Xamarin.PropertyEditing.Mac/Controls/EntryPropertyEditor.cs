@@ -21,10 +21,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 			RightEdgeConstraint = NSLayoutConstraint.Create (Entry, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0);
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (Entry, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0),
+				NSLayoutConstraint.Create (Entry, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Bottom, 1f, BottomOffset),
 				NSLayoutConstraint.Create (Entry, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1, 0),
 				RightEdgeConstraint,
-				NSLayoutConstraint.Create (Entry, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, -6),
 			});
 		}
 
@@ -51,7 +50,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			Entry.Enabled = ViewModel.Property.CanWrite;
+			Entry.Enabled = ViewModel.IsInputEnabled;
 		}
 
 		protected override void UpdateAccessibilityValues ()

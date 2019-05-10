@@ -59,11 +59,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			this.currentTextField.Enabled = ViewModel.Property.CanWrite;
-			this.browsePathButton.Enabled = ViewModel.Property.CanWrite;
+			this.currentTextField.Enabled =
+			this.browsePathButton.Enabled = ViewModel.IsInputEnabled;
 
 			//button states
-			this.revealPathButton.Enabled = ViewModel.Property.CanWrite && File.Exists (this.currentTextField.StringValue);
+			this.revealPathButton.Enabled = ViewModel.IsInputEnabled && File.Exists (this.currentTextField.StringValue);
 			Window?.RecalculateKeyViewLoop ();
 		}
 	}

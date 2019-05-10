@@ -56,7 +56,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (this.propertyIcon);
 
-			this.AddConstraints (new[] {
+			AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.propertyIcon, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1, 32),
 				NSLayoutConstraint.Create (this.propertyIcon, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1, 32),
 				NSLayoutConstraint.Create (this.propertyIcon, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 5),

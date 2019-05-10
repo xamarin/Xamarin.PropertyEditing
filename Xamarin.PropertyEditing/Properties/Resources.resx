@@ -1043,5 +1043,17 @@
   <data name="FilterTypePlaceholder" xml:space="preserve">
     <value>Filter Types</value>
     <comment>Placeholder for filter type control</comment>
+  </data>  
+  <data name="AddVariation" xml:space="preserve">
+    <value>Add</value>
+    <comment>Button text telling the user clicking this will add the variation</comment>
+  </data>
+  <data name="AccessibilityAddVariationButton" xml:space="preserve">
+    <value>Add a variation to this property</value>
+    <comment>Button to add a variatione</comment>
+  </data>
+  <data name="AccessibilityDeleteVariationButton" xml:space="preserve">
+    <value>Delete the variation associated with this property</value>
+    <comment>Button to delete a variation</comment>
   </data>
 </root>

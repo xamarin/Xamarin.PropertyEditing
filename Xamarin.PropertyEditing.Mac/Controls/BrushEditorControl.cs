@@ -64,7 +64,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (this.popUpButton);
 
-			this.AddConstraints (new[] {
+			AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0),
 				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 16),
 				NSLayoutConstraint.Create (this.popUpButton, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0),
@@ -84,7 +84,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			this.popUpButton.Enabled = this.ViewModel?.Property.CanWrite ?? false;
+			this.popUpButton.Enabled = ViewModel?.IsInputEnabled ?? false;
 		}
 
 		string GetTitle ()
@@ -109,7 +109,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void UpdateValue ()
 		{
 			this.brushTabViewController.ViewModel = ViewModel;
-			this.popUpButton.Popover = (ViewModel?.Property.CanWrite ?? false) ? this.popover : null;
+			this.popUpButton.Popover = (ViewModel?.IsInputEnabled ?? false) ? this.popover : null;
 
 			if (ViewModel.Solid != null) {
 				var title = GetTitle ();

@@ -21,11 +21,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			YEditor.Frame = new CGRect (132, 13, 90, 20);
 		}
-
-		public override nint GetHeight (EditorViewModel vm)
-		{
-			return 33;
-		}
 	}
 
 	internal class SystemPointEditorControl

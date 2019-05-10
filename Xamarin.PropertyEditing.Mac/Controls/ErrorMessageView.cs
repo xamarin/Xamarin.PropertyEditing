@@ -46,7 +46,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (this.errorMessages);
 
-			this.AddConstraints (new[] {
+			AddConstraints (new[] {
 				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 5f),
 				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 5f),
 				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, DefaultIconButtonSize),

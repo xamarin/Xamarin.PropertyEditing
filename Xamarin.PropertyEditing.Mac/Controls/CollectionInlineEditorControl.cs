@@ -51,7 +51,7 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void SetEnabled ()
 		{
 			base.SetEnabled ();
-			this.openCollection.Enabled = ViewModel?.Property.CanWrite ?? false;
+			this.openCollection.Enabled = ViewModel?.IsInputEnabled ?? false;
 		}
 
 		protected override void UpdateAccessibilityValues ()

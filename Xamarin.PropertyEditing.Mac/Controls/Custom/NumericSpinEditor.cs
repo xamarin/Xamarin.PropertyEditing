@@ -206,10 +206,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.numericEditor = new NumericTextField {
 				Alignment = NSTextAlignment.Right,
-				TranslatesAutoresizingMaskIntoConstraints = false,
-				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				ControlSize = NSControlSize.Small,
-				Formatter = this.formatter
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
+				Formatter = this.formatter,
+				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 
 			this.incrementButton.OnMouseLeftDown += (sender, e) => { IncrementNumericValue (); };
@@ -224,9 +224,9 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.incrementButton);
 			AddSubview (this.decrementButton);
 
-			this.AddConstraints (new[] {
+			AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.numericEditor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0),
-				NSLayoutConstraint.Create (this.numericEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
+				NSLayoutConstraint.Create (this.numericEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, 0),
 
 				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.numericEditor, NSLayoutAttribute.Top, 1f, 0f),
 				NSLayoutConstraint.Create (this.incrementButton, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.numericEditor, NSLayoutAttribute.Right, 1f, StepperSpace),
@@ -305,7 +305,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private const int StepperSpace = 2;
 		private const int StepperWidth = 11;
 		private const int StepperTopHeight = 9;
-		private const int StepperBotHeight = 10;
+		private const int StepperBotHeight = 9;
 
 		private readonly IHostResourceProvider hostResources;
 	}

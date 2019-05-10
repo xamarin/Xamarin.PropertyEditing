@@ -18,6 +18,9 @@
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controls\Variations\" />
+  </ItemGroup>
   <Target Name="IncludeIconsInBundle" BeforeTargets="AssignTargetPaths">
     <ItemGroup>
       <PropertyEditingResourceBundlePath Include="PropertyEditingResource\**\*" />

@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 					AddConstraints (new[] {
 						this.editorInputModeConstraint,
-						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0f),
+						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, Entry,  NSLayoutAttribute.CenterY, 1f, 0),
 						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, 0),
 						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1, DefaultButtonWidth),
 						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Height, NSLayoutRelation.Equal, Entry, NSLayoutAttribute.Height, 1, 0),
@@ -85,10 +85,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			Entry.Enabled = ViewModel.Property.CanWrite && (((ViewModel.InputMode != null) && !ViewModel.InputMode.IsSingleValue) || (this.inputModePopup == null));
+			Entry.Enabled = ViewModel.IsInputEnabled;
 
 			if (this.inputModePopup != null)
-				this.inputModePopup.Enabled = ViewModel.Property.CanWrite;
+				this.inputModePopup.Enabled = ViewModel.IsInputEnabled;
 		}
 
 		protected override void UpdateAccessibilityValues ()

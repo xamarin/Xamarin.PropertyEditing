@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using AppKit;
 using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
@@ -35,12 +36,14 @@ namespace Xamarin.PropertyEditing.Mac
 		public const string DefaultFontName = ".AppleSystemUIFont";
 		public const float DefaultButtonWidth = 70f;
 		public virtual bool IsDynamicallySized => false;
+		public const float BottomOffset = -2f;
+		protected virtual nint BaseHeight => 24;
 
 		PropertyViewModel viewModel;
 		public PropertyViewModel ViewModel {
 			get { return this.viewModel; }
 			set {
-				if (this.ViewModel == value)
+				if (this.viewModel == value)
 					return;
 
 				PropertyViewModel oldModel = this.viewModel;
@@ -90,7 +93,13 @@ namespace Xamarin.PropertyEditing.Mac
 				} while (row > 0 && ctrl == null);
 
 				if (ctrl != null) {
-					ctrl.LastKeyView.NextKeyView = FirstKeyView;
+					if (Superview is EditorContainer editorContainer && editorContainer.NextKeyView != null) {
+						editorContainer.NextKeyView.NextKeyView = FirstKeyView;
+						ctrl.LastKeyView.NextKeyView = editorContainer.NextKeyView;
+					}
+					else {
+						ctrl.LastKeyView.NextKeyView = FirstKeyView;
+					}
 					ctrl.UpdateKeyViews ();
 				} else if (row == 0 && view is PanelHeaderEditorControl header) {
 					header.SetNextKeyView (FirstKeyView);
@@ -98,10 +107,13 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		/// <remarks>You should treat the implementation of this as static.</remarks>
 		public virtual nint GetHeight (EditorViewModel vm)
 		{
-			return 24;
+			if (vm is PropertyViewModel realVm && realVm.IsVariant) {
+				return (nint)(BaseHeight + EditorContainer.VariationOptionFont.BoundingRectForFont.Height + (EditorContainer.VariationBorderOffset * 2)); // * 2 for upper and lower borders
+			}
+
+			return BaseHeight;
 		}
 
 		protected virtual void UpdateValue ()
@@ -158,5 +170,7 @@ namespace Xamarin.PropertyEditing.Mac
 			get { return (TViewModel)base.ViewModel; }
 			set { base.ViewModel = value; }
 		}
+
+		public override bool IsDynamicallySized => true;
 	}
 }

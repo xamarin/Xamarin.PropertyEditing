@@ -10,7 +10,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public event EventHandler OnMouseLeftDown;
 		public event EventHandler OnMouseRightDown;
 
-		NSTrackingArea trackingArea;
+		private NSTrackingArea trackingArea;
 
 		public UnfocusableButton ()
 		{
@@ -54,12 +54,12 @@ namespace Xamarin.PropertyEditing.Mac
 			base.UpdateTrackingAreas ();
 
 			// Add tracking so our MouseEntered and MouseExited get called.
-			if (trackingArea == null) {
-				var options = NSTrackingAreaOptions.MouseEnteredAndExited | NSTrackingAreaOptions.ActiveAlways;
+			if (this.trackingArea == null) {
+				NSTrackingAreaOptions options = NSTrackingAreaOptions.MouseEnteredAndExited | NSTrackingAreaOptions.ActiveAlways;
 
-				trackingArea = new NSTrackingArea (this.Bounds, options, this, null);
+				this.trackingArea = new NSTrackingArea (Bounds, options, this, null);
 
-				AddTrackingArea (trackingArea);
+				AddTrackingArea (this.trackingArea);
 			}
 		}
 		#endregion
@@ -78,6 +78,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void NotifyMouseLeftDown ()
 		{
+			//this.command?.Execute (null);
 			OnMouseLeftDown?.Invoke (this, EventArgs.Empty);
 		}
 
@@ -85,7 +86,6 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			OnMouseRightDown?.Invoke (this, EventArgs.Empty);
 		}
-
 		#endregion
 	}
 }

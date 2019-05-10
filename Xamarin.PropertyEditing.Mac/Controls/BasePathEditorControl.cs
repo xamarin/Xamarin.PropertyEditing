@@ -26,7 +26,10 @@ namespace Xamarin.PropertyEditing.Mac
 		protected BasePathEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
-			this.currentTextField = new TextFieldSmallButtonContainer ();
+			this.currentTextField = new TextFieldSmallButtonContainer {
+				ControlSize = NSControlSize.Small,
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
+			};
 			this.currentTextField.Changed += CurrentTextField_Changed;
 			AddSubview (this.currentTextField);
 
@@ -72,9 +75,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.currentTextField, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1, 0f),
-				NSLayoutConstraint.Create (this.currentTextField, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1, 0f),
+				NSLayoutConstraint.Create (this.currentTextField, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this, NSLayoutAttribute.Bottom, 1, -2f),
 				NSLayoutConstraint.Create (this.currentTextField, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, 0f),
-				NSLayoutConstraint.Create (this.currentTextField, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, -6f),
 			});
 		}
 
@@ -113,7 +115,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.currentTextField.Enabled =
 			this.browsePathButton.Enabled =
-			this.revealPathButton.Enabled = ViewModel.Property.CanWrite;
+			this.revealPathButton.Enabled = ViewModel.IsInputEnabled;
 		}
 
 		protected override void Dispose (bool disposing)

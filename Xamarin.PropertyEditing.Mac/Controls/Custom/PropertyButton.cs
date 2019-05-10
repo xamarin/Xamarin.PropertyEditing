@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.ViewModels;
@@ -20,16 +21,25 @@ namespace Xamarin.PropertyEditing.Mac
 			set {
 				if (this.viewModel != null) {
 					this.viewModel.PropertyChanged -= OnPropertyChanged;
+
 					if (this.viewModel.SupportsBindings)
 						this.viewModel.CreateBindingRequested -= OnBindingRequested;
+
+					if (this.viewModel.HasVariations) 
+						this.viewModel.CreateVariantRequested -= OnCreateVariantRequested;
 				}
 
 				this.viewModel = value;
 
 				if (this.viewModel != null) {
 					this.viewModel.PropertyChanged += OnPropertyChanged;
+
 					if (this.viewModel.SupportsBindings)
 						this.viewModel.CreateBindingRequested += OnBindingRequested;
+
+					if (this.viewModel.HasVariations)
+						this.viewModel.CreateVariantRequested += OnCreateVariantRequested;
+
 					ValueSourceChanged (this.viewModel.ValueSource);
 
 					AccessibilityTitle = string.Format (Properties.Resources.AccessibilityPropertiesButton, ViewModel.Property.Name);
@@ -94,7 +104,7 @@ namespace Xamarin.PropertyEditing.Mac
 						AttributedTitle = new Foundation.NSAttributedString (
 						Properties.Resources.CustomExpressionEllipsis,
 						new CoreText.CTStringAttributes {
-							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
+							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 						})
 					};
 
@@ -111,7 +121,7 @@ namespace Xamarin.PropertyEditing.Mac
 						AttributedTitle = new Foundation.NSAttributedString (
 						Properties.Resources.ResourceEllipsis,
 						new CoreText.CTStringAttributes {
-							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
+							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 						})
 					};
 
@@ -126,7 +136,7 @@ namespace Xamarin.PropertyEditing.Mac
 						AttributedTitle = new Foundation.NSAttributedString (
 						Properties.Resources.CreateDataBindingMenuItem,
 						new CoreText.CTStringAttributes {
-							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
+							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 						})
 					});
 				}
@@ -138,7 +148,7 @@ namespace Xamarin.PropertyEditing.Mac
 					AttributedTitle = new Foundation.NSAttributedString (
 						Properties.Resources.Reset,
 						new CoreText.CTStringAttributes {
-							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
+							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 						})
 				});
 			}
@@ -154,8 +164,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void FocusClickedRow ()
 		{
-			if (Superview != null) {
-				MakeFocusableKeyViewFirstResponder (Superview.Subviews);
+			if (Superview is EditorContainer ec) {
+				MakeFocusableKeyViewFirstResponder (ec.EditorView.NativeView.Subviews);
 			}
 		}
 
@@ -163,7 +173,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			foreach (NSView item in subViews) {
 				if (item.CanBecomeKeyView) {
-					Window.MakeFirstResponder (item);
+					Window?.MakeFirstResponder (item);
 					break;
 				} else {
 					MakeFocusableKeyViewFirstResponder (item.Subviews);
@@ -176,34 +186,34 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.viewModel != null) {
 				
 				switch (this.viewModel.ValueSource) {
-				case ValueSource.Binding:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-bound-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-bound-mac-10");
-					break;
+					case ValueSource.Binding:
+						Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-bound-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-bound-mac-10");
+						break;
 
-				case ValueSource.Default:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");
-					break;
+					case ValueSource.Default:
+						Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");
+						break;
 
-				case ValueSource.Local:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-local-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-local-mac-10");
-					break;
+					case ValueSource.Local:
+						Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-local-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-local-mac-10");
+						break;
 
-				case ValueSource.Inherited:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-10");
-					break;
+					case ValueSource.Inherited:
+						Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-10");
+						break;
 
-				case ValueSource.Resource:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-10");
-					break;
+					case ValueSource.Resource:
+						Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-10");
+						break;
 
-				case ValueSource.Unset:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");
-					break;
+					case ValueSource.Unset:
+						Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");
+						break;
 
-				default:
-					// To Handle ValueSource.DefaultStyle, ValueSource.Style etc.
-					Image = null;
-					break;
+					default:
+						// To Handle ValueSource.DefaultStyle, ValueSource.Style etc.
+						Image = null;
+						break;
 				}
 			}
 		}
@@ -291,6 +301,19 @@ namespace Xamarin.PropertyEditing.Mac
 			var result = (NSModalResponse)(int)NSApplication.SharedApplication.RunModalForWindow (bindingEditorWindow);
 			if (result == NSModalResponse.OK) {
 				e.BindingObject = bindingEditorWindow.ViewModel.SelectedObjects.Single ();
+			}
+		}
+
+		private void OnCreateVariantRequested (object sender, CreateVariantEventArgs e)
+		{
+			using (var createVariantWindow = new CreateVariantWindow (this.hostResources, this.viewModel) {
+				Appearance = EffectiveAppearance,
+				})
+				{
+					var result = (NSModalResponse)(int)NSApplication.SharedApplication.RunModalForWindow (createVariantWindow);
+					if (result == NSModalResponse.OK) {
+						e.Variation = Task.FromResult (createVariantWindow.ViewModel.Variation);
+				}
 			}
 		}
 	}

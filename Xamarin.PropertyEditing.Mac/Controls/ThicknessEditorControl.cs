@@ -30,11 +30,6 @@ namespace Xamarin.PropertyEditing.Mac
 			HeightEditor.Frame = new CGRect (132, 13, 90, 20);
 		}
 
-		public override nint GetHeight (EditorViewModel vm)
-		{
-			return 66;
-		}
-
 		protected override void OnInputUpdated (object sender, EventArgs e)
 		{
 			ViewModel.Value = (CommonThickness)Activator.CreateInstance (typeof (CommonThickness), HeightEditor.Value, XEditor.Value, WidthEditor.Value, YEditor.Value);
