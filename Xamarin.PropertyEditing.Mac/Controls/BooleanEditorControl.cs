@@ -8,8 +8,6 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class BooleanEditorControl
 		: PropertyEditorControl<PropertyViewModel<bool?>>
 	{
-		const string setBezelColorSelector = "setBezelColor:";
-
 		public BooleanEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
@@ -29,8 +27,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (BooleanEditor);
 
-			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (BooleanEditor, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0f),
+			AddConstraints (new[] {
+				NSLayoutConstraint.Create (BooleanEditor, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Bottom, 1f, -4f),
 				NSLayoutConstraint.Create (BooleanEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0f),
 			});
 		}
@@ -60,7 +58,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			BooleanEditor.Enabled = ViewModel.Property.CanWrite;
+			BooleanEditor.Enabled = ViewModel.IsInputEnabled;
 		}
 
 		protected override void UpdateAccessibilityValues ()

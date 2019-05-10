@@ -1480,5 +1480,23 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("FilterTypePlaceholder", resourceCulture);
             }
         }
+        
+        public static string AddVariation {
+            get {
+                return ResourceManager.GetString("AddVariation", resourceCulture);
+            }
+        }
+        
+        public static string AccessibilityAddVariationButton {
+            get {
+                return ResourceManager.GetString("AccessibilityAddVariationButton", resourceCulture);
+            }
+        }
+        
+        public static string AccessibilityDeleteVariationButton {
+            get {
+                return ResourceManager.GetString("AccessibilityDeleteVariationButton", resourceCulture);
+            }
+        }
     }
 }

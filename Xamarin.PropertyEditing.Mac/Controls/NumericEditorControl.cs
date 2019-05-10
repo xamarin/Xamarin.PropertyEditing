@@ -42,11 +42,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.editorRightConstraint = NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0);
 
-			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0),
+			AddConstraints (new[] {
+				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Bottom, 1f, BottomOffset),
 				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1, 0),
 				this.editorRightConstraint,
-				NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, -6),
 			});
 		}
 
@@ -60,8 +59,6 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => NumericEditor;
 		public override NSView LastKeyView => NumericEditor.DecrementButton;
 
-		private bool CanEnable => ViewModel.Property.CanWrite && (((ViewModel.InputMode != null) && !ViewModel.InputMode.IsSingleValue) || (this.inputModePopup == null));
-
 		protected NSNumberFormatterStyle NumberStyle {
 			get { 
 				return NumericEditor.NumberStyle; }
@@ -72,9 +69,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			NumericEditor.Enabled = CanEnable;
+			NumericEditor.Enabled = ViewModel.IsInputEnabled;
 			if (this.inputModePopup != null)
-				this.inputModePopup.Enabled = ViewModel.Property.CanWrite;
+				this.inputModePopup.Enabled = ViewModel.IsInputEnabled;
 		}
 
 		protected virtual void OnValueChanged (object sender, EventArgs e)
@@ -89,7 +86,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (this.underlyingType != null) {
 				NumericEditor.StringValue = ViewModel.Value == null ? string.Empty : ViewModel.Value.ToString ();
-				NumericEditor.Enabled = CanEnable;
+				NumericEditor.Enabled = ViewModel.IsInputEnabled;
 
 				if (this.inputModePopup != null)
 					this.inputModePopup.SelectItem ((ViewModel.InputMode == null) ? string.Empty : ViewModel.InputMode.Identifier);
@@ -136,9 +133,10 @@ namespace Xamarin.PropertyEditing.Mac
 
 					AddSubview (this.inputModePopup);
 					this.editorInputModeConstraint = NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this.inputModePopup, NSLayoutAttribute.Left, 1, -4);
+
 					AddConstraints (new[] {
 						this.editorInputModeConstraint,
-						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0f),
+						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Bottom, 1f, BottomOffset),
 						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, 0f),
 						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, DefaultButtonWidth),
 					});

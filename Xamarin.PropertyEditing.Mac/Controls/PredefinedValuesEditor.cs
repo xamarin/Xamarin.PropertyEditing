@@ -23,9 +23,9 @@ namespace Xamarin.PropertyEditing.Mac
 		protected override void SetEnabled ()
 		{
 			if (ViewModel.IsConstrainedToPredefined) {
-				this.popupButton.Enabled = ViewModel.Property.CanWrite;
+				this.popupButton.Enabled = ViewModel.IsInputEnabled;
 			} else {
-				this.comboBox.Enabled = ViewModel.Property.CanWrite;
+				this.comboBox.Enabled = ViewModel.IsInputEnabled;
 			}
 		}
 
@@ -119,7 +119,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.popupButton);
 
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.popupButton, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0f),
+				NSLayoutConstraint.Create (this.popupButton, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Bottom, 1f, BottomOffset),
 				NSLayoutConstraint.Create (this.popupButton, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0f),
 				NSLayoutConstraint.Create (this.popupButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0),
 			});
@@ -165,7 +165,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.comboBox);
 
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
+				NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Bottom, 1f, BottomOffset),
 				NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0f),
 				NSLayoutConstraint.Create (this.comboBox, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, 0),
 			});

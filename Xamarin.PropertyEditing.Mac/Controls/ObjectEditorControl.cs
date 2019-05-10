@@ -26,8 +26,6 @@ namespace Xamarin.PropertyEditing.Mac
 			this.createObject.Activated += OnNewPressed;
 			AddSubview (this.createObject);
 
-			//this.buttonConstraint = NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.typeLabel, NSLayoutAttribute.Trailing, 1f, 12);
-
 			AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0f),
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
@@ -50,7 +48,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			this.createObject.Enabled = ViewModel.Property.CanWrite;
+			this.createObject.Enabled = ViewModel.IsInputEnabled;
 		}
 
 		protected override void UpdateAccessibilityValues ()

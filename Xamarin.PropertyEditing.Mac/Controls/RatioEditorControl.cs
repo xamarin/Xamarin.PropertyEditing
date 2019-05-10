@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class RatioEditorControl<T> : PropertyEditorControl<RatioViewModel>
 	{
-		private RatioEditor<T> ratioEditor;
+		private readonly RatioEditor<T> ratioEditor;
 
 		public RatioEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
@@ -26,19 +26,19 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (this.ratioEditor);
 
-			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0),
-				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0),
-				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, -6),
+			AddConstraints (new[] {
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Bottom, 1f, BottomOffset),
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1, 0),
+				NSLayoutConstraint.Create (this.ratioEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0),
 			});
 		}
 
-		public override NSView FirstKeyView => ratioEditor.NumericEditor;
-		public override NSView LastKeyView => ratioEditor.DecrementButton;
+		public override NSView FirstKeyView => this.ratioEditor.NumericEditor;
+		public override NSView LastKeyView => this.ratioEditor.DecrementButton;
 
 		protected override void SetEnabled ()
 		{
-			this.ratioEditor.Enabled = ViewModel.Property.CanWrite;
+			this.ratioEditor.Enabled = ViewModel.IsInputEnabled;
 		}
 
 		protected override void UpdateAccessibilityValues ()

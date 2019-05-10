@@ -26,9 +26,6 @@ namespace Xamarin.PropertyEditing.Mac
 		NSSegmentedControl segmentedControl;
 		NSButton showPreviewImage;
 		RequestResourcePanel resourceSelectorPanel;
-
-		public NSPopover PopOver { get; internal set; }
-
 		private bool showPreview;
 		public bool ShowPreview
 		{

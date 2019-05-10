@@ -16,6 +16,8 @@ namespace Xamarin.PropertyEditing.Mac
 		public override NSView FirstKeyView => XEditor;
 		public override NSView LastKeyView => YEditor.DecrementButton;
 
+		protected override nint BaseHeight => 36;
+
 		protected BasePointEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
@@ -46,23 +48,21 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (YLabel);
 			AddSubview (YEditor);
 
-			const float editorHeight = 18;
-			this.AddConstraints (new[] {
-				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 3f),
+			nfloat labelHeight = NSFont.SystemFontSizeForControlSize (NSControlSize.Small);
+			AddConstraints (new[] {
+				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Bottom, 1f, BottomOffset + 1),
+				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, labelHeight),
+
+				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, XLabel,  NSLayoutAttribute.Top, 1f, -1f),
 				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 0f),
 				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, YEditor,  NSLayoutAttribute.Left, 1f, -10f),
-				NSLayoutConstraint.Create (XEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, editorHeight),
 
-				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, XEditor,  NSLayoutAttribute.Bottom, 1f, -4f),
-				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, editorHeight),
-
-				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 3f),
+				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, YLabel,  NSLayoutAttribute.Top, 1f, -1f),
 				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, 0),
 				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Width, NSLayoutRelation.Equal, XEditor,  NSLayoutAttribute.Width, 1f, 0f),
-				NSLayoutConstraint.Create (YEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, editorHeight),
 
 				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, XLabel,  NSLayoutAttribute.Top, 1f, 0f),
-				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, editorHeight),
+				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, labelHeight),
 
 				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, XEditor.Subviews[0], NSLayoutAttribute.CenterX, 1f, 0),
 				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, YEditor.Subviews[0], NSLayoutAttribute.CenterX, 1f, 0),
@@ -73,8 +73,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			XEditor.Enabled = ViewModel.Property.CanWrite;
-			YEditor.Enabled = ViewModel.Property.CanWrite;
+			XEditor.Enabled =
+			YEditor.Enabled = ViewModel.IsInputEnabled;
 		}
 
 		protected override void UpdateAccessibilityValues ()

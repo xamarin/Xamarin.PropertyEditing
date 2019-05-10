@@ -15,8 +15,6 @@ namespace Xamarin.PropertyEditing.Mac
 		private const string PreviewCustomExpressionString = "PreviewCustomExpression";
 		private const string AutocompleteItemsString = "AutocompleteItems";
 
-		public AutoClosePopOver PopOver { get; internal set; }
-
 		public CustomExpressionView (IHostResourceProvider hostResources, PropertyViewModel viewModel)
 			: base (hostResources, viewModel,  Properties.Resources.CustomExpression, "pe-custom-expression-32")
 		{
@@ -56,7 +54,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (editorControl);
 
-			this.AddConstraints (new[] {
+			AddConstraints (new[] {
 				NSLayoutConstraint.Create (editorControl, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 37f),
 				NSLayoutConstraint.Create (editorControl, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 38f),
 				NSLayoutConstraint.Create (editorControl, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, -57f),

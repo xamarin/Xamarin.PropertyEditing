@@ -30,13 +30,18 @@ namespace Xamarin.PropertyEditing.Mac
 		public override nint GetHeight (EditorViewModel vm)
 		{
 			var realVm = (CombinablePropertyViewModel<T>)vm;
-			return subrowHeight * realVm.Choices.Count + 6;
+			nint baseHeight = subrowHeight * realVm.Choices.Count + 6;
+			if (realVm != null && realVm.IsVariant) {
+				return (baseHeight * 2);
+			}
+
+			return baseHeight;
 		}
 
 		protected override void SetEnabled ()
 		{
 			foreach (var item in this.combinableList) {
-				item.Key.Enabled = ViewModel.Property.CanWrite;
+				item.Key.Enabled = ViewModel.IsInputEnabled;
 			}
 		}
 
@@ -66,7 +71,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 					AddSubview (checkbox);
 
-					this.AddConstraints (new[] {
+					AddConstraints (new[] {
 						NSLayoutConstraint.Create (checkbox, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1f, top),
 						NSLayoutConstraint.Create (checkbox, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0f),
 						NSLayoutConstraint.Create (checkbox, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1f, 0),

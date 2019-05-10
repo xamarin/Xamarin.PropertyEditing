@@ -25,10 +25,9 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.datePicker);
 
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0f),
+				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Bottom, 1f, BottomOffset),
 				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Leading, 1f, 0f),
 				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0),
-				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1f,  -6f),
 			});
 		}
 
@@ -47,7 +46,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void SetEnabled ()
 		{
-			this.datePicker.Enabled = ViewModel.Property.CanWrite;
+			this.datePicker.Enabled = ViewModel.IsInputEnabled;
 		}
 
 		protected override void UpdateAccessibilityValues ()

@@ -13,18 +13,68 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		{
 			AddProperty<AutoResizingFlags> ("Autoresizing", ReadWrite, valueSources: ValueSources.Local, ignoreEnum: true);
 			AddProperty<TimeSpan> ("TimeSpan", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
-			AddProperty<TimeSpan> ("TimeSpanReadOnly", ReadOnly, canWrite: false, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
+			AddProperty<TimeSpan> ("ReadOnlyTimeSpan", ReadOnly, canWrite: false, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
+			AddProperty<TimeSpan> ("TimeSpanV", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding,
+				options: new[] {
+					new PropertyVariationOption ("Width", "Compact"),
+					new PropertyVariationOption ("Width", "Regular"),
+					new PropertyVariationOption ("Gamut", "P3"),
+					new PropertyVariationOption ("Gamut", "sRGB"),
+					new PropertyVariationOption ("OnPlatform", "iOS"),
+					new PropertyVariationOption ("OnPlatform", "Android"),
+					new PropertyVariationOption ("OnPlatform", "UWP"),
+				});
 			AddProperty<bool> ("Boolean", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
+			AddProperty<bool> ("BooleanV", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding,
+				options: new[] {
+					new PropertyVariationOption ("Width", "Compact"),
+					new PropertyVariationOption ("Width", "Regular"),
+					new PropertyVariationOption ("Gamut", "P3"),
+					new PropertyVariationOption ("Gamut", "sRGB"),
+					new PropertyVariationOption ("OnPlatform", "iOS"),
+					new PropertyVariationOption ("OnPlatform", "Android"),
+					new PropertyVariationOption ("OnPlatform", "UWP"),
+				});
 			AddProperty<bool> ("UnsetBoolean", ReadWrite, valueSources: ValueSources.Local);
 			AddProperty<int> ("Integer", ReadWrite);
 			AddProperty<int> ("UnsetInteger", ReadWrite, valueSources: ValueSources.Local);
 			AddProperty<float> ("FloatingPoint", ReadWrite);
+			AddProperty<float> ("FloatingPointV", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding,
+				options: new[] {
+					new PropertyVariationOption ("Width", "Compact"),
+					new PropertyVariationOption ("Width", "Regular"),
+					new PropertyVariationOption ("Gamut", "P3"),
+					new PropertyVariationOption ("Gamut", "sRGB"),
+					new PropertyVariationOption ("OnPlatform", "iOS"),
+					new PropertyVariationOption ("OnPlatform", "Android"),
+					new PropertyVariationOption ("OnPlatform", "UWP"),
+				});
 			AddProperty<char> ("Char", ReadWrite, valueSources: ValueSources.Local);
-			AddProperty<char> ("CharReadOnly", ReadOnly, canWrite: false, valueSources: ValueSources.Local);
+			AddProperty<char> ("CharV", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding,
+				options: new[] {
+					new PropertyVariationOption ("Width", "Compact"),
+					new PropertyVariationOption ("Width", "Regular"),
+					new PropertyVariationOption ("Gamut", "P3"),
+					new PropertyVariationOption ("Gamut", "sRGB"),
+					new PropertyVariationOption ("OnPlatform", "iOS"),
+					new PropertyVariationOption ("OnPlatform", "Android"),
+					new PropertyVariationOption ("OnPlatform", "UWP"),
+				});
+			AddProperty<char> ("ReadOnlyChar", ReadOnly, canWrite: false, valueSources: ValueSources.Local);
 			AddProperty<string> ("String", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<int> ("Width", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding, inputModes: new[] { new InputMode("Auto", true), new InputMode("Star"), new InputMode("Pixel"), });
 			AddProperty<Enumeration> ("Enumeration", ReadWrite, constrained: false);
 			AddProperty<Enumeration> ("ConstrainedList", ReadWrite, constrained: true);
+			AddProperty<Enumeration> ("EnumerationV", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding,
+				options: new[] {
+					new PropertyVariationOption ("Width", "Compact"),
+					new PropertyVariationOption ("Width", "Regular"),
+					new PropertyVariationOption ("Gamut", "P3"),
+					new PropertyVariationOption ("Gamut", "sRGB"),
+					new PropertyVariationOption ("OnPlatform", "iOS"),
+					new PropertyVariationOption ("OnPlatform", "Android"),
+					new PropertyVariationOption ("OnPlatform", "UWP"),
+				});
 			AddProperty<string> ("StringV", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding,
 				options: new [] {
 					new PropertyVariationOption ("Width", "Compact"),
@@ -39,8 +89,28 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<FlagsWithValues> ("FlagsWithValues", ReadWrite, canWrite: true, flag: true);
 			AddProperty<FlagsWithValues> ("prefix:FlagsWithColonInLabel", ReadWrite, canWrite: true, flag: true);
 			AddProperty<CommonPoint> ("Point", ReadWrite, isUncommon: true);
+			AddProperty<CommonPoint> ("PointV", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding,
+				options: new[] {
+					new PropertyVariationOption ("Width", "Compact"),
+					new PropertyVariationOption ("Width", "Regular"),
+					new PropertyVariationOption ("Gamut", "P3"),
+					new PropertyVariationOption ("Gamut", "sRGB"),
+					new PropertyVariationOption ("OnPlatform", "iOS"),
+					new PropertyVariationOption ("OnPlatform", "Android"),
+					new PropertyVariationOption ("OnPlatform", "UWP"),
+				});
 			AddProperty<CommonSize> ("Size", ReadWrite, isUncommon: true);
 			AddProperty<CommonRectangle> ("Rectangle", ReadWrite);
+			AddProperty<CommonRectangle> ("RectangleV", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding,
+				options: new[] {
+					new PropertyVariationOption ("Width", "Compact"),
+					new PropertyVariationOption ("Width", "Regular"),
+					new PropertyVariationOption ("Gamut", "P3"),
+					new PropertyVariationOption ("Gamut", "sRGB"),
+					new PropertyVariationOption ("OnPlatform", "iOS"),
+					new PropertyVariationOption ("OnPlatform", "Android"),
+					new PropertyVariationOption ("OnPlatform", "UWP"),
+				});
 			AddProperty<CommonRatio> ("Ratio", ReadWrite);
 			AddProperty<CommonThickness> ("Thickness", ReadWrite);
 			AddProperty<object> ("Object", ReadWrite);
@@ -51,6 +121,16 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddReadOnlyProperty<int> ("ReadOnlyInteger", ReadOnly);
 			AddReadOnlyProperty<float> ("ReadOnlyFloatingPoint", ReadOnly);
 			AddReadOnlyProperty<string> ("ReadOnlyString", ReadOnly);
+			AddProperty<string> ("ReadOnlyStringV", ReadOnly, canWrite: false, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding,
+				options: new[] {
+					new PropertyVariationOption ("Width", "Compact"),
+					new PropertyVariationOption ("Width", "Regular"),
+					new PropertyVariationOption ("Gamut", "P3"),
+					new PropertyVariationOption ("Gamut", "sRGB"),
+					new PropertyVariationOption ("OnPlatform", "iOS"),
+					new PropertyVariationOption ("OnPlatform", "Android"),
+					new PropertyVariationOption ("OnPlatform", "UWP"),
+				});
 			AddReadOnlyProperty<Enumeration> ("ReadOnlyEnumeration", ReadOnly);
 			AddProperty<FlagsNoValues> ("ReadOnlyFlagsNotValue", ReadOnly, canWrite: false, flag: true);
 			AddProperty<FlagsWithValues> ("ReadOnlyFlagsWithValues", ReadOnly, canWrite: false, flag: true);
@@ -102,7 +182,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<FilePath> ("FilePath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddReadOnlyProperty<FilePath> ("ReadOnlyFilePath", ReadOnly);
 			AddProperty<DateTime> ("DateTime", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
-			AddReadOnlyProperty<DateTime> ("ReadDateTime", ReadOnly);
+			AddReadOnlyProperty<DateTime> ("ReadOnlyDateTime", ReadOnly);
 
 			AddEvents ("Click", "Hover", "Focus");
 

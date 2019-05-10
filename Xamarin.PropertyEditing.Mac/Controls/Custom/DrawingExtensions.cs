@@ -116,5 +116,33 @@ namespace Xamarin.PropertyEditing.Mac
 				k: k ?? color.K,
 				alpha: alpha ?? color.A);
 		}
+
+		public static CGPath ToCGPath (this NSBezierPath nsPath)
+		{
+			var cgPath = new CGPath ();
+			for (var i = 0; i < nsPath.ElementCount; i++) {
+				NSBezierPathElement type = nsPath.ElementAt (i, out CGPoint[] points);
+
+				switch (type) {
+					case NSBezierPathElement.ClosePath:
+						cgPath.CloseSubpath ();
+						break;
+
+					case NSBezierPathElement.CurveTo:
+						cgPath.AddCurveToPoint (points[0], points[1], points[2]);
+						break;
+
+					case NSBezierPathElement.LineTo:
+						cgPath.AddLineToPoint (points[0]);
+						break;
+
+					case NSBezierPathElement.MoveTo:
+						cgPath.MoveToPoint (points[0]);
+						break;
+				}
+			}
+
+			return cgPath;
+		}
 	}
 }

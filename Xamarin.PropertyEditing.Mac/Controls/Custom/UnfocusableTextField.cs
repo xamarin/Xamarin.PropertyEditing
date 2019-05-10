@@ -39,6 +39,11 @@ namespace Xamarin.PropertyEditing.Mac
 			internal set { this.label.TextColor = value; }
 		}
 
+		public bool Bordered {
+			get { return this.label.Bordered; }
+			internal set { this.label.Bordered = value; }
+		}
+
 		public virtual NSBackgroundStyle BackgroundStyle
 		{
 			[Export ("backgroundStyle")] get => this.label.Cell.BackgroundStyle;

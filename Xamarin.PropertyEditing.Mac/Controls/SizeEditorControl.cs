@@ -23,11 +23,6 @@ namespace Xamarin.PropertyEditing.Mac
 			YEditor.Frame = new CGRect (132, 13, 90, 20);
 		}
 
-		public override nint GetHeight (EditorViewModel vm)
-		{
-			return 33;
-		}
-
 		protected override void UpdateAccessibilityValues ()
 		{
 			XEditor.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityWidthEditor, ViewModel.Property.Name);

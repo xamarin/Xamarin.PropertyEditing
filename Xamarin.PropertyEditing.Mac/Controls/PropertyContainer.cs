@@ -11,6 +11,8 @@ namespace Xamarin.PropertyEditing.Mac
 			if (hostResources == null)
 				throw new ArgumentNullException (nameof (hostResources));
 
+			HostResources = hostResources;
+
 			NativeContainer = nativeView;
 
 			AddSubview (this.label);
@@ -24,12 +26,6 @@ namespace Xamarin.PropertyEditing.Mac
 			if (NativeContainer != null) {
 				AddSubview (NativeContainer.NativeView);
 				NativeContainer.NativeView.TranslatesAutoresizingMaskIntoConstraints = false;
-
-				if (NativeContainer.NativeView is PropertyEditorControl pec && pec.FirstKeyView != null) {
-					AddConstraint (NSLayoutConstraint.Create (this.label, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, pec.FirstKeyView, NSLayoutAttribute.CenterY, 1, 0));
-				} else {
-					AddConstraint (NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 3));
-				}
 
 				AddConstraints (new[] {
 					NSLayoutConstraint.Create (NativeContainer.NativeView, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
@@ -52,9 +48,25 @@ namespace Xamarin.PropertyEditing.Mac
 				} else {
 					AddConstraint (NSLayoutConstraint.Create (NativeContainer.NativeView, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0f));
 				}
-			} else {
-				AddConstraint (NSLayoutConstraint.Create (this.label, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1, 0));
 			}
+		}
+
+		protected void UpdateLabelVerticalConstraint ()
+		{
+			if (NativeContainer != null) {
+				if (NativeContainer.NativeView is PropertyEditorControl pec) {
+					if (pec.FirstKeyView != null) {
+						LabelVerticalContraint = NSLayoutConstraint.Create (LabelControl, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, pec.FirstKeyView, NSLayoutAttribute.CenterY, 1, 0);
+					} else {
+						LabelVerticalContraint = NSLayoutConstraint.Create (LabelControl, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, pec, NSLayoutAttribute.CenterY, 1, 0);
+					}
+				}
+			} else {
+				LabelVerticalContraint = NSLayoutConstraint.Create (LabelControl, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1, 0);
+			}
+
+			if (LabelVerticalContraint != null)
+				AddConstraint (LabelVerticalContraint);
 		}
 
 		public string Label
@@ -77,6 +89,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private const float EditorToButtonSpacing = 4f;
 		private const float ButtonToWallSpacing = 17f;
+		protected NSLayoutConstraint LabelVerticalContraint { get; set; }
 
 		private readonly PropertyButton propertyButton;
 		private readonly UnfocusableTextField label = new UnfocusableTextField {
@@ -86,5 +99,7 @@ namespace Xamarin.PropertyEditing.Mac
 			},
 			TranslatesAutoresizingMaskIntoConstraints = false,
 		};
+
+		protected IHostResourceProvider HostResources { get; private set; }
 	}
 }
