@@ -746,4 +746,10 @@
     <value>Directory</value>
     <comment>Directory</comment>
   </data>
+  <data name="AddVariant" xml:space="preserve">
+    <value>Add Variant</value>
+  </data>
+  <data name="RemoveVariant" xml:space="preserve">
+    <value>Remove Variant</value>
+  </data>
 </root>

@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public CreateVariantWindow (IEnumerable<ResourceDictionary> merged, IPropertyInfo property)
 		{
-			DataContext = new CreateVariationViewModel (property);
+			DataContext = new CreateVariantViewModel (property);
 			InitializeComponent ();
 			Resources.MergedDictionaries.AddItems (merged);
 		}
@@ -26,8 +26,8 @@ namespace Xamarin.PropertyEditing.Windows
 			if (!w.ShowDialog () ?? false)
 				return null;
 
-			var vm = (CreateVariationViewModel)w.DataContext;
-			return vm.Variant;
+			var vm = (CreateVariantViewModel)w.DataContext;
+			return vm.Variation;
 		}
 
 		private void OnOkClicked (object sender, RoutedEventArgs e)

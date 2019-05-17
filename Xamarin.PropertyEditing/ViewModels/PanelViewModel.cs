@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (editor == null)
 				throw new ArgumentNullException (nameof(editor));
 
-			var list = GetList (editor);
+			var list = GetListCore (editor);
 			if (editor is PropertyViewModel pvm && this.targetPlatform.GroupedTypes != null && this.targetPlatform.GroupedTypes.TryGetValue (pvm.Property.Type, out string groupName)) {
 				var group = list.OfType<PropertyGroupViewModel> ().FirstOrDefault (gvm => gvm.Category == groupName);
 				if (group != null) {
@@ -99,6 +99,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.isExpanded[mode] = expanded;
 		}
 
+		public IReadOnlyList<EditorViewModel> GetList (EditorViewModel evm)
+		{
+			if (evm == null)
+				throw new ArgumentNullException (nameof(evm));
+
+			return (IReadOnlyList<EditorViewModel>)GetListCore (evm);
+		}
+
 		private Dictionary<PropertyArrangeMode, bool> isExpanded;
 		private readonly ObservableCollectionEx<EditorViewModel> editors = new ObservableCollectionEx<EditorViewModel> ();
 		private readonly ObservableCollectionEx<EditorViewModel> uncommonEditors = new ObservableCollectionEx<EditorViewModel> ();
@@ -119,7 +127,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (editor == null)
 				throw new ArgumentNullException (nameof (editor));
 
-			var list = GetList (editor);
+			var list = GetListCore (editor);
 			if (editor is PropertyViewModel pvm && this.targetPlatform.GroupedTypes != null && this.targetPlatform.GroupedTypes.TryGetValue (pvm.Property.Type, out string groupName)) {
 				var group = list.OfType<PropertyGroupViewModel> ().FirstOrDefault (gvm => gvm.Category == groupName);
 				if (group != null)
@@ -133,7 +141,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof(HasUncommonElements));
 		}
 
-		private IList<EditorViewModel> GetList (EditorViewModel evm)
+		private IList<EditorViewModel> GetListCore (EditorViewModel evm)
 		{
 			if (this.separateUncommon && evm is PropertyViewModel pvm)
 				return pvm.Property.IsUncommon ? this.uncommonEditors : this.editors;
@@ -339,6 +347,30 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.arranged.Clear ();
 
 			ArrangedPropertiesChanged?.Invoke (this, EventArgs.Empty);
+		}
+
+		internal override bool GetIsLastVariant (PropertyViewModel viewModel)
+		{
+			if (viewModel == null)
+				throw new ArgumentNullException (nameof (viewModel));
+			if (!viewModel.IsVariant)
+				throw new ArgumentException ($"{nameof (viewModel)} is not a variant", nameof (viewModel));
+
+			string groupKey = GetGroup (viewModel);
+			PanelGroupViewModel group = this.arranged[groupKey];
+
+			var list = group.GetList (viewModel);
+
+			int index = list.IndexOf (viewModel);
+			if (index == -1)
+				throw new KeyNotFoundException ($"{nameof (viewModel)} was not found");
+
+			if (++index == list.Count)
+				return true;
+			if (list[index] is PropertyViewModel pvm) {
+				return !Equals (viewModel.Property, pvm.Property);
+			} else
+				return false;
 		}
 
 		private readonly OrderedDictionary<string, PanelGroupViewModel> arranged = new OrderedDictionary<string, PanelGroupViewModel> ();

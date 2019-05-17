@@ -23,6 +23,27 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 		}
 
+		public static T FindChildOrSelf<T> (this UIElement self)
+			where T : UIElement
+		{
+			if (self == null)
+				throw new ArgumentNullException (nameof(self));
+
+			if (self is T t)
+				return t;
+
+			int count = VisualTreeHelper.GetChildrenCount (self);
+			for (int i = 0; i < count; i++) {
+				if (VisualTreeHelper.GetChild (self, i) is UIElement element) {
+					var child = FindChildOrSelf<T> (element);
+					if (child != null)
+						return child;
+				}
+			}
+
+			return null;
+		}
+
 		public static T FindParent<T> (this UIElement self)
 			where T : UIElement
 		{

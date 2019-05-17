@@ -1404,6 +1404,74 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
+		public void RequestCreateVariant ()
+		{
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (v => v.Variations).Returns (new[] { new PropertyVariationOption ("Category", "Value") });
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetTarget (target);
+			editor.Setup (oe => oe.Properties).Returns (new[] { mockProperty.Object });
+			SetupPropertyGet (editor, mockProperty.Object, default(TValue));
+
+			var vm = GetViewModel (mockProperty.Object, editor.Object);
+
+			var variation = new PropertyVariation (new[] { mockProperty.Object.Variations[0] });
+			bool requested = false;
+			vm.CreateVariantRequested += (sender, args) => {
+				requested = true;
+				args.Variation = Task.FromResult (variation);
+			};
+
+			vm.RequestCreateVariantCommand.Execute (null);
+
+			Assert.That (requested, Is.True, "CreateVariantRequested didn't fire");
+			editor.Verify (oe => oe.SetValueAsync (mockProperty.Object, It.IsAny<ValueInfo<TValue>> (), variation));
+		}
+
+		[Test]
+		public void RequestCreateVariantCancel ()
+		{
+			var mockProperty = GetPropertyMock ();
+			mockProperty.SetupGet (v => v.Variations).Returns (new[] { new PropertyVariationOption ("Category", "Value") });
+
+			var target = new object ();
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetTarget (target);
+			editor.Setup (oe => oe.Properties).Returns (new[] { mockProperty.Object });
+			SetupPropertyGet (editor, mockProperty.Object, default (TValue));
+
+			var vm = GetViewModel (mockProperty.Object, editor.Object);
+
+			int t = 0;
+			bool requested = false;
+			vm.CreateVariantRequested += (sender, args) => {
+				requested = true;
+
+				switch (t) {
+				case 0:
+					args.Variation = null;
+					break;
+				case 1:
+					args.Variation = Task.FromCanceled<PropertyVariation> (new CancellationToken (true));
+					break;
+				case 2:
+					args.Variation = Task.FromResult<PropertyVariation> (null);
+					break;
+				}
+
+				t++;
+			};
+
+			for (int i = 0; i < 3; i++) {
+				Assert.That (() => vm.RequestCreateVariantCommand.Execute (null), Throws.Nothing);
+				Assert.That (requested, Is.True, "CreateVariantRequested didn't fire");
+				editor.Verify (oe => oe.SetValueAsync (mockProperty.Object, It.IsAny<ValueInfo<TValue>> (), It.IsAny<PropertyVariation> ()), Times.Never);
+			}
+		}
+
+		[Test]
 		public void CreateBinding ()
 		{
 			var mockProperty = GetPropertyMock ();

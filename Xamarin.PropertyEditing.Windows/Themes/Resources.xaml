@@ -4,7 +4,9 @@
 					xmlns:drawing="clr-namespace:Xamarin.PropertyEditing.Drawing;assembly=Xamarin.PropertyEditing"
 					xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
 					xmlns:prop="clr-namespace:Xamarin.PropertyEditing.Properties;assembly=Xamarin.PropertyEditing"
-					xmlns:system="clr-namespace:System;assembly=mscorlib">
+					xmlns:system="clr-namespace:System;assembly=mscorlib"
+					xmlns:vm="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing"
+					xmlns:pe="clr-namespace:Xamarin.PropertyEditing;assembly=Xamarin.PropertyEditing">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="MenuButtonStyle.xaml" />
@@ -43,7 +45,9 @@
 	<local:BoolsToVisibilityConverter x:Key="BoolsToVisibilityConverter" />
 	<local:CommonBrushToBrushConverter x:Key="BrushConverter" />
 	<local:CommonColorToColorConverter x:Key="ColorConverter" />
+	<local:NegativeThicknessConverter x:Key="NegativeThicknessConverter" />
 	<local:GroupedEditorPropertySelector x:Key="GroupedEditorSelector" />
+	<local:MultiplierConverter x:Key="MultiplierConverter" />
 
 	<Style TargetType="local:CombinablePredefinedValuesEditor">
 		<Setter Property="Template">
@@ -1504,8 +1508,40 @@
 		</Setter>
 	</Style>
 
+	<Style x:Key="VariantButton" TargetType="Button">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="FontSize" Value="9" />
+		<Setter Property="Height" Value="10" />
+		<Setter Property="Width" Value="10" />
+		<Setter Property="Foreground" Value="{DynamicResource PropertyButtonBorderBrush}" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="SnapsToDevicePixels" Value="True" />
+		<Setter Property="UseLayoutRounding" Value="True" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+						<ContentPresenter />
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="FocusVisualStyle" Value="{DynamicResource GenericVisualFocusStyle}" />
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Trigger.Setters>
+					<Setter Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}" />
+				</Trigger.Setters>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
 	<Style TargetType="local:PropertyPresenter">
 		<Setter Property="MinHeight" Value="24" />
+		<Setter Property="VariantBackgroundBrush" Value="{DynamicResource PanelGroupSecondaryBackgroundBrush}" />
+		<Setter Property="LineBrush" Value="{DynamicResource VariantLineBrush}" />
+		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyPresenter">
@@ -1518,17 +1554,74 @@
 								<ColumnDefinition Name="propertyButtonColumn" Width="12" />
 							</Grid.ColumnDefinitions>
 							<Grid.RowDefinitions>
+								<RowDefinition Name="variationRow" Height="Auto" />
 								<RowDefinition Height="Auto" MinHeight="24" />
 								<RowDefinition Height="*" />
 								<RowDefinition Height="Auto" />
 							</Grid.RowDefinitions>
 
-							<ToggleButton Name="delveButton" Grid.Column="0" Style="{DynamicResource StandaloneToggleStyle}" Width="11" Height="11" Visibility="{Binding HasItems,ElementName=subProperties,Converter={StaticResource BoolToVisibilityConverter}}" />
-							<TextBlock Name="Label" Margin="0,3,0,3" Grid.Row="0" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-							<ContentPresenter Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" MinHeight="20" />
-							<local:PropertyButton Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}"/>
+							<Button Name="addVariant" Grid.Column="0" Grid.Row="1" Margin="{TemplateBinding Padding,Converter={StaticResource NegativeThicknessConverter}}" Style="{StaticResource VariantButton}" Command="{Binding RequestCreateVariantCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.AddVariant}" AutomationProperties.Name="{x:Static prop:Resources.AddVariant}">
+								<Button.Visibility>
+									<MultiBinding Converter="{StaticResource BoolsToVisibilityConverter}">
+										<Binding Path="HasVariations" Mode="OneTime" />
+										<Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ShowVariants" />
+										<Binding Path="IsEnabled" RelativeSource="{RelativeSource Self}" />
+									</MultiBinding>
+								</Button.Visibility>
 
-							<ItemsControl Name="subProperties" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Margin="-19,0,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{DynamicResource PropertyEditorTemplate}">
+								<Grid Width="6" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
+									<Line X1="0" X2="6" Y1="3" Y2="3" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+									<Line X1="3" X2="3" Y1="0" Y2="6" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+								</Grid>
+							</Button>
+
+							<Grid Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0" Visibility="{Binding IsVariant,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter},FallbackValue=Collapsed}">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+
+								<Button Name="removeVariant" Grid.Column="0" Command="{Binding RemoveVariationCommand,Mode=OneTime}" Style="{StaticResource VariantButton}" ToolTip="{x:Static prop:Resources.RemoveVariant}" AutomationProperties.Name="{x:Static prop:Resources.RemoveVariant}">
+									<Grid RenderTransformOrigin="0.5,0.5" Width="6" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
+										<Grid.RenderTransform>
+											<RotateTransform Angle="45" />
+										</Grid.RenderTransform>
+
+										<Line X1="0" X2="6" Y1="3" Y2="3" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+										<Line X1="3" X2="3" Y1="0" Y2="6" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+									</Grid>
+								</Button>
+
+								<ItemsControl Margin="5,2,0,2" Name="variationsList" Grid.Column="1" ItemsSource="{Binding Variation,Mode=OneTime}" Focusable="False">
+									<ItemsControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<VirtualizingStackPanel Orientation="Horizontal" />
+										</ItemsPanelTemplate>
+									</ItemsControl.ItemsPanel>
+									<ItemsControl.ItemTemplate>
+										<DataTemplate DataType="pe:PropertyVariationOption">
+											<Border Background="{DynamicResource VariantBackgroundBrush}" MinHeight="14" Padding="5,0,5,0" Margin="0,0,2,0">
+												<!-- We need to base this font size on some VS setting. !-->
+												<TextBlock Foreground="{DynamicResource VariantForegroundBrush}" FontSize="{Binding FontSize,RelativeSource={RelativeSource FindAncestor,AncestorType=ItemsControl},Converter={StaticResource MultiplierConverter},ConverterParameter=0.83}" VerticalAlignment="Center">
+													<TextBlock.Text>
+														<MultiBinding StringFormat="{}{0}: {1}" Mode="OneTime">
+															<Binding Path="Category" Mode="OneTime" />
+															<Binding Path="Name" Mode="OneTime" />
+														</MultiBinding>
+													</TextBlock.Text>
+												</TextBlock>
+											</Border>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
+							</Grid>
+
+							<ToggleButton Name="delveButton" Grid.Column="0" Grid.Row="0" Style="{DynamicResource StandaloneToggleStyle}" Width="11" Height="11" Visibility="{Binding HasItems,ElementName=subProperties,Converter={StaticResource BoolToVisibilityConverter}}" />
+							<TextBlock Name="Label" Margin="0,3,0,3" Grid.Row="1" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+							<ContentPresenter Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" MinHeight="20" />
+							<local:PropertyButton Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}"/>
+
+							<ItemsControl Name="subProperties" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Margin="{TemplateBinding Padding,Converter={StaticResource NegativeThicknessConverter}}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{DynamicResource PropertyEditorTemplate}">
 								<ItemsControl.Visibility>
 									<MultiBinding Converter="{StaticResource BoolsToVisibilityConverter}">
 										<Binding ElementName="delveButton" Path="IsChecked" />

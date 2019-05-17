@@ -167,6 +167,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					removedEditors = new IObjectEditor[e.OldItems.Count];
 					for (int i = 0; i < e.OldItems.Count; i++) {
 						IObjectEditor editor = this.objEditors.First (oe => oe?.Target == e.OldItems[i]);
+						editor.PropertyChanged -= OnObjectEditorPropertyChanged;
 						INotifyCollectionChanged notifier = editor.Properties as INotifyCollectionChanged;
 						if (notifier != null)
 							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
@@ -181,8 +182,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 				case NotifyCollectionChangedAction.Reset: {
 					removedEditors = new IObjectEditor[this.objEditors.Count];
 					for (int i = 0; i < removedEditors.Length; i++) {
-						removedEditors[i] = this.objEditors[i];
-						INotifyCollectionChanged notifier = removedEditors[i]?.Properties as INotifyCollectionChanged;
+						IObjectEditor editor = this.objEditors[i];
+						if (editor == null)
+							continue;
+
+						removedEditors[i] = editor;
+						editor.PropertyChanged -= OnObjectEditorPropertyChanged;
+						INotifyCollectionChanged notifier = editor.Properties as INotifyCollectionChanged;
 						if (notifier != null)
 							notifier.CollectionChanged -= OnObjectEditorPropertiesChanged;
 					}
@@ -210,6 +216,14 @@ namespace Xamarin.PropertyEditing.ViewModels
 		{
 		}
 
+		/// <summary>
+		/// Gets whether the <paramref name="viewModel"/> is the last-arranged variant property of its base property
+		/// </summary>
+		internal virtual bool GetIsLastVariant (PropertyViewModel viewModel)
+		{
+			throw new NotSupportedException();
+		}
+
 		private INameableObject nameable;
 		private bool nameReadOnly;
 		private bool eventsEnabled;
@@ -226,20 +240,45 @@ namespace Xamarin.PropertyEditing.ViewModels
 			ErrorsChanged?.Invoke (this, e);
 		}
 
-		private async void OnVariationsChanged (object sender, EventArgs e)
+		private void OnObjectEditorPropertyChanged (object sender, EditorPropertyChangedEventArgs e)
 		{
+			if (!e.Property.HasVariations ())
+				return;
+
+			OnVariantsChanged (e.Property, EventArgs.Empty);
+		}
+
+		private async void OnVariantsChanged (object sender, EventArgs e)
+		{
+			IPropertyInfo property = sender as IPropertyInfo;
+			if (property == null)
+				property = ((PropertyViewModel)sender).Property;
+
 			using (await AsyncWork.RequestAsyncWork (this)) {
-				PropertyViewModel pvm = (PropertyViewModel) sender;
-				var variations = (await GetVariationsAsync (pvm.Property)).SelectMany (vs => vs).Distinct ();
-				var properties = this.editors
-					.OfType<PropertyViewModel> ()
-					.Where (evm => Equals (evm.Property, pvm.Property) && evm.Variation != null)
-					.ToDictionary (evm => evm.Variation);
+				var variationsTask = GetVariationsAsync (property);
+
+				PropertyViewModel baseVm = null;
+				var properties = new Dictionary<PropertyVariation, PropertyViewModel> ();
+				foreach (PropertyViewModel pvm in this.editors.OfType<PropertyViewModel> ()) {
+					if (!Equals (property, pvm.Property))
+						continue;
+
+					if (pvm.Variation == null)
+						baseVm = pvm;
+					else
+						properties.Add (pvm.Variation, pvm);
+				}
+
+				if (baseVm == null)
+					throw new InvalidOperationException ("Base property view model couldn't be found");
+
+				var variations = await variationsTask;
+				baseVm.HasVariantChildren = variations.Count > 0;
 
 				List<PropertyViewModel> toAdd = new List<PropertyViewModel> ();
 				foreach (PropertyVariation variation in variations) {
 					if (!properties.Remove (variation)) {
-						toAdd.Add (GetViewModel (pvm.Property, variation));
+						toAdd.Add (CreateViewModel (property, variation));
 					}
 				}
 
@@ -472,12 +511,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 				List<EditorViewModel> newVms = new List<EditorViewModel> ();
 				foreach (IPropertyInfo property in newSet) {
 					if (variations != null && variations.TryGetValue (property, out Dictionary<PropertyVariation, PropertyViewModel> propertyVariations)) {
-						var setVariations = (await GetVariationsAsync (property)).SelectMany (vs => vs).Distinct ();
-						foreach (PropertyVariation variation in setVariations) {
+						foreach (PropertyVariation variation in await GetVariationsAsync (property)) {
 							if (propertyVariations.Remove (variation))
 								continue;
 
-							newVms.Add (GetViewModel (property, variation));
+							newVms.Add (CreateViewModel (property, variation));
 						}
 
 						foreach (var kvp in propertyVariations) {
@@ -486,7 +524,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					} else if (property.HasVariations()) {
 						newVms.AddRange (await GetViewModelsAsync (property));
 					} else {
-						newVms.Add (GetViewModel (property));
+						newVms.Add (CreateViewModel (property));
 					}
 				}
 
@@ -511,6 +549,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (editor == null)
 					continue;
 
+				editor.PropertyChanged += OnObjectEditorPropertyChanged;
 				var notifier = editor.Properties as INotifyCollectionChanged;
 				if (notifier != null)
 					notifier.CollectionChanged += OnObjectEditorPropertiesChanged;
@@ -532,34 +571,28 @@ namespace Xamarin.PropertyEditing.ViewModels
 			tcs.SetResult (true);
 		}
 
-		private Task<IReadOnlyCollection<PropertyVariation>[]> GetVariationsAsync (IPropertyInfo property)
+		private async Task<IReadOnlyCollection<PropertyVariation>> GetVariationsAsync (IPropertyInfo property)
 		{
 			var variantTasks = new List<Task<IReadOnlyCollection<PropertyVariation>>> (ObjectEditors.Count);
 			for (int i = 0; i < ObjectEditors.Count; i++) {
 				variantTasks.Add (ObjectEditors[i].GetPropertyVariantsAsync (property));
 			}
 
-			return Task.WhenAll (variantTasks);
+			return (await Task.WhenAll (variantTasks)).SelectMany (vs => vs).Distinct ().ToList ();
 		}
 
-		private async Task<IReadOnlyList<PropertyViewModel>> GetViewModelsAsync (IPropertyInfo property, IEnumerable<PropertyVariation> variantsToSkip = null)
+		private async Task<IReadOnlyList<PropertyViewModel>> GetViewModelsAsync (IPropertyInfo property)
 		{
-			PropertyViewModel baseVm = GetViewModel (property);
-			List<PropertyViewModel> vms = new List<PropertyViewModel> ();
-			vms.Add (baseVm);
-
-			HashSet<PropertyVariation> skipped =
-				(variantsToSkip != null) ? new HashSet<PropertyVariation> (variantsToSkip) : null;
+			PropertyViewModel baseVm = CreateViewModel (property);
+			var vms = new List<PropertyViewModel> { baseVm };
 
 			if (baseVm.HasVariations) {
 				using (await AsyncWork.RequestAsyncWork (this)) {
 					var variants = await GetVariationsAsync (property);
-					for (int i = 0; i < variants.Length; i++) {
-						foreach (PropertyVariation variant in variants[i]) {
-							if (skipped != null && skipped.Contains (variant))
-								continue;
-
-							vms.Add (GetViewModel (property, variant));
+					baseVm.HasVariantChildren = variants.Count > 0;
+					if (baseVm.HasVariantChildren) {
+						foreach (PropertyVariation variant in variants) {
+							vms.Add (CreateViewModel (property, variant));
 						}
 					}
 				}
@@ -568,7 +601,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return vms;
 		}
 
-		private PropertyViewModel GetViewModel (IPropertyInfo property, PropertyVariation variant = null)
+		private PropertyViewModel CreateViewModel (IPropertyInfo property, PropertyVariation variant = null)
 		{
 			PropertyViewModel vm;
 			Type[] interfaces = property.GetType ().GetInterfaces ();
@@ -586,7 +619,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			else
 				vm = new StringPropertyViewModel (TargetPlatform, property, this.objEditors, variant);
 
-			vm.VariationsChanged += OnVariationsChanged;
+			vm.Parent = this;
+			vm.VariantsChanged += OnVariantsChanged;
 			return vm;
 		}
 
