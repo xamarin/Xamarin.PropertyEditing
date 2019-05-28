@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Alpha" xml:space="preserve">
-    <value>Alfa</value>
+    <value>Алфавит</value>
     <comment>Alpha textbox help text</comment>
   </data>
   <data name="AlphaInitial" xml:space="preserve">
@@ -126,27 +126,27 @@
     <comment>Alpha initial used as alpha textbox label</comment>
   </data>
   <data name="Black" xml:space="preserve">
-    <value>Preto</value>
+    <value>Черный</value>
     <comment>Black textbox help text</comment>
   </data>
   <data name="BlackInitial" xml:space="preserve">
-    <value>K</value>
+    <value>тыс.</value>
     <comment>Black initial used as black textbox label</comment>
   </data>
   <data name="Blue" xml:space="preserve">
-    <value>Azul</value>
+    <value>Синий</value>
     <comment>Blue textbox help text</comment>
   </data>
   <data name="BlueInitial" xml:space="preserve">
-    <value>B</value>
+    <value>б</value>
     <comment>Blue initial used as blue textbox label</comment>
   </data>
   <data name="Brightness" xml:space="preserve">
-    <value>Brilho</value>
+    <value>Яркость</value>
     <comment>Brightness textbox help text</comment>
   </data>
   <data name="BrightnessInitial" xml:space="preserve">
-    <value>B</value>
+    <value>б</value>
     <comment>Brightness initial used as brightness textbox label</comment>
   </data>
   <data name="CMYK" xml:space="preserve">
@@ -154,15 +154,15 @@
     <comment>Cyan magenta yellow black menu entry</comment>
   </data>
   <data name="ColorSpace" xml:space="preserve">
-    <value>Espaço de cores</value>
+    <value>Цветовое пространство</value>
     <comment>Color space dropdown help text</comment>
   </data>
   <data name="CurrentColor" xml:space="preserve">
-    <value>Cor atual</value>
+    <value>Текущий цвет</value>
     <comment>Current color help text</comment>
   </data>
   <data name="Cyan" xml:space="preserve">
-    <value>Ciano</value>
+    <value>Голубой</value>
     <comment>Cyan textbox help text</comment>
   </data>
   <data name="CyanInitial" xml:space="preserve">
@@ -170,23 +170,23 @@
     <comment>Cyan initial used as cyan textbox label</comment>
   </data>
   <data name="CyanMagentaYellowBlack" xml:space="preserve">
-    <value>Ciano / Magenta / Amarelo / Preto</value>
+    <value>Голубой/пурпурный/желтый/черный</value>
     <comment>CMYK help text</comment>
   </data>
   <data name="ConvertToLocalValue" xml:space="preserve">
-    <value>Converter para valor local</value>
+    <value>Преобразовать в локальное значение</value>
   </data>
   <data name="CustomExpressionEllipsis" xml:space="preserve">
-    <value>Expressão Personalizada…</value>
+    <value>Пользовательское выражение…</value>
   </data>
   <data name="EventHandlersSelectedElement" xml:space="preserve">
-    <value>Manipuladores de eventos para o elemento selecionado</value>
+    <value>Обработчики событий для выбранного элемента</value>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>Eventos</value>
+    <value>События</value>
   </data>
   <data name="Green" xml:space="preserve">
-    <value>Verde</value>
+    <value>Зеленый</value>
     <comment>Green textbox help text</comment>
   </data>
   <data name="GreenInitial" xml:space="preserve">
@@ -194,11 +194,11 @@
     <comment>Green initial used as green textbox label</comment>
   </data>
   <data name="HexValue" xml:space="preserve">
-    <value>Valor hex.</value>
+    <value>Шестнадцатеричное значение</value>
     <comment>Hex value textbox help text</comment>
   </data>
   <data name="HLS" xml:space="preserve">
-    <value>HLS</value>
+    <value>Статическая HLS</value>
     <comment>Hue lightness saturation menu entry</comment>
   </data>
   <data name="HSB" xml:space="preserve">
@@ -206,7 +206,7 @@
     <comment>Hue saturation brightness menu entry</comment>
   </data>
   <data name="Hue" xml:space="preserve">
-    <value>Matiz</value>
+    <value>Оттенок</value>
     <comment>Hue textbox help text</comment>
   </data>
   <data name="HueInitial" xml:space="preserve">
@@ -214,23 +214,23 @@
     <comment>Hue initial used as hue textbox label</comment>
   </data>
   <data name="HueLightnessSaturation" xml:space="preserve">
-    <value>Matiz / Luminosidade / Saturação</value>
+    <value>Оттенок/освещенность/насыщенность</value>
     <comment>HLS help text</comment>
   </data>
   <data name="HueSaturationBrightness" xml:space="preserve">
-    <value>Matiz / Saturação / Brilho</value>
+    <value>Оттенок/насыщенность/яркость</value>
     <comment>HSB help text</comment>
   </data>
   <data name="InitialColor" xml:space="preserve">
-    <value>Cor inicial</value>
+    <value>Исходный цвет</value>
     <comment>Initial color button help text</comment>
   </data>
   <data name="LastColor" xml:space="preserve">
-    <value>Última cor</value>
+    <value>Последний цвет</value>
     <comment>Last color help text</comment>
   </data>
   <data name="Lightness" xml:space="preserve">
-    <value>Luminosidade</value>
+    <value>Освещенность</value>
     <comment>Lightness textbox help text</comment>
   </data>
   <data name="LightnessInitial" xml:space="preserve">
@@ -238,7 +238,7 @@
     <comment>Lightness initial used as lightness textbox label</comment>
   </data>
   <data name="Magenta" xml:space="preserve">
-    <value>Magenta</value>
+    <value>Пурпурный</value>
     <comment>Magenta textbox help text</comment>
   </data>
   <data name="MagentaInitial" xml:space="preserve">
@@ -246,29 +246,29 @@
     <comment>Magenta initial used as magenta textbox label</comment>
   </data>
   <data name="MultipleObjectsSelected" xml:space="preserve">
-    <value>{0} objetos selecionados</value>
+    <value>Выбрано объектов: {0}</value>
   </data>
   <data name="MultipleTypesSelected" xml:space="preserve">
-    <value>{0} tipos selecionados</value>
+    <value>Выбрано типов: {0}</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Nome</value>
+    <value>Имя</value>
   </data>
   <data name="NoName" xml:space="preserve">
-    <value>&lt;Sem Nome&gt;</value>
+    <value>&lt;Без имени&gt;</value>
   </data>
   <data name="Properties" xml:space="preserve">
-    <value>Propriedades</value>
+    <value>Свойства</value>
   </data>
   <data name="PropertiesSelectedElement" xml:space="preserve">
-    <value>Propriedades do elemento selecionado</value>
+    <value>Свойства для выбранного элемента</value>
   </data>
   <data name="Red" xml:space="preserve">
-    <value>Vermelho</value>
+    <value>Красный</value>
     <comment>Red textbox help text</comment>
   </data>
   <data name="RedGreenBlue" xml:space="preserve">
-    <value>Vermelho / Verde / Azul</value>
+    <value>Красный/зеленый/синий</value>
     <comment>RGB help text</comment>
   </data>
   <data name="RedInitial" xml:space="preserve">
@@ -280,7 +280,7 @@
     <comment>Red green blue menu entry</comment>
   </data>
   <data name="Saturation" xml:space="preserve">
-    <value>Saturação</value>
+    <value>Насыщенность</value>
     <comment>Saturation textbox help text</comment>
   </data>
   <data name="SaturationInitial" xml:space="preserve">
@@ -288,17 +288,17 @@
     <comment>Saturation initial used as saturation textbox label</comment>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Redefinir</value>
+    <value>Сбросить</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Tipo</value>
+    <value>Тип</value>
   </data>
   <data name="ViewPropertiesOrEvents" xml:space="preserve">
-    <value>Exibir propriedades ou eventos</value>
+    <value>Просмотр свойств или событий</value>
     <comment>Properties/Events narrator help text</comment>
   </data>
   <data name="Yellow" xml:space="preserve">
-    <value>Amarelo</value>
+    <value>Желтый</value>
     <comment>Yellow textbox help text</comment>
   </data>
   <data name="YellowInitial" xml:space="preserve">
@@ -306,276 +306,276 @@
     <comment>Yellow initial used as yellow textbox label</comment>
   </data>
   <data name="NoBrush" xml:space="preserve">
-    <value>Sem pincel</value>
+    <value>Нет кисти</value>
     <comment>No brush tab help text</comment>
   </data>
   <data name="SolidBrush" xml:space="preserve">
-    <value>Pincel de cor sólida</value>
+    <value>Одноцветная кисть</value>
     <comment>Solid color brush help text</comment>
   </data>
   <data name="ResourceBrush" xml:space="preserve">
-    <value>Pincel para o recurso</value>
+    <value>Кисть из ресурса</value>
     <comment>Brush from resource help text</comment>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>Opacidade</value>
+    <value>Непрозрачность</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>Отмена</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>ОК</value>
   </data>
   <data name="ShowAllAssemblies" xml:space="preserve">
-    <value>Mostrar todos os assemblies</value>
+    <value>Показать все сборки</value>
   </data>
   <data name="SearchProperties" xml:space="preserve">
-    <value>Pesquisar propriedades</value>
+    <value>Свойства поиска</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>Novo</value>
+    <value>Создать</value>
   </data>
   <data name="SearchObjectsTitle" xml:space="preserve">
-    <value>Pesquisar objetos</value>
+    <value>Поиск объектов</value>
   </data>
   <data name="SelectObjectTitle" xml:space="preserve">
-    <value>Selecionar Objeto</value>
+    <value>Выбор объекта</value>
   </data>
   <data name="CustomExpression" xml:space="preserve">
-    <value>Expressão Personalizada</value>
+    <value>Пользовательское выражение</value>
   </data>
   <data name="ColorEditorTabLabel" xml:space="preserve">
-    <value>Editor</value>
+    <value>Редактор</value>
   </data>
   <data name="SearchResourcesTitle" xml:space="preserve">
-    <value>Recursos de Pesquisa</value>
+    <value>Поиск ресурсов</value>
   </data>
   <data name="SelectResourceTitle" xml:space="preserve">
-    <value>Selecionar Recurso</value>
+    <value>Выбор ресурса</value>
   </data>
   <data name="ShowSystemResources" xml:space="preserve">
-    <value>Mostrar recursos do sistema</value>
+    <value>Показать системные ресурсы</value>
   </data>
   <data name="ResourceEllipsis" xml:space="preserve">
-    <value>Recurso…</value>
+    <value>Ресурс…</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Padrão</value>
+    <value>По умолчанию</value>
   </data>
   <data name="Inherited" xml:space="preserve">
-    <value>Herdado</value>
+    <value>Унаследовано</value>
   </data>
   <data name="InvalidValue" xml:space="preserve">
-    <value>{0} é um Valor Inválido</value>
+    <value>{0} — недопустимое значение.</value>
   </data>
   <data name="Local" xml:space="preserve">
-    <value>Local</value>
+    <value>Локальные</value>
   </data>
   <data name="Unset" xml:space="preserve">
-    <value>Remover Definição</value>
+    <value>Unset</value>
   </data>
   <data name="MaterialColorRed" xml:space="preserve">
-    <value>Vermelho</value>
+    <value>Красный</value>
   </data>
   <data name="MaterialColorPink" xml:space="preserve">
-    <value>Rosa</value>
+    <value>Розовый</value>
   </data>
   <data name="MaterialColorPurple" xml:space="preserve">
-    <value>Roxo</value>
+    <value>Сиреневый</value>
   </data>
   <data name="MaterialColorDeepPurple" xml:space="preserve">
-    <value>Violeta</value>
+    <value>Темно-сиреневый</value>
   </data>
   <data name="MaterialColorIndigo" xml:space="preserve">
-    <value>Índigo</value>
+    <value>Индиго</value>
   </data>
   <data name="MaterialColorBlue" xml:space="preserve">
-    <value>Azul</value>
+    <value>Синий</value>
   </data>
   <data name="MaterialColorLightBlue" xml:space="preserve">
-    <value>Azul-claro</value>
+    <value>Светло-синий</value>
   </data>
   <data name="MaterialColorCyan" xml:space="preserve">
-    <value>Ciano</value>
+    <value>Голубой</value>
   </data>
   <data name="MaterialColorTeal" xml:space="preserve">
-    <value>Azul-petróleo</value>
+    <value>Сине-зеленый</value>
   </data>
   <data name="MaterialColorGreen" xml:space="preserve">
-    <value>Verde</value>
+    <value>Зеленый</value>
   </data>
   <data name="MaterialColorLightGreen" xml:space="preserve">
-    <value>Verde-claro</value>
+    <value>Светло-зеленый</value>
   </data>
   <data name="MaterialColorLime" xml:space="preserve">
-    <value>Verde-limão</value>
+    <value>Травяной</value>
   </data>
   <data name="MaterialColorYellow" xml:space="preserve">
-    <value>Amarelo</value>
+    <value>Желтый</value>
   </data>
   <data name="MaterialColorAmber" xml:space="preserve">
-    <value>Âmbar</value>
+    <value>Янтарный</value>
   </data>
   <data name="MaterialColorOrange" xml:space="preserve">
-    <value>Laranja</value>
+    <value>Оранжевый</value>
   </data>
   <data name="MaterialColorDeepOrange" xml:space="preserve">
-    <value>Laranja-escuro</value>
+    <value>Темно-оранжевый</value>
   </data>
   <data name="MaterialColorBrown" xml:space="preserve">
-    <value>Marrom</value>
+    <value>Коричневый</value>
   </data>
   <data name="MaterialColorGrey" xml:space="preserve">
-    <value>Cinza</value>
+    <value>Серый</value>
   </data>
   <data name="MaterialColorBlueGrey" xml:space="preserve">
-    <value>Cinza-azulado</value>
+    <value>Серо-синий</value>
   </data>
   <data name="MaterialDesignColorBrush" xml:space="preserve">
-    <value>Cores de Design do Material</value>
+    <value>Цвета разработки материала</value>
     <comment>Material design help text</comment>
   </data>
   <data name="MaterialColorBlackAndWhite" xml:space="preserve">
-    <value>Preto e Branco</value>
+    <value>Черно-белый</value>
   </data>
   <data name="White" xml:space="preserve">
-    <value>Branco</value>
+    <value>Белый</value>
   </data>
   <data name="NoPreviewAvailable" xml:space="preserve">
-    <value>Nenhuma visualização disponível</value>
+    <value>Предварительный просмотр невозможен</value>
     <comment>Resource selector window preview section text</comment>
   </data>
   <data name="Resource" xml:space="preserve">
-    <value>Recurso</value>
+    <value>Ресурс</value>
   </data>
   <data name="ResourceWithName" xml:space="preserve">
-    <value>Recurso ({0})</value>
+    <value>Ресурс ({0})</value>
     <comment>Resource with the raw embedded resource name</comment>
   </data>
   <data name="Binding" xml:space="preserve">
-    <value>Associação</value>
+    <value>Привязка</value>
   </data>
   <data name="GoToSource" xml:space="preserve">
-    <value>Ir para Origem</value>
+    <value>Перейти к источнику</value>
   </data>
   <data name="CollectionValue" xml:space="preserve">
-    <value>(Coleção)</value>
+    <value>(Коллекция)</value>
     <comment>Indicates that a collection is the value of the property</comment>
   </data>
   <data name="Ellipsis" xml:space="preserve">
     <value>…</value>
   </data>
   <data name="OtherTypeAction" xml:space="preserve">
-    <value>&lt;Outro tipo...&gt;</value>
+    <value>&lt;Другой тип…&gt;</value>
   </data>
   <data name="Items" xml:space="preserve">
-    <value>Itens</value>
+    <value>Элементы</value>
   </data>
   <data name="CollectionEditorTitle" xml:space="preserve">
-    <value>Editor de Coleção: {0}</value>
+    <value>Редактор коллекций: {0}</value>
     <comment>Collection Editor: {PropertyName}</comment>
   </data>
   <data name="MoveItemDown" xml:space="preserve">
-    <value>Mover item para baixo</value>
+    <value>Переместить элемент вниз</value>
   </data>
   <data name="MoveItemUp" xml:space="preserve">
-    <value>Mover item para cima</value>
+    <value>Переместить элемент вверх</value>
   </data>
   <data name="RemoveItem" xml:space="preserve">
-    <value>Remover item</value>
+    <value>Удалить элемент</value>
   </data>
   <data name="GenericErrorMessage" xml:space="preserve">
-    <value>Algo deu errado</value>
+    <value>Что-то пошло не так</value>
   </data>
   <data name="DefineIn" xml:space="preserve">
-    <value>Definir em</value>
+    <value>Создать источник данных в</value>
   </data>
   <data name="Application" xml:space="preserve">
-    <value>Aplicativo</value>
+    <value>Приложение</value>
   </data>
   <data name="ApplyToAll" xml:space="preserve">
-    <value>Aplicar a todos</value>
+    <value>Применить ко всем</value>
   </data>
   <data name="ThisDocument" xml:space="preserve">
-    <value>Este documento</value>
+    <value>Этот документ</value>
   </data>
   <data name="ConvertToNewResourceEllipsis" xml:space="preserve">
-    <value>Converter para novo recurso…</value>
+    <value>Преобразовать в новый ресурс…</value>
   </data>
   <data name="CreateResourceTitle" xml:space="preserve">
-    <value>Criar Recurso {0}</value>
+    <value>Создание ресурса {0}</value>
     <comment>Create {Type} Resource</comment>
   </data>
   <data name="ResourceNameLabel" xml:space="preserve">
-    <value>Nome</value>
+    <value>Имя</value>
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
-    <value>Dicionário de recurso</value>
+    <value>словаре ресурсов</value>
   </data>
   <data name="CreateDataBindingMenuItem" xml:space="preserve">
-    <value>Criar Associação…</value>
+    <value>Создать новую привязку…</value>
   </data>
   <data name="AddValueConverterEllipsis" xml:space="preserve">
-    <value>Adicionar conversor de valor…</value>
+    <value>Добавить преобразователь значений…</value>
   </data>
   <data name="AddValueConverterTitle" xml:space="preserve">
-    <value>Adicionar Conversor de Valor</value>
+    <value>Добавить преобразователь значений</value>
   </data>
   <data name="NoValueConverter" xml:space="preserve">
-    <value>Nenhum conversor de valor</value>
+    <value>Нет конвертера значений</value>
   </data>
   <data name="ValueConverterName" xml:space="preserve">
-    <value>Nome do conversor de valor</value>
+    <value>Имя преобразователя значений</value>
   </data>
   <data name="CreateDataBindingTitle" xml:space="preserve">
-    <value>Criar Associação de Dados para {0}</value>
+    <value>Создание привязки данных для {0}</value>
     <comment>Create Data Binding for Object.Property</comment>
   </data>
   <data name="BindingType" xml:space="preserve">
-    <value>Tipo de associação</value>
+    <value>Тип привязки</value>
   </data>
   <data name="Path" xml:space="preserve">
-    <value>Caminho</value>
+    <value>Путь</value>
   </data>
   <data name="ResourcePlural" xml:space="preserve">
-    <value>Recursos</value>
+    <value>Ресурсы</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Personalizado</value>
+    <value>Настраиваемый</value>
   </data>
   <data name="InvalidRatio" xml:space="preserve">
-    <value>Razão Inválida</value>
+    <value>Недопустимое соотношение</value>
   </data>
   <data name="AllResources" xml:space="preserve">
-    <value>Todos os Recursos</value>
+    <value>Все ресурсы</value>
   </data>
   <data name="Shared" xml:space="preserve">
-    <value>Compartilhado</value>
+    <value>Общий ресурс</value>
   </data>
   <data name="AddVariationHelpText" xml:space="preserve">
-    <value>Introduzir variação com base em:</value>
+    <value>Предложение варианта на основе:</value>
   </data>
   <data name="AddVariationTitle" xml:space="preserve">
-    <value>Adicionar uma Variação</value>
+    <value>Добавление варианта</value>
   </data>
   <data name="Any" xml:space="preserve">
-    <value>Qualquer</value>
+    <value>Любой</value>
   </data>
   <data name="ErrorCreatingVariant" xml:space="preserve">
-    <value>Erro ao criar variante: {0}. Se o erro persistir, faça um relatório.</value>
+    <value>Ошибка при создании варианта: {0}. Если ошибка повторится, сообщите нам об этом.</value>
   </data>
   <data name="UncommonPropertiesTooltip" xml:space="preserve">
-    <value>Mostrar propriedades avançadas</value>
+    <value>Показать дополнительные свойства</value>
   </data>
   <data name="NewInstanceForProperty" xml:space="preserve">
-    <value>Novo {0}</value>
+    <value>Создать {0}</value>
     <comment>New {PropertyName}</comment>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Selecionar</value>
+    <value>Выбор</value>
   </data>
   <data name="SelectTypeForProperty" xml:space="preserve">
-    <value>Selecione tipo {0}</value>
+    <value>Выберите тип {0}</value>
     <comment>Select {property} type</comment>
   </data>
   <data name="PropertyFilterLabel" xml:space="preserve">
@@ -583,173 +583,173 @@
     <comment>Property Filter placeholder text</comment>
   </data>
   <data name="PropertyColumnTitle" xml:space="preserve">
-    <value>Propriedade</value>
+    <value>Свойство</value>
     <comment>Title text for property column</comment>
   </data>
   <data name="ValueColumnTitle" xml:space="preserve">
-    <value>Valor</value>
+    <value>Значение</value>
     <comment>Title text for value column</comment>
   </data>
   <data name="AccessibilityNumeric" xml:space="preserve">
-    <value>{0} Editor Numérico</value>
+    <value>{0} Редактор параметра Numeric</value>
     <comment>Editor for Numeric Value</comment>
   </data>
   <data name="AccessibilityBoolean" xml:space="preserve">
-    <value>{0} Editor Booleano</value>
+    <value>{0} Редактор параметра Boolean</value>
     <comment>Editor for Boolean Value</comment>
   </data>
   <data name="AccessibilityCombobox" xml:space="preserve">
-    <value>{0} Editor de Caixa de combinação</value>
+    <value>{0} Редактор параметра Combobox</value>
     <comment>Editor for Combobox Value</comment>
   </data>
   <data name="AccessibilityCollection" xml:space="preserve">
-    <value>{0} propriedade, coleção de edição</value>
+    <value>Свойство {0}, изменить коллекцию</value>
     <comment></comment>
   </data>
   <data name="AccessibilityCollectionHelp" xml:space="preserve">
-    <value>Abre uma janela para editar a coleção</value>
+    <value>Открывает окно для изменения коллекции</value>
   </data>
   <data name="AccessibilityCollectionTypeSelector" xml:space="preserve">
-    <value>Lista de tipos</value>
+    <value>Список типов</value>
   </data>
   <data name="AccessibilityCollectionAddButton" xml:space="preserve">
-    <value>Adicionar instância de tipo</value>
+    <value>Добавить экземпляр типа</value>
   </data>
   <data name="AccessibilityCollectionRemoveButton" xml:space="preserve">
-    <value>Remover instância</value>
+    <value>Удалить экземпляр</value>
   </data>
   <data name="AccessibilityString" xml:space="preserve">
-    <value>{0} Editor de Cadeia de caracteres</value>
+    <value>{0} Редактор параметра String</value>
     <comment>Editor for String Value</comment>
   </data>
   <data name="AccessibilityChar" xml:space="preserve">
-    <value>{0} Editor de Char</value>
+    <value>{0} Редактор параметра Char</value>
     <comment>Editor for Char Value</comment>
   </data>
   <data name="AccessibilityTimeSpan" xml:space="preserve">
-    <value>{0} Editor de PeríodoTempo</value>
+    <value>{0} Редактор параметра TimeSpan</value>
     <comment>Editor for TimeSpan Value</comment>
   </data>
   <data name="AccessibilityDateTime" xml:space="preserve">
-    <value>{0} Editor de DataHora</value>
+    <value>{0} Редактор параметра DateTime</value>
     <comment>Editor for DateTime Value</comment>
   </data>
   <data name="AccessibilityXEditor" xml:space="preserve">
-    <value>{0} Editor X</value>
+    <value>{0} Редактор параметра X</value>
     <comment>Editor for X Value</comment>
   </data>
   <data name="AccessibilityYEditor" xml:space="preserve">
-    <value>{0} Editor Y</value>
+    <value>{0} Редактор параметра Y</value>
     <comment>Editor for Y Value</comment>
   </data>
   <data name="AccessibilityWidthEditor" xml:space="preserve">
-    <value>{0} Editor de Largura</value>
+    <value>{0} Редактор параметра Width</value>
     <comment>Editor for Width Value</comment>
   </data>
   <data name="AccessibilityHeightEditor" xml:space="preserve">
-    <value>{0} Editor de Altura</value>
+    <value>{0} Редактор параметра Height</value>
     <comment>Editor for Height Value</comment>
   </data>
   <data name="ArrangeByLabel" xml:space="preserve">
-    <value>Organizar por:</value>
+    <value>Упорядочить по:</value>
   </data>
   <data name="AccessibilityPropertiesButton" xml:space="preserve">
-    <value>Propriedades</value>
+    <value>Свойства</value>
   </data>
   <data name="AccessibilityPropertiesButtonDescription" xml:space="preserve">
-    <value>Editar as propriedades deste editor</value>
+    <value>Изменение свойств этого редактора</value>
   </data>
   <data name="AccessibilityActionButton" xml:space="preserve">
-    <value>Avisos</value>
+    <value>Предупреждения</value>
   </data>
   <data name="AccessibilityActionButtonDescription" xml:space="preserve">
-    <value>Exibir avisos.</value>&gt;
+    <value>Отображать предупреждения.</value>&gt;
   </data>
   <data name="CollectionTargetsHeader" xml:space="preserve">
-    <value>Itens de Coleção</value>
+    <value>Элементы коллекции</value>
   </data>
   <data name="CollectionEditButton" xml:space="preserve">
-    <value>Editar</value>
+    <value>Редактировать</value>
   </data>
   <data name="ColumnResourceName" xml:space="preserve">
-    <value>Nome</value>&gt;
+    <value>Имя</value>&gt;
   </data>
   <data name="ColumnResourcePreview" xml:space="preserve">
-    <value>Visualizar</value>&gt;
+    <value>Предварительная версия</value>&gt;
   </data>
   <data name="ResourceTableImageColumnTitle" xml:space="preserve">
-    <value>Ícone</value>
+    <value>Значок</value>
   </data>
   <data name="ResourceTableTypeColumnTitle" xml:space="preserve">
-    <value>Tipo</value>
+    <value>Тип</value>
   </data>
   <data name="ResourceTableNameColumnTitle" xml:space="preserve">
-    <value>Nome</value>
+    <value>Имя</value>
   </data>
   <data name="ResourceTableValueColumnTitle" xml:space="preserve">
-    <value>Valor</value>&gt;
+    <value>Значение</value>&gt;
   </data>
   <data name="CommonBrushTitleUnknown" xml:space="preserve">
-    <value>Desconhecido</value>
+    <value>Нет данных</value>
   </data>
   <data name="CommonBrushTitleGradient" xml:space="preserve">
-    <value>Gradiente</value>&gt;
+    <value>Градиент</value>&gt;
   </data>
   <data name="AccessibilityObjectName" xml:space="preserve">
-    <value>{0} Editor de Nome de Objeto</value>
+    <value>{0} Редактор параметра Object Name</value>
     <comment>Editor for Object Name Value</comment>
   </data>
   <data name="ObjectNamePlaceholder" xml:space="preserve">
-    <value>Sem Nome</value>&gt;
+    <value>Без имени</value>&gt;
   </data>
   <data name="AccessibilityLeftEditor" xml:space="preserve">
-    <value>{0} Editor Esquerdo</value>
+    <value>{0} Редактор параметра Left</value>
     <comment>Editor for Left Value</comment>
   </data>
   <data name="AccessibilityTopEditor" xml:space="preserve">
-    <value>{0} Editor Superior</value>
+    <value>{0} Редактор параметра Top</value>
     <comment>Editor for Top Value</comment>
   </data>
   <data name="AccessibilityRightEditor" xml:space="preserve">
-    <value>{0} Editor Direito</value>
+    <value>{0} Редактор параметра Right</value>
     <comment>Editor for Right Value</comment>
   </data>
   <data name="AccessibilityBottomEditor" xml:space="preserve">
-    <value>{0} Editor Inferior</value>
+    <value>{0} Редактор параметра Bottom</value>
     <comment>Editor for Bottom Value</comment>
   </data>
   <data name="AccessibilityInputModeEditor" xml:space="preserve">
-    <value>{0} Editor de ModoEntrada</value>
+    <value>{0} Редактор параметра InputMode</value>
     <comment>Editor for InputMode Value</comment>
   </data>
   <data name="AccessibilityPathEditor" xml:space="preserve">
-    <value>{0} {1} Editor de Caminho</value>
+    <value>{0} {1} Редактор пути</value>
     <comment>Editor for File/Directory Path Editor</comment>
   </data>
   <data name="ChooseFileOrDirectory" xml:space="preserve">
-    <value>Escolher um {0}</value>
+    <value>Выбор {0}</value>
     <comment>Choose a File or Directory</comment>
   </data>
   <data name="BrowseFileOrDirectory" xml:space="preserve">
-    <value>Procurar por um {0}</value>
+    <value>Поиск {0}</value>
     <comment>Browse for a File or Directory</comment>
   </data>
   <data name="RevealFileOrDirectory" xml:space="preserve">
-    <value>Revelar {0}</value>
+    <value>Показать {0}</value>
     <comment>Reveal a File or Directory</comment>
   </data>
   <data name="File" xml:space="preserve">
-    <value>Arquivo</value>
+    <value>Файл</value>
     <comment>File</comment>
   </data>
   <data name="Directory" xml:space="preserve">
-    <value>Diretório</value>
+    <value>Каталог</value>
     <comment>Directory</comment>
   </data>
   <data name="AddVariant" xml:space="preserve">
-    <value>Add Variant</value>
+    <value>Добавить вариант</value>
   </data>
   <data name="RemoveVariant" xml:space="preserve">
-    <value>Remove Variant</value>
+    <value>Удалить вариант</value>
   </data>
 </root>

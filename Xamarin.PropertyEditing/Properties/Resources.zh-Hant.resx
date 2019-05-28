@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Alpha" xml:space="preserve">
-    <value>Alfa</value>
+    <value>Alpha</value>
     <comment>Alpha textbox help text</comment>
   </data>
   <data name="AlphaInitial" xml:space="preserve">
@@ -126,7 +126,7 @@
     <comment>Alpha initial used as alpha textbox label</comment>
   </data>
   <data name="Black" xml:space="preserve">
-    <value>Preto</value>
+    <value>黑色</value>
     <comment>Black textbox help text</comment>
   </data>
   <data name="BlackInitial" xml:space="preserve">
@@ -134,7 +134,7 @@
     <comment>Black initial used as black textbox label</comment>
   </data>
   <data name="Blue" xml:space="preserve">
-    <value>Azul</value>
+    <value>藍色</value>
     <comment>Blue textbox help text</comment>
   </data>
   <data name="BlueInitial" xml:space="preserve">
@@ -142,7 +142,7 @@
     <comment>Blue initial used as blue textbox label</comment>
   </data>
   <data name="Brightness" xml:space="preserve">
-    <value>Brilho</value>
+    <value>亮度</value>
     <comment>Brightness textbox help text</comment>
   </data>
   <data name="BrightnessInitial" xml:space="preserve">
@@ -154,39 +154,39 @@
     <comment>Cyan magenta yellow black menu entry</comment>
   </data>
   <data name="ColorSpace" xml:space="preserve">
-    <value>Espaço de cores</value>
+    <value>色彩空間</value>
     <comment>Color space dropdown help text</comment>
   </data>
   <data name="CurrentColor" xml:space="preserve">
-    <value>Cor atual</value>
+    <value>目前色彩</value>
     <comment>Current color help text</comment>
   </data>
   <data name="Cyan" xml:space="preserve">
-    <value>Ciano</value>
+    <value>青色</value>
     <comment>Cyan textbox help text</comment>
   </data>
   <data name="CyanInitial" xml:space="preserve">
-    <value>C</value>
+    <value>壓縮</value>
     <comment>Cyan initial used as cyan textbox label</comment>
   </data>
   <data name="CyanMagentaYellowBlack" xml:space="preserve">
-    <value>Ciano / Magenta / Amarelo / Preto</value>
+    <value>青色/洋紅/黃色/黑色</value>
     <comment>CMYK help text</comment>
   </data>
   <data name="ConvertToLocalValue" xml:space="preserve">
-    <value>Converter para valor local</value>
+    <value>轉換成本機值</value>
   </data>
   <data name="CustomExpressionEllipsis" xml:space="preserve">
-    <value>Expressão Personalizada…</value>
+    <value>自訂運算式…</value>
   </data>
   <data name="EventHandlersSelectedElement" xml:space="preserve">
-    <value>Manipuladores de eventos para o elemento selecionado</value>
+    <value>所選項目的事件處理常式</value>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>Eventos</value>
+    <value>事件</value>
   </data>
   <data name="Green" xml:space="preserve">
-    <value>Verde</value>
+    <value>綠色</value>
     <comment>Green textbox help text</comment>
   </data>
   <data name="GreenInitial" xml:space="preserve">
@@ -194,7 +194,7 @@
     <comment>Green initial used as green textbox label</comment>
   </data>
   <data name="HexValue" xml:space="preserve">
-    <value>Valor hex.</value>
+    <value>十六進位值</value>
     <comment>Hex value textbox help text</comment>
   </data>
   <data name="HLS" xml:space="preserve">
@@ -206,7 +206,7 @@
     <comment>Hue saturation brightness menu entry</comment>
   </data>
   <data name="Hue" xml:space="preserve">
-    <value>Matiz</value>
+    <value>色調</value>
     <comment>Hue textbox help text</comment>
   </data>
   <data name="HueInitial" xml:space="preserve">
@@ -214,23 +214,23 @@
     <comment>Hue initial used as hue textbox label</comment>
   </data>
   <data name="HueLightnessSaturation" xml:space="preserve">
-    <value>Matiz / Luminosidade / Saturação</value>
+    <value>色調/光度/飽和</value>
     <comment>HLS help text</comment>
   </data>
   <data name="HueSaturationBrightness" xml:space="preserve">
-    <value>Matiz / Saturação / Brilho</value>
+    <value>色調/飽和/亮度</value>
     <comment>HSB help text</comment>
   </data>
   <data name="InitialColor" xml:space="preserve">
-    <value>Cor inicial</value>
+    <value>初始色彩</value>
     <comment>Initial color button help text</comment>
   </data>
   <data name="LastColor" xml:space="preserve">
-    <value>Última cor</value>
+    <value>最後色彩</value>
     <comment>Last color help text</comment>
   </data>
   <data name="Lightness" xml:space="preserve">
-    <value>Luminosidade</value>
+    <value>光度</value>
     <comment>Lightness textbox help text</comment>
   </data>
   <data name="LightnessInitial" xml:space="preserve">
@@ -238,7 +238,7 @@
     <comment>Lightness initial used as lightness textbox label</comment>
   </data>
   <data name="Magenta" xml:space="preserve">
-    <value>Magenta</value>
+    <value>洋紅色</value>
     <comment>Magenta textbox help text</comment>
   </data>
   <data name="MagentaInitial" xml:space="preserve">
@@ -246,29 +246,29 @@
     <comment>Magenta initial used as magenta textbox label</comment>
   </data>
   <data name="MultipleObjectsSelected" xml:space="preserve">
-    <value>{0} objetos selecionados</value>
+    <value>已選取 {0} 個物件</value>
   </data>
   <data name="MultipleTypesSelected" xml:space="preserve">
-    <value>{0} tipos selecionados</value>
+    <value>已選取 {0} 個類型</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Nome</value>
+    <value>名稱</value>
   </data>
   <data name="NoName" xml:space="preserve">
-    <value>&lt;Sem Nome&gt;</value>
+    <value>&lt;沒有名稱&gt;</value>
   </data>
   <data name="Properties" xml:space="preserve">
-    <value>Propriedades</value>
+    <value>屬性</value>
   </data>
   <data name="PropertiesSelectedElement" xml:space="preserve">
-    <value>Propriedades do elemento selecionado</value>
+    <value>所選元素的屬性</value>
   </data>
   <data name="Red" xml:space="preserve">
-    <value>Vermelho</value>
+    <value>紅色</value>
     <comment>Red textbox help text</comment>
   </data>
   <data name="RedGreenBlue" xml:space="preserve">
-    <value>Vermelho / Verde / Azul</value>
+    <value>紅色/綠色/藍色</value>
     <comment>RGB help text</comment>
   </data>
   <data name="RedInitial" xml:space="preserve">
@@ -280,7 +280,7 @@
     <comment>Red green blue menu entry</comment>
   </data>
   <data name="Saturation" xml:space="preserve">
-    <value>Saturação</value>
+    <value>飽和度</value>
     <comment>Saturation textbox help text</comment>
   </data>
   <data name="SaturationInitial" xml:space="preserve">
@@ -288,17 +288,17 @@
     <comment>Saturation initial used as saturation textbox label</comment>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Redefinir</value>
+    <value>重設</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Tipo</value>
+    <value>類型</value>
   </data>
   <data name="ViewPropertiesOrEvents" xml:space="preserve">
-    <value>Exibir propriedades ou eventos</value>
+    <value>檢視屬性或事件</value>
     <comment>Properties/Events narrator help text</comment>
   </data>
   <data name="Yellow" xml:space="preserve">
-    <value>Amarelo</value>
+    <value>黃色</value>
     <comment>Yellow textbox help text</comment>
   </data>
   <data name="YellowInitial" xml:space="preserve">
@@ -306,276 +306,276 @@
     <comment>Yellow initial used as yellow textbox label</comment>
   </data>
   <data name="NoBrush" xml:space="preserve">
-    <value>Sem pincel</value>
+    <value>沒有筆刷</value>
     <comment>No brush tab help text</comment>
   </data>
   <data name="SolidBrush" xml:space="preserve">
-    <value>Pincel de cor sólida</value>
+    <value>單色筆刷</value>
     <comment>Solid color brush help text</comment>
   </data>
   <data name="ResourceBrush" xml:space="preserve">
-    <value>Pincel para o recurso</value>
+    <value>來自資源的筆刷</value>
     <comment>Brush from resource help text</comment>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>Opacidade</value>
+    <value>不透明度</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>取消</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>確定</value>
   </data>
   <data name="ShowAllAssemblies" xml:space="preserve">
-    <value>Mostrar todos os assemblies</value>
+    <value>顯示所有組件</value>
   </data>
   <data name="SearchProperties" xml:space="preserve">
-    <value>Pesquisar propriedades</value>
+    <value>搜尋屬性</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>Novo</value>
+    <value>新增</value>
   </data>
   <data name="SearchObjectsTitle" xml:space="preserve">
-    <value>Pesquisar objetos</value>
+    <value>搜尋物件</value>
   </data>
   <data name="SelectObjectTitle" xml:space="preserve">
-    <value>Selecionar Objeto</value>
+    <value>選取物件</value>
   </data>
   <data name="CustomExpression" xml:space="preserve">
-    <value>Expressão Personalizada</value>
+    <value>自訂運算式</value>
   </data>
   <data name="ColorEditorTabLabel" xml:space="preserve">
-    <value>Editor</value>
+    <value>編輯器</value>
   </data>
   <data name="SearchResourcesTitle" xml:space="preserve">
-    <value>Recursos de Pesquisa</value>
+    <value>搜尋資源</value>
   </data>
   <data name="SelectResourceTitle" xml:space="preserve">
-    <value>Selecionar Recurso</value>
+    <value>選取資源</value>
   </data>
   <data name="ShowSystemResources" xml:space="preserve">
-    <value>Mostrar recursos do sistema</value>
+    <value>顯示系統資源</value>
   </data>
   <data name="ResourceEllipsis" xml:space="preserve">
-    <value>Recurso…</value>
+    <value>資源…</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Padrão</value>
+    <value>預設值</value>
   </data>
   <data name="Inherited" xml:space="preserve">
-    <value>Herdado</value>
+    <value>已繼承</value>
   </data>
   <data name="InvalidValue" xml:space="preserve">
-    <value>{0} é um Valor Inválido</value>
+    <value>{0} 是無效值</value>
   </data>
   <data name="Local" xml:space="preserve">
-    <value>Local</value>
+    <value>本機</value>
   </data>
   <data name="Unset" xml:space="preserve">
-    <value>Remover Definição</value>
+    <value>取消設定</value>
   </data>
   <data name="MaterialColorRed" xml:space="preserve">
-    <value>Vermelho</value>
+    <value>紅色</value>
   </data>
   <data name="MaterialColorPink" xml:space="preserve">
-    <value>Rosa</value>
+    <value>粉紅色</value>
   </data>
   <data name="MaterialColorPurple" xml:space="preserve">
-    <value>Roxo</value>
+    <value>紫色</value>
   </data>
   <data name="MaterialColorDeepPurple" xml:space="preserve">
-    <value>Violeta</value>
+    <value>深紫色</value>
   </data>
   <data name="MaterialColorIndigo" xml:space="preserve">
-    <value>Índigo</value>
+    <value>靛藍色</value>
   </data>
   <data name="MaterialColorBlue" xml:space="preserve">
-    <value>Azul</value>
+    <value>藍色</value>
   </data>
   <data name="MaterialColorLightBlue" xml:space="preserve">
-    <value>Azul-claro</value>
+    <value>淺藍色</value>
   </data>
   <data name="MaterialColorCyan" xml:space="preserve">
-    <value>Ciano</value>
+    <value>青色</value>
   </data>
   <data name="MaterialColorTeal" xml:space="preserve">
-    <value>Azul-petróleo</value>
+    <value>藍綠色</value>
   </data>
   <data name="MaterialColorGreen" xml:space="preserve">
-    <value>Verde</value>
+    <value>綠色</value>
   </data>
   <data name="MaterialColorLightGreen" xml:space="preserve">
-    <value>Verde-claro</value>
+    <value>淺綠色</value>
   </data>
   <data name="MaterialColorLime" xml:space="preserve">
-    <value>Verde-limão</value>
+    <value>亮綠色</value>
   </data>
   <data name="MaterialColorYellow" xml:space="preserve">
-    <value>Amarelo</value>
+    <value>黃色</value>
   </data>
   <data name="MaterialColorAmber" xml:space="preserve">
-    <value>Âmbar</value>
+    <value>琥珀色</value>
   </data>
   <data name="MaterialColorOrange" xml:space="preserve">
-    <value>Laranja</value>
+    <value>橙色</value>
   </data>
   <data name="MaterialColorDeepOrange" xml:space="preserve">
-    <value>Laranja-escuro</value>
+    <value>深橙色</value>
   </data>
   <data name="MaterialColorBrown" xml:space="preserve">
-    <value>Marrom</value>
+    <value>棕色</value>
   </data>
   <data name="MaterialColorGrey" xml:space="preserve">
-    <value>Cinza</value>
+    <value>灰色</value>
   </data>
   <data name="MaterialColorBlueGrey" xml:space="preserve">
-    <value>Cinza-azulado</value>
+    <value>藍灰色</value>
   </data>
   <data name="MaterialDesignColorBrush" xml:space="preserve">
-    <value>Cores de Design do Material</value>
+    <value>材質設計色彩</value>
     <comment>Material design help text</comment>
   </data>
   <data name="MaterialColorBlackAndWhite" xml:space="preserve">
-    <value>Preto e Branco</value>
+    <value>黑白</value>
   </data>
   <data name="White" xml:space="preserve">
-    <value>Branco</value>
+    <value>白色</value>
   </data>
   <data name="NoPreviewAvailable" xml:space="preserve">
-    <value>Nenhuma visualização disponível</value>
+    <value>沒有可用的預覽</value>
     <comment>Resource selector window preview section text</comment>
   </data>
   <data name="Resource" xml:space="preserve">
-    <value>Recurso</value>
+    <value>資源</value>
   </data>
   <data name="ResourceWithName" xml:space="preserve">
-    <value>Recurso ({0})</value>
+    <value>資源 ({0})</value>
     <comment>Resource with the raw embedded resource name</comment>
   </data>
   <data name="Binding" xml:space="preserve">
-    <value>Associação</value>
+    <value>繫結</value>
   </data>
   <data name="GoToSource" xml:space="preserve">
-    <value>Ir para Origem</value>
+    <value>移至原始檔</value>
   </data>
   <data name="CollectionValue" xml:space="preserve">
-    <value>(Coleção)</value>
+    <value>(集合)</value>
     <comment>Indicates that a collection is the value of the property</comment>
   </data>
   <data name="Ellipsis" xml:space="preserve">
     <value>…</value>
   </data>
   <data name="OtherTypeAction" xml:space="preserve">
-    <value>&lt;Outro tipo...&gt;</value>
+    <value>&lt;其他類型...&gt;</value>
   </data>
   <data name="Items" xml:space="preserve">
-    <value>Itens</value>
+    <value>項目</value>
   </data>
   <data name="CollectionEditorTitle" xml:space="preserve">
-    <value>Editor de Coleção: {0}</value>
+    <value>集合編輯器: {0}</value>
     <comment>Collection Editor: {PropertyName}</comment>
   </data>
   <data name="MoveItemDown" xml:space="preserve">
-    <value>Mover item para baixo</value>
+    <value>將項目向下移</value>
   </data>
   <data name="MoveItemUp" xml:space="preserve">
-    <value>Mover item para cima</value>
+    <value>將項目向上移</value>
   </data>
   <data name="RemoveItem" xml:space="preserve">
-    <value>Remover item</value>
+    <value>移除項目</value>
   </data>
   <data name="GenericErrorMessage" xml:space="preserve">
-    <value>Algo deu errado</value>
+    <value>發生錯誤</value>
   </data>
   <data name="DefineIn" xml:space="preserve">
-    <value>Definir em</value>
+    <value>定義於</value>
   </data>
   <data name="Application" xml:space="preserve">
-    <value>Aplicativo</value>
+    <value>應用程式</value>
   </data>
   <data name="ApplyToAll" xml:space="preserve">
-    <value>Aplicar a todos</value>
+    <value>全部套用</value>
   </data>
   <data name="ThisDocument" xml:space="preserve">
-    <value>Este documento</value>
+    <value>此文件</value>
   </data>
   <data name="ConvertToNewResourceEllipsis" xml:space="preserve">
-    <value>Converter para novo recurso…</value>
+    <value>轉換成新的資源...</value>
   </data>
   <data name="CreateResourceTitle" xml:space="preserve">
-    <value>Criar Recurso {0}</value>
+    <value>建立 {0} 資源</value>
     <comment>Create {Type} Resource</comment>
   </data>
   <data name="ResourceNameLabel" xml:space="preserve">
-    <value>Nome</value>
+    <value>名稱</value>
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
-    <value>Dicionário de recurso</value>
+    <value>資源字典</value>
   </data>
   <data name="CreateDataBindingMenuItem" xml:space="preserve">
-    <value>Criar Associação…</value>
+    <value>建立新的繫結...</value>
   </data>
   <data name="AddValueConverterEllipsis" xml:space="preserve">
-    <value>Adicionar conversor de valor…</value>
+    <value>新增值轉換器...</value>
   </data>
   <data name="AddValueConverterTitle" xml:space="preserve">
-    <value>Adicionar Conversor de Valor</value>
+    <value>加入值轉換器</value>
   </data>
   <data name="NoValueConverter" xml:space="preserve">
-    <value>Nenhum conversor de valor</value>
+    <value>沒有值轉換器</value>
   </data>
   <data name="ValueConverterName" xml:space="preserve">
-    <value>Nome do conversor de valor</value>
+    <value>值轉換器名稱</value>
   </data>
   <data name="CreateDataBindingTitle" xml:space="preserve">
-    <value>Criar Associação de Dados para {0}</value>
+    <value>建立 {0} 的資料繫結</value>
     <comment>Create Data Binding for Object.Property</comment>
   </data>
   <data name="BindingType" xml:space="preserve">
-    <value>Tipo de associação</value>
+    <value>繫結類型</value>
   </data>
   <data name="Path" xml:space="preserve">
-    <value>Caminho</value>
+    <value>路徑</value>
   </data>
   <data name="ResourcePlural" xml:space="preserve">
-    <value>Recursos</value>
+    <value>資源</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Personalizado</value>
+    <value>自訂</value>
   </data>
   <data name="InvalidRatio" xml:space="preserve">
-    <value>Razão Inválida</value>
+    <value>比例無效</value>
   </data>
   <data name="AllResources" xml:space="preserve">
-    <value>Todos os Recursos</value>
+    <value>所有資源</value>
   </data>
   <data name="Shared" xml:space="preserve">
-    <value>Compartilhado</value>
+    <value>共用</value>
   </data>
   <data name="AddVariationHelpText" xml:space="preserve">
-    <value>Introduzir variação com base em:</value>
+    <value>引入變異依據:</value>
   </data>
   <data name="AddVariationTitle" xml:space="preserve">
-    <value>Adicionar uma Variação</value>
+    <value>新增變異</value>
   </data>
   <data name="Any" xml:space="preserve">
-    <value>Qualquer</value>
+    <value>任何</value>
   </data>
   <data name="ErrorCreatingVariant" xml:space="preserve">
-    <value>Erro ao criar variante: {0}. Se o erro persistir, faça um relatório.</value>
+    <value>建立變化時發生錯誤: {0}。若此錯誤持續發生，請回報。</value>
   </data>
   <data name="UncommonPropertiesTooltip" xml:space="preserve">
-    <value>Mostrar propriedades avançadas</value>
+    <value>顯示進階屬性</value>
   </data>
   <data name="NewInstanceForProperty" xml:space="preserve">
-    <value>Novo {0}</value>
+    <value>新增 {0}</value>
     <comment>New {PropertyName}</comment>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Selecionar</value>
+    <value>選取</value>
   </data>
   <data name="SelectTypeForProperty" xml:space="preserve">
-    <value>Selecione tipo {0}</value>
+    <value>選取 {0} 類型</value>
     <comment>Select {property} type</comment>
   </data>
   <data name="PropertyFilterLabel" xml:space="preserve">
@@ -583,173 +583,173 @@
     <comment>Property Filter placeholder text</comment>
   </data>
   <data name="PropertyColumnTitle" xml:space="preserve">
-    <value>Propriedade</value>
+    <value>屬性</value>
     <comment>Title text for property column</comment>
   </data>
   <data name="ValueColumnTitle" xml:space="preserve">
-    <value>Valor</value>
+    <value>值</value>
     <comment>Title text for value column</comment>
   </data>
   <data name="AccessibilityNumeric" xml:space="preserve">
-    <value>{0} Editor Numérico</value>
+    <value>{0} 數值編輯器</value>
     <comment>Editor for Numeric Value</comment>
   </data>
   <data name="AccessibilityBoolean" xml:space="preserve">
-    <value>{0} Editor Booleano</value>
+    <value>{0} 布林值編輯器</value>
     <comment>Editor for Boolean Value</comment>
   </data>
   <data name="AccessibilityCombobox" xml:space="preserve">
-    <value>{0} Editor de Caixa de combinação</value>
+    <value>{0} 下拉式方塊編輯器</value>
     <comment>Editor for Combobox Value</comment>
   </data>
   <data name="AccessibilityCollection" xml:space="preserve">
-    <value>{0} propriedade, coleção de edição</value>
+    <value>{0} 屬性，編輯集合</value>
     <comment></comment>
   </data>
   <data name="AccessibilityCollectionHelp" xml:space="preserve">
-    <value>Abre uma janela para editar a coleção</value>
+    <value>開啟視窗以編輯集合</value>
   </data>
   <data name="AccessibilityCollectionTypeSelector" xml:space="preserve">
-    <value>Lista de tipos</value>
+    <value>類型清單</value>
   </data>
   <data name="AccessibilityCollectionAddButton" xml:space="preserve">
-    <value>Adicionar instância de tipo</value>
+    <value>新增類型的執行個體</value>
   </data>
   <data name="AccessibilityCollectionRemoveButton" xml:space="preserve">
-    <value>Remover instância</value>
+    <value>移除執行個體</value>
   </data>
   <data name="AccessibilityString" xml:space="preserve">
-    <value>{0} Editor de Cadeia de caracteres</value>
+    <value>{0} 字串編輯器</value>
     <comment>Editor for String Value</comment>
   </data>
   <data name="AccessibilityChar" xml:space="preserve">
-    <value>{0} Editor de Char</value>
+    <value>{0} Char 編輯器</value>
     <comment>Editor for Char Value</comment>
   </data>
   <data name="AccessibilityTimeSpan" xml:space="preserve">
-    <value>{0} Editor de PeríodoTempo</value>
+    <value>{0} TimeSpan 編輯器</value>
     <comment>Editor for TimeSpan Value</comment>
   </data>
   <data name="AccessibilityDateTime" xml:space="preserve">
-    <value>{0} Editor de DataHora</value>
+    <value>{0} DateTime 編輯器</value>
     <comment>Editor for DateTime Value</comment>
   </data>
   <data name="AccessibilityXEditor" xml:space="preserve">
-    <value>{0} Editor X</value>
+    <value>{0} X 編輯器</value>
     <comment>Editor for X Value</comment>
   </data>
   <data name="AccessibilityYEditor" xml:space="preserve">
-    <value>{0} Editor Y</value>
+    <value>{0} Y 編輯器</value>
     <comment>Editor for Y Value</comment>
   </data>
   <data name="AccessibilityWidthEditor" xml:space="preserve">
-    <value>{0} Editor de Largura</value>
+    <value>{0} 寬度編輯器</value>
     <comment>Editor for Width Value</comment>
   </data>
   <data name="AccessibilityHeightEditor" xml:space="preserve">
-    <value>{0} Editor de Altura</value>
+    <value>{0} 高度編輯器</value>
     <comment>Editor for Height Value</comment>
   </data>
   <data name="ArrangeByLabel" xml:space="preserve">
-    <value>Organizar por:</value>
+    <value>排列依據:</value>
   </data>
   <data name="AccessibilityPropertiesButton" xml:space="preserve">
-    <value>Propriedades</value>
+    <value>屬性</value>
   </data>
   <data name="AccessibilityPropertiesButtonDescription" xml:space="preserve">
-    <value>Editar as propriedades deste editor</value>
+    <value>編輯此編輯器的屬性</value>
   </data>
   <data name="AccessibilityActionButton" xml:space="preserve">
-    <value>Avisos</value>
+    <value>警告</value>
   </data>
   <data name="AccessibilityActionButtonDescription" xml:space="preserve">
-    <value>Exibir avisos.</value>&gt;
+    <value>顯示警告。</value>&gt;
   </data>
   <data name="CollectionTargetsHeader" xml:space="preserve">
-    <value>Itens de Coleção</value>
+    <value>集合項目</value>
   </data>
   <data name="CollectionEditButton" xml:space="preserve">
-    <value>Editar</value>
+    <value>編輯</value>
   </data>
   <data name="ColumnResourceName" xml:space="preserve">
-    <value>Nome</value>&gt;
+    <value>名稱</value>&gt;
   </data>
   <data name="ColumnResourcePreview" xml:space="preserve">
-    <value>Visualizar</value>&gt;
+    <value>預覽</value>&gt;
   </data>
   <data name="ResourceTableImageColumnTitle" xml:space="preserve">
-    <value>Ícone</value>
+    <value>圖示</value>
   </data>
   <data name="ResourceTableTypeColumnTitle" xml:space="preserve">
-    <value>Tipo</value>
+    <value>類型</value>
   </data>
   <data name="ResourceTableNameColumnTitle" xml:space="preserve">
-    <value>Nome</value>
+    <value>名稱</value>
   </data>
   <data name="ResourceTableValueColumnTitle" xml:space="preserve">
-    <value>Valor</value>&gt;
+    <value>值</value>&gt;
   </data>
   <data name="CommonBrushTitleUnknown" xml:space="preserve">
-    <value>Desconhecido</value>
+    <value>未知</value>
   </data>
   <data name="CommonBrushTitleGradient" xml:space="preserve">
-    <value>Gradiente</value>&gt;
+    <value>漸層</value>&gt;
   </data>
   <data name="AccessibilityObjectName" xml:space="preserve">
-    <value>{0} Editor de Nome de Objeto</value>
+    <value>{0} 物件名稱編輯器</value>
     <comment>Editor for Object Name Value</comment>
   </data>
   <data name="ObjectNamePlaceholder" xml:space="preserve">
-    <value>Sem Nome</value>&gt;
+    <value>沒有名稱</value>&gt;
   </data>
   <data name="AccessibilityLeftEditor" xml:space="preserve">
-    <value>{0} Editor Esquerdo</value>
+    <value>{0} 左方編輯器</value>
     <comment>Editor for Left Value</comment>
   </data>
   <data name="AccessibilityTopEditor" xml:space="preserve">
-    <value>{0} Editor Superior</value>
+    <value>{0} 上方編輯器</value>
     <comment>Editor for Top Value</comment>
   </data>
   <data name="AccessibilityRightEditor" xml:space="preserve">
-    <value>{0} Editor Direito</value>
+    <value>{0} 右方編輯器</value>
     <comment>Editor for Right Value</comment>
   </data>
   <data name="AccessibilityBottomEditor" xml:space="preserve">
-    <value>{0} Editor Inferior</value>
+    <value>{0} 下方編輯器</value>
     <comment>Editor for Bottom Value</comment>
   </data>
   <data name="AccessibilityInputModeEditor" xml:space="preserve">
-    <value>{0} Editor de ModoEntrada</value>
+    <value>{0} InputMode 編輯器</value>
     <comment>Editor for InputMode Value</comment>
   </data>
   <data name="AccessibilityPathEditor" xml:space="preserve">
-    <value>{0} {1} Editor de Caminho</value>
+    <value>{0} {1} 路徑編輯器</value>
     <comment>Editor for File/Directory Path Editor</comment>
   </data>
   <data name="ChooseFileOrDirectory" xml:space="preserve">
-    <value>Escolher um {0}</value>
+    <value>選擇 {0}</value>
     <comment>Choose a File or Directory</comment>
   </data>
   <data name="BrowseFileOrDirectory" xml:space="preserve">
-    <value>Procurar por um {0}</value>
+    <value>瀏覽 {0}</value>
     <comment>Browse for a File or Directory</comment>
   </data>
   <data name="RevealFileOrDirectory" xml:space="preserve">
-    <value>Revelar {0}</value>
+    <value>顯示 {0}</value>
     <comment>Reveal a File or Directory</comment>
   </data>
   <data name="File" xml:space="preserve">
-    <value>Arquivo</value>
+    <value>檔案</value>
     <comment>File</comment>
   </data>
   <data name="Directory" xml:space="preserve">
-    <value>Diretório</value>
+    <value>目錄</value>
     <comment>Directory</comment>
   </data>
   <data name="AddVariant" xml:space="preserve">
-    <value>Add Variant</value>
+    <value>新增變體</value>
   </data>
   <data name="RemoveVariant" xml:space="preserve">
-    <value>Remove Variant</value>
+    <value>移除變體</value>
   </data>
 </root>
