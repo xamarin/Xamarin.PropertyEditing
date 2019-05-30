@@ -33,6 +33,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public override string Name => null;
 
+		public override bool CanWrite => true;
+
 		public override string Category
 		{
 			get;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -56,6 +57,7 @@ namespace Xamarin.PropertyEditing.Tests
 		{
 			Properties = control.Properties.Values.ToArray();
 			Events = control.Events.Values.ToArray();
+			PotentialHandlers = control.PotentialHandlers.ToDictionary (k => k.Key, kvp => kvp.Value);
 			Target = control;
 			TargetType = Target.GetType ().ToTypeInfo ();
 		}
@@ -72,7 +74,14 @@ namespace Xamarin.PropertyEditing.Tests
 			set;
 		}
 
+		public bool SupportsMultipleHandlers
+		{
+			get;
+			set;
+		}
+
 		public event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
+		public event EventHandler<EventHandlersChangedEventArgs> EventHandlersChanged;
 
 		/// <summary>
 		/// Test helper for non-local values, passes in the property, <see cref="ValueInfo{T}.ValueDescriptor"/>, <see cref="ValueInfo{T}.SourceDescriptor"/>
@@ -100,6 +109,12 @@ namespace Xamarin.PropertyEditing.Tests
 			get;
 			set;
 		} = new IEventInfo[0];
+
+		public IReadOnlyDictionary<IEventInfo, IReadOnlyList<string>> PotentialHandlers
+		{
+			get;
+			set;
+		} = new ReadOnlyDictionary<IEventInfo, IReadOnlyList<string>> (new Dictionary<IEventInfo, IReadOnlyList<string>> ());
 
 		public IObjectEditor Parent
 		{
@@ -131,23 +146,39 @@ namespace Xamarin.PropertyEditing.Tests
 
 		public Task AttachHandlerAsync (IEventInfo ev, string handlerName)
 		{
-			this.events[ev] = handlerName;
+			if (!this.events.TryGetValue (ev, out List<string> handlers)) {
+				this.events[ev] = handlers = new List<string> ();
+			}
+
+			handlers.Add (handlerName);
+			EventHandlersChanged?.Invoke (this, new EventHandlersChangedEventArgs (ev));
 			return Task.FromResult (true);
 		}
 
 		public Task DetachHandlerAsync (IEventInfo ev, string handlerName)
 		{
-			this.events.Remove (ev);
+			if (this.events.TryGetValue (ev, out List<string> handlers)) {
+				if (handlers.Remove (handlerName))
+					EventHandlersChanged?.Invoke (this, new EventHandlersChangedEventArgs (ev));
+			}
+
 			return Task.FromResult (true);
 		}
 
 		public Task<IReadOnlyList<string>> GetHandlersAsync (IEventInfo ev)
 		{
-			string handler;
-			if (this.events.TryGetValue (ev, out handler))
-				return Task.FromResult<IReadOnlyList<string>> (new[] { handler });
+			if (this.events.TryGetValue (ev, out List<string> handlers))
+				return Task.FromResult<IReadOnlyList<string>> (handlers);
 
 			return Task.FromResult<IReadOnlyList<string>> (new string[0]);
+		}
+
+		public Task<IReadOnlyList<string>> GetPotentialHandlersAsync (IEventInfo ev)
+		{
+			if (!PotentialHandlers.TryGetValue (ev, out var handlers))
+				handlers = Array.Empty<string> ();
+
+			return Task.FromResult (handlers);
 		}
 
 		public Task<AssignableTypesResult> GetAssignableTypesAsync (IPropertyInfo property, bool childTypes)
@@ -410,7 +441,7 @@ namespace Xamarin.PropertyEditing.Tests
 		private static readonly PropertyVariation NeutralVariations = new PropertyVariation();
 
 		private readonly IDictionary<IPropertyInfo,IDictionary<PropertyVariation, object>> values = new Dictionary<IPropertyInfo, IDictionary<PropertyVariation, object>> ();
-		internal readonly IDictionary<IEventInfo, string> events = new Dictionary<IEventInfo, string> ();
+		internal readonly IDictionary<IEventInfo, List<string>> events = new Dictionary<IEventInfo, List<string>> ();
 		internal readonly IReadOnlyDictionary<IPropertyInfo, IReadOnlyList<ITypeInfo>> assignableTypes;
 	}
 }

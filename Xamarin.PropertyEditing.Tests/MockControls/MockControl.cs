@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cadenza.Collections;
+using Xamarin.PropertyEditing.Common;
 using Xamarin.PropertyEditing.Tests.MockPropertyInfo;
 
 namespace Xamarin.PropertyEditing.Tests.MockControls
@@ -10,6 +12,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		public IReadOnlyDictionary<string, IPropertyInfo> Properties => this.properties;
 
 		public IReadOnlyDictionary<string, IEventInfo> Events => this.events;
+
+		public IReadOnlyDictionary<IEventInfo, IReadOnlyList<string>> PotentialHandlers => this.potentialHandlers;
 
 		public void AddProperty<T> (string name, string category = null,
 			bool canWrite = true, bool flag = false,
@@ -55,8 +59,21 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			}
 		}
 
+		public void AddExistingHandler (string eventName, string name)
+		{
+			if (!this.events.TryGetValue (eventName, out IEventInfo ev))
+				ev = this.events[eventName] = new MockEventInfo (eventName);
+
+			if (!this.potentialHandlers.TryGetValue (ev, out var eventHandlers))
+				this.potentialHandlers[ev] = eventHandlers = new List<string> ();
+
+			((List<string>)eventHandlers).Add (name);
+		}
+
 		public class NotImplemented { }
 
+
+		private readonly Dictionary<IEventInfo, IReadOnlyList<string>> potentialHandlers = new Dictionary<IEventInfo, IReadOnlyList<string>> ();
 		private readonly OrderedDictionary<string, IEventInfo> events = new OrderedDictionary<string, IEventInfo> ();
 		private readonly OrderedDictionary<string, IPropertyInfo> properties = new OrderedDictionary<string, IPropertyInfo> ();
 	}

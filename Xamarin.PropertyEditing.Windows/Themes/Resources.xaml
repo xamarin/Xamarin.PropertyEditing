@@ -377,7 +377,7 @@
 		<Setter Property="Fill" Value="{DynamicResource InputForegroundBrush}" />
 		<Setter Property="VerticalAlignment" Value="Center" />
 	</Style>
-	
+
 	<Style TargetType="local:ThicknessEditorControl">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -583,6 +583,76 @@
 	<Rectangle x:Shared="False" x:Key="ResourceMarker" Style="{StaticResource MarkerStyle}" Fill="{DynamicResource ResourceMarkerBrush}" />
 	<Rectangle x:Shared="False" x:Key="BindingMarker" Style="{StaticResource MarkerStyle}" Fill="{DynamicResource BindingMarkerBrush}" />
 	<Rectangle x:Shared="False" x:Key="SourceMarker" Style="{StaticResource MarkerStyle}" Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=local:PropertyButton,Mode=FindAncestor}}" />
+
+	<Style x:Key="RemoveButtonStyle" TargetType="Button">
+		<Setter Property="Margin" Value="5,0,0,0" />
+		<Setter Property="Height" Value="10" />
+		<Setter Property="Width" Value="10" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Foreground" Value="{DynamicResource RemoveElementButtonForegroundBrush}" />
+		<Setter Property="FocusVisualStyle" Value="{DynamicResource GenericVisualFocusStyle}" />
+		<Setter Property="ContentTemplate">
+			<Setter.Value>
+				<DataTemplate>
+					<Grid RenderTransformOrigin="0.5,0.5" Width="6" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
+						<Grid.RenderTransform>
+							<RotateTransform Angle="45" />
+						</Grid.RenderTransform>
+
+						<Line X1="0" X2="6" Y1="3" Y2="3" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+						<Line X1="3" X2="3" Y1="0" Y2="6" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+					</Grid>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:EventEditor">
+		<Setter Property="MinHeight" Value="24" />
+		<Setter Property="ItemsSource" Value="{Binding Handlers}" />
+		<Setter Property="AddCommand" Value="{Binding AddHandlerCommand}" />
+		<Setter Property="Focusable" Value="False" />
+		<Setter Property="ItemTemplate">
+			<Setter.Value>
+				<DataTemplate>
+					<Border Background="{DynamicResource EventBackgroundBrush}" MinHeight="14" Padding="5,0,5,0" Margin="0,3,2,3">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition />
+								<ColumnDefinition Width="Auto" />
+							</Grid.ColumnDefinitions>
+
+							<TextBlock Grid.Column="0" Text="{Binding Mode=OneTime}" Foreground="{DynamicResource EventForegroundBrush}" />
+							<Button Grid.Column="1" Style="{StaticResource RemoveButtonStyle}" Command="{Binding DataContext.RemoveHandlerCommand,RelativeSource={RelativeSource AncestorType=local:EventEditor}}" CommandParameter="{Binding Mode=OneTime}" />
+						</Grid>
+					</Border>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:EventEditor">
+					<Grid VerticalAlignment="Center">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+
+						<ItemsControl Grid.Row="0" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding ItemTemplate}" Focusable="False">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<WrapPanel />
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+						</ItemsControl>
+						<local:ComboBoxEx Grid.Row="1" Margin="0,3,2,3" Padding="2,0,0,0" EnableSubmit="True" SubmitCommand="{TemplateBinding AddCommand}" ClearOnSubmit="True" ItemsSource="{Binding PotentialHandlers.Value}" IsEditable="True" IsEnabled="{Binding CanWrite}" Visibility="{Binding CanAddMoreHandlers,Converter={StaticResource BoolToVisibilityConverter}}" AutomationProperties.LabeledBy="{Binding ElementName=eventName,Mode=OneTime}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
 	<Style TargetType="local:PropertyButton">
 		<Setter Property="Foreground" Value="Transparent" />
@@ -1083,7 +1153,7 @@
 							<RowDefinition Height="Auto"/>
 							<RowDefinition Height="*"/>
 						</Grid.RowDefinitions>
-						
+
 						<Grid x:Name="hlsPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto" MinHeight="22"/>
@@ -1095,7 +1165,7 @@
 								<ColumnDefinition Width="23"/>
 								<ColumnDefinition Width="77"/>
 							</Grid.ColumnDefinitions>
-							
+
 							<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Opacity="0" FocusVisualStyle="{x:Null}" Panel.ZIndex="1" IsTabStop="False"
 									ToolTip="{x:Static prop:Resources.Hue}" AutomationProperties.Name="{x:Static prop:Resources.Hue}" AutomationProperties.HelpText="{x:Static prop:Resources.Hue}"/>
 							<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3,0,0,0">
@@ -1146,7 +1216,7 @@
 								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}" Unit="%"
 								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
-						
+
 						<Grid x:Name="hsbPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto" MinHeight="22"/>
@@ -1207,7 +1277,7 @@
 								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}" Unit="%"
 								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
-						
+
 						<Grid x:Name="rgbPane" Grid.Row="0" Grid.Column="0">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto" MinHeight="22"/>
@@ -1257,7 +1327,7 @@
 								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}" Unit="%"
 								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
-						
+
 						<Grid x:Name="cmykPane" Visibility="Collapsed" Grid.Row="0" Grid.Column="0">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto" MinHeight="22"/>
@@ -1318,7 +1388,7 @@
 								Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=A, Converter={local:ByteToPercentageConverter}, Mode=TwoWay}" Unit="%"
 								GradientBrush="{TemplateBinding Color, Converter={local:ColorComponentToAlphaBrushConverter}}"/>
 						</Grid>
-						
+
 						<local:TextBoxEx x:Name="hexEntry" HorizontalContentAlignment="Left" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="77" Grid.Column="0" Grid.Row="2"
 							AutomationProperties.Name="{x:Static prop:Resources.HexValue}" AutomationProperties.HelpText="{x:Static prop:Resources.HexValue}" ToolTip="{x:Static prop:Resources.HexValue}"
 							Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Color, Converter={local:HexColorConverter}, Mode=TwoWay}" FocusSelectsAll="True"/>
@@ -1665,6 +1735,12 @@
 	</Style>
 
 	<local:InvokePropertyButtonCommand x:Key="InvokePropertyButtonCommand" />
+	<Style x:Key="ListLabelStyle" TargetType="TextBlock">
+		<Setter Property="Margin" Value="0,3,0,3" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="TextWrapping" Value="NoWrap" />
+		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
+	</Style>
 
 	<Style TargetType="local:PropertyPresenter">
 		<Setter Property="MinHeight" Value="24" />
@@ -1749,7 +1825,7 @@
 							</Grid>
 
 							<local:ToggleButtonEx x:Name="delveButton" Grid.Row="1" Grid.Column="0" Style="{DynamicResource StandaloneToggleStyle}" Width="11" Height="11" Visibility="{Binding HasItems,ElementName=subProperties,Converter={StaticResource BoolToVisibilityConverter}}" HorizontalContentAlignment="Left" />
-							<TextBlock Name="Label" Margin="0,3,0,3" Grid.Row="1" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+							<TextBlock Name="Label" Style="{StaticResource ListLabelStyle}" Grid.Row="1" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" />
 							<ContentPresenter Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" MinHeight="20" />
 							<local:PropertyButton x:Name="propertyButton"  Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{x:Static prop:Resources.PropertyButtonName}" />
 
@@ -1814,7 +1890,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	
+
 	<Style TargetType="{x:Type TabControl}">
 		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}"/>
 		<Setter Property="BorderThickness" Value="0"/>
@@ -1845,7 +1921,7 @@
 		<Setter Property="Background" Value="{DynamicResource ListBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ListBackgroundBrush}" />
 	</Style>
-	
+
 	<Style TargetType="ListBoxItem">
 		<Setter Property="SnapsToDevicePixels" Value="True"/>
 		<Setter Property="Padding" Value="4,1"/>
@@ -1963,14 +2039,14 @@
 							</ScrollViewer>
 						</Border>
 					</theme:SystemDropShadowChrome>
-					
+
 					<ControlTemplate.Triggers>
 						<MultiDataTrigger>
 							<MultiDataTrigger.Conditions>
 								<Condition Binding="{Binding HasDropShadow,RelativeSource={RelativeSource Self}}" Value="True" />
 								<Condition Binding="{Binding AreGradientsAllowed,Source={x:Static local:HostEnvironment.Current}}" Value="True" />
 							</MultiDataTrigger.Conditions>
-							
+
 							<Setter TargetName="shadow" Property="Margin" Value="0,0,5,5" />
 							<Setter TargetName="shadow" Property="Color" Value="{DynamicResource DropShadowBackgroundColor}" />
 						</MultiDataTrigger>
@@ -2451,7 +2527,7 @@
 								<ContentPresenter x:Name="PART_Header" Grid.Column="1" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
 							</Grid>
 						</Border>
-						
+
 						<ItemsPresenter x:Name="ItemsHost" />
 					</StackPanel>
 					<ControlTemplate.Triggers>
@@ -2629,7 +2705,7 @@
 			</Trigger>
 		</Style.Triggers>
 	</Style>
-	
+
 	<Style x:Key="ScrollBarButton" TargetType="{x:Type RepeatButton}">
 		<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
 		<Setter Property="BorderThickness" Value="0"/>
@@ -2950,7 +3026,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	
+
 	<ControlTemplate x:Key="ComboBoxTemplate" TargetType="{x:Type ComboBox}">
 		<Grid x:Name="templateRoot" SnapsToDevicePixels="true">
 			<Grid.ColumnDefinitions>
@@ -2998,7 +3074,7 @@
 			</Trigger>
 		</ControlTemplate.Triggers>
 	</ControlTemplate>
-	
+
 	<Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
 		<Setter Property="OverridesDefaultStyle" Value="true"/>
 		<Setter Property="AllowDrop" Value="true"/>
@@ -3016,7 +3092,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	
+
 	<ControlTemplate x:Key="ComboBoxEditableTemplate" TargetType="{x:Type ComboBox}">
 		<Grid x:Name="templateRoot" SnapsToDevicePixels="true">
 			<Grid.ColumnDefinitions>
@@ -3072,7 +3148,7 @@
 			</Trigger>
 		</ControlTemplate.Triggers>
 	</ControlTemplate>
-	
+
 	<Style TargetType="{x:Type ComboBox}">
 		<Setter Property="FocusVisualStyle" Value="{StaticResource GenericVisualFocusStyle}"/>
 		<Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundBrush}"/>

@@ -26,6 +26,7 @@ namespace Xamarin.PropertyEditing.Reflection
 		}
 
 		public event EventHandler<EditorPropertyChangedEventArgs> PropertyChanged;
+		public event EventHandler<EventHandlersChangedEventArgs> EventHandlersChanged;
 
 		public object Target => this.target;
 
@@ -36,6 +37,7 @@ namespace Xamarin.PropertyEditing.Reflection
 		public IReadOnlyDictionary<IPropertyInfo, KnownProperty> KnownProperties => null;
 
 		public IReadOnlyCollection<IEventInfo> Events => this.events;
+		public bool SupportsMultipleHandlers => true;
 
 		public IObjectEditor Parent => null;
 
@@ -66,6 +68,11 @@ namespace Xamarin.PropertyEditing.Reflection
 		public Task DetachHandlerAsync (IEventInfo ev, string handlerName)
 		{
 			throw new NotSupportedException ();
+		}
+
+		public Task<IReadOnlyList<string>> GetPotentialHandlersAsync (IEventInfo ev)
+		{
+			return Task.FromResult<IReadOnlyList<string>> (Array.Empty<string> ());
 		}
 
 		public Task<IReadOnlyList<string>> GetHandlersAsync (IEventInfo ev)

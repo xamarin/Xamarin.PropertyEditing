@@ -34,6 +34,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
+		public abstract bool CanWrite
+		{
+			get;
+		}
+
 		/// <summary>
 		/// Gets if the property's value can not be determined because multiple editors disagree.
 		/// </summary>

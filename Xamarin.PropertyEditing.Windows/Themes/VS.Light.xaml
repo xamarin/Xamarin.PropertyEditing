@@ -15,6 +15,8 @@
 	<SolidColorBrush x:Key="GroupBackgroundBrush">#FFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="GroupBorderBrush">#CCCEDB</SolidColorBrush>
 
+	<SolidColorBrush x:Key="RemoveElementButtonForegroundBrush">#FFFFFF</SolidColorBrush>
+
 	<SolidColorBrush x:Key="VariantForegroundBrush">#FFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="VariantBackgroundBrush">#767676</SolidColorBrush>
 	<SolidColorBrush x:Key="VariantLineBrush">#B7B7B7</SolidColorBrush>
@@ -22,7 +24,10 @@
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverForegroundBrush">#007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBorderBrush">#C9DEF5</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBackgroundBrush">#C9DEF5</SolidColorBrush>
-	
+
+	<SolidColorBrush x:Key="EventForegroundBrush">#FFFFFF</SolidColorBrush>
+	<SolidColorBrush x:Key="EventBackgroundBrush">#767676</SolidColorBrush>
+
 	<SolidColorBrush x:Key="SelectorBackgroundBrush">#FFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="CategoryExpanderBorderBrush">#E9E9E9</SolidColorBrush>
 

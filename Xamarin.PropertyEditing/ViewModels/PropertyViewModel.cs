@@ -584,6 +584,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public override string Name => Property.Name;
 		public override string Category => Property.Category;
 
+		public override bool CanWrite => Property.CanWrite;
+
 		public bool IsAvailable
 		{
 			get { return this.isAvailable?.Result ?? true; }

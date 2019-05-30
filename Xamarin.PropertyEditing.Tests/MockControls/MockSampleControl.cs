@@ -104,7 +104,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddReadOnlyProperty<DateTime> ("ReadDateTime", ReadOnly);
 
 			AddEvents ("Click", "Hover", "Focus");
-
+			AddExistingHandler ("Click", "OnClick");
+			AddExistingHandler ("Focus", "OnFocus");
 		}
 
 		// Categories

@@ -22,6 +22,24 @@ namespace Xamarin.PropertyEditing.Windows
 			set { SetValue (EnableSubmitProperty, value); }
 		}
 
+		public static readonly DependencyProperty SubmitCommandProperty = DependencyProperty.Register (
+			"SubmitCommand", typeof(ICommand), typeof(ComboBoxEx), new PropertyMetadata (default(ICommand)));
+
+		public ICommand SubmitCommand
+		{
+			get { return (ICommand) GetValue (SubmitCommandProperty); }
+			set { SetValue (SubmitCommandProperty, value); }
+		}
+
+		public static readonly DependencyProperty ClearOnSubmitProperty = DependencyProperty.Register (
+			"ClearOnSubmit", typeof(bool), typeof(ComboBoxEx), new PropertyMetadata (default(bool)));
+
+		public bool ClearOnSubmit
+		{
+			get { return (bool) GetValue (ClearOnSubmitProperty); }
+			set { SetValue (ClearOnSubmitProperty, value); }
+		}
+
 		protected override AutomationPeer OnCreateAutomationPeer ()
 		{
 			return new ComboBoxExAutomationPeer (this);
@@ -29,6 +47,9 @@ namespace Xamarin.PropertyEditing.Windows
 
 		protected override void OnSelectionChanged (SelectionChangedEventArgs e)
 		{
+			if (!IsDropDownOpen)
+				return;
+
 			base.OnSelectionChanged (e);
 			Submit();
 		}
@@ -51,8 +72,17 @@ namespace Xamarin.PropertyEditing.Windows
 
 		protected virtual void OnSubmit ()
 		{
-			var expression = GetBindingExpression (TextProperty);
-			expression?.UpdateSource ();
+			ICommand command = SubmitCommand;
+			if (command != null) {
+				if (command.CanExecute (Text))
+					command.Execute (Text);
+			} else {
+				var expression = GetBindingExpression (TextProperty);
+				expression?.UpdateSource ();
+			}
+
+			if (ClearOnSubmit)
+				Text = null;
 		}
 
 		private void Submit ()

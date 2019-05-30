@@ -1,20 +1,27 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.PropertyEditing.Common;
+using Xamarin.PropertyEditing.Properties;
 
 namespace Xamarin.PropertyEditing.ViewModels
 {
 	internal class EventViewModel
 		: EditorViewModel
 	{
-		// TODO: Break error handling out into reusable interface implementer
 		public EventViewModel (TargetPlatform platform, IEventInfo ev, IEnumerable<IObjectEditor> editors)
 			: base (platform, editors)
 		{
 			if (ev == null)
 				throw new ArgumentNullException (nameof (ev));
+
+			AddHandlerCommand = new RelayCommand<string> (OnAddHandler, CanAddHandler);
+			RemoveHandlerCommand = new RelayCommand<string> (OnRemoveHandler, CanRemoveHandler);
 
 			Event = ev;
 			RequestCurrentValueUpdate();
@@ -25,20 +32,65 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
+		public ICommand AddHandlerCommand
+		{
+			get;
+		}
+
+		public ICommand RemoveHandlerCommand
+		{
+			get;
+		}
+
+		public bool CanAddMoreHandlers
+		{
+			get { return this.canAddMoreHandlers; }
+			private set
+			{
+				if (this.canAddMoreHandlers == value)
+					return;
+
+				this.canAddMoreHandlers = value;
+				OnPropertyChanged();
+			}
+		}
+
 		public override string Name => Event.Name;
 
 		public override string Category => null;
 
-		public string MethodName
+		public override bool CanWrite => this.canWrite;
+
+		public IReadOnlyList<string> Handlers => this.handlers;
+
+		public AsyncValue<IReadOnlyList<string>> PotentialHandlers
 		{
-			get { return this.methodName; }
-			set
+			get { return this.potentialHandlers; }
+			private set
 			{
-				if (this.methodName == value)
+				if (this.potentialHandlers == value)
 					return;
 
-				SetMethodName (value);
+				this.potentialHandlers = value;
+				OnPropertyChanged();
 			}
+		}
+
+		protected override void SetupEditor (IObjectEditor editor)
+		{
+			base.SetupEditor (editor);
+
+			// We can move this up to the top level VM if it becomes a perf issue
+			if (editor is IObjectEventEditor eventEditor)
+				eventEditor.EventHandlersChanged += OnEventHandlersChanged;
+		}
+
+		protected override void TeardownEditor (IObjectEditor editor)
+		{
+			base.TeardownEditor (editor);
+
+			if (editor is IObjectEventEditor eventEditor)
+				eventEditor.EventHandlersChanged -= OnEventHandlersChanged;
 		}
 
 		protected override async Task UpdateCurrentValueAsync ()
@@ -54,11 +106,27 @@ namespace Xamarin.PropertyEditing.ViewModels
 				// Right now we only show events if one item is selected, but there's no technical reason
 				// we can't attach the same event to the same handler across multiple objects, so the ground
 				// work is done.
-				IReadOnlyList<string>[] methodLists = await Task.WhenAll (Editors.OfType<IObjectEventEditor>().Select (ed => ed.GetHandlersAsync (Event)));
-
 				bool disagree = false;
+
+				bool canAddMultiple = true;
+				Task<IReadOnlyList<string>>[] methodListTasks = new Task<IReadOnlyList<string>>[Editors.Count];
+				int i = 0;
+				foreach (IObjectEditor editor in Editors) {
+					if (!(editor is IObjectEventEditor eventEditor)) {
+						CanAddMoreHandlers = false;
+						SetCanWrite (false);
+						return;
+					}
+
+					methodListTasks[i++] = eventEditor.GetHandlersAsync (Event);
+					canAddMultiple &= eventEditor.SupportsMultipleHandlers;
+				}
+
+				SetCanWrite (true);
+
+				IReadOnlyList<string>[] methodLists = await Task.WhenAll (methodListTasks);
 				IReadOnlyList<string> methods = methodLists[0];
-				for (int i = 1; i < methodLists.Length; i++) {
+				for (i = 1; i < methodLists.Length; i++) {
 					IReadOnlyList<string> methodList = methodLists[i];
 					if (methodList.Count != methods.Count) {
 						disagree = true;
@@ -76,34 +144,101 @@ namespace Xamarin.PropertyEditing.ViewModels
 						break;
 				}
 
+				CanAddMoreHandlers = (canAddMultiple || (methods?.Count ?? 0) == 0);
 				MultipleValues = disagree;
 				SetCurrentMethods ((!disagree) ? methods : null);
+				OnPotentialHandlersChanged();
 			}
 		}
 
-		private string methodName;
+		private readonly RelayCommand<string> addHandlerCommand, removeHandlerCommand;
+		private readonly ObservableCollectionEx<string> handlers = new ObservableCollectionEx<string> ();
+		private AsyncValue<IReadOnlyList<string>> potentialHandlers;
+		private bool canWrite;
+		private bool canAddMoreHandlers;
 
 		private void SetCurrentMethods (IReadOnlyList<string> names)
 		{
-			// Currently the UI only handles single attachments, but things like inspector
-			// might be able to make use of a full list, so most of the ground work is done.
-			string name = names?.FirstOrDefault ();
-
-			this.methodName = name;
-			OnPropertyChanged (nameof (MethodName));
+			this.handlers.Reset (names ?? Array.Empty<string>());
 		}
 
-		private async void SetMethodName (string name)
+		private void SetCanWrite (bool newCanWrite)
 		{
-			IObjectEventEditor editor = Editors.OfType<IObjectEventEditor>().First ();
+			if (this.canWrite == newCanWrite)
+				return;
 
-			if (this.methodName != null)
-				await editor.DetachHandlerAsync (Event, this.methodName);
+			this.canWrite = newCanWrite;
+			OnPropertyChanged (nameof(CanWrite));
+		}
 
-			if (!String.IsNullOrWhiteSpace (name))
-				await editor.AttachHandlerAsync (Event, name);
+		private void OnPotentialHandlersChanged()
+		{
+			PotentialHandlers = new AsyncValue<IReadOnlyList<string>> (GetPotentialHandlers ());
+		}
 
-			await UpdateCurrentValueAsync ();
+		private void OnEventHandlersChanged (object sender, EventHandlersChangedEventArgs e)
+		{
+			if (e.EventInfo != Event)
+				return;
+
+			RequestCurrentValueUpdate();
+		}
+
+		private async Task<IReadOnlyList<string>> GetPotentialHandlers ()
+		{
+			var commandsTask = new Task<IReadOnlyList<string>>[Editors.Count];
+			int i = 0;
+			foreach (IObjectEditor editor in Editors) {
+				if (!(editor is IObjectEventEditor eventEditor))
+					return Array.Empty<string> ();
+
+				commandsTask[i++] = eventEditor.GetPotentialHandlersAsync (Event);
+			}
+
+			var potentialResults = await Task.WhenAll (commandsTask);
+			var lcd = new HashSet<string> (potentialResults[0]);
+			for (i = 1; i < potentialResults.Length; i++) {
+				lcd.IntersectWith (potentialResults[i]);
+			}
+
+			lcd.ExceptWith (Handlers);
+
+			return new ObservableCollection<string> (lcd);
+		}
+
+		private bool CanAddHandler (string name)
+		{
+			return CanWrite && !String.IsNullOrWhiteSpace (name) && !Handlers.Contains (name.Trim());
+		}
+
+		private async void OnAddHandler (string name)
+		{
+			name = name.Trim();
+
+			try {
+				foreach (IObjectEventEditor editor in Editors) {
+					await editor.AttachHandlerAsync (Event, name);
+				}
+			} catch (Exception ex) {
+				TargetPlatform.ReportError (ex.Message, ex);
+			}
+
+			if (PotentialHandlers.Value is IList<string> list)
+				list.Remove (name);
+		}
+
+		private bool CanRemoveHandler (string name)
+		{
+			return CanWrite && Handlers.Contains (name);
+		}
+
+		private async void OnRemoveHandler (string name)
+		{
+			foreach (IObjectEventEditor editor in Editors) {
+				await editor.DetachHandlerAsync (Event, name);
+			}
+
+			OnPotentialHandlersChanged();
 		}
 	}
 }
