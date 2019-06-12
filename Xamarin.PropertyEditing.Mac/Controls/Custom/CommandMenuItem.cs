@@ -15,7 +15,9 @@ namespace Xamarin.PropertyEditing.Mac
 					this.command.CanExecuteChanged -= CanExecuteChanged;
 
 				this.command = value;
-				this.command.CanExecuteChanged += CanExecuteChanged;
+
+				if (this.command != null)
+					this.command.CanExecuteChanged += CanExecuteChanged;
 			}
 		}
 
