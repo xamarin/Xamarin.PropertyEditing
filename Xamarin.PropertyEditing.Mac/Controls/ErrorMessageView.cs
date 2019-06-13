@@ -29,7 +29,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (iconView);
 
-			var viewTitle = new UnfocusableTextField (new CGRect (30, Frame.Height - 26, 120, 24), "Errors");
+			var viewTitle = new UnfocusableTextField (hostResources, new CGRect (30, Frame.Height - 26, 120, 24), "Errors");
 
 			AddSubview (viewTitle);
 

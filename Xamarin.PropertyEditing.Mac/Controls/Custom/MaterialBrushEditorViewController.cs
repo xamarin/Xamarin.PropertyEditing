@@ -58,7 +58,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Orientation = NSUserInterfaceLayoutOrientation.Horizontal
 			};
 
-			var alphaLabel = new UnfocusableTextField {
+			var alphaLabel = new UnfocusableTextField (this.hostResources) {
 				StringValue = $"{Properties.Resources.Alpha}:",
 				Alignment = NSTextAlignment.Left,
 			};

@@ -25,9 +25,10 @@ namespace Xamarin.PropertyEditing.Mac
 		protected BaseRectangleEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
-			XLabel = new UnfocusableTextField {
+			XLabel = new UnfocusableTextField (hostResources) {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize),
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				TextColorName = NamedResources.DescriptionLabelColor
 			};
 			XEditor = new NumericSpinEditor<T> (hostResources) {
 				BackgroundColor = NSColor.Clear,
@@ -35,9 +36,10 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			XEditor.ValueChanged += OnInputUpdated;
 
-			YLabel =  new UnfocusableTextField {
+			YLabel =  new UnfocusableTextField (hostResources) {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize),
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				TextColorName = NamedResources.DescriptionLabelColor
 			};
 			YEditor = new NumericSpinEditor<T> (hostResources) {
 				BackgroundColor = NSColor.Clear,
@@ -45,9 +47,10 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			YEditor.ValueChanged += OnInputUpdated;
 
-			WidthLabel = new UnfocusableTextField {
+			WidthLabel = new UnfocusableTextField (hostResources) {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize),
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				TextColorName = NamedResources.DescriptionLabelColor
 			};
 			WidthEditor = new NumericSpinEditor<T> (hostResources) {
 				BackgroundColor = NSColor.Clear,
@@ -55,9 +58,10 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			WidthEditor.ValueChanged += OnInputUpdated;
 
-			HeightLabel =  new UnfocusableTextField {
+			HeightLabel =  new UnfocusableTextField (hostResources) {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize),
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				TextColorName = NamedResources.DescriptionLabelColor
 			};
 			HeightEditor = new NumericSpinEditor<T> (hostResources) {
 				BackgroundColor = NSColor.Clear,
@@ -113,8 +117,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (WidthLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, WidthEditor.Subviews[0], NSLayoutAttribute.CenterX, 1f, 0),
 				NSLayoutConstraint.Create (HeightLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, HeightEditor.Subviews[0], NSLayoutAttribute.CenterX, 1f, 0),
 			});
-
-			AppearanceChanged ();
 		}
 
 		protected virtual void OnInputUpdated (object sender, EventArgs e)
@@ -143,16 +145,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			HeightEditor.AccessibilityEnabled = HeightEditor.Enabled;
 			HeightEditor.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityHeightEditor, ViewModel.Property.Name);
-		}
-
-		protected override void AppearanceChanged ()
-		{
-			base.AppearanceChanged ();
-
-			XLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
-			YLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
-			WidthLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
-			HeightLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
 		}
 	}
 }

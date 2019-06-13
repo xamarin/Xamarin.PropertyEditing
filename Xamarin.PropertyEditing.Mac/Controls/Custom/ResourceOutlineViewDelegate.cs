@@ -43,7 +43,7 @@ namespace Xamarin.PropertyEditing.Mac
 				default:
 					var utf = (UnfocusableTextField)outlineView.MakeView (labelIdentifier, this);
 					if (utf == null) {
-						utf = new UnfocusableTextField {
+						utf = new UnfocusableTextField (this.hostResources) {
 							Identifier = labelIdentifier,
 						};
 					}

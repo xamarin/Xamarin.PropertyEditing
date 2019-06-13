@@ -52,7 +52,7 @@ namespace Xamarin.PropertyEditing.Mac
 				case RequestResourcePanel.ResourceTypeColId:
 					var typeView = (UnfocusableTextField)tableView.MakeView (typeIdentifier, this);
 					if (typeView == null) {
-						typeView = new UnfocusableTextField {
+						typeView = new UnfocusableTextField (this.hostResources) {
 							Identifier = typeIdentifier,
 						};
 					}
@@ -63,7 +63,7 @@ namespace Xamarin.PropertyEditing.Mac
 				case RequestResourcePanel.ResourceNameColId:
 					var nameView = (UnfocusableTextField)tableView.MakeView (nameIdentifier, this);
 					if (nameView == null) {
-						nameView = new UnfocusableTextField {
+						nameView = new UnfocusableTextField (this.hostResources) {
 							Identifier = nameIdentifier,
 						};
 					}

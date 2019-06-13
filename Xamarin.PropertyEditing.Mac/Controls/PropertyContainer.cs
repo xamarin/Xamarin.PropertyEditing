@@ -13,6 +13,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 			NativeContainer = nativeView;
 
+			this.label = new UnfocusableTextField (hostResources) {
+				Alignment = NSTextAlignment.Right,
+				Cell = {
+					LineBreakMode = NSLineBreakMode.TruncatingHead,
+				},
+				TranslatesAutoresizingMaskIntoConstraints = false,
+			};
+
 			AddSubview (this.label);
 
 			AddConstraints (new[] {
@@ -82,12 +90,6 @@ namespace Xamarin.PropertyEditing.Mac
 		private const float ButtonToWallSpacing = 9f;
 
 		private readonly PropertyButton propertyButton;
-		private readonly UnfocusableTextField label = new UnfocusableTextField {
-			Alignment = NSTextAlignment.Right,
-			Cell = {
-				LineBreakMode = NSLineBreakMode.TruncatingHead,
-			},
-			TranslatesAutoresizingMaskIntoConstraints = false,
-		};
+		private readonly UnfocusableTextField label;
 	}
 }

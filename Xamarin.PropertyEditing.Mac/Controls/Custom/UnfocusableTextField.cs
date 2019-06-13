@@ -7,8 +7,6 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class UnfocusableTextField : NSView
 	{
-		private NSTextField label;
-
 		public NSTextAlignment Alignment {
 			get { return this.label.Alignment; }
 			internal set { this.label.Alignment = value; }
@@ -34,9 +32,9 @@ namespace Xamarin.PropertyEditing.Mac
 			internal set { this.label.StringValue = value; }
 		}
 
-		public NSColor TextColor {
-			get { return this.label.TextColor; }
-			internal set { this.label.TextColor = value; }
+		public string TextColorName {
+			get { return this.label.TextColorName; }
+			internal set { this.label.TextColorName = value; }
 		}
 
 		public virtual NSBackgroundStyle BackgroundStyle
@@ -45,21 +43,23 @@ namespace Xamarin.PropertyEditing.Mac
 			[Export ("setBackgroundStyle:")] set => this.label.Cell.BackgroundStyle = value;
 		}
 
-		public UnfocusableTextField ()
+		public UnfocusableTextField (IHostResourceProvider hostResources)
 		{
-			SetDefaultTextProperties ();
+			SetDefaultTextProperties (hostResources);
 		}
 
-		public UnfocusableTextField (CGRect frameRect, string text) : base (frameRect)
+		public UnfocusableTextField (IHostResourceProvider hostResources, CGRect frameRect, string text) : base (frameRect)
 		{
-			SetDefaultTextProperties ();
+			SetDefaultTextProperties (hostResources);
 
 			StringValue = text;
 		}
 
-		private void SetDefaultTextProperties ()
+		private PropertyTextField label;
+
+		private void SetDefaultTextProperties (IHostResourceProvider hostResources)
 		{
-			this.label = new PropertyTextField {
+			this.label = new PropertyTextField (hostResources) {
 				AccessibilityElement = false,
 				BackgroundColor = NSColor.Clear,
 				Bordered = false,

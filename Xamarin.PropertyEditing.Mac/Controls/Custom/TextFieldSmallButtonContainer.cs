@@ -45,7 +45,8 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public TextFieldSmallButtonContainer ()
+		public TextFieldSmallButtonContainer (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			Cell = this.cell = new ButtonTextFieldCell (this) {
 				Bezeled = true,

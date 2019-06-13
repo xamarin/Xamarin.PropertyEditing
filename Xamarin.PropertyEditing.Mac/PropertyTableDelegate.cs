@@ -59,7 +59,7 @@ namespace Xamarin.PropertyEditing.Mac
 					disclosure.TranslatesAutoresizingMaskIntoConstraints = false;
 					labelContainer.AddSubview (disclosure);
 
-					var label = new UnfocusableTextField {
+					var label = new UnfocusableTextField (this.hostResources) {
 						TranslatesAutoresizingMaskIntoConstraints = false
 					};
 					labelContainer.AddSubview (label);
@@ -95,11 +95,6 @@ namespace Xamarin.PropertyEditing.Mac
 			if (editorOrContainer is EditorContainer ec) {
 				ec.ViewModel = evm;
 				ec.Label = evm.Name;
-
-#if DEBUG // Currently only used to highlight which controls haven't been implemented
-				if (editor == null)
-					ec.LabelTextColor = NSColor.Red;
-#endif
 			}
 
 			if (editor != null) {

@@ -23,10 +23,10 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly NSObject[] objects;
 		public override NSObject[] AccessibilityChildren { get => this.objects; }
 
-		protected BasePathEditorControl (IHostResourceProvider hostResource)
-			: base (hostResource)
+		protected BasePathEditorControl (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
-			this.currentTextField = new TextFieldSmallButtonContainer ();
+			this.currentTextField = new TextFieldSmallButtonContainer (hostResources);
 			this.currentTextField.Changed += CurrentTextField_Changed;
 			AddSubview (this.currentTextField);
 

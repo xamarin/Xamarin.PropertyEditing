@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private ChannelGroup CreateEditor (IHostResourceProvider hostResources, ChannelEditor editor)
 		{
 			var ce = new ChannelGroup {
-				Label = new UnfocusableTextField {
+				Label = new UnfocusableTextField (hostResources) {
 					StringValue = $"{editor.Name}:",
 					Alignment = NSTextAlignment.Right,
 					ToolTip = editor.ToolTip
@@ -111,7 +111,7 @@ namespace Xamarin.PropertyEditing.Mac
 			WantsLayer = true;
 			Editors = CreateEditors (hostResources, EditorType);
 
-			this.hexLabel = new UnfocusableTextField {
+			this.hexLabel = new UnfocusableTextField (hostResources) {
 				StringValue = "#:",
 				Alignment = NSTextAlignment.Right,
 				ToolTip = Properties.Resources.HexValue

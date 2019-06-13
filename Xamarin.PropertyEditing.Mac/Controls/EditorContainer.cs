@@ -62,12 +62,6 @@ namespace Xamarin.PropertyEditing.Mac
 			base.ViewWillMoveToSuperview (newSuperview);
 		}
 
-#if DEBUG // Currently only used to highlight which controls haven't been implemented
-		public NSColor LabelTextColor {
-			set { LabelControl.TextColor = value; }
-		}
-#endif
-
 		private NSView leftEdgeView;
 		private NSLayoutConstraint leftEdgeLeftConstraint, leftEdgeVCenterConstraint;
 	}

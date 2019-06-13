@@ -34,7 +34,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var header = new DynamicBox (hostResources, NamedResources.ControlBackground, NamedResources.FrameBoxBorderColor) {
 				BoxType = NSBoxType.NSBoxCustom,
 				BorderWidth = 1,
-				ContentView = new UnfocusableTextField { StringValue = Properties.Resources.CollectionTargetsHeader },
+				ContentView = new UnfocusableTextField (hostResources) { StringValue = Properties.Resources.CollectionTargetsHeader },
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				ContentViewMargins = new CGSize (8, 0),
 			};
@@ -333,6 +333,10 @@ namespace Xamarin.PropertyEditing.Mac
 					this.iconProvider = iconProvider;
 					this.hostResources = hostResources;
 
+					this.label = new UnfocusableTextField (hostResources) {
+						TranslatesAutoresizingMaskIntoConstraints = false
+					};
+
 					AddSubview (this.label);
 					if (iconProvider != null) {
 						AddSubview (this.iconView);
@@ -389,9 +393,7 @@ namespace Xamarin.PropertyEditing.Mac
 					TranslatesAutoresizingMaskIntoConstraints = false
 				};
 
-				private readonly UnfocusableTextField label = new UnfocusableTextField {
-					TranslatesAutoresizingMaskIntoConstraints = false
-				};
+				private readonly UnfocusableTextField label;
 
 				private CollectionPropertyItemViewModel vm;
 

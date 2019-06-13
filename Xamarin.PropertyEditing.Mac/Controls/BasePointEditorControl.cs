@@ -19,9 +19,10 @@ namespace Xamarin.PropertyEditing.Mac
 		protected BasePointEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
-			XLabel = new UnfocusableTextField {
+			XLabel = new UnfocusableTextField (hostResources) {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize),
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				TextColorName = NamedResources.DescriptionLabelColor
 			};
 
 			XEditor = new NumericSpinEditor<T> (hostResources) {
@@ -30,9 +31,10 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			XEditor.ValueChanged += OnInputUpdated;
 
-			YLabel = new UnfocusableTextField {
+			YLabel = new UnfocusableTextField (hostResources) {
 				Font = NSFont.FromFontName (DefaultFontName, DefaultDescriptionLabelFontSize),
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				TextColorName = NamedResources.DescriptionLabelColor
 			};
 
 			YEditor = new NumericSpinEditor<T> (hostResources) {
@@ -67,8 +69,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (XLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, XEditor.Subviews[0], NSLayoutAttribute.CenterX, 1f, 0),
 				NSLayoutConstraint.Create (YLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, YEditor.Subviews[0], NSLayoutAttribute.CenterX, 1f, 0),
 			});
-
-			AppearanceChanged ();
 		}
 
 		protected override void SetEnabled ()
@@ -89,14 +89,6 @@ namespace Xamarin.PropertyEditing.Mac
 		protected virtual void OnInputUpdated (object sender, EventArgs e)
 		{
 			ViewModel.Value = (T)Activator.CreateInstance (typeof (T), XEditor.Value, YEditor.Value);
-		}
-
-		protected override void AppearanceChanged ()
-		{
-			base.AppearanceChanged ();
-
-			XLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
-			YLabel.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
 		}
 	}
 }

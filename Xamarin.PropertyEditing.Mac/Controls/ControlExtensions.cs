@@ -15,7 +15,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var tcs = new TaskCompletionSource<ITypeInfo> ();
 
 			var vm = new TypeSelectorViewModel (assignableTypes);
-			var selector = new TypeSelectorControl {
+			var selector = new TypeSelectorControl (hostResources) {
 				ViewModel = vm,
 				Appearance = source.EffectiveAppearance
 			};

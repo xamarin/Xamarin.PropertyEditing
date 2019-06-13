@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public EntryPropertyEditor (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
-			Entry = new PropertyTextField {
+			Entry = new PropertyTextField (hostResources) {
 				BackgroundColor = NSColor.Clear,
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),

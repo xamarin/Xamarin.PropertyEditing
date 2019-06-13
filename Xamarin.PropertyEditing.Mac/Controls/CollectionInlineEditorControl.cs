@@ -10,9 +10,10 @@ namespace Xamarin.PropertyEditing.Mac
 		public CollectionInlineEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
-			this.label = new UnfocusableTextField {
+			this.label = new UnfocusableTextField (hostResources) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				StringValue = Properties.Resources.CollectionValue,
+				TextColorName = NamedResources.DescriptionLabelColor
 			};
 
 			AddSubview (this.label);
@@ -39,8 +40,6 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.openCollection, NSLayoutAttribute.Width, NSLayoutRelation.GreaterThanOrEqual, 1, 70),
 				NSLayoutConstraint.Create (this.openCollection, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, -6)
 			});
-
-			AppearanceChanged ();
 		}
 
 		public override NSView FirstKeyView => this.openCollection;
@@ -61,12 +60,5 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private readonly UnfocusableTextField label;
 		private readonly NSButton openCollection;
-
-		protected override void AppearanceChanged ()
-		{
-			base.AppearanceChanged ();
-
-			this.label.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
-		}
 	}
 }

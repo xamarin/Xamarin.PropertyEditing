@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var FrameWidthHalf = (Frame.Width - 32) / 2;
 			var FrameWidthThird = (Frame.Width - 32) / 3;
 
-			this.noPreviewAvailable = new UnfocusableTextField {
+			this.noPreviewAvailable = new UnfocusableTextField (hostResources) {
 				StringValue = Properties.Resources.NoPreviewAvailable,
 				Frame = new CGRect (50, FrameHeightHalf, 150, 50),
 			};

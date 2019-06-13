@@ -14,7 +14,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public ObjectEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
-			this.typeLabel = new UnfocusableTextField {
+			this.typeLabel = new UnfocusableTextField (hostResources) {
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
 			AddSubview (this.typeLabel);

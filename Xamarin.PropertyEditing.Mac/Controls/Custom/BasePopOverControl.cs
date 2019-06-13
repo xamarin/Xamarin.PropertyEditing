@@ -31,15 +31,16 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (iconView);
 
-			this.viewTitle = new UnfocusableTextField {
+			this.viewTitle = new UnfocusableTextField (hostResources) {
 				Font = NSFont.BoldSystemFontOfSize (11),
 				StringValue = title,
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				TextColorName = NamedResources.DescriptionLabelColor
 			};
 
 			AddSubview (this.viewTitle);
 
-			this.AddConstraints (new[] {
+			AddConstraints (new[] {
 				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Top, 1f, 5f),
 				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Left, 1f, 5f),
 				NSLayoutConstraint.Create (iconView, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, DefaultIconButtonSize),
@@ -52,19 +53,12 @@ namespace Xamarin.PropertyEditing.Mac
 			});
 
 			this.SetAppearance (hostResources.GetVibrantAppearance (EffectiveAppearance));
-
-			ViewDidChangeEffectiveAppearance ();
 		}
 
 		protected IHostResourceProvider HostResources
 		{
 			get;
 			private set;
-		}
-
-		public override void ViewDidChangeEffectiveAppearance ()
-		{
-			this.viewTitle.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace Xamarin.PropertyEditing.Mac
 			NSControlSize controlSize = NSControlSize.Small;
 			TranslatesAutoresizingMaskIntoConstraints = false;
 
-			this.propertyObjectName = new PropertyTextField {
+			this.propertyObjectName = new PropertyTextField (hostResources) {
 				ControlSize = controlSize,
 				PlaceholderString = Properties.Resources.ObjectNamePlaceholder,
 				TranslatesAutoresizingMaskIntoConstraints = false,
@@ -31,19 +31,19 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (this.propertyObjectName);
 
-			this.typeDisplay = new UnfocusableTextField {
+			this.typeDisplay = new UnfocusableTextField (hostResources) {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 			AddSubview (this.typeDisplay);
 
-			this.objectNameLabel = new UnfocusableTextField {
+			this.objectNameLabel = new UnfocusableTextField (hostResources) {
 				Alignment = NSTextAlignment.Right,
 				StringValue = Properties.Resources.Name + ":",
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 			AddSubview (this.objectNameLabel);
 
-			this.typeLabel = new UnfocusableTextField {
+			this.typeLabel = new UnfocusableTextField (hostResources) {
 				Alignment = NSTextAlignment.Right,
 				StringValue = Properties.Resources.Type + ":",
 				TranslatesAutoresizingMaskIntoConstraints = false,

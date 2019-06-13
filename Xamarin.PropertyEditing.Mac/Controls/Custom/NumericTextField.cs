@@ -39,7 +39,8 @@ namespace Xamarin.PropertyEditing.Mac
 		public event EventHandler<bool> KeyArrowDown;
 		public event EventHandler ValidatedEditingEnded;
 
-		public NumericTextField ()
+		public NumericTextField (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
 			AllowNegativeValues = true;
 

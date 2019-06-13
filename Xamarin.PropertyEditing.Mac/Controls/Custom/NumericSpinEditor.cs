@@ -194,7 +194,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (DisplayFormat != null)
 				this.formatter.PositiveFormat = DisplayFormat;
 
-			this.numericEditor = new NumericTextField {
+			this.numericEditor = new NumericTextField (hostResources) {
 				Alignment = NSTextAlignment.Right,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),

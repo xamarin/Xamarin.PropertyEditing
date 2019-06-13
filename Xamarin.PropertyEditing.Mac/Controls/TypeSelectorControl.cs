@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class TypeSelectorControl
 		: NotifyingView<TypeSelectorViewModel>
 	{
-		public TypeSelectorControl()
+		public TypeSelectorControl (IHostResourceProvider hostResources)
 		{
 			this.checkbox = NSButton.CreateCheckbox (Properties.Resources.ShowAllAssemblies, OnCheckedChanged);
 			this.checkbox.TranslatesAutoresizingMaskIntoConstraints = false;
@@ -21,7 +21,7 @@ namespace Xamarin.PropertyEditing.Mac
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
 
-			var d = new TypeSelectorDelegate ();
+			var d = new TypeSelectorDelegate (hostResources);
 			this.outlineView = new NSOutlineView  {
 				Delegate = d,
 				AutoresizingMask = NSViewResizingMask.WidthSizable,
@@ -184,12 +184,19 @@ namespace Xamarin.PropertyEditing.Mac
 		private class TypeSelectorDelegate
 			: NSOutlineViewDelegate
 		{
+			public TypeSelectorDelegate (IHostResourceProvider hostResources)
+			{
+				if (hostResources == null)
+					throw new ArgumentNullException (nameof (hostResources));
+
+				this.hostResources = hostResources;
+			}
 
 			public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
 			{
 				var label = (UnfocusableTextField)outlineView.MakeView (LabelId, outlineView);
 				if (label == null) {
-					label = new UnfocusableTextField {
+					label = new UnfocusableTextField (this.hostResources) {
 						Identifier = LabelId
 					};
 				}
@@ -205,6 +212,7 @@ namespace Xamarin.PropertyEditing.Mac
 				return label;
 			}
 
+			private readonly IHostResourceProvider hostResources;
 			private const string LabelId = "label";
 		}
 	}

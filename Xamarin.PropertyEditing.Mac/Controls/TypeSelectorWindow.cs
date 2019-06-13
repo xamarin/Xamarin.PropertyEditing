@@ -12,12 +12,12 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class TypeSelectorWindow
 		: NSWindow
 	{
-		public TypeSelectorWindow (TypeSelectorViewModel viewModel)
+		public TypeSelectorWindow (IHostResourceProvider hostResources, TypeSelectorViewModel viewModel)
 			: base (new CGRect (0, 0, 300, 300), NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Resizable, NSBackingStore.Buffered, true)
 		{
 			Title = Properties.Resources.SelectObjectTitle;
 
-			this.selector = new TypeSelectorControl {
+			this.selector = new TypeSelectorControl (hostResources) {
 				ViewModel = viewModel,
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
@@ -61,9 +61,9 @@ namespace Xamarin.PropertyEditing.Mac
 			Close ();
 		}
 
-		public static ITypeInfo RequestType (AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
+		public static ITypeInfo RequestType (IHostResourceProvider hostResources, AsyncValue<IReadOnlyDictionary<IAssemblyInfo, ILookup<string, ITypeInfo>>> assignableTypes)
 		{
-			var w = new TypeSelectorWindow (new TypeSelectorViewModel (assignableTypes));
+			var w = new TypeSelectorWindow (hostResources, new TypeSelectorViewModel (assignableTypes));
 
 			var result = (NSModalResponse)(int)NSApplication.SharedApplication.RunModalForWindow (w);
 			if (result != NSModalResponse.OK)
