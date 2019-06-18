@@ -51,12 +51,15 @@ namespace Xamarin.PropertyEditing.Mac
 			Cell = this.cell = new ButtonTextFieldCell (this) {
 				Bezeled = true,
 				BezelStyle = NSTextFieldBezelStyle.Square,
-				ControlSize = NSControlSize.Regular,
+				ControlSize = NSControlSize.Small,
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				Editable = true,
 			};
 
 			TranslatesAutoresizingMaskIntoConstraints = false;
 			this.lastView = this;
+
+			AppearanceChanged (); // we replaced the cell
 		}
 		public override bool AllowsVibrancy => false;
 
@@ -71,7 +74,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 		public int ButtonSize { get; set; } = 16;
 
-		public int ButtonRightBorder { get; set; } = 3;
+		public int ButtonMargin { get; set; } = 3;
 
 		public int ButtonSeparation { get; set; } = 1;
 
@@ -79,7 +82,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			AddSubview (button);
 
-			var separation = this.buttons.Count == 0 ? ButtonRightBorder : (ButtonSeparation + ButtonSize);
+			var separation = this.buttons.Count == 0 ? ButtonMargin : (ButtonSeparation + ButtonSize);
 
 			AddConstraints (new[] {
 				NSLayoutConstraint.Create (button, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, lastView, NSLayoutAttribute.CenterY, 1f, 0),
@@ -108,33 +111,11 @@ namespace Xamarin.PropertyEditing.Mac
 				this.field = field;
 			}
 
-			public override void DrawInteriorWithFrame (CGRect cellFrame, NSView inView)
-			{
-				base.DrawInteriorWithFrame (DrawingRectForBounds (cellFrame), inView);
-			}
-
-			public override void EditWithFrame (CGRect aRect, NSView inView, NSText editor, NSObject delegateObject, NSEvent theEvent)
-			{
-				base.EditWithFrame (DrawingRectForBounds (aRect), inView, editor, delegateObject, theEvent);
-			}
-
-			public override void SelectWithFrame (CGRect aRect, NSView inView, NSText editor, NSObject delegateObject, nint selStart, nint selLength)
-			{
-				base.SelectWithFrame (DrawingRectForBounds (aRect), inView, editor, delegateObject, selStart, selLength);
-			}
-
-			public override void ResetCursorRect (CGRect cellFrame, NSView inView)
-			{
-				base.ResetCursorRect (DrawingRectForBounds (cellFrame), inView);
-			}
-
 			public override CGRect DrawingRectForBounds (CGRect theRect)
 			{
 				CGRect baseRect = base.DrawingRectForBounds (theRect);
 				if (this.field.buttons.Count != 0) {
-					baseRect.Y -= 2;
-					baseRect.Width -= this.field.ButtonSize;
-					baseRect.Height = PropertyEditorControl.DefaultControlHeight;
+					baseRect.Width -= this.field.ButtonMargin + (this.field.ButtonSize * this.field.buttons.Count);
 				}
 
 				return baseRect;

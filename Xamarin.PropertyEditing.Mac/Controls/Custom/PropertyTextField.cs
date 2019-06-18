@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (HostResources == null)
 				return;
 
-			TextColor = HostResources.GetNamedColor (TextColorName);
+			Cell.TextColor = HostResources.GetNamedColor (TextColorName);
 		}
 
 		private string textColorName = NamedResources.ForegroundColor;
