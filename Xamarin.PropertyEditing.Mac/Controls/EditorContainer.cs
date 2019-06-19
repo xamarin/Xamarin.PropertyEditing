@@ -57,8 +57,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ViewWillMoveToSuperview (NSView newSuperview)
 		{
-			if (newSuperview == null && EditorView != null)
-				EditorView.ViewModel = null;
+			if (newSuperview == null)
+				ViewModel = null;
 
 			base.ViewWillMoveToSuperview (newSuperview);
 		}
