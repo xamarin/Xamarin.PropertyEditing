@@ -16,7 +16,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			this.comboBox = new FocusableComboBox {
+			this.comboBox = new FocusableComboBox (hostResources) {
 				AllowsExpansionToolTips = true,
 				BackgroundColor = NSColor.Clear,
 				Cell = {
@@ -33,7 +33,7 @@ namespace Xamarin.PropertyEditing.Mac
 				ViewModel.ValueName = this.comboBox.SelectedValue.ToString ();
 			};
 
-			this.popUpButton = new FocusablePopUpButton {
+			this.popUpButton = new FocusablePopUpButton (hostResources) {
 				AllowsExpansionToolTips = true,
 				Cell = {
 					LineBreakMode = NSLineBreakMode.TruncatingTail,

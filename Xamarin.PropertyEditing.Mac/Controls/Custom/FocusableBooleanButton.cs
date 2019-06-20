@@ -1,33 +1,16 @@
-using System;
 using AppKit;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class FocusableBooleanButton : NSButton
+	internal class FocusableBooleanButton
+		: FocusableButton
 	{
 		public override bool CanBecomeKeyView { get { return Enabled; } }
 
-		public FocusableBooleanButton ()
+		public FocusableBooleanButton (IHostResourceProvider hostResources)
+			: base (hostResources)
 		{
-			AllowsExpansionToolTips = true;
-			AllowsMixedState = true;
-			Cell.LineBreakMode = NSLineBreakMode.TruncatingTail;
-			Cell.UsesSingleLineMode = true;
-			ControlSize = NSControlSize.Small;
-			Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small));
-			Title = string.Empty;
-			TranslatesAutoresizingMaskIntoConstraints = false;
-
 			SetButtonType (NSButtonType.Switch);
-		}
-
-		public override bool BecomeFirstResponder ()
-		{
-			var willBecomeFirstResponder = base.BecomeFirstResponder ();
-			if (willBecomeFirstResponder) {
-				ScrollRectToVisible (Bounds);
-			}
-			return willBecomeFirstResponder;
 		}
 	}
 }

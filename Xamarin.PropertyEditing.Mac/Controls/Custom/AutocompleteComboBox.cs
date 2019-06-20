@@ -13,22 +13,6 @@ namespace Xamarin.PropertyEditing.Mac.Controls
 {
 	internal class AutocompleteComboBox : NSComboBox
 	{
-		private readonly PropertyViewModel viewModel;
-		private readonly PropertyInfo previewCustomExpressionPropertyInfo;
-		public PropertyInfo PreviewCustomExpressionPropertyInfo
-		{
-			get { return this.PreviewCustomExpressionPropertyInfo; }
-			set {
-				this.PreviewCustomExpressionPropertyInfo = value;
-			}
-		}
-		private ObservableCollectionEx<string> values;
-
-		protected IHostResourceProvider HostResources {
-			get;
-			private set;
-		}
-
 		public AutocompleteComboBox (IHostResourceProvider hostResources, PropertyViewModel viewModel, ObservableCollectionEx<string> values, PropertyInfo previewCustomExpressionPropertyInfo)
 		{
 			if (hostResources == null)
@@ -108,8 +92,56 @@ namespace Xamarin.PropertyEditing.Mac.Controls
 
 			UpdatePropertyInfo ();
 
-			ViewDidChangeEffectiveAppearance ();
+			AppearanceChanged ();
 		}
+
+		public string TextColorName
+		{
+			get => this.textColorName;
+			set
+			{
+				if (this.textColorName == value)
+					return;
+
+				this.textColorName = value;
+				AppearanceChanged ();
+			}
+		}
+
+		public PropertyInfo PreviewCustomExpressionPropertyInfo
+		{
+			get { return this.PreviewCustomExpressionPropertyInfo; }
+			set
+			{
+				this.PreviewCustomExpressionPropertyInfo = value;
+			}
+		}
+
+		protected IHostResourceProvider HostResources
+		{
+			get;
+			private set;
+		}
+
+		public override void ViewDidChangeEffectiveAppearance ()
+		{
+			base.ViewDidChangeEffectiveAppearance ();
+			AppearanceChanged ();
+		}
+
+		protected virtual void AppearanceChanged ()
+		{
+			if (HostResources == null)
+				return;
+
+			TextColor = HostResources.GetNamedColor (TextColorName);
+		}
+
+		private readonly PropertyViewModel viewModel;
+		private readonly PropertyInfo previewCustomExpressionPropertyInfo;
+
+		private ObservableCollectionEx<string> values;
+		private string textColorName = NamedResources.ForegroundColor;
 
 		private void Reset ()
 		{
@@ -124,7 +156,7 @@ namespace Xamarin.PropertyEditing.Mac.Controls
 			}
 		}
 
-		public void UpdatePropertyInfo ()
+		private void UpdatePropertyInfo ()
 		{
 			this.previewCustomExpressionPropertyInfo.SetValue (this.viewModel, StringValue);
 		}

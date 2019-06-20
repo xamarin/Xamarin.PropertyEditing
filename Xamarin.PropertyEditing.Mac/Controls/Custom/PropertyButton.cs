@@ -78,14 +78,7 @@ namespace Xamarin.PropertyEditing.Mac
 				this.popUpContextMenu = new NSMenu ();
 
 				if (this.viewModel.TargetPlatform.SupportsCustomExpressions) {
-					var mi = new NSMenuItem (Properties.Resources.CustomExpressionEllipsis) {
-						AttributedTitle = new Foundation.NSAttributedString (
-						Properties.Resources.CustomExpressionEllipsis,
-						new CoreText.CTStringAttributes {
-							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
-						})
-					};
-
+					var mi = new ThemedMenuItem (this.hostResources, Properties.Resources.CustomExpressionEllipsis);
 					mi.Activated += OnCustomExpression;
 
 					this.popUpContextMenu.AddItem (mi);
@@ -95,14 +88,7 @@ namespace Xamarin.PropertyEditing.Mac
 				if (this.viewModel.SupportsResources) {
 					this.popUpContextMenu.AddItem (NSMenuItem.SeparatorItem);
 
-					var mi2 = new NSMenuItem (Properties.Resources.ResourceEllipsis) {
-						AttributedTitle = new Foundation.NSAttributedString (
-						Properties.Resources.ResourceEllipsis,
-						new CoreText.CTStringAttributes {
-							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
-						})
-					};
-
+					var mi2 = new ThemedMenuItem (this.hostResources, Properties.Resources.ResourceEllipsis);
 					mi2.Activated += OnResourceRequested;
 					this.popUpContextMenu.AddItem (mi2);
 				}
@@ -110,13 +96,7 @@ namespace Xamarin.PropertyEditing.Mac
 				this.popUpContextMenu.AddItem (NSMenuItem.SeparatorItem);
 
 				// TODO If we add more menu items consider making the Label/Command a dictionary that we can iterate over to populate everything.
-				this.popUpContextMenu.AddItem (new CommandMenuItem (Properties.Resources.Reset, viewModel.ClearValueCommand) {
-					AttributedTitle = new Foundation.NSAttributedString (
-						Properties.Resources.Reset,
-						new CoreText.CTStringAttributes {
-							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
-						})
-				});
+				this.popUpContextMenu.AddItem (new CommandMenuItem (this.hostResources, Properties.Resources.Reset, viewModel.ClearValueCommand));
 			}
 
 			var menuOrigin = this.Superview.ConvertPointToView (new CGPoint (Frame.Location.X - 1, Frame.Location.Y + Frame.Size.Height + 4), null);

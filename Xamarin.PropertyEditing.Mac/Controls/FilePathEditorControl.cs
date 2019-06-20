@@ -1,17 +1,14 @@
 using System;
-using System.Collections.Generic;
-using AppKit;
-using CoreGraphics;
 using System.IO;
+using AppKit;
 using Xamarin.PropertyEditing.Common;
-using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class FilePathEditorControl : BasePathEditorControl<FilePath>
 	{
 		public FilePathEditorControl (IHostResourceProvider hostResource)
-		: base (hostResource)
+			: base (hostResource)
 		{
 			this.currentTextField.ToolTip = this.currentTextField.PlaceholderString = string.Format (Properties.Resources.ChooseFileOrDirectory, Properties.Resources.File);
 			this.panel.CanChooseFiles = true;

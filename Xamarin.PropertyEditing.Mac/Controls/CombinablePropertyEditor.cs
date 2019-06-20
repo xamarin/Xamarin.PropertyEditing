@@ -61,7 +61,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				NSButton checkbox;
 				if (i >= this.combinableList.Count) {
-					checkbox = new FocusableBooleanButton ();
+					checkbox = new FocusableBooleanButton (HostResources);
 					checkbox.Activated += SelectionChanged;
 
 					AddSubview (checkbox);

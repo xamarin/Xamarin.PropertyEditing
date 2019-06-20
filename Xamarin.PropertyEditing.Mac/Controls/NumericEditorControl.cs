@@ -122,7 +122,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.editorRightConstraint.Active = !ViewModel.HasInputModes;
 			if (ViewModel.HasInputModes) {
 				if (this.inputModePopup == null) {
-					this.inputModePopup = new FocusablePopUpButton {
+					this.inputModePopup = new FocusablePopUpButton (HostResources) {
 						ControlSize = NSControlSize.Small,
 						Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 						Menu = new NSMenu (),
@@ -148,7 +148,7 @@ namespace Xamarin.PropertyEditing.Mac
 				this.inputModePopup.Menu.RemoveAllItems ();
 				this.viewModelInputModes = ViewModel.InputModes;
 				foreach (InputMode item in this.viewModelInputModes) {
-					this.inputModePopup.Menu.AddItem (new NSMenuItem (item.Identifier));
+					this.inputModePopup.Menu.AddItem (new ThemedMenuItem (HostResources, item.Identifier));
 				}
 			}
 

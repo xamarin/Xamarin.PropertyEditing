@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (this.label);
 
-			this.openCollection = new FocusableButton {
+			this.openCollection = new FocusableButton (hostResources) {
 				Title = Properties.Resources.CollectionEditButton,
 				BezelStyle = NSBezelStyle.Rounded,
 				AccessibilityEnabled = true,

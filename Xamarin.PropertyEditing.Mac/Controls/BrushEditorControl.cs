@@ -3,6 +3,7 @@ using System.Collections;
 using System.ComponentModel;
 using AppKit;
 using CoreGraphics;
+using Foundation;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -10,6 +11,11 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class ColorPopUpButton : FocusablePopUpButton
 	{
+		public ColorPopUpButton (IHostResourceProvider hostResources)
+			: base (hostResources)
+		{
+		}
+
 		public NSPopover Popover { get; set; }
 
 		public override void MouseDown (NSEvent theEvent)
@@ -52,7 +58,7 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			};
 
-			this.popUpButton = new ColorPopUpButton {
+			this.popUpButton = new ColorPopUpButton (hostResources) {
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				TranslatesAutoresizingMaskIntoConstraints = false,
@@ -86,7 +92,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.popUpButton.Enabled = this.ViewModel?.Property.CanWrite ?? false;
 		}
 
-		string GetTitle ()
+		NSAttributedString GetTitle ()
 		{
 			var title = Properties.Resources.CommonBrushTitleUnknown;
 			switch (ViewModel.Value) {
@@ -102,7 +108,8 @@ namespace Xamarin.PropertyEditing.Mac
 					break;
 			}
 
-			return title;
+			var color = HostResources.GetNamedColor (NamedResources.ForegroundColor);
+			return new NSAttributedString (title, new NSStringAttributes { ForegroundColor = color });
 		}
 
 		protected override void UpdateValue ()
@@ -111,17 +118,13 @@ namespace Xamarin.PropertyEditing.Mac
 			this.popUpButton.Popover = (ViewModel?.Property.CanWrite ?? false) ? this.popover : null;
 
 			if (ViewModel.Solid != null) {
-				var title = GetTitle ();
-
 				if (this.popupButtonList.Count == 0)
 					this.popupButtonList.AddItem (new NSMenuItem ());
 
 				this.previewLayer.Brush = ViewModel.Value;
 				var item = this.popupButtonList.ItemAt (0);
-				if (item.Title != title) {
-					item.Title = title;
-					item.Image = this.previewLayer.RenderPreview ();
-				}
+				item.AttributedTitle = GetTitle();
+				item.Image = this.previewLayer.RenderPreview ();
 			}
 		}
 

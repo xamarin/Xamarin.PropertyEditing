@@ -30,6 +30,8 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Width, 1f, 0),
 				NSLayoutConstraint.Create (this.datePicker, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1f,  -6f),
 			});
+
+			AppearanceChanged ();
 		}
 
 		private void Editor_Activated (object sender, EventArgs e)
@@ -39,6 +41,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override NSView FirstKeyView => this.datePicker;
 		public override NSView LastKeyView => this.datePicker;
+
+		protected override void AppearanceChanged ()
+		{
+			base.AppearanceChanged ();
+
+			this.datePicker.TextColor = HostResources.GetNamedColor (NamedResources.ForegroundColor);
+		}
 
 		protected override void UpdateValue ()
 		{
