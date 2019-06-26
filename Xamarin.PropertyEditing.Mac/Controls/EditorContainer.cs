@@ -16,13 +16,14 @@ namespace Xamarin.PropertyEditing.Mac
 		public EditorViewModel ViewModel
 		{
 			get => EditorView?.ViewModel;
-			set
-			{
+			set {
 				if (EditorView == null)
 					return;
 
 				EditorView.ViewModel = value;
-				PropertyButton.ViewModel = value as PropertyViewModel;
+
+				if (EditorView.NeedsPropertyButton)
+					PropertyButton.ViewModel = value as PropertyViewModel;
 			}
 		}
 
