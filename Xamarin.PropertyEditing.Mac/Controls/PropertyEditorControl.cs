@@ -75,23 +75,25 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public void UpdateKeyViews ()
 		{
-			nint row = TableView.RowForView (this);
-			if (row <= 0)
-				return;
+			if (TableView != null) {
+				nint row = TableView.RowForView (this);
+				if (row <= 0)
+					return;
 
-			NSView view;
-			PropertyEditorControl ctrl = null;
-			do {
-				row--;
-				view = TableView.GetView (0, row, makeIfNecessary: false);
-				ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
-			} while (row > 0 && ctrl == null);
+				NSView view;
+				PropertyEditorControl ctrl = null;
+				do {
+					row--;
+					view = TableView.GetView (0, row, makeIfNecessary: false);
+					ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
+				} while (row > 0 && ctrl == null);
 
-			if (ctrl != null) {
-				ctrl.LastKeyView.NextKeyView = FirstKeyView;
-				ctrl.UpdateKeyViews ();
-			} else if (row == 0 && view is PanelHeaderEditorControl header) {
-				header.SetNextKeyView (FirstKeyView);
+				if (ctrl != null) {
+					ctrl.LastKeyView.NextKeyView = FirstKeyView;
+					ctrl.UpdateKeyViews ();
+				} else if (row == 0 && view is PanelHeaderEditorControl header) {
+					header.SetNextKeyView (FirstKeyView);
+				}
 			}
 		}
 

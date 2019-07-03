@@ -11,6 +11,25 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class TypeSelectorControl
 		: NotifyingView<TypeSelectorViewModel>
 	{
+		private bool flush;
+		public bool Flush { 
+			get { return this.flush; }
+			set { 
+				this.flush = value;
+				this.filterTop.Constant = this.flush ? 0: 10;
+				this.filterWidth.Constant = this.flush ? 0 : -20;
+				this.scrollTop.Constant = this.flush ? 0 : 8;
+				this.checkBoxBottom.Constant = this.flush ? -28 : -10;
+				this.checkBoxLeft.Constant = this.flush ? 8 : 0;
+			} 
+		}
+
+		private NSLayoutConstraint filterTop;
+		private NSLayoutConstraint filterWidth;
+		private NSLayoutConstraint scrollTop;
+		private NSLayoutConstraint checkBoxBottom;
+		private NSLayoutConstraint checkBoxLeft;
+
 		public TypeSelectorControl()
 		{
 			this.checkbox = NSButton.CreateCheckbox (Properties.Resources.ShowAllAssemblies, OnCheckedChanged);
@@ -36,7 +55,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (scroll);
 
-			this.filter = new NSTextField {
+			this.filter = new NSSearchField {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				PlaceholderString = "Filter"
 			};
@@ -44,18 +63,24 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (this.filter);
 
+			this.filterTop = NSLayoutConstraint.Create (this.filter, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 10);
+			this.filterWidth = NSLayoutConstraint.Create (this.filter, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, -20);
+			this.scrollTop = NSLayoutConstraint.Create (scroll, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.filter, NSLayoutAttribute.Bottom, 1, 8);
+			this.checkBoxBottom = NSLayoutConstraint.Create (this.checkbox, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this, NSLayoutAttribute.Bottom, 1, -10);
+			this.checkBoxLeft = NSLayoutConstraint.Create (this.checkbox, NSLayoutAttribute.Left, NSLayoutRelation.Equal, scroll, NSLayoutAttribute.Left, 1, 0);
+
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.filter, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 10),
-				NSLayoutConstraint.Create (this.filter, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, -20),
+				this.filterTop,
+				this.filterWidth,
 				NSLayoutConstraint.Create (this.filter, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterX, 1, 0),
 
-				NSLayoutConstraint.Create (scroll, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.filter, NSLayoutAttribute.Bottom, 1, 8),
+				this.scrollTop,
 				NSLayoutConstraint.Create (scroll, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this.filter, NSLayoutAttribute.Width, 1, 0),
 				NSLayoutConstraint.Create (scroll, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterX, 1, 0),
 				NSLayoutConstraint.Create (scroll, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this.checkbox, NSLayoutAttribute.Top, 1, -8),
 
-				NSLayoutConstraint.Create (this.checkbox, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this, NSLayoutAttribute.Bottom, 1, -10),
-				NSLayoutConstraint.Create (this.checkbox, NSLayoutAttribute.Left, NSLayoutRelation.Equal, scroll, NSLayoutAttribute.Left, 1, 0)
+				this.checkBoxBottom,
+				this.checkBoxLeft,
 			});
 		}
 
@@ -109,6 +134,8 @@ namespace Xamarin.PropertyEditing.Mac
 				for (int i = 0; i < this.outlineView.RowCount; i++) {
 					this.outlineView.ExpandItem (this.outlineView.ItemAtRow (i));
 				}
+			} else {
+				this.outlineView.ExpandItem (null, true);
 			}
 		}
 

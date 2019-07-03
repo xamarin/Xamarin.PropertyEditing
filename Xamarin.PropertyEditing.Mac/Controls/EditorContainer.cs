@@ -6,8 +6,8 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class EditorContainer
 		: PropertyContainer
 	{
-		public EditorContainer (IHostResourceProvider hostResources, IEditorView editorView)
-			: base (hostResources, editorView, editorView?.NeedsPropertyButton ?? false)
+		public EditorContainer (IHostResourceProvider hostResources, IEditorView editorView, bool? needsPropertyButton = null)
+			: base (hostResources, editorView, needsPropertyButton ?? editorView?.NeedsPropertyButton ?? false)
 		{
 		}
 
@@ -22,7 +22,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				EditorView.ViewModel = value;
 
-				if (EditorView.NeedsPropertyButton)
+				if (PropertyButton != null)
 					PropertyButton.ViewModel = value as PropertyViewModel;
 			}
 		}
@@ -57,8 +57,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ViewWillMoveToSuperview (NSView newSuperview)
 		{
-			if (newSuperview == null && EditorView != null)
-				EditorView.ViewModel = null;
+			if (newSuperview == null)
+				ViewModel = null;
 
 			base.ViewWillMoveToSuperview (newSuperview);
 		}

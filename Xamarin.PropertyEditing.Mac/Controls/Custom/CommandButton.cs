@@ -2,7 +2,7 @@ using System;
 using System.Windows.Input;
 using AppKit;
 
-namespace Xamarin.PropertyEditing.Mac.Controls.Custom
+namespace Xamarin.PropertyEditing.Mac
 {
 	internal class CommandButton : NSButton
 	{
@@ -11,8 +11,7 @@ namespace Xamarin.PropertyEditing.Mac.Controls.Custom
 		public ICommand Command
 		{
 			get { return this.command; }
-			set
-			{
+			set {
 				if (this.command != null)
 					this.command.CanExecuteChanged -= CanExecuteChanged;
 

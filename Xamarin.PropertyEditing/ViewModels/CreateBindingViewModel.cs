@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.PropertyEditing.Properties;
 
 namespace Xamarin.PropertyEditing.ViewModels
@@ -34,7 +34,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 	internal class CreateBindingViewModel
 		: PropertiesViewModel, IProvidePath
 	{
-		public CreateBindingViewModel (TargetPlatform platform, IObjectEditor targetEditor, IPropertyInfo property, PropertyVariation variations = null)
+		public CreateBindingViewModel (TargetPlatform platform, IObjectEditor targetEditor, IPropertyInfo property, PropertyVariation variations = null, bool includeAddValueConverter = true)
 			: base (platform)
 		{
 			if (platform == null)
@@ -51,6 +51,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			this.property = property;
 			this.provider = platform.BindingProvider;
 			this.variations = variations;
+			IncludeAddValueConverter = includeAddValueConverter;
 
 			PropertyDisplay = String.Format (Resources.CreateDataBindingTitle, $"[{this.targetEditor.TargetType.Name}].{property.Name}");
 			RequestNamedDisplay ();
@@ -58,7 +59,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			BindingSources = new AsyncValue<IReadOnlyList<BindingSource>> (
 					platform.BindingProvider.GetBindingSourcesAsync (targetEditor.Target, property));
 
-			RequestBindingObject();
+			this.requestAddValueConverterCommand = new RelayCommand (OnRequestAddValueConverter, CanRequestAddValueConverter);
+
+			RequestBindingObject ();
 		}
 
 		private async void RequestBindingObject ()
@@ -235,6 +238,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				OnPropertyChanged();
 				UpdateShowProperties();
 				RequestUpdateSources();
+
+				((RelayCommand)RequestAddValueConverterCommand)?.ChangeCanExecute ();
 			}
 		}
 
@@ -483,6 +488,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			set { GetKnownPropertyViewModel<object> (PropertyBinding.SourceParameterProperty).Value = value; }
 		}
 
+		public bool IncludeAddValueConverter { get; private set; }
+
 		private void UpdateShowProperties ()
 		{
 			OnPropertyChanged (nameof (ShowResourceSelector));
@@ -497,7 +504,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			var converters = await TargetPlatform.BindingProvider.GetValueConverterResourcesAsync (this.targetEditor.Target);
 			this.valueConverters.AddRange (converters);
-			this.valueConverters.Add (AddValueConverter);
+
+			// Don't add the AddValueConverter resource if we are on Mac
+			if (IncludeAddValueConverter) {
+				this.valueConverters.Add (AddValueConverter);
+			}
 
 			return this.valueConverters;
 		}
@@ -673,6 +684,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 			default:
 				throw new ArgumentException();
 			}
+		}
+
+		private readonly RelayCommand requestAddValueConverterCommand;
+		public ICommand RequestAddValueConverterCommand => this.requestAddValueConverterCommand;
+
+		private bool CanRequestAddValueConverter ()
+		{
+			return TargetPlatform.BindingProvider != null;
+		}
+
+		private void OnRequestAddValueConverter ()
+		{
+			SelectedValueConverter = AddValueConverter;
 		}
 	}
 }

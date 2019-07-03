@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using AppKit;
 using CoreGraphics;
 using Xamarin.PropertyEditing.ViewModels;
@@ -19,12 +20,16 @@ namespace Xamarin.PropertyEditing.Mac
 			set {
 				if (this.viewModel != null) {
 					this.viewModel.PropertyChanged -= OnPropertyChanged;
+					if (this.viewModel.SupportsBindings)
+						this.viewModel.CreateBindingRequested -= OnBindingRequested;
 				}
 
 				this.viewModel = value;
 
 				if (this.viewModel != null) {
 					this.viewModel.PropertyChanged += OnPropertyChanged;
+					if (this.viewModel.SupportsBindings)
+						this.viewModel.CreateBindingRequested += OnBindingRequested;
 					ValueSourceChanged (this.viewModel.ValueSource);
 				}
 
@@ -113,10 +118,22 @@ namespace Xamarin.PropertyEditing.Mac
 					this.popUpContextMenu.AddItem (mi2);
 				}
 
+				if (this.viewModel.SupportsBindings) {
+					this.popUpContextMenu.AddItem (NSMenuItem.SeparatorItem);
+
+					this.popUpContextMenu.AddItem (new CommandMenuItem (Properties.Resources.CreateDataBindingMenuItem, this.viewModel.RequestCreateBindingCommand) {
+						AttributedTitle = new Foundation.NSAttributedString (
+						Properties.Resources.CreateDataBindingMenuItem,
+						new CoreText.CTStringAttributes {
+							Font = new CoreText.CTFont (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize + 1),
+						})
+					});
+				}
+
 				this.popUpContextMenu.AddItem (NSMenuItem.SeparatorItem);
 
 				// TODO If we add more menu items consider making the Label/Command a dictionary that we can iterate over to populate everything.
-				this.popUpContextMenu.AddItem (new CommandMenuItem (Properties.Resources.Reset, viewModel.ClearValueCommand) {
+				this.popUpContextMenu.AddItem (new CommandMenuItem (Properties.Resources.Reset, this.viewModel.ClearValueCommand) {
 					AttributedTitle = new Foundation.NSAttributedString (
 						Properties.Resources.Reset,
 						new CoreText.CTStringAttributes {
@@ -241,6 +258,18 @@ namespace Xamarin.PropertyEditing.Mac
 			requestResourceView.PopOver = resourceSelectorPopOver;
 
 			resourceSelectorPopOver.Show (requestResourceView.Frame, (NSView)this, NSRectEdge.MinYEdge);
+		}
+
+		private void OnBindingRequested (object sender, CreateBindingRequestedEventArgs e)
+		{
+			var bindingEditorWindow = new BindingEditorWindow (this.hostResources, this.viewModel) {
+				Appearance = EffectiveAppearance,
+			};
+
+			var result = (NSModalResponse)(int)NSApplication.SharedApplication.RunModalForWindow (bindingEditorWindow);
+			if (result == NSModalResponse.OK) {
+				e.BindingObject = bindingEditorWindow.ViewModel.SelectedObjects.Single ();
+			}
 		}
 	}
 }
