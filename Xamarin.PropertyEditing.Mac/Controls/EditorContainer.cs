@@ -22,7 +22,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				EditorView.ViewModel = value;
 
-				if (EditorView.NeedsPropertyButton)
+				if (PropertyButton != null)
 					PropertyButton.ViewModel = value as PropertyViewModel;
 			}
 		}
