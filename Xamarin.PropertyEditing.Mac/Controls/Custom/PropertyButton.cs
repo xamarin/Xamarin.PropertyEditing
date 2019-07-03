@@ -15,16 +15,22 @@ namespace Xamarin.PropertyEditing.Mac
 		PropertyViewModel viewModel;
 		internal PropertyViewModel ViewModel
 		{
-			get { return viewModel; }
+			get { return this.viewModel; }
 			set {
 				if (this.viewModel != null) {
 					this.viewModel.PropertyChanged -= OnPropertyChanged;
 				}
 
 				this.viewModel = value;
+
 				if (this.viewModel != null) {
 					this.viewModel.PropertyChanged += OnPropertyChanged;
 					ValueSourceChanged (this.viewModel.ValueSource);
+				}
+
+				if (this.popUpContextMenu != null) {
+					this.popUpContextMenu.RemoveAllItems ();
+					this.popUpContextMenu = null;
 				}
 			}
 		}
