@@ -585,7 +585,7 @@
 	<Rectangle x:Shared="False" x:Key="SourceMarker" Style="{StaticResource MarkerStyle}" Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=local:PropertyButton,Mode=FindAncestor}}" />
 
 	<Style x:Key="RemoveButtonStyle" TargetType="Button">
-		<Setter Property="Margin" Value="5,0,0,0" />
+		<Setter Property="Margin" Value="8,0,0,0" />
 		<Setter Property="Height" Value="10" />
 		<Setter Property="Width" Value="10" />
 		<Setter Property="VerticalAlignment" Value="Center" />
@@ -593,16 +593,17 @@
 		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="Foreground" Value="{DynamicResource RemoveElementButtonForegroundBrush}" />
 		<Setter Property="FocusVisualStyle" Value="{DynamicResource GenericVisualFocusStyle}" />
+		<Setter Property="Padding" Value="0" />
 		<Setter Property="ContentTemplate">
 			<Setter.Value>
 				<DataTemplate>
-					<Grid RenderTransformOrigin="0.5,0.5" Width="6" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
+					<Grid RenderTransformOrigin="0.5,0.5" Width="8" Height="8" VerticalAlignment="Center" HorizontalAlignment="Center">
 						<Grid.RenderTransform>
 							<RotateTransform Angle="45" />
 						</Grid.RenderTransform>
 
-						<Line X1="0" X2="6" Y1="3" Y2="3" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
-						<Line X1="3" X2="3" Y1="0" Y2="6" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+						<Line X1="0" X2="8" Y1="4" Y2="4" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+						<Line X1="4" X2="4" Y1="0" Y2="8" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
 					</Grid>
 				</DataTemplate>
 			</Setter.Value>
@@ -1777,9 +1778,9 @@
 									</MultiBinding>
 								</local:ButtonEx.Visibility>
 
-								<Grid Width="6" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
-									<Line X1="0" X2="6" Y1="3" Y2="3" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
-									<Line X1="3" X2="3" Y1="0" Y2="6" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+								<Grid Width="8" Height="8" VerticalAlignment="Center" HorizontalAlignment="Center" SnapsToDevicePixels="True" UseLayoutRounding="True">
+									<Line X1="0" X2="8" Y1="4" Y2="4" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+									<Line X1="4" X2="4" Y1="0" Y2="8" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
 								</Grid>
 							</local:ButtonEx>
 
@@ -1790,13 +1791,13 @@
 								</Grid.ColumnDefinitions>
 
 								<local:ButtonEx Name="removeVariant" Grid.Column="0" Command="{Binding RemoveVariationCommand,Mode=OneTime}" Style="{StaticResource VariantButton}" ToolTip="{x:Static prop:Resources.RemoveVariant}" AutomationProperties.Name="{x:Static prop:Resources.RemoveVariant}">
-									<Grid RenderTransformOrigin="0.5,0.5" Width="6" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
+									<Grid RenderTransformOrigin="0.5,0.5" Width="8" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
 										<Grid.RenderTransform>
 											<RotateTransform Angle="45" />
 										</Grid.RenderTransform>
 
-										<Line X1="0" X2="6" Y1="3" Y2="3" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
-										<Line X1="3" X2="3" Y1="0" Y2="6" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+										<Line X1="0" X2="8" Y1="4" Y2="4" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+										<Line X1="4" X2="4" Y1="0" Y2="8" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
 									</Grid>
 								</local:ButtonEx>
 
