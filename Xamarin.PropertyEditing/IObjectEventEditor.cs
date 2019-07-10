@@ -24,6 +24,8 @@ namespace Xamarin.PropertyEditing
 		/// </summary>
 		bool SupportsMultipleHandlers { get; }
 
+		bool IsValidHandlerName (string handlerName);
+
 		/// <exception cref="ArgumentNullException"><paramref name="ev"/> or <paramref name="handlerName"/> is <c>null</c>.</exception>
 		Task AttachHandlerAsync (IEventInfo ev, string handlerName);
 

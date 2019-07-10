@@ -208,7 +208,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool CanAddHandler (string name)
 		{
-			return CanWrite && !String.IsNullOrWhiteSpace (name) && !Handlers.Contains (name.Trim());
+			if (!CanWrite || String.IsNullOrWhiteSpace (name))
+				return false;
+
+			name = name.Trim ();
+			if (Handlers.Contains (name))
+				return false;
+
+			foreach (IObjectEventEditor editor in Editors) {
+				if (!editor.IsValidHandlerName (name))
+					return false;
+			}
+
+			return true;
 		}
 
 		private async void OnAddHandler (string name)

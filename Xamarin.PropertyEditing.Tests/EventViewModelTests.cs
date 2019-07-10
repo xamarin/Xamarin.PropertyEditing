@@ -41,6 +41,7 @@ namespace Xamarin.PropertyEditing.Tests
 			var handlers = new List<string> ();
 			var editor = new Mock<IObjectEditor> ();
 			var eeditor = editor.As<IObjectEventEditor> ();
+			eeditor.Setup (ee => ee.IsValidHandlerName (It.IsAny<string> ())).Returns (true);
 			eeditor.Setup (ee => ee.GetHandlersAsync (info.Object)).ReturnsAsync (handlers);
 			eeditor.Setup (ee => ee.GetPotentialHandlersAsync (It.IsAny<IEventInfo> ())).ReturnsAsync (Array.Empty<string> ());
 			eeditor.Setup (ee => ee.AttachHandlerAsync (It.IsAny<IEventInfo> (), It.IsAny<string> ()))

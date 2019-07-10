@@ -60,6 +60,11 @@ namespace Xamarin.PropertyEditing.Reflection
 			return Task.FromResult (Name);
 		}
 
+		public bool IsValidHandlerName (string handlerName)
+		{
+			return false;
+		}
+
 		public Task AttachHandlerAsync (IEventInfo ev, string handlerName)
 		{
 			throw new NotSupportedException ();

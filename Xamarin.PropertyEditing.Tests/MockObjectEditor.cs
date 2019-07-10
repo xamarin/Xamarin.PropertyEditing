@@ -144,6 +144,11 @@ namespace Xamarin.PropertyEditing.Tests
 			PropertyChanged?.Invoke (this, new EditorPropertyChangedEventArgs (property));
 		}
 
+		public bool IsValidHandlerName (string handlerName)
+		{
+			return !String.IsNullOrWhiteSpace (handlerName) && !handlerName.Contains (" ");
+		}
+
 		public Task AttachHandlerAsync (IEventInfo ev, string handlerName)
 		{
 			if (!this.events.TryGetValue (ev, out List<string> handlers)) {
