@@ -92,11 +92,6 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly NSButton selectType;
 		private readonly NSLayoutConstraint buttonConstraint;
 
-		private void OnCreateInstanceExecutableChanged (object sender, EventArgs e)
-		{
-			UpdateCreateInstanceCommand ();
-		}
-
 		private void OnTypeRequested (object sender, TypeRequestedEventArgs e)
 		{
 			e.SelectedType = e.RequestAt (HostResources, this.selectType, ViewModel.AssignableTypes);
@@ -120,23 +115,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnSelectPressed (object sender, EventArgs e)
 		{
+			Window.MakeFirstResponder (this.selectType);
 			ViewModel.SelectTypeCommand.Execute (null);
-		}
-
-		private class PopoverDelegate<T>
-			: NSPopoverDelegate
-		{
-			public PopoverDelegate (TaskCompletionSource<T> tcs)
-			{
-				this.tcs = tcs;
-			}
-
-			public override void WillClose (NSNotification notification)
-			{
-				this.tcs.TrySetCanceled ();
-			}
-
-			private readonly TaskCompletionSource<T> tcs;
 		}
 	}
 }
