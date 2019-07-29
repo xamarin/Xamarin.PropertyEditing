@@ -16,6 +16,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.label);
 
 			AddConstraints (new[] {
+				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Left, NSLayoutRelation.GreaterThanOrEqual, this, NSLayoutAttribute.Left, 1, 0f),
 				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, Mac.Layout.GoldenRatioLeft, 0f),
 				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 			});
@@ -85,7 +86,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly UnfocusableTextField label = new UnfocusableTextField {
 			Alignment = NSTextAlignment.Right,
 			Cell = {
-				LineBreakMode = NSLineBreakMode.TruncatingHead,
+				LineBreakMode = NSLineBreakMode.TruncatingMiddle,
 			},
 			TranslatesAutoresizingMaskIntoConstraints = false,
 		};
