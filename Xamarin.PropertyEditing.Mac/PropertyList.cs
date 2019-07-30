@@ -28,6 +28,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.scrollView = new NSScrollView {
 				AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable,
 				HasHorizontalScroller = false,
+				HasVerticalScroller = true,
 			};
 
 			this.scrollView.DocumentView = this.propertyTable;
