@@ -23,6 +23,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void OnRevealPathButtonActivated (object sender, EventArgs e)
 		{
+			Window.MakeFirstResponder (this.currentTextField);
 			if (File.Exists (this.currentTextField.StringValue)) {
 				NSWorkspace.SharedWorkspace.SelectFile (this.currentTextField.StringValue, string.Empty);
 			}

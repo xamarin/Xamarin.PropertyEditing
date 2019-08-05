@@ -142,11 +142,32 @@ namespace Xamarin.PropertyEditing.Mac
 				});
 			}
 
+			FocusClickedRow ();
+
 			var menuOrigin = this.Superview.ConvertPointToView (new CGPoint (Frame.Location.X - 1, Frame.Location.Y + Frame.Size.Height + 4), null);
 
 			var popupMenuEvent = NSEvent.MouseEvent (NSEventType.LeftMouseDown, menuOrigin, (NSEventModifierMask)0x100, 0, this.Window.WindowNumber, this.Window.GraphicsContext, 0, 1, 1);
 
 			NSMenu.PopUpContextMenu (popUpContextMenu, popupMenuEvent, this);
+		}
+
+		private void FocusClickedRow ()
+		{
+			if (Superview != null) {
+				MakeFocusableKeyViewFirstResponder (Superview.Subviews);
+			}
+		}
+
+		private void MakeFocusableKeyViewFirstResponder (NSView[] subViews)
+		{
+			foreach (NSView item in subViews) {
+				if (item.CanBecomeKeyView) {
+					Window.MakeFirstResponder (item);
+					break;
+				} else {
+					MakeFocusableKeyViewFirstResponder (item.Subviews);
+				}
+			}
 		}
 
 		private void ToggleFocusImage (bool focused = false)

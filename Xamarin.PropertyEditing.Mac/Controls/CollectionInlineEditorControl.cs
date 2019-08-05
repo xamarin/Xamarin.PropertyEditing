@@ -25,6 +25,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			this.openCollection.Activated += (o, e) => {
+				Window.MakeFirstResponder (this.openCollection);
 				CollectionEditorWindow.EditCollection (EffectiveAppearance, HostResources, ViewModel);
 			};
 

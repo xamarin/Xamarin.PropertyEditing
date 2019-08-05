@@ -91,6 +91,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void BrowsePathButton_Activated (object sender, EventArgs e)
 		{
+			Window.MakeFirstResponder (this.currentTextField);
 			this.panel.BeginSheet (this.Window, HandleAction);
 		}
 
