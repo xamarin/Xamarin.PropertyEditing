@@ -97,6 +97,8 @@ namespace Xamarin.PropertyEditing.Windows
 		}
 
 		private static readonly Dictionary<Type, Type> TypeMap = new Dictionary<Type, Type> {
+			{ typeof(PropertyViewModel<DateTime>), typeof(StringEditorControl) },
+			{ typeof(PropertyViewModel<TimeSpan>), typeof(StringEditorControl) },
 			{ typeof(StringPropertyViewModel), typeof(StringEditorControl) },
 			{ typeof(PropertyViewModel<bool?>), typeof(BoolEditorControl) },
 			{ typeof(NumericPropertyViewModel<>), typeof(NumericEditorControl) },
