@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -112,6 +114,11 @@ namespace Xamarin.PropertyEditing.Windows
 			this.variationsList = GetTemplateChild ("variationsList") as ItemsControl;
 		}
 
+		protected override AutomationPeer OnCreateAutomationPeer ()
+		{
+			return new PropertyPresenterAutomationPeer (this);
+		}
+
 		protected override void OnRender (DrawingContext drawingContext)
 		{
 			if (this.pvm == null)
@@ -174,6 +181,8 @@ namespace Xamarin.PropertyEditing.Windows
 			if (this.pvm != null && this.pvm.RequestCreateVariantCommand.CanExecute (null)) {
 				this.pvm.CreateVariantRequested += OnCreateVariantRequested;
 			}
+
+			(UIElementAutomationPeer.FromElement (this) as PropertyPresenterAutomationPeer)?.Refresh();
 		}
 
 		private void OnCreateVariantRequested (object sender, CreateVariantEventArgs e)
@@ -209,6 +218,37 @@ namespace Xamarin.PropertyEditing.Windows
 					}
 				}
 			}
+		}
+
+		private class PropertyPresenterAutomationPeer
+			: UIElementAutomationPeer
+		{
+			public PropertyPresenterAutomationPeer (PropertyPresenter owner)
+				: base (owner)
+			{
+				this.presenter = owner;
+				Refresh();
+			}
+
+			public void Refresh ()
+			{
+				this.name = AutomationProperties.GetName (this.presenter);
+				if (String.IsNullOrEmpty (this.name))
+					this.name = (this.presenter.DataContext as PropertyViewModel)?.Name;
+			}
+
+			protected override AutomationControlType GetAutomationControlTypeCore ()
+			{
+				return AutomationControlType.Group;
+			}
+
+			protected override string GetNameCore ()
+			{
+				return this.name;
+			}
+
+			private readonly PropertyPresenter presenter;
+			private string name;
 		}
 	}
 }
