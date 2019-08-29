@@ -776,4 +776,7 @@
    <data name="ResourceNotSupported" xml:space="preserve">
     <value>Resource Not Supported</value>
   </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>Add</value>
+  </data>
 </root>

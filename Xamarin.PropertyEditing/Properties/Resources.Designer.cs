@@ -1204,5 +1204,11 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("ResourceNotSupported", resourceCulture);
             }
         }
+
+        public static string AddCollectionItem {
+	        get {
+		        return ResourceManager.GetString("AddCollectionItem", resourceCulture);
+	        }
+        }
     }
 }
