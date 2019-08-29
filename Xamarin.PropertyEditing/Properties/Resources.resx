@@ -779,4 +779,13 @@
   <data name="AddCollectionItem" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_All Resources</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Local</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Shared</value>
+  </data>
 </root>

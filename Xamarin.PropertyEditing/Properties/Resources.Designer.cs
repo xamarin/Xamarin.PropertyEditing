@@ -1210,5 +1210,23 @@ namespace Xamarin.PropertyEditing.Properties {
 		        return ResourceManager.GetString("AddCollectionItem", resourceCulture);
 	        }
         }
+
+        public static string ResourcesAllSources {
+	        get {
+		        return ResourceManager.GetString("ResourcesAllSources", resourceCulture);
+	        }
+        }
+
+        public static string ResourcesLocalSource {
+	        get {
+		        return ResourceManager.GetString("ResourcesLocalSource", resourceCulture);
+	        }
+        }
+
+        public static string ResourcesSharedSource {
+	        get {
+		        return ResourceManager.GetString("ResourcesSharedSource", resourceCulture);
+	        }
+        }
     }
 }
