@@ -60,11 +60,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public string Label
 		{
 			get { return this.label.StringValue; }
-			set
-			{
-				this.label.StringValue = value + ":";
-				this.label.ToolTip = value;
-			}
+			set { this.label.StringValue = value + ":"; }
 		}
 
 		protected INativeContainer NativeContainer
