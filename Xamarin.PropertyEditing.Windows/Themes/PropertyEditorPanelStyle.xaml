@@ -10,6 +10,7 @@
 	<local:OppositeBoolConverter x:Key="OppositeBoolConverter" />
 	<local:EditorPropertySelector x:Key="PropertyEditorSelector" />
 	<local:EditorTreeSelector x:Key="EditorTreeSelector" EditorTemplateKey="PropertyEditorTemplate" ParentTemplateKey="PropertyGroupTemplate" />
+	<local:ArrangeModeLocalizedConverter x:Key="ArrangeLocalizer" />
 
 	<Style x:Key="TreeExpanderStyle" TargetType="Expander">
 		<Setter Property="Foreground" Value="{DynamicResource PanelGroupForegroundBrush}" />
@@ -210,7 +211,7 @@
 
 								<local:TextBoxEx x:Name="search" Grid.Row="0" Style="{DynamicResource PropertySearchTextBox}" AutomationProperties.Name="{x:Static prop:Resources.SearchProperties}" Text="{Binding FilterText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
 
-								<local:MenuButton Grid.Row="1" x:Name="arrangeBy" Header="Arrange by:" Margin="0,0,18,0" Content="{Binding ArrangeMode}">
+								<local:MenuButton Grid.Row="1" x:Name="arrangeBy" Header="{x:Static prop:Resources.ArrangeByLabel}" Margin="0,0,18,0" Content="{Binding ArrangeMode,Converter={StaticResource ArrangeLocalizer}}">
 									<local:MenuButton.Visibility>
 										<Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsArrangeEnabled">
 											<Binding.Converter>

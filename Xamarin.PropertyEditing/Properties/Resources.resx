@@ -788,4 +788,13 @@
   <data name="ResourcesSharedSource" xml:space="preserve">
     <value>_Shared</value>
   </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Value Source</value>
+  </data>
 </root>

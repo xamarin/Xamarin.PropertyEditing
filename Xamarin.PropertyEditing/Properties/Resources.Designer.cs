@@ -982,11 +982,29 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("AccessibilityHeightEditor", resourceCulture);
             }
         }
+
+        public static string ArrangeByCategory {
+	        get {
+		        return ResourceManager.GetString("ArrangeByCategory", resourceCulture);
+	        }
+        }
         
         public static string ArrangeByLabel {
-            get {
-                return ResourceManager.GetString("ArrangeByLabel", resourceCulture);
-            }
+	        get {
+		        return ResourceManager.GetString("ArrangeByLabel", resourceCulture);
+	        }
+        }
+
+        public static string ArrangeByName {
+	        get {
+		        return ResourceManager.GetString("ArrangeByName", resourceCulture);
+	        }
+        }
+
+        public static string ArrangeByValueSource {
+	        get {
+		        return ResourceManager.GetString("ArrangeByValueSource", resourceCulture);
+	        }
         }
         
         public static string AccessibilityPropertiesButton {
