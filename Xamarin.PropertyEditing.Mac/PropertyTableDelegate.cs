@@ -25,7 +25,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public void UpdateExpansions (NSOutlineView outlineView)
 		{
-			this.isExpanding = true;
+			this.isUpdatingExpansions = true;
 
 			if (!String.IsNullOrWhiteSpace (this.dataSource.DataContext.FilterText)) {
 				outlineView.ExpandItem (null, true);
@@ -36,12 +36,12 @@ namespace Xamarin.PropertyEditing.Mac
 						continue;
 
 					if (this.dataSource.DataContext.GetIsExpanded (g.Category))
-						outlineView.ExpandItem (item);
+						EnsureOpenOrClose (outlineView, item, open: true);
 					else
-						outlineView.CollapseItem (item);
+						EnsureOpenOrClose (outlineView, item, open: false);
 				}
 			}
-			this.isExpanding = false;
+			this.isUpdatingExpansions = false;
 		}
 
 		public override NSView GetView (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item)
@@ -146,7 +146,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var outline = (NSOutlineView)notification.Object;
 			nint row = outline.RowForItem (facade);
 
-			if (this.isExpanding) {
+			if (this.isUpdatingExpansions) {
 				NSView view = outline.GetView (0, row, makeIfNecessary: true);
 				if (view.Subviews[0] is NSButton expander)
 					expander.State = NSCellStateValue.On;
@@ -168,7 +168,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var outline = (NSOutlineView)notification.Object;
 			nint row = outline.RowForItem (facade);
 
-			if (this.isExpanding) {
+			if (this.isUpdatingExpansions) {
 				NSView view = outline.GetView (0, row, makeIfNecessary: true);
 				if (view.Subviews[0] is NSButton expander)
 					expander.State = NSCellStateValue.Off;
@@ -239,17 +239,29 @@ namespace Xamarin.PropertyEditing.Mac
 		public const string CategoryIdentifier = "label";
 
 		private PropertyTableDataSource dataSource;
-		private bool isExpanding;
+		private bool isUpdatingExpansions;
 		private readonly PropertyEditorSelector editorSelector = new PropertyEditorSelector ();
 
 		private readonly IHostResourceProvider hostResources;
 		private readonly Dictionary<string, EditorRegistration> registrations = new Dictionary<string, EditorRegistration> ();
 		private readonly Dictionary<string, IEditorView> firstCache = new Dictionary<string, IEditorView> ();
 
-		private NSView GetViewForItem (NSOutlineView outline, NSObjectFacade facade)
+		private void EnsureOpenOrClose (NSOutlineView outline, NSObjectFacade item, bool open)
+		{
+			if (open)
+				outline.ExpandItem (item);
+			else
+				outline.CollapseItem (item);
+
+			NSView view = GetViewForItem (outline, item, makeIfNeccessary: true);
+			if (view.Subviews[0] is NSButton expander)
+				expander.State = (open) ? NSCellStateValue.On : NSCellStateValue.Off;
+		}
+
+		private NSView GetViewForItem (NSOutlineView outline, NSObjectFacade facade, bool makeIfNeccessary = false)
 		{
 			nint row = outline.RowForItem (facade);
-			return outline.GetView (0, row, false);
+			return outline.GetView (0, row, makeIfNeccessary);
 		}
 
 		private void SetRowValueBackground (NSView view, bool valueBackground)
