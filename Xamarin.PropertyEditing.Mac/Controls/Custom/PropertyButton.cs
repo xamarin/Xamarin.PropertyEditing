@@ -256,7 +256,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Appearance = EffectiveAppearance
 			};
 
-			var customExpressionPopOver = new AutoClosePopOver(this.hostResources) {
+			var customExpressionPopOver = new AutoClosePopOver (this.hostResources, EffectiveAppearance) {
 				CloseOnEnter = false,
 				ContentViewController = new NSViewController (null, null) { View = customExpressionView },
 			};
@@ -272,7 +272,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Appearance = EffectiveAppearance
 			};
 
-			var resourceSelectorPopOver = new AutoClosePopOver(this.hostResources) {
+			var resourceSelectorPopOver = new AutoClosePopOver (this.hostResources, EffectiveAppearance) {
 				ContentViewController = new NSViewController (null, null) { View = requestResourceView },
 			};
 
