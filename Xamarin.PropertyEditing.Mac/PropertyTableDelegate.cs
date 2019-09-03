@@ -31,7 +31,7 @@ namespace Xamarin.PropertyEditing.Mac
 				outlineView.ExpandItem (null, true);
 			} else {
 				foreach (PanelGroupViewModel g in this.dataSource.DataContext.ArrangedEditors) {
-					NSObject item;
+					NSObjectFacade item;
 					if (!this.dataSource.TryGetFacade (g, out item))
 						continue;
 
