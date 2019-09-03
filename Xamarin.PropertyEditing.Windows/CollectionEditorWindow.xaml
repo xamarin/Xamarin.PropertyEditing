@@ -51,7 +51,7 @@
 				<Button Command="{Binding MoveDownCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.MoveItemDown}" AutomationProperties.Name="{x:Static prop:Resources.MoveItemDown}" MinWidth="29" Margin="4,0,0,0" FontFamily="Segoe UI Symbol" Content="⭣" />
 			</StackPanel>
 			<ComboBox Grid.Column="1" ItemsSource="{Binding SuggestedTypes}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedType,Mode=TwoWay}" Margin="12,0,0,0" />
-			<Button Grid.Column="2" Command="{Binding AddTargetCommand,Mode=OneTime}" Margin="4,0,0,0">Add</Button>
+			<Button Grid.Column="2" Command="{Binding AddTargetCommand,Mode=OneTime}" Margin="4,0,0,0" Content="{x:Static prop:Resources.AddCollectionItem}" />
 		</Grid>
 
 		<ItemsControl Margin="12,4,0,0" Style="{StaticResource PropertyListStyle}" Background="{DynamicResource ListBackgroundBrush}" Grid.IsSharedSizeScope="True" DataContext="{Binding Panel}" ItemsSource="{Binding ArrangedEditors}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" />

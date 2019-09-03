@@ -982,11 +982,29 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("AccessibilityHeightEditor", resourceCulture);
             }
         }
+
+        public static string ArrangeByCategory {
+	        get {
+		        return ResourceManager.GetString("ArrangeByCategory", resourceCulture);
+	        }
+        }
         
         public static string ArrangeByLabel {
-            get {
-                return ResourceManager.GetString("ArrangeByLabel", resourceCulture);
-            }
+	        get {
+		        return ResourceManager.GetString("ArrangeByLabel", resourceCulture);
+	        }
+        }
+
+        public static string ArrangeByName {
+	        get {
+		        return ResourceManager.GetString("ArrangeByName", resourceCulture);
+	        }
+        }
+
+        public static string ArrangeByValueSource {
+	        get {
+		        return ResourceManager.GetString("ArrangeByValueSource", resourceCulture);
+	        }
         }
         
         public static string AccessibilityPropertiesButton {
@@ -1203,6 +1221,30 @@ namespace Xamarin.PropertyEditing.Properties {
             get {
                 return ResourceManager.GetString("ResourceNotSupported", resourceCulture);
             }
+        }
+
+        public static string AddCollectionItem {
+	        get {
+		        return ResourceManager.GetString("AddCollectionItem", resourceCulture);
+	        }
+        }
+
+        public static string ResourcesAllSources {
+	        get {
+		        return ResourceManager.GetString("ResourcesAllSources", resourceCulture);
+	        }
+        }
+
+        public static string ResourcesLocalSource {
+	        get {
+		        return ResourceManager.GetString("ResourcesLocalSource", resourceCulture);
+	        }
+        }
+
+        public static string ResourcesSharedSource {
+	        get {
+		        return ResourceManager.GetString("ResourcesSharedSource", resourceCulture);
+	        }
         }
     }
 }
