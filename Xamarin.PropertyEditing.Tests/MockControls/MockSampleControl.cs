@@ -11,6 +11,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 	{
 		public MockSampleControl ()
 		{
+			AddProperty<AutoResizingFlags> ("Autoresizing", ReadWrite, valueSources: ValueSources.Local, ignoreEnum: true);
 			AddProperty<TimeSpan> ("TimeSpan", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<TimeSpan> ("TimeSpanReadOnly", ReadOnly, canWrite: false, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<bool> ("Boolean", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);

@@ -655,6 +655,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			{ typeof(object), (tp,p,e,v) => new ObjectPropertyViewModel (tp, p, e, v) },
 			{ typeof(ITypeInfo), (tp,p,e,v) => new TypePropertyViewModel (tp, p, e, v) },
 			{ typeof(CommonRatio), (tp, p, e, v) => new RatioViewModel (tp, p, e, v) },
+			{ typeof(AutoResizingFlags), (tp, p, e, v) => new AutoResizingPropertyViewModel (tp, p, e, v) },
 		};
 	}
 }
