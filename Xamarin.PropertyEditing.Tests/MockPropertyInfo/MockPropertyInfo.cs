@@ -35,11 +35,11 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 				this.typeConverters = converterTypes
 					.Where (type => type != null && typeof (TypeConverter).IsAssignableFrom (type))
 					.Select (type => (TypeConverter)Activator.CreateInstance (type))
-					.ToArray();
+					.ToArray ();
 			}
 
-			if (typeof(T).IsValueType) {
-				this.nullConverter = new NullableConverter (typeof(Nullable<>).MakeGenericType (typeof(T)));
+			if (typeof (T).IsValueType) {
+				this.nullConverter = new NullableConverter (typeof (Nullable<>).MakeGenericType (typeof (T)));
 			}
 
 			Variations = options ?? EmptyVariationOptions;
@@ -78,12 +78,12 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 				}
 			}
 
-			if (this.nullConverter != null && (fromValue != null  && this.nullConverter.CanConvertFrom (fromValue.GetType()) || this.nullConverter.CanConvertFrom (typeof(TFrom)))) {
+			if (this.nullConverter != null && (fromValue != null && this.nullConverter.CanConvertFrom (fromValue.GetType ()) || this.nullConverter.CanConvertFrom (typeof (TFrom)))) {
 				toValue = this.nullConverter.ConvertFrom (fromValue);
 				return true;
 			}
 
-			if (toType == typeof(string)) {
+			if (toType == typeof (string)) {
 				toValue = fromValue?.ToString ();
 				return true;
 			}
@@ -92,9 +92,9 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 				toValue = Convert.ChangeType (fromValue, toType);
 				return true;
 			} catch {
-				
+
 			}
-			
+
 			return false;
 		}
 
@@ -116,7 +116,7 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 				return false;
 			if (ReferenceEquals (this, obj))
 				return true;
-			if (GetType() != obj.GetType ())
+			if (GetType () != obj.GetType ())
 				return false;
 
 			return Equals ((MockPropertyInfo<T>)obj);
@@ -137,5 +137,17 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 		private readonly IReadOnlyList<TypeConverter> typeConverters;
 		private readonly NullableConverter nullConverter;
+	}
+
+	public class MockPropertyInfoWithOrigin<T>
+		: MockPropertyInfo<T>, IOrigin
+	{
+		public MockPropertyInfoWithOrigin (string name, string description = null, string category = null, bool canWrite = true, IEnumerable<Type> converterTypes = null, ValueSources valueSources = ValueSources.Default | ValueSources.Local, PropertyVariationOption[] variations = null, bool hasOrigin = false)
+			: base (name, description, category, canWrite, converterTypes, valueSources, variations)
+		{
+			HasOrigin = hasOrigin;
+		}
+
+		public bool HasOrigin { get; }
 	}
 }

@@ -96,6 +96,8 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 
 			AddEvents ("Click", "Hover", "Focus");
 
+			AddProperty<CommonRectangle> ("RectangleWithOrigin", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding, hasOrigin: true);
+			AddProperty<CommonRectangle> ("ReadOnlyRectangleWithOrigin", ReadOnly, false, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding, hasOrigin: true);
 		}
 
 		// Categories

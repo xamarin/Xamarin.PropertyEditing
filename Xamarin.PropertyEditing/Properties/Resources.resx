@@ -797,4 +797,8 @@
   <data name="ArrangeByValueSource" xml:space="preserve">
     <value>Value Source</value>
   </data>
+  <data name="AccessibilityOriginEditor" xml:space="preserve">
+    <value>{0} Origin Editor. Use left and right arrow keys to navigate between values or click on the position.</value>
+    <comment>Editor for Origin Value</comment>
+  </data>
 </root>

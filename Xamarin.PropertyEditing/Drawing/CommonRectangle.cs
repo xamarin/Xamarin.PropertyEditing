@@ -12,11 +12,13 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// <param name="y">The vertical coordinate of the top border of the rectangle.</param>
 		/// <param name="width">The width of the rectangle.</param>
 		/// <param name="height">The height of the rectangle.</param>
-		public CommonRectangle (double x, double y, double width, double height)
+		/// <param name="origin">The origin of the rectangle.</param>
+		public CommonRectangle (double x, double y, double width, double height, CommonOrigin? origin = null)
 		{
 			X = x;
 			Y = y;
 			Size = new CommonSize (width, height);
+			Origin = origin;
 		}
 
 		/// <summary>
@@ -38,10 +40,15 @@ namespace Xamarin.PropertyEditing.Drawing
 		/// </summary>
 		public double Height => Size.Height;
 
-		public CommonSize Size
-		{
-			get;
-		}
+		/// <summary>
+		/// The size of the rectangle.
+		/// </summary>
+		public CommonSize Size { get; }
+
+		/// <summary>
+		/// Rectangle origin.
+		/// </summary>
+		public CommonOrigin? Origin { get; }
 
 		public override bool Equals (object obj)
 		{
@@ -52,10 +59,15 @@ namespace Xamarin.PropertyEditing.Drawing
 
 		public bool Equals (CommonRectangle other)
 		{
-			return X == other.X &&
+			var isEqual = X == other.X &&
 				   Y == other.Y &&
 				   Width == other.Width &&
 				   Height == other.Height;
+
+			if (Origin.HasValue && other.Origin.HasValue)
+				isEqual &= Origin.Value.Equals (other.Origin.Value);
+
+			return isEqual;
 		}
 
 		public override int GetHashCode ()
@@ -66,6 +78,8 @@ namespace Xamarin.PropertyEditing.Drawing
 				hashCode = hashCode * -1521134295 + Y.GetHashCode ();
 				hashCode = hashCode * -1521134295 + Width.GetHashCode ();
 				hashCode = hashCode * -1521134295 + Height.GetHashCode ();
+				if (Origin.HasValue)
+					hashCode = hashCode * -1521134295 + Origin.Value.GetHashCode ();
 			}
 			return hashCode;
 		}

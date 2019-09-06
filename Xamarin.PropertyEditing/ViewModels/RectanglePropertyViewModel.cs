@@ -9,6 +9,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 		public RectanglePropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
 			: base (platform, property, editors, variation)
 		{
+			this.origin = property as IOrigin;
 		}
 
 		public double X {
@@ -17,7 +18,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (Value.X == value)
 					return;
 
-				Value = new CommonRectangle (value, Value.Y, Value.Width, Value.Height);
+				Value = new CommonRectangle (value, Value.Y, Value.Width, Value.Height, Value.Origin);
 			}
 		}
 
@@ -27,7 +28,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (Value.Y == value)
 					return;
 
-				Value = new CommonRectangle (Value.X, value, Value.Width, Value.Height);
+				Value = new CommonRectangle (Value.X, value, Value.Width, Value.Height, Value.Origin);
 			}
 		}
 
@@ -37,7 +38,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (Value.Width == value)
 					return;
 
-				Value = new CommonRectangle (Value.X, Value.Y, value, Value.Height);
+				Value = new CommonRectangle (Value.X, Value.Y, value, Value.Height, Value.Origin);
 			}
 		}
 
@@ -47,9 +48,24 @@ namespace Xamarin.PropertyEditing.ViewModels
 				if (Value.Height == value)
 					return;
 
-				Value = new CommonRectangle (Value.X, Value.Y, Value.Width, value);
+				Value = new CommonRectangle (Value.X, Value.Y, Value.Width, value, Value.Origin);
 			}
 		}
+
+		public CommonOrigin? Origin {
+			get { return Value.Origin; }
+			set {
+
+				if (Value.Origin.HasValue && Value.Origin.Value.Equals(value))
+					return;
+
+				Value = new CommonRectangle (Value.X, Value.Y, Value.Width, Value.Height, value);
+			}
+		}
+
+		private readonly IOrigin origin;
+
+		public bool HasOrigin => this.origin != null;
 
 		protected override void OnValueChanged ()
 		{
@@ -58,6 +74,9 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnPropertyChanged (nameof (Y));
 			OnPropertyChanged (nameof (Width));
 			OnPropertyChanged (nameof (Height));
+
+			if (HasOrigin)
+				OnPropertyChanged (nameof (Origin));
 		}
 	}
 }
