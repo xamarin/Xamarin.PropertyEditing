@@ -72,15 +72,8 @@ namespace Xamarin.PropertyEditing.Windows
 			OnValueSourceChanged (ValueSource);
 		}
 
-		private Rectangle indicator;
-		private ContextMenu menu;
-		private PropertyViewModel vm;
-
-		private void OnBorderMouseDown (object sender, MouseButtonEventArgs e)
+		public void ShowMenu ()
 		{
-			if (e.ChangedButton != MouseButton.Left)
-				return;
-
 			if (this.menu == null) {
 				this.menu = MenuTemplate?.LoadContent () as ContextMenu;
 				if (this.menu == null)
@@ -95,6 +88,18 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 
 			this.menu.IsOpen = true;
+		}
+
+		private Rectangle indicator;
+		private ContextMenu menu;
+		private PropertyViewModel vm;
+
+		private void OnBorderMouseDown (object sender, MouseButtonEventArgs e)
+		{
+			if (e.ChangedButton != MouseButton.Left)
+				return;
+
+			ShowMenu();
 			e.Handled = true;
 		}
 

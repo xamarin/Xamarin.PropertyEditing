@@ -474,7 +474,7 @@
 		<Setter Property="MenuTemplate">
 			<Setter.Value>
 				<DataTemplate>
-					<local:HeaderedContextMenu Header="{Binding Property.Name,Mode=OneTime}" StaysOpen="True" Placement="Left" HorizontalOffset="{StaticResource MenuOffset}" VerticalOffset="{StaticResource MenuOffset}">
+					<local:HeaderedContextMenu Header="{Binding Property.Name,Mode=OneTime}" StaysOpen="True" Placement="Left" HorizontalOffset="{StaticResource MenuOffset}" VerticalOffset="{StaticResource MenuOffset}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}">
 						<MenuItem x:Name="CustomExpressionItem" Header="{x:Static prop:Resources.CustomExpressionEllipsis}" Icon="{StaticResource LiteralMarker}" Visibility="{Binding TargetPlatform.SupportsCustomExpressions,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<Separator Visibility="{Binding TargetPlatform.SupportsCustomExpressions,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" />
 						<MenuItem Header="{x:Static prop:Resources.Reset}" Icon="{StaticResource LiteralMarker}" Command="{Binding ClearValueCommand,Mode=OneTime}" />
@@ -1543,6 +1543,8 @@
 		</Style.Triggers>
 	</Style>
 
+	<local:InvokePropertyButtonCommand x:Key="InvokePropertyButtonCommand" />
+
 	<Style TargetType="local:PropertyPresenter">
 		<Setter Property="MinHeight" Value="24" />
 		<Setter Property="VariantBackgroundBrush" Value="{DynamicResource PanelGroupSecondaryBackgroundBrush}" />
@@ -1552,6 +1554,9 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyPresenter">
 					<Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+						<Border.InputBindings>
+							<KeyBinding Gesture="CTRL+Space" Command="{StaticResource InvokePropertyButtonCommand}" CommandParameter="{Binding ElementName=propertyButton,Mode=OneTime}" />
+						</Border.InputBindings>
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Name="delveColumn" Width="Auto" />
@@ -1625,7 +1630,7 @@
 							<ToggleButton Name="delveButton" Grid.Column="0" Grid.Row="0" Style="{DynamicResource StandaloneToggleStyle}" Width="11" Height="11" Visibility="{Binding HasItems,ElementName=subProperties,Converter={StaticResource BoolToVisibilityConverter}}" />
 							<TextBlock Name="Label" Margin="0,3,0,3" Grid.Row="1" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
 							<ContentPresenter Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" MinHeight="20" />
-							<local:PropertyButton Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}"/>
+							<local:PropertyButton x:Name="propertyButton"  Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}"/>
 
 							<ItemsControl Name="subProperties" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Margin="{TemplateBinding Padding,Converter={StaticResource NegativeThicknessConverter}}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{DynamicResource PropertyEditorTemplate}">
 								<ItemsControl.Visibility>

@@ -97,6 +97,7 @@
     <Compile Include="FilterExpander.cs" />
     <Compile Include="HasItemsToVisibilityConverter.cs" />
     <Compile Include="InvertedVisibilityConverter.cs" />
+    <Compile Include="InvokePropertyButtonCommand.cs" />
     <Compile Include="IPropertiesHost.cs" />
     <Compile Include="MaterialDesignColorEditorControl.cs" />
     <Compile Include="MultiplierConverter.cs" />
