@@ -59,6 +59,7 @@
     <Compile Include="BrushEditorControl.cs" />
     <Compile Include="BrushTabbedEditorControl.cs" />
     <Compile Include="BrushToDarknessConverter.cs" />
+    <Compile Include="ButtonEx.cs" />
     <Compile Include="ByteToDoubleConverter.cs" />
     <Compile Include="CategoryExpander.cs" />
     <Compile Include="CollectionEditor.cs" />

@@ -1571,20 +1571,20 @@
 								<RowDefinition Height="Auto" />
 							</Grid.RowDefinitions>
 
-							<Button Name="addVariant" Grid.Column="0" Grid.Row="1" Margin="{TemplateBinding Padding,Converter={StaticResource NegativeThicknessConverter}}" Style="{StaticResource VariantButton}" Command="{Binding RequestCreateVariantCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.AddVariant}" AutomationProperties.Name="{x:Static prop:Resources.AddVariant}">
-								<Button.Visibility>
+							<local:ButtonEx Name="addVariant" Grid.Column="0" Grid.Row="1" Margin="{TemplateBinding Padding,Converter={StaticResource NegativeThicknessConverter}}" Style="{StaticResource VariantButton}" Command="{Binding RequestCreateVariantCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.AddVariant}" AutomationProperties.Name="{x:Static prop:Resources.AddVariant}">
+								<local:ButtonEx.Visibility>
 									<MultiBinding Converter="{StaticResource BoolsToVisibilityConverter}">
 										<Binding Path="HasVariations" Mode="OneTime" />
 										<Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ShowVariants" />
 										<Binding Path="IsEnabled" RelativeSource="{RelativeSource Self}" />
 									</MultiBinding>
-								</Button.Visibility>
+								</local:ButtonEx.Visibility>
 
 								<Grid Width="6" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
 									<Line X1="0" X2="6" Y1="3" Y2="3" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
 									<Line X1="3" X2="3" Y1="0" Y2="6" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
 								</Grid>
-							</Button>
+							</local:ButtonEx>
 
 							<Grid Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0" Visibility="{Binding IsVariant,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter},FallbackValue=Collapsed}">
 								<Grid.ColumnDefinitions>
@@ -1592,7 +1592,7 @@
 									<ColumnDefinition Width="*" />
 								</Grid.ColumnDefinitions>
 
-								<Button Name="removeVariant" Grid.Column="0" Command="{Binding RemoveVariationCommand,Mode=OneTime}" Style="{StaticResource VariantButton}" ToolTip="{x:Static prop:Resources.RemoveVariant}" AutomationProperties.Name="{x:Static prop:Resources.RemoveVariant}">
+								<local:ButtonEx Name="removeVariant" Grid.Column="0" Command="{Binding RemoveVariationCommand,Mode=OneTime}" Style="{StaticResource VariantButton}" ToolTip="{x:Static prop:Resources.RemoveVariant}" AutomationProperties.Name="{x:Static prop:Resources.RemoveVariant}">
 									<Grid RenderTransformOrigin="0.5,0.5" Width="6" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
 										<Grid.RenderTransform>
 											<RotateTransform Angle="45" />
@@ -1601,7 +1601,7 @@
 										<Line X1="0" X2="6" Y1="3" Y2="3" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
 										<Line X1="3" X2="3" Y1="0" Y2="6" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
 									</Grid>
-								</Button>
+								</local:ButtonEx>
 
 								<ItemsControl Margin="5,2,0,2" Name="variationsList" Grid.Column="1" ItemsSource="{Binding Variation,Mode=OneTime}" Focusable="False">
 									<ItemsControl.ItemsPanel>
