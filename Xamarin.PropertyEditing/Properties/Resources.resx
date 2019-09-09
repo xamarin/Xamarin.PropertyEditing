@@ -806,4 +806,7 @@
   <data name="ArrangeByButtonName" xml:space="preserve">
     <value>Arrange by {0}</value>
   </data>
+  <data name="PropertyButtonName" xml:space="preserve">
+    <value>Advanced options</value>
+  </data>
 </root>

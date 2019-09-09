@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Automation.Peers;
+using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -88,6 +90,11 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 
 			this.menu.IsOpen = true;
+		}
+
+		protected override AutomationPeer OnCreateAutomationPeer ()
+		{
+			return new PropertyButtonAutomationPeer (this);
 		}
 
 		private Rectangle indicator;
@@ -198,6 +205,49 @@ namespace Xamarin.PropertyEditing.Windows
 
 			popup.SetResourceReference (Popup.StyleProperty, "CustomExpressionPopup");
 			popup.IsOpen = true;
+		}
+
+		private class PropertyButtonAutomationPeer
+			: FrameworkElementAutomationPeer, IInvokeProvider
+		{
+			public PropertyButtonAutomationPeer (PropertyButton button)
+				: base (button)
+			{
+				Button = button;
+			}
+
+			protected PropertyButton Button
+			{
+				get;
+			}
+
+			public void Invoke ()
+			{
+				Button.ShowMenu ();
+			}
+
+			public override object GetPattern (PatternInterface patternInterface)
+			{
+				if (patternInterface == PatternInterface.Invoke)
+					return this;
+
+				return base.GetPattern (patternInterface);
+			}
+
+			protected override bool IsControlElementCore ()
+			{
+				return Button.IsVisible;
+			}
+
+			protected override string GetClassNameCore ()
+			{
+				return nameof(PropertyButton);
+			}
+
+			protected override AutomationControlType GetAutomationControlTypeCore ()
+			{
+				return AutomationControlType.Button;
+			}
 		}
 	}
 }

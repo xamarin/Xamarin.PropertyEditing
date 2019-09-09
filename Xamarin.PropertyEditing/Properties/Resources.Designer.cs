@@ -1264,5 +1264,11 @@ namespace Xamarin.PropertyEditing.Properties {
 		        return ResourceManager.GetString("UncommonPropertiesName", resourceCulture);
 	        }
         }
+
+        public static string PropertyButtonName {
+	        get {
+		        return ResourceManager.GetString("PropertyButtonName", resourceCulture);
+	        }
+        }
     }
 }
