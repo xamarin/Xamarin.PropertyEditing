@@ -1012,6 +1012,12 @@ namespace Xamarin.PropertyEditing.Properties {
 		        return ResourceManager.GetString("ArrangeByValueSource", resourceCulture);
 	        }
         }
+
+        public static string ArrangeByButtonName {
+	        get {
+		        return ResourceManager.GetString("ArrangeByButtonName", resourceCulture);
+	        }
+        }
         
         public static string AccessibilityPropertiesButton {
             get {

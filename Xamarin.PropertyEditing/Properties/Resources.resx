@@ -803,4 +803,7 @@
   <data name="UncommonPropertiesName" xml:space="preserve">
     <value>Advanced properties</value>
   </data>
+  <data name="ArrangeByButtonName" xml:space="preserve">
+    <value>Arrange by {0}</value>
+  </data>
 </root>
