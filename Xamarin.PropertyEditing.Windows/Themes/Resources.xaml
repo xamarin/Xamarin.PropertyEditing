@@ -2422,6 +2422,11 @@
 									</Grid>
 								</DataTemplate>
 							</HierarchicalDataTemplate.ItemTemplate>
+							<HierarchicalDataTemplate.ItemContainerStyle>
+								<Style TargetType="local:TreeViewItemEx" BasedOn="{StaticResource SelectionTreeViewItem}">
+									<Setter Property="AutomationProperties.Name" Value="{Binding Name,Mode=OneTime}" />
+								</Style>
+							</HierarchicalDataTemplate.ItemContainerStyle>
 
 							<StackPanel Orientation="Horizontal">
 								<!-- Icon -->
@@ -2435,6 +2440,13 @@
 						<TextBlock Margin="8,0,0,0" Text="{Binding Key,Mode=OneTime}" />
 					</StackPanel>
 				</HierarchicalDataTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="ItemContainerStyle">
+			<Setter.Value>
+				<Style TargetType="local:TreeViewItemEx" BasedOn="{StaticResource SelectionTreeViewItem}">
+					<Setter Property="AutomationProperties.Name" Value="{Binding Key,Mode=OneTime}" />
+				</Style>
 			</Setter.Value>
 		</Setter>
 	</Style>
