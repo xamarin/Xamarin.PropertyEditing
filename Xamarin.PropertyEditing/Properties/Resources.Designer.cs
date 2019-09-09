@@ -106,6 +106,12 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("ColorSpace", resourceCulture);
             }
         }
+
+        public static string CollectionEditHelpText {
+	        get {
+		        return ResourceManager.GetString("CollectionEditHelpText", resourceCulture);
+	        }
+        }
         
         public static string CurrentColor {
             get {

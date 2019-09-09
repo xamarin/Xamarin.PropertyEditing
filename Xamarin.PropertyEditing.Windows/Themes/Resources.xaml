@@ -1507,7 +1507,7 @@
 						</Grid.ColumnDefinitions>
 
 						<TextBlock Text="{x:Static prop:Resources.CollectionValue}" Grid.Column="0" />
-						<Button Name="launch" AutomationProperties.Name="{Binding Name}" Content="{x:Static prop:Resources.Ellipsis}" MinWidth="20" Grid.Column="1" />
+						<Button Name="launch" AutomationProperties.Name="{Binding Name}" AutomationProperties.HelpText="{x:Static prop:Resources.CollectionEditHelpText}" Content="{x:Static prop:Resources.Ellipsis}" MinWidth="20" Grid.Column="1" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

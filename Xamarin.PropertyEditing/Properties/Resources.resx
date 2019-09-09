@@ -797,4 +797,7 @@
   <data name="ArrangeByValueSource" xml:space="preserve">
     <value>Value Source</value>
   </data>
+  <data name="CollectionEditHelpText" xml:space="preserve">
+    <value>Edit items in this collection</value>
+  </data>
 </root>
