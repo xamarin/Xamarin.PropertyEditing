@@ -287,7 +287,13 @@
 						</Grid.ColumnDefinitions>
 
 						<local:TextBoxEx x:Name="TextBox" Grid.Column="0" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Text="{Binding Value,UpdateSourceTrigger=Explicit}" VerticalContentAlignment="Center" IsEnabled="{Binding IsInputEnabled}" />
-						<ComboBox Grid.Column="1" Visibility="{Binding HasInputModes,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" ItemsSource="{Binding InputModes,Mode=OneTime}" SelectedItem="{Binding InputMode,Mode=TwoWay}" DisplayMemberPath="Identifier" />
+						<ComboBox Grid.Column="1" Visibility="{Binding HasInputModes,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" ItemsSource="{Binding InputModes,Mode=OneTime}" SelectedItem="{Binding InputMode,Mode=TwoWay}" DisplayMemberPath="Identifier">
+							<ComboBox.ItemContainerStyle>
+								<Style TargetType="ComboBoxItem">
+									<Setter Property="AutomationProperties.Name" Value="{Binding Identifier,Mode=OneTime}" />
+								</Style>
+							</ComboBox.ItemContainerStyle>
+						</ComboBox>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -2133,7 +2139,13 @@
 						</Grid.ColumnDefinitions>
 
 						<ContentPresenter Grid.Column="0" Content="{Binding}" ContentTemplateSelector="{StaticResource NumericTemplateSelector}" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" />
-						<ComboBox Grid.Column="1" Visibility="{Binding HasInputModes,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" ItemsSource="{Binding InputModes,Mode=OneTime}" SelectedItem="{Binding InputMode,Mode=TwoWay}" DisplayMemberPath="Identifier" />
+						<ComboBox Grid.Column="1" Visibility="{Binding HasInputModes,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter}}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" ItemsSource="{Binding InputModes,Mode=OneTime}" SelectedItem="{Binding InputMode,Mode=TwoWay}" DisplayMemberPath="Identifier">
+							<ComboBox.ItemContainerStyle>
+								<Style TargetType="ComboBoxItem">
+									<Setter Property="AutomationProperties.Name" Value="{Binding Identifier,Mode=OneTime}" />
+								</Style>
+							</ComboBox.ItemContainerStyle>
+						</ComboBox>
 					</Grid>
 					
 				</ControlTemplate>
