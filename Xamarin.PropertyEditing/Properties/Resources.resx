@@ -773,7 +773,7 @@
   <data name="TypeNotSupported" xml:space="preserve">
     <value>Type Not Supported</value>
   </data>
-   <data name="ResourceNotSupported" xml:space="preserve">
+  <data name="ResourceNotSupported" xml:space="preserve">
     <value>Resource Not Supported</value>
   </data>
   <data name="AddCollectionItem" xml:space="preserve">
@@ -799,5 +799,8 @@
   </data>
   <data name="CollectionEditHelpText" xml:space="preserve">
     <value>Edit items in this collection</value>
+  </data>
+  <data name="UncommonPropertiesName" xml:space="preserve">
+    <value>Advanced properties</value>
   </data>
 </root>

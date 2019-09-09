@@ -142,7 +142,7 @@
 						</ControlTemplate>
 					</ItemsControl.Template>
 				</ItemsControl>
-				<local:FilterExpander Grid.Row="1" Visibility="{Binding HasUncommonElements,Converter={StaticResource BoolToVisibilityConverter}}" Style="{StaticResource AdvancedPropertiesExpander}" IsExpanded="{Binding UncommonShown,Mode=TwoWay}">
+				<local:FilterExpander Grid.Row="1" Visibility="{Binding HasUncommonElements,Converter={StaticResource BoolToVisibilityConverter}}" Style="{StaticResource AdvancedPropertiesExpander}" IsExpanded="{Binding UncommonShown,Mode=TwoWay}" AutomationProperties.Name="{x:Static prop:Resources.UncommonPropertiesName}">
 					<ItemsControl Grid.Row="0" Style="{StaticResource PropertyListStyle}" ItemsSource="{Binding UncommonEditors,Mode=OneTime}">
 						<ItemsControl.Template>
 							<ControlTemplate>
