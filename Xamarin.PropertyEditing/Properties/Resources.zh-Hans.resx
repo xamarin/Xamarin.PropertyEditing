@@ -751,5 +751,50 @@
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>删除变体</value>
+   </data>
+  <data name="CreateBindingTitle" xml:space="preserve">
+    <value>创建绑定</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>其他设置</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>转换器</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>选择类型</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>类型不受支持</value>
+  </data>
+  <data name="ResourceNotSupported" xml:space="preserve">
+    <value>资源不受支持</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>所有资源(_A)</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>本地(_L)</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>已共享(_S)</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>类别</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>源值</value>
   </data>
 </root>
