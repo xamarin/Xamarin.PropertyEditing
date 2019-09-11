@@ -2,6 +2,33 @@
 
 using static Xamarin.Provisioning.ProvisioningScript;
 
-Item ("https://xamjenkinsartifact.azureedge.net/build-package-osx-mono/2018-08/248/fdb26b0a4454f60d20df1ea6c01fd851ffa4084a/MonoFramework-MDK-5.18.1.3.macos10.xamarin.universal.pkg");
-Item ("https://bosstoragemirror.blob.core.windows.net/wrench/jenkins/d16-0/50f7527307faf601c7b7754ac77a839fd5d0c820/26/package/xamarin.mac-5.6.0.25.pkg");
-Item (XreItem.Xcode_10_0_0).XcodeSelect();
+using System.Linq;
+
+static readonly bool CI = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("TF_BUILD"));
+
+if (IsMac) {
+	const string MacOSVersion = "10.12";
+	const string Mojave = "10.14";
+	if (OSVersion < new Version (MacOSVersion))
+		throw new Exception ($"macOS {MacOSVersion} or newer is required");
+
+	if (CI) {
+		foreach (var dir in System.IO.Directory.GetDirectories ("/Applications", "Xcode*"))
+			Console.WriteLine ("\tFound: {0}", dir);
+	}
+
+	if (OSVersion < new Version (Mojave)) {
+		Item (XreItem.Xcode_10_1_0).XcodeSelect ();
+	}
+	else {
+		Item (XreItem.Xcode_11_0_0_rc).XcodeSelect ();
+
+		Console.WriteLine ($"{Environment.NewLine} 🚦Disabling 32bit warning for Mojave.{Environment.NewLine}");
+	}
+
+	Item ("https://xamjenkinsartifact.azureedge.net/build-package-osx-mono/2019-06/175/4f5ed502c6e04c61cbbf6ba3b64db8187c4b6156/MonoFramework-MDK-6.4.0.192.macos10.xamarin.universal.pkg");
+	Item ("https://bosstoragemirror.blob.core.windows.net/wrench/jenkins/xcode11/e7986d2645323b76c90de095c590bb84a1e26bdb/306/package/xamarin.mac-6.0.0.8.pkg");
+
+	var dotnetVersion = "2.2.203";
+	DotNetCoreSdk (dotnetVersion);
+}
