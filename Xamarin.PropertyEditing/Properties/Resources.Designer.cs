@@ -1270,5 +1270,71 @@ namespace Xamarin.PropertyEditing.Properties {
 		        return ResourceManager.GetString("PropertyButtonName", resourceCulture);
 	        }
         }
+
+        public static string AutoresizingBottomMarginName {
+            get {
+                return ResourceManager.GetString("AutoresizingBottomMarginName", resourceCulture);
+            }
+        }
+
+        public static string AutoresizingFixedSized {
+            get {
+                return ResourceManager.GetString("AutoresizingFixedSized", resourceCulture);
+            }
+        }
+
+        public static string AutoresizingHeightSizable {
+            get {
+                return ResourceManager.GetString("AutoresizingHeightSizable", resourceCulture);
+            }
+        }
+
+        public static string AutoresizingLeftMarginName {
+            get {
+                return ResourceManager.GetString("AutoresizingLeftMarginName", resourceCulture);
+            }
+        }
+
+        public static string AutoresizingRightMarginName {
+            get {
+                return ResourceManager.GetString("AutoresizingRightMarginName", resourceCulture);
+            }
+        }
+
+        public static string AutoresizingSizingHelpText {
+            get {
+                return ResourceManager.GetString("AutoresizingSizingHelpText", resourceCulture);
+            }
+        }
+
+        public static string AutoresizingSizingName {
+            get {
+                return ResourceManager.GetString("AutoresizingSizingName", resourceCulture);
+            }
+        }
+
+        public static string AutoresizingTopMarginName {
+            get {
+                return ResourceManager.GetString("AutoresizingTopMarginName", resourceCulture);
+            }
+        }
+
+        public static string AutoresizingWidthHeightSizable {
+            get {
+                return ResourceManager.GetString("AutoresizingWidthHeightSizable", resourceCulture);
+            }
+        }
+
+        public static string AutoresizingWidthSizable {
+            get {
+                return ResourceManager.GetString("AutoresizingWidthSizable", resourceCulture);
+            }
+        }
+
+        public static string Autosizing {
+            get {
+                return ResourceManager.GetString("Autosizing", resourceCulture);
+            }
+        }
     }
 }

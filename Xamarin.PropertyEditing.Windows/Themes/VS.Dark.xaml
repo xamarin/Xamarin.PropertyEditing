@@ -20,6 +20,11 @@
 	<SolidColorBrush x:Key="VariantBackgroundBrush">#ABABAB</SolidColorBrush>
 	<SolidColorBrush x:Key="VariantLineBrush">#5E5E5E</SolidColorBrush>
 
+	<SolidColorBrush x:Key="GuidelineDisabledForegroundBrush">#777777</SolidColorBrush>
+	<SolidColorBrush x:Key="GuidelineEnabledForegroundBrush">#F56D4F</SolidColorBrush>
+	<SolidColorBrush x:Key="ExampleWindowTitleBackgroundBrush">#575757</SolidColorBrush>
+	<SolidColorBrush x:Key="ExampleWindowBackgroundBrush">#7D7D7F</SolidColorBrush>
+
 	<SolidColorBrush x:Key="AdvancedExpanderCollapsedForegroundBrush">#F1F1F1</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverForegroundBrush">#007ACC</SolidColorBrush>
 	<SolidColorBrush x:Key="AdvancedExpanderMouseOverBorderBrush">#3E3E40</SolidColorBrush>
