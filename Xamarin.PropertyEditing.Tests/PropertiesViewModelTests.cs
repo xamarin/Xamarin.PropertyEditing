@@ -1322,6 +1322,115 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (stringVms.Count (svm => svm.Variation == variants[1]), Is.EqualTo (1), "Missing variant property");
 		}
 
+		[Test]
+		public void UnavailablePropertiesDoNotShow ()
+		{
+			var target = new object ();
+
+			var constraint = new Mock<IAvailabilityConstraint> ();
+			constraint.Setup (ac => ac.GetIsAvailableAsync (It.IsAny<IObjectEditor> ())).ReturnsAsync (false);
+
+			var unavailableProperty = new Mock<IPropertyInfo> ();
+			unavailableProperty.SetupGet (pi => pi.Name).Returns ("UnavailableProperty");
+			unavailableProperty.SetupGet (pi => pi.Type).Returns (typeof(string));
+			unavailableProperty.SetupGet (pi => pi.AvailabilityConstraints).Returns (new[] { constraint.Object });
+
+			var availableProperty = new Mock<IPropertyInfo> ();
+			availableProperty.SetupGet (pi => pi.Name).Returns ("AvailableProperty");
+			availableProperty.SetupGet (pi => pi.Type).Returns (typeof(string));
+
+			var editor = new MockObjectEditor (availableProperty.Object, unavailableProperty.Object) { Target = target };
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (target)).ReturnsAsync (editor);
+
+			var vm = CreateVm (provider.Object);
+			vm.SelectedObjects.Add (target);
+
+			Assert.That (vm.Properties.OfType<PropertyViewModel> ().Select (pvm => pvm.Property), Contains.Item (availableProperty.Object));
+			Assert.That (vm.Properties.OfType<PropertyViewModel> ().Select (pvm => pvm.Property), Does.Not.Contain (unavailableProperty.Object));
+		}
+
+		[Test]
+		public void NewlyUnavailablePropertiesRemoved ()
+		{
+			var target = new object ();
+
+			var stateProperty = new Mock<IPropertyInfo> ();
+			stateProperty.SetupGet (pi => pi.Name).Returns ("StateProperty");
+			stateProperty.SetupGet (pi => pi.Type).Returns (typeof(string));
+
+			bool isAvailable = true;
+			var availableConstraint = new Mock<IAvailabilityConstraint> ();
+			availableConstraint.Setup (ac => ac.GetIsAvailableAsync (It.IsAny<IObjectEditor> ())).ReturnsAsync (() => isAvailable);
+			availableConstraint.SetupGet (ac => ac.ConstrainingProperties).Returns (new[] { stateProperty.Object });
+
+			var availableProperty = new Mock<IPropertyInfo> ();
+			availableProperty.SetupGet (pi => pi.Name).Returns ("AvailableProperty");
+			availableProperty.SetupGet (pi => pi.Type).Returns (typeof(string));
+			availableProperty.SetupGet (pi => pi.AvailabilityConstraints).Returns (new[] { availableConstraint.Object });
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.TargetType).Returns (typeof(object).ToTypeInfo ());
+			editor.Setup (oe => oe.Properties).Returns (new[] { availableProperty.Object, stateProperty.Object });
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (target)).ReturnsAsync (editor.Object);
+
+			TViewModel vm = CreateVm (provider.Object);
+			vm.SelectedObjects.Add (target);
+
+			Assume.That (vm.Properties.OfType<PropertyViewModel> ().Select (pvm => pvm.Property), Contains.Item (availableProperty.Object));
+			Assume.That (vm.Properties.OfType<PropertyViewModel> ().Select (pvm => pvm.Property), Contains.Item (stateProperty.Object));
+
+			isAvailable = false;
+			editor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (stateProperty.Object));
+
+			Assert.That (vm.Properties.OfType<PropertyViewModel> ().Select (pvm => pvm.Property), Does.Not.Contain (availableProperty.Object));
+			Assert.That (vm.Properties.OfType<PropertyViewModel> ().Select (pvm => pvm.Property), Contains.Item (stateProperty.Object));
+		}
+
+		[Test]
+		public void NewlyAvailablePropertiesAdded ()
+		{
+			var target = new object ();
+
+			var stateProperty = new Mock<IPropertyInfo> ();
+			stateProperty.SetupGet (pi => pi.Name).Returns ("StateProperty");
+			stateProperty.SetupGet (pi => pi.Type).Returns (typeof(string));
+
+			bool isAvailable = false;
+			var availableConstraint = new Mock<IAvailabilityConstraint> ();
+			availableConstraint.Setup (ac => ac.GetIsAvailableAsync (It.IsAny<IObjectEditor> ())).ReturnsAsync (() => isAvailable);
+			availableConstraint.SetupGet (ac => ac.ConstrainingProperties).Returns (new[] { stateProperty.Object });
+
+			var availableProperty = new Mock<IPropertyInfo> ();
+			availableProperty.SetupGet (pi => pi.Name).Returns ("AvailableProperty");
+			availableProperty.SetupGet (pi => pi.Type).Returns (typeof(string));
+			availableProperty.SetupGet (pi => pi.AvailabilityConstraints).Returns (new[] { availableConstraint.Object });
+
+			var editor = new Mock<IObjectEditor> ();
+			editor.SetupGet (oe => oe.Target).Returns (target);
+			editor.SetupGet (oe => oe.TargetType).Returns (typeof(object).ToTypeInfo ());
+			editor.Setup (oe => oe.Properties).Returns (new[] { availableProperty.Object, stateProperty.Object });
+
+			var provider = new Mock<IEditorProvider> ();
+			provider.Setup (ep => ep.GetObjectEditorAsync (target)).ReturnsAsync (editor.Object);
+
+			TViewModel vm = CreateVm (provider.Object);
+			vm.SelectedObjects.Add (target);
+
+			Assume.That (vm.Properties.OfType<PropertyViewModel> ().Select (pvm => pvm.Property), Does.Not.Contain (availableProperty.Object));
+			Assume.That (vm.Properties.OfType<PropertyViewModel> ().Select (pvm => pvm.Property), Contains.Item (stateProperty.Object));
+
+			isAvailable = true;
+			editor.Raise (oe => oe.PropertyChanged += null, new EditorPropertyChangedEventArgs (stateProperty.Object));
+
+			Assert.That (vm.Properties.OfType<PropertyViewModel> ().Select (pvm => pvm.Property), Contains.Item (availableProperty.Object));
+			Assert.That (vm.Properties.OfType<PropertyViewModel> ().Select (pvm => pvm.Property), Contains.Item (stateProperty.Object));
+		}
+
 		protected TViewModel CreateVm (IEditorProvider provider)
 		{
 			return CreateVm (new TargetPlatform (provider));
