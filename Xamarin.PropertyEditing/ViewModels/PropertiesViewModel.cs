@@ -248,6 +248,24 @@ namespace Xamarin.PropertyEditing.ViewModels
 			OnVariantsChanged (e.Property, EventArgs.Empty);
 		}
 
+		private void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == nameof(PropertyViewModel.IsAvailable)) {
+				OnAvailabilityChanged (sender as PropertyViewModel);
+			}
+		}
+
+		private void OnAvailabilityChanged (PropertyViewModel pvm)
+		{
+			if (pvm == null)
+				return;
+
+			if (pvm.IsAvailable)
+				AddProperties (new[] { pvm });
+			else
+				RemoveProperties (new[] { pvm });
+		}
+
 		private async void OnVariantsChanged (object sender, EventArgs e)
 		{
 			IPropertyInfo property = sender as IPropertyInfo;
@@ -298,18 +316,23 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private void AddProperties (IReadOnlyList<EditorViewModel> newEditors)
 		{
-			if (this.knownEditors != null) {
-				// Only properties common across obj editors will be listed, so knowns should also be common
-				var knownProperties = newEditors[0].Editors.First().KnownProperties;
-				if (knownProperties != null && knownProperties.Count > 0) {
-					foreach (var editorvm in newEditors) {
-						var prop = editorvm as PropertyViewModel;
-						if (prop == null)
-							continue;
+			var knownProperties = new Lazy<IReadOnlyDictionary<IPropertyInfo, KnownProperty>> (() => newEditors[0].Editors.First().KnownProperties);
 
-						if (knownProperties.TryGetValue (prop.Property, out KnownProperty known)) {
-							this.knownEditors[known] = editorvm;
-						}
+			List<EditorViewModel> modifiedList = null;
+			foreach (EditorViewModel evm in newEditors) {
+				if (!(evm is PropertyViewModel pvm))
+					continue;
+
+				if (!pvm.IsAvailable) {
+					if (modifiedList == null) {
+						modifiedList = new List<EditorViewModel> (newEditors);
+						newEditors = modifiedList;
+					}
+
+					modifiedList.Remove (evm);
+				} else if (this.knownEditors != null && (knownProperties.Value?.Count ?? 0) > 0) {
+					if (knownProperties.Value.TryGetValue (pvm.Property, out KnownProperty known)) {
+						this.knownEditors[known] = evm;
 					}
 				}
 			}
@@ -621,6 +644,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			vm.Parent = this;
 			vm.VariantsChanged += OnVariantsChanged;
+			vm.PropertyChanged += OnPropertyChanged;
 			return vm;
 		}
 
