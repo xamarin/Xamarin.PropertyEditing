@@ -1475,6 +1475,18 @@ namespace Xamarin.PropertyEditing.Properties {
             }
         }
         
+        public static string AccessibilityMaskView {
+            get {
+                return ResourceManager.GetString("AccessibilityMaskView", resourceCulture);
+            }
+        }
+        
+        public static string AccessibilityPreviewMaskView {
+            get {
+                return ResourceManager.GetString("AccessibilityPreviewMaskView", resourceCulture);
+            }
+        }
+        
         public static string FilterTypePlaceholder {
             get {
                 return ResourceManager.GetString("FilterTypePlaceholder", resourceCulture);

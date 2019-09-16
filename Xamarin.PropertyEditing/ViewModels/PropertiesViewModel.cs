@@ -604,27 +604,20 @@ namespace Xamarin.PropertyEditing.ViewModels
 		private PropertyViewModel CreateViewModel (IPropertyInfo property, PropertyVariation variant = null)
 		{
 			PropertyViewModel vm;
-			if (ViewModelMap.TryGetValue (property.Type, out var vmFactory))
+			Type[] interfaces = property.GetType ().GetInterfaces ();
+
+			Type hasPredefinedValues = interfaces.FirstOrDefault (t => t.IsGenericType && t.GetGenericTypeDefinition () == typeof(IHavePredefinedValues<>));
+			if (hasPredefinedValues != null) {
+				bool combinable = (bool) hasPredefinedValues.GetProperty (nameof(IHavePredefinedValues<bool>.IsValueCombinable)).GetValue (property);
+				Type type = combinable
+					? typeof(CombinablePropertyViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0])
+					: typeof(PredefinedValuesViewModel<>).MakeGenericType (hasPredefinedValues.GenericTypeArguments[0]);
+
+				vm = (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors, variant);
+			} else if (ViewModelMap.TryGetValue (property.Type, out var vmFactory))
 				vm = vmFactory (TargetPlatform, property, this.objEditors, variant);
-			else {
-				Type[] interfaces = property.GetType ().GetInterfaces ();
-
-				Type hasPredefinedValues = interfaces.FirstOrDefault (t =>
-					t.IsGenericType && t.GetGenericTypeDefinition () == typeof(IHavePredefinedValues<>));
-				if (hasPredefinedValues != null) {
-					bool combinable = (bool) hasPredefinedValues
-						.GetProperty (nameof(IHavePredefinedValues<bool>.IsValueCombinable)).GetValue (property);
-					Type type = combinable
-						? typeof(CombinablePropertyViewModel<>).MakeGenericType (hasPredefinedValues
-							.GenericTypeArguments[0])
-						: typeof(PredefinedValuesViewModel<>).MakeGenericType (
-							hasPredefinedValues.GenericTypeArguments[0]);
-
-					vm = (PropertyViewModel) Activator.CreateInstance (type, TargetPlatform, property, this.objEditors,
-						variant);
-				} else
-					vm = new StringPropertyViewModel (TargetPlatform, property, this.objEditors, variant);
-			}
+			else
+				vm = new StringPropertyViewModel (TargetPlatform, property, this.objEditors, variant);
 
 			vm.Parent = this;
 			vm.VariantsChanged += OnVariantsChanged;

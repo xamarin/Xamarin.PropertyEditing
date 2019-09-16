@@ -12,6 +12,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		public MockSampleControl ()
 		{
 			AddProperty<AutoResizingFlags> ("Autoresizing", ReadWrite, valueSources: ValueSources.Local, ignoreEnum: true);
+			AddProperty<AutoResizingFlags> ("ReadOnlyAutoresizing", ReadOnly, false, valueSources: ValueSources.Local, ignoreEnum: true);
 			AddProperty<TimeSpan> ("TimeSpan", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<TimeSpan> ("TimeSpanReadOnly", ReadOnly, canWrite: false, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<bool> ("Boolean", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
@@ -102,7 +103,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<FilePath> ("FilePath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddReadOnlyProperty<FilePath> ("ReadOnlyFilePath", ReadOnly);
 			AddProperty<DateTime> ("DateTime", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
-			AddReadOnlyProperty<DateTime> ("ReadDateTime", ReadOnly);
+			AddReadOnlyProperty<DateTime> ("ReadOnlyDateTime", ReadOnly);
 
 			AddEvents ("Click", "Hover", "Focus");
 

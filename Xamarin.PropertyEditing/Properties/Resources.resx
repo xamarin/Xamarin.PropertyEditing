@@ -1039,6 +1039,14 @@
   </data>  
   <data name="ObjectTypeLabelNone" xml:space="preserve">
     <value>None</value>
+  </data>    
+  <data name="AccessibilityMaskView" xml:space="preserve">
+    <value>{0} Autoresizing Mask Editor</value>
+    <comment>Editor that allows you to change auto resizing flags</comment>
+  </data>
+  <data name="AccessibilityPreviewMaskView" xml:space="preserve">
+    <value>{0} Autoresizing Preview View</value>
+    <comment>Previewer that allows you to view the changes you've made in the Autoresizing Mask Edito</comment>
   </data>
   <data name="FilterTypePlaceholder" xml:space="preserve">
     <value>Filter Types</value>
