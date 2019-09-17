@@ -327,7 +327,7 @@
     <value>OK</value>
   </data>
   <data name="ShowAllAssemblies" xml:space="preserve">
-    <value>Mostrar todos os assemblies</value>
+    <value>Mostrar Todos os Assemblies</value>
   </data>
   <data name="SearchProperties" xml:space="preserve">
     <value>Pesquisar propriedades</value>
@@ -510,29 +510,29 @@
     <value>Nome</value>
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
-    <value>Dicionário de recurso</value>
+    <value>Dicionário de Recursos</value>
   </data>
   <data name="CreateDataBindingMenuItem" xml:space="preserve">
     <value>Criar Associação…</value>
   </data>
   <data name="AddValueConverterEllipsis" xml:space="preserve">
-    <value>Adicionar conversor de valor…</value>
+    <value>Adicionar Conversor de Valor…</value>
   </data>
   <data name="AddValueConverterTitle" xml:space="preserve">
     <value>Adicionar Conversor de Valor</value>
   </data>
   <data name="NoValueConverter" xml:space="preserve">
-    <value>Nenhum conversor de valor</value>
+    <value>Nenhum Conversor de Valor</value>
   </data>
   <data name="ValueConverterName" xml:space="preserve">
-    <value>Nome do conversor de valor</value>
+    <value>Nome do Conversor de Valor</value>
   </data>
   <data name="CreateDataBindingTitle" xml:space="preserve">
     <value>Criar Associação de Dados para {0}</value>
     <comment>Create Data Binding for Object.Property</comment>
   </data>
   <data name="BindingType" xml:space="preserve">
-    <value>Tipo de associação</value>
+    <value>Tipo de Associação</value>
   </data>
   <data name="Path" xml:space="preserve">
     <value>Caminho</value>
@@ -747,9 +747,54 @@
     <comment>Directory</comment>
   </data>
   <data name="AddVariant" xml:space="preserve">
-    <value>Add Variant</value>
+    <value>Adicionar Variante</value>
   </data>
   <data name="RemoveVariant" xml:space="preserve">
-    <value>Remove Variant</value>
+    <value>Remover Variante</value>
+   </data>
+  <data name="CreateBindingTitle" xml:space="preserve">
+    <value>Criar Associação</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>Outras Configurações</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>Conversor</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>Selecionar Tipo</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>Concluído</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>Tipo Sem Suporte</value>
+  </data>
+  <data name="ResourceNotSupported" xml:space="preserve">
+    <value>Recurso Sem Suporte</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>Adicionar</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_Todos os Recursos</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Local</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Compartilhado</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>Categoria</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Origem do Valor</value>
   </data>
 </root>

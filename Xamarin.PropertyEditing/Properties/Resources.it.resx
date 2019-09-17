@@ -238,7 +238,7 @@
     <comment>Lightness initial used as lightness textbox label</comment>
   </data>
   <data name="Magenta" xml:space="preserve">
-    <value>Fucsia</value>
+    <value>Magenta</value>
     <comment>Magenta textbox help text</comment>
   </data>
   <data name="MagentaInitial" xml:space="preserve">
@@ -522,10 +522,10 @@
     <value>Aggiungi convertitore di valori</value>
   </data>
   <data name="NoValueConverter" xml:space="preserve">
-    <value>Nessun convertitore di valori</value>
+    <value>Non esiste alcun convertitore di valori</value>
   </data>
   <data name="ValueConverterName" xml:space="preserve">
-    <value>Nome convertitore di valori</value>
+    <value>Nome del convertitore di valori</value>
   </data>
   <data name="CreateDataBindingTitle" xml:space="preserve">
     <value>Crea data binding per {0}</value>
@@ -751,5 +751,50 @@
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>Rimuovi variante</value>
+   </data>
+  <data name="CreateBindingTitle" xml:space="preserve">
+    <value>Crea associazione</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>Altre impostazioni</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>Convertitore</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>Seleziona tipo</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>Fine</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>Tipo non supportato</value>
+  </data>
+  <data name="ResourceNotSupported" xml:space="preserve">
+    <value>Risorsa non supportata</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>Aggiungi</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_All Resources</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Local</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Shared</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>Categoria</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Value Source</value>
   </data>
 </root>

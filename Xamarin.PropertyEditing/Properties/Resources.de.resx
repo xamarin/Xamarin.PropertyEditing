@@ -510,7 +510,7 @@
     <value>Name</value>
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
-    <value>Ressourcenverzeichnis</value>
+    <value>Ressourcenwörterbuch</value>
   </data>
   <data name="CreateDataBindingMenuItem" xml:space="preserve">
     <value>Neue Bindung erstellen...</value>
@@ -751,5 +751,50 @@
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>Variante entfernen</value>
+   </data>
+  <data name="CreateBindingTitle" xml:space="preserve">
+    <value>Bindung erstellen</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>Andere Einstellungen</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>Konverter</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>Typ auswählen</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>Fertig</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>Typ nicht unterstützt.</value>
+  </data>
+  <data name="ResourceNotSupported" xml:space="preserve">
+    <value>Ressource nicht unterstützt.</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_All Resources</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Local</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Shared</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>Kategorie</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Value Source</value>
   </data>
 </root>

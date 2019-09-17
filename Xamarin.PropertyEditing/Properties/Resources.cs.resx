@@ -522,7 +522,7 @@
     <value>Přidat převaděč hodnot</value>
   </data>
   <data name="NoValueConverter" xml:space="preserve">
-    <value>Žádný převaděč hodnoty</value>
+    <value>Žádný převaděč hodnot</value>
   </data>
   <data name="ValueConverterName" xml:space="preserve">
     <value>Název převaděče hodnot</value>
@@ -751,5 +751,50 @@
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>Odebrat variantu</value>
+   </data>
+  <data name="CreateBindingTitle" xml:space="preserve">
+    <value>Vytvořit vazbu</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>Další nastavení</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>Převaděč</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>Vybrat typ</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>Hotovo</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>Typ není podporovaný.</value>
+  </data>
+  <data name="ResourceNotSupported" xml:space="preserve">
+    <value>Prostředek není podporovaný</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>Přidat</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_All Resources</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Local</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Shared</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>Kategorie</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>Název</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Value Source</value>
   </data>
 </root>

@@ -751,5 +751,50 @@
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>Supprimer la variante</value>
+   </data>
+  <data name="CreateBindingTitle" xml:space="preserve">
+    <value>Créer une liaison</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>Autres paramètres</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>Convertisseur</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>Sélectionner le type</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>Type non pris en charge</value>
+  </data>
+  <data name="ResourceNotSupported" xml:space="preserve">
+    <value>Ressource non prise en charge</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_Toutes les ressources</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Locale</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Partagée</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>Catégorie</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Source de valeur</value>
   </data>
 </root>

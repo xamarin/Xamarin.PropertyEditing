@@ -327,7 +327,7 @@
     <value>Tamam</value>
   </data>
   <data name="ShowAllAssemblies" xml:space="preserve">
-    <value>Tüm bütünleştirilmiş kodları göster</value>
+    <value>Tüm Bütünleştirilmiş Kodları Göster</value>
   </data>
   <data name="SearchProperties" xml:space="preserve">
     <value>Özellik ara</value>
@@ -510,29 +510,29 @@
     <value>Adı</value>
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
-    <value>Kaynak sözlüğü</value>
+    <value>Kaynak Sözlüğü</value>
   </data>
   <data name="CreateDataBindingMenuItem" xml:space="preserve">
     <value>Yeni Bağlama Oluştur...</value>
   </data>
   <data name="AddValueConverterEllipsis" xml:space="preserve">
-    <value>Değer dönüştürücüsü ekle...</value>
+    <value>Değer Dönüştürücüsü Ekle...</value>
   </data>
   <data name="AddValueConverterTitle" xml:space="preserve">
     <value>Değer Dönüştürücüsü Ekle</value>
   </data>
   <data name="NoValueConverter" xml:space="preserve">
-    <value>Değer dönüştürücüsü yok</value>
+    <value>Değer Dönüştürücüsü Yok</value>
   </data>
   <data name="ValueConverterName" xml:space="preserve">
-    <value>Değer dönüştürücüsü adı</value>
+    <value>Değer Dönüştürücüsü Adı</value>
   </data>
   <data name="CreateDataBindingTitle" xml:space="preserve">
     <value>{0} için Veri Bağlama Oluştur</value>
     <comment>Create Data Binding for Object.Property</comment>
   </data>
   <data name="BindingType" xml:space="preserve">
-    <value>Bağlama türü</value>
+    <value>Bağlama Türü</value>
   </data>
   <data name="Path" xml:space="preserve">
     <value>Yol</value>
@@ -751,5 +751,50 @@
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>Varyant Kaldır</value>
+   </data>
+  <data name="CreateBindingTitle" xml:space="preserve">
+    <value>Bağlama Oluştur</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>Diğer Ayarlar</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>Dönüştürücü</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>Tür Seçin</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>Bitti</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>Tür Desteklenmiyor</value>
+  </data>
+  <data name="ResourceNotSupported" xml:space="preserve">
+    <value>Kaynak Desteklenmiyor</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>Ekle</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_All Resources</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Local</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Shared</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>Kategori</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>Ad</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Value Source</value>
   </data>
 </root>

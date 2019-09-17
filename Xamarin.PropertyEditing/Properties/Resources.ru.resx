@@ -510,7 +510,7 @@
     <value>Имя</value>
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
-    <value>словаре ресурсов</value>
+    <value>Словарь ресурсов</value>
   </data>
   <data name="CreateDataBindingMenuItem" xml:space="preserve">
     <value>Создать новую привязку…</value>
@@ -522,10 +522,10 @@
     <value>Добавить преобразователь значений</value>
   </data>
   <data name="NoValueConverter" xml:space="preserve">
-    <value>Нет конвертера значений</value>
+    <value>Преобразователь значений отсутствует</value>
   </data>
   <data name="ValueConverterName" xml:space="preserve">
-    <value>Имя преобразователя значений</value>
+    <value>Название преобразователя значений</value>
   </data>
   <data name="CreateDataBindingTitle" xml:space="preserve">
     <value>Создание привязки данных для {0}</value>
@@ -751,5 +751,50 @@
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>Удалить вариант</value>
+   </data>
+  <data name="CreateBindingTitle" xml:space="preserve">
+    <value>Создать привязку</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>Другие параметры</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>Преобразователь</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>Выбрать тип</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>Тип не поддерживается.</value>
+  </data>
+  <data name="ResourceNotSupported" xml:space="preserve">
+    <value>Ресурс не поддерживается</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_All Resources</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Local</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Shared</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>Категория</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Value Source</value>
   </data>
 </root>
