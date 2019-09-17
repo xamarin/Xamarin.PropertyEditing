@@ -89,7 +89,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 					var views = this.tabStack.Views;
 					for (int i = 0; i < views.Length; i++) {
-						((TabButton)views[i]).Clicked -= OnArrangeModeChanged;
+						var button = (TabButton)views[i];
+						button.Clicked -= OnArrangeModeChanged;
+						button.RemoveFromSuperview ();
 					}
 				}
 
