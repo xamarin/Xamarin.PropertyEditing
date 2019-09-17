@@ -45,6 +45,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +60,7 @@
     <Compile Include="BrushEditorControl.cs" />
     <Compile Include="BrushTabbedEditorControl.cs" />
     <Compile Include="BrushToDarknessConverter.cs" />
+    <Compile Include="ButtonEx.cs" />
     <Compile Include="ByteToDoubleConverter.cs" />
     <Compile Include="CategoryExpander.cs" />
     <Compile Include="CollectionEditor.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="FilterExpander.cs" />
     <Compile Include="HasItemsToVisibilityConverter.cs" />
     <Compile Include="InvertedVisibilityConverter.cs" />
+    <Compile Include="InvokePropertyButtonCommand.cs" />
     <Compile Include="IPropertiesHost.cs" />
     <Compile Include="MaterialDesignColorEditorControl.cs" />
     <Compile Include="MultiplierConverter.cs" />

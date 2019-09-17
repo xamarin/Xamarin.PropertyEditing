@@ -773,7 +773,7 @@
   <data name="TypeNotSupported" xml:space="preserve">
     <value>Type Not Supported</value>
   </data>
-   <data name="ResourceNotSupported" xml:space="preserve">
+  <data name="ResourceNotSupported" xml:space="preserve">
     <value>Resource Not Supported</value>
   </data>
   <data name="AddCollectionItem" xml:space="preserve">
@@ -796,5 +796,17 @@
   </data>
   <data name="ArrangeByValueSource" xml:space="preserve">
     <value>Value Source</value>
+  </data>
+  <data name="CollectionEditHelpText" xml:space="preserve">
+    <value>Edit items in this collection</value>
+  </data>
+  <data name="UncommonPropertiesName" xml:space="preserve">
+    <value>Advanced properties</value>
+  </data>
+  <data name="ArrangeByButtonName" xml:space="preserve">
+    <value>Arrange by {0}</value>
+  </data>
+  <data name="PropertyButtonName" xml:space="preserve">
+    <value>Advanced options</value>
   </data>
 </root>

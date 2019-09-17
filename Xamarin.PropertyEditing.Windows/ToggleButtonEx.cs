@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls.Primitives;
 
 namespace Xamarin.PropertyEditing.Windows
@@ -18,6 +14,25 @@ namespace Xamarin.PropertyEditing.Windows
 	    {
 		    get { return (bool) GetValue (IsMouseOverRemoteProperty); }
 		    set { SetValue (IsMouseOverRemoteProperty, value); }
+	    }
+
+	    protected override AutomationPeer OnCreateAutomationPeer ()
+	    {
+		    return new ToggleButtonExAutomationPeer (this);
+	    }
+
+	    private class ToggleButtonExAutomationPeer
+		    : ToggleButtonAutomationPeer
+	    {
+		    public ToggleButtonExAutomationPeer (ToggleButton owner)
+			    : base (owner)
+		    {
+		    }
+
+		    protected override bool IsControlElementCore ()
+		    {
+			    return base.IsControlElementCore () && Owner.IsVisible;
+		    }
 	    }
     }
 }

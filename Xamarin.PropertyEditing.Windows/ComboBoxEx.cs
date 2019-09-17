@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -19,6 +20,11 @@ namespace Xamarin.PropertyEditing.Windows
 		{
 			get { return (bool)GetValue (EnableSubmitProperty); }
 			set { SetValue (EnableSubmitProperty, value); }
+		}
+
+		protected override AutomationPeer OnCreateAutomationPeer ()
+		{
+			return new ComboBoxExAutomationPeer (this);
 		}
 
 		protected override void OnSelectionChanged (SelectionChangedEventArgs e)
@@ -55,6 +61,20 @@ namespace Xamarin.PropertyEditing.Windows
 				return;
 
 			OnSubmit();
+		}
+
+		private class ComboBoxExAutomationPeer
+			: ComboBoxAutomationPeer
+		{
+			public ComboBoxExAutomationPeer (ComboBox owner)
+				: base (owner)
+			{
+			}
+
+			protected override bool IsControlElementCore ()
+			{
+				return base.IsControlElementCore () && Owner.IsVisible;
+			}
 		}
 	}
 }

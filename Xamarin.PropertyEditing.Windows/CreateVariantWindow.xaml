@@ -24,7 +24,7 @@
 		<TextBlock Grid.Row="0" Text="{x:Static prop:Resources.AddVariationHelpText}" Margin="12,12,12,0" />
 
 		<Border Grid.Row="1" Margin="0,12,0,0" Padding="12,0,12,0">
-			<ItemsControl ItemsSource="{Binding VariationCategories,Mode=OneTime}">
+			<ItemsControl ItemsSource="{Binding VariationCategories,Mode=OneTime}" Focusable="False">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="vms:VariationViewModel">
 						<Grid Margin="12,4,12,4">
@@ -34,7 +34,13 @@
 							</Grid.ColumnDefinitions>
 
 							<TextBlock Grid.Column="0" Text="{Binding Name,Mode=OneTime}" />
-							<ComboBox Grid.Column="1" ItemsSource="{Binding Variations,Mode=OneTime}" SelectedItem="{Binding SelectedOption,Mode=TwoWay}" DisplayMemberPath="Name" />
+							<ComboBox Grid.Column="1" ItemsSource="{Binding Variations,Mode=OneTime}" SelectedItem="{Binding SelectedOption,Mode=TwoWay}" DisplayMemberPath="Name" AutomationProperties.Name="{Binding Name,Mode=OneTime}">
+								<ComboBox.ItemContainerStyle>
+									<Style TargetType="ComboBoxItem">
+										<Setter Property="AutomationProperties.Name" Value="{Binding Name,Mode=OneTime}" />
+									</Style>
+								</ComboBox.ItemContainerStyle>
+							</ComboBox>
 						</Grid>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
