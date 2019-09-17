@@ -96,7 +96,7 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 
 				this.targetPlatform = value;
-				this.viewModel = new PanelViewModel (value);
+				this.viewModel = (value != null) ? new PanelViewModel (value) : null;
 				this.propertyList.ViewModel = this.viewModel;
 
 				OnVmPropertyChanged (this.viewModel, new PropertyChangedEventArgs (null));
@@ -232,10 +232,12 @@ namespace Xamarin.PropertyEditing.Mac
 		private void OnVmPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == nameof (PanelViewModel.ArrangeMode) || String.IsNullOrEmpty (e.PropertyName)) {
-				int selected = this.viewModel.ArrangeModes.Select (vm => vm.ArrangeMode).IndexOf (this.viewModel.ArrangeMode);
-				var views = this.tabStack.Views;
-				for (int i = 0; i < views.Length; i++) {
-					((TabButton)views[i]).Selected = (i == selected);
+				if (this.viewModel != null) {
+					int selected = this.viewModel.ArrangeModes.Select (vm => vm.ArrangeMode).IndexOf (this.viewModel.ArrangeMode);
+					var views = this.tabStack.Views;
+					for (int i = 0; i < views.Length; i++) {
+						((TabButton)views[i]).Selected = (i == selected);
+					}
 				}
 			}
 		}
