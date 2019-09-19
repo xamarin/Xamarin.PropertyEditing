@@ -162,13 +162,18 @@ namespace Xamarin.PropertyEditing.Windows
 
 		private void OnLoaded (object sender, RoutedEventArgs e)
 		{
-			IsSubProperty = this.FindParentUnless<PropertyPresenter, PropertyEditorPanel>() != null;
+			OnDataContextChanged (sender, new DependencyPropertyChangedEventArgs (DataContextProperty, null, DataContext));
 		}
 
 		private void OnUnloaded (object sender, RoutedEventArgs e)
 		{
-			IsSubProperty = false;
-			DataContext = null;
+			OnDataContextChanged (sender, new DependencyPropertyChangedEventArgs (DataContextProperty, DataContext, null));
+		}
+
+		protected override void OnVisualParentChanged (DependencyObject oldParent)
+		{
+			base.OnVisualParentChanged (oldParent);
+			IsSubProperty = this.FindParentUnless<PropertyPresenter, PropertyEditorPanel>() != null;
 		}
 
 		private void OnDataContextChanged (object sender, DependencyPropertyChangedEventArgs e)
