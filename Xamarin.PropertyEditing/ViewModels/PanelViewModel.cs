@@ -271,8 +271,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 				if (ArrangeMode == PropertyArrangeMode.Category) {
 					foreach (EditorViewModel editorVm in grouping) {
-						var vm = editorVm as PropertyViewModel;
-						if (vm != null && TargetPlatform.GroupedTypes != null && TargetPlatform.GroupedTypes.TryGetValue (vm.Property.Type, out string category)) {
+						if (!(editorVm is PropertyViewModel vm)) {
+							continue;
+						}
+
+						if (TargetPlatform.GroupedTypes != null && TargetPlatform.GroupedTypes.TryGetValue (vm.Property.Type, out string category)) {
 							if (remainingItems == null)
 								remainingItems = new HashSet<EditorViewModel> (grouping);
 
