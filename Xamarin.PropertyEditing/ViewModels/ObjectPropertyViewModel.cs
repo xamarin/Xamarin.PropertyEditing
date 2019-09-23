@@ -62,6 +62,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
+		public IReadOnlyList<EditorViewModel> Properties => ValueModel.Properties;
+
 		public ITypeInfo ValueType
 		{
 			get { return this.valueType; }
