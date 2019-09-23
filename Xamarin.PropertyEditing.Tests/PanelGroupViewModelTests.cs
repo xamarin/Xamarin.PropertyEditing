@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -79,6 +80,32 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (group.HasUncommonElements, Is.True);
 			Assert.That (childChanged, Is.True, "INPC did not fire for HasChildElements during add");
 			Assert.That (uncommonChanged, Is.True, "INPC did not fire for HasUncommonElements during add");
+		}
+
+		[Test]
+		public void Replace ()
+		{
+			var property = new Mock<IPropertyInfo> ();
+			property.Setup (p => p.Name).Returns ("Name");
+			property.Setup (p => p.Category).Returns ("Category");
+			property.Setup (p => p.Type).Returns (typeof (string));
+			property.Setup (p => p.IsUncommon).Returns (false);
+
+			var editor = new MockObjectEditor (property.Object);
+			var propertyVm = new StringPropertyViewModel (MockEditorProvider.MockPlatform, property.Object, new[] { editor });
+			var group = new PanelGroupViewModel (MockEditorProvider.MockPlatform, "Category", new[] { propertyVm });
+			Assume.That (group.Editors[0], Is.SameAs (propertyVm));
+
+			bool changed = false;
+			((INotifyCollectionChanged)group.Editors).CollectionChanged += (sender, args) => {
+				changed = true;
+				Assert.That (args.Action, Is.EqualTo (NotifyCollectionChangedAction.Replace));
+			};
+
+			var propertyVm2 = new StringPropertyViewModel (MockEditorProvider.MockPlatform, property.Object, new[] { editor });
+			group.Replace (propertyVm, propertyVm2);
+			Assert.That (group.Editors[0], Is.SameAs (propertyVm2));
+			Assert.That (changed, Is.True, "INCC wasn't fired'");
 		}
 	}
 }
