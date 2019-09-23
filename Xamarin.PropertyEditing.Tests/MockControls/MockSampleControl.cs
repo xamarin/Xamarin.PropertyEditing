@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Moq;
 using Xamarin.PropertyEditing.Common;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Tests.MockPropertyInfo;
@@ -96,6 +98,38 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 
 			AddEvents ("Click", "Hover", "Focus");
 
+			IPropertyInfo stateful = AddProperty<Enumeration> ("Stateful", ReadWrite);
+			var alwaysConstraint = new Mock<IAvailabilityConstraint> ();
+			alwaysConstraint.SetupGet (c => c.ParentProperty).Returns (stateful);
+			alwaysConstraint.Setup (c => c.GetIsAvailableAsync (It.IsAny<IObjectEditor> ())).ReturnsAsync (true);
+
+			var statefulBool = new MockPropertyInfo<bool> ("StatefulBool");
+			((IList<IAvailabilityConstraint>)statefulBool.AvailabilityConstraints).Add (alwaysConstraint.Object);
+			AddProperty<bool> (statefulBool);
+
+			var firstConstraint = new Mock<IAvailabilityConstraint> ();
+			firstConstraint.SetupGet (c => c.ParentProperty).Returns (stateful);
+			firstConstraint.SetupGet (c => c.ConstrainingProperties).Returns (new[] { stateful });
+			firstConstraint.Setup (c => c.GetIsAvailableAsync (It.IsAny<IObjectEditor> ())).Returns<IObjectEditor> (async oe => {
+			    ValueInfo<Enumeration> state = await oe.GetValueAsync<Enumeration> (stateful);
+			    return (state.Value == Enumeration.FirstOption);
+			});
+
+			var statefulString = new MockPropertyInfo<string> ("StatefulString", category: ReadWrite);
+			((IList<IAvailabilityConstraint>)statefulString.AvailabilityConstraints).Add (firstConstraint.Object);
+			AddProperty<string> (statefulString);
+
+			var secondConstraint = new Mock<IAvailabilityConstraint> ();
+			secondConstraint.SetupGet (c => c.ParentProperty).Returns (stateful);
+			secondConstraint.SetupGet (c => c.ConstrainingProperties).Returns (new[] { stateful });
+			secondConstraint.Setup (c => c.GetIsAvailableAsync (It.IsAny<IObjectEditor> ())).Returns<IObjectEditor> (async oe => {
+			    ValueInfo<Enumeration> state = await oe.GetValueAsync<Enumeration> (stateful);
+			    return (state.Value == Enumeration.SecondOption);
+			});
+
+			var statefulNumber = new MockPropertyInfo<int> ("StatefulNumber", category: ReadWrite);
+			((IList<IAvailabilityConstraint>)statefulNumber.AvailabilityConstraints).Add (secondConstraint.Object);
+			AddProperty<int> (statefulNumber);
 		}
 
 		// Categories

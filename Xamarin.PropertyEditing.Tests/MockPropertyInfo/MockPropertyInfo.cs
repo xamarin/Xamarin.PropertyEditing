@@ -63,8 +63,8 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 		static readonly PropertyVariationOption[] EmptyVariationOptions = new PropertyVariationOption[0];
 
 		public virtual IReadOnlyList<PropertyVariationOption> Variations { get; }
-		static readonly IAvailabilityConstraint[] EmptyConstraints = new IAvailabilityConstraint[0];
-		public virtual IReadOnlyList<IAvailabilityConstraint> AvailabilityConstraints => EmptyConstraints;
+
+		public virtual IReadOnlyList<IAvailabilityConstraint> AvailabilityConstraints => this.availability;
 
 		public virtual bool TryConvert<TFrom> (TFrom fromValue, Type toType, out object toValue)
 		{
@@ -137,5 +137,6 @@ namespace Xamarin.PropertyEditing.Tests.MockPropertyInfo
 
 		private readonly IReadOnlyList<TypeConverter> typeConverters;
 		private readonly NullableConverter nullConverter;
+		private readonly List<IAvailabilityConstraint> availability = new List<IAvailabilityConstraint> ();
 	}
 }
