@@ -8,7 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using Xamarin.PropertyEditing.Reflection;
+using Xamarin.PropertyEditing.Tests.MockControls;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Tests
@@ -822,6 +824,15 @@ namespace Xamarin.PropertyEditing.Tests
 				: stringVms.Skip(1).First (pvm => pvm.Property == property.Object);
 
 			Assert.That (vm.GetIsLastVariant (prvm), Is.EqualTo (isLast));
+		}
+
+		[Test]
+		public void ViewModelsParented ()
+		{
+			var vm = CreateVm (new TargetPlatform (new MockEditorProvider ()));
+			vm.SelectedObjects.Add (new MockSampleControl ());
+
+			Assert.That (vm.Properties.All (evm => evm.Parent == vm), Is.True, "Not all items parented");
 		}
 
 		internal override PanelViewModel CreateVm (TargetPlatform platform)

@@ -304,7 +304,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (groupedTypeProperties != null) { // Insert type-grouped properties back in sorted.
 				int i = 0;
 				foreach (var kvp in groupedTypeProperties.OrderBy (kvp => kvp.Key, CategoryComparer.Instance)) {
-					var group = new PanelGroupViewModel (TargetPlatform, kvp.Key, new[] { new PropertyGroupViewModel (TargetPlatform, kvp.Key, kvp.Value, ObjectEditors) });
+					var group = new PanelGroupViewModel (TargetPlatform, kvp.Key, new[] { new PropertyGroupViewModel (TargetPlatform, kvp.Key, kvp.Value, ObjectEditors) { Parent = this } });
 
 					bool added = false;
 					for (; i < this.arranged.Count; i++) {
