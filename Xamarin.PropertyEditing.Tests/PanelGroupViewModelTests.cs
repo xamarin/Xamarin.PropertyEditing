@@ -107,5 +107,59 @@ namespace Xamarin.PropertyEditing.Tests
 			Assert.That (group.Editors[0], Is.SameAs (propertyVm2));
 			Assert.That (changed, Is.True, "INCC wasn't fired'");
 		}
+
+		[Test]
+		public void TryGetEditor ()
+		{
+			var property = new Mock<IPropertyInfo> ();
+			property.Setup (p => p.Name).Returns ("Name");
+			property.Setup (p => p.Category).Returns ("Category");
+			property.Setup (p => p.Type).Returns (typeof (string));
+			property.Setup (p => p.IsUncommon).Returns (false);
+
+			var editor = new MockObjectEditor (property.Object);
+			var propertyVm = new StringPropertyViewModel (MockEditorProvider.MockPlatform, property.Object, new[] { editor });
+			var group = new PanelGroupViewModel (MockEditorProvider.MockPlatform, "Category", new[] { propertyVm });
+
+			Assert.That (group.TryGetEditor (property.Object, out EditorViewModel evm), Is.True, "Couldn't find editor");
+			Assert.That (evm, Is.SameAs (propertyVm));
+		}
+
+		private class HostedViewModel
+			: EditorViewModel, IPropertyHost
+		{
+			public HostedViewModel (TargetPlatform platform, IEnumerable<IObjectEditor> editors, PropertyViewModel hosted)
+				: base (platform, editors)
+			{
+				HostedProperty = hosted;
+			}
+
+			public override string Category => HostedProperty.Category;
+
+			public override string Name => HostedProperty.Name;
+
+			public PropertyViewModel HostedProperty
+			{
+				get;
+			}
+		}
+
+		[Test]
+		public void TryGetEditorHosted ()
+		{
+			var property = new Mock<IPropertyInfo> ();
+			property.Setup (p => p.Name).Returns ("Name");
+			property.Setup (p => p.Category).Returns ("Category");
+			property.Setup (p => p.Type).Returns (typeof (string));
+			property.Setup (p => p.IsUncommon).Returns (false);
+
+			var editor = new MockObjectEditor (property.Object);
+			var propertyVm = new StringPropertyViewModel (MockEditorProvider.MockPlatform, property.Object, new[] { editor });
+			var host = new HostedViewModel (MockEditorProvider.MockPlatform, new[] { editor }, propertyVm);
+			var group = new PanelGroupViewModel (MockEditorProvider.MockPlatform, "Category", new[] { host });
+
+			Assert.That (group.TryGetEditor (property.Object, out EditorViewModel evm), Is.True, "Couldn't find editor");
+			Assert.That (evm, Is.SameAs (host));
+		}
 	}
 }

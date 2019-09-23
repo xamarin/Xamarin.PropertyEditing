@@ -96,6 +96,21 @@ namespace Xamarin.PropertyEditing.ViewModels
 			return result;
 		}
 
+		public bool TryGetEditor (IPropertyInfo property, out EditorViewModel editor)
+		{
+			if (property == null)
+				throw new ArgumentNullException (nameof(property));
+
+			var list = GetListCore (property);
+			editor = list.FirstOrDefault (vm => {
+				if (!(vm is IPropertyHost ph))
+					return false;
+
+				return Equals (ph.HostedProperty.Property, property);
+			});
+			return editor != null;
+		}
+
 		public bool GetIsExpanded (PropertyArrangeMode mode)
 		{
 			if (this.isExpanded == null)
@@ -161,10 +176,15 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private IList<EditorViewModel> GetListCore (EditorViewModel evm)
 		{
-			if (this.separateUncommon && evm is PropertyViewModel pvm)
-				return pvm.Property.IsUncommon ? this.uncommonEditors : this.editors;
+			if (evm is PropertyViewModel pvm)
+				return GetListCore (pvm.Property);
 			else
 				return this.editors;
+		}
+
+		private IList<EditorViewModel> GetListCore (IPropertyInfo property)
+		{
+			return (this.separateUncommon && property.IsUncommon) ? this.uncommonEditors : this.editors;
 		}
 	}
 
