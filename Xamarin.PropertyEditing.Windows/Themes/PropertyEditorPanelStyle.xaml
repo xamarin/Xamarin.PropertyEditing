@@ -44,7 +44,7 @@
 		<local:PropertyPresenter x:Name="presenter" Padding="19,0,0,0" Label="{Binding Property.Name,Mode=OneTime}" Content="{Binding Mode=OneTime}" ContentTemplateSelector="{StaticResource PropertyEditorSelector}" />
 		<DataTemplate.Triggers>
 			<DataTrigger Binding="{Binding CanDelve}" Value="True">
-				<Setter TargetName="presenter" Property="ItemsSource" Value="{Binding ValueModel.Properties,FallbackValue={x:Null}}" />
+				<Setter TargetName="presenter" Property="ItemsSource" Value="{Binding Properties,FallbackValue={x:Null}}" />
 			</DataTrigger>
 		</DataTemplate.Triggers>
 	</DataTemplate>
