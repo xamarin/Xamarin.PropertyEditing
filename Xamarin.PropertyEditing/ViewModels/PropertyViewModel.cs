@@ -597,8 +597,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 			}
 		}
 
-		public virtual bool CanDelve => false;
-
 		public virtual bool IsInputEnabled => Property.CanWrite;
 
 		public bool SupportsResources

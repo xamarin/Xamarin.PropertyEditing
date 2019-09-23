@@ -34,6 +34,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
+		public virtual bool CanDelve => false;
+
+		public virtual bool DelveByDefault => false;
+
 		/// <summary>
 		/// Gets if the property's value can not be determined because multiple editors disagree.
 		/// </summary>
