@@ -491,14 +491,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 				var toRemove = new List<EditorViewModel> ();
 				foreach (PanelGroupViewModel g in this.arranged.Values) {
 					foreach (EditorViewModel vm in g.Editors.Concat (g.UncommonEditors)) {
-						if (!MatchesFilter (vm))
-							toRemove.Add (vm);
-						else if (vm is IFilterable) {
-							var filterable = (IFilterable) vm;
+						if (vm is IFilterable filterable) {
 							filterable.FilterText = FilterText;
 							if (!filterable.HasChildElements)
 								toRemove.Add (vm);
-						}
+						} else if (!MatchesFilter (vm))
+							toRemove.Add (vm);
 					}
 				}
 
@@ -523,7 +521,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private string GetGroup (EditorViewModel vm)
 		{
-			return GetGroup ((vm as PropertyViewModel)?.Property);
+			if (ArrangeMode == PropertyArrangeMode.Name)
+				return "0";
+			if (vm is PropertyViewModel pvm)
+				return GetGroup (pvm.Property);
+
+			return vm.Category ?? String.Empty;
 		}
 
 		private bool MatchesFilter (EditorViewModel vm)

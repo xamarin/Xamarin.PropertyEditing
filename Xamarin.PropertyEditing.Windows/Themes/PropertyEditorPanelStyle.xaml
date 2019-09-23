@@ -48,10 +48,20 @@
 			</DataTrigger>
 		</DataTemplate.Triggers>
 	</DataTemplate>
-	
-	<Style x:Key="PropertyListStyle" TargetType="ItemsControl">
-		<Setter Property="Focusable" Value="False" />
+
+	<Style x:Key="PropertyListBaseStyle" TargetType="ItemsControl">
 		<Setter Property="ItemTemplateSelector" Value="{StaticResource EditorTreeSelector}" />
+		<Setter Property="ItemsPanel">
+			<Setter.Value>
+				<ItemsPanelTemplate>
+					<VirtualizingStackPanel IsItemsHost="True" VirtualizationMode="Recycling" />
+				</ItemsPanelTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="PropertyListStyle" TargetType="ItemsControl" BasedOn="{StaticResource PropertyListBaseStyle}">
+		<Setter Property="Focusable" Value="False" />
 		<Setter Property="ScrollViewer.CanContentScroll" Value="True" />
 		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
 		<Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
@@ -62,13 +72,6 @@
 						<ItemsPresenter />
 					</ScrollViewer>
 				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-		<Setter Property="ItemsPanel">
-			<Setter.Value>
-				<ItemsPanelTemplate>
-					<VirtualizingStackPanel IsItemsHost="True" VirtualizationMode="Recycling" />
-				</ItemsPanelTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>

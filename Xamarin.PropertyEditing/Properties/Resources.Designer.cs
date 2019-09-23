@@ -1270,5 +1270,11 @@ namespace Xamarin.PropertyEditing.Properties {
 		        return ResourceManager.GetString("PropertyButtonName", resourceCulture);
 	        }
         }
+
+        public static string StateGroupEditButton {
+	        get {
+		        return ResourceManager.GetString("StateGroupEditButton", resourceCulture);
+	        }
+        }
     }
 }
