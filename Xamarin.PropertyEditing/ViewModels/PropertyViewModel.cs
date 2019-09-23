@@ -554,7 +554,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 	}
 
 	internal abstract class PropertyViewModel
-		: EditorViewModel, INotifyDataErrorInfo
+		: EditorViewModel, INotifyDataErrorInfo, IPropertyHost
 	{
 		protected PropertyViewModel (TargetPlatform platform, IPropertyInfo property, IEnumerable<IObjectEditor> editors, PropertyVariation variation = null)
 			: base (platform, editors)
@@ -760,6 +760,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			return compare;
 		}
+
+		PropertyViewModel IPropertyHost.HostedProperty => this;
 
 		/// <param name="newError">The error message or <c>null</c> to clear the error.</param>
 		protected void SetError (string newError)
