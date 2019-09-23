@@ -52,6 +52,24 @@ namespace Xamarin.PropertyEditing.ViewModels
 			AddCore (editor);
 		}
 
+		public void Replace (EditorViewModel oldEditor, EditorViewModel newEditor)
+		{
+			if (oldEditor == null)
+				throw new ArgumentNullException (nameof(oldEditor));
+			if (newEditor == null)
+				throw new ArgumentNullException (nameof(newEditor));
+
+			var list = GetListCore (oldEditor);
+			if (list != GetListCore (newEditor)) {
+				Remove (oldEditor);
+				Add (newEditor);
+				return;
+			}
+
+			int i = list.IndexOf (oldEditor);
+			list[i] = newEditor;
+		}
+
 		public bool Remove (EditorViewModel editor)
 		{
 			if (editor == null)
