@@ -7,6 +7,16 @@ namespace Xamarin.PropertyEditing
 	public interface IAvailabilityConstraint
 	{
 		/// <summary>
+		/// Gets a property that serves as the parent of this property for visual organization.
+		/// </summary>
+		/// <remarks>
+		/// <p>Return <c>null</c> if there is no parent organizing property.</p>
+		/// <p>If the value of <c>ParentProperty</c> affects the constraint itself, it still must be included in
+		/// <see cref="ConstrainingProperties"/>.</p>
+		/// </remarks>
+		IPropertyInfo ParentProperty { get; }
+
+		/// <summary>
 		/// Gets a list of properties associated with the constraint.
 		/// </summary>
 		/// <remarks>

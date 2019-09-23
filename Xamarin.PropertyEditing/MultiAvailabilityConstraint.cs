@@ -20,11 +20,22 @@ namespace Xamarin.PropertyEditing
 			if (constraintGroups == null)
 				throw new ArgumentNullException (nameof(constraintGroups));
 
+			IPropertyInfo parent = null;
+			bool foundParent = false;
+
 			List<IPropertyInfo> properties = new List<IPropertyInfo> ();
 			this.constraints = new List<List<IAvailabilityConstraint>> ();
 			foreach (var g in constraintGroups) {
 				var group = new List<IAvailabilityConstraint> ();
 				foreach (var c in g) {
+					if (Equals (parent, c.ParentProperty)) {
+						if (!foundParent) {
+							foundParent = true;
+							parent = c.ParentProperty;
+						}
+					} else if (foundParent)
+						throw new ArgumentException ("Can't mix constraints with different parents");
+
 					if (c.ConstrainingProperties != null) {
 						foreach (var p in c.ConstrainingProperties) {
 							if (!properties.Contains (p))
@@ -39,9 +50,16 @@ namespace Xamarin.PropertyEditing
 			}
 
 			ConstrainingProperties = properties;
+			ParentProperty = parent;
 		}
 
-		public IReadOnlyList<IPropertyInfo> ConstrainingProperties {
+		public IPropertyInfo ParentProperty
+		{
+			get;
+		}
+
+		public IReadOnlyList<IPropertyInfo> ConstrainingProperties
+		{
 			get;
 		}
 

@@ -642,6 +642,12 @@ namespace Xamarin.PropertyEditing.ViewModels
 			internal set;
 		}
 
+		public IPropertyInfo ParentProperty
+		{
+			get;
+			private set;
+		}
+
 		public abstract Resource Resource
 		{
 			get;
@@ -854,8 +860,18 @@ namespace Xamarin.PropertyEditing.ViewModels
 			if (constraints == null || constraints.Count == 0)
 				return;
 
+			bool foundParent = false;
 			for (int i = 0; i < constraints.Count; i++) {
 				IAvailabilityConstraint constraint = constraints[i];
+
+				if (!Equals (ParentProperty, constraint.ParentProperty)) {
+					if (!foundParent) {
+						foundParent = true;
+						ParentProperty = constraint.ParentProperty;
+					} else
+						throw new ArgumentException ("Can't mix constraints with different parents");
+				}
+				
 				IReadOnlyList<IPropertyInfo> properties = constraint.ConstrainingProperties;
 				if (properties != null) {
 					if (this.constraintProperties == null)
