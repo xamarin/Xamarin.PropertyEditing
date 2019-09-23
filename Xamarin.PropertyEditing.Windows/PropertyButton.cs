@@ -117,6 +117,12 @@ namespace Xamarin.PropertyEditing.Windows
 				this.vm.ResourceRequested -= OnResourceRequested;
 				this.vm.CreateBindingRequested -= OnCreateBindingRequested;
 				this.vm.CreateResourceRequested -= OnCreateResourceRequested;
+				this.vm = null;
+			}
+
+			if (e.NewValue is IPropertyHost host && !Equals (host.HostedProperty, e.NewValue)) {
+				Dispatcher.InvokeAsync (() => SetCurrentValue (DataContextProperty, host.HostedProperty));
+				return;
 			}
 
 			this.vm = e.NewValue as PropertyViewModel;
