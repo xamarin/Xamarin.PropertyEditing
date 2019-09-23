@@ -66,6 +66,19 @@ namespace Xamarin.PropertyEditing.ViewModels
 			get;
 		}
 
+		public PropertiesViewModel Parent
+		{
+			get { return this.parent; }
+			internal set
+			{
+				if (this.parent == value)
+					return;
+
+				this.parent = value;
+				OnPropertyChanged();
+			}
+		}
+
 		public virtual int CompareTo (EditorViewModel other)
 		{
 			if (other == null)
@@ -125,6 +138,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		private bool multipleValues;
 		private readonly List<IObjectEditor> subscribedEditors = new List<IObjectEditor> ();
+		private PropertiesViewModel parent;
 
 		private void AddEditors (IList editors)
 		{

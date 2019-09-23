@@ -634,12 +634,6 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public bool IsVariant => Variation != null;
 
-		public PropertiesViewModel Parent
-		{
-			get;
-			internal set;
-		}
-
 		public IPropertyInfo ParentProperty
 		{
 			get;
