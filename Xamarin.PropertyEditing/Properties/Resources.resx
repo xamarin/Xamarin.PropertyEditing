@@ -845,5 +845,8 @@
   </data>
   <data name="AutoresizingWidthSizable" xml:space="preserve">
     <value>width sizable</value>
+  </data>  
+  <data name="StateGroupEditButton" xml:space="preserve">
+    <value>Edit…</value>
   </data>
 </root>

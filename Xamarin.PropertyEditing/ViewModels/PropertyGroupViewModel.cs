@@ -109,8 +109,10 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return false;
 			if (String.IsNullOrWhiteSpace (FilterText))
 				return true;
+			if (String.IsNullOrWhiteSpace (vm.Name))
+				return false;
 
-			return (vm.Property.Name.Contains (FilterText, StringComparison.OrdinalIgnoreCase));
+			return (vm.Name.Contains (FilterText, StringComparison.OrdinalIgnoreCase));
 		}
 
 		private void OnChildPropertyChanged (object sender, PropertyChangedEventArgs e)

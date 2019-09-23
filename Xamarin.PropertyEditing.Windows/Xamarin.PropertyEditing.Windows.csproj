@@ -114,6 +114,7 @@
       <DependentUpon>ResourceSelectorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Spinner.cs" />
+    <Compile Include="StateGroupEditorControl.cs" />
     <Compile Include="TextBoxEx.cs" />
     <Compile Include="ToggleButtonEx.cs" />
     <Compile Include="EditorPropertySelector.cs" />
