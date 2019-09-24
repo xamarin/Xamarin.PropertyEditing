@@ -93,6 +93,7 @@
     <Compile Include="CreateValueConverterWindow.xaml.cs">
       <DependentUpon>CreateValueConverterWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EditorAutomationPeer.cs" />
     <Compile Include="EntryPopup.cs" />
     <Compile Include="CurrentColorEditorControl.cs" />
     <Compile Include="DoubleToPercentageConverter.cs" />

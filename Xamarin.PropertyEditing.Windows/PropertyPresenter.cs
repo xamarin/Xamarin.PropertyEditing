@@ -116,7 +116,7 @@ namespace Xamarin.PropertyEditing.Windows
 
 		protected override AutomationPeer OnCreateAutomationPeer ()
 		{
-			return new PropertyPresenterAutomationPeer (this);
+			return new EditorAutomationPeer (this);
 		}
 
 		protected override void OnRender (DrawingContext drawingContext)
@@ -182,7 +182,7 @@ namespace Xamarin.PropertyEditing.Windows
 				this.pvm.CreateVariantRequested += OnCreateVariantRequested;
 			}
 
-			(UIElementAutomationPeer.FromElement (this) as PropertyPresenterAutomationPeer)?.Refresh();
+			(UIElementAutomationPeer.FromElement (this) as EditorAutomationPeer)?.Refresh();
 		}
 
 		private void OnCreateVariantRequested (object sender, CreateVariantEventArgs e)
@@ -218,37 +218,6 @@ namespace Xamarin.PropertyEditing.Windows
 					}
 				}
 			}
-		}
-
-		private class PropertyPresenterAutomationPeer
-			: UIElementAutomationPeer
-		{
-			public PropertyPresenterAutomationPeer (PropertyPresenter owner)
-				: base (owner)
-			{
-				this.presenter = owner;
-				Refresh();
-			}
-
-			public void Refresh ()
-			{
-				this.name = AutomationProperties.GetName (this.presenter);
-				if (String.IsNullOrEmpty (this.name))
-					this.name = (this.presenter.DataContext as PropertyViewModel)?.Name;
-			}
-
-			protected override AutomationControlType GetAutomationControlTypeCore ()
-			{
-				return AutomationControlType.Group;
-			}
-
-			protected override string GetNameCore ()
-			{
-				return this.name;
-			}
-
-			private readonly PropertyPresenter presenter;
-			private string name;
 		}
 	}
 }
