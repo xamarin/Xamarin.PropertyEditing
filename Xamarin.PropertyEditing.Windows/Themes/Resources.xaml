@@ -1711,7 +1711,6 @@
 						</Border.InputBindings>
 						<Grid>
 							<Grid.ColumnDefinitions>
-								<ColumnDefinition Name="delveColumn" Width="Auto" />
 								<ColumnDefinition Name="labelColumn" MinWidth="100" MaxWidth="180" Width="0.4*" />
 								<ColumnDefinition MinWidth="134" Width="0.6*" />
 								<ColumnDefinition Name="propertyButtonColumn" Width="12" />
@@ -1722,29 +1721,14 @@
 								<RowDefinition Height="*" />
 								<RowDefinition Height="Auto" />
 							</Grid.RowDefinitions>
-
-							<local:ButtonEx Name="addVariant" Grid.Column="0" Grid.Row="1" Margin="{TemplateBinding Padding,Converter={StaticResource NegativeThicknessConverter}}" Style="{StaticResource VariantButton}" Command="{Binding RequestCreateVariantCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.AddVariant}" AutomationProperties.Name="{x:Static prop:Resources.AddVariant}">
-								<local:ButtonEx.Visibility>
-									<MultiBinding Converter="{StaticResource BoolsToVisibilityConverter}">
-										<Binding Path="HasVariations" Mode="OneTime" />
-										<Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ShowVariants" />
-										<Binding Path="IsEnabled" RelativeSource="{RelativeSource Self}" />
-									</MultiBinding>
-								</local:ButtonEx.Visibility>
-
-								<Grid Width="6" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
-									<Line X1="0" X2="6" Y1="3" Y2="3" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
-									<Line X1="3" X2="3" Y1="0" Y2="6" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
-								</Grid>
-							</local:ButtonEx>
-
-							<Grid Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0" Visibility="{Binding IsVariant,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter},FallbackValue=Collapsed}">
+							
+							<Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Visibility="{Binding IsVariant,Mode=OneTime,Converter={StaticResource BoolToVisibilityConverter},FallbackValue=Collapsed}">
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="Auto" />
 									<ColumnDefinition Width="*" />
 								</Grid.ColumnDefinitions>
 
-								<local:ButtonEx Name="removeVariant" Grid.Column="0" Command="{Binding RemoveVariationCommand,Mode=OneTime}" Style="{StaticResource VariantButton}" ToolTip="{x:Static prop:Resources.RemoveVariant}" AutomationProperties.Name="{x:Static prop:Resources.RemoveVariant}">
+								<local:ButtonEx x:Name="removeVariant" Grid.Column="0" Command="{Binding RemoveVariationCommand,Mode=OneTime}" Style="{StaticResource VariantButton}" ToolTip="{x:Static prop:Resources.RemoveVariant}" AutomationProperties.Name="{x:Static prop:Resources.RemoveVariant}">
 									<Grid RenderTransformOrigin="0.5,0.5" Width="6" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
 										<Grid.RenderTransform>
 											<RotateTransform Angle="45" />
@@ -1779,19 +1763,37 @@
 								</ItemsControl>
 							</Grid>
 
-							<local:ToggleButtonEx Name="delveButton" Grid.Column="0" Grid.Row="0" Style="{DynamicResource StandaloneToggleStyle}" Width="11" Height="11" IsChecked="{Binding DelveByDefault,Mode=OneTime}">
-								<local:ToggleButtonEx.Visibility>
-									<MultiBinding Converter="{StaticResource BoolsToVisibilityConverter}">
-										<Binding Path="HasItems" ElementName="subProperties" />
-										<Binding Path="CanDelve" />
-									</MultiBinding>
-								</local:ToggleButtonEx.Visibility>
-							</local:ToggleButtonEx>
-							<TextBlock Name="Label" Margin="0,3,0,3" Grid.Row="1" Grid.Column="1" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-							<ContentPresenter Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" MinHeight="20" />
-							<local:PropertyButton x:Name="propertyButton"  Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{x:Static prop:Resources.PropertyButtonName}" />
+							<StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
+								<local:ButtonEx x:Name="addVariant" Margin="{TemplateBinding Padding,Converter={StaticResource NegativeThicknessConverter}}" Style="{StaticResource VariantButton}" Command="{Binding RequestCreateVariantCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.AddVariant}" AutomationProperties.Name="{x:Static prop:Resources.AddVariant}">
+									<local:ButtonEx.Visibility>
+										<MultiBinding Converter="{StaticResource BoolsToVisibilityConverter}">
+											<Binding Path="HasVariations" Mode="OneTime" />
+											<Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ShowVariants" />
+											<Binding Path="IsEnabled" RelativeSource="{RelativeSource Self}" />
+										</MultiBinding>
+									</local:ButtonEx.Visibility>
 
-							<ItemsControl Name="subProperties" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Margin="{TemplateBinding Padding,Converter={StaticResource NegativeThicknessConverter}}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{DynamicResource PropertyEditorTemplate}">
+									<Grid Width="6" Height="6" VerticalAlignment="Center" HorizontalAlignment="Center">
+										<Line X1="0" X2="6" Y1="3" Y2="3" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+										<Line X1="3" X2="3" Y1="0" Y2="6" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" StrokeThickness="1" />
+									</Grid>
+								</local:ButtonEx>
+
+								<local:ToggleButtonEx x:Name="delveButton" Style="{DynamicResource StandaloneToggleStyle}" Width="11" Height="11" IsChecked="{Binding DelveByDefault,Mode=OneTime}" HorizontalContentAlignment="Left">
+									<local:ToggleButtonEx.Visibility>
+										<MultiBinding Converter="{StaticResource BoolsToVisibilityConverter}">
+											<Binding Path="HasItems" ElementName="subProperties" />
+											<Binding Path="CanDelve" />
+										</MultiBinding>
+									</local:ToggleButtonEx.Visibility>
+								</local:ToggleButtonEx>
+								<TextBlock Name="Label" Margin="0,3,0,3" Text="{TemplateBinding Label}" ToolTip="{Binding Property.Description,Mode=OneTime}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+							</StackPanel>
+
+							<ContentPresenter Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="4,2,0,2" IsEnabled="{Binding Property.CanWrite}" MinHeight="20" />
+							<local:PropertyButton x:Name="propertyButton"  Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" ValueSource="{Binding ValueSource}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" AutomationProperties.Name="{x:Static prop:Resources.PropertyButtonName}" />
+
+							<ItemsControl Name="subProperties" Background="{DynamicResource PanelGroupSecondaryBackgroundBrush}" Margin="{TemplateBinding Padding,Converter={StaticResource NegativeThicknessConverter}}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{DynamicResource PropertyEditorTemplate}">
 								<ItemsControl.Visibility>
 									<MultiBinding Converter="{StaticResource BoolsToVisibilityConverter}">
 										<Binding Path="CanDelve" />
