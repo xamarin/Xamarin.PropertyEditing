@@ -846,4 +846,8 @@
   <data name="AutoresizingWidthSizable" xml:space="preserve">
     <value>width sizable</value>
   </data>
+  <data name="RemoveEventHandlerName" xml:space="preserve">
+    <value>Remove event handler {0}</value>
+    <comment>Remove event handler {handler name}</comment>
+  </data>
 </root>

@@ -626,7 +626,7 @@
 							</Grid.ColumnDefinitions>
 
 							<TextBlock Grid.Column="0" Text="{Binding Mode=OneTime}" Foreground="{DynamicResource EventForegroundBrush}" />
-							<Button Grid.Column="1" Style="{StaticResource RemoveButtonStyle}" Command="{Binding DataContext.RemoveHandlerCommand,RelativeSource={RelativeSource AncestorType=local:EventEditor}}" CommandParameter="{Binding Mode=OneTime}" />
+							<Button Grid.Column="1" Style="{StaticResource RemoveButtonStyle}" Command="{Binding DataContext.RemoveHandlerCommand,RelativeSource={RelativeSource AncestorType=local:EventEditor}}" CommandParameter="{Binding Mode=OneTime}" ToolTip="{Binding StringFormat={x:Static prop:Resources.RemoveEventHandlerName}}" AutomationProperties.Name="{Binding StringFormat={x:Static prop:Resources.RemoveEventHandlerName}}" />
 						</Grid>
 					</Border>
 				</DataTemplate>
