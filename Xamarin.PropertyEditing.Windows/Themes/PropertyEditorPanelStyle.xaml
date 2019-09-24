@@ -227,7 +227,7 @@
 							</Grid>
 
 							<ScrollViewer Name="eventsPane" Grid.Row="1" Visibility="Collapsed">
-								<ItemsControl ItemsSource="{Binding Events}">
+								<ItemsControl ItemsSource="{Binding Events}" Focusable="False">
 									<ItemsControl.ItemTemplate>
 										<DataTemplate>
 											<Grid MinHeight="24" Margin="16,0,0,0">
