@@ -183,7 +183,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 				try {
 					HashSet<Resource> joinedResources = null;
 					var tasks = new HashSet<Task<IReadOnlyList<Resource>>> (this.targets.Select (t => Provider.GetResourcesAsync (t, Property, CancellationToken.None)));
-					do {
+					while (tasks.Count > 0) {
 						var task = await Task.WhenAny (tasks);
 						tasks.Remove (task);
 
@@ -194,7 +194,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 							joinedResources = new HashSet<Resource> (task.Result);
 						else
 							joinedResources.IntersectWith (task.Result);
-					} while (tasks.Count > 0);
+					}
 
 					if (joinedResources != null)
 						this.resources.AddItems (joinedResources);
