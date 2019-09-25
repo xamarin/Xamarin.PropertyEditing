@@ -23,6 +23,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<string> ("String", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddProperty<int> ("Width", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding, inputModes: new[] { new InputMode("Auto", true), new InputMode("Star"), new InputMode("Pixel"), });
 			AddProperty<Enumeration> ("Enumeration", ReadWrite, constrained: false);
+			AddProperty<Enumeration> ("ConstrainedList", ReadWrite, constrained: true);
 			AddProperty<string> ("StringV", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding,
 				options: new [] {
 					new PropertyVariationOption ("Width", "Compact"),
