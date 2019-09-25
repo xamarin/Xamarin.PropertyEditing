@@ -51,9 +51,7 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.viewTitle, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, PropertyEditorControl.DefaultControlHeight),
 			});
 
-			this.SetAppearance (hostResources.GetVibrantAppearance (EffectiveAppearance));
-
-			ViewDidChangeEffectiveAppearance ();
+			AppearanceChanged ();
 		}
 
 		protected IHostResourceProvider HostResources
@@ -64,6 +62,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void ViewDidChangeEffectiveAppearance ()
 		{
+			base.ViewDidChangeEffectiveAppearance ();
+			AppearanceChanged ();
+		}
+
+		protected void AppearanceChanged()
+		{
+			this.SetAppearance (HostResources.GetVibrantAppearance (EffectiveAppearance));
 			this.viewTitle.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
 		}
 	}

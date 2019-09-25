@@ -55,11 +55,11 @@ namespace Xamarin.PropertyEditing.Mac
 			ToolTip = Properties.Resources.Default;
 
 			OnMouseEntered += (sender, e) => {
-				ToggleFocusImage (true);
+				UpdateImage (true);
 			};
 
 			OnMouseExited += (sender, e) => {
-				ToggleFocusImage ();
+				UpdateImage ();
 			};
 
 			OnMouseLeftDown += (sender, e) => {
@@ -78,7 +78,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void AppearanceChanged ()
 		{
-			ToggleFocusImage ();
+			UpdateImage ();
 		}
 
 		private readonly IHostResourceProvider hostResources;
@@ -170,7 +170,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		private void ToggleFocusImage (bool focused = false)
+		private void UpdateImage (bool focused = false)
 		{
 			if (this.viewModel != null) {
 				
@@ -216,7 +216,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				case ValueSource.Default:
 					ToolTip = Properties.Resources.Default;
-					return;
+					break;
 
 				case ValueSource.Local:
 					ToolTip = Properties.Resources.Local;
@@ -240,7 +240,7 @@ namespace Xamarin.PropertyEditing.Mac
 					break;
 			}
 
-			ToggleFocusImage ();
+			UpdateImage ();
 		}
 
 		private void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -256,7 +256,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Appearance = EffectiveAppearance
 			};
 
-			var customExpressionPopOver = new AutoClosePopOver(this.hostResources) {
+			var customExpressionPopOver = new AutoClosePopOver (this.hostResources, EffectiveAppearance) {
 				CloseOnEnter = false,
 				ContentViewController = new NSViewController (null, null) { View = customExpressionView },
 			};
@@ -272,7 +272,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Appearance = EffectiveAppearance
 			};
 
-			var resourceSelectorPopOver = new AutoClosePopOver(this.hostResources) {
+			var resourceSelectorPopOver = new AutoClosePopOver (this.hostResources, EffectiveAppearance) {
 				ContentViewController = new NSViewController (null, null) { View = requestResourceView },
 			};
 

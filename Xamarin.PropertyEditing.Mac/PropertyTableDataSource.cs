@@ -108,9 +108,9 @@ namespace Xamarin.PropertyEditing.Mac
 			return f.Target is PanelGroupViewModel;
 		}
 
-		public NSObject GetFacade (object element)
+		public NSObjectFacade GetFacade (object element)
 		{
-			NSObject facade;
+			NSObjectFacade facade;
 			if (element is PanelGroupViewModel) {
 				if (!this.groupFacades.TryGetValue (element, out facade)) {
 					this.groupFacades[element] = facade = new NSObjectFacade (element);
@@ -121,12 +121,12 @@ namespace Xamarin.PropertyEditing.Mac
 			return facade;
 		}
 
-		public bool TryGetFacade (object element, out NSObject facade)
+		public bool TryGetFacade (object element, out NSObjectFacade facade)
 		{
 			return this.groupFacades.TryGetValue (element, out facade);
 		}
 
 		private readonly PanelViewModel vm;
-		private readonly Dictionary<object, NSObject> groupFacades = new Dictionary<object, NSObject> ();
+		private readonly Dictionary<object, NSObjectFacade> groupFacades = new Dictionary<object, NSObjectFacade> ();
 	}
 }

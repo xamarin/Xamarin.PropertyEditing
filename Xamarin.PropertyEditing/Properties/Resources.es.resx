@@ -516,7 +516,7 @@
     <value>Crear enlace...</value>
   </data>
   <data name="AddValueConverterEllipsis" xml:space="preserve">
-    <value>Agregar convertidor de valores...</value>
+    <value>Agregar convertidor de valores…</value>
   </data>
   <data name="AddValueConverterTitle" xml:space="preserve">
     <value>Agregar convertidor de valores</value>
@@ -751,5 +751,50 @@
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>Quitar variante</value>
+   </data>
+  <data name="CreateBindingTitle" xml:space="preserve">
+    <value>Crear enlace</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>Otras configuraciones</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>Convertidor</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>Seleccionar tipo</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>Listo</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>Tipo no compatible</value>
+  </data>
+  <data name="ResourceNotSupported" xml:space="preserve">
+    <value>Recurso no admitido</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>Agregar</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_All Resources</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Local</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Shared</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>Categoría</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Value Source</value>
   </data>
 </root>

@@ -9,7 +9,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public bool CloseOnEnter { get; internal set; }
 
-		public AutoClosePopOver (IHostResourceProvider hostResources) : base ()
+		public AutoClosePopOver (IHostResourceProvider hostResources, NSAppearance effectiveAppearance)
 		{
 			if (hostResources == null)
 				throw new ArgumentNullException (nameof (hostResources));
@@ -19,7 +19,7 @@ namespace Xamarin.PropertyEditing.Mac
 			Behavior = NSPopoverBehavior.Semitransient;
 			CloseOnEnter = true;
 
-			this.SetAppearance (this.hostResources.GetVibrantAppearance (EffectiveAppearance));
+			this.SetAppearance (this.hostResources.GetVibrantAppearance (effectiveAppearance));
 		}
 
 		public override void KeyUp (NSEvent theEvent)

@@ -17,7 +17,7 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
-		<local:TextBoxEx Margin="0,4,0,0" Style="{DynamicResource SearchTextBox}" MinHeight="20" Text="{Binding FilterText,UpdateSourceTrigger=PropertyChanged}" ShowClearButton="True" Hint="{x:Static prop:Resources.SearchObjectsTitle}" />
+		<local:TextBoxEx Margin="0,4,0,0" Style="{DynamicResource SearchTextBox}" MinHeight="20" Text="{Binding FilterText,UpdateSourceTrigger=PropertyChanged}" ShowClearButton="True" Hint="{x:Static prop:Resources.SearchObjectsTitle}" AutomationProperties.Name="{x:Static prop:Resources.SearchObjectsTitle}" />
 
 		<ProgressBar Grid.Row="1" IsIndeterminate="True" Height="10" Visibility="{Binding IsLoading,Converter={StaticResource BoolToVisibilityConverter}}" />
 		<local:TreeViewEx x:Name="tree" Grid.Row="1" Margin="0,4,0,0" Style="{DynamicResource TypeTreeView}" ItemsSource="{Binding Types}" SelectedDataItem="{Binding SelectedType,Mode=TwoWay}" />

@@ -56,9 +56,9 @@
 						<Setter Property="FocusVisualStyle" Value="{StaticResource GenericVisualFocusStyle}" />
 					</Style>
 				</StackPanel.Resources>
-				<RadioButton Content="_All Resources" GroupName="ResourceTypes" IsChecked="{Binding ShowBothResourceTypes}" />
-				<RadioButton Content="_Local" GroupName="ResourceTypes" IsChecked="{Binding ShowOnlyLocalResources}" />
-				<RadioButton Content="_Shared" GroupName="ResourceTypes" IsChecked="{Binding ShowOnlySystemResources}" />
+				<RadioButton Content="{x:Static prop:Resources.ResourcesAllSources}" GroupName="ResourceTypes" IsChecked="{Binding ShowBothResourceTypes}" />
+				<RadioButton Content="{x:Static prop:Resources.ResourcesLocalSource}" GroupName="ResourceTypes" IsChecked="{Binding ShowOnlyLocalResources}" />
+				<RadioButton Content="{x:Static prop:Resources.ResourcesSharedSource}" GroupName="ResourceTypes" IsChecked="{Binding ShowOnlySystemResources}" />
 			</StackPanel>
 
 			<Separator Grid.Row="3" Margin="0,10,0,10" />

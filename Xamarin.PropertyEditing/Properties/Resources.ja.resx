@@ -751,5 +751,50 @@
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>バリアントの削除</value>
+   </data>
+  <data name="CreateBindingTitle" xml:space="preserve">
+    <value>バインドの作成</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>他の設定</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>コンバーター</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>種類の選択</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>完了</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>型はサポートされていません</value>
+  </data>
+  <data name="ResourceNotSupported" xml:space="preserve">
+    <value>リソースはサポートされていません</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>追加</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_All Resources</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Local</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Shared</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>カテゴリ</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>名前</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Value Source</value>
   </data>
 </root>

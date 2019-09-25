@@ -773,7 +773,40 @@
   <data name="TypeNotSupported" xml:space="preserve">
     <value>Type Not Supported</value>
   </data>
-   <data name="ResourceNotSupported" xml:space="preserve">
+  <data name="ResourceNotSupported" xml:space="preserve">
     <value>Resource Not Supported</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_All Resources</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Local</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Shared</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Value Source</value>
+  </data>
+  <data name="CollectionEditHelpText" xml:space="preserve">
+    <value>Edit items in this collection</value>
+  </data>
+  <data name="UncommonPropertiesName" xml:space="preserve">
+    <value>Advanced properties</value>
+  </data>
+  <data name="ArrangeByButtonName" xml:space="preserve">
+    <value>Arrange by {0}</value>
+  </data>
+  <data name="PropertyButtonName" xml:space="preserve">
+    <value>Advanced options</value>
   </data>
 </root>

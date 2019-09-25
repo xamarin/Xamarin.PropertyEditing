@@ -10,6 +10,7 @@
 	<local:OppositeBoolConverter x:Key="OppositeBoolConverter" />
 	<local:EditorPropertySelector x:Key="PropertyEditorSelector" />
 	<local:EditorTreeSelector x:Key="EditorTreeSelector" EditorTemplateKey="PropertyEditorTemplate" ParentTemplateKey="PropertyGroupTemplate" />
+	<local:ArrangeModeLocalizedConverter x:Key="ArrangeLocalizer" />
 
 	<Style x:Key="TreeExpanderStyle" TargetType="Expander">
 		<Setter Property="Foreground" Value="{DynamicResource PanelGroupForegroundBrush}" />
@@ -141,7 +142,7 @@
 						</ControlTemplate>
 					</ItemsControl.Template>
 				</ItemsControl>
-				<local:FilterExpander Grid.Row="1" Visibility="{Binding HasUncommonElements,Converter={StaticResource BoolToVisibilityConverter}}" Style="{StaticResource AdvancedPropertiesExpander}" IsExpanded="{Binding UncommonShown,Mode=TwoWay}">
+				<local:FilterExpander Grid.Row="1" Visibility="{Binding HasUncommonElements,Converter={StaticResource BoolToVisibilityConverter}}" Style="{StaticResource AdvancedPropertiesExpander}" IsExpanded="{Binding UncommonShown,Mode=TwoWay}" AutomationProperties.Name="{x:Static prop:Resources.UncommonPropertiesName}">
 					<ItemsControl Grid.Row="0" Style="{StaticResource PropertyListStyle}" ItemsSource="{Binding UncommonEditors,Mode=OneTime}">
 						<ItemsControl.Template>
 							<ControlTemplate>
@@ -210,7 +211,7 @@
 
 								<local:TextBoxEx x:Name="search" Grid.Row="0" Style="{DynamicResource PropertySearchTextBox}" AutomationProperties.Name="{x:Static prop:Resources.SearchProperties}" Text="{Binding FilterText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
 
-								<local:MenuButton Grid.Row="1" x:Name="arrangeBy" Header="Arrange by:" Margin="0,0,18,0" Content="{Binding ArrangeMode}">
+								<local:MenuButton Grid.Row="1" x:Name="arrangeBy" Header="{x:Static prop:Resources.ArrangeByLabel}" Margin="0,0,18,0" Content="{Binding ArrangeMode,Converter={StaticResource ArrangeLocalizer}}" AutomationProperties.Name="{Binding ArrangeMode,StringFormat={x:Static prop:Resources.ArrangeByButtonName}}">
 									<local:MenuButton.Visibility>
 										<Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsArrangeEnabled">
 											<Binding.Converter>
@@ -219,7 +220,7 @@
 										</Binding>
 									</local:MenuButton.Visibility>
 									<local:MenuButton.ContextMenu>
-										<ContextMenu ItemsSource="{Binding ArrangeModes,Mode=OneTime}" StaysOpen="True" ItemContainerStyle="{DynamicResource ArrangeMenuItem}" />
+										<ContextMenu ItemsSource="{Binding ArrangeModes,Mode=OneTime}" StaysOpen="True" ItemContainerStyle="{DynamicResource ArrangeMenuItem}" AutomationProperties.Name="{x:Static prop:Resources.ArrangeByLabel}" />
 									</local:MenuButton.ContextMenu>
 								</local:MenuButton>
 								<ItemsControl Name="propertyItems" Grid.Row="2" Background="{DynamicResource ListBackgroundBrush}" Grid.IsSharedSizeScope="True" Style="{StaticResource PropertyListStyle}" />

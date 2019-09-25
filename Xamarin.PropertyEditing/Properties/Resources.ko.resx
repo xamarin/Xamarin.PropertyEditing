@@ -751,5 +751,50 @@
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>변형 제거</value>
+   </data>
+  <data name="CreateBindingTitle" xml:space="preserve">
+    <value>바인딩 만들기</value>
+    <comment>Create Binding for Object.Property</comment>
+  </data>
+  <data name="OtherSettings" xml:space="preserve">
+    <value>기타 설정</value>
+    <comment>Toggle the Other Settings Panel for Binding to Object.Property</comment>
+  </data>
+  <data name="Converter" xml:space="preserve">
+    <value>변환기</value>
+    <comment>Converter for Binding to Object.Property</comment>
+  </data>
+  <data name="SelectTypeTitle" xml:space="preserve">
+    <value>유형 선택</value>
+  </data>
+  <data name="DoneTitle" xml:space="preserve">
+    <value>완료</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>지원되지 않는 형식</value>
+  </data>
+  <data name="ResourceNotSupported" xml:space="preserve">
+    <value>지원되지 않는 리소스</value>
+  </data>
+  <data name="AddCollectionItem" xml:space="preserve">
+    <value>추가</value>
+  </data>
+  <data name="ResourcesAllSources" xml:space="preserve">
+    <value>_All Resources</value>
+  </data>
+  <data name="ResourcesLocalSource" xml:space="preserve">
+    <value>_Local</value>
+  </data>
+  <data name="ResourcesSharedSource" xml:space="preserve">
+    <value>_Shared</value>
+  </data>
+  <data name="ArrangeByCategory" xml:space="preserve">
+    <value>범주</value>
+  </data>
+  <data name="ArrangeByName" xml:space="preserve">
+    <value>이름</value>
+  </data>
+  <data name="ArrangeByValueSource" xml:space="preserve">
+    <value>Value Source</value>
   </data>
 </root>
