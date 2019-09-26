@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected NSLayoutConstraint RightEdgeConstraint { get; }
 
-		protected override void OnViewModelChanged (PropertyViewModel oldModel)
+		protected override void OnViewModelChanged (EditorViewModel oldModel)
 		{
 			base.OnViewModelChanged (oldModel);
 			Entry.Delegate = (ViewModel != null) ? CreateDelegate (ViewModel) : null;

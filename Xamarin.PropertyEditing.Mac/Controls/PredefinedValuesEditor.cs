@@ -29,7 +29,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		protected override void OnViewModelChanged (PropertyViewModel oldModel)
+		protected override void OnViewModelChanged (EditorViewModel oldModel)
 		{
 			if (ViewModel == null)
 				return;
