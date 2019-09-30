@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15400"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -674,16 +674,14 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="314" height="511"/>
+                        <rect key="frame" x="0.0" y="0.0" width="403" height="511"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Iru-Rx-5Kw" customClass="PropertyEditorPanel">
-                                <rect key="frame" x="0.0" y="0.0" width="314" height="451"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="Iru-Rx-5Kw" customClass="PropertyEditorPanel">
+                                <rect key="frame" x="0.0" y="0.0" width="403" height="451"/>
                             </customView>
-                            <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p4n-Th-xBf">
+                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="p4n-Th-xBf">
                                 <rect key="frame" x="4" y="457" width="302" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="qr0-t0-q16">
                                     <font key="font" metaFont="system"/>
                                     <segments>
@@ -696,9 +694,8 @@
                                     <action selector="OnThemeChanged:" target="XfG-lQ-9wD" id="NPt-Hc-LCb"/>
                                 </connections>
                             </segmentedControl>
-                            <button identifier="selectMode" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z5z-Qc-Eab">
-                                <rect key="frame" x="185" y="486" width="121" height="18"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <button identifier="selectMode" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Z5z-Qc-Eab">
+                                <rect key="frame" x="195" y="486" width="121" height="18"/>
                                 <buttonCell key="cell" type="check" title="Add to selection" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="JcR-tG-jDO">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -707,9 +704,8 @@
                                     <action selector="OnSelectionModeChanged:" target="XfG-lQ-9wD" id="2Rt-ro-wUX"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lao-X4-Foo">
-                                <rect key="frame" x="0.0" y="477" width="80" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Lao-X4-Foo">
+                                <rect key="frame" x="0.0" y="477" width="83" height="32"/>
                                 <buttonCell key="cell" type="push" title="Mock 1" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0bJ-RB-Foo" customClass="MockedSampleControlButton">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -718,9 +714,8 @@
                                     <action selector="OnClickEvent:" target="XfG-lQ-9wD" id="CqZ-JO-Foo"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lao-X4-Bar">
-                                <rect key="frame" x="80" y="477" width="75" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Lao-X4-Bar">
+                                <rect key="frame" x="80" y="477" width="85" height="32"/>
                                 <buttonCell key="cell" type="push" title="Mock 2" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0bJ-RB-Bar" customClass="MockedSampleControlButton">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -730,6 +725,20 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="Iru-Rx-5Kw" firstAttribute="top" secondItem="p4n-Th-xBf" secondAttribute="bottom" constant="8" id="4Da-nD-4H2"/>
+                            <constraint firstItem="Z5z-Qc-Eab" firstAttribute="leading" secondItem="Lao-X4-Bar" secondAttribute="trailing" constant="38" id="DUf-CD-UpF"/>
+                            <constraint firstItem="Lao-X4-Bar" firstAttribute="leading" secondItem="Lao-X4-Foo" secondAttribute="trailing" constant="9" id="Psm-Fy-oSA"/>
+                            <constraint firstItem="Lao-X4-Foo" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="6" id="Tco-Rw-rMi"/>
+                            <constraint firstItem="Lao-X4-Bar" firstAttribute="centerY" secondItem="Lao-X4-Foo" secondAttribute="centerY" id="YqH-he-Hu1"/>
+                            <constraint firstAttribute="trailing" secondItem="Iru-Rx-5Kw" secondAttribute="trailing" id="cPx-oW-DfI"/>
+                            <constraint firstAttribute="bottom" secondItem="Iru-Rx-5Kw" secondAttribute="bottom" priority="250" id="mdF-PZ-dHh"/>
+                            <constraint firstItem="p4n-Th-xBf" firstAttribute="leading" secondItem="Lao-X4-Foo" secondAttribute="leading" id="mdI-Ai-ayf"/>
+                            <constraint firstItem="Lao-X4-Foo" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="6" id="n6C-RQ-h7x"/>
+                            <constraint firstItem="Iru-Rx-5Kw" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="pci-yR-mPs"/>
+                            <constraint firstItem="p4n-Th-xBf" firstAttribute="top" secondItem="Lao-X4-Foo" secondAttribute="bottom" constant="4" id="sOz-bf-Ffv"/>
+                            <constraint firstItem="Z5z-Qc-Eab" firstAttribute="centerY" secondItem="Lao-X4-Bar" secondAttribute="centerY" id="spp-y8-pa8"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="PropertyPanel" destination="Iru-Rx-5Kw" id="rbH-Cm-X5w"/>
@@ -737,7 +746,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8" y="775.5"/>
+            <point key="canvasLocation" x="36.5" y="775.5"/>
         </scene>
     </scenes>
 </document>
