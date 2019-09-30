@@ -142,8 +142,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void Initialize ()
 		{
-			AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable;
-
 			this.header = new DynamicBox (HostResourceProvider, NamedResources.PanelTabBackground) {
 				ContentViewMargins = new CGSize (0, 0),
 				ContentView = new NSView ()
