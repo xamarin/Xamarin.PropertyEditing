@@ -679,7 +679,7 @@
                         <subviews>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Iru-Rx-5Kw" customClass="PropertyEditorPanel">
                                 <rect key="frame" x="0.0" y="0.0" width="314" height="451"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </customView>
                             <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p4n-Th-xBf">
                                 <rect key="frame" x="4" y="457" width="302" height="24"/>
