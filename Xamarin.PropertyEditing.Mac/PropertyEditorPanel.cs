@@ -150,9 +150,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (this.header);
 
-			this.border = new DynamicBox (HostResourceProvider, NamedResources.TabBorderColor) {
-				Frame = new CGRect (0, 0, 1, 1)
-			};
+			this.border = new DynamicBox (HostResourceProvider, NamedResources.TabBorderColor);
 			header.AddSubview (this.border);
 
 			this.propertyFilter = new NSSearchField {
@@ -177,15 +175,20 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (this.propertyList);
 
+			var propertyPanelWidth = (nfloat)Math.Max (Frame.Width, 1);
+			headerWidthConstraint = NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1, propertyPanelWidth);
+			propertyListWidthConstraint = NSLayoutConstraint.Create (this.propertyList, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1, propertyPanelWidth);
+			propertyListHeightConstraint = NSLayoutConstraint.Create (this.propertyList, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1, (nfloat)Math.Max (Frame.Height, 1));
+
+
 			this.AddConstraints (new[] {
+				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1, 0),
 				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 0),
-				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, 0),
-				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1, 30),
+				headerWidthConstraint,
 
 				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.header,  NSLayoutAttribute.Left, 1, 0),
 				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Top, 1, 0),
 				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Bottom, 1, 0),
-				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Right, NSLayoutRelation.LessThanOrEqual, this.propertyFilter, NSLayoutAttribute.Left, 1, 0),
 
 				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Right, 1, -15),
 				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1, 150),
@@ -193,13 +196,28 @@ namespace Xamarin.PropertyEditing.Mac
 
 				NSLayoutConstraint.Create (this.border, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Bottom, 1, 0),
 				NSLayoutConstraint.Create (this.border, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Width, 1, 0),
+				NSLayoutConstraint.Create (this.border, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Height, 1, 0),
 
 				NSLayoutConstraint.Create (this.propertyList, NSLayoutAttribute.Top, NSLayoutRelation.Equal, border, NSLayoutAttribute.Bottom, 1, 0),
-				NSLayoutConstraint.Create (this.propertyList, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this, NSLayoutAttribute.Bottom, 1, 0),
-				NSLayoutConstraint.Create (this.propertyList, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, 0),
+				propertyListWidthConstraint,
+				propertyListHeightConstraint
 			});
 
 			UpdateResourceProvider ();
+		}
+
+		const float HeaderHeight = 30;
+		NSLayoutConstraint headerWidthConstraint, propertyListWidthConstraint, propertyListHeightConstraint;
+
+		public override void SetFrameSize (CGSize newSize)
+		{
+			base.SetFrameSize (newSize);
+			propertyListHeightConstraint.Constant = (nfloat)Math.Max (newSize.Height - HeaderHeight, 1);
+		
+			//our minimun size is tabStack + small margin + property filter
+			var minimumSize = tabStack.Frame.Width + 30 + propertyFilter.Frame.Width;
+			var calculatedWidth = (nfloat) Math.Max (minimumSize, newSize.Width);
+			propertyListWidthConstraint.Constant = headerWidthConstraint.Constant = calculatedWidth;
 		}
 
 		public sealed override void ViewDidChangeEffectiveAppearance ()
