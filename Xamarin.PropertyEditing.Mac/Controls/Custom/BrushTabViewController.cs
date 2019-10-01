@@ -29,11 +29,7 @@ namespace Xamarin.PropertyEditing.Mac
 				PlaceholderString = Properties.Resources.SearchResourcesTitle,
 			};
 
-			this.filterResource.Changed += (sender, e) => {
-				ViewModel.ResourceSelector.FilterText = this.filterResource.Cell.Title;
-				this.resource.ReloadData ();
-			};
-
+			this.filterResource.Changed += OnResourceFilterChanged;
 			this.filterResource.Hidden = true;
 
 			TabStack.AddView (this.filterResource, NSStackViewGravity.Leading);
@@ -194,5 +190,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private NSSearchField filterResource;
 		private ResourceBrushViewController resource;
+
+		private void OnResourceFilterChanged (object sender, EventArgs e)
+		{
+			if (ViewModel.ResourceSelector == null)
+				return;
+
+			ViewModel.ResourceSelector.FilterText = this.filterResource.Cell.Title;
+			this.resource.ReloadData ();
+		}
 	}
 }
