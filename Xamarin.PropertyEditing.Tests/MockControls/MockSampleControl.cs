@@ -70,6 +70,13 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 				colorSpaces: new[] { "RGB", "sRGB" });
 			AddProperty<CommonBrush> (this.brushPropertyInfo);
 
+			AddProperty<CommonBrush> (new MockBrushPropertyInfo (
+				name: "SolidBrushNoResource",
+				valueSources: ValueSources.Default | ValueSources.Local,
+				category: null,
+				canWrite: true
+			));
+
 			this.materialDesignBrushPropertyInfo = new MockBrushPropertyInfo (
 				name: "MaterialDesignBrush",
 				category: null,

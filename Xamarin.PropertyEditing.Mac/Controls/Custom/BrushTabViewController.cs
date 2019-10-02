@@ -59,7 +59,7 @@ namespace Xamarin.PropertyEditing.Mac
 			existing.IntersectWith (this.brushTypeTable.Keys);
 
 			var removed = new HashSet<CommonBrushType> (this.brushTypeTable.Keys);
-			removed.ExceptWith (existing);
+			removed.ExceptWith (ViewModel?.BrushTypes.Values ?? Array.Empty<CommonBrushType>());
 
 			foreach (var item in removed.Select (t => new { Type = t, Tab = TabView.Items[this.brushTypeTable[t]] }).ToArray ()) {
 				RemoveTabViewItem (item.Tab);
@@ -137,7 +137,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 			if (this.brushTypeTable.TryGetValue (ViewModel.SelectedBrushType, out int index)) {
 				SelectedTabViewItemIndex = index;
-			}
+				this.filterResource.Hidden = ViewModel.SelectedBrushType != CommonBrushType.Resource;
+			} else
+				this.filterResource.Hidden = true;
 
 			this.inhibitSelection = false;
 		}
