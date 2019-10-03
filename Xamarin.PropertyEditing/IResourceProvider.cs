@@ -8,6 +8,8 @@ namespace Xamarin.PropertyEditing
 {
 	public interface IResourceProvider
 	{
+		event EventHandler<ResourcesChangedEventArgs> ResourcesChanged;
+
 		/// <summary>
 		/// Gets whether or not the resource provider can create resources.
 		/// </summary>
@@ -81,6 +83,27 @@ namespace Xamarin.PropertyEditing
 		/// Gets or sets whether the error message is just a warning, thereby not preventing creation
 		/// </summary>
 		public bool IsWarning
+		{
+			get;
+		}
+	}
+
+	public class ResourcesChangedEventArgs
+		: EventArgs
+	{
+		public ResourcesChangedEventArgs ()
+		{
+		}
+
+		public ResourcesChangedEventArgs (ResourceSource source)
+		{
+			if (source == null)
+				throw new ArgumentNullException (nameof(source));
+
+			Source = source;
+		}
+
+		public ResourceSource Source
 		{
 			get;
 		}
