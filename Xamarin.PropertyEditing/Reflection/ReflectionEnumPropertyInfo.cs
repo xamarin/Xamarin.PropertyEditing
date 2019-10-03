@@ -44,6 +44,8 @@ namespace Xamarin.PropertyEditing.Reflection
 			get;
 		}
 
+		public string SeparatorString { get; }
+
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 		public override async Task SetValueAsync<TValue> (object target, TValue value)
 		{

@@ -39,6 +39,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 			set { SetValueName (value); }
 		}
 
+		public string SeparatorString => this.predefinedValues.SeparatorString;
+
 		public bool IsConstrainedToPredefined => this.predefinedValues.IsConstrainedToPredefined;
 
 		protected override TValue CoerceValue (TValue validationValue)

@@ -39,14 +39,22 @@ namespace Xamarin.PropertyEditing.Mac
 
 				this.popupButtonList.RemoveAllItems ();
 				foreach (var item in ViewModel.PossibleValues) {
-					this.popupButtonList.AddItem (new NSMenuItem (item));
+					if (!string.IsNullOrEmpty (ViewModel.SeparatorString) && ViewModel.SeparatorString == item) {
+						this.popupButtonList.AddItem (NSMenuItem.SeparatorItem);
+					} else {
+						this.popupButtonList.AddItem (new NSMenuItem (item));
+					}
 				}
 			} else {
 				RequireComboBox ();
 
 				this.comboBox.RemoveAll ();
 				foreach (var item in ViewModel.PossibleValues) {
-					this.comboBox.Add (new NSString (item));
+					if (!string.IsNullOrEmpty (ViewModel.SeparatorString) && ViewModel.SeparatorString == item) {
+						this.comboBox.Add (NSMenuItem.SeparatorItem);
+					} else {
+						this.comboBox.Add (new NSString (item));
+					}
 				}
 			}
 
