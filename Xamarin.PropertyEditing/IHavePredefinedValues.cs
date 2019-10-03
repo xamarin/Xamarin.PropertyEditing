@@ -21,6 +21,8 @@ namespace Xamarin.PropertyEditing
 		/// </remarks>
 		bool IsValueCombinable { get; }
 
+		string SeparatorString { get; }
+
 		IReadOnlyDictionary<string, TValue> PredefinedValues { get; }
 	}
 }
