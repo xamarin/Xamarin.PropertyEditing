@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 		public override string Category => HostedProperty.Category;
 
-		public override bool CanDelve => this.panel != null && this.panel.ArrangeMode == PropertyArrangeMode.Name;
+		public override bool CanDelve => this.panel != null && this.panel.ArrangeMode != PropertyArrangeMode.Name;
 
 		public override bool DelveByDefault => true;
 
