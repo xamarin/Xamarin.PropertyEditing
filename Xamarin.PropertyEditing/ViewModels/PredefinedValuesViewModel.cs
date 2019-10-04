@@ -16,13 +16,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 				throw new ArgumentException (nameof(property) + " did not have predefined values", nameof(property));
 
 			var list = new List<string> (this.predefinedValues.PredefinedValues.Keys);
-			// If we're constrained but can't use the default, we need a blank to represent default
-			if (this.predefinedValues.IsConstrainedToPredefined) {
-				if (!property.ValueSources.HasFlag (ValueSources.Default) || !TryGetValueName (default(TValue), out string defaultName)) {
-					if (!list.Contains (String.Empty)) {
-						this.supportUnset = true;
-						list.Insert (0, String.Empty);
-					}
+			// If we're constrained but can't use the default, we need a blank to represent unset
+			if (IsConstrainedToPredefined && !property.ValueSources.HasFlag (ValueSources.Default)) {
+				if (!list.Contains (String.Empty)) {
+					this.supportUnset = true;
+					list.Insert (0, String.Empty);
 				}
 			}
 
