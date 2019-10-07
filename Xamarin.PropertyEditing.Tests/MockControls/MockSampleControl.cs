@@ -41,6 +41,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<CommonRectangle> ("Rectangle", ReadWrite);
 			AddProperty<CommonRatio> ("Ratio", ReadWrite);
 			AddProperty<CommonThickness> ("Thickness", ReadWrite);
+			AddProperty<Resource> ("Resource", ReadWrite, valueSources: ValueSources.Default | ValueSources.Resource);
 			AddProperty<object> ("Object", ReadWrite);
 			AddProperty<IList> ("Collection", ReadWrite);
 			AddProperty<ITypeInfo> ("Type", ReadWrite, realType: typeof(Type).ToTypeInfo());

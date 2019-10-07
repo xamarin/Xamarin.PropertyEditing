@@ -55,7 +55,7 @@ namespace Xamarin.PropertyEditing.Tests
 		public Task<IReadOnlyList<Resource>> GetResourcesAsync (object target, IPropertyInfo property, CancellationToken cancelToken)
 		{
 			return Task.FromResult<IReadOnlyList<Resource>> (this.resources.SelectMany (g => g)
-				.Where (r => property.Type.IsAssignableFrom (r.GetType().GetGenericArguments()[0]) && (!(r.Source is ObjectResourceSource ors) || ReferenceEquals (target, ors.Target)))
+				.Where (r => (property.Type == typeof(Resource) || property.Type.IsAssignableFrom (r.GetType().GetGenericArguments()[0])) && (!(r.Source is ObjectResourceSource ors) || ReferenceEquals (target, ors.Target)))
 				.ToList());
 		}
 
@@ -145,7 +145,9 @@ namespace Xamarin.PropertyEditing.Tests
 				new Resource<CommonSolidBrush> (SystemResourcesSource, "CHighlightBrush", new CommonSolidBrush (51, 153, 255)),
 				new Resource<CommonSolidBrush> (SystemResourcesSource, "CTransparentBrush", new CommonSolidBrush (0, 0, 0, 0)),
 				new Resource<CommonColor> (SystemResourcesSource, "ControlTextColor", new CommonColor (0, 0, 0)),
-				new Resource<CommonColor> (SystemResourcesSource, "HighlightColor", new CommonColor (51, 153, 255))
+				new Resource<CommonColor> (SystemResourcesSource, "HighlightColor", new CommonColor (51, 153, 255)),
+
+				new Resource<string> (SystemResourcesSource, "StringResource", "StringResourceValue")
 			},
 
 			new ObservableGrouping<ResourceSource, Resource> (ApplicationResourcesSource) {

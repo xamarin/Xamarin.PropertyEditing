@@ -75,6 +75,16 @@
 		</Setter>
 	</Style>
 
+	<Style TargetType="{x:Type local:SimpleResourceEditorControl}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:SimpleResourceEditorControl}">
+					<local:ComboBoxEx x:Name="ComboBox" ItemsSource="{Binding Selector.Resources}" DisplayMemberPath="Name" SelectedValue="{Binding Resource,Mode=TwoWay}" VerticalContentAlignment="Center" AutomationProperties.Name="{Binding Name,Mode=OneTime}" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style TargetType="{x:Type local:Spinner}">
 		<Setter Property="Template">
 			<Setter.Value>
