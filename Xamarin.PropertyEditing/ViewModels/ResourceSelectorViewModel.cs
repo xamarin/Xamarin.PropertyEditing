@@ -21,6 +21,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 				throw new ArgumentNullException (nameof (property));
 
 			Provider = provider;
+			provider.ResourcesChanged += OnResourcesChanged;
+
 			this.targets = targets.ToArray();
 			Property = property;
 			UpdateResources();
@@ -168,6 +170,11 @@ namespace Xamarin.PropertyEditing.ViewModels
 				return false;
 
 			return true;
+		}
+
+		private void OnResourcesChanged (object sender, EventArgs e)
+		{
+			UpdateResources ();
 		}
 
 		private async void UpdateResources ()
