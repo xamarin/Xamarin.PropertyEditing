@@ -40,13 +40,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.currentTextField.AddButton (this.revealPathButton);
 
-			this.panel = new NSOpenPanel {
-				AllowsMultipleSelection = false,
-				CanCreateDirectories = true,
-				ShowsHiddenFiles = false,
-				ShowsResizeIndicator = true,
-				TreatsFilePackagesAsDirectories = true,
-			};
+			this.panel = NSOpenPanel.OpenPanel;
 
 			// update the value on keypress
 			this.revealPathButton.Activated += OnRevealPathButtonActivated;
@@ -92,7 +86,13 @@ namespace Xamarin.PropertyEditing.Mac
 		private void BrowsePathButton_Activated (object sender, EventArgs e)
 		{
 			Window.MakeFirstResponder (this.currentTextField);
-			this.panel.BeginSheet (this.Window, HandleAction);
+
+			this.panel.AllowsMultipleSelection = false;
+			this.panel.CanCreateDirectories = true;
+			this.panel.ShowsHiddenFiles = false;
+			this.panel.ShowsResizeIndicator = true;
+			this.panel.TreatsFilePackagesAsDirectories = true;
+			this.panel.BeginSheet (Window, HandleAction);
 		}
 
 		protected abstract void OnRevealPathButtonActivated (object sender, EventArgs e);
