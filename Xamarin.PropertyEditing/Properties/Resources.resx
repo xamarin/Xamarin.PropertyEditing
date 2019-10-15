@@ -1036,5 +1036,8 @@
   <data name="AccessibilityBindingAddValueConverterCancel" xml:space="preserve">
     <value>This button will cancel the changes you have made in the Add Value Converter Editor.</value>
     <comment>Text to inform the user that this button will cancel the changes you have made in the Add Value Converter Editor</comment>
+  </data>  
+  <data name="ObjectTypeLabelNone" xml:space="preserve">
+    <value>None</value>
   </data>
 </root>

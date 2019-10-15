@@ -1468,5 +1468,11 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("AccessibilityBindingAddValueConverterCancel", resourceCulture);
             }
         }
+        
+        public static string ObjectTypeLabelNone {
+            get {
+                return ResourceManager.GetString("ObjectTypeLabelNone", resourceCulture);
+            }
+        }
     }
 }

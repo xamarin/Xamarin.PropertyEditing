@@ -8,6 +8,11 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public override bool CanBecomeKeyView { get { return Enabled; } }
 
+		public FocusablePopUpButton ()
+		{
+			Cell.LineBreakMode = NSLineBreakMode.TruncatingMiddle;
+		}
+
 		public override bool BecomeFirstResponder ()
 		{
 			var willBecomeFirstResponder = base.BecomeFirstResponder ();
