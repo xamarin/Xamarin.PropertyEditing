@@ -11,6 +11,8 @@ namespace Xamarin.PropertyEditing.Tests
 	public class MockResourceProvider
 		: IResourceProvider
 	{
+		public event EventHandler<ResourcesChangedEventArgs> ResourcesChanged;
+
 		public bool CanCreateResources => true;
 
 		public Task<ResourceCreateError> CheckNameErrorsAsync (object target, ResourceSource source, string name)

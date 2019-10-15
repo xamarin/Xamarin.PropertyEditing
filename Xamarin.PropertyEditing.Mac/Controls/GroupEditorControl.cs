@@ -128,21 +128,12 @@ namespace Xamarin.PropertyEditing.Mac
 				FocusRingType = NSFocusRingType.None;
 			}
 
-			// ValidateProposedFirstResponder is implemented as an extension method so we have to override the hard way (see xamarin-macios/4837)
-			[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "objc_msgSendSuper")]
-			public extern static bool bool_objc_msgSendSuper_IntPtr_IntPtr (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2);
-
-			static readonly IntPtr selValidateProposedFirstResponder_ForEvent_Handle = ObjCRuntime.Selector.GetHandle ("validateProposedFirstResponder:forEvent:");
-
-
-			[Export ("validateProposedFirstResponder:forEvent:")]
-			public bool ValidateProposedFirstResponder (NSResponder responder, NSEvent forEvent)
+			public override bool ValidateProposedFirstResponder (NSResponder responder, NSEvent forEvent)
 			{
 				if (responder is PropertyButton)
 					return true;
 
-				bool baseRet = bool_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, selValidateProposedFirstResponder_ForEvent_Handle, responder.Handle, forEvent == null ? IntPtr.Zero : forEvent.Handle);
-				return true;
+				return base.ValidateProposedFirstResponder (responder, forEvent);
 			}
 		}
 

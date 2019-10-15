@@ -6,7 +6,8 @@
 					xmlns:prop="clr-namespace:Xamarin.PropertyEditing.Properties;assembly=Xamarin.PropertyEditing"
 					xmlns:system="clr-namespace:System;assembly=mscorlib"
 					xmlns:vm="clr-namespace:Xamarin.PropertyEditing.ViewModels;assembly=Xamarin.PropertyEditing"
-					xmlns:pe="clr-namespace:Xamarin.PropertyEditing;assembly=Xamarin.PropertyEditing">
+					xmlns:pe="clr-namespace:Xamarin.PropertyEditing;assembly=Xamarin.PropertyEditing"
+					xmlns:common="clr-namespace:Xamarin.PropertyEditing.Common;assembly=Xamarin.PropertyEditing">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="MenuButtonStyle.xaml" />
@@ -408,6 +409,125 @@
 							<Path Style="{StaticResource ThicknessIconStyle}" Data="{DynamicResource BottomThicknessGeometry}" />
 						</Border>
 						<local:IntegerUpDownControl Grid.Column="1" Grid.Row="1" Margin="14,2,2,0" Value="{Binding Bottom}" IsEnabled="{TemplateBinding IsEnabled}" AutomationProperties.Name="Bottom" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:AutoResizingMaskEditorControl">
+		<Setter Property="UseLayoutRounding" Value="True" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:AutoResizingMaskEditorControl">
+					<ControlTemplate.Resources>
+						<Style x:Key="MarginButton" TargetType="ToggleButton">
+							<Setter Property="BorderThickness" Value="0" />
+							<Setter Property="Foreground" Value="{DynamicResource GuidelineEnabledForegroundBrush}" />
+							<Setter Property="Background" Value="Transparent" />
+							<Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+							<Setter Property="Padding" Value="0" />
+							<Setter Property="VerticalAlignment" Value="Center" />
+							<Setter Property="HorizontalAlignment" Value="Center" />
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="ToggleButton">
+										<Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Margin="{TemplateBinding Margin}" Padding="{TemplateBinding Padding}" UseLayoutRounding="{TemplateBinding UseLayoutRounding}">
+											<Polyline Stroke="{TemplateBinding Foreground}" Points="4,15 4,12 4,15 4,18 4,15 26,15 26,15 26,12 26,15 26,18 26,15" Height="30" Width="30" />
+										</Border>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+							<Style.Triggers>
+								<Trigger Property="IsChecked" Value="False">
+									<Setter Property="Foreground" Value="{DynamicResource GuidelineDisabledForegroundBrush}" />
+								</Trigger>
+							</Style.Triggers>
+						</Style>
+					</ControlTemplate.Resources>
+
+					<Grid VerticalAlignment="Top" Height="100" UseLayoutRounding="{TemplateBinding UseLayoutRounding}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+
+						<Border Grid.Row="0" Grid.Column="0" BorderBrush="{DynamicResource InputBorderBrush}" BorderThickness="1" Background="{DynamicResource InputBackgroundBrush}">
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition />
+									<RowDefinition Height="40" />
+									<RowDefinition />
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition />
+									<ColumnDefinition Width="40" />
+									<ColumnDefinition />
+								</Grid.ColumnDefinitions>
+								<ToggleButton Style="{StaticResource MarginButton}" AutomationProperties.Name="{x:Static prop:Resources.AutoresizingLeftMarginName}" IsChecked="{Binding LeftMarginFixed,Mode=TwoWay}" Grid.Row="1" Grid.Column="0" />
+								<ToggleButton Style="{StaticResource MarginButton}" AutomationProperties.Name="{x:Static prop:Resources.AutoresizingTopMarginName}" IsChecked="{Binding TopMarginFixed,Mode=TwoWay}" Grid.Row="0" Grid.Column="1">
+									<ToggleButton.RenderTransform>
+										<RotateTransform Angle="90" />
+									</ToggleButton.RenderTransform>
+								</ToggleButton>
+								<ToggleButton Style="{StaticResource MarginButton}" AutomationProperties.Name="{x:Static prop:Resources.AutoresizingRightMarginName}" IsChecked="{Binding RightMarginFixed,Mode=TwoWay}" Grid.Row="1" Grid.Column="2" />
+								<ToggleButton Style="{StaticResource MarginButton}" AutomationProperties.Name="{x:Static prop:Resources.AutoresizingBottomMarginName}" IsChecked="{Binding BottomMarginFixed,Mode=TwoWay}" Grid.Row="2" Grid.Column="1">
+									<ToggleButton.RenderTransform>
+										<RotateTransform Angle="90" />
+									</ToggleButton.RenderTransform>
+								</ToggleButton>
+
+								<Button Name="sizingButton" Grid.Row="1" Grid.Column="1" Command="{Binding CycleSizingCommand,Mode=OneTime}" BorderThickness="1" BorderBrush="{DynamicResource GuidelineDisabledForegroundBrush}" Background="Transparent" Content="{Binding}" AutomationProperties.HelpText="{x:Static prop:Resources.AutoresizingSizingHelpText}">
+									<Button.ContentTemplate>
+										<DataTemplate DataType="vm:AutoResizingPropertyViewModel">
+											<Grid>
+												<Polyline Name="widthSizable" Stroke="{DynamicResource GuidelineEnabledForegroundBrush}" Points="0,15 0.2,14.8 0,15 0.2,15.2 0,15 30,15 30,15 29.8,14.8 30,15 29.8,15.2 30,15" Width="30" Height="30" SnapsToDevicePixels="True" />
+												<Polyline Name="heightSizable" Stroke="{DynamicResource GuidelineEnabledForegroundBrush}" Points="15,0 14.8,0.2 15,0 15.2,0.2 15,0 15,30 15,30 14.8,29.8 15,30 15.2,29.8 15,30" Width="30" Height="30" SnapsToDevicePixels="True" />
+											</Grid>
+											<DataTemplate.Triggers>
+												<DataTrigger Binding="{Binding HeightSizable}" Value="False">
+													<Setter TargetName="heightSizable" Property="Stroke" Value="{DynamicResource GuidelineDisabledForegroundBrush}" />
+												</DataTrigger>
+												<DataTrigger Binding="{Binding WidthSizable}" Value="False">
+													<Setter TargetName="widthSizable" Property="Stroke" Value="{DynamicResource GuidelineDisabledForegroundBrush}" />
+												</DataTrigger>
+											</DataTemplate.Triggers>
+										</DataTemplate>
+									</Button.ContentTemplate>
+								</Button>
+							</Grid>
+						</Border>
+
+						<Border Grid.Row="0" Grid.Column="1" BorderBrush="{DynamicResource InputBorderBrush}" BorderThickness="1" Background="{DynamicResource InputBackgroundBrush}" Margin="2,0,0,0">
+							<Border Name="osBorder" Margin="2" Background="{DynamicResource ExampleWindowBackgroundBrush}" BorderThickness="0">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="Auto" />
+										<RowDefinition />
+									</Grid.RowDefinitions>
+
+									<Border Grid.Row="0" BorderThickness="0" Background="{DynamicResource ExampleWindowTitleBackgroundBrush}" Height="4" />
+									<Canvas Grid.Row="1" Margin="6,6,0,0">
+										<Canvas.Resources>
+											<Storyboard FillBehavior="Stop" RepeatBehavior="Forever" AutoReverse="True" Duration="0:0:0.5" x:Key="GrowStoryboard" Storyboard.TargetName="windowRect">
+												<DoubleAnimation Storyboard.TargetProperty="Width" To="{Binding ElementName=osBorder,Path=ActualWidth}" />
+												<DoubleAnimation Storyboard.TargetProperty="Height" To="{Binding ElementName=osBorder,Path=ActualHeight}" />
+											</Storyboard>
+										</Canvas.Resources>
+										<Canvas.Triggers>
+											<EventTrigger RoutedEvent="MouseEnter">
+												<BeginStoryboard Storyboard="{StaticResource GrowStoryboard}" Name="BeginGrowStoryboard" />
+											</EventTrigger>
+											<EventTrigger RoutedEvent="MouseLeave">
+												<RemoveStoryboard BeginStoryboardName="BeginGrowStoryboard" />
+											</EventTrigger>
+										</Canvas.Triggers>
+										<Rectangle Name="windowRect" Fill="White" Width="30" Height="30" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" SnapsToDevicePixels="False" />
+										<Rectangle Name="elementRect" Fill="Red" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" SnapsToDevicePixels="False" />
+									</Canvas>
+								</Grid>
+							</Border>
+						</Border>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

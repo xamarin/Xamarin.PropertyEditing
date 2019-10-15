@@ -34,7 +34,8 @@ namespace Xamarin.PropertyEditing.ViewModels
 
 			if (allowedBrushTypes.Contains (CommonBrushType.NoBrush)) types.Add (Resources.NoBrush, CommonBrushType.NoBrush);
 			if (allowedBrushTypes.Contains (CommonBrushType.Solid)) types.Add (Resources.SolidBrush, CommonBrushType.Solid);
-			if (allowedBrushTypes.Contains (CommonBrushType.Resource)) types.Add (Resources.ResourceBrush, CommonBrushType.Resource);
+			if (allowedBrushTypes.Contains (CommonBrushType.Resource) && property.ValueSources.HasFlag (ValueSources.Resource))
+				types.Add (Resources.ResourceBrush, CommonBrushType.Resource);
 
 			if (platform.SupportsMaterialDesign && allowedBrushTypes.Contains (CommonBrushType.MaterialDesign)) {
 				types.Insert (2, Resources.MaterialDesignColorBrush, CommonBrushType.MaterialDesign);

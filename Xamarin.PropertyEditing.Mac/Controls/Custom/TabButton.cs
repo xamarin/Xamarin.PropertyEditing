@@ -6,7 +6,7 @@ using Foundation;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class TabButton
-		: NSButton
+		: FocusableButton
 	{
 		public TabButton (IHostResourceProvider hostResource, string imageName)
 		{
