@@ -7,9 +7,9 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class BasePopOverViewModelControl : BasePopOverControl
 	{
-		internal PropertyViewModel ViewModel { get; }
+		internal EditorViewModel ViewModel { get; }
 
-		public BasePopOverViewModelControl (IHostResourceProvider hostResources, PropertyViewModel viewModel, string title, string imageNamed)
+		public BasePopOverViewModelControl (IHostResourceProvider hostResources, EditorViewModel viewModel, string title, string imageNamed)
 			: base (hostResources, title, imageNamed)
 		{
 			if (viewModel == null)

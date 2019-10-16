@@ -35,14 +35,14 @@ namespace Xamarin.PropertyEditing.Mac
 		public const string DefaultFontName = ".AppleSystemUIFont";
 		public virtual bool IsDynamicallySized => false;
 
-		PropertyViewModel viewModel;
-		public PropertyViewModel ViewModel {
+		EditorViewModel viewModel;
+		public EditorViewModel ViewModel {
 			get { return this.viewModel; }
 			set {
 				if (this.ViewModel == value)
 					return;
 
-				PropertyViewModel oldModel = this.viewModel;
+				EditorViewModel oldModel = this.viewModel;
 				if (oldModel != null) {
 					oldModel.PropertyChanged -= OnPropertyChanged;
 				}
@@ -58,7 +58,7 @@ namespace Xamarin.PropertyEditing.Mac
 		EditorViewModel IEditorView.ViewModel
 		{
 			get { return this.ViewModel; }
-			set { ViewModel = (PropertyViewModel)value; }
+			set { ViewModel = (EditorViewModel)value; }
 		}
 
 		NSView INativeContainer.NativeView => this;
@@ -107,7 +107,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		protected virtual void OnViewModelChanged (PropertyViewModel oldModel)
+		protected virtual void OnViewModelChanged (EditorViewModel oldModel)
 		{
 			if (ViewModel != null) {
 				SetEnabled ();
@@ -145,7 +145,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 	internal abstract class PropertyEditorControl<TViewModel>
 		: PropertyEditorControl
-		where TViewModel : PropertyViewModel
+		where TViewModel : EditorViewModel
 	{
 		public PropertyEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
