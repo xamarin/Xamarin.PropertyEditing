@@ -33,12 +33,12 @@ namespace Xamarin.PropertyEditing.Mac
 			NSControl editorControl = null;
 			PropertyInfo customAutocompleteItemsPropertyInfo = vmType.GetProperty (AutocompleteItemsString);
 			if (customAutocompleteItemsPropertyInfo.GetValue (viewModel) is ObservableCollectionEx<string> values) {
-				if (values != null && values.Count > 0) {
+				if (values != null && values.Count > 0)
 					editorControl = new AutocompleteComboBox (hostResources, viewModel, values, previewCustomExpressionPropertyInfo);
-				} else {
-					editorControl = new NSTextField ();
-				}
 			}
+
+			if (editorControl == null)
+				editorControl = new NSTextField ();
 
 			editorControl.TranslatesAutoresizingMaskIntoConstraints = false;
 			editorControl.StringValue = (string)value ?? string.Empty;
