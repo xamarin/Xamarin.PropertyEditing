@@ -76,7 +76,7 @@ namespace Xamarin.PropertyEditing.Mac
 		internal static float PropertyTotalWidth => PropertyButton.DefaultSize + ButtonToWallSpacing + EditorToButtonSpacing;
 
 		private const float EditorToButtonSpacing = 4f;
-		private const float ButtonToWallSpacing = 9f;
+		private const float ButtonToWallSpacing = 17f;
 
 		private readonly PropertyButton propertyButton;
 		private readonly UnfocusableTextField label = new UnfocusableTextField {
