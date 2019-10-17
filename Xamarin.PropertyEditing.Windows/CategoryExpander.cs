@@ -19,6 +19,12 @@ namespace Xamarin.PropertyEditing.Windows
 
 		protected override void OnKeyDown (KeyEventArgs e)
 		{
+			base.OnKeyDown (e);
+
+			if (e.OriginalSource != this || e.Handled) {
+				return;
+			}
+
 			if (e.Key == Key.Down) {
 				SetExpanded (true);
 				UpdateValue();
@@ -32,8 +38,6 @@ namespace Xamarin.PropertyEditing.Windows
 				UpdateValue();
 				e.Handled = true;
 			}
-
-			base.OnKeyDown (e);
 		}
 
 		protected override void UpdateValue ()
