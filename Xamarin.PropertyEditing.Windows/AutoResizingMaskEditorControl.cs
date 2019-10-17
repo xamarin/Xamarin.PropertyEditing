@@ -110,7 +110,7 @@ namespace Xamarin.PropertyEditing.Windows
 				name = String.Format (Properties.Resources.AutoresizingSizingName, current);
 			}
 
-			AutomationProperties.SetName (this.sizingButton, name);
+			AutomationProperties.SetName (this.sizingButton, name ?? String.Empty);
 		}
 	}
 }
