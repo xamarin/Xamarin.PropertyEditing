@@ -305,7 +305,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BoolEditorControl">
-					<CheckBox Name="CheckBox" Height="{TemplateBinding Height}" VerticalContentAlignment="Center" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalAlignment="Center" />
+					<CheckBox Name="CheckBox" Height="{TemplateBinding Height}" FocusVisualStyle="{DynamicResource EmptyCheckBoxFocusVisualSquare}" VerticalContentAlignment="Center" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" IsChecked="{Binding Value}" IsEnabled="{Binding Property.CanWrite,Mode=OneTime}" VerticalAlignment="Center" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -2823,15 +2823,9 @@
 	</Style>
 
 	<Style x:Key="EmptyCheckBoxFocusVisualSquare" TargetType="Control" BasedOn="{StaticResource GenericVisualFocusStyle}">
-		<Setter Property="Margin" Value="-3,0,0,0" />
-		<Setter Property="Width" Value="22" />
-		<Setter Property="Height" Value="21" />
+		<Setter Property="Margin" Value="-1" />
+		<Setter Property="Width" Value="18" />
 		<Setter Property="HorizontalAlignment" Value="Left" />
-		<Setter Property="VerticalAlignment" Value="Center" />
-	</Style>
-
-	<Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-		<Setter Property="FocusVisualStyle" Value="{StaticResource EmptyCheckBoxFocusVisualSquare}" />
 	</Style>
 
 	<Style TargetType="{x:Type ComboBoxItem}">
