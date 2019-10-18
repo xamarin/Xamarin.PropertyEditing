@@ -831,6 +831,7 @@
 	</local:BrushChoiceTemplateSelector>
 
 	<Style TargetType="local:BrushTabbedEditorControl">
+		<Setter Property="Focusable" Value="False" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:BrushTabbedEditorControl">
