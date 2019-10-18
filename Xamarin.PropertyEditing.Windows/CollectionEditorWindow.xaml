@@ -9,6 +9,13 @@
 	MinHeight="300" Height="500" MinWidth="500" Width="700" ShowIcon="False" ShowMaximize="False" ShowMinimize="False" WindowStartupLocation="CenterOwner"
 	Title="{Binding Property.Name, StringFormat={x:Static prop:Resources.CollectionEditorTitle},Mode=OneTime}">
 
+	<local:WindowEx.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Themes/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</local:WindowEx.Resources>
 	<Grid Margin="12">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
@@ -25,6 +32,18 @@
 		<TextBlock Text="{x:Static prop:Resources.Properties}" Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" />
 
 		<ListBox ItemsSource="{Binding Targets,Mode=OneTime}" SelectedItem="{Binding SelectedTarget,Mode=TwoWay}" Margin="0,4,0,0" Grid.Column="0" Grid.Row="1">
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+					<Setter Property="AutomationProperties.Name">
+						<Setter.Value>
+							<MultiBinding StringFormat="{}[{0}] {1}">
+								<Binding Path="Row" />
+								<Binding Mode="OneTime" Path="TypeName" />
+							</MultiBinding>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</ListBox.ItemContainerStyle>
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<TextBlock>
@@ -46,11 +65,17 @@
 			</Grid.ColumnDefinitions>
 
 			<StackPanel Orientation="Horizontal" Grid.Column="0">
-				<Button Command="{Binding RemoveTargetCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.RemoveItem}" MinWidth="29" FontFamily="Segoe UI Symbol" Content="❌" />
+				<Button Command="{Binding RemoveTargetCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.RemoveItem}" AutomationProperties.Name="{x:Static prop:Resources.RemoveItem}" MinWidth="29" FontFamily="Segoe UI Symbol" Content="❌" />
 				<Button Command="{Binding MoveUpCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.MoveItemUp}" AutomationProperties.Name="{x:Static prop:Resources.MoveItemUp}" MinWidth="29" Margin="4,0,0,0" FontFamily="Segoe UI Symbol" Content="⭡" />
 				<Button Command="{Binding MoveDownCommand,Mode=OneTime}" ToolTip="{x:Static prop:Resources.MoveItemDown}" AutomationProperties.Name="{x:Static prop:Resources.MoveItemDown}" MinWidth="29" Margin="4,0,0,0" FontFamily="Segoe UI Symbol" Content="⭣" />
 			</StackPanel>
-			<ComboBox Grid.Column="1" ItemsSource="{Binding SuggestedTypes}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedType,Mode=TwoWay}" Margin="12,0,0,0" />
+			<ComboBox Grid.Column="1" DisplayMemberPath="Name" ItemsSource="{Binding SuggestedTypes}" SelectedItem="{Binding SelectedType,Mode=TwoWay}" AutomationProperties.Name="{x:Static prop:Resources.AccessibilityCollectionTypeSelector}" Margin="12,0,0,0">
+				<ComboBox.ItemContainerStyle>
+					<Style TargetType="ComboBoxItem">
+						<Setter Property="AutomationProperties.Name" Value="{Binding Name,Mode=OneTime}" />
+					</Style>
+				</ComboBox.ItemContainerStyle>
+			</ComboBox>
 			<Button Grid.Column="2" Command="{Binding AddTargetCommand,Mode=OneTime}" Margin="4,0,0,0" Content="{x:Static prop:Resources.AddCollectionItem}" />
 		</Grid>
 
