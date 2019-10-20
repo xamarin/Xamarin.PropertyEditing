@@ -8,6 +8,8 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class NumericTextField : PropertyTextField
 	{
+		public override bool CanBecomeKeyView { get { return Enabled; } }
+
 		private NSText CachedCurrentEditor {
 			get; set;
 		}

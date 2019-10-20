@@ -4,22 +4,33 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class EmptyBrushEditorViewController : NotifyingViewController<BrushPropertyViewModel>
+	internal class EmptyBrushEditorViewController : NotifyingViewController<BrushPropertyViewModel>
 	{
 		public EmptyBrushEditorViewController ()
 		{
-			PreferredContentSize = new CGSize (430, 230);
+			PreferredContentSize = new CGSize (PreferredContentSizeWidth, PreferredContentSizeHeight);
 		}
 
 		private NSButton brushEditor;
 
 		public override void LoadView ()
 		{
-			View = brushEditor = new NSButton {
+			View = this.brushEditor = new NSButton {
 				Bordered = false,
 				Title = Properties.Resources.NoBrush,
 				Enabled = false
 			};
+		}
+
+		public override void ViewDidLayout ()
+		{
+			base.ViewDidLayout ();
+
+			if (ParentViewController is BrushTabViewController pc) {
+				if (pc.Selected is TabButton tb) {
+					View.Window?.MakeFirstResponder (tb);
+				}
+			}
 		}
 	}
 }

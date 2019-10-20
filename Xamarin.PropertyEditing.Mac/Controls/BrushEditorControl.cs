@@ -46,8 +46,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Frame = new CGRect (0, 0, 30, 10)
 			};
 
-			this.popover = new NSPopover {
-				Behavior = NSPopoverBehavior.Transient,
+			this.popover = new AutoClosePopOver (hostResources, hostResources.GetVibrantAppearance (EffectiveAppearance)) {
 				ContentViewController = this.brushTabViewController = new BrushTabViewController (hostResources) {
 					PreferredContentSize = new CGSize (550, 363)
 				}
