@@ -16,7 +16,7 @@ namespace Xamarin.PropertyEditing.Mac
 				throw new ArgumentNullException (nameof (hostResources));
 
 			this.hostResources = hostResources;
-			PreferredContentSize = new CGSize (430, 230);
+			PreferredContentSize = new CGSize (PreferredContentSizeWidth, PreferredContentSizeHeight);
 		}
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
@@ -65,12 +65,21 @@ namespace Xamarin.PropertyEditing.Mac
 			alphaLabel.Cell.LineBreakMode = NSLineBreakMode.Clipping;
 
 			alphaStack.AddView (alphaLabel, NSStackViewGravity.Trailing);
-			alphaStack.AddView (alphaSpinEditor, NSStackViewGravity.Trailing);
+			alphaStack.AddView (this.alphaSpinEditor, NSStackViewGravity.Trailing);
 
 			stack.AddView (this.materialEditor, NSStackViewGravity.Leading);
 			stack.AddView (alphaStack, NSStackViewGravity.Trailing);
 
 			View = stack;
+		}
+
+		public override void ViewDidLayout ()
+		{
+			base.ViewDidLayout ();
+
+			if (this.alphaSpinEditor.NumericEditor.CanBecomeKeyView) {
+				View.Window?.MakeFirstResponder (this.alphaSpinEditor.NumericEditor);
+			}
 		}
 
 		private readonly IHostResourceProvider hostResources;

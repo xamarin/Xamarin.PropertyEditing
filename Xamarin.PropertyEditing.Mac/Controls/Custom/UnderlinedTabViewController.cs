@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Threading;
+using System.Threading.Tasks;
 using AppKit;
 using CoreGraphics;
 using Foundation;
@@ -44,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void InsertTabViewItem (NSTabViewItem tabViewItem, nint index)
 		{
-			this.tabStack.InsertView (GetView (tabViewItem), (nuint)index, NSStackViewGravity.Leading);
+			this.tabStack.InsertView (GetView (tabViewItem, index), (nuint)index, NSStackViewGravity.Leading);
 			base.InsertTabViewItem (tabViewItem, index);
 		}
 
@@ -52,6 +53,9 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			int index = (int)TabView.IndexOf (tabViewItem);
 			NSView tabView = this.tabStack.Views[index];
+			if (tabView is TabButton tb) {
+				tb.Clicked -= OnTabButtonClicked;
+			}
 			this.tabStack.RemoveView (tabView);
 			tabView.Dispose ();
 
@@ -152,6 +156,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected NSStackView TabStack => this.tabStack;
 
+		internal IUnderliningTabView Selected { get => this.selected; set => this.selected = value; }
+
 		private NSEdgeInsets edgeInsets = new NSEdgeInsets (0, 0, 0, 0);
 
 		private void UpdatePadding()
@@ -182,27 +188,34 @@ namespace Xamarin.PropertyEditing.Mac
 				this.selected.Selected = true;
 		}
 
-		private NSView GetView (NSTabViewItem item)
+		private NSView GetView (NSTabViewItem item, nint index)
 		{
 			var id = item.Identifier as NSObjectFacade;
-			NSView tabView;
+			TabButton tabButton;
 			if (id != null) {
-				tabView = new UnderlinedImageView (HostResources, ((string)id.Target)) {
-					Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex,
-					ToolTip = item.ToolTip
-				};
+				tabButton = new TabButton (HostResources, (string)id.Target);
 			} else {
-				tabView = new UnderlinedTextField {
-					BackgroundColor = NSColor.Clear,
-					Editable = false,
-					Bezeled = false,
-					StringValue = item.Label,
-					Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex,
-					ToolTip = item.ToolTip
+				tabButton = new TabButton (HostResources) {
+					ControlSize = NSControlSize.Mini,
+					Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Mini)),
+					Title = item.Label,
 				};
 			}
 
-			return tabView;
+			tabButton.Tag = index;
+			tabButton.Selected = this.tabStack.Views.Length == SelectedTabViewItemIndex;
+			tabButton.ToolTip = item.ToolTip;
+			tabButton.Clicked += OnTabButtonClicked;
+
+			return tabButton;
+		}
+
+		private void OnTabButtonClicked (object sender, EventArgs e)
+		{
+			if (sender is TabButton tabButton) {
+				if (SelectedTabViewItemIndex != tabButton.Tag)
+					SelectedTabViewItemIndex = tabButton.Tag;
+			}
 		}
 	}
 }

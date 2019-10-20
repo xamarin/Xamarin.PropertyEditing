@@ -12,6 +12,9 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class NotifyingViewController<T> : NSViewController, INotifyingListner<T> where T : NotifyingObject
 	{
+		internal const int PreferredContentSizeWidth = 430;
+		internal const int PreferredContentSizeHeight = 230;
+
 		internal T ViewModel {
 			get => Adaptor.ViewModel;
 			set => Adaptor.ViewModel = value;
