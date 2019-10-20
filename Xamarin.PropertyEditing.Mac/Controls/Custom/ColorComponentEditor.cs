@@ -31,11 +31,11 @@ namespace Xamarin.PropertyEditing.Mac
 			Initialize (hostResources);
 		}
 
-		private ChannelGroup [] Editors { get; set; }
+		internal ChannelGroup [] Editors { get; set; }
 		private UnfocusableTextField hexLabel;
 		private NSTextField hexEditor;
 
-		class ChannelGroup
+		internal class ChannelGroup
 		{
 			public UnfocusableTextField Label { get; set; }
 			public ComponentSpinEditor Editor { get; set; }

@@ -13,6 +13,11 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class MaterialView : NotifyingView<MaterialDesignColorViewModel>
 	{
+		public override bool AcceptsFirstResponder ()
+		{
+			return false;
+		}
+
 		public override bool IsFlipped => true;
 
 		public MaterialView ()

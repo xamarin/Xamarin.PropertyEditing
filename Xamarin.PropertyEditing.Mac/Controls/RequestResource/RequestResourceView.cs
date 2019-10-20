@@ -12,8 +12,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class FirstResponderTableView : NSTableView
 	{
-		[Export ("validateProposedFirstResponder:forEvent:")]
-		public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
+		public override bool ValidateProposedFirstResponder (NSResponder responder, NSEvent forEvent)
 		{
 			return true;
 		}
