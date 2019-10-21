@@ -40,17 +40,11 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public PropertyButton (IHostResourceProvider hostResources)
+		public PropertyButton (IHostResourceProvider hostResources) : base (hostResources, "pe-property-button-default-mac-10")
 		{
-			if (hostResources == null)
-				throw new ArgumentNullException (nameof (hostResources));
-
-			this.hostResources = hostResources;
-
 			AccessibilityTitle = Properties.Resources.AccessibilityPropertiesButton;
 			AccessibilityHelp = Properties.Resources.AccessibilityPropertiesButtonDescription;
 			Enabled = true;
-			Image = this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");
 			ImageScaling = NSImageScale.None;
 			ToolTip = Properties.Resources.Default;
 
@@ -69,19 +63,10 @@ namespace Xamarin.PropertyEditing.Mac
 			AppearanceChanged ();
 		}
 
-		public sealed override void ViewDidChangeEffectiveAppearance ()
-		{
-			base.ViewDidChangeEffectiveAppearance ();
-
-			AppearanceChanged ();
-		}
-
-		private void AppearanceChanged ()
+		protected override void AppearanceChanged ()
 		{
 			UpdateImage ();
 		}
-
-		private readonly IHostResourceProvider hostResources;
 
 		private void PopUpContextMenu ()
 		{
@@ -175,34 +160,34 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.viewModel != null) {
 				
 				switch (this.viewModel.ValueSource) {
-				case ValueSource.Binding:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-bound-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-bound-mac-10");
-					break;
+					case ValueSource.Binding:
+						Image = focused ? HostResources.GetNamedImage ("pe-property-button-bound-mac-active-10") : HostResources.GetNamedImage ("pe-property-button-bound-mac-10");
+						break;
 
-				case ValueSource.Default:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");
-					break;
+					case ValueSource.Default:
+						Image = focused ? HostResources.GetNamedImage ("pe-property-button-default-mac-active-10") : HostResources.GetNamedImage ("pe-property-button-default-mac-10");
+						break;
 
-				case ValueSource.Local:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-local-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-local-mac-10");
-					break;
+					case ValueSource.Local:
+						Image = focused ? HostResources.GetNamedImage ("pe-property-button-local-mac-active-10") : HostResources.GetNamedImage ("pe-property-button-local-mac-10");
+						break;
 
-				case ValueSource.Inherited:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-10");
-					break;
+					case ValueSource.Inherited:
+						Image = focused ? HostResources.GetNamedImage ("pe-property-button-inherited-mac-active-10") : HostResources.GetNamedImage ("pe-property-button-inherited-mac-10");
+						break;
 
-				case ValueSource.Resource:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-inherited-mac-10");
-					break;
+					case ValueSource.Resource:
+						Image = focused ? HostResources.GetNamedImage ("pe-property-button-inherited-mac-active-10") : HostResources.GetNamedImage ("pe-property-button-inherited-mac-10");
+						break;
 
-				case ValueSource.Unset:
-					Image = focused ? this.hostResources.GetNamedImage ("pe-property-button-default-mac-active-10") : this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");
-					break;
+					case ValueSource.Unset:
+						Image = focused ? HostResources.GetNamedImage ("pe-property-button-default-mac-active-10") : HostResources.GetNamedImage ("pe-property-button-default-mac-10");
+						break;
 
-				default:
-					// To Handle ValueSource.DefaultStyle, ValueSource.Style etc.
-					Image = null;
-					break;
+					default:
+						// To Handle ValueSource.DefaultStyle, ValueSource.Style etc.
+						Image = null;
+						break;
 				}
 			}
 		}
@@ -252,11 +237,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnCustomExpression (object sender, EventArgs e)
 		{
-			var customExpressionView = new CustomExpressionView (this.hostResources, viewModel) {
+			var customExpressionView = new CustomExpressionView (this.HostResources, viewModel) {
 				Appearance = EffectiveAppearance
 			};
 
-			var customExpressionPopOver = new AutoClosePopOver (this.hostResources, EffectiveAppearance) {
+			var customExpressionPopOver = new AutoClosePopOver (this.HostResources, EffectiveAppearance) {
 				CloseOnEnter = false,
 				ContentViewController = new NSViewController (null, null) { View = customExpressionView },
 			};
@@ -268,11 +253,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnResourceRequested (object sender, EventArgs e)
 		{
-			var requestResourceView = new RequestResourceView (this.hostResources, this.viewModel) {
+			var requestResourceView = new RequestResourceView (this.HostResources, this.viewModel) {
 				Appearance = EffectiveAppearance
 			};
 
-			var resourceSelectorPopOver = new AutoClosePopOver (this.hostResources, EffectiveAppearance) {
+			var resourceSelectorPopOver = new AutoClosePopOver (this.HostResources, EffectiveAppearance) {
 				ContentViewController = new NSViewController (null, null) { View = requestResourceView },
 			};
 
@@ -283,7 +268,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnBindingRequested (object sender, CreateBindingRequestedEventArgs e)
 		{
-			var bindingEditorWindow = new BindingEditorWindow (this.hostResources, this.viewModel) {
+			var bindingEditorWindow = new BindingEditorWindow (this.HostResources, this.viewModel) {
 				Appearance = EffectiveAppearance,
 			};
 

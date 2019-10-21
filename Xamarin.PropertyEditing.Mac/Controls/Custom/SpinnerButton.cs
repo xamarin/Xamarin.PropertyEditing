@@ -19,12 +19,8 @@ namespace Xamarin.PropertyEditing.Mac
 			return base.HitTest (aPoint);
 		}
 
-		public SpinnerButton (IHostResourceProvider hostResource, bool isUp)
+		public SpinnerButton (IHostResourceProvider hostResource, bool isUp) : base (hostResource, "") // Blank because it is set up before AppearanceChanged is called
 		{
-			if (hostResource == null)
-				throw new ArgumentNullException (nameof (hostResource));
-
-			this.hostResources = hostResource;
 			this.imageBase += (isUp) ? "up" : "down";
 
 			AppearanceChanged ();
@@ -42,22 +38,14 @@ namespace Xamarin.PropertyEditing.Mac
 			UpdateImage ();
 		}
 
-		public sealed override void ViewDidChangeEffectiveAppearance ()
+		protected override void AppearanceChanged ()
 		{
-			base.ViewDidChangeEffectiveAppearance ();
-
-			AppearanceChanged ();
-		}
-
-		private void AppearanceChanged ()
-		{
-			this.image = this.hostResources.GetNamedImage (this.imageBase);
-			this.mouseOverImage = this.hostResources.GetNamedImage (this.imageBase + "-focus-blue");
+			this.image = HostResources.GetNamedImage (this.imageBase);
+			this.mouseOverImage = HostResources.GetNamedImage (this.imageBase + "-focus-blue");
 
 			UpdateImage ();
 		}
 
-		private readonly IHostResourceProvider hostResources;
 		private bool isMouseOver;
 		private string imageBase = "pe-stepper-";
 

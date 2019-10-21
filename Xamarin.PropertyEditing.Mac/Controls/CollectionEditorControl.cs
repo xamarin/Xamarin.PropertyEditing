@@ -108,8 +108,7 @@ namespace Xamarin.PropertyEditing.Mac
 			controlsBorder.AddSubview (addBorder);
 			controlsBorder.AddSubview (removeBorder);
 
-			this.propertyList = new PropertyList {
-				HostResourceProvider = hostResources,
+			this.propertyList = new PropertyList (hostResources, PropertyEditorPanel.PropertyEditorColId) {
 				ShowHeader = false,
 			};
 

@@ -10,32 +10,25 @@ using Xamarin.PropertyEditing.ViewModels;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class PropertyTableDelegate
-		: NSOutlineViewDelegate
+		: BaseOutlineViewDelegate
 	{
-		public PropertyTableDelegate (IHostResourceProvider hostResources, PropertyTableDataSource dataSource)
+		public PropertyTableDelegate (IHostResourceProvider hostResources, BaseOutlineViewDataSource dataSource) : base (hostResources, dataSource)
 		{
-			if (hostResources == null)
-				throw new ArgumentNullException (nameof (hostResources));
-			if (dataSource == null)
-				throw new ArgumentNullException (nameof (dataSource));
-
-			this.hostResources = hostResources;
-			this.dataSource = dataSource;
 		}
 
 		public void UpdateExpansions (NSOutlineView outlineView)
 		{
 			this.isUpdatingExpansions = true;
 
-			if (!String.IsNullOrWhiteSpace (this.dataSource.DataContext.FilterText)) {
+			if (!String.IsNullOrWhiteSpace (DataSource.DataContext.FilterText)) {
 				outlineView.ExpandItem (null, true);
 			} else {
-				foreach (PanelGroupViewModel g in this.dataSource.DataContext.ArrangedEditors) {
+				foreach (PanelGroupViewModel g in DataSource.DataContext.ArrangedEditors) {
 					NSObjectFacade item;
-					if (!this.dataSource.TryGetFacade (g, out item))
+					if (!DataSource.TryGetFacade (g, out item))
 						continue;
 
-					if (this.dataSource.DataContext.GetIsExpanded (g.Category))
+					if (DataSource.DataContext.GetIsExpanded (g.Category))
 						EnsureOpenOrClose (outlineView, item, open: true);
 					else
 						EnsureOpenOrClose (outlineView, item, open: false);
@@ -74,7 +67,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				((UnfocusableTextField)labelContainer.Subviews[1]).StringValue = group.Category;
 
-				if (this.dataSource.DataContext.GetIsExpanded (group.Category)) {
+				if (DataSource.DataContext.GetIsExpanded (group.Category)) {
 					SynchronizationContext.Current.Post (s => {
 						outlineView.ExpandItem (item);
 					}, null);
@@ -86,7 +79,7 @@ namespace Xamarin.PropertyEditing.Mac
 			NSView editorOrContainer = null;
 			if (this.firstCache.TryGetValue (cellIdentifier, out IEditorView editor)) {
 				this.firstCache.Remove (cellIdentifier);
-				editorOrContainer = (editor.NativeView is PropertyEditorControl) ? new EditorContainer (this.hostResources, editor) { Identifier = cellIdentifier } : editor.NativeView;
+				editorOrContainer = (editor.NativeView is PropertyEditorControl) ? new EditorContainer (HostResources, editor) { Identifier = cellIdentifier } : editor.NativeView;
 			} else {
 				editorOrContainer = GetEditor (cellIdentifier, evm, outlineView);
 				editor = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
@@ -129,7 +122,7 @@ namespace Xamarin.PropertyEditing.Mac
 					outlineView.NoteHeightOfRowsWithIndexesChanged (new NSIndexSet (index));
 				}
 			} else if (editorOrContainer is PanelHeaderEditorControl header) {
-				header.ViewModel = this.dataSource.DataContext;
+				header.ViewModel = DataSource.DataContext;
 			}
 
 			return editorOrContainer;
@@ -155,7 +148,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			if (facade.Target is PanelGroupViewModel group)
-				this.dataSource.DataContext.SetIsExpanded (group.Category, isExpanded: true);
+				DataSource.DataContext.SetIsExpanded (group.Category, isExpanded: true);
 			else if (facade.Target is ObjectPropertyViewModel ovm) {
 				NSView view = outline.GetView (0, row, makeIfNecessary: false);
 				SetRowValueBackground (view, valueBackground: true);
@@ -177,7 +170,7 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			if (facade.Target is PanelGroupViewModel group)
-				this.dataSource.DataContext.SetIsExpanded (group.Category, isExpanded: false);
+				DataSource.DataContext.SetIsExpanded (group.Category, isExpanded: false);
 			else if (facade.Target is ObjectPropertyViewModel ovm) {
 				NSView view = outline.GetView (0, row, makeIfNecessary: false);
 				SetRowValueBackground (view, valueBackground: false);
@@ -238,11 +231,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public const string CategoryIdentifier = "label";
 
-		private PropertyTableDataSource dataSource;
 		private bool isUpdatingExpansions;
 		private readonly PropertyEditorSelector editorSelector = new PropertyEditorSelector ();
 
-		private readonly IHostResourceProvider hostResources;
 		private readonly Dictionary<string, EditorRegistration> registrations = new Dictionary<string, EditorRegistration> ();
 		private readonly Dictionary<string, IEditorView> firstCache = new Dictionary<string, IEditorView> ();
 
@@ -270,7 +261,7 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 
 			if (valueBackground) {
-				var c = this.hostResources.GetNamedColor (NamedResources.ValueBlockBackgroundColor);
+				var c = HostResources.GetNamedColor (NamedResources.ValueBlockBackgroundColor);
 				view.SetValueForKey (c, new NSString ("backgroundColor"));
 			} else {
 				view.SetValueForKey (NSColor.Clear, new NSString ("backgroundColor"));
@@ -284,7 +275,7 @@ namespace Xamarin.PropertyEditing.Mac
 				return view;
 
 			if (vm != null) {
-				IEditorView editor = this.editorSelector.GetEditor (this.hostResources, vm);
+				IEditorView editor = this.editorSelector.GetEditor (HostResources, vm);
 
 				var editorControl = editor?.NativeView as PropertyEditorControl;
 				if (editorControl != null) {
@@ -294,9 +285,9 @@ namespace Xamarin.PropertyEditing.Mac
 					return editor.NativeView;
 				}
 
-				return new EditorContainer (this.hostResources, editor) { Identifier = identifier };
+				return new EditorContainer (HostResources, editor) { Identifier = identifier };
 			} else
-				return new PanelHeaderEditorControl (this.hostResources);
+				return new PanelHeaderEditorControl (HostResources);
 		}
 
 		private void GetVMGroupCellItendifiterFromFacade (NSObject item, out EditorViewModel vm, out PanelGroupViewModel group, out string cellIdentifier)

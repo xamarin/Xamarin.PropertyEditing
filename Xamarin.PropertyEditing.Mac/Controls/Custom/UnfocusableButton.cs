@@ -3,17 +3,30 @@ using AppKit;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	public abstract class UnfocusableButton : NSImageView
+	public class UnfocusableButton : NSImageView
 	{
 		public event EventHandler OnMouseEntered;
 		public event EventHandler OnMouseExited;
 		public event EventHandler OnMouseLeftDown;
 		public event EventHandler OnMouseRightDown;
 
-		NSTrackingArea trackingArea;
+		private NSTrackingArea trackingArea;
 
-		public UnfocusableButton ()
+        internal IHostResourceProvider HostResources { get; }
+
+		private readonly string imageName;
+
+		internal UnfocusableButton (IHostResourceProvider hostResources, string imageName)
 		{
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+
+			if (imageName == null)
+				throw new ArgumentNullException (nameof (imageName));
+
+			HostResources = hostResources;
+			this.imageName = imageName;
+		
 			Enabled = true;
 			ImageScaling = NSImageScale.AxesIndependently;
 		}
@@ -62,6 +75,13 @@ namespace Xamarin.PropertyEditing.Mac
 				AddTrackingArea (trackingArea);
 			}
 		}
+
+		public sealed override void ViewDidChangeEffectiveAppearance ()
+		{
+			base.ViewDidChangeEffectiveAppearance ();
+
+			AppearanceChanged ();
+		}
 		#endregion
 
 
@@ -86,6 +106,10 @@ namespace Xamarin.PropertyEditing.Mac
 			OnMouseRightDown?.Invoke (this, EventArgs.Empty);
 		}
 
+		protected virtual void AppearanceChanged ()
+		{
+			Image = HostResources.GetNamedImage (this.imageName);
+		}
 		#endregion
 	}
 }
