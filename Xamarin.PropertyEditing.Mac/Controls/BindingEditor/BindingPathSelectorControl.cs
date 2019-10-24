@@ -63,6 +63,8 @@ namespace Xamarin.PropertyEditing.Mac
 			});
 
 			var customCheckBox = new NSButton {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingPathSelectorCustomCheckbox,
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, PropertyEditorControl.DefaultFontSize),
 				Title = Properties.Resources.Custom,
@@ -78,6 +80,8 @@ namespace Xamarin.PropertyEditing.Mac
 			});
 
 			this.customPathControl = new NSTextField {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingPathSelectorCustomPath,
 				ControlSize = NSControlSize.Regular,
 				Enabled = false,
 				TranslatesAutoresizingMaskIntoConstraints = false,
@@ -95,6 +99,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 			// create a table view and a scroll view
 			var outlineViewContainer = new NSScrollView {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingPathSelectorPathTable,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 

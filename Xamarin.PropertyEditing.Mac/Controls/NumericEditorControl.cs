@@ -156,6 +156,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.inputModePopup != null) {
 				this.inputModePopup.Hidden = !ViewModel.HasInputModes;
 				this.editorInputModeConstraint.Active = ViewModel.HasInputModes;
+				UpdateAccessibilityValues ();
 			}
 
 			SetEnabled ();
