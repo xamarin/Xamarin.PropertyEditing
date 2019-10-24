@@ -2,6 +2,6 @@
 
 using static Xamarin.Provisioning.ProvisioningScript;
 
-Item ("https://xamjenkinsartifact.azureedge.net/build-package-osx-mono/2018-08/248/fdb26b0a4454f60d20df1ea6c01fd851ffa4084a/MonoFramework-MDK-5.18.1.3.macos10.xamarin.universal.pkg");
-Item ("https://bosstoragemirror.blob.core.windows.net/wrench/jenkins/d16-0/50f7527307faf601c7b7754ac77a839fd5d0c820/26/package/xamarin.mac-5.6.0.25.pkg");
-Item (XreItem.Xcode_10_0_0).XcodeSelect();
+Item ("https://xamjenkinsartifact.azureedge.net/build-package-osx-mono/2019-08/82/70d690305348cb30cf620db0679ba1173dc7adb0/MonoFramework-MDK-6.6.0.82.macos10.xamarin.universal.pkg");
+Item ("https://download.visualstudio.microsoft.com/download/pr/336d5c3a-3c2f-4b7d-bfad-747e5e685f58/f812b77be77cb9acc728e97e49dce1dd/xamarin.mac-6.2.0.47.pkg");
+Item (XreItem.Xcode_11_1_0).XcodeSelect();
