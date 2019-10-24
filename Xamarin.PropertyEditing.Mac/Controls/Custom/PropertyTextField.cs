@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public PropertyTextField ()
 		{
 			AllowsExpansionToolTips = true;
-			Cell.LineBreakMode = NSLineBreakMode.TruncatingTail;
+			Cell.LineBreakMode = NSLineBreakMode.TruncatingMiddle;
 			Cell.UsesSingleLineMode = true;
 		}
 
@@ -26,7 +26,7 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public PropertyTextFieldCell ()
 		{
-			LineBreakMode = NSLineBreakMode.TruncatingTail;
+			LineBreakMode = NSLineBreakMode.TruncatingMiddle;
 			UsesSingleLineMode = true;
 		}
 	}

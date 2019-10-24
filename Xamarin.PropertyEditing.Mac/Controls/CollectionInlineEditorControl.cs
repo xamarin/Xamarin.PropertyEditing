@@ -32,13 +32,14 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.openCollection);
 
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this, NSLayoutAttribute.Leading, 1, 0),
+				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1, 0),
 				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1, 0),
 				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, 0),
-				NSLayoutConstraint.Create (this.openCollection, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.label, NSLayoutAttribute.Trailing, 1, 12),
+				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this.openCollection, NSLayoutAttribute.Left, 1, -4),
+
+				NSLayoutConstraint.Create (this.openCollection, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0),
 				NSLayoutConstraint.Create (this.openCollection, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1, 0),
-				NSLayoutConstraint.Create (this.openCollection, NSLayoutAttribute.Width, NSLayoutRelation.GreaterThanOrEqual, 1, 70),
-				NSLayoutConstraint.Create (this.openCollection, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, -6)
+				NSLayoutConstraint.Create (this.openCollection, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1, DefaultButtonWidth),
 			});
 
 			AppearanceChanged ();
