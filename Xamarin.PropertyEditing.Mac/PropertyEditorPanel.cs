@@ -87,11 +87,14 @@ namespace Xamarin.PropertyEditing.Mac
 				if (this.viewModel != null) {
 					this.viewModel.PropertyChanged -= OnVmPropertyChanged;
 
-					var views = this.tabStack.Views;
-					for (int i = 0; i < views.Length; i++) {
-						var button = (TabButton)views[i];
-						button.Clicked -= OnArrangeModeChanged;
-						button.RemoveFromSuperview ();
+					var arrangeModeViews = this.arrangeModeTabStack.Views;
+					for (int i = 0; i < arrangeModeViews.Length; i++) {
+						((TabButton)arrangeModeViews[i]).Clicked -= OnArrangeModeChanged;
+					}
+
+					var propertiesEventsViews = this.propertiesEventsTabStack.Views;
+					for (int i = 0; i < propertiesEventsViews.Length; i++) {
+						((TabButton)propertiesEventsViews[i]).Clicked -= OnPropertiesEventsChanged;
 					}
 				}
 
@@ -114,11 +117,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 						arrangeMode.Clicked += OnArrangeModeChanged;
 
-						this.tabStack.AddView (arrangeMode, NSStackViewGravity.Top);
+						this.arrangeModeTabStack.AddView (arrangeMode, NSStackViewGravity.Top);
 					}
 				}
 			}
 		}
+
+		
 
 		public ICollection<object> SelectedItems => this.viewModel.SelectedObjects;
 
@@ -137,8 +142,13 @@ namespace Xamarin.PropertyEditing.Mac
 		private PanelViewModel viewModel;
 
 		private NSSearchField propertyFilter;
-		private NSStackView tabStack;
+		private NSStackView arrangeModeTabStack;
+		private NSStackView propertiesEventsTabStack;
 		private DynamicBox header, border;
+
+		private EventList eventList;
+		internal const string PropertyEditorColId = "PropertyEditors";
+		internal const string EventEditorColId = "EventEditors";
 
 		private void Initialize ()
 		{
@@ -161,29 +171,41 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.propertyFilter.Changed += OnPropertyFilterChanged;
 
-			this.tabStack = new NSStackView {
+			this.arrangeModeTabStack = new NSStackView {
 				Orientation = NSUserInterfaceLayoutOrientation.Horizontal,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				EdgeInsets = new NSEdgeInsets (0, 0, 0, 0)
 			};
 
-			((NSView)this.header.ContentView).AddSubview (this.tabStack);
+			((NSView)this.header.ContentView).AddSubview (this.arrangeModeTabStack);
 
-			this.propertyList = new PropertyList {
-				HostResourceProvider = this.hostResources,
+			this.propertiesEventsTabStack = new NSStackView {
+				Orientation = NSUserInterfaceLayoutOrientation.Horizontal,
+				TranslatesAutoresizingMaskIntoConstraints = false,
+				EdgeInsets = new NSEdgeInsets (0, 0, 0, 0)
+			};
+
+			((NSView)this.header.ContentView).AddSubview (this.propertiesEventsTabStack);
+
+			this.propertyList = new PropertyList (this.hostResources, PropertyEditorColId) {
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
 			AddSubview (this.propertyList);
 
-			this.AddConstraints (new[] {
+			AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 0),
 				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, 0),
 				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1, 30),
 
-				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.header,  NSLayoutAttribute.Left, 1, 0),
-				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Top, 1, 0),
-				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Bottom, 1, 0),
-				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Right, NSLayoutRelation.LessThanOrEqual, this.propertyFilter, NSLayoutAttribute.Left, 1, 0),
+				NSLayoutConstraint.Create (this.arrangeModeTabStack, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.header,  NSLayoutAttribute.Left, 1, 0),
+				NSLayoutConstraint.Create (this.arrangeModeTabStack, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Top, 1, 0),
+				NSLayoutConstraint.Create (this.arrangeModeTabStack, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Bottom, 1, 0),
+				NSLayoutConstraint.Create (this.arrangeModeTabStack, NSLayoutAttribute.Right, NSLayoutRelation.LessThanOrEqual, this.propertiesEventsTabStack, NSLayoutAttribute.Left, 1, 0),
+
+				NSLayoutConstraint.Create (this.propertiesEventsTabStack, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Top, 1, 0),
+				NSLayoutConstraint.Create (this.propertiesEventsTabStack, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Bottom, 1, 0),
+				NSLayoutConstraint.Create (this.propertiesEventsTabStack, NSLayoutAttribute.Left, NSLayoutRelation.GreaterThanOrEqual, this.arrangeModeTabStack, NSLayoutAttribute.Right, 1, 0),
+				NSLayoutConstraint.Create (this.propertiesEventsTabStack, NSLayoutAttribute.Right, NSLayoutRelation.LessThanOrEqual, this.propertyFilter, NSLayoutAttribute.Left, 1, 0),
 
 				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Right, 1, -15),
 				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1, 150),
@@ -232,10 +254,53 @@ namespace Xamarin.PropertyEditing.Mac
 			if (e.PropertyName == nameof (PanelViewModel.ArrangeMode) || String.IsNullOrEmpty (e.PropertyName)) {
 				if (this.viewModel != null) {
 					int selected = this.viewModel.ArrangeModes.Select (vm => vm.ArrangeMode).IndexOf (this.viewModel.ArrangeMode);
-					var views = this.tabStack.Views;
+					var views = this.arrangeModeTabStack.Views;
 					for (int i = 0; i < views.Length; i++) {
-						((TabButton)views[i]).Selected = (i == selected);
+						((TabButton)views[i]).Selected = i == selected;
 					}
+				}
+			}
+
+			if (e.PropertyName == nameof (PanelViewModel.EventsEnabled)) {
+				if (this.viewModel.EventsEnabled) {
+					var sepButton = new UnfocusableButton (this.hostResources, "pe-header-separator");
+
+					this.propertiesEventsTabStack.AddView (sepButton, NSStackViewGravity.Top);
+
+					var properties = new TabButton (this.hostResources, "pe-show-properties-16") {
+						Bounds = new CGRect (0, 0, 32, 30),
+						Selected = true,
+						Tag = 0,
+						ToolTip = Properties.Resources.PropertiesSelectedElement,
+					};
+
+					properties.Clicked += OnPropertiesEventsChanged;
+
+					this.propertiesEventsTabStack.AddView (properties, NSStackViewGravity.Top);
+
+					var events = new TabButton (this.hostResources, "pe-show-events-16") {
+						Bounds = new CGRect (0, 0, 32, 30),
+						Tag = 1,
+						ToolTip = Properties.Resources.EventHandlersSelectedElement,
+					};
+
+					events.Clicked += OnPropertiesEventsChanged;
+
+					this.propertiesEventsTabStack.AddView (events, NSStackViewGravity.Top);
+
+					this.eventList = new EventList (this.hostResources, EventEditorColId) {
+						Hidden = true,
+						TranslatesAutoresizingMaskIntoConstraints = false,
+						ViewModel = this.viewModel,
+					};
+					AddSubview (this.eventList);
+
+					AddConstraints (new[]{
+						NSLayoutConstraint.Create (this.propertiesEventsTabStack, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.arrangeModeTabStack,  NSLayoutAttribute.Right, 1, 4),
+						NSLayoutConstraint.Create (this.eventList, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.border, NSLayoutAttribute.Bottom, 1, 0),
+						NSLayoutConstraint.Create (this.eventList, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this, NSLayoutAttribute.Bottom, 1, 0),
+						NSLayoutConstraint.Create (this.eventList, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, 0),
+					});
 				}
 			}
 		}
@@ -249,6 +314,33 @@ namespace Xamarin.PropertyEditing.Mac
 				return "pe-group-by-category-16";
 			default:
 				throw new ArgumentException();
+			}
+		}
+
+		private void OnPropertiesEventsChanged (object sender, EventArgs e)
+		{
+			if (sender is TabButton tabButton) {
+				// Reset them all
+				NSView[] views = this.propertiesEventsTabStack.Views;
+				for (int i = 0; i < views.Length; i++) {
+					if (views[i] is TabButton tb) {
+						tb.Selected = false;
+					}
+				}
+
+				switch (tabButton.Tag) {
+					case 0:
+						this.propertyList.Hidden = false;
+						this.eventList.Hidden = true;
+						break;
+					case 1:
+						this.propertyList.Hidden = true;
+						this.eventList.Hidden = false;
+						this.eventList.ReloadDate ();
+						break;
+				}
+
+				tabButton.Selected = true;
 			}
 		}
 	}

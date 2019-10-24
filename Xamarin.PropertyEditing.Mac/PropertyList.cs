@@ -9,30 +9,10 @@ using Xamarin.PropertyEditing.ViewModels;
 namespace Xamarin.PropertyEditing.Mac
 {
 	internal class PropertyList
-		: NSView
+		: BaseOutlineList
 	{
-		internal const string PropertyEditorColId = "PropertyEditors";
-
-		public PropertyList ()
+		public PropertyList (IHostResourceProvider hostResources, string columnID) : base (hostResources, columnID)
 		{
-			this.propertyTable = new FirstResponderOutlineView {
-				IndentationPerLevel = 0,
-				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
-				HeaderView = null,
-				IntercellSpacing = new CGSize (0, 0)
-			};
-
-			var propertyEditors = new NSTableColumn (PropertyEditorColId);
-			this.propertyTable.AddColumn (propertyEditors);
-
-			this.scrollView = new NSScrollView {
-				AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable,
-				HasHorizontalScroller = false,
-				HasVerticalScroller = true,
-			};
-
-			this.scrollView.DocumentView = this.propertyTable;
-			AddSubview (this.scrollView);
 		}
 
 		public bool ShowHeader
@@ -44,23 +24,21 @@ namespace Xamarin.PropertyEditing.Mac
 					return;
 
 				this.showHeader = value;
-				if (this.dataSource != null) {
-					this.dataSource.ShowHeader = value;
-					this.propertyTable.ReloadData ();
+				if (this.dataSource != null && this.dataSource is PropertyTableDataSource propertyTableDataSource) {
+					propertyTableDataSource.ShowHeader = value;
+					OutlineViewTable.ReloadData ();
 				}
 			}
 		}
 
-		public PanelViewModel ViewModel
+		public override PanelViewModel ViewModel
 		{
-			get { return this.viewModel; }
-			set
-			{
+			set {
 				if (this.viewModel != null) {
 					this.viewModel.ArrangedPropertiesChanged -= OnPropertiesChanged;
 
-					this.propertyTable.Delegate = null;
-					this.propertyTable.DataSource = null;
+					OutlineViewTable.Delegate = null;
+					OutlineViewTable.DataSource = null;
 				}
 
 				this.viewModel = value;
@@ -69,97 +47,32 @@ namespace Xamarin.PropertyEditing.Mac
 					this.viewModel.ArrangedPropertiesChanged += OnPropertiesChanged;
 
 					this.dataSource = new PropertyTableDataSource (this.viewModel) { ShowHeader = ShowHeader };
-					this.propertyTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
-					this.propertyTable.DataSource = this.dataSource;
+					OutlineViewTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
+					OutlineViewTable.DataSource = this.dataSource;
 				}
 			}
-		}
-
-		public IHostResourceProvider HostResourceProvider
-		{
-			get => this.hostResources;
-			set
-			{
-				if (this.hostResources == value)
-					return;
-				if (value == null)
-					throw new ArgumentNullException (nameof (value), "Cannot set HostResourceProvider to null");
-
-				this.hostResources = value;
-				UpdateResourceProvider ();
-			}
-		}
-
-		public sealed override void ViewDidChangeEffectiveAppearance ()
-		{
-			base.ViewDidChangeEffectiveAppearance ();
-
-			UpdateResourceProvider ();
 		}
 
 		public void UpdateExpansions ()
 		{
-			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
+			((PropertyTableDelegate)OutlineViewTable.Delegate).UpdateExpansions (OutlineViewTable);
 		}
 
-		private readonly NSOutlineView propertyTable;
-		private readonly NSScrollView scrollView;
-		private IHostResourceProvider hostResources;
-		private PropertyTableDataSource dataSource;
-		private PanelViewModel viewModel;
 		private bool showHeader = true;
-
-		private class FirstResponderOutlineView : NSOutlineView
-		{
-			private bool tabbedIn;
-			public override bool ValidateProposedFirstResponder (NSResponder responder, NSEvent forEvent)
-			{
-				return true;
-			}
-
-			public override bool BecomeFirstResponder ()
-			{
-				var willBecomeFirstResponder = base.BecomeFirstResponder ();
-				if (willBecomeFirstResponder) {
-					if (SelectedRows.Count == 0 && RowCount > 0) {
-						SelectRow (0, false);
-						this.tabbedIn = true;
-						var row = GetRowView ((nint)SelectedRows.FirstIndex, false);
-						return Window.MakeFirstResponder (row.NextValidKeyView);
-					}
-				}
-				this.tabbedIn = false;
-				return willBecomeFirstResponder;
-			}
-
-			public override bool ResignFirstResponder ()
-			{
-				var wilResignFirstResponder = base.ResignFirstResponder ();
-				if (wilResignFirstResponder) {
-					if (SelectedRows.Count > 0 && !this.tabbedIn) {
-						DeselectRow ((nint)SelectedRows.FirstIndex);
-					}
-				}
-				return wilResignFirstResponder;
-			}
-		}
 
 		private void OnPropertiesChanged (object sender, EventArgs e)
 		{
-			this.propertyTable.ReloadData ();
+			OutlineViewTable.ReloadData ();
 
-			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
+			((PropertyTableDelegate)OutlineViewTable.Delegate).UpdateExpansions (OutlineViewTable);
 		}
 
-		private void UpdateResourceProvider ()
+		protected override void UpdateResourceProvider ()
 		{
-			if (this.propertyTable == null || this.hostResources == null)
-				return;
+			base.UpdateResourceProvider ();
 
-			this.propertyTable.BackgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
-
-			if (this.propertyTable.Delegate != null)
-				this.propertyTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
+			if (OutlineViewTable.Delegate != null)
+				OutlineViewTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
 		}
 	}
 }
