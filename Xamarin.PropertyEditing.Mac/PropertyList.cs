@@ -27,7 +27,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var propertyEditors = new NSTableColumn (PropertyEditorColId);
 			this.propertyTable.AddColumn (propertyEditors);
 
-			this.scrollView = new NSScrollView {
+			this.scrollView = new UnfocusableScrollView {
 				AutoresizingMask = NSViewResizingMask.WidthSizable | NSViewResizingMask.HeightSizable,
 				HasHorizontalScroller = false,
 				HasVerticalScroller = true,

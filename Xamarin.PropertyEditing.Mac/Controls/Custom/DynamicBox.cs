@@ -6,6 +6,8 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class DynamicBox
 		: NSBox
 	{
+		public override bool AcceptsFirstResponder () => false;
+
 		public DynamicBox (IHostResourceProvider hostResources, string fillName = null, string borderName = null)
 		{
 			if (hostResources == null)

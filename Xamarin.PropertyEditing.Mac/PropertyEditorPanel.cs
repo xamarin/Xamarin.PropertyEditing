@@ -13,6 +13,8 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	public partial class PropertyEditorPanel : NSView
 	{
+		public override bool AcceptsFirstResponder () => false;
+
 		public PropertyEditorPanel ()
 		{
 			this.hostResources = new HostResourceProvider ();
@@ -167,7 +169,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.propertyFilter.AccessibilityEnabled = true;
 			this.propertyFilter.AccessibilityTitle = Properties.Resources.AccessibilityPropertyFilter;
 
-			this.tabStack = new NSStackView {
+			this.tabStack = new UnfocusableStackView {
 				Orientation = NSUserInterfaceLayoutOrientation.Horizontal,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				EdgeInsets = new NSEdgeInsets (0, 0, 0, 0)
