@@ -13,6 +13,9 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		internal const string PropertyEditorColId = "PropertyEditors";
 
+		public override bool AcceptsFirstResponder () => true;
+		public override bool BecomeFirstResponder () => Window.MakeFirstResponder (propertyTable);
+
 		public PropertyList ()
 		{
 			this.propertyTable = new FirstResponderOutlineView {
