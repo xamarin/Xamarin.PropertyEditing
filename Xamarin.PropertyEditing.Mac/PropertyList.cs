@@ -122,6 +122,16 @@ namespace Xamarin.PropertyEditing.Mac
 				return true;
 			}
 
+			private const string disclosureKey = "NSOutlineViewDisclosureButtonKey";
+			public override NSView MakeView (string identifier, NSObject owner)
+			{
+				NSView view = base.MakeView (identifier, owner);
+				if (identifier == disclosureKey && view is NSButton btn) {
+					btn.RefusesFirstResponder = true;
+				}
+				return view;
+			}
+
 			public override bool BecomeFirstResponder ()
 			{
 				var willBecomeFirstResponder = base.BecomeFirstResponder ();
