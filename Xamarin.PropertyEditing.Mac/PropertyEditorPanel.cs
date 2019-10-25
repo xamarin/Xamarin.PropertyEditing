@@ -105,6 +105,7 @@ namespace Xamarin.PropertyEditing.Mac
 				if (this.viewModel != null) {
 					this.viewModel.PropertyChanged += OnVmPropertyChanged;
 
+					TabButton lastArrangeMode = null;
 					for (int i = 0; i < this.viewModel.ArrangeModes.Count; i++) {
 						var item = this.viewModel.ArrangeModes[i];
 						string imageName = GetIconName (item.ArrangeMode);
@@ -121,6 +122,14 @@ namespace Xamarin.PropertyEditing.Mac
 						arrangeMode.AccessibilityTitle = string.Format (Properties.Resources.ArrangeByButtonName, item.ArrangeMode.ToString());
 
 						this.tabStack.AddView (arrangeMode, NSStackViewGravity.Top);
+
+						if (i == this.viewModel.ArrangeModes.Count - 1) {
+							arrangeMode.NextKeyView = propertyFilter;
+						}
+						if (lastArrangeMode != null) {
+							lastArrangeMode.NextKeyView = arrangeMode;
+						}
+						lastArrangeMode = arrangeMode;
 					}
 				}
 			}
@@ -182,6 +191,7 @@ namespace Xamarin.PropertyEditing.Mac
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
 			AddSubview (this.propertyList);
+			propertyFilter.NextKeyView = propertyList;
 
 			this.AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 0),
