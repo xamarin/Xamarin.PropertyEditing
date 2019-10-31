@@ -108,11 +108,15 @@ namespace Xamarin.PropertyEditing.Mac
 						string imageName = GetIconName (item.ArrangeMode);
 						TabButton arrangeMode = new TabButton (this.hostResources, imageName) {
 							Bounds = new CGRect (0, 0, 32, 30),
+							Selected = item.IsChecked,
 							Tag = i,
-							Selected = item.IsChecked
+							ToolTip = GetTooltip (item.ArrangeMode),
 						};
 
 						arrangeMode.Clicked += OnArrangeModeChanged;
+
+						arrangeMode.AccessibilityEnabled = true;
+						arrangeMode.AccessibilityTitle = string.Format (Properties.Resources.ArrangeByButtonName, item.ArrangeMode.ToString());
 
 						this.tabStack.AddView (arrangeMode, NSStackViewGravity.Top);
 					}
@@ -160,6 +164,8 @@ namespace Xamarin.PropertyEditing.Mac
 			((NSView)this.header.ContentView).AddSubview (this.propertyFilter);
 
 			this.propertyFilter.Changed += OnPropertyFilterChanged;
+			this.propertyFilter.AccessibilityEnabled = true;
+			this.propertyFilter.AccessibilityTitle = Properties.Resources.AccessibilityPropertyFilter;
 
 			this.tabStack = new NSStackView {
 				Orientation = NSUserInterfaceLayoutOrientation.Horizontal,
@@ -185,7 +191,7 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Bottom, 1, 0),
 				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Right, NSLayoutRelation.LessThanOrEqual, this.propertyFilter, NSLayoutAttribute.Left, 1, 0),
 
-				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Right, 1, -15),
+				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Right, 1, -19),
 				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1, 150),
 				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.CenterY, 1, 0),
 
@@ -249,6 +255,18 @@ namespace Xamarin.PropertyEditing.Mac
 				return "pe-group-by-category-16";
 			default:
 				throw new ArgumentException();
+			}
+		}
+
+		private string GetTooltip (PropertyArrangeMode mode)
+		{
+			switch (mode) {
+				case PropertyArrangeMode.Name:
+					return string.Format("{0} {1}", Properties.Resources.ArrangeByLabel, Properties.Resources.ArrangeByName);
+				case PropertyArrangeMode.Category:
+					return string.Format ("{0} {1}", Properties.Resources.ArrangeByLabel, Properties.Resources.ArrangeByCategory);
+				default:
+					throw new ArgumentException ();
 			}
 		}
 	}

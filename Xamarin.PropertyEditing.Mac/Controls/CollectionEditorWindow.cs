@@ -27,11 +27,17 @@ namespace Xamarin.PropertyEditing.Mac
 			ContentView.AddSubview (this.collectionEditor);
 
 			this.ok = NSButton.CreateButton (Properties.Resources.OK, OnOked);
+			this.ok.AccessibilityEnabled = true;
+			this.ok.AccessibilityTitle = Properties.Resources.AccessibilityCollectionOKButton;
+			this.ok.Highlighted = true;
 			this.ok.TranslatesAutoresizingMaskIntoConstraints = false;
+			
 			//this.ok.KeyEquivalent = "\r"; // FIXME: The type selector popup doesn't eat this key, so it ends up closing both.
 			ContentView.AddSubview (this.ok);
 
 			this.cancel = NSButton.CreateButton (Properties.Resources.Cancel, OnCanceled);
+			this.cancel.AccessibilityEnabled = true;
+			this.cancel.AccessibilityTitle = Properties.Resources.AccessibilityCollectionCancelButton;
 			this.cancel.TranslatesAutoresizingMaskIntoConstraints = false;
 			ContentView.AddSubview (this.cancel);
 

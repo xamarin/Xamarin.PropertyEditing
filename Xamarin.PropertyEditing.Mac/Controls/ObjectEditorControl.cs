@@ -26,16 +26,17 @@ namespace Xamarin.PropertyEditing.Mac
 			this.createObject.Activated += OnNewPressed;
 			AddSubview (this.createObject);
 
-			this.buttonConstraint = NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.typeLabel, NSLayoutAttribute.Trailing, 1f, 12);
+			//this.buttonConstraint = NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.typeLabel, NSLayoutAttribute.Trailing, 1f, 12);
 
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this, NSLayoutAttribute.Leading, 1f, 0f),
+				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0f),
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, 0),
-				this.buttonConstraint,
-				NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this, NSLayoutAttribute.Leading, 1, 0).WithPriority (NSLayoutPriority.DefaultLow),
+				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this.createObject, NSLayoutAttribute.Left, 1, -4),
+
+				NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0),
 				NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
-				NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.Width, NSLayoutRelation.GreaterThanOrEqual, 1f, 70f),
+				NSLayoutConstraint.Create (this.createObject, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, DefaultButtonWidth),
 			});
 		}
 
@@ -54,7 +55,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			this.createObject.AccessibilityTitle = String.Format (Properties.Resources.NewInstanceForProperty, ViewModel.Property.Name);
+			this.createObject.AccessibilityEnabled = this.createObject.Enabled;
+			this.createObject.AccessibilityTitle = string.Format (Properties.Resources.NewInstanceForProperty, ViewModel.Property.Name);
 		}
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
@@ -92,7 +94,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private readonly UnfocusableTextField typeLabel;
 		private readonly NSButton createObject;
-		private readonly NSLayoutConstraint buttonConstraint;
 
 		private void OnCreateInstanceExecutableChanged (object sender, EventArgs e)
 		{
@@ -107,11 +108,9 @@ namespace Xamarin.PropertyEditing.Mac
 		private void UpdateTypeLabel ()
 		{
 			if (ViewModel.ValueType == null) {
-				this.typeLabel.StringValue = String.Empty;
-				this.buttonConstraint.Active = false;
+				this.typeLabel.StringValue = $"({Properties.Resources.ObjectTypeLabelNone})";
 			} else {
 				this.typeLabel.StringValue = $"({ViewModel.ValueType.Name})";
-				this.buttonConstraint.Active = true;
 			}
 		}
 

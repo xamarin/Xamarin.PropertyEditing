@@ -19,6 +19,8 @@ namespace Xamarin.PropertyEditing.Mac
 			this.hostResources = hostResources;
 
 			this.collectionView = new NSTableView {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityCollectionEditorTable,
 				HeaderView = null,
 				RowHeight = 24
 			};
@@ -58,17 +60,19 @@ namespace Xamarin.PropertyEditing.Mac
 
 			AddSubview (scrollBorder);
 
-			this.typeSelector = new NSComboBox {
-				TranslatesAutoresizingMaskIntoConstraints = false,
+			this.typeSelector = new FocusableComboBox {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityCollectionTypeSelector,
 				ControlSize = NSControlSize.Mini,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Mini)),
-				AccessibilityTitle = Properties.Resources.AccessibilityCollectionTypeSelector
+				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 			this.typeSelector.SelectionChanged += OnSelectedTypeChanged;
 
-			this.add = new NSButton {
-				BezelStyle = NSBezelStyle.SmallSquare,
+			this.add = new FocusableButton {
+				AccessibilityEnabled = true,
 				AccessibilityTitle = Properties.Resources.AccessibilityCollectionAddButton,
+				BezelStyle = NSBezelStyle.SmallSquare,
 				Bordered = false,
 			};
 			this.add.Activated += OnAddChild;
@@ -81,9 +85,10 @@ namespace Xamarin.PropertyEditing.Mac
 				ContentViewMargins = new CGSize (0, 0)
 			};
 
-			this.remove = new NSButton {
-				BezelStyle = NSBezelStyle.SmallSquare,
+			this.remove = new FocusableButton {
+				AccessibilityEnabled = true,
 				AccessibilityTitle = Properties.Resources.AccessibilityCollectionRemoveButton,
+				BezelStyle = NSBezelStyle.SmallSquare,
 				Bordered = false
 			};
 			this.remove.Activated += OnRemoveChild;

@@ -31,6 +31,8 @@ namespace Xamarin.PropertyEditing.Mac
 					if (this.viewModel.SupportsBindings)
 						this.viewModel.CreateBindingRequested += OnBindingRequested;
 					ValueSourceChanged (this.viewModel.ValueSource);
+
+					AccessibilityTitle = string.Format (Properties.Resources.AccessibilityPropertiesButton, ViewModel.Property.Name);
 				}
 
 				if (this.popUpContextMenu != null) {
@@ -47,7 +49,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.hostResources = hostResources;
 
-			AccessibilityTitle = Properties.Resources.AccessibilityPropertiesButton;
 			AccessibilityHelp = Properties.Resources.AccessibilityPropertiesButtonDescription;
 			Enabled = true;
 			Image = this.hostResources.GetNamedImage ("pe-property-button-default-mac-10");

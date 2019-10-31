@@ -61,8 +61,8 @@ namespace Xamarin.PropertyEditing.Mac
 			this.objects[0] = this.currentTextField;
 			this.objects[1] = this.browsePathButton;
 			this.objects[2] = this.revealPathButton;
-			this.AccessibilityElement = true;
-			this.AccessibilityRole = NSAccessibilityRoles.GroupRole;
+			AccessibilityElement = true;
+			AccessibilityRole = NSAccessibilityRoles.GroupRole;
 
 			this.currentTextField.AccessibilityRole = NSAccessibilityRoles.TextFieldRole;
 			this.revealPathButton.AccessibilityRole = NSAccessibilityRoles.ButtonRole;

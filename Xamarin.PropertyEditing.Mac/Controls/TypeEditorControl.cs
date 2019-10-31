@@ -20,22 +20,21 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.typeLabel);
 
 			this.selectType = new FocusableButton {
+				BezelStyle = NSBezelStyle.Rounded,
 				Title = Properties.Resources.Select,
-				BezelStyle = NSBezelStyle.Rounded
 			};
 			this.selectType.Activated += OnSelectPressed;
 			AddSubview (this.selectType);
 
-			this.buttonConstraint = NSLayoutConstraint.Create (this.selectType, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.typeLabel, NSLayoutAttribute.Trailing, 1f, 12);
-
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this, NSLayoutAttribute.Leading, 1f, 0f),
+				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0f),
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, this, NSLayoutAttribute.Height, 1, 0),
-				this.buttonConstraint,
-				NSLayoutConstraint.Create (this.selectType, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this, NSLayoutAttribute.Leading, 1, 0).WithPriority (NSLayoutPriority.DefaultLow),
+				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this.selectType, NSLayoutAttribute.Left, 1, -4),
+
+				NSLayoutConstraint.Create (this.selectType, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0),
 				NSLayoutConstraint.Create (this.selectType, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1f, 0f),
-				NSLayoutConstraint.Create (this.selectType, NSLayoutAttribute.Width, NSLayoutRelation.GreaterThanOrEqual, 1f, 70f),
+				NSLayoutConstraint.Create (this.selectType, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, DefaultButtonWidth),
 			});
 		}
 
@@ -54,7 +53,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override void UpdateAccessibilityValues ()
 		{
-			this.selectType.AccessibilityTitle = String.Format (Properties.Resources.SelectTypeForProperty, ViewModel.Property.Name);
+			this.selectType.AccessibilityEnabled = this.selectType.Enabled;
+			this.selectType.AccessibilityTitle = string.Format (Properties.Resources.SelectTypeForProperty, ViewModel.Property.Name);
 		}
 
 		protected override void OnViewModelChanged (PropertyViewModel oldModel)
@@ -90,7 +90,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private readonly UnfocusableTextField typeLabel;
 		private readonly NSButton selectType;
-		private readonly NSLayoutConstraint buttonConstraint;
 
 		private void OnTypeRequested (object sender, TypeRequestedEventArgs e)
 		{
@@ -100,11 +99,9 @@ namespace Xamarin.PropertyEditing.Mac
 		private void UpdateTypeLabel ()
 		{
 			if (ViewModel.Value == null) {
-				this.typeLabel.StringValue = String.Empty;
-				this.buttonConstraint.Active = false;
+				this.typeLabel.StringValue = $"({Properties.Resources.ObjectTypeLabelNone})";
 			} else {
 				this.typeLabel.StringValue = $"({ViewModel.Value.Name})";
-				this.buttonConstraint.Active = true;
 			}
 		}
 

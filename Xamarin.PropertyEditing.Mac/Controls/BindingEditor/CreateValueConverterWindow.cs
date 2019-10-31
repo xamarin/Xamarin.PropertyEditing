@@ -55,6 +55,8 @@ namespace Xamarin.PropertyEditing.Mac
 			});
 
 			this.valueConverterName = new NSTextField {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingAddValueConverterName,
 				ControlSize = NSControlSize.Regular,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
@@ -81,7 +83,9 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (typeSelectorControl, NSLayoutAttribute.Height, NSLayoutRelation.Equal, container, NSLayoutAttribute.Height, 1f, -95f),
 			});
 
-			var buttonSelect = new NSButton {
+			var buttonSelect = new FocusableButton {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingAddValueConverterOK,
 				BezelStyle = NSBezelStyle.Rounded,
 				ControlSize = NSControlSize.Regular,
 				Enabled = false,
@@ -104,7 +108,9 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (buttonSelect, NSLayoutAttribute.Width, NSLayoutRelation.GreaterThanOrEqual, 1f, 80f),
 			});
 
-			var buttonCancel = new NSButton {
+			var buttonCancel = new FocusableButton {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingAddValueConverterCancel,
 				BezelStyle = NSBezelStyle.Rounded,
 				ControlSize = NSControlSize.Regular,
 				Title = Properties.Resources.Cancel,

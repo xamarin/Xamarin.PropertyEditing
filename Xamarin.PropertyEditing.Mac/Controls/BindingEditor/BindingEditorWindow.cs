@@ -80,7 +80,9 @@ namespace Xamarin.PropertyEditing.Mac
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
 
-			this.buttonDone = new NSButton {
+			this.buttonDone = new FocusableButton {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingEditorOK,
 				BezelStyle = NSBezelStyle.Rounded,
 				ControlSize = NSControlSize.Regular,
 				Highlighted = true,
@@ -90,7 +92,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.mainContainer.AddSubview (this.buttonDone);
 
-			this.buttonCancel = new NSButton {
+			this.buttonCancel = new FocusableButton {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingEditorCancel,
 				BezelStyle = NSBezelStyle.Rounded,
 				ControlSize = NSControlSize.Regular,
 				Title = Properties.Resources.Cancel,
@@ -114,6 +118,8 @@ namespace Xamarin.PropertyEditing.Mac
 			this.mainContainer.AddSubview (bindingTypeLabel);
 
 			this.bindingTypePopup = new FocusablePopUpButton {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingEditorBindingType,
 				ControlSize = NSControlSize.Regular,
 				Font = NSFont.FromFontName (PropertyEditorControl.DefaultFontName, 13),
 				StringValue = String.Empty,
@@ -148,6 +154,8 @@ namespace Xamarin.PropertyEditing.Mac
 			this.mainContainer.AddSubview (valueConverterLabel);
 
 			this.valueConverterPopup = new FocusablePopUpButton {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingEditorValueConverter,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				StringValue = String.Empty,
 				ControlSize = NSControlSize.Regular,
@@ -159,6 +167,8 @@ namespace Xamarin.PropertyEditing.Mac
 			this.mainContainer.AddSubview (this.valueConverterPopup);
 
 			this.addConverterButton = new CommandButton {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingEditorAddConverter,
 				BezelStyle = NSBezelStyle.Rounded,
 				Command = ViewModel.RequestAddValueConverterCommand,
 				Image = NSImage.ImageNamed (NSImageName.AddTemplate),
@@ -170,6 +180,8 @@ namespace Xamarin.PropertyEditing.Mac
 			this.mainContainer.AddSubview (this.addConverterButton);
 
 			this.buttonMoreSettings = new NSButton {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityBindingEditorMore,
 				BezelStyle = NSBezelStyle.Disclosure,
 				Title = string.Empty,
 				TranslatesAutoresizingMaskIntoConstraints = false,

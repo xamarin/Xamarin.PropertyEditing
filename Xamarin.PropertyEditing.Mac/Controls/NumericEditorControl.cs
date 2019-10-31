@@ -136,12 +136,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 					AddSubview (this.inputModePopup);
 					this.editorInputModeConstraint = NSLayoutConstraint.Create (NumericEditor, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this.inputModePopup, NSLayoutAttribute.Left, 1, -4);
-					this.AddConstraints (new[] {
+					AddConstraints (new[] {
 						this.editorInputModeConstraint,
 						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0f),
 						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this,  NSLayoutAttribute.Right, 1f, 0f),
-						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, 80f),
-						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Height, NSLayoutRelation.Equal, NumericEditor, NSLayoutAttribute.Height, 1f, 0),
+						NSLayoutConstraint.Create (this.inputModePopup, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1f, DefaultButtonWidth),
 					});
 				}
 
@@ -156,6 +155,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.inputModePopup != null) {
 				this.inputModePopup.Hidden = !ViewModel.HasInputModes;
 				this.editorInputModeConstraint.Active = ViewModel.HasInputModes;
+				UpdateAccessibilityValues ();
 			}
 
 			SetEnabled ();

@@ -16,6 +16,8 @@ namespace Xamarin.PropertyEditing.Mac
 		public PropertyList ()
 		{
 			this.propertyTable = new FirstResponderOutlineView {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityPropertyTable,
 				IndentationPerLevel = 0,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 				HeaderView = null,
