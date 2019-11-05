@@ -44,6 +44,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override NSView LastKeyView => this.createObject;
 
+		public override NSWindow Window => base.Window ?? TableView?.Window;
+
 		protected override void UpdateValue ()
 		{
 		}
