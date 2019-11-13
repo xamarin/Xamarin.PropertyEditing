@@ -37,6 +37,9 @@ namespace Xamarin.PropertyEditing.Mac
 			popover.SetAppearance (hostResources.GetVibrantAppearance (source.EffectiveAppearance));
 
 			tcs.Task.ContinueWith (t => {
+				// Focus back to the button that popped us up
+				source.Superview?.Window?.MakeFirstResponder (source);
+
 				popover.PerformClose (popover);
 				popover.Dispose ();
 			}, TaskScheduler.FromCurrentSynchronizationContext ());
