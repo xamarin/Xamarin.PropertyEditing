@@ -12,8 +12,8 @@ namespace Xamarin.PropertyEditing.Windows
 	{
 		public CollectionEditorWindow (IEnumerable<ResourceDictionary> mergedResources)
 		{
-			Resources.MergedDictionaries.AddItems (mergedResources);
 			InitializeComponent ();
+			Resources.MergedDictionaries.AddItems (mergedResources);
 			DataContextChanged += OnDataContextChanged;
 		}
 
