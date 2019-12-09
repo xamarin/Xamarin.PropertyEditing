@@ -62,7 +62,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.filter = new NSSearchField {
 				AccessibilityEnabled = true,
 				AccessibilityTitle = Properties.Resources.AccessibilityTypeSelectorSearch,
-				PlaceholderString = "Filter",
+				PlaceholderString = Properties.Resources.FilterTypePlaceholder,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 			this.filter.Changed += OnFilterChanged;
