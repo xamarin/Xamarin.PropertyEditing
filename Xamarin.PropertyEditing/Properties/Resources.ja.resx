@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -127,7 +127,7 @@
   </data>
   <data name="Black" xml:space="preserve">
     <value>黒</value>
-    <comment>Black textbox help text</comment>
+    <comment>Text describing Black, used in the BlackAndWhiteNames list</comment>
   </data>
   <data name="BlackInitial" xml:space="preserve">
     <value>K</value>
@@ -247,21 +247,27 @@
   </data>
   <data name="MultipleObjectsSelected" xml:space="preserve">
     <value>{0} 個のオブジェクトが選択されています</value>
+    <comment>Describes how many objects are selected</comment>
   </data>
   <data name="MultipleTypesSelected" xml:space="preserve">
     <value>{0} 個の型が選択されています</value>
+    <comment>Describes how many types are selected</comment>
   </data>
   <data name="Name" xml:space="preserve">
     <value>名前</value>
+    <comment>Text used to label the Object Name</comment>
   </data>
   <data name="NoName" xml:space="preserve">
     <value>&lt;名前なし&gt;</value>
+    <comment>Text used if there are 0 objects selected</comment>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>プロパティ</value>
+    <comment>Header label for the property list</comment>
   </data>
   <data name="PropertiesSelectedElement" xml:space="preserve">
     <value>選択した要素のプロパティ</value>
+    <comment>Tooltip when the Property List is moused over</comment>
   </data>
   <data name="Red" xml:space="preserve">
     <value>赤</value>
@@ -289,9 +295,11 @@
   </data>
   <data name="Reset" xml:space="preserve">
     <value>リセット</value>
+    <comment>Reset MenuItem text</comment>
   </data>
   <data name="Type" xml:space="preserve">
     <value>種類</value>
+    <comment>Text used to label the Object Type</comment>
   </data>
   <data name="ViewPropertiesOrEvents" xml:space="preserve">
     <value>プロパティまたはイベントを表示</value>
@@ -319,117 +327,155 @@
   </data>
   <data name="Opacity" xml:space="preserve">
     <value>不透明度</value>
+    <comment>Label text to describe the opacity of a colour</comment>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>キャンセル</value>
+    <comment>Decribes a button that will cancel the changes in a dialog</comment>
   </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
+    <comment>Decribes a button that will accept the changes in a dialog</comment>
   </data>
   <data name="ShowAllAssemblies" xml:space="preserve">
     <value>すべてのアセンブリを表示</value>
+    <comment>Describes whether a toggle should show all assemblies or not</comment>
   </data>
   <data name="SearchProperties" xml:space="preserve">
     <value>検索プロパティ</value>
+    <comment>Filter Box AutomationProperties.Name Check this needs translating</comment>
   </data>
   <data name="New" xml:space="preserve">
     <value>新規作成</value>
+    <comment>Describes a button that will allow the user to open popup dialog</comment>
   </data>
   <data name="SearchObjectsTitle" xml:space="preserve">
     <value>オブジェクトの検索</value>
+    <comment>Hint text to describe how users interact with search/filter control</comment>
   </data>
   <data name="SelectObjectTitle" xml:space="preserve">
     <value>オブジェクトの選択</value>
+    <comment>Title text for the Type Selector dialog</comment>
   </data>
   <data name="CustomExpression" xml:space="preserve">
     <value>カスタム式</value>
+    <comment>Title text for the Custom Expression dialog</comment>
   </data>
   <data name="ColorEditorTabLabel" xml:space="preserve">
     <value>エディター</value>
+    <comment></comment>
   </data>
   <data name="SearchResourcesTitle" xml:space="preserve">
     <value>リソースの検索</value>
+    <comment>Search Control placeholder text</comment>
   </data>
   <data name="SelectResourceTitle" xml:space="preserve">
     <value>リソースの選択</value>
+    <comment>Title text for the Resource Selector dialog</comment>
   </data>
   <data name="ShowSystemResources" xml:space="preserve">
     <value>システム リソースを表示</value>
+    <comment>Decribes whether a toggle should show system resources or not</comment>
   </data>
   <data name="ResourceEllipsis" xml:space="preserve">
     <value>リソース...</value>
+    <comment>Decribes a menu option that will allow the user to see the resources dialog</comment>
   </data>
   <data name="Default" xml:space="preserve">
     <value>既定</value>
+    <comment>Tooltip describing this property has a default value</comment>
   </data>
   <data name="Inherited" xml:space="preserve">
     <value>継承</value>
+    <comment>Tooltip describing this property has an inherited value</comment>
   </data>
   <data name="InvalidValue" xml:space="preserve">
     <value>'{0}' は無効な値です</value>
+    <comment>Error text when an invalid value is found</comment>
   </data>
   <data name="Local" xml:space="preserve">
     <value>ローカル</value>
+    <comment>Tooltip describing this property has a local value</comment>
   </data>
   <data name="Unset" xml:space="preserve">
     <value>設定解除</value>
+    <comment>Tooltip describing this property has an unset value</comment>
   </data>
   <data name="MaterialColorRed" xml:space="preserve">
     <value>赤</value>
+    <comment>Text describing Red used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorPink" xml:space="preserve">
     <value>ピンク色</value>
+    <comment>Text describing Pink used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorPurple" xml:space="preserve">
     <value>紫</value>
+    <comment>Text describing Purple used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorDeepPurple" xml:space="preserve">
     <value>濃い紫色</value>
+    <comment>Text describing Deep Purple used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorIndigo" xml:space="preserve">
     <value>インディゴ</value>
+    <comment>Text describing Indigo used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorBlue" xml:space="preserve">
     <value>青</value>
+    <comment>Text describing Blue used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorLightBlue" xml:space="preserve">
     <value>明るい青色</value>
+    <comment>Text describing Light Blue used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorCyan" xml:space="preserve">
     <value>水色</value>
+    <comment>Text describing Cyan used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorTeal" xml:space="preserve">
     <value>青緑</value>
+    <comment>Text describing Teal used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorGreen" xml:space="preserve">
     <value>緑</value>
+    <comment>Text describing Green used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorLightGreen" xml:space="preserve">
     <value>明るい緑色</value>
+    <comment>Text describing Light Green used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorLime" xml:space="preserve">
     <value>黄緑</value>
+    <comment>Text describing Lime used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorYellow" xml:space="preserve">
     <value>黄</value>
+    <comment>Text describing Yellow used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorAmber" xml:space="preserve">
     <value>アンバー色</value>
+    <comment>Text describing Amber used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorOrange" xml:space="preserve">
     <value>オレンジ</value>
+    <comment>Text describing Orange used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorDeepOrange" xml:space="preserve">
     <value>濃いオレンジ色</value>
+    <comment>Text describing Deep Orange used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorBrown" xml:space="preserve">
     <value>茶色</value>
+    <comment>Text describing Brown used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorGrey" xml:space="preserve">
     <value>灰色</value>
+    <comment>Text describing Grey used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorBlueGrey" xml:space="preserve">
     <value>青灰色</value>
+    <comment>Text describing Blue Grey used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialDesignColorBrush" xml:space="preserve">
     <value>素材のデザインの色</value>
@@ -437,16 +483,19 @@
   </data>
   <data name="MaterialColorBlackAndWhite" xml:space="preserve">
     <value>白黒</value>
+    <comment>Text describing Black and White used in the MaterialPalettes list</comment>
   </data>
   <data name="White" xml:space="preserve">
     <value>白</value>
+    <comment>Text describing White, used in the BlackAndWhiteNames list</comment>
   </data>
   <data name="NoPreviewAvailable" xml:space="preserve">
     <value>プレビューはできません。</value>
-    <comment>Resource selector window preview section text</comment>
+    <comment>Text for the Resource selector window preview section, when no preview is available</comment>
   </data>
   <data name="Resource" xml:space="preserve">
     <value>リソース</value>
+    <comment>Default text when no resource name is available</comment>
   </data>
   <data name="ResourceWithName" xml:space="preserve">
     <value>リソース ({0})</value>
@@ -454,9 +503,11 @@
   </data>
   <data name="Binding" xml:space="preserve">
     <value>バインド</value>
+    <comment>Tooltip describing this property has a bound value</comment>
   </data>
   <data name="GoToSource" xml:space="preserve">
     <value>ソースに移動</value>
+    <comment>Text describing what is possible when a ValueSource supports navigation</comment>
   </data>
   <data name="CollectionValue" xml:space="preserve">
     <value>(コレクション)</value>
@@ -464,12 +515,15 @@
   </data>
   <data name="Ellipsis" xml:space="preserve">
     <value>…</value>
+    <comment></comment>
   </data>
   <data name="OtherTypeAction" xml:space="preserve">
     <value>&lt;その他の種類...&gt;</value>
+    <comment>Text used for the OtherType.Name</comment>
   </data>
   <data name="Items" xml:space="preserve">
     <value>項目</value>
+    <comment>Header Text used denote a list of selected objects in the collection editor.</comment>
   </data>
   <data name="CollectionEditorTitle" xml:space="preserve">
     <value>コレクション エディター: {0}</value>
@@ -477,30 +531,39 @@
   </data>
   <data name="MoveItemDown" xml:space="preserve">
     <value>項目を下に移動</value>
+    <comment>Tooltip text for a button that will allow you to move a selected item down in the list</comment>
   </data>
   <data name="MoveItemUp" xml:space="preserve">
     <value>項目を上に移動</value>
+    <comment>Tooltip text for a button that will allow you to move a selected item up in the list</comment>
   </data>
   <data name="RemoveItem" xml:space="preserve">
     <value>項目の削除</value>
-  </data>
-  <data name="GenericErrorMessage" xml:space="preserve">
-    <value>問題が発生しました</value>
+    <comment>Tooltip text for a button that will allow you to remove a selected item from the list</comment>
   </data>
   <data name="DefineIn" xml:space="preserve">
     <value>定義先</value>
+    <comment>Header text in Create Resource dialog for where the new resource is defined</comment>
   </data>
   <data name="Application" xml:space="preserve">
     <value>アプリケーション</value>
-  </data>
-  <data name="ApplyToAll" xml:space="preserve">
-    <value>すべてに適用</value>
+    <comment>Option text within Create Resource dialog denoting that the new resource will be definied in the application</comment>
   </data>
   <data name="ThisDocument" xml:space="preserve">
     <value>このドキュメント</value>
+    <comment>Option text within Create Resource dialog denoting that the new resource will be definied in this document</comment>
+  </data>
+  <data name="ResourceDictionary" xml:space="preserve">
+    <value>Resource dictionary</value>
+    <comment>Option text within Create Resource Window denoting that the new resource will be definied in a resource dictionary</comment>
+  </data>
+  <data name="ApplyToAll" xml:space="preserve">
+    <value>すべてに適用</value>
+    <comment>Option text within Create Resource Window denoting that the new resource name will apply to all resources</comment>
   </data>
   <data name="ConvertToNewResourceEllipsis" xml:space="preserve">
     <value>新しいリソースに変換...</value>
+    <comment>Menu option text which when selected will launch the Create Resource dialog</comment>
   </data>
   <data name="CreateResourceTitle" xml:space="preserve">
     <value>{0} リソースの作成</value>
@@ -511,76 +574,91 @@
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
     <value>リソース ディクショナリ</value>
+    <comment>Label text for the name of the resource</comment>
   </data>
   <data name="CreateDataBindingMenuItem" xml:space="preserve">
     <value>新しいバインドの作成...</value>
+    <comment>Menu option text which when selected will launch the Create Databinding dialog</comment>
   </data>
   <data name="AddValueConverterEllipsis" xml:space="preserve">
     <value>値コンバーターの追加...</value>
+    <comment>Menu option text which when selected will launch the Add Value Converter dialog</comment>
   </data>
   <data name="AddValueConverterTitle" xml:space="preserve">
     <value>値コンバーターの追加</value>
+    <comment>Title window text for the Add Value Converter dialog</comment>
   </data>
   <data name="NoValueConverter" xml:space="preserve">
     <value>値コンバーターがありません</value>
+    <comment>Used when no value converter is available</comment>
   </data>
   <data name="ValueConverterName" xml:space="preserve">
     <value>値コンバーター名</value>
+    <comment>Name of the value converter</comment>
   </data>
   <data name="CreateDataBindingTitle" xml:space="preserve">
     <value>{0} のデータ バインドの作成</value>
-    <comment>Create Data Binding for Object.Property</comment>
+    <comment>Create Data Binding for {Object.Property}</comment>
   </data>
   <data name="BindingType" xml:space="preserve">
     <value>バインドの種類</value>
+    <comment>Label text for the binding type dropdown</comment>
   </data>
   <data name="Path" xml:space="preserve">
     <value>パス</value>
-  </data>
-  <data name="ResourcePlural" xml:space="preserve">
-    <value>リソース</value>
+    <comment>Label text for the path edit box</comment>
   </data>
   <data name="Custom" xml:space="preserve">
     <value>カスタム</value>
+    <comment>Label text for the custom path check box</comment>
   </data>
   <data name="InvalidRatio" xml:space="preserve">
     <value>比率が無効です</value>
+    <comment>Error text for when an Invalid ration is entered</comment>
   </data>
   <data name="AllResources" xml:space="preserve">
     <value>すべてのリソース</value>
+    <comment>Label text for all resources to be to shown</comment>
   </data>
   <data name="Shared" xml:space="preserve">
     <value>共有</value>
+    <comment>Label text for shared resource to be to shown</comment>
   </data>
   <data name="AddVariationHelpText" xml:space="preserve">
     <value>次に基づいてバリエーションを導入:</value>
+    <comment>Label text within the Create Variant dialog</comment>
   </data>
   <data name="AddVariationTitle" xml:space="preserve">
     <value>バリエーションの追加</value>
+    <comment>Title text for the Create Variant dialog</comment>
   </data>
   <data name="Any" xml:space="preserve">
     <value>任意</value>
+    <comment>Text denoting any variant for a category</comment>
   </data>
   <data name="ErrorCreatingVariant" xml:space="preserve">
     <value>バリアント {0} の作成でエラーが発生しました。このエラーが引き続き発生する場合は、それを報告してください。</value>
+    <comment>Error text when unable to create a variant</comment>
   </data>
   <data name="UncommonPropertiesTooltip" xml:space="preserve">
     <value>詳細設定プロパティの表示</value>
+    <comment>Tooltip text used to toggle the visibility of the advanced properties</comment>
   </data>
   <data name="NewInstanceForProperty" xml:space="preserve">
-    <value>新しい {0}</value>
+    <value>このボタンは {0} プロパティ用です。</value>
     <comment>New {PropertyName}</comment>
   </data>
   <data name="Select" xml:space="preserve">
     <value>選択</value>
+    <comment>Text to denote that an the user would like to select an item</comment>
   </data>
   <data name="SelectTypeForProperty" xml:space="preserve">
-    <value>種類 {0} を選択します</value>
-    <comment>Select {property} type</comment>
+    <value>このボタンは {0} プロパティ用です。</value>
+    <comment>Select {Property} type</comment>
   </data>
   <data name="PropertyFilterLabel" xml:space="preserve">
     <value>Property Filter</value>
-    <comment>Property Filter placeholder text</comment>
+    <comment>Label text used as Property Filter placeholder</comment>
   </data>
   <data name="PropertyColumnTitle" xml:space="preserve">
     <value>プロパティ</value>
@@ -591,167 +669,200 @@
     <comment>Title text for value column</comment>
   </data>
   <data name="AccessibilityNumeric" xml:space="preserve">
-    <value>{0} 数値エディター</value>
-    <comment>Editor for Numeric Value</comment>
+    <value>この数値エディターは、{0} プロパティ用です。</value>
+    <comment>Editor for {Property.Name} that accepts a numeric value</comment>
   </data>
   <data name="AccessibilityBoolean" xml:space="preserve">
-    <value>{0} ブール値エディター</value>
-    <comment>Editor for Boolean Value</comment>
+    <value>このチェック ボックスは {0} プロパティ用です。</value>
+    <comment>Editor for {Property.Name} that accepts a boolean value</comment>
   </data>
   <data name="AccessibilityCombobox" xml:space="preserve">
-    <value>{0} コンボ ボックス エディター</value>
-    <comment>Editor for Combobox Value</comment>
+    <value>このコンボ ボックスは、{0} プロパティ用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to pick a value from a drop-down list</comment>
+  </data>
+  <data name="AccessibilityPopUp" xml:space="preserve">
+    <value>このポップアップは {0} プロパティ用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to pick a value from a drop-down list</comment>
   </data>
   <data name="AccessibilityCollection" xml:space="preserve">
-    <value>{0} プロパティ、コレクションの編集</value>
-    <comment></comment>
+    <value>このボタンは {0} プロパティ用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to edit a collection</comment>
   </data>
   <data name="AccessibilityCollectionHelp" xml:space="preserve">
     <value>コレクションを編集するためのウィンドウを開きます</value>
+    <comment>Text to inform the user that this button will open a collection editor dialog</comment>
   </data>
   <data name="AccessibilityCollectionTypeSelector" xml:space="preserve">
-    <value>型一覧</value>
+    <value>このコンボ ボックスは型セレクター用です。</value>
+    <comment>Text denoting this used can select a Type from this list</comment>
   </data>
   <data name="AccessibilityCollectionAddButton" xml:space="preserve">
-    <value>型のインスタンスの追加</value>
+    <value>このボタンを使用すると、型セレクターからコレクション テーブルにオブジェクト インスタンスを追加できます。</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
   </data>
   <data name="AccessibilityCollectionRemoveButton" xml:space="preserve">
-    <value>インスタンスの削除</value>
+    <value>このボタンを使用すると、選択したオブジェクトのインスタンスをコレクション テーブルから削除できます。</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityCollectionOKButton" xml:space="preserve">
+    <value>このボタンを使用すると、コレクション エディターで行った変更が反映されます。</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
+  </data>
+  <data name="AccessibilityCollectionCancelButton" xml:space="preserve">
+    <value>このボタンを使用すると、コレクション エディターで行った変更が取り消されます。</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
   </data>
   <data name="AccessibilityString" xml:space="preserve">
-    <value>{0} 文字列値エディター</value>
-    <comment>Editor for String Value</comment>
+    <value>このテキスト エディターは、{0} プロパティ用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a string value</comment>
   </data>
   <data name="AccessibilityChar" xml:space="preserve">
-    <value>{0} 文字値エディター</value>
-    <comment>Editor for Char Value</comment>
+    <value>この文字エディターは、{0} プロパティ用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a char value</comment>
   </data>
   <data name="AccessibilityTimeSpan" xml:space="preserve">
-    <value>{0} TimeSpan 値エディター</value>
-    <comment>Editor for TimeSpan Value</comment>
+    <value>この TimeSpan エディターは、{0} プロパティ用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a TimeSpan value</comment>
   </data>
   <data name="AccessibilityDateTime" xml:space="preserve">
-    <value>{0} DateTime 値エディター</value>
-    <comment>Editor for DateTime Value</comment>
+    <value>この DateTime エディターは、{0} プロパティ用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a DateTime value</comment>
   </data>
   <data name="AccessibilityXEditor" xml:space="preserve">
-    <value>{0} X 値エディター</value>
-    <comment>Editor for X Value</comment>
+    <value>この数値エディターは、{0} プロパティの X 値用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its X value</comment>
   </data>
   <data name="AccessibilityYEditor" xml:space="preserve">
-    <value>{0} Y 値エディター</value>
-    <comment>Editor for Y Value</comment>
+    <value>この数値エディターは、{0} プロパティの Y 値用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Y value</comment>
   </data>
   <data name="AccessibilityWidthEditor" xml:space="preserve">
-    <value>{0} 幅エディター</value>
-    <comment>Editor for Width Value</comment>
+    <value>この数値エディターは、{0} プロパティの幅の値用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Width value</comment>
   </data>
   <data name="AccessibilityHeightEditor" xml:space="preserve">
-    <value>{0} 高さエディター</value>
-    <comment>Editor for Height Value</comment>
+    <value>この数値エディターは、{0} プロパティの高さの値用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Height value</comment>
   </data>
   <data name="ArrangeByLabel" xml:space="preserve">
     <value>並べ替え:</value>
   </data>
   <data name="AccessibilityPropertiesButton" xml:space="preserve">
-    <value>プロパティ</value>
+    <value>これは、{0} プロパティの [プロパティ] ボタンです。</value>
+    <comment>Property Button for {Property.Name}</comment>
   </data>
   <data name="AccessibilityPropertiesButtonDescription" xml:space="preserve">
     <value>このエディターのプロパティを編集します</value>
-  </data>
-  <data name="AccessibilityActionButton" xml:space="preserve">
-    <value>警告</value>
-  </data>
-  <data name="AccessibilityActionButtonDescription" xml:space="preserve">
-    <value>警告を表示します。</value>&gt;
+    <comment>Text to inform the user that they can edit the the properties of the associated editor</comment>
   </data>
   <data name="CollectionTargetsHeader" xml:space="preserve">
     <value>コレクション項目</value>
+    <comment>Header label text forr the Collection Items list</comment>
   </data>
   <data name="CollectionEditButton" xml:space="preserve">
     <value>編集</value>
+    <comment>Text for the button that will launch the collection editor dialog</comment>
   </data>
   <data name="ColumnResourceName" xml:space="preserve">
-    <value>名前</value>&gt;
+    <value>名前</value>
+    <comment>Title text for the name column in the resource list</comment>
   </data>
   <data name="ColumnResourcePreview" xml:space="preserve">
-    <value>プレビュー</value>&gt;
+    <value>プレビュー</value>
+    <comment>Title text for the preview section in the resource dialog</comment>
   </data>
   <data name="ResourceTableImageColumnTitle" xml:space="preserve">
     <value>アイコン</value>
+    <comment>Title text for the icon column in the resource list</comment>
   </data>
   <data name="ResourceTableTypeColumnTitle" xml:space="preserve">
     <value>種類</value>
+    <comment>Title text for the type column in the resource list</comment>
   </data>
   <data name="ResourceTableNameColumnTitle" xml:space="preserve">
     <value>名前</value>
+    <comment>Title text for the name column in the resource list</comment>
   </data>
   <data name="ResourceTableValueColumnTitle" xml:space="preserve">
-    <value>値</value>&gt;
+    <value>値</value>
+    <comment>Title text for the value column in the resource list</comment>
   </data>
   <data name="CommonBrushTitleUnknown" xml:space="preserve">
     <value>不明</value>
+    <comment>Default title text for a Brush that doesn't have an existing value</comment>
   </data>
   <data name="CommonBrushTitleGradient" xml:space="preserve">
-    <value>グラデーション</value>&gt;
+    <value>グラデーション</value>
+    <comment>Default title text for a Brush that doesn't have an existing value</comment>
   </data>
   <data name="AccessibilityObjectName" xml:space="preserve">
-    <value>{0} オブジェクト名エディター</value>
-    <comment>Editor for Object Name Value</comment>
+    <value>このエディターは、{0} プロパティ用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Object Name value</comment>
   </data>
   <data name="ObjectNamePlaceholder" xml:space="preserve">
-    <value>名前なし</value>&gt;
+    <value>名前なし</value>
+    <comment>Default placeholder text when the Object has name</comment>
   </data>
   <data name="AccessibilityLeftEditor" xml:space="preserve">
-    <value>{0} 左端値エディター</value>
-    <comment>Editor for Left Value</comment>
+    <value>この数値エディターは、{0} プロパティの左の値用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Left value</comment>
   </data>
   <data name="AccessibilityTopEditor" xml:space="preserve">
-    <value>{0} 上端値エディター</value>
-    <comment>Editor for Top Value</comment>
+    <value>この数値エディターは、{0} プロパティの上の値用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Top value</comment>
   </data>
   <data name="AccessibilityRightEditor" xml:space="preserve">
-    <value>{0} 右端値エディター</value>
-    <comment>Editor for Right Value</comment>
+    <value>この数値エディターは、{0} プロパティの右の値用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Right value</comment>
   </data>
   <data name="AccessibilityBottomEditor" xml:space="preserve">
-    <value>{0} 下端値エディター</value>
-    <comment>Editor for Bottom Value</comment>
+    <value>この数値エディターは、{0} プロパティの下の値用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Bottom value</comment>
   </data>
   <data name="AccessibilityInputModeEditor" xml:space="preserve">
-    <value>{0} InputMode 値エディター</value>
-    <comment>Editor for InputMode Value</comment>
+    <value>このポップアップは {0} プロパティ用です。</value>
+    <comment>Editor for {Property.Name} that allows the user to select its InputMode value</comment>
   </data>
   <data name="AccessibilityPathEditor" xml:space="preserve">
-    <value>{0} {1} パス エディター</value>
-    <comment>Editor for File/Directory Path Editor</comment>
+    <value>このパス エディターは、{0} プロパティ用です。Tab キーを押すと、[ファイル/ディレクトリの選択] ボタンに移動します。Tab キーをもう一度押すと、[表示] ボタンに移動します</value>
+    <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
+  </data>
+  <data name="AccessibilityBrowseButton" xml:space="preserve">
+    <value>このボタンは、{0} プロパティのファイルまたはディレクトリ エディター内にあります。</value>
+    <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
+  </data>
+  <data name="AccessibilityRevealButton" xml:space="preserve">
+    <value>このボタンは、{0} プロパティのファイルまたはディレクトリエディター内にあります。ファイルの場所が表示されます。</value>
+    <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
   </data>
   <data name="ChooseFileOrDirectory" xml:space="preserve">
     <value>{0} を選択する</value>
-    <comment>Choose a File or Directory</comment>
+    <comment>Tooltip and Placeholder text to choose a File or Directory</comment>
   </data>
   <data name="BrowseFileOrDirectory" xml:space="preserve">
     <value>{0} を参照する</value>
-    <comment>Browse for a File or Directory</comment>
+    <comment>Tooltip text to Browse for a File or Directory</comment>
   </data>
   <data name="RevealFileOrDirectory" xml:space="preserve">
     <value>{0} を表示する</value>
-    <comment>Reveal a File or Directory</comment>
+    <comment>Tooltip text to Reveal a File or Directory</comment>
   </data>
   <data name="File" xml:space="preserve">
     <value>ファイル</value>
-    <comment>File</comment>
+    <comment>Text denoting a File will be shown or selected</comment>
   </data>
   <data name="Directory" xml:space="preserve">
     <value>ディレクトリ</value>
-    <comment>Directory</comment>
+    <comment>Text denoting a Directory will be shown or selected</comment>
   </data>
   <data name="AddVariant" xml:space="preserve">
     <value>バリアントの追加</value>
+    <comment>Tooltip text shown when Add Variant button is hovered over</comment>
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>バリアントの削除</value>
-   </data>
+    <comment>Tooltip text shown when Remove or Delete Variant button is hovered over</comment>
+  </data>
   <data name="CreateBindingTitle" xml:space="preserve">
     <value>バインドの作成</value>
     <comment>Create Binding for Object.Property</comment>
@@ -780,13 +891,13 @@
     <value>追加</value>
   </data>
   <data name="ResourcesAllSources" xml:space="preserve">
-    <value>_All Resources</value>
+    <value>すべてのリソース(_A)</value>
   </data>
   <data name="ResourcesLocalSource" xml:space="preserve">
-    <value>_Local</value>
+    <value>ローカル(_L)</value>
   </data>
   <data name="ResourcesSharedSource" xml:space="preserve">
-    <value>_Shared</value>
+    <value>共有(_S)</value>
   </data>
   <data name="ArrangeByCategory" xml:space="preserve">
     <value>カテゴリ</value>
@@ -795,6 +906,142 @@
     <value>名前</value>
   </data>
   <data name="ArrangeByValueSource" xml:space="preserve">
-    <value>Value Source</value>
+    <value>値のソース</value>
+  </data>
+  <data name="CollectionEditHelpText" xml:space="preserve">
+    <value>このコレクション内の項目を編集</value>
+  </data>
+  <data name="UncommonPropertiesName" xml:space="preserve">
+    <value>詳細プロパティ</value>
+  </data>
+  <data name="ArrangeByButtonName" xml:space="preserve">
+    <value>このボタンを使用すると、プロパティ一覧を {0} で並べ替えることができます。</value>
+  </data>
+  <data name="PropertyButtonName" xml:space="preserve">
+    <value>詳細オプション</value>
+  </data>
+  <data name="AutoresizingLeftMarginName" xml:space="preserve">
+    <value>左余白固定</value>
+  </data>
+  <data name="Autosizing" xml:space="preserve">
+    <value>自動サイズ調整</value>
+  </data>
+  <data name="Example" xml:space="preserve">
+    <value>例</value>
+  </data>
+  <data name="AutoresizingBottomMarginName" xml:space="preserve">
+    <value>下余白固定</value>
+  </data>
+  <data name="AutoresizingRightMarginName" xml:space="preserve">
+    <value>右余白固定</value>
+  </data>
+  <data name="AutoresizingSizingHelpText" xml:space="preserve">
+    <value>調整可能な幅と高さを切り替えます</value>
+  </data>
+  <data name="AutoresizingTopMarginName" xml:space="preserve">
+    <value>上余白固定</value>
+  </data>
+  <data name="AutoresizingFixedSized" xml:space="preserve">
+    <value>固定サイズ</value>
+  </data>
+  <data name="AutoresizingHeightSizable" xml:space="preserve">
+    <value>高さ調整可</value>
+  </data>
+  <data name="AutoresizingSizingName" xml:space="preserve">
+    <value>サイズ、{0}</value>
+    <comment>Name, {Current State}</comment>
+  </data>
+  <data name="AutoresizingWidthHeightSizable" xml:space="preserve">
+    <value>幅と高さ調整可</value>
+  </data>
+  <data name="AutoresizingWidthSizable" xml:space="preserve">
+    <value>幅調整可</value>
+  </data>
+  <data name="AccessibilityPropertyFilter" xml:space="preserve">
+    <value>この検索テキスト フィールドを使用すると、プロパティ一覧のコンテンツをフィルター処理できます。入力を開始してフィルター処理を開始します</value>
+     <comment>Text denoting this user filer the property list</comment>
+  </data>
+  <data name="AccessibilityTypeSelectorCheckbox" xml:space="preserve">
+    <value>このチェック ボックスは、すべてのアセンブリの表示を有効または無効にするためのものです。</value>
+    <comment>Text denoting this user can show all assemblies</comment>
+  </data>
+  <data name="AccessibilityTypeSelectorSearch" xml:space="preserve">
+    <value>この検索テキスト フィールドを使用すると、型リストのコンテンツをフィルター処理できます。入力を開始してフィルター処理を開始します</value>
+    <comment>Text denoting this user can filter the type list</comment>
+  </data>
+  <data name="AccessibilityTypeSelectorTable" xml:space="preserve">
+    <value>このテーブルには、使用可能な型がツリー構造で一覧表示されます。</value>
+    <comment>Text denoting this user can navifate the type selector table</comment>
+  </data>
+  <data name="AccessibilityCollectionEditorTable" xml:space="preserve">
+    <value>このテーブルには、型がリスト構造で一覧表示されます。</value>
+    <comment>Text denoting this user can navigate the collection editor table</comment>
+  </data>
+  <data name="AccessibilityPropertyTable" xml:space="preserve">
+    <value>このテーブルには、オブジェクトのプロパティがリスト構造で一覧表示されます。</value>
+    <comment>Text denoting this user can navigate the property list table</comment>
+  </data>
+  <data name="AccessibilityCustomExpressionCombobox" xml:space="preserve">
+    <value>このコンボ ボックスはカスタム式用です。</value>
+    <comment>Text denoting this user can navigate the custom expression combobox</comment>
+  </data>
+  <data name="AccessibilityCustomExpressionEditControl" xml:space="preserve">
+    <value>このテキスト フィールドは、カスタム式用です。</value>
+    <comment>Text denoting this user can navigate the property list table</comment>
+  </data>
+  <data name="AccessibilityBindingEditorOK" xml:space="preserve">
+    <value>このボタンを使用すると、バインディング エディターで行った変更が反映されます。</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
+  </data>
+  <data name="AccessibilityBindingEditorCancel" xml:space="preserve">
+    <value>このボタンを使用すると、バインディング エディターで行った変更が取り消されます。</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingEditorValueConverter" xml:space="preserve">
+    <value>これは、[値コンバーター] ポップアップです。</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
+  </data>
+  <data name="AccessibilityBindingEditorAddConverter" xml:space="preserve">
+    <value>これは [値コンバーターの追加] ボタンです。アクティブ化すると、[値コンバーターの追加] ウィンドウが開きます。</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingPathSelectorCustomCheckbox" xml:space="preserve">
+    <value>このチェック ボックスは、カスタム パス テキスト フィールドの表示を有効または無効にするためのものです。</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingPathSelectorCustomPath" xml:space="preserve">
+    <value>このテキスト フィールドは、カスタム パス用です。</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingPathSelectorPathTable" xml:space="preserve">
+    <value>このテーブルには、オブジェクトのプロパティがリスト構造で一覧表示されます。</value>
+    <comment>Text denoting this user can navigate the property list table</comment>
+  </data>
+  <data name="AccessibilityBindingEditorMore" xml:space="preserve">
+    <value>この開示ボタンを使用すると、他の設定を表示または追加できます。</value>
+    <comment>Text to inform the user that this button will show or add additional items</comment>
+  </data>
+  <data name="AccessibilityBindingEditorBindingType" xml:space="preserve">
+    <value>これは [バインドの種類] ポップアップです。</value>
+    <comment>Text to inform the user that this button will show or add additional items</comment>
+  </data>
+  <data name="AccessibilityBindingAddValueConverterName" xml:space="preserve">
+    <value>これは [バインドの種類] ポップアップです。</value>
+    <comment>Text to inform the user that this button will show or add additional items</comment>
+  </data>
+  <data name="AccessibilityBindingAddValueConverterOK" xml:space="preserve">
+    <value>このボタンを使用すると、値コンバーターの追加エディターで行った変更が反映されます。</value>
+    <comment>Text to inform the user that this button will cancel the changes you have made in the Add Value Converter Editor</comment>
+  </data>
+  <data name="AccessibilityBindingAddValueConverterCancel" xml:space="preserve">
+    <value>このボタンを使用すると、値コンバーターの追加エディターで行った変更が取り消されます。</value>
+    <comment>Text to inform the user that this button will cancel the changes you have made in the Add Value Converter Editor</comment>
+  </data>
+  <data name="ObjectTypeLabelNone" xml:space="preserve">
+    <value>なし</value>
+  </data>
+  <data name="FilterTypePlaceholder" xml:space="preserve">
+    <value>Filter Types</value>
+    <comment>Placeholder for filter type control</comment>
   </data>
 </root>

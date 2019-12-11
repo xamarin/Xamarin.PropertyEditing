@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -127,7 +127,7 @@
   </data>
   <data name="Black" xml:space="preserve">
     <value>Nero</value>
-    <comment>Black textbox help text</comment>
+    <comment>Text describing Black, used in the BlackAndWhiteNames list</comment>
   </data>
   <data name="BlackInitial" xml:space="preserve">
     <value>K</value>
@@ -247,21 +247,27 @@
   </data>
   <data name="MultipleObjectsSelected" xml:space="preserve">
     <value>{0} oggetti selezionati</value>
+    <comment>Describes how many objects are selected</comment>
   </data>
   <data name="MultipleTypesSelected" xml:space="preserve">
     <value>{0} tipi selezionati</value>
+    <comment>Describes how many types are selected</comment>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Nome</value>
+    <comment>Text used to label the Object Name</comment>
   </data>
   <data name="NoName" xml:space="preserve">
     <value>&lt;Nessun nome&gt;</value>
+    <comment>Text used if there are 0 objects selected</comment>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>Proprietà</value>
+    <comment>Header label for the property list</comment>
   </data>
   <data name="PropertiesSelectedElement" xml:space="preserve">
     <value>Proprietà per l'elemento selezionato</value>
+    <comment>Tooltip when the Property List is moused over</comment>
   </data>
   <data name="Red" xml:space="preserve">
     <value>Rosso</value>
@@ -289,9 +295,11 @@
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reimposta</value>
+    <comment>Reset MenuItem text</comment>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Tipo</value>
+    <comment>Text used to label the Object Type</comment>
   </data>
   <data name="ViewPropertiesOrEvents" xml:space="preserve">
     <value>Visualizza proprietà o eventi</value>
@@ -319,117 +327,155 @@
   </data>
   <data name="Opacity" xml:space="preserve">
     <value>Opacità</value>
+    <comment>Label text to describe the opacity of a colour</comment>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annulla</value>
+    <comment>Decribes a button that will cancel the changes in a dialog</comment>
   </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
+    <comment>Decribes a button that will accept the changes in a dialog</comment>
   </data>
   <data name="ShowAllAssemblies" xml:space="preserve">
     <value>Mostra tutti gli assembly</value>
+    <comment>Describes whether a toggle should show all assemblies or not</comment>
   </data>
   <data name="SearchProperties" xml:space="preserve">
     <value>Proprietà di ricerca</value>
+    <comment>Filter Box AutomationProperties.Name Check this needs translating</comment>
   </data>
   <data name="New" xml:space="preserve">
     <value>Nuovo</value>
+    <comment>Describes a button that will allow the user to open popup dialog</comment>
   </data>
   <data name="SearchObjectsTitle" xml:space="preserve">
     <value>Cerca oggetti</value>
+    <comment>Hint text to describe how users interact with search/filter control</comment>
   </data>
   <data name="SelectObjectTitle" xml:space="preserve">
     <value>Seleziona oggetto</value>
+    <comment>Title text for the Type Selector dialog</comment>
   </data>
   <data name="CustomExpression" xml:space="preserve">
     <value>Espressione personalizzata</value>
+    <comment>Title text for the Custom Expression dialog</comment>
   </data>
   <data name="ColorEditorTabLabel" xml:space="preserve">
     <value>Editor</value>
+    <comment></comment>
   </data>
   <data name="SearchResourcesTitle" xml:space="preserve">
     <value>Cerca nelle risorse</value>
+    <comment>Search Control placeholder text</comment>
   </data>
   <data name="SelectResourceTitle" xml:space="preserve">
     <value>Seleziona risorsa</value>
+    <comment>Title text for the Resource Selector dialog</comment>
   </data>
   <data name="ShowSystemResources" xml:space="preserve">
     <value>Mostra le risorse di sistema</value>
+    <comment>Decribes whether a toggle should show system resources or not</comment>
   </data>
   <data name="ResourceEllipsis" xml:space="preserve">
     <value>Risorsa…</value>
+    <comment>Decribes a menu option that will allow the user to see the resources dialog</comment>
   </data>
   <data name="Default" xml:space="preserve">
     <value>Predefiniti</value>
+    <comment>Tooltip describing this property has a default value</comment>
   </data>
   <data name="Inherited" xml:space="preserve">
     <value>Ereditata</value>
+    <comment>Tooltip describing this property has an inherited value</comment>
   </data>
   <data name="InvalidValue" xml:space="preserve">
     <value>{0} è un valore non valido</value>
+    <comment>Error text when an invalid value is found</comment>
   </data>
   <data name="Local" xml:space="preserve">
     <value>Locale</value>
+    <comment>Tooltip describing this property has a local value</comment>
   </data>
   <data name="Unset" xml:space="preserve">
     <value>Annulla impostazione</value>
+    <comment>Tooltip describing this property has an unset value</comment>
   </data>
   <data name="MaterialColorRed" xml:space="preserve">
     <value>Rosso</value>
+    <comment>Text describing Red used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorPink" xml:space="preserve">
     <value>Rosa</value>
+    <comment>Text describing Pink used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorPurple" xml:space="preserve">
     <value>Viola</value>
+    <comment>Text describing Purple used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorDeepPurple" xml:space="preserve">
     <value>Viola intenso</value>
+    <comment>Text describing Deep Purple used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorIndigo" xml:space="preserve">
     <value>Indaco scuro</value>
+    <comment>Text describing Indigo used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorBlue" xml:space="preserve">
     <value>Blu</value>
+    <comment>Text describing Blue used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorLightBlue" xml:space="preserve">
     <value>Azzurro</value>
+    <comment>Text describing Light Blue used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorCyan" xml:space="preserve">
     <value>Ciano</value>
+    <comment>Text describing Cyan used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorTeal" xml:space="preserve">
     <value>Verde acqua</value>
+    <comment>Text describing Teal used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorGreen" xml:space="preserve">
     <value>Verde</value>
+    <comment>Text describing Green used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorLightGreen" xml:space="preserve">
     <value>Verde chiaro</value>
+    <comment>Text describing Light Green used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorLime" xml:space="preserve">
     <value>Verde limone</value>
+    <comment>Text describing Lime used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorYellow" xml:space="preserve">
     <value>Giallo</value>
+    <comment>Text describing Yellow used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorAmber" xml:space="preserve">
     <value>Ambra</value>
+    <comment>Text describing Amber used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorOrange" xml:space="preserve">
     <value>Arancione</value>
+    <comment>Text describing Orange used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorDeepOrange" xml:space="preserve">
     <value>Arancione intenso</value>
+    <comment>Text describing Deep Orange used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorBrown" xml:space="preserve">
     <value>Marrone</value>
+    <comment>Text describing Brown used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorGrey" xml:space="preserve">
     <value>Grigio</value>
+    <comment>Text describing Grey used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorBlueGrey" xml:space="preserve">
     <value>Grigio azzurro</value>
+    <comment>Text describing Blue Grey used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialDesignColorBrush" xml:space="preserve">
     <value>Colori della struttura del materiale</value>
@@ -437,16 +483,19 @@
   </data>
   <data name="MaterialColorBlackAndWhite" xml:space="preserve">
     <value>Bianco e nero</value>
+    <comment>Text describing Black and White used in the MaterialPalettes list</comment>
   </data>
   <data name="White" xml:space="preserve">
     <value>Bianco</value>
+    <comment>Text describing White, used in the BlackAndWhiteNames list</comment>
   </data>
   <data name="NoPreviewAvailable" xml:space="preserve">
     <value>Anteprima non disponibile</value>
-    <comment>Resource selector window preview section text</comment>
+    <comment>Text for the Resource selector window preview section, when no preview is available</comment>
   </data>
   <data name="Resource" xml:space="preserve">
     <value>Risorsa</value>
+    <comment>Default text when no resource name is available</comment>
   </data>
   <data name="ResourceWithName" xml:space="preserve">
     <value>Risorsa ({0})</value>
@@ -454,9 +503,11 @@
   </data>
   <data name="Binding" xml:space="preserve">
     <value>Binding</value>
+    <comment>Tooltip describing this property has a bound value</comment>
   </data>
   <data name="GoToSource" xml:space="preserve">
     <value>Vai a origine</value>
+    <comment>Text describing what is possible when a ValueSource supports navigation</comment>
   </data>
   <data name="CollectionValue" xml:space="preserve">
     <value>(Insieme)</value>
@@ -464,12 +515,15 @@
   </data>
   <data name="Ellipsis" xml:space="preserve">
     <value>…</value>
+    <comment></comment>
   </data>
   <data name="OtherTypeAction" xml:space="preserve">
     <value>&lt;Altro tipo…&gt;</value>
+    <comment>Text used for the OtherType.Name</comment>
   </data>
   <data name="Items" xml:space="preserve">
     <value>Elementi</value>
+    <comment>Header Text used denote a list of selected objects in the collection editor.</comment>
   </data>
   <data name="CollectionEditorTitle" xml:space="preserve">
     <value>Editor della raccolta: {0}</value>
@@ -477,30 +531,39 @@
   </data>
   <data name="MoveItemDown" xml:space="preserve">
     <value>Sposta elemento in basso</value>
+    <comment>Tooltip text for a button that will allow you to move a selected item down in the list</comment>
   </data>
   <data name="MoveItemUp" xml:space="preserve">
     <value>Sposta elemento in alto</value>
+    <comment>Tooltip text for a button that will allow you to move a selected item up in the list</comment>
   </data>
   <data name="RemoveItem" xml:space="preserve">
     <value>Rimuovi elemento</value>
-  </data>
-  <data name="GenericErrorMessage" xml:space="preserve">
-    <value>Si è verificato un errore</value>
+    <comment>Tooltip text for a button that will allow you to remove a selected item from the list</comment>
   </data>
   <data name="DefineIn" xml:space="preserve">
     <value>Posizione definizione</value>
+    <comment>Header text in Create Resource dialog for where the new resource is defined</comment>
   </data>
   <data name="Application" xml:space="preserve">
     <value>Applicazione</value>
-  </data>
-  <data name="ApplyToAll" xml:space="preserve">
-    <value>Applica a tutti</value>
+    <comment>Option text within Create Resource dialog denoting that the new resource will be definied in the application</comment>
   </data>
   <data name="ThisDocument" xml:space="preserve">
     <value>Documento corrente</value>
+    <comment>Option text within Create Resource dialog denoting that the new resource will be definied in this document</comment>
+  </data>
+  <data name="ResourceDictionary" xml:space="preserve">
+    <value>Resource dictionary</value>
+    <comment>Option text within Create Resource Window denoting that the new resource will be definied in a resource dictionary</comment>
+  </data>
+  <data name="ApplyToAll" xml:space="preserve">
+    <value>Applica a tutti</value>
+    <comment>Option text within Create Resource Window denoting that the new resource name will apply to all resources</comment>
   </data>
   <data name="ConvertToNewResourceEllipsis" xml:space="preserve">
     <value>Converti in nuova risorsa…</value>
+    <comment>Menu option text which when selected will launch the Create Resource dialog</comment>
   </data>
   <data name="CreateResourceTitle" xml:space="preserve">
     <value>Crea risorsa {0}</value>
@@ -511,76 +574,91 @@
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
     <value>Dizionario risorse</value>
+    <comment>Label text for the name of the resource</comment>
   </data>
   <data name="CreateDataBindingMenuItem" xml:space="preserve">
     <value>Crea nuovo binding…</value>
+    <comment>Menu option text which when selected will launch the Create Databinding dialog</comment>
   </data>
   <data name="AddValueConverterEllipsis" xml:space="preserve">
     <value>Aggiungi convertitore di valori…</value>
+    <comment>Menu option text which when selected will launch the Add Value Converter dialog</comment>
   </data>
   <data name="AddValueConverterTitle" xml:space="preserve">
     <value>Aggiungi convertitore di valori</value>
+    <comment>Title window text for the Add Value Converter dialog</comment>
   </data>
   <data name="NoValueConverter" xml:space="preserve">
     <value>Non esiste alcun convertitore di valori</value>
+    <comment>Used when no value converter is available</comment>
   </data>
   <data name="ValueConverterName" xml:space="preserve">
     <value>Nome del convertitore di valori</value>
+    <comment>Name of the value converter</comment>
   </data>
   <data name="CreateDataBindingTitle" xml:space="preserve">
     <value>Crea data binding per {0}</value>
-    <comment>Create Data Binding for Object.Property</comment>
+    <comment>Create Data Binding for {Object.Property}</comment>
   </data>
   <data name="BindingType" xml:space="preserve">
     <value>Tipo di binding</value>
+    <comment>Label text for the binding type dropdown</comment>
   </data>
   <data name="Path" xml:space="preserve">
     <value>Percorso</value>
-  </data>
-  <data name="ResourcePlural" xml:space="preserve">
-    <value>Risorse</value>
+    <comment>Label text for the path edit box</comment>
   </data>
   <data name="Custom" xml:space="preserve">
     <value>Personalizzato</value>
+    <comment>Label text for the custom path check box</comment>
   </data>
   <data name="InvalidRatio" xml:space="preserve">
     <value>Rapporto non valido</value>
+    <comment>Error text for when an Invalid ration is entered</comment>
   </data>
   <data name="AllResources" xml:space="preserve">
     <value>Tutte le risorse</value>
+    <comment>Label text for all resources to be to shown</comment>
   </data>
   <data name="Shared" xml:space="preserve">
     <value>Condiviso</value>
+    <comment>Label text for shared resource to be to shown</comment>
   </data>
   <data name="AddVariationHelpText" xml:space="preserve">
     <value>Introdurre la variante basata su:</value>
+    <comment>Label text within the Create Variant dialog</comment>
   </data>
   <data name="AddVariationTitle" xml:space="preserve">
     <value>Aggiungi una variante</value>
+    <comment>Title text for the Create Variant dialog</comment>
   </data>
   <data name="Any" xml:space="preserve">
     <value>Qualsiasi</value>
+    <comment>Text denoting any variant for a category</comment>
   </data>
   <data name="ErrorCreatingVariant" xml:space="preserve">
     <value>Si è verificato un errore durante la creazione della variante: {0}. Se l'errore persiste, segnalarlo.</value>
+    <comment>Error text when unable to create a variant</comment>
   </data>
   <data name="UncommonPropertiesTooltip" xml:space="preserve">
     <value>Mostra proprietà avanzate</value>
+    <comment>Tooltip text used to toggle the visibility of the advanced properties</comment>
   </data>
   <data name="NewInstanceForProperty" xml:space="preserve">
-    <value>Nuovo {0}</value>
+    <value>Pulsante per la proprietà {0}.</value>
     <comment>New {PropertyName}</comment>
   </data>
   <data name="Select" xml:space="preserve">
     <value>Seleziona</value>
+    <comment>Text to denote that an the user would like to select an item</comment>
   </data>
   <data name="SelectTypeForProperty" xml:space="preserve">
-    <value>Selezionare il tipo {0}</value>
-    <comment>Select {property} type</comment>
+    <value>Pulsante per la proprietà {0}.</value>
+    <comment>Select {Property} type</comment>
   </data>
   <data name="PropertyFilterLabel" xml:space="preserve">
     <value>Property Filter</value>
-    <comment>Property Filter placeholder text</comment>
+    <comment>Label text used as Property Filter placeholder</comment>
   </data>
   <data name="PropertyColumnTitle" xml:space="preserve">
     <value>Proprietà</value>
@@ -591,167 +669,200 @@
     <comment>Title text for value column</comment>
   </data>
   <data name="AccessibilityNumeric" xml:space="preserve">
-    <value>Editor valore Numeric {0}</value>
-    <comment>Editor for Numeric Value</comment>
+    <value>Editor numerico per la proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that accepts a numeric value</comment>
   </data>
   <data name="AccessibilityBoolean" xml:space="preserve">
-    <value>Editor valore Boolean {0}</value>
-    <comment>Editor for Boolean Value</comment>
+    <value>Casella di controllo per la proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that accepts a boolean value</comment>
   </data>
   <data name="AccessibilityCombobox" xml:space="preserve">
-    <value>Editor valore Combobox {0}</value>
-    <comment>Editor for Combobox Value</comment>
+    <value>Casella combinata per la proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to pick a value from a drop-down list</comment>
+  </data>
+  <data name="AccessibilityPopUp" xml:space="preserve">
+    <value>Popup per la proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to pick a value from a drop-down list</comment>
   </data>
   <data name="AccessibilityCollection" xml:space="preserve">
-    <value>Proprietà {0}, modifica raccolta</value>
-    <comment></comment>
+    <value>Pulsante per la proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to edit a collection</comment>
   </data>
   <data name="AccessibilityCollectionHelp" xml:space="preserve">
     <value>Apre una finestra per la modifica della raccolta</value>
+    <comment>Text to inform the user that this button will open a collection editor dialog</comment>
   </data>
   <data name="AccessibilityCollectionTypeSelector" xml:space="preserve">
-    <value>Elenco dei tipi</value>
+    <value>Casella combinata per Selettore tipo.</value>
+    <comment>Text denoting this used can select a Type from this list</comment>
   </data>
   <data name="AccessibilityCollectionAddButton" xml:space="preserve">
-    <value>Aggiungi istanza di tipo</value>
+    <value>Questo pulsante consente di aggiungere un'istanza di oggetto dal selettore di tipo alla tabella della raccolta.</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
   </data>
   <data name="AccessibilityCollectionRemoveButton" xml:space="preserve">
-    <value>Rimuovi istanza</value>
+    <value>Questo pulsante consente di rimuovere un'istanza dell'oggetto selezionato dalla tabella della raccolta.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityCollectionOKButton" xml:space="preserve">
+    <value>Questo pulsante consente di accettare le modifiche apportate nell'editor dell'insieme.</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
+  </data>
+  <data name="AccessibilityCollectionCancelButton" xml:space="preserve">
+    <value>Questo pulsante consente di annullare le modifiche apportate nell'editor dell'insieme.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
   </data>
   <data name="AccessibilityString" xml:space="preserve">
-    <value>Editor valore String {0}</value>
-    <comment>Editor for String Value</comment>
+    <value>Editor di testo per la proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a string value</comment>
   </data>
   <data name="AccessibilityChar" xml:space="preserve">
-    <value>Editor valore Char {0}</value>
-    <comment>Editor for Char Value</comment>
+    <value>Editor di caratteri per la proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a char value</comment>
   </data>
   <data name="AccessibilityTimeSpan" xml:space="preserve">
-    <value>Editor valore TimeSpan {0}</value>
-    <comment>Editor for TimeSpan Value</comment>
+    <value>Editor TimeSpan per la proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a TimeSpan value</comment>
   </data>
   <data name="AccessibilityDateTime" xml:space="preserve">
-    <value>Editor valore DateTime {0}</value>
-    <comment>Editor for DateTime Value</comment>
+    <value>Editor DateTime per la proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a DateTime value</comment>
   </data>
   <data name="AccessibilityXEditor" xml:space="preserve">
-    <value>Editor valore X {0}</value>
-    <comment>Editor for X Value</comment>
+    <value>Editor numerico per il valore X della proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its X value</comment>
   </data>
   <data name="AccessibilityYEditor" xml:space="preserve">
-    <value>Editor valore Y {0}</value>
-    <comment>Editor for Y Value</comment>
+    <value>Editor numerico per il valore Y della proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Y value</comment>
   </data>
   <data name="AccessibilityWidthEditor" xml:space="preserve">
-    <value>Editor valore Width {0}</value>
-    <comment>Editor for Width Value</comment>
+    <value>Editor numerico per il valore Width della proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Width value</comment>
   </data>
   <data name="AccessibilityHeightEditor" xml:space="preserve">
-    <value>Editor valore Height {0}</value>
-    <comment>Editor for Height Value</comment>
+    <value>Editor numerico per il valore Height della proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Height value</comment>
   </data>
   <data name="ArrangeByLabel" xml:space="preserve">
     <value>Disponi per:</value>
   </data>
   <data name="AccessibilityPropertiesButton" xml:space="preserve">
-    <value>Proprietà</value>
+    <value>Pulsante Proprietà per la proprietà {0}.</value>
+    <comment>Property Button for {Property.Name}</comment>
   </data>
   <data name="AccessibilityPropertiesButtonDescription" xml:space="preserve">
     <value>Modifica le proprietà di questo editor</value>
-  </data>
-  <data name="AccessibilityActionButton" xml:space="preserve">
-    <value>Avvisi</value>
-  </data>
-  <data name="AccessibilityActionButtonDescription" xml:space="preserve">
-    <value>Visualizza gli avvisi.</value>&gt;
+    <comment>Text to inform the user that they can edit the the properties of the associated editor</comment>
   </data>
   <data name="CollectionTargetsHeader" xml:space="preserve">
     <value>Elementi della raccolta</value>
+    <comment>Header label text forr the Collection Items list</comment>
   </data>
   <data name="CollectionEditButton" xml:space="preserve">
     <value>Modifica</value>
+    <comment>Text for the button that will launch the collection editor dialog</comment>
   </data>
   <data name="ColumnResourceName" xml:space="preserve">
-    <value>Nome</value>&gt;
+    <value>Nome</value>
+    <comment>Title text for the name column in the resource list</comment>
   </data>
   <data name="ColumnResourcePreview" xml:space="preserve">
-    <value>Anteprima</value>&gt;
+    <value>Anteprima</value>
+    <comment>Title text for the preview section in the resource dialog</comment>
   </data>
   <data name="ResourceTableImageColumnTitle" xml:space="preserve">
     <value>Icona</value>
+    <comment>Title text for the icon column in the resource list</comment>
   </data>
   <data name="ResourceTableTypeColumnTitle" xml:space="preserve">
     <value>Tipo</value>
+    <comment>Title text for the type column in the resource list</comment>
   </data>
   <data name="ResourceTableNameColumnTitle" xml:space="preserve">
     <value>Nome</value>
+    <comment>Title text for the name column in the resource list</comment>
   </data>
   <data name="ResourceTableValueColumnTitle" xml:space="preserve">
-    <value>Valore</value>&gt;
+    <value>Valore</value>
+    <comment>Title text for the value column in the resource list</comment>
   </data>
   <data name="CommonBrushTitleUnknown" xml:space="preserve">
     <value>Sconosciuto</value>
+    <comment>Default title text for a Brush that doesn't have an existing value</comment>
   </data>
   <data name="CommonBrushTitleGradient" xml:space="preserve">
-    <value>Sfumatura</value>&gt;
+    <value>Sfumatura</value>
+    <comment>Default title text for a Brush that doesn't have an existing value</comment>
   </data>
   <data name="AccessibilityObjectName" xml:space="preserve">
-    <value>Editor valore ObjectName {0}</value>
-    <comment>Editor for Object Name Value</comment>
+    <value>Editor per la proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Object Name value</comment>
   </data>
   <data name="ObjectNamePlaceholder" xml:space="preserve">
-    <value>Nessun nome</value>&gt;
+    <value>Nessun nome</value>
+    <comment>Default placeholder text when the Object has name</comment>
   </data>
   <data name="AccessibilityLeftEditor" xml:space="preserve">
-    <value>Editor valore Left {0}</value>
-    <comment>Editor for Left Value</comment>
+    <value>Editor numerico per il valore Left della proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Left value</comment>
   </data>
   <data name="AccessibilityTopEditor" xml:space="preserve">
-    <value>Editor valore Top {0}</value>
-    <comment>Editor for Top Value</comment>
+    <value>Editor numerico per il valore Top della proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Top value</comment>
   </data>
   <data name="AccessibilityRightEditor" xml:space="preserve">
-    <value>Editor valore Right {0}</value>
-    <comment>Editor for Right Value</comment>
+    <value>Editor numerico per il valore Right della proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Right value</comment>
   </data>
   <data name="AccessibilityBottomEditor" xml:space="preserve">
-    <value>Editor valore Bottom {0}</value>
-    <comment>Editor for Bottom Value</comment>
+    <value>Editor numerico per il valore Bottom della proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Bottom value</comment>
   </data>
   <data name="AccessibilityInputModeEditor" xml:space="preserve">
-    <value>Editor valore InputMode {0}</value>
-    <comment>Editor for InputMode Value</comment>
+    <value>Popup per la proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to select its InputMode value</comment>
   </data>
   <data name="AccessibilityPathEditor" xml:space="preserve">
-    <value>Editor per percorso {0} {1}</value>
-    <comment>Editor for File/Directory Path Editor</comment>
+    <value>Editor di percorsi per la proprietà {0}. Premere TAB per passare al pulsante di selezione file/directory. Premere di nuovo TAB per passare al pulsante Visualizza</value>
+    <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
+  </data>
+  <data name="AccessibilityBrowseButton" xml:space="preserve">
+    <value>Questo pulsante si trova all'interno dell'editor di file/directory della proprietà {0}.</value>
+    <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
+  </data>
+  <data name="AccessibilityRevealButton" xml:space="preserve">
+    <value>Questo pulsante si trova all'interno dell'editor di file/directory della proprietà {0}. Consente di visualizzare il percorso del file.</value>
+    <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
   </data>
   <data name="ChooseFileOrDirectory" xml:space="preserve">
     <value>Scegli {0}</value>
-    <comment>Choose a File or Directory</comment>
+    <comment>Tooltip and Placeholder text to choose a File or Directory</comment>
   </data>
   <data name="BrowseFileOrDirectory" xml:space="preserve">
     <value>Cerca {0}</value>
-    <comment>Browse for a File or Directory</comment>
+    <comment>Tooltip text to Browse for a File or Directory</comment>
   </data>
   <data name="RevealFileOrDirectory" xml:space="preserve">
     <value>Visualizza {0}</value>
-    <comment>Reveal a File or Directory</comment>
+    <comment>Tooltip text to Reveal a File or Directory</comment>
   </data>
   <data name="File" xml:space="preserve">
     <value>File</value>
-    <comment>File</comment>
+    <comment>Text denoting a File will be shown or selected</comment>
   </data>
   <data name="Directory" xml:space="preserve">
     <value>Directory</value>
-    <comment>Directory</comment>
+    <comment>Text denoting a Directory will be shown or selected</comment>
   </data>
   <data name="AddVariant" xml:space="preserve">
     <value>Aggiungi variante</value>
+    <comment>Tooltip text shown when Add Variant button is hovered over</comment>
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>Rimuovi variante</value>
-   </data>
+    <comment>Tooltip text shown when Remove or Delete Variant button is hovered over</comment>
+  </data>
   <data name="CreateBindingTitle" xml:space="preserve">
     <value>Crea associazione</value>
     <comment>Create Binding for Object.Property</comment>
@@ -780,13 +891,13 @@
     <value>Aggiungi</value>
   </data>
   <data name="ResourcesAllSources" xml:space="preserve">
-    <value>_All Resources</value>
+    <value>_Tutte le risorse</value>
   </data>
   <data name="ResourcesLocalSource" xml:space="preserve">
-    <value>_Local</value>
+    <value>_Locali</value>
   </data>
   <data name="ResourcesSharedSource" xml:space="preserve">
-    <value>_Shared</value>
+    <value>_Condivise</value>
   </data>
   <data name="ArrangeByCategory" xml:space="preserve">
     <value>Categoria</value>
@@ -795,6 +906,142 @@
     <value>Nome</value>
   </data>
   <data name="ArrangeByValueSource" xml:space="preserve">
-    <value>Value Source</value>
+    <value>Origine valore</value>
+  </data>
+  <data name="CollectionEditHelpText" xml:space="preserve">
+    <value>Consente di modificare gli elementi in questa raccolta</value>
+  </data>
+  <data name="UncommonPropertiesName" xml:space="preserve">
+    <value>Proprietà avanzate</value>
+  </data>
+  <data name="ArrangeByButtonName" xml:space="preserve">
+    <value>Questo pulsante consente di organizzare l'elenco delle proprietà per {0}.</value>
+  </data>
+  <data name="PropertyButtonName" xml:space="preserve">
+    <value>Opzioni avanzate</value>
+  </data>
+  <data name="AutoresizingLeftMarginName" xml:space="preserve">
+    <value>Margine sinistro fisso</value>
+  </data>
+  <data name="Autosizing" xml:space="preserve">
+    <value>Ridimensionamento automatico</value>
+  </data>
+  <data name="Example" xml:space="preserve">
+    <value>Esempio</value>
+  </data>
+  <data name="AutoresizingBottomMarginName" xml:space="preserve">
+    <value>Margine inferiore fisso</value>
+  </data>
+  <data name="AutoresizingRightMarginName" xml:space="preserve">
+    <value>Margine destro fisso</value>
+  </data>
+  <data name="AutoresizingSizingHelpText" xml:space="preserve">
+    <value>Alterna tra larghezza e altezza ridimensionabili</value>
+  </data>
+  <data name="AutoresizingTopMarginName" xml:space="preserve">
+    <value>Margine superiore fisso</value>
+  </data>
+  <data name="AutoresizingFixedSized" xml:space="preserve">
+    <value>dimensioni fisse</value>
+  </data>
+  <data name="AutoresizingHeightSizable" xml:space="preserve">
+    <value>altezza ridimensionabile</value>
+  </data>
+  <data name="AutoresizingSizingName" xml:space="preserve">
+    <value>Ridimensionamento, {0}</value>
+    <comment>Name, {Current State}</comment>
+  </data>
+  <data name="AutoresizingWidthHeightSizable" xml:space="preserve">
+    <value>larghezza e altezza ridimensionabili</value>
+  </data>
+  <data name="AutoresizingWidthSizable" xml:space="preserve">
+    <value>larghezza ridimensionabile</value>
+  </data>
+  <data name="AccessibilityPropertyFilter" xml:space="preserve">
+    <value>Questo campo di testo di ricerca consente di filtrare il contenuto dell'elenco delle proprietà. Per applicare il filtro, iniziare a digitare</value>
+     <comment>Text denoting this user filer the property list</comment>
+  </data>
+  <data name="AccessibilityTypeSelectorCheckbox" xml:space="preserve">
+    <value>Questa casella di controllo consente di abilitare o disabilitare la visualizzazione di tutti gli assembly.</value>
+    <comment>Text denoting this user can show all assemblies</comment>
+  </data>
+  <data name="AccessibilityTypeSelectorSearch" xml:space="preserve">
+    <value>Questo campo di testo di ricerca consente di filtrare il contenuto dell'elenco dei tipi. Per applicare il filtro, iniziare a digitare</value>
+    <comment>Text denoting this user can filter the type list</comment>
+  </data>
+  <data name="AccessibilityTypeSelectorTable" xml:space="preserve">
+    <value>Questa tabella elenca i tipi disponibili in una struttura ad albero.</value>
+    <comment>Text denoting this user can navifate the type selector table</comment>
+  </data>
+  <data name="AccessibilityCollectionEditorTable" xml:space="preserve">
+    <value>Questa tabella elenca i tipi in una struttura di elenco.</value>
+    <comment>Text denoting this user can navigate the collection editor table</comment>
+  </data>
+  <data name="AccessibilityPropertyTable" xml:space="preserve">
+    <value>Questa tabella elenca le proprietà di un oggetto in una struttura di elenco.</value>
+    <comment>Text denoting this user can navigate the property list table</comment>
+  </data>
+  <data name="AccessibilityCustomExpressionCombobox" xml:space="preserve">
+    <value>Casella combinata per Espressioni personalizzate.</value>
+    <comment>Text denoting this user can navigate the custom expression combobox</comment>
+  </data>
+  <data name="AccessibilityCustomExpressionEditControl" xml:space="preserve">
+    <value>Campo di testo per Espressioni personalizzate.</value>
+    <comment>Text denoting this user can navigate the property list table</comment>
+  </data>
+  <data name="AccessibilityBindingEditorOK" xml:space="preserve">
+    <value>Questo pulsante consente di accettare le modifiche apportate nell'editor di Binding.</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
+  </data>
+  <data name="AccessibilityBindingEditorCancel" xml:space="preserve">
+    <value>Questo pulsante consente di annullare le modifiche apportate nell'editor di Binding.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingEditorValueConverter" xml:space="preserve">
+    <value>Popup Convertitore di valori.</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
+  </data>
+  <data name="AccessibilityBindingEditorAddConverter" xml:space="preserve">
+    <value>Pulsante Aggiungi convertitore di valori. Se si attiva, verrà aperta la finestra corrispondente.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingPathSelectorCustomCheckbox" xml:space="preserve">
+    <value>Questa casella di controllo consente di abilitare o disabilitare la visualizzazione del campo di testo Percorso personalizzato.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingPathSelectorCustomPath" xml:space="preserve">
+    <value>Campo di testo per Percorso personalizzato.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingPathSelectorPathTable" xml:space="preserve">
+    <value>Questa tabella elenca le proprietà di un oggetto in una struttura di elenco.</value>
+    <comment>Text denoting this user can navigate the property list table</comment>
+  </data>
+  <data name="AccessibilityBindingEditorMore" xml:space="preserve">
+    <value>Questo pulsante di apertura consente di visualizzare o aggiungere impostazioni aggiuntive.</value>
+    <comment>Text to inform the user that this button will show or add additional items</comment>
+  </data>
+  <data name="AccessibilityBindingEditorBindingType" xml:space="preserve">
+    <value>Popup Tipo di binding.</value>
+    <comment>Text to inform the user that this button will show or add additional items</comment>
+  </data>
+  <data name="AccessibilityBindingAddValueConverterName" xml:space="preserve">
+    <value>Popup Tipo di binding.</value>
+    <comment>Text to inform the user that this button will show or add additional items</comment>
+  </data>
+  <data name="AccessibilityBindingAddValueConverterOK" xml:space="preserve">
+    <value>Questo pulsante consente di accettare le modifiche apportate nell'editor di Aggiungi convertitore di valori.</value>
+    <comment>Text to inform the user that this button will cancel the changes you have made in the Add Value Converter Editor</comment>
+  </data>
+  <data name="AccessibilityBindingAddValueConverterCancel" xml:space="preserve">
+    <value>Questo pulsante consente di annullare le modifiche apportate nell'editor di Aggiungi convertitore di valori.</value>
+    <comment>Text to inform the user that this button will cancel the changes you have made in the Add Value Converter Editor</comment>
+  </data>
+  <data name="ObjectTypeLabelNone" xml:space="preserve">
+    <value>Nessuno</value>
+  </data>
+  <data name="FilterTypePlaceholder" xml:space="preserve">
+    <value>Filter Types</value>
+    <comment>Placeholder for filter type control</comment>
   </data>
 </root>
