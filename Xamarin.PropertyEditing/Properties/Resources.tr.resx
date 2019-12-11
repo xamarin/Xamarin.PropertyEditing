@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -127,7 +127,7 @@
   </data>
   <data name="Black" xml:space="preserve">
     <value>Siyah</value>
-    <comment>Black textbox help text</comment>
+    <comment>Text describing Black, used in the BlackAndWhiteNames list</comment>
   </data>
   <data name="BlackInitial" xml:space="preserve">
     <value>K</value>
@@ -247,21 +247,27 @@
   </data>
   <data name="MultipleObjectsSelected" xml:space="preserve">
     <value>Seçili {0} nesnesi</value>
+    <comment>Describes how many objects are selected</comment>
   </data>
   <data name="MultipleTypesSelected" xml:space="preserve">
     <value>Seçili {0} türleri</value>
+    <comment>Describes how many types are selected</comment>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Ad</value>
+    <comment>Text used to label the Object Name</comment>
   </data>
   <data name="NoName" xml:space="preserve">
     <value>&lt;Ad yok&gt;</value>
+    <comment>Text used if there are 0 objects selected</comment>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>Özellikler</value>
+    <comment>Header label for the property list</comment>
   </data>
   <data name="PropertiesSelectedElement" xml:space="preserve">
     <value>Seçili öğenin özellikleri</value>
+    <comment>Tooltip when the Property List is moused over</comment>
   </data>
   <data name="Red" xml:space="preserve">
     <value>Kırmızı</value>
@@ -289,9 +295,11 @@
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Sıfırla</value>
+    <comment>Reset MenuItem text</comment>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Tür</value>
+    <comment>Text used to label the Object Type</comment>
   </data>
   <data name="ViewPropertiesOrEvents" xml:space="preserve">
     <value>Özellikleri veya olayları görüntüle</value>
@@ -319,117 +327,155 @@
   </data>
   <data name="Opacity" xml:space="preserve">
     <value>Opaklık</value>
+    <comment>Label text to describe the opacity of a colour</comment>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>İptal</value>
+    <comment>Decribes a button that will cancel the changes in a dialog</comment>
   </data>
   <data name="OK" xml:space="preserve">
     <value>Tamam</value>
+    <comment>Decribes a button that will accept the changes in a dialog</comment>
   </data>
   <data name="ShowAllAssemblies" xml:space="preserve">
     <value>Tüm Bütünleştirilmiş Kodları Göster</value>
+    <comment>Describes whether a toggle should show all assemblies or not</comment>
   </data>
   <data name="SearchProperties" xml:space="preserve">
-    <value>Özellik ara</value>
+    <value>Arama Özellikleri</value>
+    <comment>Filter Box AutomationProperties.Name Check this needs translating</comment>
   </data>
   <data name="New" xml:space="preserve">
     <value>Yeni</value>
+    <comment>Describes a button that will allow the user to open popup dialog</comment>
   </data>
   <data name="SearchObjectsTitle" xml:space="preserve">
     <value>Nesneleri Ara</value>
+    <comment>Hint text to describe how users interact with search/filter control</comment>
   </data>
   <data name="SelectObjectTitle" xml:space="preserve">
     <value>Nesne seç</value>
+    <comment>Title text for the Type Selector dialog</comment>
   </data>
   <data name="CustomExpression" xml:space="preserve">
     <value>Özel İfade</value>
+    <comment>Title text for the Custom Expression dialog</comment>
   </data>
   <data name="ColorEditorTabLabel" xml:space="preserve">
     <value>Düzenleyici</value>
+    <comment></comment>
   </data>
   <data name="SearchResourcesTitle" xml:space="preserve">
     <value>Kaynakları Ara</value>
+    <comment>Search Control placeholder text</comment>
   </data>
   <data name="SelectResourceTitle" xml:space="preserve">
     <value>Kaynak Seç</value>
+    <comment>Title text for the Resource Selector dialog</comment>
   </data>
   <data name="ShowSystemResources" xml:space="preserve">
     <value>Sistem kaynaklarını göster</value>
+    <comment>Decribes whether a toggle should show system resources or not</comment>
   </data>
   <data name="ResourceEllipsis" xml:space="preserve">
     <value>Kaynak...</value>
+    <comment>Decribes a menu option that will allow the user to see the resources dialog</comment>
   </data>
   <data name="Default" xml:space="preserve">
     <value>Varsayılan</value>
+    <comment>Tooltip describing this property has a default value</comment>
   </data>
   <data name="Inherited" xml:space="preserve">
     <value>Devralınmış</value>
+    <comment>Tooltip describing this property has an inherited value</comment>
   </data>
   <data name="InvalidValue" xml:space="preserve">
     <value>{0} değeri geçersiz</value>
+    <comment>Error text when an invalid value is found</comment>
   </data>
   <data name="Local" xml:space="preserve">
     <value>Yerel</value>
+    <comment>Tooltip describing this property has a local value</comment>
   </data>
   <data name="Unset" xml:space="preserve">
     <value>Ayarı Kaldır</value>
+    <comment>Tooltip describing this property has an unset value</comment>
   </data>
   <data name="MaterialColorRed" xml:space="preserve">
     <value>Kırmızı</value>
+    <comment>Text describing Red used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorPink" xml:space="preserve">
     <value>Pembe</value>
+    <comment>Text describing Pink used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorPurple" xml:space="preserve">
     <value>Mor</value>
+    <comment>Text describing Purple used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorDeepPurple" xml:space="preserve">
     <value>Koyu Mor</value>
+    <comment>Text describing Deep Purple used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorIndigo" xml:space="preserve">
     <value>Çivit</value>
+    <comment>Text describing Indigo used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorBlue" xml:space="preserve">
     <value>Mavi</value>
+    <comment>Text describing Blue used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorLightBlue" xml:space="preserve">
     <value>Açık Mavi</value>
+    <comment>Text describing Light Blue used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorCyan" xml:space="preserve">
     <value>Camgöbeği</value>
+    <comment>Text describing Cyan used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorTeal" xml:space="preserve">
     <value>Göl Mavisi</value>
+    <comment>Text describing Teal used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorGreen" xml:space="preserve">
     <value>Yeşil</value>
+    <comment>Text describing Green used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorLightGreen" xml:space="preserve">
     <value>Açık Yeşil</value>
+    <comment>Text describing Light Green used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorLime" xml:space="preserve">
     <value>Açık Yeşil</value>
+    <comment>Text describing Lime used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorYellow" xml:space="preserve">
     <value>Sarı</value>
+    <comment>Text describing Yellow used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorAmber" xml:space="preserve">
     <value>Bal Rengi</value>
+    <comment>Text describing Amber used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorOrange" xml:space="preserve">
     <value>Turuncu</value>
+    <comment>Text describing Orange used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorDeepOrange" xml:space="preserve">
     <value>Koyu Turuncu</value>
+    <comment>Text describing Deep Orange used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorBrown" xml:space="preserve">
     <value>Kahverengi</value>
+    <comment>Text describing Brown used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorGrey" xml:space="preserve">
     <value>Gri</value>
+    <comment>Text describing Grey used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialColorBlueGrey" xml:space="preserve">
     <value>Mavi Gri</value>
+    <comment>Text describing Blue Grey used in the MaterialPalettes list</comment>
   </data>
   <data name="MaterialDesignColorBrush" xml:space="preserve">
     <value>Malzeme Tasarım Renkleri</value>
@@ -437,16 +483,19 @@
   </data>
   <data name="MaterialColorBlackAndWhite" xml:space="preserve">
     <value>Siyah Beyaz</value>
+    <comment>Text describing Black and White used in the MaterialPalettes list</comment>
   </data>
   <data name="White" xml:space="preserve">
     <value>Beyaz</value>
+    <comment>Text describing White, used in the BlackAndWhiteNames list</comment>
   </data>
   <data name="NoPreviewAvailable" xml:space="preserve">
     <value>Önizleme yok</value>
-    <comment>Resource selector window preview section text</comment>
+    <comment>Text for the Resource selector window preview section, when no preview is available</comment>
   </data>
   <data name="Resource" xml:space="preserve">
     <value>Kaynak</value>
+    <comment>Default text when no resource name is available</comment>
   </data>
   <data name="ResourceWithName" xml:space="preserve">
     <value>Kaynak ({0})</value>
@@ -454,9 +503,11 @@
   </data>
   <data name="Binding" xml:space="preserve">
     <value>Bağlama</value>
+    <comment>Tooltip describing this property has a bound value</comment>
   </data>
   <data name="GoToSource" xml:space="preserve">
     <value>Kaynağa Git</value>
+    <comment>Text describing what is possible when a ValueSource supports navigation</comment>
   </data>
   <data name="CollectionValue" xml:space="preserve">
     <value>(Koleksiyon)</value>
@@ -464,12 +515,15 @@
   </data>
   <data name="Ellipsis" xml:space="preserve">
     <value>...</value>
+    <comment></comment>
   </data>
   <data name="OtherTypeAction" xml:space="preserve">
     <value>&lt;Diğer tür...&gt;</value>
+    <comment>Text used for the OtherType.Name</comment>
   </data>
   <data name="Items" xml:space="preserve">
     <value>Öğeler</value>
+    <comment>Header Text used denote a list of selected objects in the collection editor.</comment>
   </data>
   <data name="CollectionEditorTitle" xml:space="preserve">
     <value>Koleksiyon Düzenleyicisi: {0}</value>
@@ -477,30 +531,39 @@
   </data>
   <data name="MoveItemDown" xml:space="preserve">
     <value>Öğeyi aşağı taşı</value>
+    <comment>Tooltip text for a button that will allow you to move a selected item down in the list</comment>
   </data>
   <data name="MoveItemUp" xml:space="preserve">
     <value>Öğeyi yukarı taşı</value>
+    <comment>Tooltip text for a button that will allow you to move a selected item up in the list</comment>
   </data>
   <data name="RemoveItem" xml:space="preserve">
     <value>Öğeyi kaldır</value>
-  </data>
-  <data name="GenericErrorMessage" xml:space="preserve">
-    <value>Bir sorun oluştu</value>
+    <comment>Tooltip text for a button that will allow you to remove a selected item from the list</comment>
   </data>
   <data name="DefineIn" xml:space="preserve">
     <value>Tanımlama yeri</value>
+    <comment>Header text in Create Resource dialog for where the new resource is defined</comment>
   </data>
   <data name="Application" xml:space="preserve">
     <value>Uygulama</value>
-  </data>
-  <data name="ApplyToAll" xml:space="preserve">
-    <value>Tümüne uygula</value>
+    <comment>Option text within Create Resource dialog denoting that the new resource will be definied in the application</comment>
   </data>
   <data name="ThisDocument" xml:space="preserve">
     <value>Bu belge</value>
+    <comment>Option text within Create Resource dialog denoting that the new resource will be definied in this document</comment>
+  </data>
+  <data name="ResourceDictionary" xml:space="preserve">
+    <value>Resource dictionary</value>
+    <comment>Option text within Create Resource Window denoting that the new resource will be definied in a resource dictionary</comment>
+  </data>
+  <data name="ApplyToAll" xml:space="preserve">
+    <value>Tümüne uygula</value>
+    <comment>Option text within Create Resource Window denoting that the new resource name will apply to all resources</comment>
   </data>
   <data name="ConvertToNewResourceEllipsis" xml:space="preserve">
     <value>Yeni kaynağa dönüştür...</value>
+    <comment>Menu option text which when selected will launch the Create Resource dialog</comment>
   </data>
   <data name="CreateResourceTitle" xml:space="preserve">
     <value>{0} Kaynağını Oluştur</value>
@@ -511,76 +574,91 @@
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
     <value>Kaynak Sözlüğü</value>
+    <comment>Label text for the name of the resource</comment>
   </data>
   <data name="CreateDataBindingMenuItem" xml:space="preserve">
     <value>Yeni Bağlama Oluştur...</value>
+    <comment>Menu option text which when selected will launch the Create Databinding dialog</comment>
   </data>
   <data name="AddValueConverterEllipsis" xml:space="preserve">
     <value>Değer Dönüştürücüsü Ekle...</value>
+    <comment>Menu option text which when selected will launch the Add Value Converter dialog</comment>
   </data>
   <data name="AddValueConverterTitle" xml:space="preserve">
     <value>Değer Dönüştürücüsü Ekle</value>
+    <comment>Title window text for the Add Value Converter dialog</comment>
   </data>
   <data name="NoValueConverter" xml:space="preserve">
     <value>Değer Dönüştürücüsü Yok</value>
+    <comment>Used when no value converter is available</comment>
   </data>
   <data name="ValueConverterName" xml:space="preserve">
     <value>Değer Dönüştürücüsü Adı</value>
+    <comment>Name of the value converter</comment>
   </data>
   <data name="CreateDataBindingTitle" xml:space="preserve">
     <value>{0} için Veri Bağlama Oluştur</value>
-    <comment>Create Data Binding for Object.Property</comment>
+    <comment>Create Data Binding for {Object.Property}</comment>
   </data>
   <data name="BindingType" xml:space="preserve">
     <value>Bağlama Türü</value>
+    <comment>Label text for the binding type dropdown</comment>
   </data>
   <data name="Path" xml:space="preserve">
     <value>Yol</value>
-  </data>
-  <data name="ResourcePlural" xml:space="preserve">
-    <value>Kaynaklar</value>
+    <comment>Label text for the path edit box</comment>
   </data>
   <data name="Custom" xml:space="preserve">
     <value>Özel</value>
+    <comment>Label text for the custom path check box</comment>
   </data>
   <data name="InvalidRatio" xml:space="preserve">
     <value>Geçersiz Oran</value>
+    <comment>Error text for when an Invalid ration is entered</comment>
   </data>
   <data name="AllResources" xml:space="preserve">
     <value>Tüm Kaynaklar</value>
+    <comment>Label text for all resources to be to shown</comment>
   </data>
   <data name="Shared" xml:space="preserve">
     <value>Paylaşılan</value>
+    <comment>Label text for shared resource to be to shown</comment>
   </data>
   <data name="AddVariationHelpText" xml:space="preserve">
     <value>Şunu temel alarak çeşitleme ekle:</value>
+    <comment>Label text within the Create Variant dialog</comment>
   </data>
   <data name="AddVariationTitle" xml:space="preserve">
     <value>Çeşitleme Ekle</value>
+    <comment>Title text for the Create Variant dialog</comment>
   </data>
   <data name="Any" xml:space="preserve">
     <value>Herhangi biri</value>
+    <comment>Text denoting any variant for a category</comment>
   </data>
   <data name="ErrorCreatingVariant" xml:space="preserve">
     <value>Değişken oluşturulurken hata: {0}. Bu hata devam ederse lütfen bildirin.</value>
+    <comment>Error text when unable to create a variant</comment>
   </data>
   <data name="UncommonPropertiesTooltip" xml:space="preserve">
     <value>Gelişmiş özellikleri göster</value>
+    <comment>Tooltip text used to toggle the visibility of the advanced properties</comment>
   </data>
   <data name="NewInstanceForProperty" xml:space="preserve">
-    <value>Yeni {0}</value>
+    <value>Bu düğme {0} özelliği içindir.</value>
     <comment>New {PropertyName}</comment>
   </data>
   <data name="Select" xml:space="preserve">
     <value>Seç</value>
+    <comment>Text to denote that an the user would like to select an item</comment>
   </data>
   <data name="SelectTypeForProperty" xml:space="preserve">
-    <value>{0} türünü seçin</value>
-    <comment>Select {property} type</comment>
+    <value>Bu düğme {0} özelliği içindir.</value>
+    <comment>Select {Property} type</comment>
   </data>
   <data name="PropertyFilterLabel" xml:space="preserve">
     <value>Property Filter</value>
-    <comment>Property Filter placeholder text</comment>
+    <comment>Label text used as Property Filter placeholder</comment>
   </data>
   <data name="PropertyColumnTitle" xml:space="preserve">
     <value>Özellik</value>
@@ -591,167 +669,200 @@
     <comment>Title text for value column</comment>
   </data>
   <data name="AccessibilityNumeric" xml:space="preserve">
-    <value>{0} Sayısal Düzenleyici</value>
-    <comment>Editor for Numeric Value</comment>
+    <value>Bu sayısal düzenleyici, {0} özelliği içindir.</value>
+    <comment>Editor for {Property.Name} that accepts a numeric value</comment>
   </data>
   <data name="AccessibilityBoolean" xml:space="preserve">
-    <value>{0} Boole Düzenleyicisi</value>
-    <comment>Editor for Boolean Value</comment>
+    <value>Bu onay kutusu {0} özelliği içindir.</value>
+    <comment>Editor for {Property.Name} that accepts a boolean value</comment>
   </data>
   <data name="AccessibilityCombobox" xml:space="preserve">
-    <value>{0} Birleşik Giriş Kutusu Düzenleyicisi</value>
-    <comment>Editor for Combobox Value</comment>
+    <value>Bu birleşik giriş kutusu, {0} özelliği içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to pick a value from a drop-down list</comment>
+  </data>
+  <data name="AccessibilityPopUp" xml:space="preserve">
+    <value>Bu açılır pencere, {0} özelliği içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to pick a value from a drop-down list</comment>
   </data>
   <data name="AccessibilityCollection" xml:space="preserve">
-    <value>{0} özellik, düzenleme koleksiyonu</value>
-    <comment></comment>
+    <value>Bu düğme {0} özelliği içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to edit a collection</comment>
   </data>
   <data name="AccessibilityCollectionHelp" xml:space="preserve">
     <value>Koleksiyonu düzenlemek için bir pencere açar</value>
+    <comment>Text to inform the user that this button will open a collection editor dialog</comment>
   </data>
   <data name="AccessibilityCollectionTypeSelector" xml:space="preserve">
-    <value>Tür listesi</value>
+    <value>Bu birleşik giriş kutusu, Tür Seçici içindir.</value>
+    <comment>Text denoting this used can select a Type from this list</comment>
   </data>
   <data name="AccessibilityCollectionAddButton" xml:space="preserve">
-    <value>Örnek türü ekle</value>
+    <value>Bu düğme, Tür Seçici'den Koleksiyon tablosuna bir nesne örneği eklemenizi sağlar.</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
   </data>
   <data name="AccessibilityCollectionRemoveButton" xml:space="preserve">
-    <value>Örneği kaldır</value>
+    <value>Bu düğme, Koleksiyon tablosundan seçili nesnenin bir örneğini kaldırmanızı sağlar.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityCollectionOKButton" xml:space="preserve">
+    <value>Bu düğme, Koleksiyon Düzenleyicisi'nde yaptığınız değişiklikleri kabul eder.</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
+  </data>
+  <data name="AccessibilityCollectionCancelButton" xml:space="preserve">
+    <value>Bu düğme, Koleksiyon Düzenleyicisi'nde yaptığınız değişiklikleri iptal eder.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
   </data>
   <data name="AccessibilityString" xml:space="preserve">
-    <value>{0} Dize Düzenleyicisi</value>
-    <comment>Editor for String Value</comment>
+    <value>Bu metin düzenleyicisi, {0} özelliği içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a string value</comment>
   </data>
   <data name="AccessibilityChar" xml:space="preserve">
-    <value>{0} Karakter Düzenleyicisi</value>
-    <comment>Editor for Char Value</comment>
+    <value>Bu karakter düzenleyicisi {0} özelliği içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a char value</comment>
   </data>
   <data name="AccessibilityTimeSpan" xml:space="preserve">
-    <value>{0} TimeSpan Düzenleyicisi</value>
-    <comment>Editor for TimeSpan Value</comment>
+    <value>Bu TimeSpan düzenleyicisi, {0} özelliği içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a TimeSpan value</comment>
   </data>
   <data name="AccessibilityDateTime" xml:space="preserve">
-    <value>{0} Tarih Saat Düzenleyicisi</value>
-    <comment>Editor for DateTime Value</comment>
+    <value>Bu DateTime düzenleyicisi, {0} özelliği içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter a DateTime value</comment>
   </data>
   <data name="AccessibilityXEditor" xml:space="preserve">
-    <value>{0} X Düzenleyicisi</value>
-    <comment>Editor for X Value</comment>
+    <value>Bu sayısal düzenleyici, {0} özelliğinin X değeri içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its X value</comment>
   </data>
   <data name="AccessibilityYEditor" xml:space="preserve">
-    <value>{0} Y Düzenleyicisi</value>
-    <comment>Editor for Y Value</comment>
+    <value>Bu sayısal düzenleyici, {0} özelliğinin Y değeri içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Y value</comment>
   </data>
   <data name="AccessibilityWidthEditor" xml:space="preserve">
-    <value>{0} Genişlik Düzenleyicisi</value>
-    <comment>Editor for Width Value</comment>
+    <value>Bu sayısal düzenleyici, {0} özelliğin Genişlik değeri içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Width value</comment>
   </data>
   <data name="AccessibilityHeightEditor" xml:space="preserve">
-    <value>{0} Yükseklik Düzenleyicisi</value>
-    <comment>Editor for Height Value</comment>
+    <value>Bu sayısal düzenleyici, {0} özelliğin Yükseklik değeri içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Height value</comment>
   </data>
   <data name="ArrangeByLabel" xml:space="preserve">
     <value>Yerleştirme Ölçütü:</value>
   </data>
   <data name="AccessibilityPropertiesButton" xml:space="preserve">
-    <value>Özellikler</value>
+    <value>Bu, {0} özelliğine yönelik Özellik Düğmesidir.</value>
+    <comment>Property Button for {Property.Name}</comment>
   </data>
   <data name="AccessibilityPropertiesButtonDescription" xml:space="preserve">
     <value>Bu düzenleyicinin özelliklerini düzenleyin</value>
-  </data>
-  <data name="AccessibilityActionButton" xml:space="preserve">
-    <value>Uyarılar</value>
-  </data>
-  <data name="AccessibilityActionButtonDescription" xml:space="preserve">
-    <value>Uyarıları görüntüle.</value>&gt;
+    <comment>Text to inform the user that they can edit the the properties of the associated editor</comment>
   </data>
   <data name="CollectionTargetsHeader" xml:space="preserve">
     <value>Koleksiyon Öğeleri</value>
+    <comment>Header label text forr the Collection Items list</comment>
   </data>
   <data name="CollectionEditButton" xml:space="preserve">
     <value>Düzenle</value>
+    <comment>Text for the button that will launch the collection editor dialog</comment>
   </data>
   <data name="ColumnResourceName" xml:space="preserve">
-    <value>Ad</value>&gt;
+    <value>Ad</value>
+    <comment>Title text for the name column in the resource list</comment>
   </data>
   <data name="ColumnResourcePreview" xml:space="preserve">
-    <value>Önizleme</value>&gt;
+    <value>Önizleme</value>
+    <comment>Title text for the preview section in the resource dialog</comment>
   </data>
   <data name="ResourceTableImageColumnTitle" xml:space="preserve">
     <value>Simge</value>
+    <comment>Title text for the icon column in the resource list</comment>
   </data>
   <data name="ResourceTableTypeColumnTitle" xml:space="preserve">
     <value>Tür</value>
+    <comment>Title text for the type column in the resource list</comment>
   </data>
   <data name="ResourceTableNameColumnTitle" xml:space="preserve">
     <value>Ad</value>
+    <comment>Title text for the name column in the resource list</comment>
   </data>
   <data name="ResourceTableValueColumnTitle" xml:space="preserve">
-    <value>Değer</value>&gt;
+    <value>Değer</value>
+    <comment>Title text for the value column in the resource list</comment>
   </data>
   <data name="CommonBrushTitleUnknown" xml:space="preserve">
     <value>Bilinmeyen</value>
+    <comment>Default title text for a Brush that doesn't have an existing value</comment>
   </data>
   <data name="CommonBrushTitleGradient" xml:space="preserve">
-    <value>Gradyan</value>&gt;
+    <value>Gradyan</value>
+    <comment>Default title text for a Brush that doesn't have an existing value</comment>
   </data>
   <data name="AccessibilityObjectName" xml:space="preserve">
-    <value>{0} Nesne Adı Düzenleyicisi</value>
-    <comment>Editor for Object Name Value</comment>
+    <value>Bu düzenleyici, {0} özelliği içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Object Name value</comment>
   </data>
   <data name="ObjectNamePlaceholder" xml:space="preserve">
-    <value>Ad Yok</value>&gt;
+    <value>Ad Yok</value>
+    <comment>Default placeholder text when the Object has name</comment>
   </data>
   <data name="AccessibilityLeftEditor" xml:space="preserve">
-    <value>{0} Sol Düzenleyicisi</value>
-    <comment>Editor for Left Value</comment>
+    <value>Bu sayısal düzenleyici, {0} özelliğinin Sol değeri içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Left value</comment>
   </data>
   <data name="AccessibilityTopEditor" xml:space="preserve">
-    <value>{0} Üst Düzenleyicisi</value>
-    <comment>Editor for Top Value</comment>
+    <value>Bu sayısal düzenleyici, {0} özelliğin En Üst değeri içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Top value</comment>
   </data>
   <data name="AccessibilityRightEditor" xml:space="preserve">
-    <value>{0} Sağ Düzenleyicisi</value>
-    <comment>Editor for Right Value</comment>
+    <value>Bu sayısal düzenleyici, {0} özelliğin Sağ değeri içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Right value</comment>
   </data>
   <data name="AccessibilityBottomEditor" xml:space="preserve">
-    <value>{0} Alt Düzenleyicisi</value>
-    <comment>Editor for Bottom Value</comment>
+    <value>Bu sayısal düzenleyici, {0} özelliğinin Alt değeri içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to enter its Bottom value</comment>
   </data>
   <data name="AccessibilityInputModeEditor" xml:space="preserve">
-    <value>{0} InputMode Düzenleyicisi</value>
-    <comment>Editor for InputMode Value</comment>
+    <value>Bu açılır pencere, {0} özelliği içindir.</value>
+    <comment>Editor for {Property.Name} that allows the user to select its InputMode value</comment>
   </data>
   <data name="AccessibilityPathEditor" xml:space="preserve">
-    <value>{0} {1} Yolu Düzenleyicisi</value>
-    <comment>Editor for File/Directory Path Editor</comment>
+    <value>Bu Yol düzenleyicisi, {0} özelliği içindir. Dosya/dizin seçim düğmesine gitmek için Sekme tuşuna basın. Göster düğmesine gitmek için tekrar Sekme tuşuna basın</value>
+    <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
+  </data>
+  <data name="AccessibilityBrowseButton" xml:space="preserve">
+    <value>Bu düğme, {0} özelliğinin dosya/dizin düzenleyicisindedir.</value>
+    <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
+  </data>
+  <data name="AccessibilityRevealButton" xml:space="preserve">
+    <value>Bu düğme, {0} özelliğinin dosya/dizin düzenleyicisindedir. Dosyanın konumunu gösterir.</value>
+    <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
   </data>
   <data name="ChooseFileOrDirectory" xml:space="preserve">
     <value>Bir {0} seçin</value>
-    <comment>Choose a File or Directory</comment>
+    <comment>Tooltip and Placeholder text to choose a File or Directory</comment>
   </data>
   <data name="BrowseFileOrDirectory" xml:space="preserve">
     <value>Bir {0} için gözat</value>
-    <comment>Browse for a File or Directory</comment>
+    <comment>Tooltip text to Browse for a File or Directory</comment>
   </data>
   <data name="RevealFileOrDirectory" xml:space="preserve">
     <value>{0} öğesini göster</value>
-    <comment>Reveal a File or Directory</comment>
+    <comment>Tooltip text to Reveal a File or Directory</comment>
   </data>
   <data name="File" xml:space="preserve">
     <value>Dosya</value>
-    <comment>File</comment>
+    <comment>Text denoting a File will be shown or selected</comment>
   </data>
   <data name="Directory" xml:space="preserve">
     <value>Dizin</value>
-    <comment>Directory</comment>
+    <comment>Text denoting a Directory will be shown or selected</comment>
   </data>
   <data name="AddVariant" xml:space="preserve">
     <value>Değişken Ekle</value>
+    <comment>Tooltip text shown when Add Variant button is hovered over</comment>
   </data>
   <data name="RemoveVariant" xml:space="preserve">
     <value>Varyant Kaldır</value>
-   </data>
+    <comment>Tooltip text shown when Remove or Delete Variant button is hovered over</comment>
+  </data>
   <data name="CreateBindingTitle" xml:space="preserve">
     <value>Bağlama Oluştur</value>
     <comment>Create Binding for Object.Property</comment>
@@ -780,13 +891,13 @@
     <value>Ekle</value>
   </data>
   <data name="ResourcesAllSources" xml:space="preserve">
-    <value>_All Resources</value>
+    <value>_Tüm Kaynaklar</value>
   </data>
   <data name="ResourcesLocalSource" xml:space="preserve">
-    <value>_Local</value>
+    <value>_Yerel</value>
   </data>
   <data name="ResourcesSharedSource" xml:space="preserve">
-    <value>_Shared</value>
+    <value>_Paylaşılan</value>
   </data>
   <data name="ArrangeByCategory" xml:space="preserve">
     <value>Kategori</value>
@@ -795,6 +906,142 @@
     <value>Ad</value>
   </data>
   <data name="ArrangeByValueSource" xml:space="preserve">
-    <value>Value Source</value>
+    <value>Değer Kaynağı</value>
+  </data>
+  <data name="CollectionEditHelpText" xml:space="preserve">
+    <value>Bu koleksiyondaki öğeleri düzenle</value>
+  </data>
+  <data name="UncommonPropertiesName" xml:space="preserve">
+    <value>Gelişmiş özellikler</value>
+  </data>
+  <data name="ArrangeByButtonName" xml:space="preserve">
+    <value>Bu düğme, özellik listesini {0} ölçütüne göre düzenlemenizi sağlar.</value>
+  </data>
+  <data name="PropertyButtonName" xml:space="preserve">
+    <value>Gelişmiş seçenekler</value>
+  </data>
+  <data name="AutoresizingLeftMarginName" xml:space="preserve">
+    <value>Sol kenar boşluğu sabitlendi</value>
+  </data>
+  <data name="Autosizing" xml:space="preserve">
+    <value>Otomatik boyutlandırma</value>
+  </data>
+  <data name="Example" xml:space="preserve">
+    <value>Örnek</value>
+  </data>
+  <data name="AutoresizingBottomMarginName" xml:space="preserve">
+    <value>Alt kenar boşluğu sabitlendi</value>
+  </data>
+  <data name="AutoresizingRightMarginName" xml:space="preserve">
+    <value>Sağ kenar boşluğu sabitlendi</value>
+  </data>
+  <data name="AutoresizingSizingHelpText" xml:space="preserve">
+    <value>Boyutlandırılabilir genişlik ve yükseklik arasında geçiş yapar</value>
+  </data>
+  <data name="AutoresizingTopMarginName" xml:space="preserve">
+    <value>Üst kenar boşluğu sabitlendi</value>
+  </data>
+  <data name="AutoresizingFixedSized" xml:space="preserve">
+    <value>sabit boyutlu</value>
+  </data>
+  <data name="AutoresizingHeightSizable" xml:space="preserve">
+    <value>yükseklik boyutlandırılabilir</value>
+  </data>
+  <data name="AutoresizingSizingName" xml:space="preserve">
+    <value>Boyutlandırılıyor, {0}</value>
+    <comment>Name, {Current State}</comment>
+  </data>
+  <data name="AutoresizingWidthHeightSizable" xml:space="preserve">
+    <value>genişlik ve yükseklik boyutlandırılabilir</value>
+  </data>
+  <data name="AutoresizingWidthSizable" xml:space="preserve">
+    <value>genişlik boyutlandırılabilir</value>
+  </data>
+  <data name="AccessibilityPropertyFilter" xml:space="preserve">
+    <value>Bu arama metni alanı, özellik listesinin içeriğini filtrelemenizi sağlar. Filtrelemeye başlamak için yazmaya başlayın</value>
+     <comment>Text denoting this user filer the property list</comment>
+  </data>
+  <data name="AccessibilityTypeSelectorCheckbox" xml:space="preserve">
+    <value>Bu onay kutusu, tüm bütünleştirilmiş kodların gösterilmesini etkinleştirmek veya devre dışı bırakmak içindir.</value>
+    <comment>Text denoting this user can show all assemblies</comment>
+  </data>
+  <data name="AccessibilityTypeSelectorSearch" xml:space="preserve">
+    <value>Bu arama metni alanı, tür listesinin içeriğini filtrelemenizi sağlar. Filtrelemeye başlamak için yazmaya başlayın</value>
+    <comment>Text denoting this user can filter the type list</comment>
+  </data>
+  <data name="AccessibilityTypeSelectorTable" xml:space="preserve">
+    <value>Bu tablo bir ağaç yapısındaki kullanılabilir türleri listeler.</value>
+    <comment>Text denoting this user can navifate the type selector table</comment>
+  </data>
+  <data name="AccessibilityCollectionEditorTable" xml:space="preserve">
+    <value>Bu tablo bir liste yapısındaki türleri listeler.</value>
+    <comment>Text denoting this user can navigate the collection editor table</comment>
+  </data>
+  <data name="AccessibilityPropertyTable" xml:space="preserve">
+    <value>Bu tablo bir liste yapısındaki nesnenin özelliklerini listeler.</value>
+    <comment>Text denoting this user can navigate the property list table</comment>
+  </data>
+  <data name="AccessibilityCustomExpressionCombobox" xml:space="preserve">
+    <value>Bu birleşik giriş kutusu, Özel İfadeler içindir.</value>
+    <comment>Text denoting this user can navigate the custom expression combobox</comment>
+  </data>
+  <data name="AccessibilityCustomExpressionEditControl" xml:space="preserve">
+    <value>Bu metin alanı, Özel İfadeler içindir.</value>
+    <comment>Text denoting this user can navigate the property list table</comment>
+  </data>
+  <data name="AccessibilityBindingEditorOK" xml:space="preserve">
+    <value>Bu düğme, Bağlama Düzenleyicisi'nde yaptığınız değişiklikleri kabul eder.</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
+  </data>
+  <data name="AccessibilityBindingEditorCancel" xml:space="preserve">
+    <value>Bu düğme, Bağlama Düzenleyicisi'nde yaptığınız değişiklikleri iptal eder.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingEditorValueConverter" xml:space="preserve">
+    <value>Bu, Değer Dönüştürücüsü açılır penceresidir.</value>
+    <comment>Text to inform the user that this button will add an instance of type</comment>
+  </data>
+  <data name="AccessibilityBindingEditorAddConverter" xml:space="preserve">
+    <value>Bu, Değer Dönüştürücüsü Ekleme düğmesidir. Bu düğme etkinleştirildiğinde Değer Dönüştürücüsü Ekleme penceresi açılır.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingPathSelectorCustomCheckbox" xml:space="preserve">
+    <value>Bu onay kutusu, Özel Yol metin alanının gösterilmesini etkinleştirmek veya devre dışı bırakmak içindir.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingPathSelectorCustomPath" xml:space="preserve">
+    <value>Bu metin alanı Özel Yol içindir.</value>
+    <comment>Text to inform the user that this button will remove a selected instance</comment>
+  </data>
+  <data name="AccessibilityBindingPathSelectorPathTable" xml:space="preserve">
+    <value>Bu tablo bir liste yapısındaki nesnenin özelliklerini listeler.</value>
+    <comment>Text denoting this user can navigate the property list table</comment>
+  </data>
+  <data name="AccessibilityBindingEditorMore" xml:space="preserve">
+    <value>Bu bilgileri açıklama düğmesi, ek ayarlar gösterip eklemenize olanak sağlar.</value>
+    <comment>Text to inform the user that this button will show or add additional items</comment>
+  </data>
+  <data name="AccessibilityBindingEditorBindingType" xml:space="preserve">
+    <value>Bu, Bağlama Türü açılan penceresidir.</value>
+    <comment>Text to inform the user that this button will show or add additional items</comment>
+  </data>
+  <data name="AccessibilityBindingAddValueConverterName" xml:space="preserve">
+    <value>Bu, Bağlama Türü açılan penceresidir.</value>
+    <comment>Text to inform the user that this button will show or add additional items</comment>
+  </data>
+  <data name="AccessibilityBindingAddValueConverterOK" xml:space="preserve">
+    <value>Bu düğme, Değer Dönüştürücüsü Ekleme Düzenleyicisi'nde yaptığınız değişiklikleri kabul eder.</value>
+    <comment>Text to inform the user that this button will cancel the changes you have made in the Add Value Converter Editor</comment>
+  </data>
+  <data name="AccessibilityBindingAddValueConverterCancel" xml:space="preserve">
+    <value>Bu düğme, Değer Dönüştürücüsü Ekleme Düzenleyicisi'nde yaptığınız değişiklikleri iptal eder.</value>
+    <comment>Text to inform the user that this button will cancel the changes you have made in the Add Value Converter Editor</comment>
+  </data>
+  <data name="ObjectTypeLabelNone" xml:space="preserve">
+    <value>Yok</value>
+  </data>
+  <data name="FilterTypePlaceholder" xml:space="preserve">
+    <value>Filter Types</value>
+    <comment>Placeholder for filter type control</comment>
   </data>
 </root>

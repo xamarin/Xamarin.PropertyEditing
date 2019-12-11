@@ -1040,4 +1040,8 @@
   <data name="ObjectTypeLabelNone" xml:space="preserve">
     <value>None</value>
   </data>
+  <data name="FilterTypePlaceholder" xml:space="preserve">
+    <value>Filter Types</value>
+    <comment>Placeholder for filter type control</comment>
+  </data>
 </root>

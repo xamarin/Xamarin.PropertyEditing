@@ -184,6 +184,13 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
+		public override void DidRemoveRowView (NSOutlineView outlineView, NSTableRowView rowView, nint row)
+		{
+			if (rowView.Subviews[0] is EditorContainer ec) {
+				ec.ViewModel = null;
+			}
+		}
+
 		public override nfloat GetRowHeight (NSOutlineView outlineView, NSObject item)
 		{
 			EditorViewModel vm;

@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Xamarin.PropertyEditing.ViewModels;
+using System.Windows.Automation;
+using System.Reflection;
 
 namespace Xamarin.PropertyEditing.Windows
 {
@@ -87,6 +89,25 @@ namespace Xamarin.PropertyEditing.Windows
 				MenuItem customExpression = this.menu.Items.OfType<MenuItem>().FirstOrDefault (mi => mi.Name == "CustomExpressionItem");
 				if (customExpression != null)
 					customExpression.Click += OnCustomExpression;
+
+				if (!initializedSetPositionInSetMethod) {
+					setPositionInSetMethod = typeof (AutomationProperties).GetMethod ("SetPositionInSet");
+					initializedSetPositionInSetMethod = true;
+				}
+
+				// .NET Framework 4.8 added the PositionInSet automation property. It also changed the semantics so that if this
+				// property is not set it's computed automatically. And it's read by the narrator. The net result is that when
+				// proppy is run in a .NET Framework 4.8 app (like Visual Studio), the narrator reads off the position of menu items
+				// (e.g. "blah blah menu item 4 of 11"). AND hidden menu items are counted here, which makes those positions wrong,
+				// causing this bug: https://devdiv.visualstudio.com/DevDiv/_workitems/edit/1000455.
+				// To work around all of that, we set the PositionInSet property explicitly, when running on .NET Framework 4.8,
+				// to be 0. That causes the narrator not to read the position at all, which is how most VS menus behave.
+				if (setPositionInSetMethod != null) {
+					foreach (object item in this.menu.Items) {
+						if (item is MenuItem menuItem)
+							setPositionInSetMethod.Invoke (null, new object[] { menuItem, 0 });
+					}
+				}
 			}
 
 			this.menu.IsOpen = true;
@@ -100,6 +121,8 @@ namespace Xamarin.PropertyEditing.Windows
 		private Rectangle indicator;
 		private ContextMenu menu;
 		private PropertyViewModel vm;
+		private static bool initializedSetPositionInSetMethod;
+		private static MethodInfo setPositionInSetMethod;
 
 		private void OnBorderMouseDown (object sender, MouseButtonEventArgs e)
 		{

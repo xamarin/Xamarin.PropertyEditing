@@ -55,14 +55,6 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		public override void ViewWillMoveToSuperview (NSView newSuperview)
-		{
-			if (newSuperview == null)
-				ViewModel = null;
-
-			base.ViewWillMoveToSuperview (newSuperview);
-		}
-
 #if DEBUG // Currently only used to highlight which controls haven't been implemented
 		public NSColor LabelTextColor {
 			set { LabelControl.TextColor = value; }

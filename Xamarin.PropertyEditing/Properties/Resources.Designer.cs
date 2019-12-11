@@ -1474,5 +1474,11 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("ObjectTypeLabelNone", resourceCulture);
             }
         }
+        
+        public static string FilterTypePlaceholder {
+            get {
+                return ResourceManager.GetString("FilterTypePlaceholder", resourceCulture);
+            }
+        }
     }
 }
