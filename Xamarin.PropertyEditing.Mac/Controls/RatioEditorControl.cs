@@ -15,7 +15,9 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			this.ratioEditor = new RatioEditor<T> (hostResources);
+			this.ratioEditor = new RatioEditor<T> (hostResources) {
+				Tag = 1,
+			};
 			this.ratioEditor.SetFormatter (null);
 
 			// update the value on keypress

@@ -108,6 +108,7 @@ namespace Xamarin.PropertyEditing.Mac
 				},
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
+				Tag = 1,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				StringValue = String.Empty,
 			};
@@ -154,6 +155,7 @@ namespace Xamarin.PropertyEditing.Mac
 				},
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
+				Tag = 1,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				StringValue = String.Empty,
 			};

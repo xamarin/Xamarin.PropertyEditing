@@ -56,6 +56,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.popUpButton = new ColorPopUpButton {
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
+				Tag = 1,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 

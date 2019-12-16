@@ -21,7 +21,8 @@ namespace Xamarin.PropertyEditing.Mac
 				Title = Properties.Resources.CollectionEditButton,
 				BezelStyle = NSBezelStyle.Rounded,
 				AccessibilityEnabled = true,
-				AccessibilityHelp = Properties.Resources.AccessibilityCollectionHelp
+				AccessibilityHelp = Properties.Resources.AccessibilityCollectionHelp,
+				Tag = 1,
 			};
 
 			this.openCollection.Activated += (o, e) => {

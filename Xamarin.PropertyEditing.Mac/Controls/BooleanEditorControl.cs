@@ -11,7 +11,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public BooleanEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
-			BooleanEditor = new FocusableBooleanButton ();
+			BooleanEditor = new FocusableBooleanButton () { Tag = 1 };
 
 			// update the value on 'enter'
 			BooleanEditor.Activated += (sender, e) => {

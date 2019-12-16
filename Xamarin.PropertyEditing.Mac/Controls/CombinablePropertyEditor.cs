@@ -82,6 +82,7 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 
 				checkbox.Title = choice.Name;
+				checkbox.Tag = i == 0 ? 1 : -1;
 
 				this.combinableList[checkbox] = choice;
 				top += subrowHeight;

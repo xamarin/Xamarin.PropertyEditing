@@ -9,6 +9,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public TimeSpanEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
+			Entry.Tag = 1;
 		}
 
 		protected override EntryPropertyEditorDelegate<TimeSpan> CreateDelegate (PropertyViewModel<TimeSpan> viewModel)

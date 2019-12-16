@@ -14,6 +14,7 @@ namespace Xamarin.PropertyEditing.Mac
 		: base (hostResource)
 		{
 			this.currentTextField.ToolTip = this.currentTextField.PlaceholderString = string.Format (Properties.Resources.ChooseFileOrDirectory, Properties.Resources.File);
+			this.currentTextField.Tag = 1;
 			this.panel.CanChooseFiles = true;
 			this.panel.CanChooseDirectories = false;
 			this.revealPathButton.ToolTip = string.Format (Properties.Resources.RevealFileOrDirectory, Properties.Resources.File);

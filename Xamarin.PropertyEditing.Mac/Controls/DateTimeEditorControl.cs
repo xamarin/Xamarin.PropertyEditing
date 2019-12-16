@@ -16,6 +16,7 @@ namespace Xamarin.PropertyEditing.Mac
 				DatePickerElements = NSDatePickerElementFlags.HourMinuteSecond | NSDatePickerElementFlags.YearMonthDateDay,
 				DatePickerStyle = NSDatePickerStyle.TextFieldAndStepper,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
+				Tag = 1,
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
 
