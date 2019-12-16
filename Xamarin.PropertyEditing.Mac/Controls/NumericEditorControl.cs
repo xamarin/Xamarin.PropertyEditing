@@ -16,7 +16,9 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			NumericEditor = new NumericSpinEditor<T> (hostResources);
+			NumericEditor = new NumericSpinEditor<T> (hostResources) {
+				Tag = 1
+			};
 			NumericEditor.ValueChanged += OnValueChanged;
 
 			var t = typeof (T);

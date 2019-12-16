@@ -172,7 +172,8 @@ namespace Xamarin.PropertyEditing.Mac
 		private void MakeFocusableKeyViewFirstResponder (NSView[] subViews)
 		{
 			foreach (NSView item in subViews) {
-				if (item.CanBecomeKeyView) {
+				if (item.CanBecomeKeyView
+					&& item.Tag == 1) {
 					Window?.MakeFirstResponder (item);
 					break;
 				} else {

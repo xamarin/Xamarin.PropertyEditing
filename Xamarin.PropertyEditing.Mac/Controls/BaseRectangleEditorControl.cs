@@ -33,6 +33,7 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			XEditor = new NumericSpinEditor<T> (hostResources) {
 				BackgroundColor = NSColor.Clear,
+				Tag = 1,
 				Value = 0.0f
 			};
 			XEditor.ValueChanged += OnInputUpdated;

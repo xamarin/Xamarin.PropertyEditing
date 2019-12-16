@@ -171,6 +171,12 @@ namespace Xamarin.PropertyEditing.Mac
 			set { this.numericEditor.AccessibilityTitle = value; }
 		}
 
+		public new nint Tag
+		{
+			get { return this.numericEditor.Tag; }
+			set { this.numericEditor.Tag = value; }
+		}
+
 		public virtual void Reset ()
 		{
 		}

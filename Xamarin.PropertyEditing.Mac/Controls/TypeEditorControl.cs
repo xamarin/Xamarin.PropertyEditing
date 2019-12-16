@@ -21,6 +21,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.selectType = new FocusableButton {
 				BezelStyle = NSBezelStyle.Rounded,
+				Tag = 1,
 				Title = Properties.Resources.Select,
 			};
 			this.selectType.Activated += OnSelectPressed;

@@ -15,6 +15,7 @@ namespace Xamarin.PropertyEditing.Mac
 			: base (hostResources)
 		{
 			this.lastKeyView = Entry;
+			Entry.Tag = 1;
 		}
 
 		public override NSView LastKeyView => this.lastKeyView;

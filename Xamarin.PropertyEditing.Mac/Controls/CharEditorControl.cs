@@ -9,6 +9,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public CharEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
+			Entry.Tag = 1;
 		}
 
 		protected override EntryPropertyEditorDelegate<char> CreateDelegate (PropertyViewModel<char> viewModel)
