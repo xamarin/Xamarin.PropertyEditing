@@ -1041,7 +1041,7 @@
     <value>无</value>
   </data>
   <data name="FilterTypePlaceholder" xml:space="preserve">
-    <value>Filter Types</value>
+    <value>筛选器类型</value>
     <comment>Placeholder for filter type control</comment>
   </data>
 </root>
