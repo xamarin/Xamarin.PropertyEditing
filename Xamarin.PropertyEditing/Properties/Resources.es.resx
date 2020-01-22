@@ -1041,7 +1041,7 @@
     <value>Ninguno</value>
   </data>
   <data name="FilterTypePlaceholder" xml:space="preserve">
-    <value>Filter Types</value>
+    <value>Tipos de filtro</value>
     <comment>Placeholder for filter type control</comment>
   </data>
 </root>

@@ -1041,7 +1041,7 @@
     <value>なし</value>
   </data>
   <data name="FilterTypePlaceholder" xml:space="preserve">
-    <value>Filter Types</value>
+    <value>種類をフィルター処理してください</value>
     <comment>Placeholder for filter type control</comment>
   </data>
 </root>
