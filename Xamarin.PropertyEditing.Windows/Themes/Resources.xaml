@@ -225,6 +225,9 @@
 				<Setter Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}" />
 				<Setter Property="Foreground" Value="{DynamicResource ToggleItemMouseOverForegroundBrush}" />
 			</Trigger>
+			<Trigger Property="IsFocused" Value="True">
+				<Setter Property="Background" Value="{DynamicResource ToggleItemMouseOverBackgroundBrush}" />
+			</Trigger>
 			<Trigger Property="IsPressed" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource ToggleItemPressedBorderBrush}" />
 				<Setter Property="Background" Value="{DynamicResource ToggleItemPressedBackgroundBrush}" />
