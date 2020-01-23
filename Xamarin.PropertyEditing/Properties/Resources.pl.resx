@@ -1041,7 +1041,7 @@
     <value>Brak</value>
   </data>
   <data name="FilterTypePlaceholder" xml:space="preserve">
-    <value>Filter Types</value>
+    <value>Filtruj typy</value>
     <comment>Placeholder for filter type control</comment>
   </data>
 </root>

@@ -112,7 +112,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnSelectPressed (object sender, EventArgs e)
 		{
-			Window.MakeFirstResponder (this.selectType);
 			ViewModel.SelectTypeCommand.Execute (null);
 		}
 	}

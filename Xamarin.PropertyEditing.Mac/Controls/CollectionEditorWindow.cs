@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using AppKit;
 using CoreGraphics;
-using Foundation;
 
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -16,7 +13,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public CollectionEditorWindow (IHostResourceProvider hostResources, CollectionPropertyViewModel viewModel)
 			: base (new CGRect (0, 0, 500, 400), NSWindowStyle.Titled | NSWindowStyle.Closable | NSWindowStyle.Resizable, NSBackingStore.Buffered, true)
 		{
-			Delegate = new ModalDialogDelegate ();
+			if (hostResources == null)
+				throw new ArgumentNullException (nameof (hostResources));
+			if (viewModel == null)
+				throw new ArgumentNullException (nameof (viewModel));
+
+			Delegate = new ModalWindowCloseDelegate ();
 			Title = String.Format (Properties.Resources.CollectionEditorTitle, viewModel.Property.Name);
 
 			this.collectionEditor = new CollectionEditorControl (hostResources) {
@@ -26,19 +28,28 @@ namespace Xamarin.PropertyEditing.Mac
 
 			ContentView.AddSubview (this.collectionEditor);
 
-			this.ok = NSButton.CreateButton (Properties.Resources.OK, OnOked);
-			this.ok.AccessibilityEnabled = true;
-			this.ok.AccessibilityTitle = Properties.Resources.AccessibilityCollectionOKButton;
-			this.ok.Highlighted = true;
-			this.ok.TranslatesAutoresizingMaskIntoConstraints = false;
-			
-			//this.ok.KeyEquivalent = "\r"; // FIXME: The type selector popup doesn't eat this key, so it ends up closing both.
+			this.ok = new FocusableButton {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityCollectionOKButton,
+				BezelStyle = NSBezelStyle.Rounded,
+				ControlSize = NSControlSize.Regular,
+				Highlighted = true,
+				//KeyEquivalent = "\r", // FIXME: The type selector popup doesn't eat this key, so it ends up closing both.Sw
+				Title = Properties.Resources.OK,
+				TranslatesAutoresizingMaskIntoConstraints = false
+			};
+			this.ok.Activated += OnOked;
 			ContentView.AddSubview (this.ok);
 
-			this.cancel = NSButton.CreateButton (Properties.Resources.Cancel, OnCanceled);
-			this.cancel.AccessibilityEnabled = true;
-			this.cancel.AccessibilityTitle = Properties.Resources.AccessibilityCollectionCancelButton;
-			this.cancel.TranslatesAutoresizingMaskIntoConstraints = false;
+			this.cancel = new FocusableButton {
+				AccessibilityEnabled = true,
+				AccessibilityTitle = Properties.Resources.AccessibilityCollectionCancelButton,
+				BezelStyle = NSBezelStyle.Rounded,
+				ControlSize = NSControlSize.Regular,
+				Title = Properties.Resources.Cancel,
+				TranslatesAutoresizingMaskIntoConstraints = false
+			};
+			this.cancel.Activated += OnCanceled;
 			ContentView.AddSubview (this.cancel);
 
 			ContentView.AddConstraints (new[] {
@@ -66,16 +77,20 @@ namespace Xamarin.PropertyEditing.Mac
 		private CollectionEditorControl collectionEditor;
 		private NSButton ok, cancel;
 
-		private void OnOked ()
+		private void OnOked (object o, EventArgs e)
 		{
 			ModalResponse = NSModalResponse.OK;
-			this.collectionEditor.ViewModel = null;
-			Close ();
+			CloseWindow ();
 		}
 
-		private void OnCanceled ()
+		private void OnCanceled (object o, EventArgs e)
 		{
 			ModalResponse = NSModalResponse.Cancel;
+			CloseWindow ();
+		}
+
+		private void CloseWindow ()
+		{
 			this.collectionEditor.ViewModel = null;
 			Close ();
 		}
@@ -93,16 +108,6 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			collectionVm.CommitCommand.Execute (null);
-		}
-
-		private class ModalDialogDelegate
-			: NSWindowDelegate
-		{
-			public override void WillClose (NSNotification notification)
-			{
-				NSModalResponse response = ((CollectionEditorWindow)notification.Object).ModalResponse;
-				NSApplication.SharedApplication.StopModalWithCode ((int)response);
-			}
 		}
 	}
 }

@@ -1041,7 +1041,7 @@
     <value>Yok</value>
   </data>
   <data name="FilterTypePlaceholder" xml:space="preserve">
-    <value>Filter Types</value>
+    <value>Filtre Türleri</value>
     <comment>Placeholder for filter type control</comment>
   </data>
 </root>
