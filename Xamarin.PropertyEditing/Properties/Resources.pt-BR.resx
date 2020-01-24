@@ -657,7 +657,7 @@
     <comment>Select {Property} type</comment>
   </data>
   <data name="PropertyFilterLabel" xml:space="preserve">
-    <value>Property Filter</value>
+    <value>Filtro de Propriedade</value>
     <comment>Label text used as Property Filter placeholder</comment>
   </data>
   <data name="PropertyColumnTitle" xml:space="preserve">
