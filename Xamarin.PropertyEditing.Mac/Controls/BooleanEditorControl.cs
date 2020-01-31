@@ -8,12 +8,11 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class BooleanEditorControl
 		: PropertyEditorControl<PropertyViewModel<bool?>>
 	{
-		const string setBezelColorSelector = "setBezelColor:";
-
 		public BooleanEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
 			BooleanEditor = new FocusableBooleanButton ();
+			BooleanEditor.Title = string.Empty;
 
 			// update the value on 'enter'
 			BooleanEditor.Activated += (sender, e) => {
@@ -49,12 +48,10 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (ViewModel.Value.HasValue) {
 				BooleanEditor.State = ViewModel.Value.Value ? NSCellStateValue.On : NSCellStateValue.Off;
-				BooleanEditor.Title = ViewModel.Value.ToString ();
 				BooleanEditor.AllowsMixedState = false;
 			} else {
 				BooleanEditor.AllowsMixedState = true;
 				BooleanEditor.State = NSCellStateValue.Mixed;
-				BooleanEditor.Title = string.Empty;
 			}
 		}
 

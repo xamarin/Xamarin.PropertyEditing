@@ -657,7 +657,7 @@
     <comment>Select {Property} type</comment>
   </data>
   <data name="PropertyFilterLabel" xml:space="preserve">
-    <value>Property Filter</value>
+    <value>Фильтр свойств</value>
     <comment>Label text used as Property Filter placeholder</comment>
   </data>
   <data name="PropertyColumnTitle" xml:space="preserve">
@@ -1041,7 +1041,7 @@
     <value>Нет</value>
   </data>
   <data name="FilterTypePlaceholder" xml:space="preserve">
-    <value>Filter Types</value>
+    <value>Типы фильтров</value>
     <comment>Placeholder for filter type control</comment>
   </data>
 </root>
