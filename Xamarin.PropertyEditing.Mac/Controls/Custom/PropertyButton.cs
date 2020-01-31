@@ -84,7 +84,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private readonly IHostResourceProvider hostResources;
 
-		private void PopUpContextMenu ()
+		internal void PopUpContextMenu ()
 		{
 			if (this.popUpContextMenu == null) {
 				this.popUpContextMenu = new NSMenu ();
