@@ -1,0 +1,114 @@
+name: $(BuildID)
+
+trigger: 
+  branches:
+    include: [ master, d16-* ]
+pr: 
+  branches:
+    include: [ master, d16-* ]
+
+resources:
+  repositories:
+  - repository: self
+
+stages:
+  - stage: Windows
+    dependsOn: []
+    jobs:
+      - job: 'Build'
+        pool:
+          vmImage: 'windows-latest'
+
+        steps:
+          - checkout: self
+            clean: true
+            persistCredentials: true
+
+          - task: MSBuild@1
+            displayName: Build
+            inputs:
+              solution: build.proj
+              msbuildVersion: "15.0"
+              msbuildArguments: '/restore /p:Release=true /t:Build'
+
+          - task: MSBuild@1
+            displayName: 'Run Tests'
+            inputs:
+              solution: build.proj
+              msbuildVersion: "15.0"
+              msbuildArguments: '/p:Release=true /t:Test'
+
+          - task: PublishTestResults@2
+            displayName: 'Publish Test Results'
+            inputs:
+              testResultsFormat: NUnit
+              testResultsFiles: '**/TestResult.xml'
+            condition: succeededOrFailed()
+
+  - stage: Mac
+    dependsOn: []
+    jobs:
+      - job: 'Build'
+        pool:
+          vmImage: 'macOS-latest'
+
+        steps:
+          - checkout: self
+            clean: true
+            persistCredentials: true
+
+          - task: NuGetAuthenticate@0
+
+          - task: CmdLine@1
+            displayName: 'Set Token'
+            inputs:
+              filename: echo
+              arguments: '##vso[task.setvariable variable=GITHUB_TOKEN]$(GitHub.Token)'
+          - task: MSBuild@1
+            displayName: Build
+            inputs:
+              solution: build.proj
+              msbuildVersion: "15.0"
+              msbuildArguments: '/restore /p:Release=true /t:Build'
+
+          - task: MSBuild@1
+            displayName: 'Run Tests'
+            inputs:
+              solution: build.proj
+              msbuildVersion: "15.0"
+              msbuildArguments: '/p:Release=true /t:Test'
+
+          - task: PublishTestResults@2
+            displayName: 'Publish Test Results'
+            inputs:
+              testResultsFormat: NUnit
+              testResultsFiles: '**/TestResult.xml'
+            condition: succeededOrFailed()
+
+  - stage: UpdateTranslations
+    dependsOn: ['Windows', 'Mac']
+    condition: and( succeeded(), and( eq(variables['Build.Reason'], 'PullRequest'), eq( variables['System.PullRequest.SourceBranch'], 'loc') ) )
+    jobs:        
+      - job : 'ValidateAndMerge'
+        variables:
+          pull_request_number: $(System.PullRequest.PullRequestNumber)
+        steps:
+          - powershell: |
+              Write-Host "Validating translations for PR# $(System.PullRequest.PullRequestNumber)"
+              $matches = Get-ChildItem -recurse -Path $(Build.SourcesDirectory) -Filter *.resx | Select-String  -Pattern '\[.*\]\s\(https:.*\)' -AllMatches
+              $matchCount = ($matches | Measure-Object -Line).Lines
+              Write-Host "Found $matchCount violations."
+              $matches | Write-Host
+              if( ($matches | Measure-Object -Line).Lines -eq 0 ) {
+                Write-Host "Quality Gate Succeeded."
+              } else {
+                throw "Quality Gate Failure : Check the logs for details."
+              }
+            displayName: 'Validate Markdown Urls'
+          - task: github-merge-pr@1
+            inputs:
+              github_token: $(GitHub.Token)
+              repository: 'xamarin/Xamarin.PropertyEditing'
+              pr_number: $(pull_request_number)
+              merge_method: 'merge'
+            displayName: Merge PR# $(System.PullRequest.PullRequestNumber)
