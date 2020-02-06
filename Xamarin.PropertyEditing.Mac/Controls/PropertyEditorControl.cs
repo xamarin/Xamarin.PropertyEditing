@@ -86,7 +86,11 @@ namespace Xamarin.PropertyEditing.Mac
 				do {
 					row--;
 					view = TableView.GetView (0, row, makeIfNecessary: false);
-					ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
+					if (view is PropertyEditorControl pec) { // This is to include the CategoryContainer
+						ctrl = pec;
+					} else {
+						ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
+					}
 				} while (row > 0 && ctrl == null);
 
 				if (ctrl != null) {
