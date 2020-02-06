@@ -49,30 +49,15 @@ namespace Xamarin.PropertyEditing.Mac
 			GetVMGroupCellItendifiterFromFacade (item, out EditorViewModel evm, out PanelGroupViewModel group, out var cellIdentifier);
 
 			if (group != null) {
-				var labelContainer = (NSView)outlineView.MakeView (CategoryIdentifier, this);
-				if (labelContainer == null) {
-					labelContainer = new NSView {
+				var categoryContainer = (CategoryContainerControl)outlineView.MakeView (CategoryIdentifier, this);
+				if (categoryContainer == null) {
+					categoryContainer = new CategoryContainerControl (this.hostResources, outlineView) {
 						Identifier = CategoryIdentifier,
+						TableView = outlineView,
 					};
-
-					var disclosure = outlineView.MakeView ("NSOutlineViewDisclosureButtonKey", outlineView);
-					disclosure.TranslatesAutoresizingMaskIntoConstraints = false;
-					labelContainer.AddSubview (disclosure);
-
-					var label = new UnfocusableTextField {
-						TranslatesAutoresizingMaskIntoConstraints = false
-					};
-					labelContainer.AddSubview (label);
-
-					labelContainer.AddConstraints (new[] {
-						NSLayoutConstraint.Create (disclosure, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, labelContainer, NSLayoutAttribute.CenterY, 1, 0),
-						NSLayoutConstraint.Create (disclosure, NSLayoutAttribute.Left, NSLayoutRelation.Equal, labelContainer, NSLayoutAttribute.Left, 1, 4),
-						NSLayoutConstraint.Create (label, NSLayoutAttribute.Left, NSLayoutRelation.Equal, disclosure, NSLayoutAttribute.Right, 1, 0),
-						NSLayoutConstraint.Create (label, NSLayoutAttribute.Height, NSLayoutRelation.Equal, labelContainer, NSLayoutAttribute.Height, 1, 0),
-					});
 				}
 
-				((UnfocusableTextField)labelContainer.Subviews[1]).StringValue = group.Category;
+				((UnfocusableTextField)categoryContainer.Subviews[1]).StringValue = group.Category;
 
 				if (this.dataSource.DataContext.GetIsExpanded (group.Category)) {
 					SynchronizationContext.Current.Post (s => {
@@ -80,7 +65,7 @@ namespace Xamarin.PropertyEditing.Mac
 					}, null);
 				}
 
-				return labelContainer;
+				return categoryContainer;
 			}
 
 			NSView editorOrContainer = null;
@@ -204,7 +189,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (!this.registrations.TryGetValue (cellIdentifier, out EditorRegistration registration)) {
 				registration = new EditorRegistration ();
 
-				if (cellIdentifier == nameof(PanelHeaderEditorControl)) {
+				if (cellIdentifier == nameof (PanelHeaderEditorControl)) {
 					registration.RowSize = 54;
 				} else {
 					NSView editorOrContainer = GetEditor (cellIdentifier, vm, outlineView);
