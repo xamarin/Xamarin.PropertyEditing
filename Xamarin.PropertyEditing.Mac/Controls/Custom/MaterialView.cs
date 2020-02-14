@@ -39,8 +39,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void CreateColourPallette ()
 		{
-			if (Subviews.Length > 0) {
-				foreach (var sv in Subviews) {
+			var subViews = Subviews;
+			if (subViews.Length > 0) {
+				foreach (var sv in subViews) {
+					if (sv is FocusableButton fb)
+						fb.Activated -= MaterialColourButton_Activated;
 					sv.RemoveFromSuperview ();
 					sv.Dispose ();
 				}
@@ -141,8 +144,10 @@ namespace Xamarin.PropertyEditing.Mac
 				x += width;
 			}
 
-			if (ViewModel.AccentColorScale.Count () <= 0)
+			if (ViewModel.AccentColorScale.Count () <= 0) {
+				Window?.RecalculateKeyViewLoop (); // Still needs to be called for the Buttons above.
 				return;
+			}
 
 			y += height + 6;
 			x = 0;
