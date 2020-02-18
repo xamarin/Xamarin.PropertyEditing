@@ -158,9 +158,8 @@ namespace Xamarin.PropertyEditing.Mac
 				StringValue = String.Empty,
 			};
 
-			this.comboBox.SelectionChanged += (sender, e) => {
-				ViewModel.ValueName = this.comboBox.SelectedValue.ToString ();
-			};
+			this.comboBox.Activated += ComboBox_Activated;
+			this.comboBox.SelectionChanged += ComboBox_Activated;
 
 			AddSubview (this.comboBox);
 
@@ -172,6 +171,19 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.firstKeyView = this.comboBox;
 			this.lastKeyView = this.comboBox;
+		}
+
+		private void ComboBox_Activated (object sender, EventArgs e)
+		{
+			ViewModel.ValueName = this.comboBox.StringValue;
+		}
+
+		protected override void Dispose (bool disposing)
+		{
+			if (disposing) {
+				this.comboBox.Activated -= ComboBox_Activated;
+				this.comboBox.SelectionChanged -= ComboBox_Activated;
+			}
 		}
 	}
 }
