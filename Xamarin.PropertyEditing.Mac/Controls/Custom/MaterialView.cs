@@ -18,6 +18,8 @@ namespace Xamarin.PropertyEditing.Mac
 			return false;
 		}
 
+		public override bool IsFlipped => true;
+
 		public override void OnViewModelChanged (MaterialDesignColorViewModel oldModel)
 		{
 			base.OnViewModelChanged (oldModel);
