@@ -77,8 +77,13 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.ViewDidLayout ();
 
-			if (this.alphaSpinEditor.NumericEditor.CanBecomeKeyView) {
-				View.Window?.MakeFirstResponder (this.alphaSpinEditor.NumericEditor);
+			var window = View.Window;
+			window?.RecalculateKeyViewLoop ();
+
+			if (this.materialEditor.Subviews.Length > 0
+				&& this.materialEditor.Subviews[0] is FocusableButton fb
+				&& fb.CanBecomeKeyView) {
+				window?.MakeFirstResponder (fb);
 			}
 		}
 
