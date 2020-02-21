@@ -22,8 +22,6 @@ namespace Xamarin.PropertyEditing.Mac
 
 			if (!Popover.Shown) {
 				Popover.Show (new CGRect (26, this.Frame.Height / 2 - 2, 2, 2), this, NSRectEdge.MinYEdge);
-				Window.MakeFirstResponder (this);
-				Window.MakeFirstResponder (Popover);
 			}
 		}
 
@@ -33,33 +31,6 @@ namespace Xamarin.PropertyEditing.Mac
 				MouseDown (theEvent);
 			} else {
 				base.KeyDown (theEvent);
-			}
-		}
-	}
-
-	internal class ColorPopOverDelegate : NSPopoverDelegate
-	{
-		private BrushTabViewController brushTabViewController;
-		private CommonBrushType selectedBrushType = CommonBrushType.None;
-
-		internal ColorPopOverDelegate (BrushTabViewController brushTabViewController)
-		{
-			if (brushTabViewController == null)
-				throw new ArgumentNullException (nameof (brushTabViewController));
-
-			this.brushTabViewController = brushTabViewController;
-		}
-
-		public override void WillShow (NSNotification notification)
-		{
-			if (this.brushTabViewController.ViewModel != null) {
-				var ct = new CancellationTokenSource ();
-				Task.Factory.StartNew (()=> {
-					if (this.selectedBrushType == CommonBrushType.None)
-						this.selectedBrushType = this.brushTabViewController.ViewModel.SelectedBrushType;
-					else
-						this.brushTabViewController.ViewModel.SelectedBrushType = this.selectedBrushType;
-				}, ct.Token, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext ());
 			}
 		}
 	}
@@ -80,8 +51,6 @@ namespace Xamarin.PropertyEditing.Mac
 					PreferredContentSize = new CGSize (550, 363)
 				}
 			};
-
-			this.popover.Delegate = new ColorPopOverDelegate (this.brushTabViewController);
 
 			this.popUpButton = new ColorPopUpButton {
 				ControlSize = NSControlSize.Small,
