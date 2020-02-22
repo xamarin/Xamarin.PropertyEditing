@@ -81,7 +81,7 @@ namespace Xamarin.PropertyEditing.Mac
 			window?.RecalculateKeyViewLoop ();
 
 			if (this.materialEditor.Subviews.Length > 0
-				&& this.materialEditor.Subviews[0] is FocusableButton fb
+				&& (this.materialEditor.SelectedButton ?? this.materialEditor.Subviews[0]) is FocusableButton fb
 				&& fb.CanBecomeKeyView) {
 				window?.MakeFirstResponder (fb);
 			}
