@@ -20,6 +20,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override bool IsFlipped => true;
 
+		public FocusableButton SelectedButton { get; private set; }
+
 		public override void OnViewModelChanged (MaterialDesignColorViewModel oldModel)
 		{
 			base.OnViewModelChanged (oldModel);
@@ -68,6 +70,7 @@ namespace Xamarin.PropertyEditing.Mac
 			foreach (var p in colors) {
 				var frame = new CGRect (x, y, width, height);
 				var selectedColor = p.Color.Lightness > 0.58 ? NSColor.Black : NSColor.White;
+				var isSelected = ViewModel.Color == p.Color || ViewModel.ColorName == p.Name;
 				var l = new MaterialColorLayer {
 					Frame = new CGRect (0, 0, width, height),
 					ForegroundColor = selectedColor.CGColor,
@@ -75,7 +78,7 @@ namespace Xamarin.PropertyEditing.Mac
 					CornerRadius = 3,
 					BorderColor = new CGColor (.5f, .5f, .5f, .5f),
 					MasksToBounds = false,
-					IsSelected = ViewModel.Color == p.Color || ViewModel.ColorName == p.Name
+					IsSelected = isSelected
 				};
 
 				var materialColourButton = new FocusableButton {
@@ -86,6 +89,8 @@ namespace Xamarin.PropertyEditing.Mac
 					Transparent = false,
 					TranslatesAutoresizingMaskIntoConstraints = true,
 				};
+				if (isSelected)
+					SelectedButton = materialColourButton;
 
 				materialColourButton.Activated += MaterialColourButton_Activated;
 
@@ -114,8 +119,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 			foreach (var color in ViewModel.NormalColorScale) {
 				var l = CreateLayer (color.Value);
+				var isSelected = color.Value == ViewModel.NormalColor || color.Value == ViewModel.Color;
 				l.ColorType = MaterialColorType.Normal;
-				l.IsSelected = color.Value == ViewModel.NormalColor || color.Value == ViewModel.Color;
+				l.IsSelected = isSelected;
 				l.Frame = new CGRect (0, 0, width, height);
 
 				var normalColourButton = new FocusableButton {
@@ -126,6 +132,8 @@ namespace Xamarin.PropertyEditing.Mac
 					Transparent = false,
 					TranslatesAutoresizingMaskIntoConstraints = true,
 				};
+				if (isSelected)
+					SelectedButton = normalColourButton;
 
 				normalColourButton.Activated += MaterialColourButton_Activated;
 
@@ -134,8 +142,13 @@ namespace Xamarin.PropertyEditing.Mac
 				x += width;
 			}
 
-			if (ViewModel.AccentColorScale.Count () <= 0) {
-				Window?.RecalculateKeyViewLoop (); // Still needs to be called for the Buttons above.
+			var window = Window;
+			if (!ViewModel.AccentColorScale.Any ()) {
+				if (window != null) {
+					window.RecalculateKeyViewLoop (); // Still needs to be called for the Buttons above.
+					if (SelectedButton != null)
+						window.MakeFirstResponder (SelectedButton);
+				}
 				return;
 			}
 
@@ -145,8 +158,9 @@ namespace Xamarin.PropertyEditing.Mac
 			width = FrameWidth / ViewModel.AccentColorScale.Count ();
 			foreach (var color in ViewModel.AccentColorScale) {
 				var l = CreateLayer (color.Value);
+				var isSelected = color.Value == ViewModel.AccentColor || color.Value == ViewModel.Color;
 				l.ColorType = MaterialColorType.Accent;
-				l.IsSelected = color.Value == ViewModel.AccentColor || color.Value == ViewModel.Color;
+				l.IsSelected = isSelected;
 				l.Frame = new CGRect (0, 0, width, height);
 
 				var accentColourButton = new FocusableButton {
@@ -157,6 +171,8 @@ namespace Xamarin.PropertyEditing.Mac
 					Transparent = false,
 					TranslatesAutoresizingMaskIntoConstraints = true,
 				};
+				if (isSelected)
+					SelectedButton = accentColourButton;
 
 				accentColourButton.Activated += MaterialColourButton_Activated;
 
@@ -165,7 +181,11 @@ namespace Xamarin.PropertyEditing.Mac
 				x += width;
 			}
 
-			Window?.RecalculateKeyViewLoop ();
+			if (window != null) {
+				window.RecalculateKeyViewLoop ();
+				if (SelectedButton != null)
+					window.MakeFirstResponder (SelectedButton);
+			}
 		}
 
 		private void MaterialColourButton_Activated (object sender, EventArgs e)
