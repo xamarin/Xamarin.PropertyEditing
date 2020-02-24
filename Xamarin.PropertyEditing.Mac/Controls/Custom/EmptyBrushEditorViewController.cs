@@ -21,16 +21,5 @@ namespace Xamarin.PropertyEditing.Mac
 				Enabled = false
 			};
 		}
-
-		public override void ViewDidLayout ()
-		{
-			base.ViewDidLayout ();
-
-			if (ParentViewController is BrushTabViewController pc) {
-				if (pc.Selected is TabButton tb) {
-					View.Window?.MakeFirstResponder (tb);
-				}
-			}
-		}
 	}
 }
