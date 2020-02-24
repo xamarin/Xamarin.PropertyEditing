@@ -68,5 +68,14 @@ namespace Xamarin.PropertyEditing.Mac
 			var controller = item.ViewController as ColorComponentViewController;
 			EditorType = controller.EditorType;
 		}
+
+		public override void ViewDidLayout ()
+		{
+			base.ViewDidLayout ();
+
+			if (Selected is TabButton tb) {
+				View.Window?.MakeFirstResponder (tb);
+			}
+		}
 	}
 }

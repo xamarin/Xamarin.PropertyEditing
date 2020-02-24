@@ -60,13 +60,13 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			Layer = new CALayer ();
-			Layer.AddSublayer (background);
-			Layer.AddSublayer (shadeLayer);
-			Layer.AddSublayer (hueLayer);
-			Layer.AddSublayer (historyLayer);
-			Layer.AddSublayer (componentBackground);
+			Layer.AddSublayer (this.background);
+			Layer.AddSublayer (this.shadeLayer);
+			Layer.AddSublayer (this.hueLayer);
+			Layer.AddSublayer (this.historyLayer);
+			Layer.AddSublayer (this.componentBackground);
 			WantsLayer = true;
-			AddSubview (componentTabs.View);
+			AddSubview (this.componentTabs.View);
 		}
 
 		public override bool AcceptsFirstResponder () => true;
@@ -104,9 +104,9 @@ namespace Xamarin.PropertyEditing.Mac
 				for (var c = hit?.ModelLayer; c != null; c = c.SuperLayer) {
 					var active = c as ColorEditorLayer;
 					if (active != null) {
-						interaction = new EditorInteraction (ViewModel, active);
+						this.interaction = new EditorInteraction (ViewModel, active);
 						active.UpdateFromLocation (
-							interaction,
+							this.interaction,
 							Layer.ConvertPointToLayer (location, active));
 						OnPropertyChanged (ViewModel, new PropertyChangedEventArgs (nameof (SolidBrushViewModel.Color)));
 						return;
@@ -124,9 +124,9 @@ namespace Xamarin.PropertyEditing.Mac
 			if (diff.X * diff.X < .5 && diff.Y * diff.Y < .5)
 				return;
 
-			interaction?.Layer?.UpdateFromLocation (
-						interaction,
-						Layer.ConvertPointToLayer (location, interaction.Layer));
+			this.interaction?.Layer?.UpdateFromLocation (
+						this.interaction,
+						Layer.ConvertPointToLayer (location, this.interaction.Layer));
 
 			OnPropertyChanged (ViewModel, new PropertyChangedEventArgs (nameof (SolidBrushViewModel.Color)));
 		}
@@ -134,14 +134,15 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void MouseUp (NSEvent theEvent)
 		{
 			base.MouseUp (theEvent);
-			interaction?.Commit ();
-			interaction = null;
+			this.interaction?.Commit ();
+			this.interaction = null;
 		}
 
 		private bool modelChanged = true;
+
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
-			var inter = interaction ?? new EditorInteraction (ViewModel, null);
+			var inter = this.interaction ?? new EditorInteraction (ViewModel, null);
 
 			switch (e.PropertyName) {
 				case nameof (SolidBrushViewModel.Color):
@@ -154,9 +155,9 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void OnViewModelChanged (SolidBrushViewModel oldModel)
 		{
 			base.OnViewModelChanged (oldModel);
-			var inter = interaction ?? new EditorInteraction (ViewModel, null);
+			var inter = this.interaction ?? new EditorInteraction (ViewModel, null);
 
-			componentTabs.ViewModel = ViewModel;
+			this.componentTabs.ViewModel = ViewModel;
 			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
 				editor.UpdateFromModel (inter);
 			}
@@ -165,7 +166,7 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void Layout ()
 		{
 			if (this.modelChanged) {
-				var interx = interaction ?? new EditorInteraction (ViewModel, null);
+				var interx = this.interaction ?? new EditorInteraction (ViewModel, null);
 				foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
 					editor.UpdateFromModel (interx);
 				}
@@ -207,7 +208,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var inset = backgroundFrame.Inset (componentPadding, componentPadding);
 			this.componentTabs.View.Frame = inset;
 
-			var inter = interaction ?? new EditorInteraction (ViewModel, null);
+			var inter = this.interaction ?? new EditorInteraction (ViewModel, null);
 			foreach (var editor in Layer.Sublayers.OfType<ColorEditorLayer> ()) {
 				editor.UpdateFromModel (inter);
 			}

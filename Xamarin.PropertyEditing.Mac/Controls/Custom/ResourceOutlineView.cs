@@ -45,8 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 			HeaderView = null;
 		}
 
-		[Export ("validateProposedFirstResponder:forEvent:")]
-		public bool validateProposedFirstResponder (NSResponder responder, NSEvent ev)
+		public override bool ValidateProposedFirstResponder (NSResponder responder, NSEvent forEvent)
 		{
 			return true;
 		}

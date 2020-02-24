@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using AppKit;
 using CoreGraphics;
+using Foundation;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -19,17 +22,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 			if (!Popover.Shown) {
 				Popover.Show (new CGRect (26, this.Frame.Height / 2 - 2, 2, 2), this, NSRectEdge.MinYEdge);
-				Window.MakeFirstResponder (this);
-				Window.MakeFirstResponder (Popover);
 			}
 		}
 
 		public override void KeyDown (NSEvent theEvent)
 		{
-			if (theEvent.KeyCode == 36 || theEvent.KeyCode == 49) {
+			if (theEvent.KeyCode == (ushort)NSKey.Space) {
 				MouseDown (theEvent);
-			}
-			else {
+			} else {
 				base.KeyDown (theEvent);
 			}
 		}
@@ -46,8 +46,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Frame = new CGRect (0, 0, 30, 10)
 			};
 
-			this.popover = new NSPopover {
-				Behavior = NSPopoverBehavior.Transient,
+			this.popover = new AutoClosePopOver (hostResources, hostResources.GetVibrantAppearance (EffectiveAppearance)) {
 				ContentViewController = this.brushTabViewController = new BrushTabViewController (hostResources) {
 					PreferredContentSize = new CGSize (550, 363)
 				}
