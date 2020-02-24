@@ -1,5 +1,6 @@
 using System;
 using AppKit;
+using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -17,6 +18,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.hostResources = hostResources;
 
 			Behavior = NSPopoverBehavior.Semitransient;
+			Delegate = new PopoverFocusRestoreDelegate ();
 			CloseOnEnter = true;
 
 			this.SetAppearance (this.hostResources.GetVibrantAppearance (effectiveAppearance));

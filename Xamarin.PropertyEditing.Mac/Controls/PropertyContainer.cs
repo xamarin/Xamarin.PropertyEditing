@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using AppKit;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -54,6 +55,38 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			} else {
 				AddConstraint (NSLayoutConstraint.Create (this.label, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this, NSLayoutAttribute.CenterY, 1, 0));
+			}
+		}
+
+		public override bool PerformKeyEquivalent (NSEvent theEvent)
+		{
+			if (theEvent.KeyCode == (ushort)NSKey.I
+			&& (theEvent.ModifierFlags & (NSEventModifierMask.ShiftKeyMask | NSEventModifierMask.ControlKeyMask))
+			== (NSEventModifierMask.ShiftKeyMask | NSEventModifierMask.ControlKeyMask)) {
+				if (theEvent.Window.FirstResponder is NSView fr) {
+					var propertyContainer = FindPropertyContainer (fr); // Recursive on SuperView, up the chain
+					if (propertyContainer != null) {
+						SynchronizationContext.Current.Post (s => {
+							propertyContainer.PropertyButton.PopUpContextMenu ();
+						}, null);
+						return true;
+					}
+				}
+			}
+
+			return base.PerformKeyEquivalent (theEvent);
+		}
+
+		private PropertyContainer FindPropertyContainer (NSView fr)
+		{
+			if (fr.Superview != null) {
+				if (fr.Superview is PropertyContainer propertyContainer) {
+					return propertyContainer;
+				} else {
+					return FindPropertyContainer (fr.Superview);
+				}
+			} else {
+				return null;
 			}
 		}
 

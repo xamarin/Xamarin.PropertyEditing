@@ -24,8 +24,8 @@ namespace Xamarin.PropertyEditing.Mac
 			ContentPadding = new NSEdgeInsets (8, 8, 8, 8);
 
 			this.filterResource = new NSSearchField {
-				ControlSize = NSControlSize.Mini,
-				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Mini)),
+				ControlSize = NSControlSize.Small,
+				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				PlaceholderString = Properties.Resources.SearchResourcesTitle,
 			};
 
@@ -107,7 +107,7 @@ namespace Xamarin.PropertyEditing.Mac
 						this.resource.ViewModel = ViewModel;
 						item.ViewController = this.resource;
 						item.ToolTip = Properties.Resources.ResourceBrush;
-						image = "pe-property-brush-resources-16"; 
+						image = "pe-property-brush-resources-16";
 						break;
 
 					case CommonBrushType.Gradient:
@@ -158,8 +158,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void WillSelect (NSTabView tabView, NSTabViewItem item)
 		{
-			if (item.ViewController is NotifyingViewController<BrushPropertyViewModel> brushController)
+			if (item.ViewController is NotifyingViewController<BrushPropertyViewModel> brushController) {
 				brushController.ViewModel = ViewModel;
+			}
 
 			if (this.inhibitSelection)
 				return;
@@ -174,13 +175,25 @@ namespace Xamarin.PropertyEditing.Mac
 
 			ViewModel.SelectedBrushType = ViewModel.BrushTypes[item.Label];
 			this.filterResource.Hidden = ViewModel.SelectedBrushType != CommonBrushType.Resource;
+			if (!this.filterResource.Hidden) {
+				if (Selected is TabButton tb) {
+					tb.NextKeyView = this.filterResource;
+					item.View.Window?.MakeFirstResponder (this.filterResource);
+					if (item.View.Subviews.Length > 1
+					&& item.View.Subviews[1].Subviews.Length > 0
+					&& item.View.Subviews[1].Subviews[0] is NSOutlineView rov) {
+						rov.NextKeyView = this.filterResource.NextKeyView;
+						this.filterResource.NextKeyView = rov;
+					}
+				}
+			}
 
 			base.DidSelect (tabView, item);
 		}
 
 		public override void ViewDidLoad ()
 		{
-			View.Frame = new CGRect (0, 0, 430, 230);
+			View.Frame = new CGRect (0, 0, NotifyingViewController<BrushPropertyViewModel>.PreferredContentSizeWidth, NotifyingViewController<BrushPropertyViewModel>.PreferredContentSizeHeight);
 
 			this.inhibitSelection = true;
 			base.ViewDidLoad ();

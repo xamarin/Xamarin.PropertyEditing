@@ -14,7 +14,7 @@ namespace Xamarin.PropertyEditing.Mac
 				throw new ArgumentNullException (nameof (hostResources));
 
 			this.hostResources = hostResources;
-			PreferredContentSize = new CGSize (430, 230);
+			PreferredContentSize = new CGSize (PreferredContentSizeWidth, PreferredContentSizeHeight);
 		}
 
 		public override void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
