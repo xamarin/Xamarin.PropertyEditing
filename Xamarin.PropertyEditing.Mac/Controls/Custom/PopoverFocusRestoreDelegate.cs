@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (window != null && keyPath == key) {
 				if (!ignore) {
 					var firstResponder = change [ChangeNewKey] as NSResponder;
-					if (firstResponder != null && !(firstResponder is NSWindow))
+					if (firstResponder != null && !(firstResponder is NSWindow) && (!(firstResponder is NSView view) || view.Window == window))
 						this.prevFirstResponder = ResolveResponder (firstResponder);
 				}
 			} else {
