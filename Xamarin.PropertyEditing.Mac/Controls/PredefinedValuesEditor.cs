@@ -85,10 +85,12 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.popupButton == null)
 				return;
 
+			this.popupButton.Activated -= PopupButton_Activated;
 			this.popupButton.RemoveFromSuperview ();
 			this.popupButton.Dispose ();
 			this.popupButton = null;
 
+			this.popupButtonList.RemoveAllItems ();
 			this.popupButtonList.Dispose ();
 			this.popupButtonList = null;
 		}
@@ -114,7 +116,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.popupButtonList = new NSMenu ();
 			this.popupButton.Menu = this.popupButtonList;
-			this.popupButton.Activated += (o, e) => ViewModel.ValueName = (o as NSPopUpButton).Title;
+			this.popupButton.Activated += PopupButton_Activated; 
 
 			AddSubview (this.popupButton);
 
@@ -133,6 +135,8 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.comboBox == null)
 				return;
 
+			this.comboBox.SelectionChanged -= ComboBox_SelectionChanged;
+			this.comboBox.RemoveAll ();
 			this.comboBox.RemoveFromSuperview ();
 			this.comboBox.Dispose ();
 			this.comboBox = null;
@@ -158,9 +162,7 @@ namespace Xamarin.PropertyEditing.Mac
 				StringValue = String.Empty,
 			};
 
-			this.comboBox.SelectionChanged += (sender, e) => {
-				ViewModel.ValueName = this.comboBox.SelectedValue.ToString ();
-			};
+			this.comboBox.SelectionChanged += ComboBox_SelectionChanged;
 
 			AddSubview (this.comboBox);
 
@@ -172,6 +174,20 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.firstKeyView = this.comboBox;
 			this.lastKeyView = this.comboBox;
+		}
+
+		private void PopupButton_Activated (object sender, EventArgs e)
+		{
+			if (ViewModel != null && sender is NSPopUpButton popUpButton) {
+				ViewModel.ValueName = popUpButton.Title;
+			}
+		}
+
+		private void ComboBox_SelectionChanged (object sender, EventArgs e)
+		{
+			if (ViewModel != null && this.comboBox != null) {
+				ViewModel.ValueName = this.comboBox.SelectedValue.ToString ();
+			}
 		}
 	}
 }
