@@ -1,2 +1,2 @@
-Build Status
-[![Build status](https://devdiv.visualstudio.com/DevDiv/_apis/build/status/Xamarin/Proppy/Xamarin.PropertyEditing.Mac)](https://devdiv.visualstudio.com/DevDiv/_build/latest?definitionId=5330)
+### Build Status
+[![Build Status](https://dev.azure.com/xamarin/public/_apis/build/status/xamarin/Xamarin.PropertyEditing/Xamarin.PropertyEditing%20(Public)?branchName=master)](https://dev.azure.com/xamarin/public/_build/latest?definitionId=51&branchName=master)
