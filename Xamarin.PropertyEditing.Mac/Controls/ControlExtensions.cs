@@ -26,15 +26,13 @@ namespace Xamarin.PropertyEditing.Mac
 				}
 			};
 
-			var popover = new NSPopover {
-				Behavior = NSPopoverBehavior.Transient,
+			var popover = new AutoClosePopOver (hostResources, hostResources.GetVibrantAppearance (source.EffectiveAppearance)) {
 				Delegate = new PopoverDelegate<ITypeInfo> (tcs),
 				ContentViewController = new NSViewController {
 					View = selector,
 					PreferredContentSize = new CoreGraphics.CGSize (360, 335)
 				},
 			};
-			popover.SetAppearance (hostResources.GetVibrantAppearance (source.EffectiveAppearance));
 
 			tcs.Task.ContinueWith (t => {
 				// Focus back to the button that popped us up

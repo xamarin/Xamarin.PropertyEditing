@@ -224,7 +224,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.incrementButton);
 			AddSubview (this.decrementButton);
 
-			this.AddConstraints (new[] {
+			AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.numericEditor, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this, NSLayoutAttribute.Left, 1f, 0),
 				NSLayoutConstraint.Create (this.numericEditor, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 

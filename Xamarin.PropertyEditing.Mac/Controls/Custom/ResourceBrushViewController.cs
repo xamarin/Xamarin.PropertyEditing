@@ -6,14 +6,15 @@ using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class ResourceBrushViewController : NotifyingViewController<BrushPropertyViewModel>
+	internal class ResourceBrushViewController
+		: NotifyingViewController<BrushPropertyViewModel>
 	{
 		private ResourceOutlineView resourceSelector;
 		private readonly ResourceBrushPropertyViewDelegate viewDelegate;
 
 		public ResourceBrushViewController (IHostResourceProvider hostResources)
 		{
-			PreferredContentSize = new CGSize (430, 230);
+			PreferredContentSize = new CGSize (PreferredContentSizeWidth, PreferredContentSizeHeight);
 			this.viewDelegate = new ResourceBrushPropertyViewDelegate (hostResources);
 		}
 
@@ -22,15 +23,15 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			switch (e.PropertyName) {
 				case nameof (BrushPropertyViewModel.Resource):
-					if (resource == ViewModel.Resource)
+					if (this.resource == ViewModel.Resource)
 						return;
 
-					resource = ViewModel?.Resource;
+					this.resource = ViewModel?.Resource;
 					UpdateSelection ();
 					break;
 				case nameof (BrushPropertyViewModel.Solid):
-					if (resourceSelector != null)
-						resourceSelector.ViewModel = ViewModel?.ResourceSelector;
+					if (this.resourceSelector != null)
+						this.resourceSelector.ViewModel = ViewModel?.ResourceSelector;
 					break;
 				case nameof (BrushPropertyViewModel.Value):
 					break;
@@ -39,30 +40,30 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void UpdateSelection ()
 		{
-			if (resourceSelector == null)
+			if (this.resourceSelector == null)
 				return;
 
-			var source = resourceSelector.DataSource as ResourceDataSource;
+			var source = this.resourceSelector.DataSource as ResourceDataSource;
 			if (source == null || ViewModel == null)
 				return;
 
 			nint index = -1;
 			if (ViewModel.Resource != null && source.TryGetFacade (ViewModel?.Resource, out var facade)) {
-				index = resourceSelector.RowForItem (facade);
+				index = this.resourceSelector.RowForItem (facade);
 			}
 
 			if (index < 0)
-				resourceSelector.DeselectAll (null);
+				this.resourceSelector.DeselectAll (null);
 			else
-				resourceSelector.SelectRow (index, false);
+				this.resourceSelector.SelectRow (index, false);
 		}
 
 		public override void OnViewModelChanged (BrushPropertyViewModel oldModel)
 		{
 			base.OnViewModelChanged (oldModel);
-			if (resourceSelector != null) {
-				viewDelegate.ViewModel = ViewModel;
-				resourceSelector.ViewModel = ViewModel?.ResourceSelector;
+			if (this.resourceSelector != null) {
+				this.viewDelegate.ViewModel = ViewModel;
+				this.resourceSelector.ViewModel = ViewModel?.ResourceSelector;
 			}
 		}
 
@@ -73,7 +74,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void LoadView ()
 		{
-			viewDelegate.ViewModel = ViewModel;
+			this.viewDelegate.ViewModel = ViewModel;
 			this.resourceSelector = new ResourceOutlineView {
 				Delegate = viewDelegate,
 			};
@@ -88,7 +89,7 @@ namespace Xamarin.PropertyEditing.Mac
 			View = tableContainer;
 
 			if (ViewModel != null) {
-				resourceSelector.ViewModel = ViewModel?.ResourceSelector;
+				this.resourceSelector.ViewModel = ViewModel?.ResourceSelector;
 			}
 		}
 
