@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+
 using AppKit;
 using Foundation;
 
@@ -8,8 +10,8 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		static readonly NSString key = new NSString ("firstResponder");
 
-		private bool ignore;
 		private NSResponder prevFirstResponder;
+		private NSWindow window;
 
 		public PopoverFocusRestoreDelegate ()
 		{
@@ -17,30 +19,28 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override void DidShow (NSNotification notification)
 		{
-			this.ignore = false;
-			var window = ((NSPopover)notification.Object).ContentViewController.View.Window;
+			Debug.Assert (window == null);
+			this.window = ((NSPopover)notification.Object).ContentViewController.View.Window;
 
-			if (this.prevFirstResponder != null) {
+			if (this.prevFirstResponder != null)
 				window.MakeFirstResponder (this.prevFirstResponder);
-			} else {
-				window.AddObserver (this, key, NSKeyValueObservingOptions.Initial | NSKeyValueObservingOptions.New, IntPtr.Zero);
-			}
+
+			window.AddObserver (this, key, NSKeyValueObservingOptions.Initial | NSKeyValueObservingOptions.New, IntPtr.Zero);
 		}
 
 		public override void WillClose (NSNotification notification)
 		{
-			this.ignore = true;
+			window.RemoveObserver (this, key);
+			window = null;
 		}
 
 		public override void ObserveValue (NSString keyPath, NSObject ofObject, NSDictionary change, IntPtr context)
 		{
 			var window = ofObject as NSWindow;
 			if (window != null && keyPath == key) {
-				if (!ignore) {
-					var firstResponder = change [ChangeNewKey] as NSResponder;
-					if (firstResponder != null && !(firstResponder is NSWindow) && (!(firstResponder is NSView view) || view.Window == window))
-						this.prevFirstResponder = ResolveResponder (firstResponder);
-				}
+				var firstResponder = change [ChangeNewKey] as NSResponder;
+				if (firstResponder != null && !(firstResponder is NSWindow) && (!(firstResponder is NSView view) || view.Window == window))
+					this.prevFirstResponder = ResolveResponder (firstResponder);
 			} else {
 				base.ObserveValue (keyPath, ofObject, change, context);
 			}
