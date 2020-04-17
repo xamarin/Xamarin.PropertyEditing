@@ -1,6 +1,9 @@
 name: Localization-CI
 
-on: [push]
+on:
+  push:
+    branches: 
+      - loc
 
 jobs:
   build:
