@@ -3,7 +3,6 @@
 
 	<PropertyGroup>
 		<BuildDir>build\</BuildDir>
-		<LocalizationSln>$(BuildDir)Localization.targets</LocalizationSln>
 	</PropertyGroup>
 
 	<!-- Set up some basic properties to control the build configuration -->
@@ -74,11 +73,6 @@
 	</Target>
 
 	<Target Name="TestWindows" Condition=" '$(IsWindows)' ">
-	</Target>
-
-	<Target Name="UpdateLocalizations">
-		<MSBuild Projects="$(LocalizationSln)" Targets="Restore" Properties="RestoreOnly=true"/>
-		<MSBuild Projects="$(LocalizationSln)" />
 	</Target>
 
 </Project>
