@@ -184,7 +184,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void ComboBox_SelectionChanged (object sender, EventArgs e)
 		{
-			if (ViewModel != null && this.comboBox != null) {
+			if (ViewModel != null
+				&& this.comboBox != null
+				&& this.comboBox.SelectedValue != null) {
 				ViewModel.ValueName = this.comboBox.SelectedValue.ToString ();
 			}
 		}
