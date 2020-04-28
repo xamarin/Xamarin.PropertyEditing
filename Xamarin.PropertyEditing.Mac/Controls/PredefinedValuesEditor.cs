@@ -48,6 +48,7 @@ namespace Xamarin.PropertyEditing.Mac
 				foreach (var item in ViewModel.PossibleValues) {
 					this.comboBox.Add (new NSString (item));
 				}
+				this.comboBox.SelectionChanged += ComboBox_SelectionChanged;
 			}
 
 			base.OnViewModelChanged (oldModel);
@@ -140,12 +141,6 @@ namespace Xamarin.PropertyEditing.Mac
 			this.comboBox = null;
 		}
 
-		private void UnhookSelectionChangeAndClearItems ()
-		{
-			this.comboBox.SelectionChanged -= ComboBox_SelectionChanged;
-			this.comboBox.RemoveAll ();
-		}
-
 		private void RequireComboBox()
 		{
 			if (this.comboBox != null)
@@ -191,6 +186,14 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (ViewModel != null && this.comboBox != null) {
 				ViewModel.ValueName = this.comboBox.SelectedValue.ToString ();
+			}
+		}
+
+		private void UnhookSelectionChangeAndClearItems ()
+		{
+			if (this.comboBox != null) {
+				this.comboBox.SelectionChanged -= ComboBox_SelectionChanged;
+				this.comboBox.RemoveAll ();
 			}
 		}
 	}
