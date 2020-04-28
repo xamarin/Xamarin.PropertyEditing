@@ -44,7 +44,7 @@ namespace Xamarin.PropertyEditing.Mac
 			} else {
 				RequireComboBox ();
 
-				this.comboBox.RemoveAll ();
+				UnhookSelectionChangeAndClearItems ();
 				foreach (var item in ViewModel.PossibleValues) {
 					this.comboBox.Add (new NSString (item));
 				}
@@ -134,12 +134,16 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			if (this.comboBox == null)
 				return;
-
-			this.comboBox.SelectionChanged -= ComboBox_SelectionChanged;
-			this.comboBox.RemoveAll ();
+			UnhookSelectionChangeAndClearItems ();
 			this.comboBox.RemoveFromSuperview ();
 			this.comboBox.Dispose ();
 			this.comboBox = null;
+		}
+
+		private void UnhookSelectionChangeAndClearItems ()
+		{
+			this.comboBox.SelectionChanged -= ComboBox_SelectionChanged;
+			this.comboBox.RemoveAll ();
 		}
 
 		private void RequireComboBox()
