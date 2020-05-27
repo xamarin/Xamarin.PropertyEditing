@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Title = Properties.Resources.OK,
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
-			this.ok.Activated += OnOked;
+			this.ok.Activated += OnOkedOrCanceled;
 			ContentView.AddSubview (this.ok);
 
 			this.cancel = new FocusableButton {
@@ -49,7 +49,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Title = Properties.Resources.Cancel,
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
-			this.cancel.Activated += OnCanceled;
+			this.cancel.Activated += OnOkedOrCanceled;
 			ContentView.AddSubview (this.cancel);
 
 			ContentView.AddConstraints (new[] {
@@ -68,29 +68,13 @@ namespace Xamarin.PropertyEditing.Mac
 			});
 		}
 
-		public NSModalResponse ModalResponse
-		{
-			get;
-			private set;
-		} = NSModalResponse.Cancel;
-
 		private CollectionEditorControl collectionEditor;
 		private NSButton ok, cancel;
 
-		private void OnOked (object o, EventArgs e)
+		private void OnOkedOrCanceled (object button, EventArgs e)
 		{
-			ModalResponse = NSModalResponse.OK;
-			CloseWindow ();
-		}
-
-		private void OnCanceled (object o, EventArgs e)
-		{
-			ModalResponse = NSModalResponse.Cancel;
-			CloseWindow ();
-		}
-
-		private void CloseWindow ()
-		{
+			((ModalWindowCloseDelegate)Delegate).Response =
+				button == this.ok ? NSModalResponse.OK : NSModalResponse.Cancel;
 			this.collectionEditor.ViewModel = null;
 			Close ();
 		}
