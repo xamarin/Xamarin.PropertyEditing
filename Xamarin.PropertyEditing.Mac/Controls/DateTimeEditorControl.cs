@@ -16,7 +16,8 @@ namespace Xamarin.PropertyEditing.Mac
 				DatePickerElements = NSDatePickerElementFlags.HourMinuteSecond | NSDatePickerElementFlags.YearMonthDateDay,
 				DatePickerStyle = NSDatePickerStyle.TextFieldAndStepper,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
-				TranslatesAutoresizingMaskIntoConstraints = false
+				TranslatesAutoresizingMaskIntoConstraints = false,
+				TimeZone = Foundation.NSTimeZone.FromAbbreviation ("GMT")
 			};
 
 			// update the value on keypress

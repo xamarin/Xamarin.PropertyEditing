@@ -140,6 +140,7 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		public async Task SetInitialValuesAsync (IObjectEditor editor)
 		{
 			await editor.SetValueAsync (Properties["FilePath"], new ValueInfo<FilePath> { Value = new FilePath ("/Desktop/MyTestFile") });
+			await editor.SetValueAsync (Properties["DateTime"], new ValueInfo<DateTime> { Value = DateTime.Now });
 		}
 
 		public async Task SetBrushInitialValueAsync (IObjectEditor editor, CommonBrush brush)
