@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -363,6 +363,7 @@
   </data>
   <data name="ColorEditorTabLabel" xml:space="preserve">
     <value>Editor</value>
+    <comment></comment>
   </data>
   <data name="SearchResourcesTitle" xml:space="preserve">
     <value>Search Resources</value>
@@ -514,6 +515,7 @@
   </data>
   <data name="Ellipsis" xml:space="preserve">
     <value>…</value>
+    <comment></comment>
   </data>
   <data name="OtherTypeAction" xml:space="preserve">
     <value>&lt;Other type…&gt;</value>
@@ -552,8 +554,8 @@
     <comment>Option text within Create Resource dialog denoting that the new resource will be definied in this document</comment>
   </data>
   <data name="ResourceDictionary" xml:space="preserve">
-    <value>Resource Dictionary</value>
-    <comment>Label text for the name of the resource</comment>
+    <value>Resource dictionary</value>
+    <comment>Option text within Create Resource Window denoting that the new resource will be definied in a resource dictionary</comment>
   </data>
   <data name="ApplyToAll" xml:space="preserve">
     <value>Apply to all</value>
@@ -569,6 +571,10 @@
   </data>
   <data name="ResourceNameLabel" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="ResourceDictionary" xml:space="preserve">
+    <value>Resource Dictionary</value>
+    <comment>Label text for the name of the resource</comment>
   </data>
   <data name="CreateDataBindingMenuItem" xml:space="preserve">
     <value>Create New Binding…</value>
@@ -953,7 +959,7 @@
   </data>
   <data name="AccessibilityPropertyFilter" xml:space="preserve">
     <value>This search text field allows you to filter the contents of the property list. Start typing to begin filtering</value>
-    <comment>Text denoting this user filer the property list</comment>
+     <comment>Text denoting this user filer the property list</comment>
   </data>
   <data name="AccessibilityTypeSelectorCheckbox" xml:space="preserve">
     <value>This checkbox is to enable or disable showing all assemblies.</value>
