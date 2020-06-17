@@ -727,7 +727,7 @@
   <data name="AccessibilityDateTime" xml:space="preserve">
     <value>This DateTime editor is for the {0} property.</value>
     <comment>Editor for {Property.Name} that allows the user to enter a DateTime value</comment>
-  </data>
+  </data>  
   <data name="AccessibilityXEditor" xml:space="preserve">
     <value>This numeric editor is for the {0} property's X value.</value>
     <comment>Editor for {Property.Name} that allows the user to enter its X value</comment>
@@ -826,15 +826,15 @@
   <data name="AccessibilityPathEditor" xml:space="preserve">
     <value>This Path editor is for the {0} property. Press tab to navigate to the file/directory selection button. Press tab again to navigate to the Reveal button</value>
     <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
-  </data>
+  </data> 
   <data name="AccessibilityBrowseButton" xml:space="preserve">
     <value>This button is within the file/directory editor of the {0} property.</value>
     <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
-  </data>
+  </data> 
   <data name="AccessibilityRevealButton" xml:space="preserve">
     <value>This button is within the file/directory editor of the {0} property. It will Reveal the location of the file.</value>
     <comment>Editor for {Property.Name} that allows the user to select the File/Directory Path value</comment>
-  </data>
+  </data> 
   <data name="ChooseFileOrDirectory" xml:space="preserve">
     <value>Choose a {0}</value>
     <comment>Tooltip and Placeholder text to choose a File or Directory</comment>
@@ -851,7 +851,7 @@
     <value>File</value>
     <comment>Text denoting a File will be shown or selected</comment>
   </data>
-  <data name="Directory" xml:space="preserve">
+   <data name="Directory" xml:space="preserve">
     <value>Directory</value>
     <comment>Text denoting a Directory will be shown or selected</comment>
   </data>
@@ -1036,7 +1036,7 @@
   <data name="AccessibilityBindingAddValueConverterCancel" xml:space="preserve">
     <value>This button will cancel the changes you have made in the Add Value Converter Editor.</value>
     <comment>Text to inform the user that this button will cancel the changes you have made in the Add Value Converter Editor</comment>
-  </data>
+  </data>  
   <data name="ObjectTypeLabelNone" xml:space="preserve">
     <value>None</value>
   </data>
