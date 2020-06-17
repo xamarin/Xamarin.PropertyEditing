@@ -458,7 +458,7 @@ namespace Xamarin.PropertyEditing.ViewModels
 					return groupName;
 			}
 
-			return vm.Category ?? String.Empty;
+			return vm.Category ?? PropertyEditing.Properties.Resources.UnnamedCategory;
 		}
 
 		private bool MatchesFilter (EditorViewModel vm)
