@@ -255,9 +255,9 @@ namespace Xamarin.PropertyEditing.Tests
 		}
 
 		[Test]
-		public async Task PropertyListCategoryGroupedWithNullCategory ()
+		public async Task PropertyListCategoryGroupedWithUnnamedCategory ()
 		{
-			// Purposefully a null catgory
+			// Purposefully a null category, so we get an Unnamed Category
 			var normalProp = new Mock<IPropertyInfo> ();
 			normalProp.SetupGet (p => p.Type).Returns (typeof(string));
 			normalProp.SetupGet (p => p.Name).Returns ("name");
@@ -284,8 +284,7 @@ namespace Xamarin.PropertyEditing.Tests
 			vm.SelectedObjects.Add (target);
 
 			Assert.That (vm.ArrangedEditors.Count, Is.EqualTo (2));
-			Assert.That (vm.ArrangedEditors[0].Category, Is.EqualTo ("ints"), "Grouped group not found or out of order");
-			Assert.That (vm.ArrangedEditors[1].Category, Is.Empty);
+			Assert.That (vm.ArrangedEditors[0].Category, Is.EqualTo (Properties.Resources.UnnamedCategory), "Grouped group not found or out of order");
 		}
 
 		[Test]
