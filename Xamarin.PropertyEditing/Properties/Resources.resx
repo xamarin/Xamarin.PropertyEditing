@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!--
     Microsoft ResX Schema
@@ -1043,5 +1043,21 @@
   <data name="FilterTypePlaceholder" xml:space="preserve">
     <value>Filter Types</value>
     <comment>Placeholder for filter type control</comment>
+  </data>
+  <data name="AccessibilityCollectionEditor" xml:space="preserve">
+    <value>Collection Editor</value>
+    <comment>Collection Editor Window</comment>
+  </data>
+  <data name="AccessibilityCollectionEditorItemList" xml:space="preserve">
+    <value>Collection Editor Item List</value>
+    <comment>CollectionEditor Item ListBox</comment>
+  </data>
+  <data name="AccessibilityCollectionEditorItemProperties" xml:space="preserve">
+    <value>Collection Editor Item Properties</value>
+    <comment>Collection EditorI tem Properties</comment>
+  </data>
+  <data name="UnnamedCategory" xml:space="preserve">
+    <value>Unnamed</value>
+    <comment>Default for certain property are unnamed or blank</comment>
   </data>
 </root>

@@ -1480,5 +1480,29 @@ namespace Xamarin.PropertyEditing.Properties {
                 return ResourceManager.GetString("FilterTypePlaceholder", resourceCulture);
             }
         }
+        
+        public static string AccessibilityCollectionEditor {
+            get {
+                return ResourceManager.GetString("AccessibilityCollectionEditor", resourceCulture);
+            }
+        }
+        
+        public static string AccessibilityCollectionEditorItemList {
+            get {
+                return ResourceManager.GetString("AccessibilityCollectionEditorItemList", resourceCulture);
+            }
+        }
+        
+        public static string AccessibilityCollectionEditorItemProperties {
+            get {
+                return ResourceManager.GetString("AccessibilityCollectionEditorItemProperties", resourceCulture);
+            }
+        }
+        
+        public static string UnnamedCategory {
+            get {
+                return ResourceManager.GetString("UnnamedCategory", resourceCulture);
+            }
+        }
     }
 }
