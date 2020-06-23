@@ -25,8 +25,19 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			this.openCollection.Activated += (o, e) => {
-				CollectionEditorWindow.EditCollection (EffectiveAppearance, HostResources, ViewModel);
-				Window.MakeFirstResponder (this.openCollection);
+				NSWindow parentWindow = NSApplication.SharedApplication.KeyWindow;
+
+				var w = new CollectionEditorWindow (hostResources, ViewModel) {
+					Appearance = EffectiveAppearance
+				};
+
+				CocoaHelpers.RunModalForWindow (w, parentWindow, responseHandler: result => {
+					if (result != NSModalResponse.OK)
+						ViewModel.CancelCommand.Execute (null);
+					else
+						ViewModel.CommitCommand.Execute (null);
+					parentWindow.MakeFirstResponder (this.openCollection);
+				});
 			};
 
 			AddSubview (this.openCollection);
