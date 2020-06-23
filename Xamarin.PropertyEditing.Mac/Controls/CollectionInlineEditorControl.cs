@@ -36,7 +36,7 @@ namespace Xamarin.PropertyEditing.Mac
 						ViewModel.CancelCommand.Execute (null);
 					else
 						ViewModel.CommitCommand.Execute (null);
-					parentWindow.MakeFirstResponder (this.openCollection);
+					parentWindow?.MakeFirstResponder (this.openCollection);
 				});
 			};
 

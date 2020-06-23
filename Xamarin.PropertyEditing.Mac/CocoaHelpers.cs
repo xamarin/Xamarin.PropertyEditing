@@ -41,7 +41,7 @@ namespace Xamarin.PropertyEditing.Mac
 			var result = (NSModalResponse)(int)NSApplication.SharedApplication.RunModalForWindow (window);
 
 			//after run modal our FocusedWindow is null, we set the parent again
-			parentWindow.MakeKeyAndOrderFront (parentWindow);
+			parentWindow?.MakeKeyAndOrderFront (parentWindow);
 
 			System.Threading.Tasks.Task.Delay (defaultDelayTime).ContinueWith (t => {
 				responseHandler?.Invoke (result);
