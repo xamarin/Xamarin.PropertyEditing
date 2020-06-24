@@ -1044,4 +1044,20 @@
     <value>Types de filtre</value>
     <comment>Placeholder for filter type control</comment>
   </data>
+  <data name="AccessibilityCollectionEditor" xml:space="preserve">
+    <value>Éditeur de collections</value>
+    <comment>Collection Editor Window</comment>
+  </data>
+  <data name="AccessibilityCollectionEditorItemList" xml:space="preserve">
+    <value>Liste d'éléments de l'éditeur de collections</value>
+    <comment>CollectionEditor Item ListBox</comment>
+  </data>
+  <data name="AccessibilityCollectionEditorItemProperties" xml:space="preserve">
+    <value>Propriétés d'éléments de l'éditeur de collections</value>
+    <comment>Collection EditorI tem Properties</comment>
+  </data>
+  <data name="UnnamedCategory" xml:space="preserve">
+    <value>Sans nom</value>
+    <comment>Default for certain property are unnamed or blank</comment>
+  </data>
 </root>
