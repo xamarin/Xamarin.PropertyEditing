@@ -94,20 +94,5 @@ namespace Xamarin.PropertyEditing.Mac
 			this.collectionEditor.ViewModel = null;
 			Close ();
 		}
-
-		public static void EditCollection (NSAppearance appearance, IHostResourceProvider hostResources, CollectionPropertyViewModel collectionVm)
-		{
-			var w = new CollectionEditorWindow (hostResources, collectionVm) {
-				Appearance = appearance
-			};
-
-			var result = (NSModalResponse)(int)NSApplication.SharedApplication.RunModalForWindow (w);
-			if (result != NSModalResponse.OK) {
-				collectionVm.CancelCommand.Execute (null);
-				return;
-			}
-
-			collectionVm.CommitCommand.Execute (null);
-		}
 	}
 }
