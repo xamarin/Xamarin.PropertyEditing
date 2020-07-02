@@ -29,12 +29,13 @@ namespace Xamarin.PropertyEditing.Mac
 					Appearance = EffectiveAppearance
 				};
 
-				CocoaHelpers.RunModalForWindow (w, this.openCollection, responseHandler: result => {
-					if (result != NSModalResponse.OK)
-						ViewModel.CancelCommand.Execute (null);
-					else
-						ViewModel.CommitCommand.Execute (null);
-				});
+				var parentWindow = Window;
+
+				var result = CocoaHelpers.RunModalForWindow (w, parentWindow);
+				if (result != NSModalResponse.OK)
+					ViewModel.CancelCommand.Execute (null);
+				else
+					ViewModel.CommitCommand.Execute (null);
 			};
 
 			AddSubview (this.openCollection);
