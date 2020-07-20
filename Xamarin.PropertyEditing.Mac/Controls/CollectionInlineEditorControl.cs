@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using AppKit;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -7,6 +8,8 @@ namespace Xamarin.PropertyEditing.Mac
 	internal class CollectionInlineEditorControl
 		: PropertyEditorControl<CollectionPropertyViewModel>
 	{
+		const int DefaultDelayTime = 500;
+
 		public CollectionInlineEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
@@ -25,8 +28,27 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 
 			this.openCollection.Activated += (o, e) => {
-				CollectionEditorWindow.EditCollection (EffectiveAppearance, HostResources, ViewModel);
-				Window.MakeFirstResponder (this.openCollection);
+				var parentWindow = Window;
+				
+				var w = new CollectionEditorWindow (hostResources, ViewModel) {
+					Appearance = EffectiveAppearance
+				};
+
+				var result = (NSModalResponse)(int)NSApplication.SharedApplication.RunModalForWindow (w);
+
+				//after run modal our FocusedWindow is null, we set the parent again
+				parentWindow?.MakeKeyAndOrderFront (parentWindow);
+
+				if (result != NSModalResponse.OK)
+					ViewModel.CancelCommand.Execute (null);
+				else
+					ViewModel.CommitCommand.Execute (null);
+
+				//small hack to override vs4mac default focus
+				System.Threading.Tasks.Task.Delay (DefaultDelayTime)
+				.ContinueWith (t => {
+					parentWindow?.MakeFirstResponder (openCollection);
+				}, TaskScheduler.FromCurrentSynchronizationContext ());
 			};
 
 			AddSubview (this.openCollection);
