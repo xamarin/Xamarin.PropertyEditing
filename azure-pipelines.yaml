@@ -10,6 +10,11 @@ pr:
 resources:
   repositories:
   - repository: self
+  - repository: templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/master
+    endpoint: xamarin
 
 stages:
   - stage: Windows
@@ -112,3 +117,17 @@ stages:
               pr_number: $(pull_request_number)
               merge_method: 'merge'
             displayName: Merge PR# $(System.PullRequest.PullRequestNumber)
+
+  - stage: PoliCheck
+    dependsOn: ['Windows', 'Mac']
+    displayName: PoliCheck
+    jobs:
+    # Check - "PoliCheck "
+    - job: run_poli_check
+      displayName: 'Running PoliCheck'
+      pool: $(HostedWinVS2019)
+      timeoutInMinutes: 60
+      cancelTimeoutInMinutes: 5
+      steps:
+      - checkout: self
+      - template: security/policheck/v1.yml@templates
