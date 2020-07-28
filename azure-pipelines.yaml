@@ -21,6 +21,30 @@ resources:
     endpoint: xamarin
 
 stages:
+  - stage: code_analysis
+    displayName: Code Analysis
+    jobs:
+    # Check - "PoliCheck"
+    - job: run_polichack_compliance
+      displayName: 'Policheck Compliance'
+      pool: $(HostedWinVS2019)
+      timeoutInMinutes: 60
+      cancelTimeoutInMinutes: 5
+      steps:
+      - checkout: self
+      - template: security/policheck/v1.yml@templates
+    # Check - "Xamarin PropertyEditing (Code Analysis CredScan)"
+    - job: run_static_analysis
+      displayName: CredScan
+      pool: $(HostedWinVS2019)
+      timeoutInMinutes: 60
+      cancelTimeoutInMinutes: 5
+      steps:
+      - checkout: self
+      - template: security/xa-static-analysis/v2.yml@templates
+        parameters:
+          credScanSuppressionsFile: $(System.DefaultWorkingDirectory)/CredScanSuppressions.json
+
   - stage: Windows
     dependsOn: []
     jobs:
@@ -121,17 +145,3 @@ stages:
               pr_number: $(pull_request_number)
               merge_method: 'merge'
             displayName: Merge PR# $(System.PullRequest.PullRequestNumber)
-
-  - stage: PoliCheck
-    dependsOn: ['Windows', 'Mac']
-    displayName: PoliCheck
-    jobs:
-    # Check - "PoliCheck "
-    - job: run_poli_check
-      displayName: 'Running PoliCheck'
-      pool: $(HostedWinVS2019)
-      timeoutInMinutes: 60
-      cancelTimeoutInMinutes: 5
-      steps:
-      - checkout: self
-      - template: security/policheck/v1.yml@templates
