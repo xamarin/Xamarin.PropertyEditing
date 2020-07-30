@@ -25,7 +25,7 @@ stages:
     displayName: Code Analysis
     jobs:
     # Check - "PoliCheck"
-    - job: run_polichack_compliance
+    - job: run_policheck_compliance
       displayName: 'Policheck Compliance'
       pool: $(HostedWinVS2019)
       timeoutInMinutes: 60
