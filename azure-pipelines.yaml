@@ -1,5 +1,9 @@
 name: $(BuildID)
 
+variables:
+- name: HostedWinVS2019
+  value: Hosted Windows 2019 with VS2019
+
 trigger: 
   branches:
     include: [ master, d16-* ]
@@ -10,8 +14,37 @@ pr:
 resources:
   repositories:
   - repository: self
+  - repository: templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/master
+    endpoint: xamarin
 
 stages:
+  - stage: code_analysis
+    displayName: Code Analysis
+    jobs:
+    # Check - "PoliCheck"
+    - job: run_policheck_compliance
+      displayName: 'Policheck Compliance'
+      pool: $(HostedWinVS2019)
+      timeoutInMinutes: 60
+      cancelTimeoutInMinutes: 5
+      steps:
+      - checkout: self
+      - template: security/policheck/v1.yml@templates
+    # Check - "Xamarin PropertyEditing (Code Analysis CredScan)"
+    - job: run_static_analysis
+      displayName: CredScan
+      pool: $(HostedWinVS2019)
+      timeoutInMinutes: 60
+      cancelTimeoutInMinutes: 5
+      steps:
+      - checkout: self
+      - template: security/xa-static-analysis/v2.yml@templates
+        parameters:
+          credScanSuppressionsFile: $(System.DefaultWorkingDirectory)/CredScanSuppressions.json
+
   - stage: Windows
     dependsOn: []
     jobs:
