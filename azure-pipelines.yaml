@@ -46,9 +46,9 @@ stages:
       - checkout: self
       - template: security/policheck/v1.yml@templates
 
-    - task: securedevelopmentteam.vss-secure-development-tools.build-task-uploadtotsa.TSAUpload@1
-      displayName: 'TSA V2 upload to designer_master'
-      inputs:
+      - task: securedevelopmentteam.vss-secure-development-tools.build-task-uploadtotsa.TSAUpload@1
+        displayName: 'TSA V2 upload to designer_master'
+        inputs:
         tsaVersion: TsaV2
         codeBaseName: 'designer_master'
         uploadAPIScan: false
@@ -61,11 +61,11 @@ stages:
         uploadRoslyn: false
         uploadTSLint: false
         validateCompatibility: Warning
-      enabled: false
+        enabled: false
 
-    - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@1
-      displayName: 'Post Analysis'
-      inputs:
+      - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@1
+        displayName: 'Post Analysis'
+        inputs:
         AllTools: true
 
   - stage: Windows
