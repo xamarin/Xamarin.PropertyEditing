@@ -47,26 +47,26 @@ stages:
       - template: security/policheck/v1.yml@templates
 
       - task: securedevelopmentteam.vss-secure-development-tools.build-task-uploadtotsa.TSAUpload@1
-        displayName: 'TSA V2 upload to designer_master'
+        displayName: 'TSA V2 upload to Xamarin.PropertyEditing_master'
         inputs:
-        tsaVersion: TsaV2
-        codeBaseName: 'designer_master'
-        uploadAPIScan: false
-        uploadBinSkim: false
-        uploadCredScan: false
-        uploadFortifySCA: false
-        uploadFxCop: false
-        uploadModernCop: false
-        uploadPREfast: false
-        uploadRoslyn: false
-        uploadTSLint: false
-        validateCompatibility: Warning
+          tsaVersion: TsaV2
+          codeBaseName: 'Xamarin.PropertyEditing_master'
+          uploadAPIScan: false
+          uploadBinSkim: false
+          uploadCredScan: false
+          uploadFortifySCA: false
+          uploadFxCop: false
+          uploadModernCop: false
+          uploadPREfast: false
+          uploadRoslyn: false
+          uploadTSLint: false
+          validateCompatibility: Warning
         enabled: false
 
       - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@1
         displayName: 'Post Analysis'
         inputs:
-        AllTools: true
+          AllTools: true
 
   - stage: Windows
     dependsOn: []
