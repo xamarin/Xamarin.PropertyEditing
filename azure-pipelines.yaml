@@ -46,7 +46,7 @@ stages:
       - checkout: self
       - template: security/policheck/v1.yml@templates
         parameters:
-          UEPATH: $(System.DefaultWorkingDirectory)/UserExclusion.xml
+          exclusionFile: $(System.DefaultWorkingDirectory)/UserExclusion.xml
 
       - task: securedevelopmentteam.vss-secure-development-tools.build-task-uploadtotsa.TSAUpload@1
         displayName: 'TSA V2 upload to Xamarin.PropertyEditing_master'
