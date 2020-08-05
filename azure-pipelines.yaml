@@ -52,7 +52,7 @@ stages:
             TERM_TYPE: '0029a9'
           SpanishResourceOnly:
             EXCLUSION_FILE: 'UserExclusion.es.xml'
-            TERM_TYPE: '0029a9'
+            TERM_TYPE: '0099a1034'
         maxParallel: 2
       steps:
       - checkout: self
