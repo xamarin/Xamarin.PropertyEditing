@@ -47,12 +47,48 @@ stages:
           SourceCodeOnly:
             EXCLUSION_FILE: 'UserExclusion.xml'
             TERM_TYPE: '0029a9'
+          CzechResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.cs.xml'
+            TERM_TYPE: '0025a1029'
+          GermanResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.de.xml'
+            TERM_TYPE: '0036a1031'
           EnglishResourceOnly:
             EXCLUSION_FILE: 'UserExclusion.en.xml'
             TERM_TYPE: '0029a9'
           SpanishResourceOnly:
             EXCLUSION_FILE: 'UserExclusion.es.xml'
             TERM_TYPE: '0099a1034'
+          FrenchResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.fr.xml'
+            TERM_TYPE: '0033a1036'
+          ItalianResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.it.xml'
+            TERM_TYPE: '0051a1040'
+          JapaneseResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.ja.xml'
+            TERM_TYPE: '0052a1041'
+          KoreanResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.ko.xml'
+            TERM_TYPE: '0060a1042'
+          PolishResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.pl.xml'
+            TERM_TYPE: '0079a1045'
+          PortugeseBrazilianResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.pt-br.xml'
+            TERM_TYPE: '0080a1046'
+          RussianResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.ru.xml'
+            TERM_TYPE: '0087a1049'
+          TrResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.tr.xml'
+            TERM_TYPE: '0107a1055'
+          TrResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.zh-hans.xml'
+            TERM_TYPE: '0021a2052'
+          TrResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.zh-hant.xml'
+            TERM_TYPE: '0022a3076'
         maxParallel: 2
       steps:
       - checkout: self
