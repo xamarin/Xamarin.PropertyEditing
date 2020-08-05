@@ -46,12 +46,13 @@ stages:
         matrix:
           SourceCodeOnly:
             EXCLUSION_FILE: 'UserExclusion.xml'
+            TERM_TYPE: '0029a9'
           EnglishResourceOnly:
             EXCLUSION_FILE: 'UserExclusion.en.xml'
             TERM_TYPE: '0029a9'
           SpanishResourceOnly:
             EXCLUSION_FILE: 'UserExclusion.es.xml'
-            TERM_TYPE: ''
+            TERM_TYPE: '0029a9'
         maxParallel: 2
       steps:
       - checkout: self
