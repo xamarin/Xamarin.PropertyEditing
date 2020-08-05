@@ -17,7 +17,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/master
+    ref: refs/heads/dominique-TSACompliance
     endpoint: xamarin
 
 stages:
@@ -42,11 +42,23 @@ stages:
       pool: $(HostedWinVS2019)
       timeoutInMinutes: 60
       cancelTimeoutInMinutes: 5
+      strategy:
+        matrix:
+          SourceCodeOnly:
+            EXCLUSION_FILE: 'UserExclusion.xml'
+          EnglishResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.en.xml'
+            TERM_TYPE: '0029a9'
+          SpanishResourceOnly:
+            EXCLUSION_FILE: 'UserExclusion.es.xml'
+            TERM_TYPE: ''
+        maxParallel: 2
       steps:
       - checkout: self
       - template: security/policheck/v1.yml@templates
         parameters:
-          exclusionFile: $(System.DefaultWorkingDirectory)/UserExclusion.xml
+          exclusionFile: $(System.DefaultWorkingDirectory)/$(EXCLUSION_FILE)
+          termType: $(TERM_TYPE)
 
       - task: securedevelopmentteam.vss-secure-development-tools.build-task-uploadtotsa.TSAUpload@1
         displayName: 'TSA V2 upload to Xamarin.PropertyEditing_master'
