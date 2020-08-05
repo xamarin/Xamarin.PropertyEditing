@@ -17,7 +17,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/dominqiue-AddTermType
+    ref: refs/heads/master
     endpoint: xamarin
 
 stages:
@@ -83,10 +83,10 @@ stages:
           TrResourceOnly:
             EXCLUSION_FILE: 'UserExclusion.tr.xml'
             TERM_TYPE: '0107a1055'
-          TrResourceOnly:
+          ChineseSimplifiedResourceOnly:
             EXCLUSION_FILE: 'UserExclusion.zh-hans.xml'
             TERM_TYPE: '0021a2052'
-          TrResourceOnly:
+          ChineseTraditionalResourceOnly:
             EXCLUSION_FILE: 'UserExclusion.zh-hant.xml'
             TERM_TYPE: '0022a3076'
         maxParallel: 2
