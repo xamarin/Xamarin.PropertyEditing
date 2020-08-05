@@ -37,6 +37,7 @@ stages:
           credScanSuppressionsFile: $(System.DefaultWorkingDirectory)/CredScanSuppressions.json
 
     # Check - "Code Analysis Policheck Compliance"
+    # For a full list of termType and the correct code refer to https://github.com/xamarin/yaml-templates/blob/master/security/policheck/v1.yml
     - job: run_policheck_compliance
       displayName: 'Policheck Compliance Source'
       pool: $(HostedWinVS2019)
