@@ -66,7 +66,7 @@ stages:
             EXCLUSION_FILE: 'UserExclusion.it.xml'
             TERM_TYPE: '0051a1040'
           JapaneseResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.ja.xml'
+            EXCLUSION_FILE: 'UserExclusion.jp.xml'
             TERM_TYPE: '0052a1041'
           KoreanResourceOnly:
             EXCLUSION_FILE: 'UserExclusion.ko.xml'
