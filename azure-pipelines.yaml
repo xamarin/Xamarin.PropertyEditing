@@ -80,7 +80,7 @@ stages:
           RussianResourceOnly:
             EXCLUSION_FILE: 'UserExclusion.ru.xml'
             TERM_TYPE: '0087a1049'
-          TrResourceOnly:
+          TurkeyResourceOnly:
             EXCLUSION_FILE: 'UserExclusion.tr.xml'
             TERM_TYPE: '0107a1055'
           ChineseSimplifiedResourceOnly:
