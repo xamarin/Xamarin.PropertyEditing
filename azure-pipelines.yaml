@@ -120,7 +120,6 @@ stages:
             TERM_TYPE: '0022a3076'
             OPTIONS_PE: '4'
             OPTIONS_RULES_DB_PATH: 'Rule-zh-all.mdb'
-        maxParallel: 2
       steps:
       - checkout: self
       - template: security/policheck/v1.yml@templates
