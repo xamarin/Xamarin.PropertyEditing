@@ -111,12 +111,12 @@ stages:
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           ChineseSimplifiedResourceOnly:
-            EXCLUSION_FILE: ''
+            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\UserExclusion.zh-hans.xml'
             TERM_TYPE: '0021a2052'
             OPTIONS_PE: '4'
             OPTIONS_RULES_DB_PATH: 'Rule-zh-all.mdb'
           ChineseTraditionalResourceOnly:
-            EXCLUSION_FILE: ''
+            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\UserExclusion.zh-hant.xml'
             TERM_TYPE: '0022a3076'
             OPTIONS_PE: '4'
             OPTIONS_RULES_DB_PATH: 'Rule-zh-all.mdb'
