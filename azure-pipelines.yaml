@@ -17,7 +17,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/master
+    ref: refs/heads/dominique-AddOptionPE
     endpoint: xamarin
 
 stages:
@@ -46,67 +46,67 @@ stages:
       strategy:
         matrix:
           SourceCodeOnly:
-            EXCLUSION_FILE: 'UserExclusion.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.xml'
             TERM_TYPE: '0029a9'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           CzechResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.cs.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.cs.xml'
             TERM_TYPE: '0025a1029'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           GermanResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.de.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.de.xml'
             TERM_TYPE: '0036a1031'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           EnglishResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.en.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.en.xml'
             TERM_TYPE: '0029a9'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           SpanishResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.es.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.es.xml'
             TERM_TYPE: '0099a1034'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           FrenchResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.fr.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.fr.xml'
             TERM_TYPE: '0033a1036'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           ItalianResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.it.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.it.xml'
             TERM_TYPE: '0051a1040'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           JapaneseResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.ja.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.ja.xml'
             TERM_TYPE: '0052a1041'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           KoreanResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.ko.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.ko.xml'
             TERM_TYPE: '0060a1042'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           PolishResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.pl.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.pl.xml'
             TERM_TYPE: '0079a1045'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           PortugeseBrazilianResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.pt-br.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.pt-br.xml'
             TERM_TYPE: '0080a1046'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           RussianResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.ru.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.ru.xml'
             TERM_TYPE: '0087a1049'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
           TurkeyResourceOnly:
-            EXCLUSION_FILE: 'UserExclusion.tr.xml'
+            EXCLUSION_FILE: $(System.DefaultWorkingDirectory)/'UserExclusion.tr.xml'
             TERM_TYPE: '0107a1055'
             OPTIONS_PE: ''
             OPTIONS_RULES_DB_PATH: ''
@@ -125,9 +125,10 @@ stages:
       - checkout: self
       - template: security/policheck/v1.yml@templates
         parameters:
-          exclusionFile: $(System.DefaultWorkingDirectory)/$(EXCLUSION_FILE)
+          exclusionFile: $(EXCLUSION_FILE)
           termType: $(TERM_TYPE)
-          optionsPE:
+          pE: $(OPTIONS_PE)
+          rulesDBPath: $(OPTIONS_RULES_DB_PATH)
 
       - task: securedevelopmentteam.vss-secure-development-tools.build-task-uploadtotsa.TSAUpload@1
         displayName: 'TSA V2 upload to Xamarin.PropertyEditing_master'
