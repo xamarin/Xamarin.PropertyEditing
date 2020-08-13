@@ -17,7 +17,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/dominique-AddOptionPE
+    ref: refs/heads/master
     endpoint: xamarin
 
 stages:
