@@ -466,9 +466,12 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private void OnSuggestedTypesChanged (object sender, NotifyCollectionChangedEventArgs e)
 		{
+			if (this.typeSelector == null)
+				return;
+
 			this.typeSelector.RemoveAll ();
 
-			foreach (ITypeInfo type in ViewModel.SuggestedTypes) {
+			foreach (ITypeInfo type in ViewModel?.SuggestedTypes) {
 				this.typeSelector.Add (new NSString (type.Name));
 			}
 		}
