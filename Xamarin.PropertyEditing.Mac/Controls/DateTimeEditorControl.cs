@@ -8,6 +8,20 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		private readonly NSDatePicker datePicker;
 
+		private bool showTime = true;
+		public bool ShowTime {
+			get {
+				return this.showTime;
+			}
+			set {
+				if (this.showTime != value) {
+					this.showTime = value;
+					if (this.datePicker != null)
+						this.datePicker.DatePickerElements = this.showTime ? NSDatePickerElementFlags.HourMinuteSecond | NSDatePickerElementFlags.YearMonthDateDay : NSDatePickerElementFlags.YearMonthDateDay;
+				}
+			}
+		}
+
 		public DateTimeEditorControl (IHostResourceProvider hostResources)
 			: base (hostResources)
 		{
@@ -16,7 +30,8 @@ namespace Xamarin.PropertyEditing.Mac
 				DatePickerElements = NSDatePickerElementFlags.HourMinuteSecond | NSDatePickerElementFlags.YearMonthDateDay,
 				DatePickerStyle = NSDatePickerStyle.TextFieldAndStepper,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
-				TranslatesAutoresizingMaskIntoConstraints = false
+				TranslatesAutoresizingMaskIntoConstraints = false,
+				TimeZone = Foundation.NSTimeZone.FromAbbreviation ("UTC"),
 			};
 
 			// update the value on keypress
