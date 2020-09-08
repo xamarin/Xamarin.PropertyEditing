@@ -102,7 +102,11 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 			AddProperty<FilePath> ("FilePath", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
 			AddReadOnlyProperty<FilePath> ("ReadOnlyFilePath", ReadOnly);
 			AddProperty<DateTime> ("DateTime", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
-			AddReadOnlyProperty<DateTime> ("ReadDateTime", ReadOnly);
+			AddReadOnlyProperty<DateTime> ("ReadOnlyDateTime", ReadOnly);
+			AddProperty<Date> ("Date", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
+			AddReadOnlyProperty<Date> ("ReadOnlyDate", ReadOnly);
+			AddProperty<Time> ("Time", ReadWrite, valueSources: ValueSources.Local | ValueSources.Resource | ValueSources.Binding);
+			AddReadOnlyProperty<Time> ("ReadOnlyTime", ReadOnly);
 
 			AddEvents ("Click", "Hover", "Focus");
 
@@ -140,6 +144,9 @@ namespace Xamarin.PropertyEditing.Tests.MockControls
 		public async Task SetInitialValuesAsync (IObjectEditor editor)
 		{
 			await editor.SetValueAsync (Properties["FilePath"], new ValueInfo<FilePath> { Value = new FilePath ("/Desktop/MyTestFile") });
+			await editor.SetValueAsync (Properties["DateTime"], new ValueInfo<DateTime> { Value = DateTime.Now });
+			await editor.SetValueAsync (Properties["Date"], new ValueInfo<Date> { Value = new Date (DateTime.Now) });
+			await editor.SetValueAsync (Properties["Time"], new ValueInfo<Time> { Value = new Time (DateTime.Now) });
 		}
 
 		public async Task SetBrushInitialValueAsync (IObjectEditor editor, CommonBrush brush)
