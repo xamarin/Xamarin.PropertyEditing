@@ -6,11 +6,11 @@ variables:
 
 trigger: 
   branches:
-    include: [ master, d16-* ]
+    include: [ main, d16-* ]
 pr:
   autoCancel: true 
   branches:
-    include: [ master, d16-* ]
+    include: [ main, d16-* ]
 
 resources:
   repositories:
@@ -18,7 +18,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/master
+    ref: refs/heads/main
     endpoint: xamarin
 
 stages:
