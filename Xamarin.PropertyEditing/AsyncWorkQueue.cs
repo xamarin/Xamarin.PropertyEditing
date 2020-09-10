@@ -16,15 +16,15 @@ namespace Xamarin.PropertyEditing
 			var worker = new AsyncValueWorker (requester, this);
 			this.workers.AddLast (worker.Node);
 
-			if (this.workers.Count == 1 || ReferenceEquals (requester, this.activeRequester)) {
+			if (this.workers.Count == 1 || (this.activeRequester.TryGetTarget (out var target) && ReferenceEquals (requester, target))) {
 				worker.Completion.SetResult (worker);
-				this.activeRequester = requester;
+				this.activeRequester.SetTarget (requester);
 			}
 
 			return worker.Completion.Task;
 		}
 
-		private object activeRequester;
+		private WeakReference<object> activeRequester;
 		private readonly LinkedList<AsyncValueWorker> workers = new LinkedList<AsyncValueWorker>();
 
 		private void CompleteWork (AsyncValueWorker worker)
@@ -63,7 +63,7 @@ namespace Xamarin.PropertyEditing
 			this.workers.Remove (worker);
 
 			if (toFree != null) {
-				this.activeRequester = toFree.Requester;
+				this.activeRequester.SetTarget (toFree.Requester);
 				toFree.Completion.SetResult (toFree);
 
 				if (related != null) {
