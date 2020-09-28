@@ -16,9 +16,9 @@ namespace Xamarin.PropertyEditing
 			var worker = new AsyncValueWorker (requester, this);
 			this.workers.AddLast (worker.Node);
 
-			if (this.workers.Count == 1 || (this.activeRequester.TryGetTarget (out var target) && ReferenceEquals (requester, target))) {
+			if (this.workers.Count == 1 || (this.activeRequester?.TryGetTarget (out var target) ?? false && ReferenceEquals (requester, target))) {
 				worker.Completion.SetResult (worker);
-				this.activeRequester.SetTarget (requester);
+				this.activeRequester?.SetTarget (requester);
 			}
 
 			return worker.Completion.Task;
