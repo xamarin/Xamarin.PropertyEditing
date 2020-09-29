@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Xamarin.PropertyEditing.Common;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -113,7 +114,11 @@ namespace Xamarin.PropertyEditing.Windows
 			{ typeof(TypePropertyViewModel), typeof(TypeEditorControl) },
 			{ typeof(CollectionPropertyViewModel), typeof(CollectionEditor) },
 			{ typeof(RatioViewModel), typeof(RatioEditorControl) },
-			{ typeof(AutoResizingPropertyViewModel), typeof(AutoResizingMaskEditorControl) }
+			{ typeof(AutoResizingPropertyViewModel), typeof(AutoResizingMaskEditorControl) },
+			{ typeof(PropertyViewModel<char>), typeof(StringEditorControl) },
+			{ typeof(PropertyViewModel<FilePath>), typeof(StringEditorControl) },
+			{ typeof(PropertyViewModel<Date>), typeof(StringEditorControl) },
+			{ typeof(PropertyViewModel<Time>), typeof(StringEditorControl) },
 		};
 	}
 }
