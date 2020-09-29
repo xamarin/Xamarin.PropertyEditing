@@ -89,6 +89,8 @@
     <Compile Include="CreateVariantWindow.xaml.cs">
       <DependentUpon>CreateVariantWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DateEditorControl.cs" />
+    <Compile Include="DateToTextConverter.cs" />
     <Compile Include="DoubleToAngleConverter.cs" />
     <Compile Include="CreateValueConverterWindow.xaml.cs">
       <DependentUpon>CreateValueConverterWindow.xaml</DependentUpon>
@@ -115,6 +117,8 @@
     </Compile>
     <Compile Include="Spinner.cs" />
     <Compile Include="TextBoxEx.cs" />
+    <Compile Include="TimeEditorControl.cs" />
+    <Compile Include="TimeToTextConverter.cs" />
     <Compile Include="ToggleButtonEx.cs" />
     <Compile Include="EditorPropertySelector.cs" />
     <Compile Include="EnumEditorControl.cs" />

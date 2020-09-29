@@ -49,6 +49,8 @@
 	<local:NegativeThicknessConverter x:Key="NegativeThicknessConverter" />
 	<local:GroupedEditorPropertySelector x:Key="GroupedEditorSelector" />
 	<local:MultiplierConverter x:Key="MultiplierConverter" />
+	<local:DateToTextConverter x:Key="DateToTextConverter" />
+	<local:TimeToTextConverter x:Key="TimeToTextConverter" />
 
 	<Style TargetType="local:CombinablePredefinedValuesEditor">
 		<Setter Property="Template">
@@ -295,6 +297,38 @@
 								</Style>
 							</local:ComboBoxEx.ItemContainerStyle>
 						</local:ComboBoxEx>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:DateEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:DateEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<local:TextBoxEx x:Name="TextBox" Grid.Column="0" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Text="{Binding Value,UpdateSourceTrigger=Explicit,Converter={StaticResource DateToTextConverter}}" VerticalContentAlignment="Center" IsEnabled="{Binding IsInputEnabled}" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="local:TimeEditorControl">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:TimeEditorControl">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<local:TextBoxEx x:Name="TextBox" Grid.Column="0" FocusSelectsAll="True" AutomationProperties.Name="{Binding Property.Name,Mode=OneTime}" Text="{Binding Value,UpdateSourceTrigger=Explicit,Converter={StaticResource TimeToTextConverter}}" VerticalContentAlignment="Center" IsEnabled="{Binding IsInputEnabled}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

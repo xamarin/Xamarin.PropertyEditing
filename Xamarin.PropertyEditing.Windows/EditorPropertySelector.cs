@@ -117,8 +117,8 @@ namespace Xamarin.PropertyEditing.Windows
 			{ typeof(AutoResizingPropertyViewModel), typeof(AutoResizingMaskEditorControl) },
 			{ typeof(PropertyViewModel<char>), typeof(StringEditorControl) },
 			{ typeof(PropertyViewModel<FilePath>), typeof(StringEditorControl) },
-			{ typeof(PropertyViewModel<Date>), typeof(StringEditorControl) },
-			{ typeof(PropertyViewModel<Time>), typeof(StringEditorControl) },
+			{ typeof(PropertyViewModel<Date>), typeof(DateEditorControl) },
+			{ typeof(PropertyViewModel<Time>), typeof(TimeEditorControl) },
 		};
 	}
 }

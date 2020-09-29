@@ -42,5 +42,19 @@ namespace Xamarin.PropertyEditing.Common
 			}
 			return hashCode;
 		}
+
+		public override string ToString ()
+		{
+			return this.dateTime.ToShortDateString ();
+		}
+
+		public static Date Parse (string value)
+		{
+			try {
+				return new Date (DateTime.Parse (value));
+			} catch (Exception) {
+				return null;
+			}
+		}
 	}
 }
