@@ -15,8 +15,17 @@ namespace Xamarin.PropertyEditing.Windows
 				: timeValue.ToString ();
 
 		public object ConvertBack (object value, Type targetType, object parameter, CultureInfo culture)
-			=> !(value is string timeValue) ? DependencyProperty.UnsetValue
-				: Time.Parse (timeValue);
+		{
+			if (value is string dateValue) {
+				var parsedValue = Time.Parse (dateValue);
+				if (parsedValue != null)
+					return parsedValue;
+				else
+					return value;
+			} else {
+				return DependencyProperty.UnsetValue;
+  			}
+		}
 
 		public override object ProvideValue (IServiceProvider serviceProvider) => this;
 	}
