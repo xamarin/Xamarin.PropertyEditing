@@ -159,6 +159,7 @@
 	<Style TargetType="local:PropertyEditorPanel">
 		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
 		<Setter Property="Foreground" Value="{DynamicResource PanelForegroundBrush}" />
+		<Setter Property="Focusable" Value="False" />
 		<Setter Property="UseLayoutRounding" Value="True" />
 		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="Template">
