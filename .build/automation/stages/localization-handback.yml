@@ -48,8 +48,7 @@ stages:
               Invoke-Git checkout -B ${branchName}
               Write-Host ("##vso[task.setvariable variable=HANDBACK_BRANCH_NAME;]$branchName")
               #-- Stage Build Changes
-              Invoke-Git add Designer
-              Invoke-Git add HotReload
+              Invoke-Git add Xamarin.PropertyEditing
               #-- Only commit/push if there are changed files.
               $changedFiles = $(git status --porcelain | Measure-Object | Select-Object -expand Count)
               if ($changedFiles -gt 0)
@@ -72,7 +71,7 @@ stages:
               $headers = @{ Authorization = "token $(GitHub.Token)" }
 
               # let it throw
-              $response = Invoke-WebRequest -UseBasicParsing -Method POST -Headers $headers -Uri "https://api.github.com/repos/Xamarin/UITools/pulls" -Body ($payload | ConvertTo-json)
+              $response = Invoke-WebRequest -UseBasicParsing -Method POST -Headers $headers -Uri "https://api.github.com/repos/Xamarin/Xamarin.PropertyEditing/pulls" -Body ($payload | ConvertTo-json)
               $newPr =  $response.Content | ConvertFrom-Json
 
               Write-Host "Response is $newPr"      
