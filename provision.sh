@@ -1,3 +1,5 @@
+#!/bin/bash
+
 DEFAULT_CSX=
 
 if ! echo "$@" | grep -q 'csx'
