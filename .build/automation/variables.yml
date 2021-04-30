@@ -1,4 +1,5 @@
 variables:
+- group: xamops-azdev-secrets
 
 - name: DefaultBuildConfiguration
   value: Release
