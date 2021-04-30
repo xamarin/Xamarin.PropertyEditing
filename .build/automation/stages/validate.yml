@@ -1,0 +1,72 @@
+stages:
+  - stage: validate
+    displayName: 'Validation'
+    dependsOn: []
+    jobs:
+      - job: 'Windows'
+        pool:
+          vmImage: 'windows-latest'
+
+        steps:
+          - checkout: self
+            clean: true
+            persistCredentials: true
+
+          - task: MSBuild@1
+            displayName: Build
+            inputs:
+              solution: build.proj
+              msbuildVersion: "15.0"
+              msbuildArguments: '/restore /p:Release=true /t:Build'
+
+          - task: MSBuild@1
+            displayName: 'Run Tests'
+            inputs:
+              solution: build.proj
+              msbuildVersion: "15.0"
+              msbuildArguments: '/p:Release=true /t:Test'
+
+          - task: PublishTestResults@2
+            displayName: 'Publish Test Results'
+            inputs:
+              testResultsFormat: NUnit
+              testResultsFiles: '**/TestResult.xml'
+            condition: succeededOrFailed()
+
+      - job: 'MacOS'
+        pool:
+          vmImage: 'macOS-latest'
+
+        steps:
+          - checkout: self
+            clean: true
+            persistCredentials: true
+
+          - task: NuGetAuthenticate@0
+
+          - task: CmdLine@1
+            displayName: 'Set Token'
+            inputs:
+              filename: echo
+              arguments: '##vso[task.setvariable variable=GITHUB_TOKEN]$(GitHub.Token)'
+
+          - task: MSBuild@1
+            displayName: Build
+            inputs:
+              solution: build.proj
+              msbuildVersion: "15.0"
+              msbuildArguments: '/restore /p:Release=true /t:Build'
+
+          - task: MSBuild@1
+            displayName: 'Run Tests'
+            inputs:
+              solution: build.proj
+              msbuildVersion: "15.0"
+              msbuildArguments: '/p:Release=true /t:Test'
+
+          - task: PublishTestResults@2
+            displayName: 'Publish Test Results'
+            inputs:
+              testResultsFormat: NUnit
+              testResultsFiles: '**/TestResult.xml'
+            condition: succeededOrFailed()

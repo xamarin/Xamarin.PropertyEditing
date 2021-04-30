@@ -1,0 +1,17 @@
+{
+    "Projects": [
+      {
+        "LanguageSet": "VS_Main_Languages",
+        "LocItems": [
+            {
+                "SourceFile": "Xamarin.PropertyEditing\\Resources\\Resources.resx",
+                "LclFile": "loc\\{Lang}\\Xamarin.PropertyEditing\\Resources\\Resources.resx.lcl",
+                "CopyOption": "LangIDOnName",
+                "OutputPath": "\\Xamarin.PropertyEditing\\Resources\\Resources"
+            }
+        ],
+        "LssFiles": [],
+        "CloneLanguageSet": ""
+      }
+    ]
+}

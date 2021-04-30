@@ -1,254 +1,30 @@
 name: $(BuildID)
 
-variables:
-- name: HostedWinVS2019
-  value: Hosted Windows 2019 with VS2019
-
 trigger: 
   branches:
-    include: [ main, d16-* ]
+    include: [ main, d16-*, d17-* ]
 pr:
-  autoCancel: true 
+  autoCancel: 'true'
   branches:
-    include: [ main, d16-* ]
+    include: [ main, d16-*, d17-* ]
 
 resources:
   repositories:
   - repository: self
-  - repository: templates
+  - repository: templates   # for shared yaml templates
     type: github
     name: xamarin/yaml-templates
     ref: refs/heads/main
     endpoint: xamarin
 
+# Variables
+variables:
+- template: .build/automation/variables.yml
+
 stages:
-  - stage: code_analysis
-    displayName: Code Analysis
-    jobs:
-    # Check - "Code Analysis CredScan"
-    - job: run_static_analysis
-      displayName: CredScan
-      pool: $(HostedWinVS2019)
-      timeoutInMinutes: 60
-      cancelTimeoutInMinutes: 5
-      steps:
-      - checkout: self
-      - template: security/xa-static-analysis/v2.yml@templates
-        parameters:
-          credScanSuppressionsFile: $(System.DefaultWorkingDirectory)/CredScanSuppressions.json
-
-    # Check - "Code Analysis Policheck Compliance"
-    # For a full list of termType and the correct code refer to https://github.com/xamarin/yaml-templates/blob/master/security/policheck/v1.yml
-    - job: run_policheck_compliance
-      displayName: 'Policheck Compliance Source'
-      pool: $(HostedWinVS2019)
-      timeoutInMinutes: 60
-      cancelTimeoutInMinutes: 5
-      strategy:
-        matrix:
-          SourceCodeOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.xml'
-            TERM_TYPE: '0029a9'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          CzechResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.cs.xml'
-            TERM_TYPE: '0025a1029'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          GermanResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.de.xml'
-            TERM_TYPE: '0036a1031'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          EnglishResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.en.xml'
-            TERM_TYPE: '0029a9'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          SpanishResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.es.xml'
-            TERM_TYPE: '0099a1034'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          FrenchResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.fr.xml'
-            TERM_TYPE: '0033a1036'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          ItalianResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.it.xml'
-            TERM_TYPE: '0051a1040'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          JapaneseResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.ja.xml'
-            TERM_TYPE: '0052a1041'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          KoreanResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.ko.xml'
-            TERM_TYPE: '0060a1042'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          PolishResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.pl.xml'
-            TERM_TYPE: '0079a1045'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          PortugeseBrazilianResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.pt-br.xml'
-            TERM_TYPE: '0080a1046'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          RussianResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.ru.xml'
-            TERM_TYPE: '0087a1049'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          TurkeyResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.tr.xml'
-            TERM_TYPE: '0107a1055'
-            OPTIONS_PE: ''
-            OPTIONS_RULES_DB_PATH: ''
-          ChineseSimplifiedResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.zh-hans.xml'
-            TERM_TYPE: '0021a2052'
-            OPTIONS_PE: '1|2|3|4'
-            OPTIONS_RULES_DB_PATH: '$(System.DefaultWorkingDirectory)\build\Rule-zh-all.mdb'
-          ChineseTraditionalResourceOnly:
-            EXCLUSION_FILE: '$(System.DefaultWorkingDirectory)\build\UserExclusion.zh-hant.xml'
-            TERM_TYPE: '0022a3076'
-            OPTIONS_PE: '1|2|3|4'
-            OPTIONS_RULES_DB_PATH: '$(System.DefaultWorkingDirectory)\build\Rule-zh-all.mdb'
-      steps:
-      - checkout: self
-      - template: security/policheck/v1.yml@templates
-        parameters:
-          exclusionFile: $(EXCLUSION_FILE)
-          termType: $(TERM_TYPE)
-          pE: $(OPTIONS_PE)
-          rulesDBPath: $(OPTIONS_RULES_DB_PATH)
-
-      - task: securedevelopmentteam.vss-secure-development-tools.build-task-uploadtotsa.TSAUpload@1
-        displayName: 'TSA V2 upload to Xamarin.PropertyEditing_master'
-        inputs:
-          tsaVersion: TsaV2
-          codeBaseName: 'Xamarin.PropertyEditing_master'
-          uploadAPIScan: false
-          uploadBinSkim: false
-          uploadCredScan: false
-          uploadFortifySCA: false
-          uploadFxCop: false
-          uploadModernCop: false
-          uploadPREfast: false
-          uploadRoslyn: false
-          uploadTSLint: false
-          validateCompatibility: Warning
-        enabled: false
-
-      - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@1
-        displayName: 'Post Analysis'
-        inputs:
-          AllTools: true
-
-  - stage: Windows
-    dependsOn: []
-    jobs:
-      - job: 'Build'
-        pool:
-          vmImage: 'windows-latest'
-
-        steps:
-          - checkout: self
-            clean: true
-            persistCredentials: true
-
-          - task: MSBuild@1
-            displayName: Build
-            inputs:
-              solution: build.proj
-              msbuildVersion: "15.0"
-              msbuildArguments: '/restore /p:Release=true /t:Build'
-
-          - task: MSBuild@1
-            displayName: 'Run Tests'
-            inputs:
-              solution: build.proj
-              msbuildVersion: "15.0"
-              msbuildArguments: '/p:Release=true /t:Test'
-
-          - task: PublishTestResults@2
-            displayName: 'Publish Test Results'
-            inputs:
-              testResultsFormat: NUnit
-              testResultsFiles: '**/TestResult.xml'
-            condition: succeededOrFailed()
-
-  - stage: Mac
-    dependsOn: []
-    jobs:
-      - job: 'Build'
-        pool:
-          vmImage: 'macOS-latest'
-
-        steps:
-          - checkout: self
-            clean: true
-            persistCredentials: true
-
-          - task: NuGetAuthenticate@0
-
-          - task: CmdLine@1
-            displayName: 'Set Token'
-            inputs:
-              filename: echo
-              arguments: '##vso[task.setvariable variable=GITHUB_TOKEN]$(GitHub.Token)'
-          - task: MSBuild@1
-            displayName: Build
-            inputs:
-              solution: build.proj
-              msbuildVersion: "15.0"
-              msbuildArguments: '/restore /p:Release=true /t:Build'
-
-          - task: MSBuild@1
-            displayName: 'Run Tests'
-            inputs:
-              solution: build.proj
-              msbuildVersion: "15.0"
-              msbuildArguments: '/p:Release=true /t:Test'
-
-          - task: PublishTestResults@2
-            displayName: 'Publish Test Results'
-            inputs:
-              testResultsFormat: NUnit
-              testResultsFiles: '**/TestResult.xml'
-            condition: succeededOrFailed()
-
-  - stage: UpdateTranslations
-    dependsOn: ['Windows', 'Mac']
-    condition: and( succeeded(), and( eq(variables['Build.Reason'], 'PullRequest'), eq( variables['System.PullRequest.SourceBranch'], 'loc') ) )
-    jobs:        
-      - job : 'ValidateAndMerge'
-        variables:
-          pull_request_number: $(System.PullRequest.PullRequestNumber)
-        steps:
-          - powershell: |
-              Write-Host "Validating translations for PR# $(System.PullRequest.PullRequestNumber)"
-              $matches = Get-ChildItem -recurse -Path $(Build.SourcesDirectory) -Filter *.resx | Select-String  -Pattern '\[.*\]\s\(https:.*\)' -AllMatches
-              $matchCount = ($matches | Measure-Object -Line).Lines
-              Write-Host "Found $matchCount violations."
-              $matches | Write-Host
-              if( ($matches | Measure-Object -Line).Lines -eq 0 ) {
-                Write-Host "Quality Gate Succeeded."
-              } else {
-                throw "Quality Gate Failure : Check the logs for details."
-              }
-            displayName: 'Validate Markdown Urls'
-          - task: github-merge-pr@1
-            inputs:
-              github_token: $(GitHub.Token)
-              repository: 'xamarin/Xamarin.PropertyEditing'
-              pr_number: $(pull_request_number)
-              merge_method: 'merge'
-            displayName: Merge PR# $(System.PullRequest.PullRequestNumber)
+  - template: .build/automation/stages/validate.yml
+  - template: .build/automation/stages/security_compliance.yml
+# The following Stages are dependent on the OneLocBuild task which is not available in the Xamarin Public AzDevops instance
+#  - template: .build/automation/stages/localization-handoff.yml                     # Process outgoing strings [Localization Handoff]
+#  - template: .build/automation/stages/localization-handback.yml                    # Process incoming translations and Create PR to main [Localization Handback]
+#  - template: .build/automation/stages/merge-translations-update.yml                # Validating incoming translations strings and merge PR [Localization Handback]
