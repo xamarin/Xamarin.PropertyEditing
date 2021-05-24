@@ -10,7 +10,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="Xamarin.Mac">
-      <HintPath>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/full/Xamarin.Mac.dll</HintPath>
+      <HintPath Condition="Exists('/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/x86_64/full/Xamarin.Mac.dll')">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/x86_64/full/Xamarin.Mac.dll</HintPath>
+      <HintPath Condition="Exists('/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/full/Xamarin.Mac.dll')">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/full/Xamarin.Mac.dll</HintPath>
     </Reference>
   </ItemGroup>
 
