@@ -2237,8 +2237,14 @@
 						<Trigger Property="Text" Value="{x:Null}">
 							<Setter TargetName="hintContent" Property="Visibility" Value="Visible" />
 						</Trigger>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="BorderBrush" Value="{DynamicResource InputMouseOverBorderBrush}" />
+							<Setter Property="Foreground" Value="{DynamicResource InputMouseOverBrush}" />
+						</Trigger>
 						<Trigger Property="IsFocused" Value="True">
 							<Setter TargetName="hintContent" Property="Visibility" Value="Collapsed" />
+							<Setter Property="BorderBrush" Value="{DynamicResource InputMouseOverBorderBrush}" />
+							<Setter Property="Foreground" Value="{DynamicResource InputMouseOverBrush}" />
 						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
