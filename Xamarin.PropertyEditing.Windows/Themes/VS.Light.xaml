@@ -79,6 +79,8 @@
 	<SolidColorBrush x:Key="InputBackgroundBrush">#FFFFFFFF</SolidColorBrush>
 	<SolidColorBrush x:Key="InputBorderBrush">#FFCCCEDB</SolidColorBrush>
 	<SolidColorBrush x:Key="InputForegroundBrush">#FF1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="InputMouseOverBrush">#FF1E1E1E</SolidColorBrush>
+	<SolidColorBrush x:Key="InputMouseOverBorderBrush">#FF007ACC</SolidColorBrush>
 
 	<SolidColorBrush x:Key="PopupBackgroundBrush">#FFF6F6F6</SolidColorBrush>
 	<SolidColorBrush x:Key="PopupForegroundBrush">#FF1E1E1E</SolidColorBrush>
