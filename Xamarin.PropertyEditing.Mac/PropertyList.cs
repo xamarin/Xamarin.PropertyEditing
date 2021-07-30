@@ -119,6 +119,8 @@ namespace Xamarin.PropertyEditing.Mac
 				return true;
 			}
 
+			public override CGRect FrameOfOutlineCellAtRow (nint row) => CGRect.Empty;
+
 			public override bool BecomeFirstResponder ()
 			{
 				var willBecomeFirstResponder = base.BecomeFirstResponder ();
