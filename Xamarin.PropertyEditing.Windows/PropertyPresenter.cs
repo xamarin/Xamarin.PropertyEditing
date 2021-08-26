@@ -168,7 +168,6 @@ namespace Xamarin.PropertyEditing.Windows
 		private void OnUnloaded (object sender, RoutedEventArgs e)
 		{
 			IsSubProperty = false;
-			DataContext = null;
 		}
 
 		private void OnDataContextChanged (object sender, DependencyPropertyChangedEventArgs e)
