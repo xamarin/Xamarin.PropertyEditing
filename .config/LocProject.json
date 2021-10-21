@@ -7,7 +7,7 @@
                 "SourceFile": "Xamarin.PropertyEditing\\Properties\\Resources.resx",
                 "LclFile": "loc\\{Lang}\\Xamarin.PropertyEditing\\Properties\\Resources.resx.lcl",
                 "CopyOption": "LangIDOnName",
-                "OutputPath": "\\Xamarin.PropertyEditing\\Properties"
+                "OutputPath": "Xamarin.PropertyEditing\\Properties"
             }
         ],
         "LssFiles": [],
