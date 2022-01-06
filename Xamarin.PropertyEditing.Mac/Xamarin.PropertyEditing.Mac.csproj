@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <XamarinMacAnalyzerMinimumOSVersion>10.12</XamarinMacAnalyzerMinimumOSVersion>
   </PropertyGroup>
 
