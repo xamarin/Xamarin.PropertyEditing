@@ -5,11 +5,13 @@
     <OutputType>Exe</OutputType>
     <SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.PropertyEditing.Mac\Xamarin.PropertyEditing.Mac.csproj" />
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj" />
     <ProjectReference Include="..\Xamarin.PropertyEditing.Tests\Xamarin.PropertyEditing.Tests.csproj" />
   </ItemGroup>
+
   <Target Name="AfterBuild">
     <ItemGroup>
       <PropertyEditingResourceBundlePath Include="$(OutputPath)\PropertyEditingResource.bundle\**\*" />
