@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <XamarinMacAnalyzerMinimumOSVersion>10.12</XamarinMacAnalyzerMinimumOSVersion>
+    <TargetFramework>net6.0-macos</TargetFramework>
+    <SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="Xamarin.Mac">
-      <HintPath Condition="Exists('/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/x86_64/full/Xamarin.Mac.dll')">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/x86_64/full/Xamarin.Mac.dll</HintPath>
-      <HintPath Condition="Exists('/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/full/Xamarin.Mac.dll')">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/full/Xamarin.Mac.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.PropertyEditing\Xamarin.PropertyEditing.csproj" />
