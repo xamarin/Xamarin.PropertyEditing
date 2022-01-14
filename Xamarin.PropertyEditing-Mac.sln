@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.PropertyEditing", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.PropertyEditing.Mac", "Xamarin.PropertyEditing.Mac\Xamarin.PropertyEditing.Mac.csproj", "{E8F4F0EB-C2B1-4116-8459-E076E0E0E485}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.PropertyEditing.Tests", "Xamarin.PropertyEditing.Tests\Xamarin.PropertyEditing.Tests.csproj", "{BA78BFE9-B51A-476D-B949-BD764CB55807}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.PropertyEditing.Mac.Standalone", "Xamarin.PropertyEditing.Mac.Standalone\Xamarin.PropertyEditing.Mac.Standalone.csproj", "{A8ADFD5D-26CE-446B-AACA-99F6CA26FE45}"
 EndProject
 Global
@@ -33,14 +31,6 @@ Global
 		{E8F4F0EB-C2B1-4116-8459-E076E0E0E485}.DebugMac|Any CPU.Build.0 = Debug|Any CPU
 		{E8F4F0EB-C2B1-4116-8459-E076E0E0E485}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
 		{E8F4F0EB-C2B1-4116-8459-E076E0E0E485}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
-		{BA78BFE9-B51A-476D-B949-BD764CB55807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BA78BFE9-B51A-476D-B949-BD764CB55807}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BA78BFE9-B51A-476D-B949-BD764CB55807}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BA78BFE9-B51A-476D-B949-BD764CB55807}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BA78BFE9-B51A-476D-B949-BD764CB55807}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
-		{BA78BFE9-B51A-476D-B949-BD764CB55807}.DebugMac|Any CPU.Build.0 = Debug|Any CPU
-		{BA78BFE9-B51A-476D-B949-BD764CB55807}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
-		{BA78BFE9-B51A-476D-B949-BD764CB55807}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
 		{A8ADFD5D-26CE-446B-AACA-99F6CA26FE45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A8ADFD5D-26CE-446B-AACA-99F6CA26FE45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8ADFD5D-26CE-446B-AACA-99F6CA26FE45}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
