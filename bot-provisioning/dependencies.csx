@@ -12,4 +12,6 @@ if (IsMac) {
 
 	Xcode ("13.2.1").XcodeSelect ();
 }
-
+else if (IsWindows) {
+	DotNetCoreSdk ("../global.json");
+}
