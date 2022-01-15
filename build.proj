@@ -38,7 +38,9 @@
 	</ItemGroup>
 
 	<!-- List the sln files we need to build -->
-	<SolutionFiles Include="$(MSBuildThisFileDirectory)Xamarin.PropertyEditing.sln" />
+	<ItemGroup>
+		<SolutionFiles Include="$(MSBuildThisFileDirectory)Xamarin.PropertyEditing.sln" />
+	</ItemGroup>
 
 	<Target Name="Build">
 		<MSBuild Projects="@(SolutionFiles)" Properties="$(CommonBuildProperties)" Targets="Build" />
