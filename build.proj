@@ -38,12 +38,7 @@
 	</ItemGroup>
 
 	<!-- List the sln files we need to build -->
-	<ItemGroup Condition=" $(IsMac)" >
-		<SolutionFiles Include="$(MSBuildThisFileDirectory)Xamarin.PropertyEditing-Mac.sln" />
-	</ItemGroup>
-	<ItemGroup Condition=" $(IsWindows)" >
-		<SolutionFiles Include="$(MSBuildThisFileDirectory)Xamarin.PropertyEditing.sln" />
-	</ItemGroup>
+	<SolutionFiles Include="$(MSBuildThisFileDirectory)Xamarin.PropertyEditing.sln" />
 
 	<Target Name="Build">
 		<MSBuild Projects="@(SolutionFiles)" Properties="$(CommonBuildProperties)" Targets="Build" />
