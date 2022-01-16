@@ -55,6 +55,13 @@ stages:
             clean: true
             persistCredentials: true
 
+          # Using the provisionator to switch to .NET6 doesn't currently work for some reason on Mac agents -
+          # it's only .NET5 and earlier SDKS listed after running it. So use the AzDO task instead.
+          - task: UseDotNet@2
+            displayName: 'Use .Net Core sdk 6.0.101'
+            inputs:
+              version: 6.0.101
+
           - task: NuGetAuthenticate@0
 
           - task: CmdLine@1
@@ -69,13 +76,6 @@ stages:
               github_token: $(GitHub.Token)
               provisioning_script: $(System.DefaultWorkingDirectory)/bot-provisioning/dependencies.csx
               provisioning_extra_args: -vv DEVDIV_PKGS_NUGET_TOKEN=$(DevDiv.NuGet.Token) SECTOOLS_PKGS_NUGET_TOKEN=$(SecTools.NuGet.Token)
-
-          # Using the provisionator to switch to .NET6 doesn't currently work for some reason on Mac agents -
-          # it's only .NET5 and earlier SDKS listed after running it. So use the AzDO task instead.
-          - task: UseDotNet@2
-            displayName: 'Use .Net Core sdk 6.0.101'
-            inputs:
-              version: 6.0.101
 
           - task: MSBuild@1
             displayName: Build
