@@ -3,7 +3,7 @@
 using static Xamarin.Provisioning.ProvisioningScript;
 
 if (IsMac) {
-	DotNetCoreSdk ("../global.json")
+	DotNetCoreSdk ("../global.json", installDirectory: Env("DOTNET_ROOT"))
 		.Workload(
 			"microsoft.net.sdk.macos",
 			"12.0.101-preview.10.249",
