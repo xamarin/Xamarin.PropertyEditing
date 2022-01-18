@@ -55,23 +55,6 @@ stages:
             clean: true
             persistCredentials: true
 
-          # Using the provisionator to switch to .NET6 doesn't currently work for some reason on Mac agents -
-          # it's only .NET5 and earlier SDKS listed after running it. So use the AzDO task instead.
-          - task: UseDotNet@2
-            displayName: 'Use .Net Core sdk 6.0.101'
-            inputs:
-              version: 6.0.101
-
-          - bash: |
-              export PATH=/usr/local/share/dotnet:$(PATH)
-            displayName: Add dotnet to path
-
-          - bash: |
-              which dotnet
-              dotnet --list-sdks
-              printenv DOTNET_ROOT
-            displayName: Show environment info
-
           - task: NuGetAuthenticate@0
 
           - task: CmdLine@1
