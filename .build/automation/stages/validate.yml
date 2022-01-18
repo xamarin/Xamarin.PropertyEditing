@@ -69,6 +69,7 @@ stages:
           - bash: |
               which dotnet
               dotnet --list-sdks
+              printenv DOTNET_ROOT
             displayName: Show environment info
 
           - task: NuGetAuthenticate@0
