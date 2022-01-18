@@ -62,6 +62,11 @@ stages:
             inputs:
               version: 6.0.101
 
+          - bash: |
+              which dotnet
+              dotnet --list-sdks
+            displayName: Show environment info
+
           - task: NuGetAuthenticate@0
 
           - task: CmdLine@1
