@@ -63,6 +63,10 @@ stages:
               version: 6.0.101
 
           - bash: |
+              export PATH=/usr/local/share/dotnet:$(PATH)
+            displayName: Add dotnet to path
+
+          - bash: |
               which dotnet
               dotnet --list-sdks
             displayName: Show environment info
