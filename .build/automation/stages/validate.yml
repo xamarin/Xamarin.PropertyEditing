@@ -48,7 +48,7 @@ stages:
 
       - job: 'MacOS'
         pool:
-          vmImage: 'internal-macos1100'
+          vmImage: 'macOS-latest'
 
         steps:
           - checkout: self
