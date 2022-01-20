@@ -51,12 +51,6 @@ stages:
 
           - task: NuGetAuthenticate@0
 
-          - task: CmdLine@1
-            displayName: 'Set Token'
-            inputs:
-              filename: echo
-              arguments: '##vso[task.setvariable variable=GITHUB_TOKEN]$(GitHub.Token)'
-
           - task: provisionator@2
             displayName: Provision Dependencies
             inputs:
