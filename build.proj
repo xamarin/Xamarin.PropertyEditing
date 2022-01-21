@@ -27,15 +27,12 @@
 
 		<CommonBuildProperties>$(CommonBuildProperties);Configuration=$(Configuration)</CommonBuildProperties>
 
+		<TestProjectDirectory>Xamarin.PropertyEditing.Tests\</TestProjectDirectory>
 		<TestAssemblyBaseDirectory>Xamarin.PropertyEditing.Tests\bin\</TestAssemblyBaseDirectory>
 		<TestAssemblyName>Xamarin.PropertyEditing.Tests.dll</TestAssemblyName>
 
-		<Out Condition="'$(Out)' == ''">out</Out>
+		<Out Condition="'$(Out)' == ''">$(MSBuildThisFileDirectory)out</Out>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<NunitConsoleRunner Include="**/nunit3-console.exe" />
-	</ItemGroup>
 
 	<!-- List the sln files we need to build -->
 	<ItemGroup>
@@ -62,7 +59,7 @@
 			<TestAssembly Include="$(TestAssemblyBaseDirectory)**\$(TestAssemblyName)" />
 		</ItemGroup>
 		<MakeDir Directories="$(Out)" />
-		<Exec Command="$(Mono64) @(NunitConsoleRunner) @(TestAssembly) -result=$(Out)\TestResult.xml" />
+		<Exec Command="dotnet test $(TestProjectDirectory)Xamarin.PropertyEditing.Tests.csproj -- NUnit.TestOutputXml='$(Out)'" />
 	</Target>
 
 	<Target Name="TestMac" Condition=" '$(IsMac)' ">
