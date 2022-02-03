@@ -14,14 +14,14 @@ namespace Xamarin.PropertyEditing.Mac
 			BorderWidth = 0;
 			BoxType = NSBoxType.NSBoxCustom;
 			TranslatesAutoresizingMaskIntoConstraints = false;
-
+			this.WantsLayer = true;
 			this.fillColor = fillName;
 			if (fillName == null)
-				FillColor = NSColor.Clear;
+				this.Layer.BackgroundColor = NSColor.Clear.CGColor;
 
 			this.borderColor = borderName;
 			if (borderName == null)
-				BorderColor = NSColor.Clear;
+				this.Layer.BorderColor = NSColor.Clear.CGColor;
 
 			HostResourceProvider = hostResources;
 		}
@@ -43,7 +43,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{
 				this.fillColor = value;
 				if (value == null)
-					FillColor = NSColor.Clear;
+					this.Layer.BackgroundColor = NSColor.Clear.CGColor;
 
 				AppearanceChanged ();
 			}
@@ -56,7 +56,7 @@ namespace Xamarin.PropertyEditing.Mac
 			{
 				this.borderColor = value;
 				if (value == null)
-					BorderColor = NSColor.Clear;
+					this.Layer.BorderColor = NSColor.Clear.CGColor;
 
 				AppearanceChanged ();
 			}
@@ -78,16 +78,14 @@ namespace Xamarin.PropertyEditing.Mac
 				NSColor color = this.hostResources.GetNamedColor (this.fillColor);
 				if (color == null)
 					return;
-
-				FillColor = color;
+				this.Layer.BackgroundColor = color.CGColor;
 			}
 
 			if (this.borderColor != null) {
 				NSColor color = this.hostResources.GetNamedColor (this.borderColor);
 				if (color == null)
 					return;
-
-				BorderColor = color;
+				this.Layer.BorderColor = color.CGColor;
 			}
 		}
 	}
