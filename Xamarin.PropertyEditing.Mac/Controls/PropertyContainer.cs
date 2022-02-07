@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using AppKit;
+using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
 {

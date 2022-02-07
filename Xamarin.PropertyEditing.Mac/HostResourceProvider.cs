@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using AppKit;
 using Foundation;
+using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
 {
