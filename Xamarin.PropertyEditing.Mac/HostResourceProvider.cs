@@ -39,7 +39,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public virtual NSImage GetNamedImage (string name)
 		{
-			if ((CurrentAppearance ?? NSAppearance.CurrentAppearance).Name.ToLower ().Contains ("dark")) {
+			NSAppearance currentAppearance = CurrentAppearance ?? NSAppearance.CurrentAppearance;
+			if (currentAppearance != null && currentAppearance.Name.ToLower ().Contains ("dark")) {
 				bool sel = name.EndsWith ("~sel");
 				if (sel)
 					name = name.Substring (0, name.Length - 4);
