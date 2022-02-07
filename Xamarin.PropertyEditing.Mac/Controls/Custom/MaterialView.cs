@@ -6,6 +6,7 @@ using AppKit;
 using CoreAnimation;
 using CoreGraphics;
 using Foundation;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 

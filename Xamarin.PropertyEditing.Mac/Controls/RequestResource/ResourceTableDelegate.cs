@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AppKit;
 using Foundation;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
 

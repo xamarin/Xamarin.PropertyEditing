@@ -1,5 +1,6 @@
 using System;
 using AppKit;
+using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
 {

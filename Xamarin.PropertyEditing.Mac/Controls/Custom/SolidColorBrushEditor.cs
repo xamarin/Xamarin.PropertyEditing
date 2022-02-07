@@ -5,6 +5,7 @@ using System.Linq;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
+using ObjCRuntime;
 
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.ViewModels;
