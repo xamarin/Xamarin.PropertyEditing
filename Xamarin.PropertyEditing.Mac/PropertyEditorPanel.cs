@@ -6,6 +6,7 @@ using System.ComponentModel;
 using CoreGraphics;
 using Foundation;
 using AppKit;
+using ObjCRuntime;
 
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -26,7 +27,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		// Called when created from unmanaged code
-		public PropertyEditorPanel (IntPtr handle) : base (handle)
+		public PropertyEditorPanel (NativeHandle handle) : base (handle)
 		{
 			this.hostResources = new HostResourceProvider ();
 			Initialize ();

@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 	public class MockedSampleControlButton : MockedControlButton<MockSampleControl>
 	{
 		// Called when created from unmanaged code
-		public MockedSampleControlButton (IntPtr handle) : base (new MockSampleControl (), handle)
+		public MockedSampleControlButton (NativeHandle handle) : base (new MockSampleControl (), handle)
 		{
 		}
 

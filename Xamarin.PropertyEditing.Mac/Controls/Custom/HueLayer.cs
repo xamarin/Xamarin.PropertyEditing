@@ -2,6 +2,7 @@ using System;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -23,7 +24,7 @@ namespace Xamarin.PropertyEditing.Mac
 			Initialize ();
 		}
 
-		public HueLayer (IntPtr handle) : base (handle)
+		public HueLayer (NativeHandle handle) : base (handle)
 		{
 		}
 
