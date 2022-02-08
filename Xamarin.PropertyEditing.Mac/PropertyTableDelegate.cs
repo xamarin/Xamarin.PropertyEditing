@@ -212,7 +212,7 @@ namespace Xamarin.PropertyEditing.Mac
 				this.registrations[cellIdentifier] = registration;
 			}
 
-			return registration.GetHeight (vm);
+			return (nfloat) registration.GetHeight (vm);
 		}
 
 		private class EditorRegistration
