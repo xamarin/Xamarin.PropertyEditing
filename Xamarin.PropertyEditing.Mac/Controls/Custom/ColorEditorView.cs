@@ -3,6 +3,7 @@ using System.ComponentModel;
 using AppKit;
 using CoreGraphics;
 using Foundation;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -25,7 +26,7 @@ namespace Xamarin.PropertyEditing.Mac
 			Adaptor = new NotifyingViewAdaptor<TViewModel> (this);
 		}
 
-		public NotifyingView (IntPtr handle) : base (handle)
+		public NotifyingView (NativeHandle handle) : base (handle)
 		{
 		}
 
@@ -60,7 +61,7 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		protected const float Padding = 3;
 
-		public ColorEditorView (IntPtr handle) : base (handle)
+		public ColorEditorView (NativeHandle handle) : base (handle)
 		{
 		}
 

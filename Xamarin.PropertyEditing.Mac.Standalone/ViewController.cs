@@ -10,7 +10,7 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 {
 	public partial class ViewController : NSViewController
 	{
-		public ViewController (IntPtr handle) : base (handle)
+		public ViewController (NativeHandle handle) : base (handle)
 		{
 			
 		}

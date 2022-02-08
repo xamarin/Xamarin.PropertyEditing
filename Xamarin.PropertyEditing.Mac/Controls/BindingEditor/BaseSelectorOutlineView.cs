@@ -1,6 +1,7 @@
 using System;
 using AppKit;
 using Foundation;
+using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -12,7 +13,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		// Called when created from unmanaged code
-		public BaseSelectorOutlineView (IntPtr handle) : base (handle)
+		public BaseSelectorOutlineView (NativeHandle handle) : base (handle)
 		{
 			Initialize ();
 		}
