@@ -299,7 +299,7 @@ namespace Xamarin.PropertyEditing.Mac
 			public override bool WriteRows (NSTableView tableView, NSIndexSet rowIndexes, NSPasteboard pboard)
 			{
 				var item = new NSPasteboardItem ();
-				item.SetDataForType (NSKeyedArchiver.ArchivedDataWithRootObject (rowIndexes), DataTypeName);
+				item.SetDataForType (NSKeyedArchiver.GetArchivedData (rowIndexes), DataTypeName);
 				pboard.WriteObjects (new[] { item });
 				return true;
 			}
