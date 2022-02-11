@@ -68,7 +68,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected void AppearanceChanged()
 		{
-			this.SetAppearance (HostResources.GetVibrantAppearance (EffectiveAppearance));
+			Appearance = HostResources.GetVibrantAppearance (EffectiveAppearance);
 			this.viewTitle.TextColor = HostResources.GetNamedColor (NamedResources.DescriptionLabelColor);
 		}
 	}
