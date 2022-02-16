@@ -129,7 +129,9 @@ namespace Xamarin.PropertyEditing.Mac
 						SelectRow (0, false);
 						this.tabbedIn = true;
 						var row = GetRowView ((nint)SelectedRows.FirstIndex, false);
-						return Window.MakeFirstResponder (row.NextValidKeyView);
+						if (row != null) {
+							return Window.MakeFirstResponder (row.NextValidKeyView);
+						}
 					}
 				}
 				this.tabbedIn = false;
