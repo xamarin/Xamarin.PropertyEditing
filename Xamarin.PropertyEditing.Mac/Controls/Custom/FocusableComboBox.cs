@@ -5,17 +5,17 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class FocusableComboBox : NSComboBox
 	{
-		public ProxyRowResponder ResponderProxy { get; set; }
+		public RowProxyResponder ProxyResponder { get; set; }
 
 		public override void KeyDown (NSEvent theEvent)
 		{
 			switch (theEvent.KeyCode) {
 			case (int)NSKey.Tab:
-				if (ResponderProxy != null) {
+				if (ProxyResponder != null) {
 					if (theEvent.ModifierFlags.HasFlag(NSEventModifierMask.ShiftKeyMask)) {
-						ResponderProxy.PreviousResponder ();
+						ProxyResponder.PreviousResponder ();
 					} else {
-						ResponderProxy.NextResponder ();
+						ProxyResponder.NextResponder ();
 					}
 				}
 				return;

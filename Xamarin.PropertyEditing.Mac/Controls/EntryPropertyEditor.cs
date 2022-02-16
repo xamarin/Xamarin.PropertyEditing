@@ -8,19 +8,19 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	class TextNextResponderDelegate : NSTextFieldDelegate
 	{
-		public ProxyRowResponder ResponderProxy { get; set; }
+		public RowProxyResponder ProxyResponder { get; set; }
 
 		public override bool DoCommandBySelector (NSControl control, NSTextView textView, Selector commandSelector)
 		{
 			switch (commandSelector.Name) {
 			case "insertTab:":
-				if (ResponderProxy?.NextResponder () ?? false)
+				if (ProxyResponder?.NextResponder () ?? false)
 				{
 					return true;
 				}
 				break;
 			case "insertBacktab:":
-				if (ResponderProxy?.PreviousResponder () ?? false)
+				if (ProxyResponder?.PreviousResponder () ?? false)
 				{
 					return true;
 				}
@@ -88,7 +88,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			var propertyEditorDelegate = new EntryPropertyEditorDelegate<T> (viewModel)
 			{
-				ResponderProxy = new ProxyRowResponder (this, ProxyRowType.SingleView)
+				ProxyResponder = new RowProxyResponder  (this, ProxyRowType.SingleView)
 			};
 			return propertyEditorDelegate;
 		}

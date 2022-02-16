@@ -51,18 +51,18 @@ namespace Xamarin.PropertyEditing.Mac
 			Delegate = keyUpDownDelegate;
 		}
 
-		public ProxyRowResponder ResponderProxy
+		public RowProxyResponder ProxyResponder
 		{
 			get {
 				if (Delegate is KeyUpDownDelegate keydown) {
-					return keydown.ResponderProxy;
+					return keydown.ProxyResponder;
 				}
 				return null;
 			}
 			set
 			{
 				if (Delegate is KeyUpDownDelegate keydown) {
-					keydown.ResponderProxy = value;
+					keydown.ProxyResponder = value;
 				}
 			}
 		}

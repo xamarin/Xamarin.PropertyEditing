@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			NumericEditor = new NumericSpinEditor<T> (hostResources)
 			{
-				ResponderProxy = new ProxyRowResponder (this, ProxyRowType.SingleView)
+				ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView)
 			};
 			NumericEditor.ValueChanged += OnValueChanged;
 
