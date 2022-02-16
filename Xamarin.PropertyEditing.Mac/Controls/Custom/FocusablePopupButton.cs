@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public override bool CanBecomeKeyView { get { return Enabled; } }
 
-		public ProxyRowResponder ResponderProxy { get; set; }
+		public RowProxyResponder ProxyResponder { get; set; }
 
 		public FocusablePopUpButton ()
 		{
@@ -19,11 +19,11 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			switch (theEvent.KeyCode) {
 			case (int)NSKey.Tab:
-				if (ResponderProxy != null) {
+				if (ProxyResponder != null) {
 					if (theEvent.ModifierFlags.HasFlag(NSEventModifierMask.ShiftKeyMask)) {
-						ResponderProxy.PreviousResponder ();
+						ProxyResponder.PreviousResponder ();
 					} else {
-						ResponderProxy.NextResponder ();
+						ProxyResponder.NextResponder ();
 					}
 				}
 				return;

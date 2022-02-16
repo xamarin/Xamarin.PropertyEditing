@@ -49,7 +49,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.textNextResponderDelegate = new BasePathEditordDelegate (this)
 			{
-				ResponderProxy = new ProxyRowResponder(this, ProxyRowType.SingleView)
+				ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView)
 			};
 			this.currentTextField.Delegate = this.textNextResponderDelegate;
 			AddSubview (this.currentTextField);

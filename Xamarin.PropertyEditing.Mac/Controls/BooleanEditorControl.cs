@@ -13,7 +13,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			BooleanEditor = new FocusableBooleanButton ()
 			{
-				ResponderProxy = new ProxyRowResponder(this, ProxyRowType.SingleView)
+				ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView)
 			};
 			BooleanEditor.Title = string.Empty;
 
