@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppKit;
 using Foundation;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Tests;
 
