@@ -64,43 +64,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		NSView INativeContainer.NativeView => this;
 
-		[Export ("_primitiveSetDefaultNextKeyView:")]
-		public void SetDefaultNextKeyView (NSView child)
-		{
-			if (child == FirstKeyView || child == LastKeyView) {
-				UpdateKeyViews ();
-			}
-		}
 
 		public virtual bool NeedsPropertyButton => true;
 
-		public void UpdateKeyViews ()
-		{
-			if (TableView != null) {
-				nint row = TableView.RowForView (this);
-				if (row <= 0)
-					return;
-
-				NSView view;
-				PropertyEditorControl ctrl = null;
-				do {
-					row--;
-					view = TableView.GetView (0, row, makeIfNecessary: false);
-					if (view is PropertyEditorControl pec) { // This is to include the CategoryContainer
-						ctrl = pec;
-					} else {
-						ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
-					}
-				} while (row > 0 && ctrl == null);
-
-				if (ctrl != null) {
-					ctrl.LastKeyView.NextKeyView = FirstKeyView;
-					ctrl.UpdateKeyViews ();
-				} else if (row == 0 && view is PanelHeaderEditorControl header) {
-					header.SetNextKeyView (FirstKeyView);
-				}
-			}
-		}
 
 		/// <remarks>You should treat the implementation of this as static.</remarks>
 		public virtual nint GetHeight (EditorViewModel vm)
@@ -145,6 +111,66 @@ namespace Xamarin.PropertyEditing.Mac
 			base.ViewDidChangeEffectiveAppearance ();
 
 			AppearanceChanged ();
+		}
+
+		public void OnNextResponderRequested ()
+		{
+			if (TableView != null) {
+				nint row = TableView.RowForView (this) + 1;
+
+				NSView view;
+				PropertyEditorControl ctrl = null;
+
+				for (; row < TableView.RowCount; row++) {
+					view = TableView.GetView (0, row, makeIfNecessary: false);
+					if (view is PropertyEditorControl pec) { // This is to include the CategoryContainer
+						ctrl = pec;
+					} else {
+						ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
+					}
+
+					if (ctrl != null && !ctrl.viewModel.IsInputEnabled) {
+						ctrl = null;
+					}
+
+					if (ctrl != null) {
+						Window?.MakeFirstResponder (ctrl.FirstKeyView);
+						return;
+					}
+				}
+			}
+		}
+
+		public void OnPreviousResponderRequested ()
+		{
+			if (TableView != null) {
+				nint row = TableView.RowForView (this) - 1;
+
+				NSView view;
+				PropertyEditorControl ctrl = null;
+
+				for (; row > 0; row--)
+				{
+					view = TableView.GetView (0, row, makeIfNecessary: false);
+					if (view is PropertyEditorControl pec) { // This is to include the CategoryContainer
+						ctrl = pec;
+					} else {
+						ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
+					}
+
+					if (ctrl != null && !ctrl.viewModel.IsInputEnabled) {
+						ctrl = null;
+					}
+
+					if (ctrl != null) {
+						Window?.MakeFirstResponder (ctrl.LastKeyView);
+						return;
+					} else if (row == 0 && view is PanelHeaderEditorControl header) {
+						Window?.MakeFirstResponder(header);
+						return;
+					}
+				}
+			}
 		}
 	}
 
