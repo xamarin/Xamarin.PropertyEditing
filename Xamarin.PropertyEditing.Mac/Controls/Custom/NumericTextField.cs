@@ -51,6 +51,22 @@ namespace Xamarin.PropertyEditing.Mac
 			Delegate = keyUpDownDelegate;
 		}
 
+		public ProxyRowResponder ResponderProxy
+		{
+			get {
+				if (Delegate is KeyUpDownDelegate keydown) {
+					return keydown.ResponderProxy;
+				}
+				return null;
+			}
+			set
+			{
+				if (Delegate is KeyUpDownDelegate keydown) {
+					keydown.ResponderProxy = value;
+				}
+			}
+		}
+
 		public override CGSize IntrinsicContentSize => new CGSize(30, 20);
 
 		public override bool ShouldBeginEditing (NSText textObject)
@@ -156,14 +172,16 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class KeyUpDownDelegate : NSTextFieldDelegate
+	internal class KeyUpDownDelegate : TextNextResponderDelegate
 	{
 		public event EventHandler<bool> KeyArrowUp;
 		public event EventHandler<bool> KeyArrowDown;
 
 		public override bool DoCommandBySelector (NSControl control, NSTextView textView, Selector commandSelector)
 		{
-			switch (commandSelector.Name) {
+			if (!base.DoCommandBySelector(control, textView, commandSelector))
+			{
+				switch (commandSelector.Name) {
 				case "moveUp:":
 					OnKeyArrowUp ();
 					break;
@@ -178,6 +196,7 @@ namespace Xamarin.PropertyEditing.Mac
 					break;
 				default:
 					return false;
+				}
 			}
 
 			return true;
