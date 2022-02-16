@@ -172,6 +172,12 @@ namespace Xamarin.PropertyEditing.Mac
 			set { this.numericEditor.AccessibilityTitle = value; }
 		}
 
+		public ProxyRowResponder ResponderProxy
+		{
+			get => this.numericEditor.ResponderProxy;
+			set => this.numericEditor.ResponderProxy = value;
+		}
+
 		public virtual void Reset ()
 		{
 		}
