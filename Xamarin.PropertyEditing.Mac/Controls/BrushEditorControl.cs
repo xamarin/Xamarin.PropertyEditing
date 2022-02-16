@@ -56,6 +56,7 @@ namespace Xamarin.PropertyEditing.Mac
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				ResponderProxy = new ProxyRowResponder(this, ProxyRowType.SingleView)
 			};
 
 			this.popupButtonList = new NSMenu ();

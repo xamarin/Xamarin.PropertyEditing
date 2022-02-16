@@ -113,6 +113,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				StringValue = String.Empty,
+				ResponderProxy = new ProxyRowResponder(this, ProxyRowType.SingleView)
 			};
 
 			this.popupButtonList = new NSMenu ();
@@ -155,6 +156,7 @@ namespace Xamarin.PropertyEditing.Mac
 					LineBreakMode = NSLineBreakMode.TruncatingTail,
 					UsesSingleLineMode = true,
 				},
+				ResponderProxy = new ProxyRowResponder (this, ProxyRowType.SingleView),
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				TranslatesAutoresizingMaskIntoConstraints = false,

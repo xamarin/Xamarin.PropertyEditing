@@ -13,7 +13,9 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override EntryPropertyEditorDelegate<TimeSpan> CreateDelegate (PropertyViewModel<TimeSpan> viewModel)
 		{
-			return new TimeSpanDelegate (viewModel);
+			return new TimeSpanDelegate (viewModel) {
+				ResponderProxy = new ProxyRowResponder(this, ProxyRowType.SingleView)
+			};
 		}
 
 		protected override void UpdateAccessibilityValues ()

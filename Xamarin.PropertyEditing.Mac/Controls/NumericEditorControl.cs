@@ -16,7 +16,10 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			NumericEditor = new NumericSpinEditor<T> (hostResources);
+			NumericEditor = new NumericSpinEditor<T> (hostResources)
+			{
+				ResponderProxy = new ProxyRowResponder (this, ProxyRowType.SingleView)
+			};
 			NumericEditor.ValueChanged += OnValueChanged;
 
 			var t = typeof (T);
