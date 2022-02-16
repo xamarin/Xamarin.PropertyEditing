@@ -3,7 +3,28 @@ using AppKit;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class FocusableBooleanButton : NSButton
+	internal class ProxyResponderButton : NSButton
+	{
+		public ProxyRowResponder ResponderProxy { get; set; }
+
+		public override void KeyDown (NSEvent theEvent)
+		{
+			switch (theEvent.KeyCode) {
+			case (int)NSKey.Tab:
+				if (ResponderProxy != null) {
+					if (theEvent.ModifierFlags.HasFlag(NSEventModifierMask.ShiftKeyMask)) {
+						ResponderProxy.PreviousResponder ();
+					} else {
+						ResponderProxy.NextResponder ();
+					}
+				}
+				return;
+			}
+			base.KeyDown (theEvent);
+		}
+	}
+
+	internal class FocusableBooleanButton : ProxyResponderButton
 	{
 		public override bool CanBecomeKeyView { get { return Enabled; } }
 
