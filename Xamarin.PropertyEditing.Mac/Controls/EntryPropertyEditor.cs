@@ -2,9 +2,34 @@ using System;
 using AppKit;
 using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
+using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
 {
+	class TextNextResponderDelegate : NSTextFieldDelegate
+	{
+		public ProxyRowResponder ResponderProxy { get; set; }
+
+		public override bool DoCommandBySelector (NSControl control, NSTextView textView, Selector commandSelector)
+		{
+			switch (commandSelector.Name) {
+			case "insertTab:":
+				if (ResponderProxy?.NextResponder () ?? false)
+				{
+					return true;
+				}
+				break;
+			case "insertBacktab:":
+				if (ResponderProxy?.PreviousResponder () ?? false)
+				{
+					return true;
+				}
+				break;
+			}
+			return false;
+		}
+	}
+
 	internal abstract class EntryPropertyEditor<T>
 		: PropertyEditorControl<PropertyViewModel<T>>
 	{
@@ -61,7 +86,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected virtual EntryPropertyEditorDelegate<T> CreateDelegate (PropertyViewModel<T> viewModel)
 		{
-			return new EntryPropertyEditorDelegate<T> (viewModel);
+			var propertyEditorDelegate = new EntryPropertyEditorDelegate<T> (viewModel)
+			{
+				ResponderProxy = new ProxyRowResponder (this, ProxyRowType.SingleView)
+			};
+			return propertyEditorDelegate;
 		}
 
 		protected virtual string GetValue (T value)
@@ -71,7 +100,7 @@ namespace Xamarin.PropertyEditing.Mac
 	}
 
 	internal class EntryPropertyEditorDelegate<T>
-		: NSTextFieldDelegate
+		: TextNextResponderDelegate
 	{
 		public EntryPropertyEditorDelegate (PropertyViewModel<T> viewModel)
 		{
