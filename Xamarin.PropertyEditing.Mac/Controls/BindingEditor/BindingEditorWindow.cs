@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AppKit;
 using CoreGraphics;
 using Foundation;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.Common;
 using Xamarin.PropertyEditing.ViewModels;
 

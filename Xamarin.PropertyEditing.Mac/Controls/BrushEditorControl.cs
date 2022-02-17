@@ -129,7 +129,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.AppearanceChanged ();
 
-			this.popover.SetAppearance (HostResources.GetVibrantAppearance (EffectiveAppearance));
+			this.popover.Appearance = HostResources.GetVibrantAppearance (EffectiveAppearance);
 			this.popover.ContentViewController.View.Appearance = EffectiveAppearance;
 		}
 

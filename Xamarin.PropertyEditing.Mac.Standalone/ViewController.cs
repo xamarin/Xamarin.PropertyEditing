@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppKit;
 using Foundation;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.Drawing;
 using Xamarin.PropertyEditing.Tests;
 
@@ -10,7 +11,7 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 {
 	public partial class ViewController : NSViewController
 	{
-		public ViewController (IntPtr handle) : base (handle)
+		public ViewController (NativeHandle handle) : base (handle)
 		{
 			
 		}
