@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using AppKit;
 using Foundation;
+using ObjCRuntime;
 
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -211,7 +212,7 @@ namespace Xamarin.PropertyEditing.Mac
 				this.registrations[cellIdentifier] = registration;
 			}
 
-			return registration.GetHeight (vm);
+			return (nfloat) registration.GetHeight (vm);
 		}
 
 		private class EditorRegistration

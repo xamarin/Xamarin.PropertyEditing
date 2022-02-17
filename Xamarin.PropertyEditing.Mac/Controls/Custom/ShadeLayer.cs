@@ -2,6 +2,7 @@ using System;
 using AppKit;
 using CoreAnimation;
 using CoreGraphics;
+using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -31,7 +32,7 @@ namespace Xamarin.PropertyEditing.Mac
 			});
 		}
 
-		public ShadeLayer (IntPtr handle) : base (handle)
+		public ShadeLayer (NativeHandle handle) : base (handle)
 		{
 		}
 

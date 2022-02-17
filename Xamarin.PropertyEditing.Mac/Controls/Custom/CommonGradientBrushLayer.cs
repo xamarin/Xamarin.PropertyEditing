@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using CoreAnimation;
 using CoreGraphics;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -12,7 +13,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		public CommonGradientBrushLayer (IntPtr handle) : base (handle)
+		public CommonGradientBrushLayer (NativeHandle handle) : base (handle)
 		{
 		}
 

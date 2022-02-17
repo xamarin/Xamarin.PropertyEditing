@@ -21,7 +21,7 @@ namespace Xamarin.PropertyEditing.Mac
 			Delegate = new PopoverFocusRestoreDelegate ();
 			CloseOnEnter = true;
 
-			this.SetAppearance (this.hostResources.GetVibrantAppearance (effectiveAppearance));
+			Appearance = this.hostResources.GetVibrantAppearance (effectiveAppearance);
 		}
 
 		public override void KeyUp (NSEvent theEvent)

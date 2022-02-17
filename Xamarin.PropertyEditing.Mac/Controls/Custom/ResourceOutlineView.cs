@@ -2,6 +2,7 @@
 using AppKit;
 using CoreGraphics;
 using Foundation;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.ViewModels;
 
 namespace Xamarin.PropertyEditing.Mac
@@ -18,7 +19,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		// Called when created from unmanaged code
-		public ResourceOutlineView (IntPtr handle) : base (handle)
+		public ResourceOutlineView (NativeHandle handle) : base (handle)
 		{
 		}
 
