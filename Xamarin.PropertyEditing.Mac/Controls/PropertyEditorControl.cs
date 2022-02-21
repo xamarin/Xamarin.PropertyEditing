@@ -129,7 +129,7 @@ namespace Xamarin.PropertyEditing.Mac
 						ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
 					}
 
-					if (ctrl != null && !ctrl.viewModel.IsInputEnabled) {
+					if (ctrl?.viewModel != null && !ctrl.viewModel.IsInputEnabled) {
 						ctrl = null;
 					}
 
@@ -158,7 +158,7 @@ namespace Xamarin.PropertyEditing.Mac
 						ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
 					}
 
-					if (ctrl != null && !ctrl.viewModel.IsInputEnabled) {
+					if (ctrl?.viewModel != null && !ctrl.viewModel.IsInputEnabled) {
 						ctrl = null;
 					}
 
