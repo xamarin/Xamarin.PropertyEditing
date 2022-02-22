@@ -25,11 +25,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private readonly TextNextResponderDelegate textNextResponderDelegate;
 
-		class BasePathEditordDelegate : TextNextResponderDelegate
+		class BasePathEditorDelegate : TextNextResponderDelegate
 		{
 			WeakReference<BasePathEditorControl<T>> weakView;
 
-			public BasePathEditordDelegate (BasePathEditorControl<T> basePathEditorControl)
+			public BasePathEditorDelegate (BasePathEditorControl<T> basePathEditorControl)
 			{
 				weakView = new WeakReference<BasePathEditorControl<T>>(basePathEditorControl);
 			}
@@ -47,7 +47,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			this.currentTextField = new TextFieldSmallButtonContainer ();
 
-			this.textNextResponderDelegate = new BasePathEditordDelegate (this)
+			this.textNextResponderDelegate = new BasePathEditorDelegate (this)
 			{
 				ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView)
 			};
