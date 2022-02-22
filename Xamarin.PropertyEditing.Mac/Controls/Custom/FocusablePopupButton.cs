@@ -25,8 +25,9 @@ namespace Xamarin.PropertyEditing.Mac
 					} else {
 						ProxyResponder.NextResponder ();
 					}
+					return;
 				}
-				return;
+				break;
 			}
 			base.KeyDown (theEvent);
 		}
