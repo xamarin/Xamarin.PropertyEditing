@@ -113,15 +113,18 @@ namespace Xamarin.PropertyEditing.Mac
 			AppearanceChanged ();
 		}
 
-		public void OnNextResponderRequested ()
+		public void OnNextResponderRequested (bool reverse)
 		{
 			if (TableView != null) {
-				nint row = TableView.RowForView (this) + 1;
+				var modifier = reverse ? -1 : 1;
+
+				nint row = TableView.RowForView (this) + modifier;
 
 				NSView view;
 				PropertyEditorControl ctrl = null;
 
-				for (; row < TableView.RowCount; row++) {
+				for (; reverse ? row > 0 : row < TableView.RowCount; row += modifier) {
+
 					view = TableView.GetView (0, row, makeIfNecessary: false);
 					if (view is PropertyEditorControl pec) { // This is to include the CategoryContainer
 						ctrl = pec;
@@ -134,39 +137,11 @@ namespace Xamarin.PropertyEditing.Mac
 					}
 
 					if (ctrl != null) {
-						Window?.MakeFirstResponder (ctrl.FirstKeyView);
-						return;
-					}
-				}
-			}
-		}
-
-		public void OnPreviousResponderRequested ()
-		{
-			if (TableView != null) {
-				nint row = TableView.RowForView (this) - 1;
-
-				NSView view;
-				PropertyEditorControl ctrl = null;
-
-				for (; row > 0; row--)
-				{
-					view = TableView.GetView (0, row, makeIfNecessary: false);
-					if (view is PropertyEditorControl pec) { // This is to include the CategoryContainer
-						ctrl = pec;
-					} else {
-						ctrl = (view as EditorContainer)?.EditorView?.NativeView as PropertyEditorControl;
-					}
-
-					if (ctrl?.viewModel != null && !ctrl.viewModel.IsInputEnabled) {
-						ctrl = null;
-					}
-
-					if (ctrl != null) {
-						Window?.MakeFirstResponder (ctrl.LastKeyView);
+						var targetView = reverse ? ctrl.LastKeyView : ctrl.FirstKeyView;
+						Window?.MakeFirstResponder (targetView);
 						return;
 					} else if (row == 0 && view is PanelHeaderEditorControl header) {
-						Window?.MakeFirstResponder(header);
+						Window?.MakeFirstResponder (header);
 						return;
 					}
 				}
