@@ -26,7 +26,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.editorControl.TryGetTarget (out var editor))
 			{
 				if (this.rowType == ProxyRowType.LastView || this.rowType == ProxyRowType.SingleView) {
-					editor.OnNextResponderRequested ();
+					editor.OnNextResponderRequested (false);
 					return true;
 				}
 			}
@@ -38,7 +38,7 @@ namespace Xamarin.PropertyEditing.Mac
 			if (this.editorControl.TryGetTarget (out var editor))
 			{
 				if (this.rowType == ProxyRowType.FirstView || this.rowType == ProxyRowType.SingleView) {
-					editor.OnPreviousResponderRequested ();
+					editor.OnNextResponderRequested (true);
 					return true;
 				}
 			}
