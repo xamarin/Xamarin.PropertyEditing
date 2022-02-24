@@ -84,8 +84,11 @@ namespace Xamarin.PropertyEditing.Mac
 		public NSImage RenderPreview ()
 		{
 			var scale = this.ContentsScale;
-			nint h = (nint)(this.Bounds.Height * scale);
-			nint w = (nint)(this.Bounds.Width * scale);
+			// The double cast below is needed for now, while Width/Height/scale are of type ObjCRuntime.nfloat
+			// in order for the floating point to integral conversion to work properly. Later when ObjCRuntime.nfloat
+			// is replaced with System.Runtime.InteropServices.NFloat that won't be needed (but can't hurt).
+			nint h = (nint)(double)(this.Bounds.Height * scale);
+			nint w = (nint)(double)(this.Bounds.Width * scale);
 			nint bytesPerRow = w * 4;
 
 			if (h <= 0 || w <= 0)
