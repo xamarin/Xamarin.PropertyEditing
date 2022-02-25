@@ -179,24 +179,28 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public override bool DoCommandBySelector (NSControl control, NSTextView textView, Selector commandSelector)
 		{
-			if (!base.DoCommandBySelector(control, textView, commandSelector))
+			//if parent already handles command we break the event chain
+			var parentHandlesCommand = base.DoCommandBySelector (control, textView, commandSelector);
+			if (parentHandlesCommand)
 			{
-				switch (commandSelector.Name) {
-				case "moveUp:":
-					OnKeyArrowUp ();
-					break;
-				case "moveDown:":
-					OnKeyArrowDown ();
-					break;
-				case "moveUpAndModifySelection:":
-					OnKeyArrowUp (true);
-					break;
-				case "moveDownAndModifySelection:":
-					OnKeyArrowDown (true);
-					break;
-				default:
-					return false;
-				}
+				return false;
+			}
+
+			switch (commandSelector.Name) {
+			case "moveUp:":
+				OnKeyArrowUp ();
+				break;
+			case "moveDown:":
+				OnKeyArrowDown ();
+				break;
+			case "moveUpAndModifySelection:":
+				OnKeyArrowUp (true);
+				break;
+			case "moveDownAndModifySelection:":
+				OnKeyArrowDown (true);
+				break;
+			default:
+				return false;
 			}
 
 			return true;
