@@ -33,7 +33,7 @@ namespace Xamarin.PropertyEditing.Mac
 				BackgroundColor = NSColor.Clear,
 				Value = 0.0f
 			};
-			XEditor.ProxyResponder = new RowProxyResponder (this, ProxyRowType.FirstView);
+			XEditor.ProxyResponder = new ProxyResponder (this, ProxyRowType.FirstView);
 			XEditor.ValueChanged += OnInputUpdated;
 
 			YLabel =  new UnfocusableTextField {
@@ -64,7 +64,7 @@ namespace Xamarin.PropertyEditing.Mac
 				BackgroundColor = NSColor.Clear,
 				Value = 0.0f
 			};
-			HeightEditor.ProxyResponder = new RowProxyResponder (this, ProxyRowType.LastView);
+			HeightEditor.ProxyResponder = new ProxyResponder (this, ProxyRowType.LastView);
 			HeightEditor.ValueChanged += OnInputUpdated;
 
 			AddSubview (XLabel);

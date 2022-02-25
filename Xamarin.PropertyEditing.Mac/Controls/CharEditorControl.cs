@@ -15,7 +15,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			var charDelegate = new CharDelegate (viewModel)
 			{
-				ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView)
+				ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView)
 			};
 			return charDelegate;
 		}

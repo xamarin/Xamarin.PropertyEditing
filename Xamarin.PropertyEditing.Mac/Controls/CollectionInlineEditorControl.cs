@@ -24,7 +24,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Title = Properties.Resources.CollectionEditButton,
 				BezelStyle = NSBezelStyle.Rounded,
 				AccessibilityEnabled = true,
-				ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView),
+				ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView),
 				AccessibilityHelp = Properties.Resources.AccessibilityCollectionHelp
 			};
 

@@ -51,7 +51,7 @@ namespace Xamarin.PropertyEditing.Mac
 			Delegate = keyUpDownDelegate;
 		}
 
-		public RowProxyResponder ProxyResponder
+		public ProxyResponder ProxyResponder
 		{
 			get {
 				if (Delegate is KeyUpDownDelegate keydown) {
@@ -172,7 +172,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class KeyUpDownDelegate : TextNextResponderDelegate
+	internal class KeyUpDownDelegate : DelegatedRowTextFieldDelegate
 	{
 		public event EventHandler<bool> KeyArrowUp;
 		public event EventHandler<bool> KeyArrowDown;

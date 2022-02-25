@@ -92,10 +92,10 @@ namespace Xamarin.PropertyEditing.Mac
 			if (combinableList.Count > 0)
 			{
 				if (firstButton == lastButton) {
-					firstButton.ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView);
+					firstButton.ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView);
 				} else {
-					firstButton.ProxyResponder = new RowProxyResponder (this, ProxyRowType.FirstView);
-					lastButton.ProxyResponder = new RowProxyResponder (this, ProxyRowType.LastView);
+					firstButton.ProxyResponder = new ProxyResponder (this, ProxyRowType.FirstView);
+					lastButton.ProxyResponder = new ProxyResponder (this, ProxyRowType.LastView);
 				}
 			}
 

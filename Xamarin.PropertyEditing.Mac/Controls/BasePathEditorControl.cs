@@ -23,9 +23,9 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly NSObject[] objects;
 		public override NSObject[] AccessibilityChildren { get => this.objects; }
 
-		private readonly TextNextResponderDelegate textNextResponderDelegate;
+		private readonly DelegatedRowTextFieldDelegate textNextResponderDelegate;
 
-		class BasePathEditorDelegate : TextNextResponderDelegate
+		class BasePathEditorDelegate : DelegatedRowTextFieldDelegate
 		{
 			WeakReference<BasePathEditorControl<T>> weakView;
 
@@ -49,7 +49,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			this.textNextResponderDelegate = new BasePathEditorDelegate (this)
 			{
-				ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView)
+				ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView)
 			};
 			this.currentTextField.Delegate = this.textNextResponderDelegate;
 			AddSubview (this.currentTextField);

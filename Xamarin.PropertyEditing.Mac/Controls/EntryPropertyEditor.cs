@@ -6,26 +6,27 @@ using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	class TextNextResponderDelegate : NSTextFieldDelegate
+	class DelegatedRowTextFieldDelegate : NSTextFieldDelegate
 	{
-		public RowProxyResponder ProxyResponder { get; set; }
+		public ProxyResponder ProxyResponder { get; set; }
 
 		public override bool DoCommandBySelector (NSControl control, NSTextView textView, Selector commandSelector)
 		{
-			switch (commandSelector.Name) {
-			case "insertTab:":
-				if (ProxyResponder?.NextResponder () ?? false)
-				{
-					return true;
+			if (ProxyResponder != null)
+			{
+				switch (commandSelector.Name) {
+				case "insertTab:":
+					if (ProxyResponder.NextResponder ()) {
+						return true;
+					}
+					break;
+				case "insertBacktab:":
+					if (ProxyResponder.PreviousResponder ()) {
+						return true;
+					}
+					break;
 				}
-				break;
-			case "insertBacktab:":
-				if (ProxyResponder?.PreviousResponder () ?? false)
-				{
-					return true;
-				}
-				break;
-			}
+			} 
 			return false;
 		}
 	}
@@ -44,9 +45,9 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (Entry);
 
-			Entry.Delegate = new TextNextResponderDelegate ()
+			Entry.Delegate = new DelegatedRowTextFieldDelegate ()
 			{
-				ProxyResponder = new RowProxyResponder(this, ProxyRowType.SingleView)
+				ProxyResponder = new ProxyResponder(this, ProxyRowType.SingleView)
 			};
 
 			RightEdgeConstraint = NSLayoutConstraint.Create (Entry, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0);
@@ -93,7 +94,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			var propertyEditorDelegate = new EntryPropertyEditorDelegate<T> (viewModel)
 			{
-				ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView)
+				ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView)
 			};
 			return propertyEditorDelegate;
 		}
@@ -105,7 +106,7 @@ namespace Xamarin.PropertyEditing.Mac
 	}
 
 	internal class EntryPropertyEditorDelegate<T>
-		: TextNextResponderDelegate
+		: DelegatedRowTextFieldDelegate
 	{
 		public EntryPropertyEditorDelegate (PropertyViewModel<T> viewModel)
 		{

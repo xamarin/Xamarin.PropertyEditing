@@ -4,7 +4,7 @@ namespace Xamarin.PropertyEditing.Mac
 {
 	internal class ProxyResponderButton : NSButton
 	{
-		public RowProxyResponder ProxyResponder { get; set; }
+		public ProxyResponder ProxyResponder { get; set; }
 
 		public override void KeyDown (NSEvent theEvent)
 		{

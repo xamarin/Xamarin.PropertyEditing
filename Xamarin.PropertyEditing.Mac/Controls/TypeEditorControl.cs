@@ -22,7 +22,7 @@ namespace Xamarin.PropertyEditing.Mac
 			this.selectType = new FocusableButton {
 				BezelStyle = NSBezelStyle.Rounded,
 				Title = Properties.Resources.Select,
-				ProxyResponder = new RowProxyResponder(this, ProxyRowType.SingleView)
+				ProxyResponder = new ProxyResponder(this, ProxyRowType.SingleView)
 			};
 
 			this.selectType.Activated += OnSelectPressed;

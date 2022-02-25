@@ -8,7 +8,7 @@ namespace Xamarin.PropertyEditing.Mac
 	{
 		public override bool CanBecomeKeyView { get { return Enabled; } }
 
-		public RowProxyResponder ProxyResponder { get; set; }
+		public ProxyResponder ProxyResponder { get; set; }
 
 		public FocusablePopUpButton ()
 		{

@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 			NumericEditor = new NumericSpinEditor<T> (hostResources)
 			{
-				ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView)
+				ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView)
 			};
 			NumericEditor.ValueChanged += OnValueChanged;
 
@@ -132,8 +132,8 @@ namespace Xamarin.PropertyEditing.Mac
 						TranslatesAutoresizingMaskIntoConstraints = false,
 					};
 
-					this.NumericEditor.ProxyResponder = new RowProxyResponder (this, ProxyRowType.FirstView);
-					this.inputModePopup.ProxyResponder = new RowProxyResponder (this, ProxyRowType.LastView);
+					this.NumericEditor.ProxyResponder = new ProxyResponder (this, ProxyRowType.FirstView);
+					this.inputModePopup.ProxyResponder = new ProxyResponder (this, ProxyRowType.LastView);
 
 					this.inputModePopup.Activated += (o, e) => {
 						var popupButton = o as NSPopUpButton;
