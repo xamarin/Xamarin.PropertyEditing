@@ -123,7 +123,8 @@ namespace Xamarin.PropertyEditing.Mac
 				NSView view;
 				PropertyEditorControl ctrl = null;
 
-				for (; reverse ? row > 0 : row < TableView.RowCount; row += modifier) {
+				var rowCount = TableView.RowCount;
+				for (; reverse ? row > 0 : row < rowCount; row += modifier) {
 
 					view = TableView.GetView (0, row, makeIfNecessary: false);
 					if (view is PropertyEditorControl pec) { // This is to include the CategoryContainer
