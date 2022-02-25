@@ -44,6 +44,11 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (Entry);
 
+			Entry.Delegate = new TextNextResponderDelegate ()
+			{
+				ProxyResponder = new RowProxyResponder(this, ProxyRowType.SingleView)
+			};
+
 			RightEdgeConstraint = NSLayoutConstraint.Create (Entry, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0);
 			AddConstraints (new[] {
 				NSLayoutConstraint.Create (Entry, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this,  NSLayoutAttribute.CenterY, 1f, 0),
@@ -88,7 +93,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			var propertyEditorDelegate = new EntryPropertyEditorDelegate<T> (viewModel)
 			{
-				ProxyResponder = new RowProxyResponder  (this, ProxyRowType.SingleView)
+				ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView)
 			};
 			return propertyEditorDelegate;
 		}

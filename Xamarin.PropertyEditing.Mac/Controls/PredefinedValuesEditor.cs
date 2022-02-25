@@ -74,8 +74,8 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 		}
 
-		private NSComboBox comboBox;
-		private NSPopUpButton popupButton;
+		private FocusableComboBox comboBox;
+		private FocusablePopUpButton popupButton;
 		private NSMenu popupButtonList;
 
 		private NSView firstKeyView;
@@ -115,7 +115,7 @@ namespace Xamarin.PropertyEditing.Mac
 				StringValue = String.Empty,
 				ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView)
 			};
-
+			this.popupButton.ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView);
 			this.popupButtonList = new NSMenu ();
 			this.popupButton.Menu = this.popupButtonList;
 			this.popupButton.Activated += PopupButton_Activated; 
@@ -162,7 +162,7 @@ namespace Xamarin.PropertyEditing.Mac
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				StringValue = String.Empty,
 			};
-
+			this.comboBox.ProxyResponder = new RowProxyResponder (this, ProxyRowType.SingleView);
 			this.comboBox.SelectionChanged += ComboBox_SelectionChanged;
 
 			AddSubview (this.comboBox);
