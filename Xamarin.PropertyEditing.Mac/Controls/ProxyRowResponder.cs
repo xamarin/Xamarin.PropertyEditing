@@ -9,13 +9,13 @@ namespace Xamarin.PropertyEditing.Mac
 		LastView
 	}
 
-	internal class RowProxyResponder 
+	internal class ProxyResponder 
 	{
 		protected WeakReference<PropertyEditorControl> editorControl;
 
 		readonly ProxyRowType rowType;
 
-		public RowProxyResponder (PropertyEditorControl editorControl, ProxyRowType rowType)
+		public ProxyResponder (PropertyEditorControl editorControl, ProxyRowType rowType)
 		{
 			this.rowType = rowType;
 			this.editorControl = new WeakReference<PropertyEditorControl> (editorControl);
