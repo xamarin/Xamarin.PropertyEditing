@@ -22,7 +22,9 @@ namespace Xamarin.PropertyEditing.Mac
 			this.selectType = new FocusableButton {
 				BezelStyle = NSBezelStyle.Rounded,
 				Title = Properties.Resources.Select,
+				ProxyResponder = new ProxyResponder(this, ProxyRowType.SingleView)
 			};
+
 			this.selectType.Activated += OnSelectPressed;
 			AddSubview (this.selectType);
 
@@ -89,7 +91,7 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 
 		private readonly UnfocusableTextField typeLabel;
-		private readonly NSButton selectType;
+		private readonly FocusableButton selectType;
 
 		private void OnTypeRequested (object sender, TypeRequestedEventArgs e)
 		{

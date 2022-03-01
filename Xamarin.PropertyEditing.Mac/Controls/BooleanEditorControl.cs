@@ -11,7 +11,10 @@ namespace Xamarin.PropertyEditing.Mac
 		public BooleanEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
-			BooleanEditor = new FocusableBooleanButton ();
+			BooleanEditor = new FocusableBooleanButton ()
+			{
+				ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView)
+			};
 			BooleanEditor.Title = string.Empty;
 
 			// update the value on 'enter'
