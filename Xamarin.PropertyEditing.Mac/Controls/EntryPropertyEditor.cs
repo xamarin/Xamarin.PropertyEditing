@@ -2,9 +2,35 @@ using System;
 using AppKit;
 using Foundation;
 using Xamarin.PropertyEditing.ViewModels;
+using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
 {
+	class DelegatedRowTextFieldDelegate : NSTextFieldDelegate
+	{
+		public ProxyResponder ProxyResponder { get; set; }
+
+		public override bool DoCommandBySelector (NSControl control, NSTextView textView, Selector commandSelector)
+		{
+			if (ProxyResponder != null)
+			{
+				switch (commandSelector.Name) {
+				case "insertTab:":
+					if (ProxyResponder.NextResponder ()) {
+						return true;
+					}
+					break;
+				case "insertBacktab:":
+					if (ProxyResponder.PreviousResponder ()) {
+						return true;
+					}
+					break;
+				}
+			} 
+			return false;
+		}
+	}
+
 	internal abstract class EntryPropertyEditor<T>
 		: PropertyEditorControl<PropertyViewModel<T>>
 	{
@@ -18,6 +44,11 @@ namespace Xamarin.PropertyEditing.Mac
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
 			AddSubview (Entry);
+
+			Entry.Delegate = new DelegatedRowTextFieldDelegate ()
+			{
+				ProxyResponder = new ProxyResponder(this, ProxyRowType.SingleView)
+			};
 
 			RightEdgeConstraint = NSLayoutConstraint.Create (Entry, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1f, 0);
 			AddConstraints (new[] {
@@ -61,7 +92,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected virtual EntryPropertyEditorDelegate<T> CreateDelegate (PropertyViewModel<T> viewModel)
 		{
-			return new EntryPropertyEditorDelegate<T> (viewModel);
+			var propertyEditorDelegate = new EntryPropertyEditorDelegate<T> (viewModel)
+			{
+				ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView)
+			};
+			return propertyEditorDelegate;
 		}
 
 		protected virtual string GetValue (T value)
@@ -71,7 +106,7 @@ namespace Xamarin.PropertyEditing.Mac
 	}
 
 	internal class EntryPropertyEditorDelegate<T>
-		: NSTextFieldDelegate
+		: DelegatedRowTextFieldDelegate
 	{
 		public EntryPropertyEditorDelegate (PropertyViewModel<T> viewModel)
 		{

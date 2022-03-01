@@ -23,11 +23,35 @@ namespace Xamarin.PropertyEditing.Mac
 		private readonly NSObject[] objects;
 		public override NSObject[] AccessibilityChildren { get => this.objects; }
 
+		private readonly DelegatedRowTextFieldDelegate textNextResponderDelegate;
+
+		class BasePathEditorDelegate : DelegatedRowTextFieldDelegate
+		{
+			WeakReference<BasePathEditorControl<T>> weakView;
+
+			public BasePathEditorDelegate (BasePathEditorControl<T> basePathEditorControl)
+			{
+				weakView = new WeakReference<BasePathEditorControl<T>>(basePathEditorControl);
+			}
+
+			public override void Changed (NSNotification notification)
+			{
+				if (this.weakView.TryGetTarget(out BasePathEditorControl<T> t)) {
+					t.StoreCurrentValue ();
+				}
+			}
+		}
+
 		protected BasePathEditorControl (IHostResourceProvider hostResource)
 			: base (hostResource)
 		{
 			this.currentTextField = new TextFieldSmallButtonContainer ();
-			this.currentTextField.Changed += CurrentTextField_Changed;
+
+			this.textNextResponderDelegate = new BasePathEditorDelegate (this)
+			{
+				ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView)
+			};
+			this.currentTextField.Delegate = this.textNextResponderDelegate;
 			AddSubview (this.currentTextField);
 
 			#region Reveal handler

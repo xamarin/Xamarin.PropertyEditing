@@ -13,7 +13,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected override EntryPropertyEditorDelegate<char> CreateDelegate (PropertyViewModel<char> viewModel)
 		{
-			return new CharDelegate (viewModel);
+			var charDelegate = new CharDelegate (viewModel)
+			{
+				ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView)
+			};
+			return charDelegate;
 		}
 
 		protected override void UpdateAccessibilityValues ()

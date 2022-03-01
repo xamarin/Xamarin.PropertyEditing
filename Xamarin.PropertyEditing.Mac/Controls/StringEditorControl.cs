@@ -45,7 +45,7 @@ namespace Xamarin.PropertyEditing.Mac
 						Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 						TranslatesAutoresizingMaskIntoConstraints = false
 					};
-
+					this.inputModePopup.ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView);
 					this.inputModePopup.Activated += (o, e) => {
 						var popupButton = o as NSPopUpButton;
 						ViewModel.InputMode = this.viewModelInputModes.FirstOrDefault (im => im.Identifier == popupButton.Title);
@@ -104,7 +104,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private NSView lastKeyView;
 		private NSLayoutConstraint editorInputModeConstraint;
-		private NSPopUpButton inputModePopup;
+		private FocusablePopUpButton inputModePopup;
 		private IReadOnlyList<InputMode> viewModelInputModes;
 	}
 }

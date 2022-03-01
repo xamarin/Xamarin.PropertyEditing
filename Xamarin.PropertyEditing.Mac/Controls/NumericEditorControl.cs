@@ -16,7 +16,10 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			NumericEditor = new NumericSpinEditor<T> (hostResources);
+			NumericEditor = new NumericSpinEditor<T> (hostResources)
+			{
+				ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView)
+			};
 			NumericEditor.ValueChanged += OnValueChanged;
 
 			var t = typeof (T);
@@ -129,6 +132,9 @@ namespace Xamarin.PropertyEditing.Mac
 						TranslatesAutoresizingMaskIntoConstraints = false,
 					};
 
+					this.NumericEditor.ProxyResponder = new ProxyResponder (this, ProxyRowType.FirstView);
+					this.inputModePopup.ProxyResponder = new ProxyResponder (this, ProxyRowType.LastView);
+
 					this.inputModePopup.Activated += (o, e) => {
 						var popupButton = o as NSPopUpButton;
 						ViewModel.InputMode = this.viewModelInputModes.FirstOrDefault (im => im.Identifier == popupButton.Title);
@@ -163,7 +169,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private Type underlyingType;
 
-		internal NSPopUpButton inputModePopup;
+		internal FocusablePopUpButton inputModePopup;
 		private IReadOnlyList<InputMode> viewModelInputModes;
 
 		private readonly NSLayoutConstraint editorRightConstraint;
