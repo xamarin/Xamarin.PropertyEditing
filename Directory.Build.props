@@ -1,3 +1,13 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- Deliberately empty so we don't inherit files from whoever submodules this repository -->
+    <!-- Enable MicroBuild signing on all projects, if the build is running in a pipeline where MicroBuild has been setup.  -->
+    <ItemGroup>
+      <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core">
+        <Version>1.0.0</Version>
+      </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+      <FilesToSign Include="$(OutDir)\$(AssemblyName).dll"> 
+        <Authenticode>Microsoft400</Authenticode> 
+      </FilesToSign>
+    </ItemGroup>
 </Project>

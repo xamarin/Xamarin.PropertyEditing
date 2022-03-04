@@ -5,12 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core">
-      <Version>1.0.0</Version>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -27,13 +21,10 @@
     </Compile>
   </ItemGroup>
 
-  <Target Name="GetFilesToSign" BeforeTargets="SignFiles" Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'ReleaseWindows'">
+  <Target Name="GetFilesToSign" BeforeTargets="SignFiles">
     <ItemGroup>
       <FilesToSign Include="$(OutDir)\**\$(AssemblyName).resources.dll">
         <Authenticode>Microsoft400</Authenticode>
-      </FilesToSign>
-      <FilesToSign Include="$(OutDir)\$(AssemblyName).dll"> 
-        <Authenticode>Microsoft400</Authenticode> 
       </FilesToSign>
     </ItemGroup>
   </Target>
