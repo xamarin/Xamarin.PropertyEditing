@@ -56,6 +56,7 @@ namespace Xamarin.PropertyEditing.Mac
 				ControlSize = NSControlSize.Small,
 				Font = NSFont.SystemFontOfSize (NSFont.SystemFontSizeForControlSize (NSControlSize.Small)),
 				TranslatesAutoresizingMaskIntoConstraints = false,
+				ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView)
 			};
 
 			this.popupButtonList = new NSMenu ();
@@ -129,7 +130,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			base.AppearanceChanged ();
 
-			this.popover.SetAppearance (HostResources.GetVibrantAppearance (EffectiveAppearance));
+			this.popover.Appearance = HostResources.GetVibrantAppearance (EffectiveAppearance);
 			this.popover.ContentViewController.View.Appearance = EffectiveAppearance;
 		}
 

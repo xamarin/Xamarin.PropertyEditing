@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using AppKit;
 using Foundation;
+using ObjCRuntime;
 
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -211,7 +212,11 @@ namespace Xamarin.PropertyEditing.Mac
 				this.registrations[cellIdentifier] = registration;
 			}
 
-			return registration.GetHeight (vm);
+			// The double cast below is needed for now, while the return value is type ObjCRuntime.nfloat
+			// in order for the integral to floating point conversion to work properly. Later when ObjCRuntime.nfloat
+			// is replaced with System.Runtime.InteropServices.NFloat that won't be needed (but can't hurt).
+			nfloat rowHeight = (nfloat)(double)registration.GetHeight (vm);
+			return rowHeight;
 		}
 
 		private class EditorRegistration

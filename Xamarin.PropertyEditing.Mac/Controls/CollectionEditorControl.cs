@@ -299,12 +299,13 @@ namespace Xamarin.PropertyEditing.Mac
 			public override bool WriteRows (NSTableView tableView, NSIndexSet rowIndexes, NSPasteboard pboard)
 			{
 				var item = new NSPasteboardItem ();
-				item.SetDataForType (NSKeyedArchiver.ArchivedDataWithRootObject (rowIndexes), DataTypeName);
+				item.SetDataForType (NSKeyedArchiver.GetArchivedData (rowIndexes), DataTypeName);
 				pboard.WriteObjects (new[] { item });
 				return true;
 			}
 
-			public override NSDragOperation ValidateDrop (NSTableView tableView, NSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation)
+			[Export ("tableView:validateDrop:proposedRow:proposedDropOperation:")]
+			public NSDragOperation ValidateDrop (NSTableView tableView, INSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation)
 			{
 				if (info.DraggingPasteboard.GetDataForType (DataTypeName) != null)
 					return NSDragOperation.Move;
@@ -312,7 +313,8 @@ namespace Xamarin.PropertyEditing.Mac
 				return NSDragOperation.None;
 			}
 
-			public override bool AcceptDrop (NSTableView tableView, NSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation)
+			[Export ("tableView:acceptDrop:row:dropOperation:")]
+			public bool AcceptDrop (NSTableView tableView, INSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation)
 			{
 				NSData data = info.DraggingPasteboard.GetDataForType (DataTypeName);
 				NSIndexSet indexes = NSKeyedUnarchiver.UnarchiveObject (data) as NSIndexSet;

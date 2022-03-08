@@ -16,6 +16,7 @@ namespace Xamarin.PropertyEditing.Mac
 			base.TranslatesAutoresizingMaskIntoConstraints = false;
 
 			this.ratioEditor = new RatioEditor<T> (hostResources);
+			this.ratioEditor.ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView);
 			this.ratioEditor.SetFormatter (null);
 
 			// update the value on keypress

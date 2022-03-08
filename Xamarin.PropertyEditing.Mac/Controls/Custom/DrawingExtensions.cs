@@ -2,6 +2,7 @@ using System;
 using AppKit;
 using CoreGraphics;
 using CoreImage;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac

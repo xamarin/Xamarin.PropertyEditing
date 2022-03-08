@@ -51,6 +51,19 @@ namespace Xamarin.PropertyEditing.Mac
 			Delegate = keyUpDownDelegate;
 		}
 
+		public ProxyResponder ProxyResponder
+		{
+			get {
+				return Delegate is KeyUpDownDelegate viewDownDelegate ? viewDownDelegate.ProxyResponder : null;
+			}
+			set
+			{
+				if (Delegate is KeyUpDownDelegate keydown) {
+					keydown.ProxyResponder = value;
+				}
+			}
+		}
+
 		public override CGSize IntrinsicContentSize => new CGSize(30, 20);
 
 		public override bool ShouldBeginEditing (NSText textObject)
@@ -156,28 +169,35 @@ namespace Xamarin.PropertyEditing.Mac
 		}
 	}
 
-	internal class KeyUpDownDelegate : NSTextFieldDelegate
+	internal class KeyUpDownDelegate : DelegatedRowTextFieldDelegate
 	{
 		public event EventHandler<bool> KeyArrowUp;
 		public event EventHandler<bool> KeyArrowDown;
 
 		public override bool DoCommandBySelector (NSControl control, NSTextView textView, Selector commandSelector)
 		{
+			//if parent already handles command we break the event chain
+			var parentHandlesCommand = base.DoCommandBySelector (control, textView, commandSelector);
+			if (parentHandlesCommand)
+			{
+				return false;
+			}
+
 			switch (commandSelector.Name) {
-				case "moveUp:":
-					OnKeyArrowUp ();
-					break;
-				case "moveDown:":
-					OnKeyArrowDown ();
-					break;
-				case "moveUpAndModifySelection:":
-					OnKeyArrowUp (true);
-					break;
-				case "moveDownAndModifySelection:":
-					OnKeyArrowDown (true);
-					break;
-				default:
-					return false;
+			case "moveUp:":
+				OnKeyArrowUp ();
+				break;
+			case "moveDown:":
+				OnKeyArrowDown ();
+				break;
+			case "moveUpAndModifySelection:":
+				OnKeyArrowUp (true);
+				break;
+			case "moveDownAndModifySelection:":
+				OnKeyArrowDown (true);
+				break;
+			default:
+				return false;
 			}
 
 			return true;

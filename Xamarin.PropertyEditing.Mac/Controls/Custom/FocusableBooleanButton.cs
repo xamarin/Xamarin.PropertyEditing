@@ -3,7 +3,7 @@ using AppKit;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class FocusableBooleanButton : NSButton
+	internal class FocusableBooleanButton : ProxyResponderButton
 	{
 		public override bool CanBecomeKeyView { get { return Enabled; } }
 

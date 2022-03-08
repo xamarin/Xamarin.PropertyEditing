@@ -6,7 +6,7 @@ using Foundation;
 
 namespace Xamarin.PropertyEditing.Mac
 {
-	internal class SmallButton : NSButton
+	internal class SmallButton : ProxyResponderButton
 	{
 		private NSView previousKeyView;
 		public override NSView PreviousKeyView => this.previousKeyView ?? base.PreviousKeyView;

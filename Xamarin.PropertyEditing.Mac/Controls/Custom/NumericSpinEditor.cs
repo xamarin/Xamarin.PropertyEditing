@@ -3,6 +3,7 @@ using System;
 using AppKit;
 using CoreGraphics;
 using Foundation;
+using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -169,6 +170,12 @@ namespace Xamarin.PropertyEditing.Mac
 		public override string AccessibilityTitle {
 			get { return this.numericEditor.AccessibilityTitle; }
 			set { this.numericEditor.AccessibilityTitle = value; }
+		}
+
+		public ProxyResponder ProxyResponder
+		{
+			get => this.numericEditor.ProxyResponder;
+			set => this.numericEditor.ProxyResponder = value;
 		}
 
 		public virtual void Reset ()

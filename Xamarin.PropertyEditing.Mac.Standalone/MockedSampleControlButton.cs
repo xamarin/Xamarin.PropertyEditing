@@ -1,5 +1,6 @@
 ﻿using System;
 using Foundation;
+using ObjCRuntime;
 using Xamarin.PropertyEditing.Tests.MockControls;
 
 namespace Xamarin.PropertyEditing.Mac.Standalone
@@ -8,7 +9,7 @@ namespace Xamarin.PropertyEditing.Mac.Standalone
 	public class MockedSampleControlButton : MockedControlButton<MockSampleControl>
 	{
 		// Called when created from unmanaged code
-		public MockedSampleControlButton (IntPtr handle) : base (new MockSampleControl (), handle)
+		public MockedSampleControlButton (NativeHandle handle) : base (new MockSampleControl (), handle)
 		{
 		}
 

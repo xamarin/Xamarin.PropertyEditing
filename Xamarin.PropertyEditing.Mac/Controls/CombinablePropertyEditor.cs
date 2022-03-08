@@ -83,8 +83,21 @@ namespace Xamarin.PropertyEditing.Mac
 			}
 
 			// Set our tabable order
-			this.firstKeyView = this.combinableList.KeyAt (0);
-			this.lastKeyView = this.combinableList.KeyAt (this.combinableList.Count - 1);
+			var firstButton = (FocusableBooleanButton) this.combinableList.KeyAt (0);
+			this.firstKeyView = firstButton;
+			
+			var lastButton = (FocusableBooleanButton)this.combinableList.KeyAt (this.combinableList.Count - 1);
+			this.lastKeyView = lastButton;
+
+			if (combinableList.Count > 0)
+			{
+				if (firstButton == lastButton) {
+					firstButton.ProxyResponder = new ProxyResponder (this, ProxyRowType.SingleView);
+				} else {
+					firstButton.ProxyResponder = new ProxyResponder (this, ProxyRowType.FirstView);
+					lastButton.ProxyResponder = new ProxyResponder (this, ProxyRowType.LastView);
+				}
+			}
 
 			SetEnabled ();
 

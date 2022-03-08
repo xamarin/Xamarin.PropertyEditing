@@ -2,6 +2,7 @@ using System;
 using CoreAnimation;
 using CoreGraphics;
 using Foundation;
+using ObjCRuntime;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -16,7 +17,7 @@ namespace Xamarin.PropertyEditing.Mac
 			return null;
 		}
 
-		public ColorEditorLayer (IntPtr handle) : base (handle)
+		public ColorEditorLayer (NativeHandle handle) : base (handle)
 		{
 		}
 
@@ -31,7 +32,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		public UnanimatedGradientLayer (IntPtr handle) : base (handle)
+		public UnanimatedGradientLayer (NativeHandle handle) : base (handle)
 		{
 		}
 
@@ -47,7 +48,7 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 		}
 
-		public UnanimatedLayer (IntPtr handle) : base (handle)
+		public UnanimatedLayer (NativeHandle handle) : base (handle)
 		{
 		}
 

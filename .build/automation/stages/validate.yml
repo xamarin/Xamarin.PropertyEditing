@@ -12,6 +12,13 @@ stages:
             clean: true
             persistCredentials: true
 
+          - task: provisionator@2
+            displayName: Provision Dependencies
+            inputs:
+              github_token: $(GitHub.Token)
+              provisioning_script: $(System.DefaultWorkingDirectory)/bot-provisioning/dependencies.csx
+              provisioning_extra_args: -vv DEVDIV_PKGS_NUGET_TOKEN=$(DevDiv.NuGet.Token) SECTOOLS_PKGS_NUGET_TOKEN=$(SecTools.NuGet.Token)
+
           - task: MSBuild@1
             displayName: Build
             inputs:
@@ -44,12 +51,6 @@ stages:
 
           - task: NuGetAuthenticate@0
 
-          - task: CmdLine@1
-            displayName: 'Set Token'
-            inputs:
-              filename: echo
-              arguments: '##vso[task.setvariable variable=GITHUB_TOKEN]$(GitHub.Token)'
-
           - task: provisionator@2
             displayName: Provision Dependencies
             inputs:
@@ -75,5 +76,5 @@ stages:
             displayName: 'Publish Test Results'
             inputs:
               testResultsFormat: NUnit
-              testResultsFiles: '**/TestResult.xml'
+              testResultsFiles: '**/*.Tests.xml'
             condition: succeededOrFailed()
