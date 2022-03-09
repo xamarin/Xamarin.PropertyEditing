@@ -20,4 +20,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
+
+  <Target Name="GetFilesToSign" BeforeTargets="SignFiles">
+    <ItemGroup>
+      <FilesToSign Include="$(OutDir)\**\$(AssemblyName).resources.dll">
+        <Authenticode>Microsoft400</Authenticode>
+      </FilesToSign>
+    </ItemGroup>
+  </Target>
 </Project>
