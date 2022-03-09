@@ -4,4 +4,16 @@
     <IsWindows>$([MSBuild]::IsOSPlatform('Windows'))</IsWindows>
     <IsLinux>$([MSBuild]::IsOSPlatform('Linux'))</IsLinux>
   </PropertyGroup>
+
+  <!-- Enable MicroBuild signing on all projects, if the build is running in a pipeline where MicroBuild has been setup.  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core">
+      <Version>1.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <FilesToSign Include="$(OutDir)\$(AssemblyName).dll"> 
+      <Authenticode>Microsoft400</Authenticode> 
+    </FilesToSign>
+  </ItemGroup>
 </Project>
