@@ -915,7 +915,7 @@
     <value>Advanced properties</value>
   </data>
   <data name="ArrangeByButtonName" xml:space="preserve">
-    <value>This button allows you to arrange the property list by {0}.</value>
+    <value>Arrange By</value>
   </data>
   <data name="PropertyButtonName" xml:space="preserve">
     <value>Advanced options</value>
