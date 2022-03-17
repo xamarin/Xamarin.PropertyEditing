@@ -1708,7 +1708,10 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="local:PropertyPresenter">
-					<Border x:Name="propertyContainer" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+					<Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+						<Border.InputBindings>
+							<KeyBinding Gesture="CTRL+Space" Command="{StaticResource InvokePropertyButtonCommand}" CommandParameter="{Binding ElementName=propertyButton,Mode=OneTime}" />
+						</Border.InputBindings>
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Name="delveColumn" Width="Auto" />
