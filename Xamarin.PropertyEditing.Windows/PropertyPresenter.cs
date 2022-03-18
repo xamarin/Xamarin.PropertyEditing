@@ -117,6 +117,7 @@ namespace Xamarin.PropertyEditing.Windows
 			this.propertyButton = (PropertyButton) GetTemplateChild ("propertyButton");
 
 			this.propertyContainer = (Border) GetTemplateChild ("propertyContainer");
+			// Since the template never changes, the handler only gets added once and there's no need to unsubscribe
 			this.propertyContainer.AddHandler (Border.PreviewKeyDownEvent, new KeyEventHandler (PropertyContainer_PreviewKeyDown));
 		}
 
