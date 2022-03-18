@@ -36,9 +36,10 @@ namespace Xamarin.PropertyEditing.Windows
 			this.brushBoxPopup.Closed += (s, e) => {
 				this.brushBoxButton.Focus ();
 			};
-			this.brushBoxPopup.KeyUp += (s, e) => {
+			this.brushBoxPopup.PreviewKeyDown += (s, e) => {
 				if (e.Key == Key.Escape) {
 					this.brushBoxPopup.IsOpen = false;
+					e.Handled = true;
 				}
 			};
 		}
