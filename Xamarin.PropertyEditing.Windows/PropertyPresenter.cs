@@ -6,6 +6,7 @@ using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using Xamarin.PropertyEditing.ViewModels;
 
@@ -112,6 +113,12 @@ namespace Xamarin.PropertyEditing.Windows
 
 			this.variationRow = (RowDefinition) GetTemplateChild ("variationRow");
 			this.variationsList = GetTemplateChild ("variationsList") as ItemsControl;
+
+			this.propertyButton = (PropertyButton) GetTemplateChild ("propertyButton");
+
+			this.propertyContainer = (Border) GetTemplateChild ("propertyContainer");
+			// Since the template never changes, the handler only gets added once and there's no need to unsubscribe
+			this.propertyContainer.AddHandler (Border.PreviewKeyDownEvent, new KeyEventHandler (PropertyContainer_PreviewKeyDown));
 		}
 
 		protected override AutomationPeer OnCreateAutomationPeer ()
@@ -155,10 +162,22 @@ namespace Xamarin.PropertyEditing.Windows
 			}
 		}
 
+		private void PropertyContainer_PreviewKeyDown (object sender, KeyEventArgs e)
+		{
+			var isModifierControl = Keyboard.Modifiers == ModifierKeys.Control;
+
+			if (e.Key == Key.Space && isModifierControl) {
+				propertyButton.ShowMenu ();
+				e.Handled = true;
+			}
+		}
+
 		private PropertyViewModel pvm;
 		private ButtonBase addButton, removeButton;
 		private RowDefinition variationRow;
 		private ItemsControl variationsList;
+		private Border propertyContainer;
+		private PropertyButton propertyButton;
 
 		private void OnLoaded (object sender, RoutedEventArgs e)
 		{
