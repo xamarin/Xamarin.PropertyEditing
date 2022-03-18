@@ -204,7 +204,7 @@
 								</Grid>
 							</Border>
 
-							<Grid Name="propertiesPane" Grid.Row="1">
+							<Grid Name="propertiesPane" Grid.Row="1" KeyboardNavigation.TabNavigation="Cycle">
 								<Grid.RowDefinitions>
 									<RowDefinition Height="Auto" />
 									<RowDefinition Height="Auto" />
