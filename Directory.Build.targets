@@ -6,7 +6,7 @@
 
   <PropertyGroup>
     <!--
-      Diable MicroBuild signing by default, then only enable it after compilation.
+      Disable MicroBuild signing by default, then only enable it after compilation.
       This way, if compilation is skipped because it the project has already been built, signing
       will remain turned off and we will not redundantly submit already-signed files to sign.
 
