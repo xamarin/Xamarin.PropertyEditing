@@ -596,10 +596,13 @@
       </Item>
       <Item ItemId=";ArrangeByButtonName" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[This button allows you to arrange the property list by {0}.]]></Val>
+          <Val><![CDATA[Arrange By]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[このボタンを使用すると、プロパティ一覧を {0} で並べ替えることができます。]]></Val>
+            <Val><![CDATA[並べ替え]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[This button allows you to arrange the property list by {0}.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

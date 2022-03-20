@@ -596,10 +596,13 @@
       </Item>
       <Item ItemId=";ArrangeByButtonName" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[This button allows you to arrange the property list by {0}.]]></Val>
+          <Val><![CDATA[Arrange By]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[이 단추를 사용하여 속성 목록을 {0}별로 정렬할 수 있습니다.]]></Val>
+            <Val><![CDATA[정렬 기준]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[This button allows you to arrange the property list by {0}.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
