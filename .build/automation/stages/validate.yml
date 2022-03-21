@@ -42,6 +42,8 @@ stages:
             clean: true
             persistCredentials: true
 
+          - template: agent-cleanser/v1.yml@templates # Uninstall Mono and Xamarin.Mac that come pre-loaded on the hosted agent. Workaround for https://github.com/xamarin/xamarin-macios/issues/9550.
+
           - task: NuGetAuthenticate@0
 
           - task: CmdLine@1
