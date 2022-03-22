@@ -33,7 +33,12 @@ stages:
               testResultsFiles: '**/TestResult.xml'
             condition: succeededOrFailed()
 
+      ###
+      # The MacOS job is disabled for the d17-0 branch because the branch is only used to ship VS Windows builds.
+      # Mac validation is superfluous.
+      ###
       - job: 'MacOS'
+        conditions: false # Disable job
         pool:
           vmImage: 'macOS-latest'
 
@@ -41,8 +46,6 @@ stages:
           - checkout: self
             clean: true
             persistCredentials: true
-
-          - template: agent-cleanser/v1.yml@templates # Uninstall Mono and Xamarin.Mac that come pre-loaded on the hosted agent. Workaround for https://github.com/xamarin/xamarin-macios/issues/9550.
 
           - task: NuGetAuthenticate@0
 
