@@ -38,7 +38,7 @@ stages:
       # Mac validation is superfluous.
       ###
       - job: 'MacOS'
-        conditions: false # Disable job
+        condition: false # Disable job
         pool:
           vmImage: 'macOS-latest'
 
