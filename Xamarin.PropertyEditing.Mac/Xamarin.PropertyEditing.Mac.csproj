@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Xamarin.PropertyEditing.props" />
   <PropertyGroup>
-    <TargetFramework>net6.0-macos</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
   </PropertyGroup>
 
