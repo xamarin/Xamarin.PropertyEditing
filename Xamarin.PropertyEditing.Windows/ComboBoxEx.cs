@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -25,6 +26,18 @@ namespace Xamarin.PropertyEditing.Windows
 		protected override AutomationPeer OnCreateAutomationPeer ()
 		{
 			return new ComboBoxExAutomationPeer (this);
+		}
+
+		public override void OnApplyTemplate ()
+		{
+			base.OnApplyTemplate ();
+
+			var textBox = Template.FindName ("PART_EditableTextBox", this) as TextBox;
+			if (textBox != null) {
+				string accessibilityName = AutomationProperties.GetName (this);
+
+				AutomationProperties.SetName (textBox, accessibilityName);
+			}
 		}
 
 		protected override void OnSelectionChanged (SelectionChangedEventArgs e)
