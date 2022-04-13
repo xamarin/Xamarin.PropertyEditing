@@ -33,7 +33,12 @@ stages:
               testResultsFiles: '**/TestResult.xml'
             condition: succeededOrFailed()
 
+      ###
+      # The MacOS job is disabled for the d17-1 branch because the branch is only used to ship VS Windows builds.
+      # Mac validation is superfluous.
+      ###
       - job: 'MacOS'
+        condition: false # Disable job
         pool:
           vmImage: 'macOS-latest'
 
