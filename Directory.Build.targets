@@ -3,4 +3,28 @@
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)Xamarin.PropertyEditing.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <!--
+      Disable MicroBuild signing by default, then only enable it after compilation.
+      This way, if compilation is skipped because it the project has already been built, signing
+      will remain turned off and we will not redundantly submit already-signed files to sign.
+
+      This property group must remain in Directory.Build.targets file (as opposed to *.props) because
+      the initial MicroBuild_SigningEnabled value is not set until after Directory.Build.props has been processed.
+    -->
+    <MicroBuild_SigningEnabled_Old>$(MicroBuild_SigningEnabled)</MicroBuild_SigningEnabled_Old>
+    <MicroBuild_SigningEnabled>false</MicroBuild_SigningEnabled>
+
+    <TargetsTriggeredByCompilation>
+        $(TargetsTriggeredByCompilation);
+        EnableMicroBuildSigningPostCompile
+    </TargetsTriggeredByCompilation>
+  </PropertyGroup>
+
+  <Target Name="EnableMicroBuildSigningPostCompile">
+    <PropertyGroup>
+      <MicroBuild_SigningEnabled>$(MicroBuild_SigningEnabled_Old)</MicroBuild_SigningEnabled>
+    </PropertyGroup>
+  </Target>
 </Project>
