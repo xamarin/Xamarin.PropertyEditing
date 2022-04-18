@@ -15,5 +15,16 @@
     <FilesToSign Include="$(OutDir)\$(AssemblyName).dll"> 
       <Authenticode>Microsoft400</Authenticode> 
     </FilesToSign>
+
+    <!--
+      Sign both OutDir and IntermediateOutputPath when nuget files are present, so that IntermediateOutputPath can be updated after
+      the nuget file signing, else nuget inputs will register as newer than outputs.
+      See EnforceNugetSigningBeforeOutputSigning target for more details.
+      TODO thsparks : Do we still need to sign OutDir in this case? Should we just always sign Intermediate?
+    -->
+    <FilesToSign Include="$(IntermediateOutputPath)$(AssemblyName).dll" Condition="@(NuGetFilesToSign)' != ''">
+      <Authenticode>Microsoft400</Authenticode>
+      <StrongName>None</StrongName>
+    </FilesToSign>
   </ItemGroup>
 </Project>
