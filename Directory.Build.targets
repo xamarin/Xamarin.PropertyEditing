@@ -38,4 +38,19 @@
   <Target Name="EnforceNugetSigningBeforeOutputSigning" Condition="'$(MicroBuild_SigningEnabled)' == 'true' and '@(NuGetFilesToSign)' != ''" BeforeTargets="SignFiles" DependsOnTargets="SignNugetFiles">
       <Message Text="Enforing NuGet signing before output signing..." />
   </Target>
+
+  <!--
+    Sign IntermediateOutputPath when nuget files are present, so IntermediateOutputPath files can be updated after
+    the nuget file signing, else nuget inputs will register as newer than outputs.
+    See EnforceNugetSigningBeforeOutputSigning target for more details.
+    TODO thsparks : Do we still need to sign OutDir in this case? Should we just always sign Intermediate?
+  -->
+  <Target Name="SignIntermediateOutputIfSigningNugets" BeforeTargets="SignNuGetFiles" Condition="'@(NuGetFilesToSign)' != ''">
+    <ItemGroup>
+      <FilesToSign Include="$(IntermediateOutputPath)$(AssemblyName).dll">
+        <Authenticode>Microsoft400</Authenticode>
+        <StrongName>None</StrongName>
+      </FilesToSign>
+    </ItemGroup>
+  </Target>
 </Project>
