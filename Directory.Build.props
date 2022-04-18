@@ -22,7 +22,7 @@
       See EnforceNugetSigningBeforeOutputSigning target for more details.
       TODO thsparks : Do we still need to sign OutDir in this case? Should we just always sign Intermediate?
     -->
-    <FilesToSign Include="$(IntermediateOutputPath)$(AssemblyName).dll" Condition="@(NuGetFilesToSign)' != ''">
+    <FilesToSign Include="$(IntermediateOutputPath)$(AssemblyName).dll" Condition="'@(NuGetFilesToSign)' != ''">
       <Authenticode>Microsoft400</Authenticode>
       <StrongName>None</StrongName>
     </FilesToSign>
