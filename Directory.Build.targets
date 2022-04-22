@@ -4,53 +4,5 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <!--
-      Disable MicroBuild signing by default, then only enable it after compilation.
-      This way, if compilation is skipped because it the project has already been built, signing
-      will remain turned off and we will not redundantly submit already-signed files to sign.
-
-      This property group must remain in Directory.Build.targets file (as opposed to *.props) because
-      the initial MicroBuild_SigningEnabled value is not set until after Directory.Build.props has been processed.
-    -->
-    <MicroBuild_SigningEnabled_Old>$(MicroBuild_SigningEnabled)</MicroBuild_SigningEnabled_Old>
-    <MicroBuild_SigningEnabled>false</MicroBuild_SigningEnabled>
-
-    <TargetsTriggeredByCompilation>
-        $(TargetsTriggeredByCompilation);
-        EnableMicroBuildSigningPostCompile
-    </TargetsTriggeredByCompilation>
-  </PropertyGroup>
-
-  <Target Name="EnableMicroBuildSigningPostCompile">
-    <PropertyGroup>
-      <MicroBuild_SigningEnabled>$(MicroBuild_SigningEnabled_Old)</MicroBuild_SigningEnabled>
-    </PropertyGroup>
-  </Target>
-
-  <!--
-  By creating this target, we can ensure SignNugetFiles will run before SignFiles.
-  This ensures the output files (signed by SignFiles) will still look "more recent" than
-  the nuget files (signed by SignNugetFiles), which are considered inputs to the project.
-  If we don't do this and SignNugetFiles runs first, the inputs look more recent than the outputs and the
-  project will be rebuilt unnecessarily.
-  -->
-  <Target Name="EnforceNugetSigningBeforeOutputSigning" Condition="'$(MicroBuild_SigningEnabled)' == 'true' and '@(NuGetFilesToSign)' != ''" BeforeTargets="SignFiles" DependsOnTargets="SignNugetFiles">
-      <Message Text="Enforing NuGet signing before output signing..." />
-  </Target>
-
-  <!--
-    Sign IntermediateOutputPath when nuget files are present, so IntermediateOutputPath files can be updated after
-    the nuget file signing, else nuget inputs will register as newer than outputs.
-    See EnforceNugetSigningBeforeOutputSigning target for more details.
-    TODO thsparks : Do we still need to sign OutDir in this case? Should we just always sign Intermediate?
-  -->
-  <Target Name="SignIntermediateOutputIfSigningNugets" BeforeTargets="SignNuGetFiles" Condition="'@(NuGetFilesToSign)' != ''">
-    <ItemGroup>
-      <FilesToSign Include="$(IntermediateOutputPath)$(AssemblyName).dll">
-        <Authenticode>Microsoft400</Authenticode>
-        <StrongName>None</StrongName>
-      </FilesToSign>
-    </ItemGroup>
-  </Target>
+  <Import Project="RedundantSigningWorkarounds.targets" />
 </Project>
