@@ -16,14 +16,12 @@ stages:
             displayName: Build
             inputs:
               solution: build.proj
-              msbuildVersion: "15.0"
               msbuildArguments: '/restore /p:Release=true /t:Build'
 
           - task: MSBuild@1
             displayName: 'Run Tests'
             inputs:
               solution: build.proj
-              msbuildVersion: "15.0"
               msbuildArguments: '/p:Release=true /t:Test'
 
           - task: PublishTestResults@2
@@ -61,14 +59,12 @@ stages:
             displayName: Build
             inputs:
               solution: build.proj
-              msbuildVersion: "15.0"
               msbuildArguments: '/restore /p:Release=true /t:Build'
 
           - task: MSBuild@1
             displayName: 'Run Tests'
             inputs:
               solution: build.proj
-              msbuildVersion: "15.0"
               msbuildArguments: '/p:Release=true /t:Test'
 
           - task: PublishTestResults@2
