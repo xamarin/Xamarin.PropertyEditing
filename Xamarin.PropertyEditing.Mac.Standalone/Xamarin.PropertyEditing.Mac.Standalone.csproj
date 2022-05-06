@@ -121,7 +121,7 @@
       <Name>Xamarin.PropertyEditing.Tests</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\..\..\..\..\..\External\xbuild\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>
       <PropertyEditingResourceBundlePath Include="$(OutputPath)\PropertyEditingResource.bundle\**\*" />
