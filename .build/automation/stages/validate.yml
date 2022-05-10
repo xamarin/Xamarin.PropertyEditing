@@ -71,5 +71,5 @@ stages:
             displayName: 'Publish Test Results'
             inputs:
               testResultsFormat: NUnit
-              testResultsFiles: '**/TestResult.xml'
+              testResultsFiles: '**/*.Tests.xml'
             condition: succeededOrFailed()
