@@ -42,7 +42,7 @@ stages:
 
       - job: 'MacOS'
         pool:
-          vmImage: 'macOS-latest'
+          vmImage: 'macos-12'
 
         steps:
           - checkout: self
@@ -58,19 +58,19 @@ stages:
               provisioning_script: $(System.DefaultWorkingDirectory)/bot-provisioning/dependencies.csx
               provisioning_extra_args: -vv DEVDIV_PKGS_NUGET_TOKEN=$(DevDiv.NuGet.Token) SECTOOLS_PKGS_NUGET_TOKEN=$(SecTools.NuGet.Token)
 
-          - task: MSBuild@1
+          - task: DotNetCoreCLI@2
             displayName: Build
             inputs:
-              solution: build.proj
-              msbuildVersion: "15.0"
-              msbuildArguments: '/restore /p:Release=true /t:Build'
+              projects: build.proj
+              command: build
+              arguments: '/restore /p:Release=true /t:Build'
 
-          - task: MSBuild@1
+          - task: DotNetCoreCLI@2
             displayName: 'Run Tests'
             inputs:
-              solution: build.proj
-              msbuildVersion: "15.0"
-              msbuildArguments: '/p:Release=true /t:Test'
+              projects: build.proj
+              command: build
+              arguments: '/p:Release=true /t:Test'
 
           - task: PublishTestResults@2
             displayName: 'Publish Test Results'
