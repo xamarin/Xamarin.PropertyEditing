@@ -71,7 +71,9 @@ namespace Xamarin.PropertyEditing.Mac
 					this.viewModel.ArrangedPropertiesChanged += OnPropertiesChanged;
 
 					this.dataSource = new PropertyTableDataSource (this.viewModel) { ShowHeader = ShowHeader };
-					this.propertyTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
+					this.dataDelegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
+
+					this.propertyTable.Delegate = this.dataDelegate;
 					this.propertyTable.DataSource = this.dataSource;
 				}
 			}
@@ -101,13 +103,14 @@ namespace Xamarin.PropertyEditing.Mac
 
 		public void UpdateExpansions ()
 		{
-			((PropertyTableDelegate)this.propertyTable.Delegate).UpdateExpansions (this.propertyTable);
+			dataDelegate.UpdateExpansions (this.propertyTable);
 		}
 
 		private readonly NSOutlineView propertyTable;
 		private readonly NSScrollView scrollView;
 		private IHostResourceProvider hostResources;
 		private PropertyTableDataSource dataSource;
+		private PropertyTableDelegate dataDelegate;
 		private PanelViewModel viewModel;
 		private bool showHeader = true;
 
@@ -163,7 +166,9 @@ namespace Xamarin.PropertyEditing.Mac
 			this.propertyTable.BackgroundColor = this.hostResources.GetNamedColor (NamedResources.PadBackgroundColor);
 
 			if (this.propertyTable.Delegate != null)
-				this.propertyTable.Delegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
+			{
+				this.propertyTable.Delegate = dataDelegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
+			}
 		}
 	}
 }
