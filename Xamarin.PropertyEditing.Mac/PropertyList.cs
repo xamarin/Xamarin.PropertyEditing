@@ -167,7 +167,13 @@ namespace Xamarin.PropertyEditing.Mac
 
 			if (this.propertyTable.Delegate != null)
 			{
-				this.propertyTable.Delegate = dataDelegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
+				var oldDelegate = this.propertyTable.Delegate;
+
+				this.dataDelegate = new PropertyTableDelegate (HostResourceProvider, this.dataSource);
+
+				this.propertyTable.Delegate = dataDelegate;
+
+				GC.KeepAlive (oldDelegate);
 			}
 		}
 	}
