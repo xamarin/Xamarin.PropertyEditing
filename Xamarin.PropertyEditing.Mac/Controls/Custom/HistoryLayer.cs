@@ -78,7 +78,11 @@ namespace Xamarin.PropertyEditing.Mac
 		{
 			LayoutIfNeeded ();
 			current.BackgroundColor = interaction.Color.ToCGColor ();
-			previous.BackgroundColor = interaction.ViewModel.InitialColor.ToCGColor ();
+			//there are some scenarios where viewmodel could be null
+			var initialColor = interaction.ViewModel?.InitialColor;
+			if (initialColor != null) {
+				previous.BackgroundColor = initialColor.ToCGColor ();
+			}
 			last.BackgroundColor = interaction.LastColor.ToCGColor ();
 		}
 
