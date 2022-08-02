@@ -3,6 +3,7 @@ using AppKit;
 using CoreAnimation;
 using CoreGraphics;
 using ObjCRuntime;
+using Xamarin.PropertyEditing.Drawing;
 
 namespace Xamarin.PropertyEditing.Mac
 {
@@ -77,9 +78,20 @@ namespace Xamarin.PropertyEditing.Mac
 		public override void UpdateFromModel (EditorInteraction interaction)
 		{
 			LayoutIfNeeded ();
-			current.BackgroundColor = interaction.Color.ToCGColor ();
-			previous.BackgroundColor = interaction.ViewModel.InitialColor.ToCGColor ();
-			last.BackgroundColor = interaction.LastColor.ToCGColor ();
+			SetCALayerBackgroundColor (current, interaction.Color);
+			//there are some scenarios where viewmodel could be null
+			if (interaction.ViewModel != null)
+				SetCALayerBackgroundColor (previous, interaction.ViewModel.InitialColor);
+			SetCALayerBackgroundColor (last, interaction.LastColor);
+		}
+
+		static void SetCALayerBackgroundColor(CALayer layer, CommonColor color)
+		{
+			// We need to use GC.KeepAlive to ensure that the CGColor doesn't get garbage collected (and thus the
+			// native object Released) before the BackgroundColor assignment is complete
+			CGColor cgColor = color.ToCGColor ();
+			layer.BackgroundColor = cgColor;
+			GC.KeepAlive (cgColor);
 		}
 
 		public override void UpdateFromLocation (EditorInteraction interaction, CGPoint location)
