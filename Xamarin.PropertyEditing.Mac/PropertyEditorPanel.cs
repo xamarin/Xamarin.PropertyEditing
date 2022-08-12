@@ -185,14 +185,14 @@ namespace Xamarin.PropertyEditing.Mac
 			this.AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 0),
 				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Width, NSLayoutRelation.Equal, this, NSLayoutAttribute.Width, 1, 0),
-				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1, 30),
+				NSLayoutConstraint.Create (this.header, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1, 32),
 
 				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.header,  NSLayoutAttribute.Leading, 1, 0),
 				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Top, 1, 0),
 				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Bottom, 1, 0),
 				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Trailing, NSLayoutRelation.LessThanOrEqual, this.propertyFilter, NSLayoutAttribute.Leading, 1, 0),
 
-				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.tabStack, NSLayoutAttribute.Trailing, 1, 20),
+				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.tabStack, NSLayoutAttribute.Trailing, 1, 10),
 				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Trailing, 1, -19),
 				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.CenterY, 1, 0),
 
