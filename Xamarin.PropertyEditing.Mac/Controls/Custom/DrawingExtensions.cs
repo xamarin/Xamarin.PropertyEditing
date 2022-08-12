@@ -20,7 +20,7 @@ namespace Xamarin.PropertyEditing.Mac
 				Color0 = c0,
 				Color1 = c1,
 				Width = (float)Math.Min (frame.Height / 2f, 10),
-				Center = new CIVector (new nfloat[] { 0, 0 }),
+				InputCenter = default,
 			}) {
 				using (var context = new CIContext (null)) {
 					return context.CreateCGImage (board.OutputImage, new CGRect (0, 0, frame.Width, frame.Height));
