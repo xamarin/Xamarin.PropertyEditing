@@ -193,7 +193,7 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.tabStack, NSLayoutAttribute.Trailing, NSLayoutRelation.LessThanOrEqual, this.propertyFilter, NSLayoutAttribute.Leading, 1, 0),
 
 				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, this.tabStack, NSLayoutAttribute.Trailing, 1, 10),
-				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Trailing, 1, -19),
+				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Trailing, 1, -6),
 				NSLayoutConstraint.Create (this.propertyFilter, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.CenterY, 1, 0),
 
 				NSLayoutConstraint.Create (this.border, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, this.header, NSLayoutAttribute.Bottom, 1, 0),
