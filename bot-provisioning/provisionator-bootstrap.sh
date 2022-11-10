@@ -81,4 +81,4 @@ fi
 # More info https://github.com/ziglang/zig/issues/7569
 export SYSTEM_VERSION_COMPAT=0
 
-exec "$binary_path" "$@"
+exec caffeinate "$binary_path" "$@"
