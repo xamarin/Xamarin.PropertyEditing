@@ -56,6 +56,10 @@ namespace Xamarin.PropertyEditing.Mac
 			};
 			AddSubview (this.propertyIcon);
 
+			typeTopConstraintWhenNameVisible = NSLayoutConstraint.Create(this.typeLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.propertyObjectName, NSLayoutAttribute.Bottom, 1, 5);
+			typeTopConstraintWhenNameHidden = NSLayoutConstraint.Create(this.typeLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 1);
+			typeTopConstraintWhenNameHidden.Active = false;
+
 			this.AddConstraints (new[] {
 				NSLayoutConstraint.Create (this.propertyIcon, NSLayoutAttribute.Width, NSLayoutRelation.Equal, 1, 32),
 				NSLayoutConstraint.Create (this.propertyIcon, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1, 32),
@@ -70,7 +74,8 @@ namespace Xamarin.PropertyEditing.Mac
 				NSLayoutConstraint.Create (this.propertyObjectName, NSLayoutAttribute.Left, NSLayoutRelation.Equal, this.objectNameLabel, NSLayoutAttribute.Right, 1, EditorContainer.LabelToControlSpacing),
 				NSLayoutConstraint.Create (this.propertyObjectName, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, 1, -(EditorContainer.PropertyTotalWidth)),
 
-				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.propertyObjectName, NSLayoutAttribute.Bottom, 1, 5),
+				typeTopConstraintWhenNameVisible,
+				typeTopConstraintWhenNameHidden,
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, Mac.Layout.GoldenRatioLeft, 0),
 				NSLayoutConstraint.Create (this.typeLabel, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 20),
 
@@ -97,9 +102,8 @@ namespace Xamarin.PropertyEditing.Mac
 					this.viewModel.PropertyChanged += OnViewModelPropertyChanged;
 
 				this.typeDisplay.StringValue = value?.TypeName ?? String.Empty;
-				UpdateValue ();
+				UpdateObjectName ();
 				UpdateIcon ();
-				this.propertyObjectName.Enabled = !this.viewModel.IsObjectNameReadOnly;
 			}
 		}
 
@@ -112,6 +116,8 @@ namespace Xamarin.PropertyEditing.Mac
 
 		private NSImageView propertyIcon;
 		private NSTextField propertyObjectName;
+		private NSLayoutConstraint typeTopConstraintWhenNameVisible;
+		private NSLayoutConstraint typeTopConstraintWhenNameHidden;
 		private UnfocusableTextField typeLabel, typeDisplay, objectNameLabel;
 
 		private PanelViewModel viewModel;
@@ -119,20 +125,26 @@ namespace Xamarin.PropertyEditing.Mac
 		private void OnViewModelPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == nameof (PanelViewModel.ObjectName)) {
-				UpdateValue ();
+				UpdateObjectName ();
 			} else if (e.PropertyName == nameof (PanelViewModel.TypeName)) {
 				UpdateIcon ();
 			} else if (String.IsNullOrEmpty (e.PropertyName)) {
-				UpdateValue ();
+				UpdateObjectName ();
 				UpdateIcon ();
 			}
 		}
 
-		private void UpdateValue ()
+		private void UpdateObjectName ()
 		{
 			this.propertyObjectName.StringValue = this.viewModel.ObjectName ?? string.Empty;
 			this.propertyObjectName.AccessibilityTitle = string.Format (Properties.Resources.AccessibilityObjectName, nameof (viewModel.ObjectName));
 			this.propertyObjectName.Enabled = !this.viewModel.IsObjectNameReadOnly;
+
+			bool objectNameVisible = this.viewModel.IsObjectNameable;
+			this.objectNameLabel.Hidden = !objectNameVisible;
+			this.propertyObjectName.Hidden = !objectNameVisible;
+			this.typeTopConstraintWhenNameVisible.Active = objectNameVisible;
+			this.typeTopConstraintWhenNameHidden.Active = !objectNameVisible;
 		}
 
 		private void OnObjectNameEdited (object sender, EventArgs e)
