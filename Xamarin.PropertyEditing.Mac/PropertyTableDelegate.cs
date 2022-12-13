@@ -192,7 +192,7 @@ namespace Xamarin.PropertyEditing.Mac
 
 				if (cellIdentifier == nameof (PanelHeaderEditorControl)) {
 					if (this.dataSource?.DataContext is PanelViewModel panelView && !panelView.IsObjectNameable) {
-						registration.RowSize = 27;
+						registration.RowSize = 26;
 					}
 					else {
 						registration.RowSize = 54;

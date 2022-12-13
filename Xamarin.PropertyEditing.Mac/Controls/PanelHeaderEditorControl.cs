@@ -57,7 +57,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.propertyIcon);
 
 			typeTopConstraintWhenNameVisible = NSLayoutConstraint.Create(this.typeLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this.propertyObjectName, NSLayoutAttribute.Bottom, 1, 5);
-			typeTopConstraintWhenNameHidden = NSLayoutConstraint.Create(this.typeLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 5);
+			typeTopConstraintWhenNameHidden = NSLayoutConstraint.Create(this.typeLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, this, NSLayoutAttribute.Top, 1, 1);
 			typeTopConstraintWhenNameHidden.Active = false;
 
 			this.AddConstraints (new[] {
