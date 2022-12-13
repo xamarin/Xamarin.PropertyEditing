@@ -191,7 +191,12 @@ namespace Xamarin.PropertyEditing.Mac
 				registration = new EditorRegistration ();
 
 				if (cellIdentifier == nameof (PanelHeaderEditorControl)) {
-					registration.RowSize = 54;
+					if (this.dataSource?.DataContext is PanelViewModel panelView && !panelView.IsObjectNameable) {
+						registration.RowSize = 27;
+					}
+					else {
+						registration.RowSize = 54;
+					}
 				} else {
 					NSView editorOrContainer = GetEditor (cellIdentifier, vm, outlineView);
 					IEditorView view = ((editorOrContainer as EditorContainer)?.EditorView) ?? editorOrContainer as IEditorView;
