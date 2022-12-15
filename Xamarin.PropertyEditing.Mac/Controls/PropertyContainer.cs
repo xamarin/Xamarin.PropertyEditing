@@ -18,7 +18,7 @@ namespace Xamarin.PropertyEditing.Mac
 			AddSubview (this.label);
 
 			AddConstraints (new[] {
-				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Left, NSLayoutRelation.GreaterThanOrEqual, this, NSLayoutAttribute.Left, 1, 0f),
+				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Left, NSLayoutRelation.GreaterThanOrEqual, this, NSLayoutAttribute.Left, 1, 8f),
 				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Right, NSLayoutRelation.Equal, this, NSLayoutAttribute.Right, Mac.Layout.GoldenRatioLeft, 0f),
 				NSLayoutConstraint.Create (this.label, NSLayoutAttribute.Height, NSLayoutRelation.Equal, 1f, 18),
 			});
@@ -106,11 +106,11 @@ namespace Xamarin.PropertyEditing.Mac
 
 		protected PropertyButton PropertyButton => this.propertyButton;
 
-		internal const float LabelToControlSpacing = 8f;
+		internal const float LabelToControlSpacing = 3f;
 		internal static float PropertyTotalWidth => PropertyButton.DefaultSize + ButtonToWallSpacing + EditorToButtonSpacing;
 
 		private const float EditorToButtonSpacing = 4f;
-		private const float ButtonToWallSpacing = 17f;
+		private const float ButtonToWallSpacing = 11f;
 
 		private readonly PropertyButton propertyButton;
 		private readonly UnfocusableTextField label = new UnfocusableTextField {
