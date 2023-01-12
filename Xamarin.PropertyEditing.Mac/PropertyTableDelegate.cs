@@ -140,9 +140,15 @@ namespace Xamarin.PropertyEditing.Mac
 				return;
 			}
 
-			if (facade.Target is PanelGroupViewModel group)
+			if (facade.Target is PanelGroupViewModel group) {
 				this.dataSource.DataContext.SetIsExpanded (group.Category, isExpanded: true);
-			else if (facade.Target is ObjectPropertyViewModel ovm) {
+
+				// Also update the expander state. This is needed when the property editor first
+				// displays and category groups default to expanded, to show the right icon
+				NSView view = outline.GetView (0, row, makeIfNecessary: false);
+				if (view != null && view.Subviews[0] is NSButton expander)
+					expander.State = NSCellStateValue.On;
+			} else if (facade.Target is ObjectPropertyViewModel ovm) {
 				NSView view = outline.GetView (0, row, makeIfNecessary: false);
 				SetRowValueBackground (view, valueBackground: true);
 			}
