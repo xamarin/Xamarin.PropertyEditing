@@ -116,6 +116,13 @@ namespace Xamarin.PropertyEditing.ViewModels
 				this.valueName = newValueName;
 				OnPropertyChanged (nameof(ValueName));
 			}
+			// If the value doesn't match a predefined value (checked with TryGetValueName above) then treat it the same as if the
+			// ValueDescriptor contains the custom value name so that the custom value is displayed. The original intention of the code
+			// isn't quite clear, but the Forms XAML code just sets the value, not ValueDescriptor, in this scenario, so support either
+			else if (!IsConstrainedToPredefined && CurrentValue != null && CurrentValue.Value is string customValue && ! string.IsNullOrEmpty(customValue)) {
+				this.valueName = customValue;
+				OnPropertyChanged (nameof (ValueName));
+			}
 		}
 	}
 }
