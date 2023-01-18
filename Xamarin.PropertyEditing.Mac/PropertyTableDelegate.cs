@@ -146,7 +146,7 @@ namespace Xamarin.PropertyEditing.Mac
 				// Also update the expander state. This is needed when the property editor first
 				// displays and category groups default to expanded, to show the right icon
 				NSView view = outline.GetView (0, row, makeIfNecessary: false);
-				if (view != null && view.Subviews[0] is NSButton expander)
+				if (view?.Subviews != null && view.Subviews.Length > 0 && view.Subviews[0] is NSButton expander)
 					expander.State = NSCellStateValue.On;
 			} else if (facade.Target is ObjectPropertyViewModel ovm) {
 				NSView view = outline.GetView (0, row, makeIfNecessary: false);
