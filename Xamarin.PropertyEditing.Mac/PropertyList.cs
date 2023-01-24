@@ -154,6 +154,7 @@ namespace Xamarin.PropertyEditing.Mac
 		private void OnPropertiesChanged (object sender, EventArgs e)
 		{
 			this.propertyTable.ReloadData ();
+			UpdateExpansions ();
 		}
 
 		private void UpdateResourceProvider ()
