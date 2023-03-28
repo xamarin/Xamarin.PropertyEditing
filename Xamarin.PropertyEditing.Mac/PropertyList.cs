@@ -18,12 +18,15 @@ namespace Xamarin.PropertyEditing.Mac
 			this.propertyTable = new FirstResponderOutlineView {
 				AccessibilityEnabled = true,
 				AccessibilityTitle = Properties.Resources.AccessibilityPropertyTable,
-				Style = NSTableViewStyle.FullWidth,
 				IndentationPerLevel = 0,
 				SelectionHighlightStyle = NSTableViewSelectionHighlightStyle.None,
 				HeaderView = null,
 				IntercellSpacing = new CGSize (0, 0)
 			};
+
+			// NSTableViewStyle.FullWidth is only supported on macOS 11.0 and later
+			if (MacSystemInformation.OsVersion >= MacSystemInformation.BigSur)
+				this.propertyTable.Style = NSTableViewStyle.FullWidth;
 
 			var propertyEditors = new NSTableColumn (PropertyEditorColId);
 			this.propertyTable.AddColumn (propertyEditors);
