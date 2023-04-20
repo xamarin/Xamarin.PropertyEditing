@@ -1,6 +1,6 @@
 stages:
-  - stage: validate
-    displayName: 'Validation'
+  - stage: build
+    displayName: 'Build'
     dependsOn: []
     jobs:
       - job: 'Windows'

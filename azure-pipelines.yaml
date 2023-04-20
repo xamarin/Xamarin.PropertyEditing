@@ -22,8 +22,8 @@ variables:
 - template: .build/automation/variables.yml
 
 stages:
-  - template: .build/automation/stages/validate.yml
-  - template: .build/automation/stages/security_compliance.yml
+  - template: .build/automation/stages/build.yml
+  - template: .build/automation/stages/compliance.yml
 # The following Stages are dependent on the OneLocBuild task which is not available in the Xamarin Public AzDevops instance
   - template: .build/automation/stages/localization-handoff.yml                     # Process outgoing strings [Localization Handoff]
   - template: .build/automation/stages/localization-handback.yml                    # Process incoming translations and Create PR to main [Localization Handback]
