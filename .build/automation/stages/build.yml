@@ -1,5 +1,5 @@
 stages:
-  - stage: build
+  - stage: Build
     displayName: 'Build'
     dependsOn: []
     jobs:
