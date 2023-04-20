@@ -1,5 +1,5 @@
 stages:
-  - template: foobar
+  - template: security/full/v0.yml@templates
     parameters:
       complianceEnabled: true
       scanArtifacts: ['Symbols']
