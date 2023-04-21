@@ -2,7 +2,7 @@ stages:
   - template: security/full/v0.yml@templates
     parameters:
       windowsPoolName: 'Hosted Windows 2019 with VS2019'
-      windowsImageOverride: 'windows-2019'
+      windowsImageOverride: 'none'
       complianceEnabled: true
       scanArtifacts: ['Symbols']
       antiMalwareEnabled: true
