@@ -14,7 +14,7 @@ resources:
   - repository: templates   # for shared yaml templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/dev/bretjohn/use-shared-compliance-template
+    ref: refs/heads/dev/bretjohn/update-compliance-template
     endpoint: xamarin
 
 # Variables
