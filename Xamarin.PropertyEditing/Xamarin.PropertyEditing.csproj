@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <Target Name="GetFilesToSign" BeforeTargets="SignFiles">
-    <ItemGroup>
+    <ItemGroup Condition=" '$(IsWindows)' ">
       <FilesToSign Include="$(OutDir)\**\$(AssemblyName).resources.dll">
         <Authenticode>Microsoft400</Authenticode>
       </FilesToSign>
