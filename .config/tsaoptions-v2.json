@@ -1,0 +1,14 @@
+{
+    "codebaseName": "Xamarin.PropertyEditing_main",
+    "notificationAliases": [
+        "vscx-tools-ui@microsoft.com"
+    ],
+    "codebaseAdmins": [
+        "REDMOND\\vsengxamarin"
+    ],
+    "instanceUrl": "https://devdiv.visualstudio.com/",
+    "projectName": "DevDiv",
+    "areaPath": "DevDiv\\VS Client - Tools\\UI",
+    "iterationPath": "DevDiv",
+    "allTools": true
+}

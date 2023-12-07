@@ -1,0 +1,31 @@
+stages:
+  - template: security/full/v1.yml@templates
+    parameters:
+      windowsPoolName: '$(HostedWinVS2019)'
+      windowsImageOverride: 'none'
+      stageDependsOn: ['validate']
+      scanArtifacts: ['Symbols']
+      antiMalwareEnabled: true
+      binSkimEnabled: true
+      credScanEnabled: true
+      credScanSuppressionFile: '$(System.DefaultWorkingDirectory)\.config\CredScanSuppressions.json'
+      sourceGdnSuppressionFile: '$(System.DefaultWorkingDirectory)\.config\guardian\source.gdnsuppress'
+      tsaConfigFile: '$(System.DefaultWorkingDirectory)\.build\automation\tsaoptions-v2.json'
+      policheckLocScanEnabled: true
+      policheckExclusionFilesFolder: '$(System.DefaultWorkingDirectory)\.config\policheck'
+      policheckSrcScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckChsScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckChtScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckCsyScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckDeuScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckEsnScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckFraScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckItaScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckJpnScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckKorScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckPlkScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckPtbScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckRusScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckTrkScanFolder: '$(System.DefaultWorkingDirectory)'
+      policheckGdnSuppressionFilesFolder: '$(System.DefaultWorkingDirectory)\.config\guardian'
+      apiScanSoftwareName: 'Xamarin.PropertyEditing'
