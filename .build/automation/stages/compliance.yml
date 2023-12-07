@@ -10,7 +10,7 @@ stages:
       credScanEnabled: true
       credScanSuppressionFile: '$(System.DefaultWorkingDirectory)\.config\CredScanSuppressions.json'
       sourceGdnSuppressionFile: '$(System.DefaultWorkingDirectory)\.config\guardian\source.gdnsuppress'
-      tsaConfigFile: '$(System.DefaultWorkingDirectory)\.build\automation\tsaoptions-v2.json'
+      tsaConfigFile: '$(System.DefaultWorkingDirectory)\.config\tsaoptions-v2.json'
       policheckLocScanEnabled: true
       policheckExclusionFilesFolder: '$(System.DefaultWorkingDirectory)\.config\policheck'
       policheckSrcScanFolder: '$(System.DefaultWorkingDirectory)'
