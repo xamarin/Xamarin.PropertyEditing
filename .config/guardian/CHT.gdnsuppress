@@ -8,9 +8,20 @@
   "suppressionSets": {
     "default": {
       "name": "default",
-      "createdDate": "2023-11-16 06:08:42Z",
-      "lastUpdatedDate": "2023-11-16 06:08:42Z"
+      "createdDate": "2023-12-07 19:25:06Z",
+      "lastUpdatedDate": "2023-12-07 19:25:06Z"
     }
   },
-  "results": {}
+  "results": {
+    "46b520f85d41589cad404687fd7bbc6053feef615632dc088d0bda0d482eb186": {
+      "signature": "46b520f85d41589cad404687fd7bbc6053feef615632dc088d0bda0d482eb186",
+      "alternativeSignatures": [
+        "a09830eb54fda5f0b68c2e726df89c2342ed96ad37b7eea0db6a6a5a0ca9c322"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2023-12-07 19:25:06Z"
+    }
+  }
 }
