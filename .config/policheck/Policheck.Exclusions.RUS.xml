@@ -10,8 +10,8 @@
 	<!-- <Exclusion Type="FolderPathStart"></Exclusion> -->
 	
 	<!-- Each of these file types will be completely skipped for the entire scan -->
-	<!-- <Exclusion Type="FileType"></Exclusion> -->
+	<Exclusion Type="FileType">.CS</Exclusion>
 	
 	<!-- The specified file names will be skipped during the scan regardless which folder they are in -->
-	<Exclusion Type="FileName">RESOURCES.RESX|RESOURCES.DE.RESX|RESOURCES.ES.RESX|RESOURCES.FR.RESX|RESOURCES.IT.RESX|RESOURCES.JA.RESX|RESOURCES.KO.RESX|RESOURCES.PL.RESX|RESOURCES.PT-BR.RESX|RESOURCES.RU.RESX|RESOURCES.TR.RESX|RESOURCES.ZH-HANS.RESX|RESOURCES.ZH-HANT.RESX</Exclusion>
+	<Exclusion Type="FileName">RESOURCES.CS.RESX|RESOURCES.DE.RESX|RESOURCES.ES.RESX|RESOURCES.FR.RESX|RESOURCES.IT.RESX|RESOURCES.JA.RESX|RESOURCES.KO.RESX|RESOURCES.PL.RESX|RESOURCES.PT-BR.RESX|RESOURCES.RESX|RESOURCES.TR.RESX|RESOURCES.ZH-HANS.RESX|RESOURCES.ZH-HANT.RESX</Exclusion>
 </PoliCheckExclusions>

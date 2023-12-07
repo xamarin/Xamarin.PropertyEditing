@@ -13,7 +13,7 @@ stages:
       tsaConfigFile: '$(System.DefaultWorkingDirectory)\.config\tsaoptions-v2.json'
       policheckLocScanEnabled: true
       policheckExclusionFilesFolder: '$(System.DefaultWorkingDirectory)\.config\policheck'
-      policheckSrcScanFolder: '$(System.DefaultWorkingDirectory)\Xamarin.PropertyEditing\Properties'
+      policheckSrcScanFolder: '$(System.DefaultWorkingDirectory)'
       policheckChsScanFolder: '$(System.DefaultWorkingDirectory)\Xamarin.PropertyEditing\Properties'
       policheckChtScanFolder: '$(System.DefaultWorkingDirectory)\Xamarin.PropertyEditing\Properties'
       policheckCsyScanFolder: '$(System.DefaultWorkingDirectory)\Xamarin.PropertyEditing\Properties'
