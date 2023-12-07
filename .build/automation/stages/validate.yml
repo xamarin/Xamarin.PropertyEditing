@@ -24,7 +24,7 @@ stages:
             inputs:
               solution: build.proj
               msbuildVersion: "15.0"
-              msbuildArguments: '/restore /p:Release=true /p:Out=$(Build.ArtifactStagingDirectory) /t:Build'
+              msbuildArguments: '/restore /p:Release=true /p:OutputPath=$(Build.ArtifactStagingDirectory) /t:Build'
 
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Artifacts'
