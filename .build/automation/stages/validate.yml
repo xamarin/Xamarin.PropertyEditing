@@ -24,7 +24,14 @@ stages:
             inputs:
               solution: build.proj
               msbuildVersion: "15.0"
-              msbuildArguments: '/restore /p:Release=true /t:Build'
+              msbuildArguments: '/restore /p:Release=true /p:OutputPath=$(Build.ArtifactStagingDirectory) /t:Build'
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifacts'
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'Symbols'
+            condition: succeededOrFailed()
 
           - task: MSBuild@1
             displayName: 'Run Tests'

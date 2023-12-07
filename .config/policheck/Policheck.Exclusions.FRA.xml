@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <PoliCheckExclusions>
 	<!-- NOTE: All names you provide must be in Upper Case, as apparently that is the string comparison PoliCheck does ¯\_(ツ)_/¯ -->
 	
@@ -7,12 +7,11 @@
 	
 	<!-- Each of these exclusions is a folder name - if any folder or file starts with "\[name]", it will be
 	skipped -->
-	<!--<Exclusion Type="FolderPathStart">ABC|XYZ</Exclusion>-->
+	<!-- <Exclusion Type="FolderPathStart"></Exclusion> -->
 	
 	<!-- Each of these file types will be completely skipped for the entire scan -->
-	<!--<Exclusion Type="FileType">.ABC|.XYZ</Exclusion>-->
-	<Exclusion Type="FileType">.RESX</Exclusion>
+	<Exclusion Type="FileType">.CS</Exclusion>
 	
 	<!-- The specified file names will be skipped during the scan regardless which folder they are in -->
-	<!--<Exclusion Type="FileName">ABC.TXT|XYZ.CS</Exclusion>-->
+	<Exclusion Type="FileName">RESOURCES.CS.RESX|RESOURCES.DE.RESX|RESOURCES.ES.RESX|RESOURCES.RESX|RESOURCES.IT.RESX|RESOURCES.JA.RESX|RESOURCES.KO.RESX|RESOURCES.PL.RESX|RESOURCES.PT-BR.RESX|RESOURCES.RU.RESX|RESOURCES.TR.RESX|RESOURCES.ZH-HANS.RESX|RESOURCES.ZH-HANT.RESX</Exclusion>
 </PoliCheckExclusions>

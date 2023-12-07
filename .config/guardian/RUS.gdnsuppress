@@ -1,0 +1,27 @@
+{
+  "hydrated": false,
+  "properties": {
+    "helpUri": "https://eng.ms/docs/microsoft-security/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/microsoft-guardian/general/suppressions",
+    "hydrationStatus": "This file does not contain identifying data. It is safe to check into your repo. To hydrate this file with identifying data, run `guardian hydrate --help` and follow the guidance."
+  },
+  "version": "1.0.0",
+  "suppressionSets": {
+    "default": {
+      "name": "default",
+      "createdDate": "2023-12-07 19:25:17Z",
+      "lastUpdatedDate": "2023-12-07 19:25:17Z"
+    }
+  },
+  "results": {
+    "156882b868e16df7add8bcf486e493ad46b6551051b5e93f42d1f9738a36baf0": {
+      "signature": "156882b868e16df7add8bcf486e493ad46b6551051b5e93f42d1f9738a36baf0",
+      "alternativeSignatures": [
+        "591846558e8a030a5e7e75b4d440f747024ed5f4b79aa09c6d9da42ad539a90e"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2023-12-07 19:25:17Z"
+    }
+  }
+}
