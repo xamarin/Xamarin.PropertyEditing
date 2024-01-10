@@ -50,6 +50,8 @@ stages:
       - job: 'MacOS'
         pool:
           vmImage: 'macos-12'
+        # Disable building on Mac as the main branch is now only used on Windows
+        condition: false
 
         steps:
           - checkout: self
