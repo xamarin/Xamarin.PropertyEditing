@@ -19,7 +19,7 @@ stages:
               locProj: '.config/LocProject.json'
               outDir: '$(Build.ArtifactStagingDirectory)'
               packageSourceAuth: patAuth
-              patVariable: "$(OneLocBuildPAT)"
+              patVariable: "$(OneLocBuild--PAT)"
 
           - task: PublishBuildArtifacts@1
             inputs:

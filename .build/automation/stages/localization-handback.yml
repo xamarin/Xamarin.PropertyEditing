@@ -31,7 +31,7 @@ stages:
               locProj: '.config/LocProject.json'
               outDir: '$(Build.ArtifactStagingDirectory)'
               packageSourceAuth: patAuth
-              patVariable: "$(OneLocBuildPAT)"
+              patVariable: "$(OneLocBuild--PAT)"
               isCreatePrSelected: false
               repoType: gitHub
               prSourceBranchPrefix: $(LocBranchPrefix)
