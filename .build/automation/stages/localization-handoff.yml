@@ -3,14 +3,13 @@ stages:
   - stage: localization_handoff
     displayName: Localization Handoff
     dependsOn: []
-    condition: and(succeeded(), eq(variables.isMainBranch, true))
+    condition: and(succeeded(), eq(variables.isMainBranch, false))
 
     jobs:
       - job : generate_lci
         displayName: 'Process outgoing strings'
         pool:  $(HostedWinVS2019)
         steps:
-
           - task: cesve.one-loc-build.one-loc-build.OneLocBuild@2
             displayName: 'Localization Build'
             env:
