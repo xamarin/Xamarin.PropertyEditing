@@ -1,0 +1,31 @@
+# Azure YAML pipeline
+# https://devdiv.visualstudio.com/DevDiv/_build?definitionId=19772
+name: Xamarin.PropertyEditing - Compliance
+
+resources:
+  repositories:
+  - repository: self
+  - repository: templates   # for shared yaml templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+# Variables
+variables:
+- template: .build/automation/variables.yml
+
+# Supported cron syntax : https://docs.microsoft.com/en-us/azure/devops/pipelines/process/scheduled-triggers?view=azure-devops&tabs=yaml#supported-cron-syntax
+schedules:
+- cron: "55 22 * * Sun"
+  displayName: Sunday afternoon builds for main branch
+  branches:
+    include:
+    - main
+
+pr: none
+trigger: none
+
+stages:
+  - template: .build/automation/stages/validate.yml
+  - template: .build/automation/stages/compliance.yml
