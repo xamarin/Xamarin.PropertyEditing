@@ -1,5 +1,5 @@
 # Azure YAML pipeline
-# link to be added
+# https://devdiv.visualstudio.com/DevDiv/_build?definitionId=19772
 name: Xamarin.PropertyEditing - Compliance
 
 resources:
