@@ -7,6 +7,13 @@ on:
 jobs:
   launchBackportBuild:
     runs-on: ubuntu-latest
+    # GITHUB_TOKEN change from read-write to read-only on 2024-02-01 requiring permissions block
+    # https://docs.opensource.microsoft.com/github/apps/permission-changes/
+    # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+    permissions:
+      actions: write
+      contents: read
+      security-events: write
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '@gitbot rebase')
 
     steps:
