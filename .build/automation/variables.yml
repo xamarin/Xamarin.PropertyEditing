@@ -5,6 +5,8 @@ variables:
 - name: DefaultBuildConfiguration
   value: Release
 
+- name: GitHub.Token
+  value: $(github-pat)
 - name: isMainBranch
   value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
 - name: isLocBranch
