@@ -6,7 +6,7 @@ variables:
   value: Release
 
 - name: GitHub.Token
-  value: $(github-pat)
+  value: $(github-pat)    # Defined in xamops-azdev-secrets
 - name: isMainBranch
   value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
 - name: isLocBranch
