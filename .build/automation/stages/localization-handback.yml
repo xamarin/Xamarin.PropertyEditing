@@ -3,7 +3,8 @@ stages:
   - stage: localization_handback
     displayName: Localization Handback
     dependsOn: []
-    condition: and(succeeded(), eq(variables.isLocBranch, true))
+    # UNDONE: TEST:
+    # condition: and(succeeded(), eq(variables.isLocBranch, true))
 
     jobs:
       - job : generate_resx
@@ -45,7 +46,7 @@ stages:
           - task: cesve.one-loc-build.one-loc-build.OneLocBuild@2
             displayName: 'Localization Build'
             env:
-              SYSTEM_ACCESSTOKEN: $(System.AccessToken) 
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
             inputs:
               locProj: '.config/LocProject.json'
               outDir: '$(Build.ArtifactStagingDirectory)'
@@ -93,7 +94,7 @@ stages:
               $response = Invoke-WebRequest -UseBasicParsing -Method POST -Headers $headers -Uri "https://api.github.com/repos/Xamarin/Xamarin.PropertyEditing/pulls" -Body ($payload | ConvertTo-json)
               $newPr =  $response.Content | ConvertFrom-Json
 
-              Write-Host "Response is $newPr"      
+              Write-Host "Response is $newPr"
             displayName: Open Pull Request
 
           - task: PublishBuildArtifacts@1
