@@ -29,7 +29,7 @@ stages:
             displayName: 'AzDO.OneLocBuildToken based on service connection'
             enabled: true
             inputs:
-              azureSubscription: 'VSEng-AzureDevOps-ceapex-OneLocBuild'   # Azure DeDevOps service connection
+              azureSubscription: 'VSEng-AzureDevOps-ceapex-OneLocBuild'   # Azure DevOps service connection
               scriptType: 'pscore'
               scriptLocation: 'inlineScript'
               inlineScript: |
