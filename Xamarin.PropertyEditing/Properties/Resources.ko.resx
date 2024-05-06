@@ -645,7 +645,7 @@
     <comment>Tooltip text used to toggle the visibility of the advanced properties</comment>
   </data>
   <data name="NewInstanceForProperty" xml:space="preserve">
-    <value>이 단추는 {0} 속성에 사용됩니다.</value>
+    <value>New {0}</value>
     <comment>New {PropertyName}</comment>
   </data>
   <data name="Select" xml:space="preserve">
@@ -915,7 +915,7 @@
     <value>고급 속성</value>
   </data>
   <data name="ArrangeByButtonName" xml:space="preserve">
-    <value>이 단추를 사용하여 속성 목록을 {0}별로 정렬할 수 있습니다.</value>
+    <value>정렬 기준</value>
   </data>
   <data name="PropertyButtonName" xml:space="preserve">
     <value>고급 옵션</value>

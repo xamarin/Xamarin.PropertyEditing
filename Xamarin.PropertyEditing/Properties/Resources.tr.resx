@@ -645,7 +645,7 @@
     <comment>Tooltip text used to toggle the visibility of the advanced properties</comment>
   </data>
   <data name="NewInstanceForProperty" xml:space="preserve">
-    <value>Bu düğme {0} özelliği içindir.</value>
+    <value>New {0}</value>
     <comment>New {PropertyName}</comment>
   </data>
   <data name="Select" xml:space="preserve">
@@ -915,7 +915,7 @@
     <value>Gelişmiş özellikler</value>
   </data>
   <data name="ArrangeByButtonName" xml:space="preserve">
-    <value>Bu düğme, özellik listesini {0} ölçütüne göre düzenlemenizi sağlar.</value>
+    <value>Düzenleme Ölçütü</value>
   </data>
   <data name="PropertyButtonName" xml:space="preserve">
     <value>Gelişmiş seçenekler</value>

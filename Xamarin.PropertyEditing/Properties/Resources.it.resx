@@ -645,7 +645,7 @@
     <comment>Tooltip text used to toggle the visibility of the advanced properties</comment>
   </data>
   <data name="NewInstanceForProperty" xml:space="preserve">
-    <value>Pulsante per la proprietà {0}.</value>
+    <value>New {0}</value>
     <comment>New {PropertyName}</comment>
   </data>
   <data name="Select" xml:space="preserve">
@@ -915,7 +915,7 @@
     <value>Proprietà avanzate</value>
   </data>
   <data name="ArrangeByButtonName" xml:space="preserve">
-    <value>Questo pulsante consente di organizzare l'elenco delle proprietà per {0}.</value>
+    <value>Disponi per</value>
   </data>
   <data name="PropertyButtonName" xml:space="preserve">
     <value>Opzioni avanzate</value>

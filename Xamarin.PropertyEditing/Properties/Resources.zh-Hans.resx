@@ -645,7 +645,7 @@
     <comment>Tooltip text used to toggle the visibility of the advanced properties</comment>
   </data>
   <data name="NewInstanceForProperty" xml:space="preserve">
-    <value>这是 {0} 属性的按钮。</value>
+    <value>New {0}</value>
     <comment>New {PropertyName}</comment>
   </data>
   <data name="Select" xml:space="preserve">
@@ -915,7 +915,7 @@
     <value>高级属性</value>
   </data>
   <data name="ArrangeByButtonName" xml:space="preserve">
-    <value>使用此按钮可以按 {0} 排列属性列表。</value>
+    <value>排列依据</value>
   </data>
   <data name="PropertyButtonName" xml:space="preserve">
     <value>高级选项</value>

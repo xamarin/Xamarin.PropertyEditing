@@ -645,7 +645,7 @@
     <comment>Tooltip text used to toggle the visibility of the advanced properties</comment>
   </data>
   <data name="NewInstanceForProperty" xml:space="preserve">
-    <value>このボタンは {0} プロパティ用です。</value>
+    <value>New {0}</value>
     <comment>New {PropertyName}</comment>
   </data>
   <data name="Select" xml:space="preserve">
@@ -915,7 +915,7 @@
     <value>詳細プロパティ</value>
   </data>
   <data name="ArrangeByButtonName" xml:space="preserve">
-    <value>このボタンを使用すると、プロパティ一覧を {0} で並べ替えることができます。</value>
+    <value>並べ替え</value>
   </data>
   <data name="PropertyButtonName" xml:space="preserve">
     <value>詳細オプション</value>
