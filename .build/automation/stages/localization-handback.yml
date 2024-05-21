@@ -39,8 +39,7 @@ stages:
                 # Note that the resource is specified to limit the token to Azure DevOps
                 $token = az account get-access-token --query accessToken --resource 499b84ac-1321-427f-aa17-267ca6975798 -o tsv
 
-                Write-Host "Setting AzDO.OneLocBuildToken: ${token}"
-                Write-Host "##vso[task.setvariable variable=AzDO.OneLocBuildToken]${token}"
+                Write-Host "##vso[task.setvariable variable=AzDO.OneLocBuildToken;issecret=true]${token}"
 
           - task: cesve.one-loc-build.one-loc-build.OneLocBuild@2
             displayName: 'Localization Build'
